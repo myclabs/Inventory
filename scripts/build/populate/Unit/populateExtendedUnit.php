@@ -53,8 +53,6 @@ class Unit_Script_Populate_extendedUnit
     protected function parseExtendedUnit(UnitExtension $extension,
                                          PhysicalQuantity $physicalQuantity
     ) {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         $query = new Core_Model_Query();
         $query->filter->addCondition(StandardUnit::QUERY_PHYSICALQUANTITY,
                                                      $physicalQuantity);
@@ -80,7 +78,7 @@ class Unit_Script_Populate_extendedUnit
                 $extendedUnit->setSymbol($standardUnit->getSymbol() . ' ' . $extension->getSymbol());
 
                 $extendedUnit->save();
-                $entityManagers['unit']->flush();
+                \Core\ContainerSingleton::getEntityManager()->flush();
             }
         }
     }

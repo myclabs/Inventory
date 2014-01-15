@@ -47,11 +47,11 @@ class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha implements UI_Fo
         }
 
         // Font path
-        $config = Zend_Registry::get('configuration');
-        if (file_exists($config->police->path . 'arial.ttf')) {
-            $fontPath = $config->police->path . 'arial.ttf';
-        } elseif (file_exists(PACKAGE_PATH . '/' . $config->police->path . 'arial.ttf')) {
-            $fontPath = PACKAGE_PATH . '/'  . $config->police->path . 'arial.ttf';
+        $container = \Core\ContainerSingleton::getContainer();
+        if (file_exists($container->get('police.path') . 'arial.ttf')) {
+            $fontPath = $container->get('police.path') . 'arial.ttf';
+        } elseif (file_exists(PACKAGE_PATH . '/' . $container->get('police.path') . 'arial.ttf')) {
+            $fontPath = PACKAGE_PATH . '/'  . $container->get('police.path') . 'arial.ttf';
         } else {
             throw new Core_Exception("Font file not found for captcha");
         }

@@ -11,11 +11,8 @@ define('RUN', false);
 
 require_once __DIR__ . '/../../../application/init.php';
 
-/** @var DI\Container $container */
-$container = Zend_Registry::get('container');
-
 /** @var Worker $worker */
-$worker = $container->get(Worker::class);
+$worker = \Core\ContainerSingleton::getContainer()->get(Worker::class);
 
 if ($worker instanceof SimpleWorker) {
     /** @var Psr\Log\LoggerInterface $logger */

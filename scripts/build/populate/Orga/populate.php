@@ -26,8 +26,7 @@ class Orga_Populate extends Core_Script_Action
      */
     public function runEnvironment($environment)
     {
-        /** @var DI\Container $container */
-        $container = Zend_Registry::get('container');
+        $container = \Core\ContainerSingleton::getContainer();
 
         $entityManager = $container->get(EntityManager::class);
 
@@ -195,7 +194,7 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function setInput(Orga_Model_Granularity $granularity, array $members, array $values, $finished = false)
     {
-        $container = Zend_Registry::get('container');
+        $container = \Core\ContainerSingleton::getContainer();
 
         $inputCell = $granularity->getCellByMembers($members);
         $inputConfigGranularity = $granularity->getInputConfigGranularity();
@@ -408,9 +407,8 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function createUser($email)
     {
-        /** @var DI\Container $container */
-        $container = Zend_Registry::get('container');
-        $container->get(UserService::class)->createUser($email, $email);
+        \Core\ContainerSingleton::getContainer()->get(UserService::class)
+            ->createUser($email, $email);
     }
 
     /**

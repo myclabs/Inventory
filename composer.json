@@ -3,6 +3,9 @@
         "psr-0": {
             "": "src/"
         },
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
         "files": [
             "src/Core/Translation/functions.php"
         ]

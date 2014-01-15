@@ -1,58 +1,42 @@
 <?php
-/**
- * @author valentin.claras
- * @author hugo.charbonnier
- * @author yoann.croizer
- * @package Exec
- */
 
+namespace Tests\Exec;
+
+use Calc_UnitValue;
+use Calc_Value;
+use Core\Test\TestCase;
+use Core_Exception_InvalidArgument;
 use Exec\Execution\Calc;
+use Inventory_Model_ValueProviderEntity;
 use Unit\UnitAPI;
 use TEC\Expression;
 
-/**
- * @package Exec
- */
-class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
+class CalcTest extends TestCase
 {
-    // Expression utilisée
     protected $expression;
     protected $expressionParticulier;
 
-    /**
-     * Méthode appelée avant chaque méthode de test.
-     */
-    function setUp()
+    public function setUp()
     {
+        parent::setUp();
+
         $this->expression = new Expression('a+b*c/d-e+f');
         $this->expressionParticulier = new Expression('o-(a+b)');
     }
 
     /**
-     * Test de la méthode ExecuteExpression() pour des c    lculs de valeurs uniquement
+     * Test de la méthode ExecuteExpression() pour des calculs de valeurs uniquement
      */
-    function testExecuteExpressionValue()
+    public function testExecuteExpressionValue()
     {
-        $value1 = new Calc_Value(1, 0.1);
-
-        $value2 = new Calc_Value(2, 0.2);
-
-        $value3 = new Calc_Value(3, 0.3);
-
-        $value4 = new Calc_Value(4, 0.4);
-
-        $value5 = new Calc_Value(5, 0.5);
-
-        $value6 = new Calc_Value(6, 0.6);
-
-        $tab = array(
-            "a" => $value1,
-            "b" => $value2,
-            "c" => $value3,
-            "d" => $value4,
-            "e" => $value5,
-            "f" => $value6,
-        );
+        $tab = [
+            "a" => new Calc_Value(1, 0.1),
+            "b" => new Calc_Value(2, 0.2),
+            "c" => new Calc_Value(3, 0.3),
+            "d" => new Calc_Value(4, 0.4),
+            "e" => new Calc_Value(5, 0.5),
+            "f" => new Calc_Value(6, 0.6),
+        ];
 
         $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
 
@@ -60,7 +44,6 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
         $calc->setCalculType(Calc::CALC_VALUE);
         $this->assertEquals($calc->getExpression(), $this->expression);
 
-        /** @var Calc_Value $result */
         $result = $calc->executeExpression($valueProvider);
 
         $this->assertTrue($result instanceof Calc_Value);
@@ -70,22 +53,15 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
     /**
      * Test de la méthode executeExpression pour des calculs d'unités uniquement
      */
-    function testExecuteExpressionUnit()
+    public function testExecuteExpressionUnit()
     {
-        $unite1 = new UnitAPI('g');
-        $unite2 = new UnitAPI('j.animal');
-        $unite3 = new UnitAPI('kg');
-        $unite4 = new UnitAPI('kg.m^2.s^-2.animal');
-        $unite5 = new UnitAPI('kg');
-        $unite6 = new UnitAPI('g');
-
         $tab = array(
-            "a" => $unite1,
-            "b" => $unite2,
-            "c" => $unite3,
-            "d" => $unite4,
-            "e" => $unite5,
-            "f" => $unite6,
+            "a" => new UnitAPI('g'),
+            "b" => new UnitAPI('j.animal'),
+            "c" => new UnitAPI('kg'),
+            "d" => new UnitAPI('kg.m^2.s^-2.animal'),
+            "e" => new UnitAPI('kg'),
+            "f" => new UnitAPI('g'),
         );
 
         $valueProvider = new Inventory_Model_ValueProviderEntity($tab);
@@ -93,7 +69,7 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
         $calc = new Calc($this->expression);
         $calc->setCalculType(Calc::CALC_UNIT);
 
-        /** @var Unit_API $result */
+        /** @var UnitAPI $result */
         $result = $calc->executeExpression($valueProvider);
 
         $this->assertTrue($result instanceof UnitAPI);
@@ -103,7 +79,7 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
     /**
      * Test de la méthode executeExpression pour des calcils d'unitValue uniquement
      */
-    function testExecuteExpressionUnitValue()
+    public function testExecuteExpressionUnitValue()
     {
         $unite1 = new UnitAPI('g');
         $unite2 = new UnitAPI('j.animal');
@@ -144,8 +120,10 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
     /**
      * Permet de tester qu'une erreure est renvoyée dans le cas ou les valeurs ne sont
      * pas homogènes.
+     * @expectedException \Core_Exception_InvalidArgument
+     * @expectedExceptionMessage Calculation expects an array of Calc_UnitValue, Unit\UnitAPI given
      */
-    function testExecuteExpressionMixed()
+    public function testExecuteExpressionMixed()
     {
         $unite1 = new UnitAPI('g');
         $unite2 = new UnitAPI('j.animal');
@@ -169,21 +147,15 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
 
         $calc = new Calc($this->expression);
         $calc->setCalculType(Calc::CALC_UNITVALUE);
-        try {
-            $calc->executeExpression($valueProvider);
-            $this->fail("Erreur d'exception");
-        } catch (Core_Exception_InvalidArgument $e) {
-            $this->assertEquals('Calculation expects an array of Calc_UnitValue, Unit\UnitAPI given', $e->getMessage());
-        }
+        $calc->executeExpression($valueProvider);
     }
 
     /**
      * Test de la méthode ExecuteExpression()
      *  Dans le cas ou le noeud racine à comme noeud enfant directe un Composite.
      *  Dans le cas ou le type d'éléments envoyé au valueProviderEntity n'existe pas
-     *
      */
-    function testExecuteExpressionCasParticulier()
+    public function testExecuteExpressionCasParticulier()
     {
         $unite1 = new UnitAPI('g');
         $unite2 = new UnitAPI('kg');
@@ -199,11 +171,10 @@ class Exec_Test_CalcTest extends PHPUnit_Framework_TestCase
         $calc = new Calc($this->expressionParticulier);
         $calc->setCalculType(Calc::CALC_UNIT);
 
-        /** @var Unit_API $result */
+        /** @var UnitAPI $result */
         $result = $calc->executeExpression($valueProvider);
 
         $this->assertTrue($result instanceof UnitAPI);
         $this->assertEquals('kg', $result->getRef());
     }
-
 }

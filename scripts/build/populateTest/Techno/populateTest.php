@@ -9,9 +9,7 @@ class Techno_PopulateTest extends Techno_Populate
 {
     public function runEnvironment($environment)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $entityManager \Doctrine\ORM\EntityManager */
-        $entityManager = $entityManagers['default'];
+        $entityManager = \Core\ContainerSingleton::getEntityManager();
 
 
         $categorie_contenant_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');

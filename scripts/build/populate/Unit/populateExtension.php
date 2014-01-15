@@ -19,8 +19,7 @@ class Unit_Script_Populate_Extension
     public function run()
     {
         $this->generateExtension();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['unit']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -41,8 +40,6 @@ class Unit_Script_Populate_Extension
      */
     protected function parseExtension(DOMElement $element)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         $extension = new UnitExtension();
         $extension->setRef($element->getAttribute('ref'));
         $extension->setMultiplier($element->getElementsByTagName('multiplier')->item(0)->firstChild->nodeValue);
@@ -83,7 +80,7 @@ class Unit_Script_Populate_Extension
             $extension->setName($name);
             $extension->setSymbol($symbol);
             $extension->save();
-            $entityManagers['unit']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 }

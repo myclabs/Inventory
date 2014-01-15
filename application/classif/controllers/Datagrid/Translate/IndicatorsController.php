@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Gedmo\Translatable\TranslatableListener;
 
 /**
  * Classe du controller du datagrid des traductions des indicators.
@@ -16,13 +17,16 @@ use Core\Annotation\Secure;
 class Classif_Datagrid_Translate_IndicatorsController extends UI_Controller_Datagrid
 {
     /**
-     * Désactivation du fallback des traductions.
+     * @Inject
+     * @var TranslatableListener
      */
-    public function init()
-    {
-        parent::init();
-        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
-    }
+    private $translatableListener;
+
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -31,12 +35,13 @@ class Classif_Datagrid_Translate_IndicatorsController extends UI_Controller_Data
      */
     public function getelementsAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         foreach (Classif_Model_Indicator::loadList($this->request) as $indicator) {
             $data = array();
             $data['index'] = $indicator->getRef();
             $data['identifier'] = $indicator->getRef();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $indicator->reloadWithLocale($locale);
                 $data[$language] = $indicator->getLabel();
@@ -55,6 +60,7 @@ class Classif_Datagrid_Translate_IndicatorsController extends UI_Controller_Data
      */
     public function updateelementAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $indicator = Classif_Model_Indicator::loadByRef($this->update['index']);
         $indicator->reloadWithLocale(Core_Locale::load($this->update['column']));
         $indicator->setLabel($this->update['value']);

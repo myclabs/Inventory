@@ -36,10 +36,8 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
 
     public function __construct(DW_Model_Report $granularityDWReport)
     {
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
         /** @var Orga_Service_ETLStructure $etlStructureService */
-        $etlStructureService = $container->get('Orga_Service_ETLStructure');
+        $etlStructureService = \Core\ContainerSingleton::getContainer()->get(Orga_Service_ETLStructure::class);
 
         $this->cellDWReports = new ArrayCollection();
 
@@ -69,10 +67,9 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
                 break;
             case DW_Model_Report::EVENT_UPDATED:
                 try {
-                    /** @var \DI\Container $container */
-                    $container = Zend_Registry::get('container');
+                    $container = \Core\ContainerSingleton::getContainer();
                     /** @var Orga_Service_ETLStructure $etlStructureService */
-                    $etlStructureService = $container->get('Orga_Service_ETLStructure');
+                    $etlStructureService = $container->get(Orga_Service_ETLStructure::class);
 
                     $etlStructureService->updateCellsDWReportFromGranularityReport(
                         self::loadByGranularityDWReport($subject)
@@ -100,7 +97,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
 
     /**
      * Charge le GranularityReport correspondant à un Report de DW.
-     * 
+     *
      * @param DW_Model_Report $dWReport
      *
      * @return Orga_Model_GranularityReport

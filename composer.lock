@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "575c38cd640941b22f9ebc1065c18e1b",
+    "hash": "373ba60a28347804b8b97bb0f40b3bbf",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -563,12 +563,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "6838903ecc14bd8d355df083bd056b3608c19b5c"
+                "reference": "3c700e1323033f8366059654288c20af7e1cd735"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/6838903ecc14bd8d355df083bd056b3608c19b5c",
-                "reference": "6838903ecc14bd8d355df083bd056b3608c19b5c",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/3c700e1323033f8366059654288c20af7e1cd735",
+                "reference": "3c700e1323033f8366059654288c20af7e1cd735",
                 "shasum": ""
             },
             "require": {
@@ -596,7 +596,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2013-12-21 02:51:38"
+            "time": "2014-01-12 04:11:03"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -750,12 +750,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "0.2.1"
+                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.2.1",
-                "reference": "0.2.1",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
+                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
                 "shasum": ""
             },
             "type": "library",
@@ -781,24 +781,25 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "3.5.1",
+            "version": "4.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "a039bcd574cce6b2370577f927fbda5e90c7540f"
+                "reference": "29408ca1f87ae49ec041f958cf3d1a2a65208022"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/a039bcd574cce6b2370577f927fbda5e90c7540f",
-                "reference": "a039bcd574cce6b2370577f927fbda5e90c7540f",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/29408ca1f87ae49ec041f958cf3d1a2a65208022",
+                "reference": "29408ca1f87ae49ec041f958cf3d1a2a65208022",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "1.*",
                 "doctrine/cache": "1.*",
+                "mnapoli/phpdocreader": "~1.1",
                 "myclabs/php-enum": "1.*",
                 "ocramius/proxy-manager": "~0.3",
-                "php": ">=5.3.0",
+                "php": ">=5.3.3",
                 "symfony/yaml": "2.*"
             },
             "type": "library",
@@ -807,7 +808,10 @@
                     "DI": "src/",
                     "IntegrationTests": "tests/",
                     "UnitTests": "tests/"
-                }
+                },
+                "files": [
+                    "src/DI/functions.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -820,30 +824,30 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-10-29 09:22:31"
+            "time": "2014-01-11 23:45:49"
         },
         {
             "name": "mnapoli/php-di-zf1",
-            "version": "1.1.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI-ZF1.git",
-                "reference": "fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43"
+                "reference": "dc8af3df550f74aab6419f07ad3a9b8dd68dd7d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI-ZF1/zipball/fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43",
-                "reference": "fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI-ZF1/zipball/dc8af3df550f74aab6419f07ad3a9b8dd68dd7d9",
+                "reference": "dc8af3df550f74aab6419f07ad3a9b8dd68dd7d9",
                 "shasum": ""
             },
             "require": {
-                "mnapoli/php-di": "~3.3",
+                "mnapoli/php-di": "~4.0",
                 "zendframework/zendframework1": "1.12.*"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "DI\\ZendFramework1": "src/"
+                    "DI\\Bridge\\ZendFramework1\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -851,8 +855,43 @@
                 "MIT"
             ],
             "description": "Integrates PHP-DI to Zend Framework 1",
-            "homepage": "http://mnapoli.github.io/PHP-DI-ZF1/",
-            "time": "2013-08-12 07:23:17"
+            "homepage": "https://github.com/mnapoli/PHP-DI-ZF1",
+            "time": "2014-01-08 10:14:14"
+        },
+        {
+            "name": "mnapoli/phpdocreader",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mnapoli/PhpDocReader.git",
+                "reference": "94eed8fb141f989fe044ae3b6743cc1d87b05a7f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mnapoli/PhpDocReader/zipball/94eed8fb141f989fe044ae3b6743cc1d87b05a7f",
+                "reference": "94eed8fb141f989fe044ae3b6743cc1d87b05a7f",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "1.*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PhpDocReader": "src/",
+                    "UnitTest": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "keywords": [
+                "phpdoc",
+                "reflection"
+            ],
+            "time": "2013-12-15 22:24:08"
         },
         {
             "name": "monolog/monolog",
@@ -2699,6 +2738,12 @@
             "alias_normalized": "1.7.99.0",
             "version": "dev-WriterExcel5OptionalConstructor",
             "package": "phpoffice/phpexcel"
+        },
+        {
+            "alias": "4.0.0",
+            "alias_normalized": "4.0.0.0",
+            "version": "4.0.9999999.9999999-dev",
+            "package": "mnapoli/php-di"
         }
     ],
     "minimum-stability": "dev",
@@ -2709,6 +2754,8 @@
         "pear/console_commandline": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
+        "mnapoli/php-di": 20,
+        "mnapoli/php-di-zf1": 20,
         "mnapoli/metaconsole": 20
     },
     "platform": [

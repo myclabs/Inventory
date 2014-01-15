@@ -21,8 +21,7 @@ class Unit_Script_Populate_StandardUnit
     public function run()
     {
         $this->generateStandardUnit();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['unit']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
 
@@ -45,8 +44,6 @@ class Unit_Script_Populate_StandardUnit
      */
     protected function parseStandardUnit(DOMElement $element)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         $unit = new StandardUnit();
         $unit->setRef($element->getAttribute('ref'));
         $unit->setMultiplier($element->getElementsByTagName('multiplier')->item(0)->firstChild->nodeValue);
@@ -95,7 +92,7 @@ class Unit_Script_Populate_StandardUnit
             $unit->setName($name);
             $unit->setSymbol($symbol);
             $unit->save();
-            $entityManagers['unit']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 

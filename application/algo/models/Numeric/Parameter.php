@@ -47,10 +47,8 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
             $coordinates[$dimensionRef] = $parameterCoordinate->getMember($inputSet);
         }
 
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
         /** @var TechnoService $technoService */
-        $technoService = $container->get(TechnoService::class);
+        $technoService = \Core\ContainerSingleton::getContainer()->get(TechnoService::class);
 
         $value = $technoService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
 
@@ -73,10 +71,8 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
     {
         $errors = parent::checkConfig();
 
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
         /** @var TechnoService $technoService */
-        $technoService = $container->get('Techno\Application\Service\TechnoService');
+        $technoService = \Core\ContainerSingleton::getContainer()->get(TechnoService::class);
 
         // Vérifie que la famille liée est bien trouvable
         try {
@@ -142,10 +138,8 @@ class Algo_Model_Numeric_Parameter extends Algo_Model_Numeric
      */
     public function getFamily()
     {
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
         /** @var TechnoService $technoService */
-        $technoService = $container->get(TechnoService::class);
+        $technoService = \Core\ContainerSingleton::getContainer()->get(TechnoService::class);
 
         return $technoService->getFamily($this->familyRef);
     }

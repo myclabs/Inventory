@@ -27,14 +27,10 @@ class Core_Mail extends Zend_Mail
     {
         parent::__construct('utf-8');
 
-        $config = Zend_Registry::get('configuration');
+        $container = \Core\ContainerSingleton::getContainer();
 
-        if ((empty($config->emails->noreply->adress)) || (empty($config->emails->noreply->name))) {
-            throw new Core_Exception_UndefinedAttribute('Le mail "no-reply" n\'est pas défini dans application.ini');
-        } else {
-            $this->setFrom($config->emails->noreply->adress, $config->emails->noreply->name);
-            $this->setReplyTo($config->emails->noreply->adress, $config->emails->noreply->name);
-        }
+        $this->setFrom($container->get('emails.noreply.adress'), $container->get('emails.noreply.name'));
+        $this->setReplyTo($container->get('emails.noreply.adress'), $container->get('emails.noreply.name'));
     }
 
     /**
