@@ -99,7 +99,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 break;
         }
 
-        $builder->addDefinitions(APPLICATION_PATH . '/configs/parameters.php');
+        if (file_exists(APPLICATION_PATH . '/configs/parameters.php')) {
+            $builder->addDefinitions(APPLICATION_PATH . '/configs/parameters.php');
+        }
 
         $diConfig = $configuration->get('di', null);
 
