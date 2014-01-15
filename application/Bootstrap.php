@@ -88,14 +88,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         switch (APPLICATION_ENV) {
             case 'testsunitaires':
-                $builder->addDefinitions(APPLICATION_PATH . '/configs/config.tests.php');
+                $builder->addDefinitions(APPLICATION_PATH . '/configs/config.env.tests.php');
                 break;
             case 'developpement':
-                $builder->addDefinitions(APPLICATION_PATH . '/configs/config.dev.php');
+                $builder->addDefinitions(APPLICATION_PATH . '/configs/config.env.dev.php');
                 break;
             case 'test':
             case 'production':
-                $builder->addDefinitions(APPLICATION_PATH . '/configs/config.prod.php');
+                $builder->addDefinitions(APPLICATION_PATH . '/configs/config.env.prod.php');
                 break;
         }
 
