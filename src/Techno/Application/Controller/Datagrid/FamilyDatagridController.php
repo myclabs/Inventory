@@ -84,7 +84,6 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
                 return;
             }
             /** @noinspection PhpUndefinedVariableInspection */
-            $family->setBaseUnit($unit->getNormalizedUnit());
             $family->setUnit($unit);
             $family->setCategory($category);
             $family->save();

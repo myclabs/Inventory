@@ -50,7 +50,7 @@ class Techno_Form_EditFamilyController extends Core_Controller
             $this->addFormError('unit', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
             $unit = new UnitAPI($refUnit);
-            if (!$unit->exists() || !$unit->isEquivalent($family->getBaseUnit()->getRef())) {
+            if (! $unit->exists()) {
                 $this->addFormError('unit', __('UI', 'formValidation', 'invalidUnit'));
             }
         }
