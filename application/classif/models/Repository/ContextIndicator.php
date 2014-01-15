@@ -76,4 +76,27 @@ class Classif_Model_Repository_ContextIndicator extends Core_Model_Repository
         }
     }
 
+    /**
+     * Renvoie le nombre d'éléments total que le loadList peut charger.
+     *
+     * @param Core_Model_Query $queryParameters Paramètres de la requête
+     *
+     * @return int
+     */
+    public function countTotal(Core_Model_Query $queryParameters = null)
+    {
+        $entityName = $this->getEntityName();
+        $entityAlias = $entityName::getAlias();
+
+        $queryParameters->rootAlias = $entityAlias;
+        $queryParameters->entityName = $entityName;
+
+        $queryBuilderCountTotal = $this->createQueryBuilder($entityAlias);
+        $queryBuilderCountTotal->select($queryBuilderCountTotal->expr()->count($entityAlias));
+        $this->addCustomParametersToQueryBuilder($queryBuilderCountTotal, $queryParameters);
+        $queryParameters->parseToQueryBuilderWithoutLimit($queryBuilderCountTotal);
+
+        return $this->getQueryFromQueryBuilder($queryBuilderCountTotal)->getSingleScalarResult();
+    }
+
 }
