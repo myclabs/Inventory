@@ -1,14 +1,12 @@
 <?php
+
+namespace Tests\Core;
+
 use Core\Test\TestCase;
+use Core_Exception_InvalidArgument;
+use Core_Locale;
 
-/**
- * @author matthieu.napoli
- */
-
-/**
- * Test pour Core_Locale
- */
-class Core_Test_LocaleTest extends TestCase
+class LocaleTest extends TestCase
 {
     /**
      * @expectedException Core_Exception_InvalidArgument

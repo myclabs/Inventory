@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Gedmo\Translatable\TranslatableListener;
 
 /**
  * Classe du controller du datagrid des traductions des members.
@@ -16,13 +17,16 @@ use Core\Annotation\Secure;
 class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagrid
 {
     /**
-     * Désactivation du fallback des traductions.
+     * @Inject
+     * @var TranslatableListener
      */
-    public function init()
-    {
-        parent::init();
-        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
-    }
+    private $translatableListener;
+
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -31,12 +35,13 @@ class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagri
      */
     public function getelementsAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         foreach (Classif_Model_Member::loadList($this->request) as $member) {
             $data = array();
             $data['index'] = $member->getId();
             $data['identifier'] = $member->getAxis()->getRef().' | '.$member->getRef();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $member->reloadWithLocale($locale);
                 $data[$language] = $member->getLabel();
@@ -55,6 +60,7 @@ class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagri
      */
     public function updateelementAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $member = Classif_Model_Member::load($this->update['index']);
         $member->reloadWithLocale(Core_Locale::load($this->update['column']));
         $member->setLabel($this->update['value']);

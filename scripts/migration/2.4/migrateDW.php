@@ -1,8 +1,6 @@
 <?php
 // Entity Manager
-$entityManagers = Zend_Registry::get('EntityManagers');
-/** @var $entityManager \Doctrine\ORM\EntityManager */
-$entityManager = $entityManagers['default'];
+$entityManager = \Core\ContainerSingleton::getEntityManager();
 
 foreach (DW_Model_Indicator::loadList() as $indicator) {
     if (strpos($indicator->getRef(), 'classif_') === 0) {

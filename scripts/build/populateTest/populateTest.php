@@ -9,14 +9,6 @@ class Inventory_PopulateTest extends Core_Script_Populate
 {
     public function populateEnvironment($environment)
     {
-        if ($environment === 'test') {
-            return;
-        }
-        // Initalisation Unit.
-        $populateUnit = new Unit_Populate();
-        $populateUnit->initUnitEntityManager($environment);
-
-
         // Classif.
         $populateClassif = new Classif_PopulateTest();
         $populateClassif->runEnvironment($environment);
@@ -34,9 +26,5 @@ class Inventory_PopulateTest extends Core_Script_Populate
         $populateOrga->runEnvironment($environment);
 
         echo "… done!".PHP_EOL;
-
-        // Fermeture Unit.
-        $populateUnit = new Unit_Populate();
-        $populateUnit->resetUnitEntityManager();
     }
 }

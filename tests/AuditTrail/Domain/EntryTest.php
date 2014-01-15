@@ -1,21 +1,18 @@
 <?php
-/**
- * @author matthieu.napoli
- */
+
+namespace Tests\AuditTrail\Domain;
 
 use AuditTrail\Domain\Context\Context;
 use AuditTrail\Domain\Entry;
 use Core\Test\TestCase;
+use DateTime;
 
-/**
- * EntryTest
- */
-class AuditTrail_EntryTest extends TestCase
+class EntryTest extends TestCase
 {
     public function testDate()
     {
         /** @var Context $context */
-        $context = $this->getMockForAbstractClass('AuditTrail\Domain\Context\Context');
+        $context = $this->getMockForAbstractClass(Context::class);
         $entry = new Entry('foo', $context);
 
         $this->assertNotNull($entry->getDate());

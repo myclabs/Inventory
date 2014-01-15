@@ -1,47 +1,12 @@
 <?php
 
+namespace Tests\Techno;
+
 use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use Techno\Domain\Category;
 
-class Techno_Test_CategoryTest
-{
-    /**
-     * Creation of the test suite
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Techno_Test_CategorySetUp');
-        return $suite;
-    }
-
-    /**
-     * Génere un objet dérivé prêt à l'emploi pour les tests.
-     * @return Category
-     */
-    public static function generateObject()
-    {
-        $category = new Category();
-        $category->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-        return $category;
-    }
-
-    /**
-     * Deletion of an object created with generateObject
-     * @param Category $o
-     */
-    public static function deleteObject($o)
-    {
-        $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
-    }
-}
-
-class Techno_Test_CategorySetUp extends TestCase
+class CategoryTest extends TestCase
 {
     public static function setUpBeforeClass()
     {
@@ -49,13 +14,9 @@ class Techno_Test_CategorySetUp extends TestCase
         foreach (Category::loadList() as $o) {
             $o->delete();
         }
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
     }
 
-    /**
-     * @return Category
-     */
     public function testConstruct()
     {
         $o = new Category("Test");
@@ -75,7 +36,7 @@ class Techno_Test_CategorySetUp extends TestCase
     {
         $this->entityManager->clear('Techno\Domain\Category');
         /** @var $oLoaded Category */
-        $oLoaded = Category::load($o->getKey());
+        $oLoaded = Category::load($o->getId());
 
         $this->assertInstanceOf('Techno\Domain\Category', $oLoaded);
         $this->assertNotSame($o, $oLoaded);

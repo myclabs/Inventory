@@ -16,6 +16,12 @@ class Unit_Datagrids_Translate_StandardUnitSymbolController extends UI_Controlle
 {
 
     /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
+
+    /**
      * @Secure("viewUnit")
      */
     public function getelementsAction()
@@ -26,7 +32,7 @@ class Unit_Datagrids_Translate_StandardUnitSymbolController extends UI_Controlle
 
             $data['identifier'] = $unit->getRef();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $unit->reloadWithLocale($locale);
                 $data[$language] = $unit->getSymbol();

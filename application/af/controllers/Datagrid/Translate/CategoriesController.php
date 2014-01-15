@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Gedmo\Translatable\TranslatableListener;
 
 /**
  * Classe du controller du datagrid des traductions des categories.
@@ -16,13 +17,16 @@ use Core\Annotation\Secure;
 class AF_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
 {
     /**
-     * Désactivation du fallback des traductions.
+     * @Inject
+     * @var TranslatableListener
      */
-    public function init()
-    {
-        parent::init();
-        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
-    }
+    private $translatableListener;
+
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -31,12 +35,13 @@ class AF_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         foreach (AF_Model_Category::loadList($this->request) as $category) {
             $data = array();
             $data['index'] = $category->getId();
             $data['identifier'] = $category->getId();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $category->reloadWithLocale($locale);
                 $data[$language] = $category->getLabel();
@@ -55,6 +60,7 @@ class AF_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $category = AF_Model_Category::load($this->update['index']);
         $category->reloadWithLocale(Core_Locale::load($this->update['column']));
         $category->setLabel($this->update['value']);

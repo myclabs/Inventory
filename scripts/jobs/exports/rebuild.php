@@ -67,9 +67,6 @@ class RebuildExports
     }
 }
 
-/** @var \DI\Container $container */
-$container = \Zend_Registry::get('container');
-
 /** @var RebuildExports $rebuildExports */
-$rebuildExports = $container->get(RebuildExports::class);
+$rebuildExports = \Core\ContainerSingleton::getContainer()->get(RebuildExports::class);
 $rebuildExports->run();

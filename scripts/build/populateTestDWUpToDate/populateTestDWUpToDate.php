@@ -11,7 +11,6 @@ require_once __DIR__ . '/Orga/populateTestDWUpToDate.php';
  */
 class Inventory_PopulateTestDWUpToDate extends Inventory_PopulateTest
 {
-
     /**
      * Populate a specific environment.
      *
@@ -21,10 +20,6 @@ class Inventory_PopulateTestDWUpToDate extends Inventory_PopulateTest
      */
     public function populateEnvironment($environment)
     {
-        // Initalisation Unit.
-        $populateUnit = new Unit_Populate();
-        $populateUnit->initUnitEntityManager($environment);
-
         // Classif.
         $populateClassif = new Classif_PopulateTestDWUpToDate();
         $populateClassif->runEnvironment($environment);
@@ -32,10 +27,5 @@ class Inventory_PopulateTestDWUpToDate extends Inventory_PopulateTest
         // Orga.
         $populateOrga = new Orga_PopulateTestDWUpToDate();
         $populateOrga->runEnvironment($environment);
-
-        // Fermeture Unit.
-        $populateUnit = new Unit_Populate();
-        $populateUnit->resetUnitEntityManager();
     }
-
 }

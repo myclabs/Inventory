@@ -20,8 +20,7 @@ class Unit_Script_Populate_UnitSystem
     public function run()
     {
         $this->generateUnitSystem();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['unit']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -42,8 +41,6 @@ class Unit_Script_Populate_UnitSystem
      */
     protected function parseUnitSystem(DOMElement $element)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         $unitSystem = new UnitSystem();
         $unitSystem->setRef($element->getAttribute('ref'));
 
@@ -59,7 +56,7 @@ class Unit_Script_Populate_UnitSystem
             $unitSystem->setTranslationLocale(Core_Locale::load($lang));
             $unitSystem->setName($value);
             $unitSystem->save();
-            $entityManagers['unit']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 }

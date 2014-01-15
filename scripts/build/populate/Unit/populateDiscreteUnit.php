@@ -19,8 +19,7 @@ class Unit_Script_Populate_DiscreteUnit
     public function run()
     {
         $this->generateDiscretesUnits();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['unit']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 
     /**
@@ -41,8 +40,6 @@ class Unit_Script_Populate_DiscreteUnit
      */
     protected function parseDiscreteUnit(DOMElement $element)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
         $discreteUnit = new DiscreteUnit();
         $discreteUnit->setRef($element->getAttribute('ref'));
 
@@ -58,7 +55,7 @@ class Unit_Script_Populate_DiscreteUnit
             $discreteUnit->setName($value);
             $discreteUnit->setSymbol($value);
             $discreteUnit->save();
-            $entityManagers['unit']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 

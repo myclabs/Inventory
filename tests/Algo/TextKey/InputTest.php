@@ -1,29 +1,20 @@
 <?php
-/**
- * @author matthieu.napoli
- * @author yoann.croizer
- * @author hugo.charbonnier
- * @package Algo
- */
 
-/**
- * Creation of the Test Suite.
- */
-class TextKey_InputTest
+namespace Tests\Algo\TextKey;
+
+use Algo_Model_Algo;
+use Algo_Model_Input_String;
+use Algo_Model_InputSet;
+use Algo_Model_Selection_TextKey_Input;
+use Algo_Model_Set;
+use Classif_Model_Context;
+use Core\Test\TestCase;
+use Core_Tools;
+use Doctrine\ORM\UnitOfWork;
+
+class InputTest extends TestCase
 {
     /**
-     * Creation of the test suite
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('TextKey_InputSetUpTest');
-        $suite->addTestSuite('TextKey_InputLogiqueMetierTest');
-        return $suite;
-    }
-
-    /**
-     * Génere un objet dérivé prêt à l'emploi pour les tests.
      * @return Algo_Model_Selection_TextKey_Input
      */
     public static function generateObject()
@@ -37,43 +28,22 @@ class TextKey_InputTest
 
         $o->setSet($set);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
         return $o;
     }
 
     /**
-     * Supprime un objet utilisé dans les tests
      * @param Algo_Model_Selection_TextKey_Input $o
      */
     public static function deleteObject(Algo_Model_Selection_TextKey_Input $o)
     {
         $o->delete();
         $o->getSet()->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
     }
-}
 
-/**
- * TextKey_InputSetUpTest
- * @package Algo
- */
-class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
-{
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
     public static function setUpBeforeClass()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
-        // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (Algo_Model_Set::loadList() as $o) {
             $o->delete();
         }
@@ -83,22 +53,9 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
         foreach (Classif_Model_Context::loadList() as $o) {
             $o->delete();
         }
-        $entityManager->flush();
+        self::getEntityManager()->flush();
     }
 
-    /**
-     * Set up
-     */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-
-    /**
-     * @return Algo_Model_Selection_TextKey_Input $o
-     */
     public function testConstruct()
     {
         $set = new Algo_Model_Set();
@@ -127,7 +84,7 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
         /** @var $oLoaded Algo_Model_Selection_TextKey_Input */
         $oLoaded = Algo_Model_Selection_TextKey_Input::load($o->getKey());
 
-        $this->assertInstanceOf('Algo_Model_Selection_TextKey_Input', $oLoaded);
+        $this->assertInstanceOf(Algo_Model_Selection_TextKey_Input::class, $oLoaded);
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getKey(), $oLoaded->getKey());
         $this->assertEquals($o->getSet()->getKey(), $oLoaded->getSet()->getKey());
@@ -143,37 +100,27 @@ class TextKey_InputSetUpTest extends PHPUnit_Framework_TestCase
         $o->delete();
         $o->getSet()->delete();
         $this->assertEquals(
-            \Doctrine\ORM\UnitOfWork::STATE_REMOVED,
+            UnitOfWork::STATE_REMOVED,
             $this->entityManager->getUnitOfWork()->getEntityState($o)
         );
         $this->entityManager->flush();
         $this->assertEquals(
-            \Doctrine\ORM\UnitOfWork::STATE_NEW,
+            UnitOfWork::STATE_NEW,
             $this->entityManager->getUnitOfWork()->getEntityState($o)
         );
     }
-}
 
-
-/**
- * TextKey_InputLogiqueMetierTest
- */
-class TextKey_InputLogiqueMetierTest extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Test de la méthode execute()
-     */
     public function testExecute1()
     {
         $algoTextKeyInput = new Algo_Model_Selection_TextKey_Input();
         $algoTextKeyInput->setInputRef('myInput');
 
-        $input = $this->getMockForAbstractClass('Algo_Model_Input_String');
+        $input = $this->getMockForAbstractClass(Algo_Model_Input_String::class);
         $input->expects($this->once())
             ->method('getValue')
             ->will($this->returnValue('Valeur'));
 
-        $inputSet = $this->getMockForAbstractClass('Algo_Model_InputSet');
+        $inputSet = $this->getMockForAbstractClass(Algo_Model_InputSet::class);
         $inputSet->expects($this->once())
             ->method('getInputByRef')
             ->with('myInput')
@@ -187,14 +134,14 @@ class TextKey_InputLogiqueMetierTest extends PHPUnit_Framework_TestCase
 
     /**
      * Input non trouvé
-     * @expectedException Core_Exception_NotFound
+     * @expectedException \Core_Exception_NotFound
      */
     public function testExecute2()
     {
         $algoTextKeyInput = new Algo_Model_Selection_TextKey_Input();
         $algoTextKeyInput->setInputRef('myInput');
 
-        $inputSet = $this->getMockForAbstractClass('Algo_Model_InputSet');
+        $inputSet = $this->getMockForAbstractClass(Algo_Model_InputSet::class);
         $inputSet->expects($this->once())
             ->method('getInputByRef')
             ->with('myInput')

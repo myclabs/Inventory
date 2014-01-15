@@ -229,11 +229,8 @@ class Orga_Test_ACL extends TestCase
 
     public static function setUpBeforeClass()
     {
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
-
         /** @var Core_EventDispatcher $eventDispatcher */
-        $eventDispatcher = $container->get('Core_EventDispatcher');
+        $eventDispatcher = \Core\ContainerSingleton::getContainer()->get('Core_EventDispatcher');
         $eventDispatcher->addListener('Orga_Model_GranularityReport', 'DW_Model_Report');
     }
 

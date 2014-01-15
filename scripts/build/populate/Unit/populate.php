@@ -1,9 +1,4 @@
 <?php
-/**
- * @package Unit
- */
-use Unit\Domain\Unit\Unit;
-use Unit\Domain\PhysicalQuantity;
 
 require_once 'populatePhysicalQuantities.php';
 require_once 'populateStandardUnit.php';
@@ -12,9 +7,6 @@ require_once 'populateDiscreteUnit.php';
 require_once 'populateExtendedUnit.php';
 require_once 'populateExtension.php';
 
-/**
- * @package Unit
- */
 class Unit_Populate extends Core_Script_Populate
 {
     /**
@@ -26,8 +18,6 @@ class Unit_Populate extends Core_Script_Populate
      */
     public function populateEnvironment($environment)
     {
-        $this->initUnitEntityManager($environment);
-
         echo PHP_EOL.'\-- Script de création des Units pour '.$environment.' -->'.PHP_EOL;
 
         $unitSystems = new Unit_Script_Populate_UnitSystem();
@@ -59,62 +49,5 @@ class Unit_Populate extends Core_Script_Populate
         echo PHP_EOL."\t\t".' ..ExtendedUnits created !'.PHP_EOL;
 
         echo PHP_EOL."\t".'--> Script de création des Units --\\'.PHP_EOL;
-
-        $this->resetUnitEntityManager($environment);
-    }
-
-    /**
-     * Initialise la connection et l'EntityManager de Unit.
-     * @param string $environment
-     */
-    public function initUnitEntityManager($environment)
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-
-        // Récupération de la configuration de la connexion dans l'application.ini
-        $config = new Zend_Config_Ini(APPLICATION_PATH.'/configs/application.ini', $environment);
-        $doctrineConnectionSettings = $config->doctrine;
-        // Si présents on utilise les paramètres spécifiques à Unit, sinon l'EntityManager par défaut.
-        if (isset($doctrineConnectionSettings->unit)) {
-            $unitConnectionSettings = $doctrineConnectionSettings->unit->connection;
-            $unitConnectionArray = array(
-                    'driver'    => $unitConnectionSettings->driver,
-                    'user'      => $unitConnectionSettings->user,
-                    'password'  => $unitConnectionSettings->password,
-                    'dbname'    => $unitConnectionSettings->dbname,
-                    'host'      => $unitConnectionSettings->host,
-                    'driverOptions' => array(
-                            1002 =>'SET NAMES utf8'
-                        ),
-            );
-
-            // Création de l'EntityManager depuis la configuration de doctrine.
-            /* @var $doctrineConfig Doctrine\ORM\Configuration */
-            $doctrineConfig = Zend_Registry::get('doctrineConfiguration');
-            // Création de l'EntityManager spécifique.
-            $unitEntityManager = Doctrine\ORM\EntityManager::create($unitConnectionArray, $doctrineConfig);
-        } else {
-            // Utilisation de l'EntityManager par défaut.
-            $unitEntityManager = $entityManagers['default'];
-        }
-        // Ajout de l'EntityManager au tableau.
-        $entityManagers['unit'] = $unitEntityManager;
-        Zend_Registry::set('EntityManagers', $entityManagers);
-
-        // Désignation des PoolName spécifique à UI.
-        //  Les Objets du sous-package Unit utilisent le PoolsNames de Unit.
-        Unit::setActivePoolName('unit');
-        PhysicalQuantity::setActivePoolName('unit');
-    }
-
-    /**
-     * Reset la connection et l'EntityManager de Unit.
-     */
-    public function resetUnitEntityManager()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['unit']->close();
-        unset($entityManagers['unit']);
-        Zend_Registry::set('EntityManagers', $entityManagers);
     }
 }

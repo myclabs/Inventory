@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Gedmo\Translatable\TranslatableListener;
 
 /**
  * Classe du controller du datagrid des traductions des Reports de DW issus des Granularity.
@@ -16,13 +17,16 @@ use Core\Annotation\Secure;
 class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller_Datagrid
 {
     /**
-     * Désativation du fallback des traduction
+     * @Inject
+     * @var TranslatableListener
      */
-    public function init()
-    {
-        parent::init();
-        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
-    }
+    private $translatableListener;
+
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -31,6 +35,7 @@ class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller
      */
     public function getelementsAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         $this->request->filter->addCondition(
             DW_Model_Report::QUERY_CUBE,
@@ -42,7 +47,7 @@ class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller
             $data['index'] = $report->getKey()['id'];
             $data['identifier'] = $report->getKey()['id'];
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $report->reloadWithLocale($locale);
                 $data[$language] = $report->getLabel();
@@ -61,6 +66,7 @@ class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller
      */
     public function updateelementAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $report = DW_Model_Report::load($this->update['index']);
         $report->reloadWithLocale(Core_Locale::load($this->update['column']));
         $report->setLabel($this->update['value']);

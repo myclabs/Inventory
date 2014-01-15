@@ -1,7 +1,0 @@
-[production]
-
-[test : production]
-
-[developpement : test]
-
-[testsunitaires : test]

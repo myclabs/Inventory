@@ -74,9 +74,7 @@ class Unit_Test_UnitAPITest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var \Doctrine\ORM\EntityManager $em */
-        $em = $entityManagers['default'];
+        $em = \Core\ContainerSingleton::getEntityManager();
 
         if (Unit::countTotal() > 0) {
             foreach (Unit::loadList() as $unit) {
@@ -491,9 +489,7 @@ class Unit_Test_UnitAPITest extends TestCase
      */
     public static function tearDownAfterClass()
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var \Doctrine\ORM\EntityManager $em */
-        $em = $entityManagers['default'];
+        $em = \Core\ContainerSingleton::getEntityManager();
 
         if (Unit::countTotal() > 0) {
             echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';

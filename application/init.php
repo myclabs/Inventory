@@ -25,7 +25,7 @@ require_once PACKAGE_PATH . '/vendor/autoload.php';
 
 // Config
 $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
-$configShared = new Zend_Config_Ini(APPLICATION_PATH . '/configs/shared.ini', APPLICATION_ENV, true);
+$configShared = new Zend_Config_Ini(APPLICATION_PATH . '/configs/zf-config.ini', APPLICATION_ENV, true);
 $configShared->merge($config);
 $configShared->setReadOnly();
 
