@@ -305,7 +305,14 @@ class Orga_OrganizationController extends Core_Controller
         }
 
         // Tab Members.
-        if ($isUserAllowedToEditCells) {
+        $canUserEditMembers = $isUserAllowedToEditCells;
+        if (!$isUserAllowedToEditOrganization) {
+            $axesCanEdit = $this->aclManager->getAxesCanEdit($connectedUser, $organization);
+            if (count($axesCanEdit) === 0) {
+                $canUserEditMembers = false;
+            }
+        }
+        if ($canUserEditMembers) {
             $membersTab = new UI_Tab('members');
             $membersTab->label = __('UI', 'name', 'elements');
             $membersTab->dataSource = 'orga/member/manage'.$parameters;
@@ -323,7 +330,19 @@ class Orga_OrganizationController extends Core_Controller
         }
 
         // Tab Relevant.
-        if ($isUserAllowedToEditCells) {
+        $canUserEditRelevance = $isUserAllowedToEditCells;
+        if (!$isUserAllowedToEditOrganization) {
+            $relevanceGranularities = [];
+            foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
+                if ($granularity->getCellsControlRelevance()) {
+                    $relevanceGranularities[] = $granularity;
+                }
+            }
+            if (count($relevanceGranularities) === 0) {
+                $canUserEditRelevance = false;
+            }
+        }
+        if ($canUserEditRelevance) {
             $relevanceTab = new UI_Tab('relevance');
             $relevanceTab->label = __('Orga', 'cellRelevance', 'relevance');
             $relevanceTab->dataSource = 'orga/organization/edit-relevance'.$parameters;
@@ -332,20 +351,20 @@ class Orga_OrganizationController extends Core_Controller
         }
 
         // Tab AFConfiguration.
-        if ($isUserAllowedToEditCells) {
+        if ($isUserAllowedToEditOrganization) {
             $afTab = new UI_Tab('afs');
             $afTab->label = __('UI', 'name', 'forms');
             $afTab->dataSource = 'orga/organization/edit-afs'.$parameters;
-            $afTab->useCache = !$isUserAllowedToEditOrganization;
+            $afTab->useCache = false;
             $tabView->addTab($afTab);
         }
 
         // Tab DW
-        if ($isUserAllowedToEditCells) {
+        if ($isUserAllowedToEditOrganization) {
             $dwTab = new UI_Tab('reports');
             $dwTab->label = __('DW', 'name', 'analyses');
             $dwTab->dataSource = 'orga/organization/edit-reports'.$parameters;
-            $dwTab->useCache = !$isUserAllowedToEditOrganization;
+            $dwTab->useCache = false;
             $tabView->addTab($dwTab);
         }
 
@@ -361,7 +380,13 @@ class Orga_OrganizationController extends Core_Controller
         $activeTab = $this->hasParam('tab') ? $this->getParam('tab') : 'organization';
         $editOrganizationTabs = ['organization', 'axes', 'granularities', 'consistency'];
         if (!$isUserAllowedToEditOrganization && in_array($activeTab, $editOrganizationTabs)) {
-            $activeTab = 'members';
+            $activeTab = 'default';
+            if ($canUserEditRelevance) {
+                $activeTab = 'relevance';
+            }
+            if ($canUserEditMembers) {
+                $activeTab = 'members';
+            }
         }
         switch ($activeTab) {
             case 'organization':
@@ -464,33 +489,6 @@ class Orga_OrganizationController extends Core_Controller
     }
 
     /**
-     * @param array|Orga_Model_Granularity[] $granularities
-     * @param User $user
-     *
-     * @return Orga_Model_Granularity[]
-     */
-    protected function getGranularitiesUserCanEdit(array $granularities, User $user)
-    {
-        /** @var Orga_Model_Granularity[] $granularitiesCanEdit */
-        $granularitiesCanEdit = [];
-
-        foreach ($granularities as $granularity) {
-            $aclCellQuery = new Core_Model_Query();
-            $aclCellQuery->aclFilter->enabled = true;
-            $aclCellQuery->aclFilter->user = $user;
-            $aclCellQuery->aclFilter->action = Action::EDIT();
-            $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
-
-            $numberCellsUserCanEdit = Orga_Model_Cell::countTotal($aclCellQuery);
-            if ($numberCellsUserCanEdit > 0) {
-                $granularitiesCanEdit[] = $granularity;
-            }
-        }
-
-        return $granularitiesCanEdit;
-    }
-
-    /**
      * @param Orga_Model_Organization $organization
      *
      * @throws Core_Exception_User
@@ -533,19 +531,17 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign('organization', $organization);
 
-        $criteriaRelevance = new Criteria();
-        $criteriaRelevance->where($criteriaRelevance->expr()->eq('cellsControlRelevance', true));
-        $relevanceGranularities = $organization->getOrderedGranularities()->matching($criteriaRelevance)->toArray();
-
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
             Action::EDIT(),
             $organization
         );
         $this->view->assign('isUserAllowedToEditOrganization', $isUserAllowedToEditOrganization);
-
-        if (!$isUserAllowedToEditOrganization) {
-            $relevanceGranularities = $this->getGranularitiesUserCanEdit($relevanceGranularities, $connectedUser);
+        $relevanceGranularities = [];
+        foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
+            if ($granularity->getCellsControlRelevance()) {
+                $relevanceGranularities[] = $granularity;
+            }
         }
         $this->view->assign('granularities', $relevanceGranularities);
 
@@ -602,44 +598,16 @@ class Orga_OrganizationController extends Core_Controller
     }
 
     /**
-     * @Secure("editOrganizationAndCells")
+     * @Secure("editOrganization")
      */
     public function editAfsAction()
     {
-        /** @var User $connectedUser */
-        $connectedUser = $this->_helper->auth();
-
         $idOrganization = $this->getParam('idOrganization');
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $this->view->assign('organization', $organization);
-
-        $inputGranularities = $organization->getInputGranularities();
-
-        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
-            $connectedUser,
-            Action::EDIT(),
-            $organization
-        );
-        $this->view->assign('isUserAllowedToEditOrganization', $isUserAllowedToEditOrganization);
-
-        if (!$isUserAllowedToEditOrganization) {
-            /** @var Orga_Model_Granularity[] $inputConfigGranularities */
-            $configGranularities = [];
-            foreach ($inputGranularities as $inputGranularity) {
-                $configGranularities[] = $inputGranularity->getInputConfigGranularity();
-            }
-            $configGranularities = $this->getGranularitiesUserCanEdit($configGranularities, $connectedUser);
-
-            $inputGranularities = [];
-            foreach ($organization->getInputGranularities() as $inputGranularity) {
-                if (in_array($inputGranularity->getInputConfigGranularity(), $configGranularities)) {
-                    $inputGranularities[] = $inputGranularity;
-                }
-            }
-        }
-        $this->view->assign('granularities', $inputGranularities);
+        $this->view->assign('granularities', $organization->getInputGranularities());
 
         $afs = [];
         /** @var AF_Model_AF $af */
@@ -726,33 +694,18 @@ class Orga_OrganizationController extends Core_Controller
     }
 
     /**
-     * @Secure("editOrganizationAndCells")
+     * @Secure("editOrganization")
      */
     public function editReportsAction()
     {
-        /** @var User $connectedUser */
-        $connectedUser = $this->_helper->auth();
-
         $idOrganization = $this->getParam('idOrganization');
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $this->view->assign('organization', $organization);
-
         $criteriaReports = new Criteria();
         $criteriaReports->where($criteriaReports->expr()->eq('cellsGenerateDWCubes', true));
         $reportsGranularities = $organization->getOrderedGranularities()->matching($criteriaReports)->toArray();
-
-        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
-            $connectedUser,
-            Action::EDIT(),
-            $organization
-        );
-        $this->view->assign('isUserAllowedToEditOrganization', $isUserAllowedToEditOrganization);
-
-        if (!$isUserAllowedToEditOrganization) {
-            $reportsGranularities = $this->getGranularitiesUserCanEdit($reportsGranularities, $connectedUser);
-        }
         $this->view->assign('granularities', $reportsGranularities);
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {

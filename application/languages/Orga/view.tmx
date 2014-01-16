@@ -25,6 +25,14 @@
                 <seg> &amp; </seg>
             </tuv>
         </tu>
+        <tu tuid="granularityExplanations">
+            <tuv xml:lang="fr">
+                <seg>Fonctionnalités disponibles à ce niveau</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Features available at this level</seg>
+            </tuv>
+        </tu>
 
         <!-- Lien d'accès à la saisie -->
 
@@ -133,6 +141,14 @@
 
         <!-- Suivi des collectes -->
 
+        <tu tuid="inventoryStatusExplanations">
+            <tuv xml:lang="fr">
+                <seg>Statut de la collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection status</seg>
+            </tuv>
+        </tu>
         <tu tuid="inventoryPercentExplanations">
             <tuv xml:lang="fr">
                 <seg>Avancement de la collecte (pourcentage de saisies terminées)</seg>
@@ -141,10 +157,58 @@
                 <seg>Collection progress (finished inputs percentage)</seg>
             </tuv>
         </tu>
+        <tu tuid="inventoryNotLaunched">
+            <tuv xml:lang="fr">
+                <seg>Collecte non lancée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection not launched</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryOpen">
+            <tuv xml:lang="fr">
+                <seg>Collecte en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection in progress</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosed">
+            <tuv xml:lang="fr">
+                <seg>Collecte fermée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection closed</seg>
+            </tuv>
+        </tu>
 
-        <!-- Détails du statut des saisies d'un inventaire -->
+        <!-- Détails du statut des saisies -->
 
-        <tu tuid="inventoryPercentExplanations">
+        <tu tuid="statusAFNotConfigured">
+            <tuv xml:lang="fr">
+                <seg>Formulaire absent</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Missing form</seg>
+            </tuv>
+        </tu>
+        <tu tuid="statusNotStarted">
+            <tuv xml:lang="fr">
+                <seg>Saisie non démarrée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input not started</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputStatusExplanations">
+            <tuv xml:lang="fr">
+                <seg>Statut de la saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputPercentExplanations">
             <tuv xml:lang="fr">
                 <seg>Avancement de la saisie (pourcentage de champs obligatoires remplis)</seg>
             </tuv>

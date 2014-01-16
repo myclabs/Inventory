@@ -233,23 +233,6 @@ class Orga_CellController extends Core_Controller
     }
 
     /**
-     * @Secure("viewCell")
-     */
-    public function tableViewAction()
-    {
-        $this->viewAction();
-    }
-
-    /**
-     * @Secure("viewCell")
-     */
-    public function mixitupViewAction()
-    {
-        $this->view->headScript()->appendFile('mixitup/jquery.mixitup.min.js', 'text/javascript');
-        $this->viewAction();
-    }
-
-    /**
      * @param Orga_Model_Axis $axis
      * @param Orga_Model_Cell $cell
      *

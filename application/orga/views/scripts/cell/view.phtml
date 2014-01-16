@@ -19,9 +19,9 @@ $inputStatusFilters = [
     AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
     AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
     AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
-    \Orga\ViewModel\CellViewModel::AF_STATUS_NOT_STARTED => __('AF', 'inputInput', 'statusNotStarted'),
-    \Orga\ViewModel\CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => __('AF', 'inputInput', 'statusAFNotConfigured'),
-    \Orga\ViewModel\CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => __('AF', 'inputInput', 'statusInventoryNotStarted'),
+    \Orga\ViewModel\CellViewModel::AF_STATUS_NOT_STARTED => __('Orga', 'view', 'statusNotStarted'),
+    \Orga\ViewModel\CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => __('Orga', 'view', 'statusAFNotConfigured'),
+    \Orga\ViewModel\CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => __('Orga', 'view', 'inventoryNotLaunched'),
 ];
 
 /** @var \Orga\ViewModel\OrganizationViewModel $organization */
@@ -63,7 +63,8 @@ $currentCell = $this->currentCell;
 
     .inventory-status .label { font-size: 11.9px; font-weight: normal; padding: 4px 12px; }
     .inventory-status > a { margin: 0 5px; }
-    .input-status .badge { font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
+    .input-status .badge { font-size: 11.9px; font-weight: normal; line-height: nomal; padding: 4px 12px; }
+    .input-status > a { margin: 0 5px; }
 
     .granularity-wrapper .cells-filter > * { margin-top: 2px; }
     .granularity-wrapper .cells-filter .granularity-info { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
@@ -111,16 +112,6 @@ $currentCell = $this->currentCell;
             </small>
         </div>
         <?php endif; ?>
-        <!-- Temporaire, pour la démo et le choix des vues -->
-        <div class="pull-right" style="margin: 0 25px;">
-            <small>
-                <a class="btn btn-small btn-info"
-                   href="orga/cell/table-view/idCell/<?=$currentCell->id?>/">
-                    <i class="fa fa-exclamation"></i>
-                    Cellules table
-                </a>
-            </small>
-        </div>
     </h1>
 </div>
 
@@ -142,9 +133,9 @@ $currentCell = $this->currentCell;
             </a>
             <?php endif; ?>
             <small class="cell-actions">
-                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'role', 'cellAdministrators')?>" class="withTooltip"><i class="fa fa-envelope"></i></a>
+                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'role', 'cellAdministrators')?>" class="withTooltip"><i class="fa fa-user-md"></i></a>
                 <?php if ($currentCell->showUsers) : ?>
-                <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('User', 'user', 'users')?>" class="withTooltip"><i class="fa fa-user"></i></a>
+                <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('User', 'user', 'users')?>" class="withTooltip"><i class="fa fa-users"></i></a>
                 <?php endif; ?>
                 <?php if ($currentCell->showReports) : ?>
                 <a data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=__('DW', 'name', 'analyses')?>" class="withTooltip"><i class="fa fa-bar-chart-o"></i></a>
@@ -155,9 +146,8 @@ $currentCell = $this->currentCell;
         <?php // Inventory ?>
         <?php if ($currentCell->showInventory) : ?>
         <div class="inventory-status">
-            <b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>
             <?php if ($currentCell->canEditInventory) : ?>
-            <div class="btn-group">
+            <div class="btn-group withTooltip" title="<?=__('Orga', 'view', 'inventoryStatusExplanations')?>">
                 <button class="btn btn-small dropdown-toggle btn-<?=$currentCell->inventoryStatusStyle?>" data-toggle="dropdown" data-inventory="<?=$currentCell->inventoryStatus?>">
                     <i class="fa fa-pencil-square-o"></i>
                     <?=$currentCell->inventoryStatusTitle?>
@@ -174,12 +164,12 @@ $currentCell = $this->currentCell;
                 </ul>
             </div>
             <?php else: ?>
-            <span class="label label-<?=$currentCell->inventoryStatusStyle?>">
+            <span class="label label-<?=$currentCell->inventoryStatusStyle?> withTooltip" title="<?=__('Orga', 'view', 'inventoryStatusExplanations')?>">
                 <?=$currentCell->inventoryStatusTitle?>
             </span>
             <?php endif; ?>
-            <a data-toggle="modal" href="#inventoryUsers<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip"><i class="fa fa-users"></i></a>
-            <a href="#" class="withPopover inventoryInputsDetails" title="<?=__('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="right" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsNotStartedMany') : __('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsStartedMany') : __('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? __('Orga', 'view', 'inputsCompletedMany') : __('Orga', 'view', 'inputsCompletedSingle')?>"><i class="fa fa-info-circle"></i></a>
+            <a href="#" class="withPopover inventoryInputsDetails" title="<?=__('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="right" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsNotStartedMany') : __('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? __('Orga', 'view', 'inputsStartedMany') : __('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? __('Orga', 'view', 'inputsCompletedMany') : __('Orga', 'view', 'inputsCompletedSingle')?>"><i class="fa fa-tasks"></i></a>
+            <a data-toggle="modal" href="#inventoryUsers<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip"><i class="fa fa-bullhorn"></i></a>
         </div>
         <div class="progress withTooltip" title="<?=__('Orga', 'view', 'inventoryPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">
             <div class="bar" style="width: <?=$currentCell->inventoryCompletion?>%">
@@ -190,8 +180,7 @@ $currentCell = $this->currentCell;
         <?php // Input ?>
         <?php if ($currentCell->showInput) : ?>
         <div class="input-status">
-            <b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>
-            <span class="badge badge-<?=$currentCell->inputStatusStyle?>">
+            <span class="badge badge-<?=$currentCell->inputStatusStyle?> withTooltip" title="<?=__('Orga', 'view', 'inputStatusExplanations')?>">
                 <?=$currentCell->inputStatusTitle?>
             </span>
         </div>
@@ -280,11 +269,13 @@ $currentCell = $this->currentCell;
     ?>
     <fieldset class="wrapper granularity-wrapper">
         <legend data-toggle="collapse" data-target="#granularity<?=$narrowerGranularity->getId()?>">
-            <i class="filterChevron fa fa-chevron-<?=((count($this->narrowerGranularities) === 1)?'down':'right')?>"></i>
-            <?=$narrowerGranularityArray['purpose']?>
-            <small>
-                <?=$narrowerGranularity->getLabel()?>
-            </small>
+            <span class="withTooltip" title="<?=__('Orga', 'view', 'granularityExplanations')?>" data-placement="right">
+                <i class="filterChevron fa fa-chevron-<?=((count($this->narrowerGranularities) === 1)?'down':'right')?>"></i>
+                <?=$narrowerGranularityArray['purpose']?>
+                <small>
+                    <?=$narrowerGranularity->getLabel()?>
+                </small>
+            </span>
         </legend>
 
         <div id="granularity<?=$narrowerGranularity->getId()?>"
@@ -453,14 +444,14 @@ $('.history a.refresh').on('click', function(e) {
 
 $('.granularity-wrapper > div').on('show', function(e) {
     if (e.currentTarget == e.target) {
-        $('legend > i.filterChevron', $(this).parent()).removeClass('fa-chevron-right');
-        $('legend > i.filterChevron', $(this).parent()).addClass('fa-chevron-down');
+        $('legend > span > i.filterChevron', $(this).parent()).removeClass('fa-chevron-right');
+        $('legend > span > i.filterChevron', $(this).parent()).addClass('fa-chevron-down');
     }
 });
 $('.granularity-wrapper > div').on('hidden', function(e) {
     if (e.currentTarget == e.target) {
-        $('legend > i.filterChevron', $(this).parent()).removeClass('fa-chevron-down');
-        $('legend > i.filterChevron', $(this).parent()).addClass('fa-chevron-right');
+        $('legend > span > i.filterChevron', $(this).parent()).removeClass('fa-chevron-down');
+        $('legend > span > i.filterChevron', $(this).parent()).addClass('fa-chevron-right');
     }
 });
 
@@ -498,7 +489,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     if (this.showUsers) {
                         usersP +=
                             '<a data-toggle="modal" href="#users' + this.id + '" title="<?=__('User', 'user', 'users')?>" class="withTooltip">' +
-                                '<i class="fa fa-user"></i>' +
+                                '<i class="fa fa-users"></i>' +
                             '</a>';
                         usersPopup +=
                             '<div id="users' + this.id + '" class="modal users hide fade large" data-cell="' + this.id + '">' +
@@ -568,11 +559,10 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var inventoryPopup = '';
                     if (this.showInventory) {
                         inventoryP +=
-                            '<div class="inventory-status">' +
-                                '<b><?=__('Orga', 'inventory', 'inventoryStatus')?>&nbsp;:&nbsp;</b>';
+                            '<div class="inventory-status">';
                         if (this.canEditInventory) {
                             inventoryP +=
-                                '<div class="btn-group">' +
+                                '<div class="btn-group withTooltip" title="<?=__('Orga', 'view', 'inventoryStatusExplanations')?>">' +
                                     '<button class="btn btn-small dropdown-toggle btn-' + this.inventoryStatusStyle + '" data-toggle="dropdown" data-inventory="' + this.inventoryStatus + '">' +
                                         '<i class="fa fa-pencil-square-o"></i> ' +
                                         this.inventoryStatusTitle +
@@ -590,14 +580,11 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                 '</div>';
                         } else {
                             inventoryP +=
-                                '<span class="label label-' + this.inventoryStatusStyle + '">' +
+                                '<span class="label label-' + this.inventoryStatusStyle + ' withTooltip" title="<?=__('Orga', 'view', 'inventoryStatusExplanations')?>">' +
                                     this.inventoryStatusTitle +
                                 '</span>';
                         }
                         inventoryP +=
-                                '<a data-toggle="modal" href="#inventoryUsers' + this.id + '" title="<?=__('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip">' +
-                                    '<i class="fa fa-users"></i>' +
-                                '</a>' +
                                 ' <a href="#" class="withPopover inventoryInputsDetails" title="<?=__('Orga', 'view', 'inventoryInputsDetails')?>"' +
                                     'data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true"' +
                                     'data-content="' +
@@ -610,7 +597,10 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                     this.inventoryCompletedInputsNumber + ' ' +
                                     ((this.inventoryCompletedInputsNumber > 1) ? '<?=__('Orga', 'view', 'inputsCompletedMany')?>' : '<?=__('Orga', 'view', 'inputsCompletedSingle')?>') +
                                     '">' +
-                                    '<i class="fa fa-info-circle"></i>' +
+                                    '<i class="fa fa-tasks"></i>' +
+                                '</a>' +
+                                '<a data-toggle="modal" href="#inventoryUsers' + this.id + '" title="<?=__('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip">' +
+                                    '<i class="fa fa-bullhorn"></i>' +
                                 '</a>' +
                             '</div>' +
                             '<div class="progress withTooltip" title="<?=__('Orga', 'view', 'inventoryPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">' +
@@ -630,8 +620,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     if (this.showInput) {
                         inputStatusP =
                             '<div class="input-status">' +
-                                '<b><?=__('Orga', 'input', 'inputStatus')?>&nbsp;:&nbsp;</b>' +
-                                '<span class="badge badge-' + this.inputStatusStyle + '">' +
+                                '<span class="badge badge-' + this.inputStatusStyle + ' withTooltip" title="<?=__('Orga', 'view', 'inputStatusExplanations')?>">' +
                                     this.inputStatusTitle +
                                 '</span>' +
                             '</div>' +
@@ -1046,7 +1035,8 @@ $('body').on('show', '.inventory-users', function(e) {
 
 $('.collapse').on({
     shown: function(e) {
-        if (e.target == this) { $(this).css('overflow','visible');
+        if (e.target == this) {
+            $(this).css('overflow','visible');
         }
     },
     hide: function(e) {

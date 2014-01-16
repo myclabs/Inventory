@@ -49,12 +49,12 @@ class CellViewModelFactory
         $this->aclService = $aclService;
 
         $this->inventoryStatusList = [
-            Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
-            Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
-            Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed')
+            Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'view', 'inventoryNotLaunched'),
+            Orga_Model_Cell::STATUS_ACTIVE => __('Orga', 'view', 'inventoryOpen'),
+            Orga_Model_Cell::STATUS_CLOSED => __('Orga', 'view', 'inventoryClosed')
         ];
         $this->inventoryStatusStyles = [
-            Orga_Model_Cell::STATUS_NOTLAUNCHED => 'inverse',
+            Orga_Model_Cell::STATUS_NOTLAUNCHED => 'info',
             Orga_Model_Cell::STATUS_ACTIVE => 'info',
             Orga_Model_Cell::STATUS_CLOSED => 'info'
         ];
@@ -63,9 +63,9 @@ class CellViewModelFactory
             AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
             AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
             AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
-            CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => __('AF', 'inputInput', 'statusInventoryNotStarted'),
-            CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => __('AF', 'inputInput', 'statusAFNotConfigured'),
-            CellViewModel::AF_STATUS_NOT_STARTED => __('AF', 'inputInput', 'statusNotStarted'),
+            CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => __('Orga', 'view', 'inventoryNotLaunched'),
+            CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => __('Orga', 'view', 'statusAFNotConfigured'),
+            CellViewModel::AF_STATUS_NOT_STARTED => __('Orga', 'view', 'statusNotStarted'),
         ];
         $this->inputStatusStyles = [
             AF_Model_InputSet_Primary::STATUS_FINISHED => 'success',

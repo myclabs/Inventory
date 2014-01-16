@@ -1,6 +1,6 @@
 <?php
 
-foreach ($this->granularities as $granularity) {
+foreach ($this->granularities as $granularity) :
     /** @var $granularity Orga_Model_Granularity */
 
     $datagridGranularityReports = new UI_Datagrid(
@@ -38,27 +38,26 @@ foreach ($this->granularities as $granularity) {
     $script .= '}';
     $script .= '});';
 
-    if ($this->display === false) {
+    if ($this->display === false) :
         echo '<script type="text/javascript">'.$datagridGranularityReports->getScript().$script.'</script>';
-    } else {
+    else :
         UI_Datagrid::addHeader($datagridGranularityReports);
         $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
-    }
-}
+    endif;
+endforeach;
 
-if ($this->isUserAllowedToEditOrganization) {
-    if (count($this->granularities) > 0) {
-        echo '<hr>';
-    }
-    echo $this->partial(
-        'granularity/add.phtml',
-        [
-            'organization' => $this->organization,
-            'purpose' => 'reports',
-            'complementaryFields' => ''
-        ]
-    );
-    if ($this->display === true) {
+if (count($this->granularities) > 0) :
+    echo '<hr>';
+endif;
+echo $this->partial(
+    'granularity/add.phtml',
+    [
+        'organization' => $this->organization,
+        'purpose' => 'reports',
+        'complementaryFields' => ''
+    ]
+);
+if ($this->display === true) :
 ?>
 <script>
     $('#addGranularity<?=$this->organization->getId()?>_reports').on('granularityAdded', function(e) {
@@ -66,8 +65,7 @@ if ($this->isUserAllowedToEditOrganization) {
     });
 </script>
 <?php
-    }
-}
+endif;
 ?>
 
 <fieldset class="wrapper">
@@ -140,7 +138,6 @@ if ($this->isUserAllowedToEditOrganization) {
 </div>
 </fieldset>
 
-<?php if ($this->isUserAllowedToEditOrganization) : ?>
 <fieldset class="wrapper">
     <legend style="cursor: default"><?=__('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
     <p><?=__('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
@@ -163,4 +160,3 @@ if ($this->isUserAllowedToEditOrganization) {
         });
     </script>
 </fieldset>
-<?php endif; ?>
