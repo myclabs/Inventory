@@ -71,6 +71,7 @@ $currentCell = $this->currentCell;
     .granularity-wrapper .granularity .cell-actions { float: right; }
     .granularity-wrapper .granularity > .cell.firstRowCell { margin-left: 0; }
     .granularity-wrapper .display-more-cells { margin-left: 0; }
+    .granularity-wrapper .no-cell { margin-left: 0; text-align: center; vertical-align: middle; padding: 8px 12px; font-size: 14px; font-weight: normal; }
 
     .history { margin-bottom: 15px; }
     .history > h3 { margin: 0; }
@@ -688,6 +689,7 @@ $('.cells-filter').on('filterCells', function(e) {
     e.preventDefault();
     var form = $(this);
     var granularity = $('.granularity', form.parent());
+    $('.no-cell', granularity).remove();
 
     $('.cell', granularity).addClass('hide').removeClass('firstRowCell').removeAttr('data-filtered');
 
@@ -707,6 +709,9 @@ $('.cells-filter').on('filterCells', function(e) {
     $('.cell' + test, granularity).attr('data-filtered', '');
     var granularityInfo = $('.granularity-info', form);
     granularityInfo.html($('.cell' + test, granularity).length + ' / ' + granularity.attr('data-total-cells'));
+    if ($('.cell' + test, granularity).length == 0) {
+        granularity.append('<div class="no-cell span"><?=__('Orga', 'view', 'filterNoResult')?></div>');
+    }
 
     granularity.trigger('showCells');
 });
@@ -739,7 +744,7 @@ $('div.collapse[id^="granularity"]').on('showCells', function(e) {
 
     if ($('.cell[data-filtered]', granularity).length > 0) {
         granularity.append(
-            '<div class="btn display-more-cells span firstRowCell">' +
+            '<div class="btn display-more-cells span">' +
                 '<?=__('Orga', 'view', 'display-more-cells')?>' +
             '</div>'
         );

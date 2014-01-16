@@ -87,6 +87,14 @@
                 <seg>Number of filtered elements / total number of elements</seg>
             </tuv>
         </tu>
+        <tu tuid="filterNoResult">
+            <tuv xml:lang="fr">
+                <seg>Aucun résultat ne correspondant au(x) filtre(s) séléctionné(s)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No result matching selected filter(s)</seg>
+            </tuv>
+        </tu>
 
         <!-- Titres des popups -->
 
