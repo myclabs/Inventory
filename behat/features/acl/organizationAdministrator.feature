@@ -15,7 +15,8 @@ Feature: Organization administrator feature
     And I should see "Collectes : Année | Zone | Marque"
   # Accès à l'organisation
     When I click "Workspace avec données"
-    Then I should see "Vue globale Workspace avec données"
+    Then I should see "Workspace avec données"
+    And I should see "Vue globale"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity1Input8" datagrid
   # Accès à l'onglet "Informations générales"
@@ -28,5 +29,3 @@ Feature: Organization administrator feature
     When I open tab "Rôles"
     And I open collapse "Administrateurs de workspace"
     Then I should see the "organizationACL1" datagrid
-
-
