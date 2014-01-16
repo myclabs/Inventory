@@ -13,7 +13,7 @@ Feature: Family general data edit feature
   # Vérification du contenu des différents champs du formulaire "Général"
     And the "Libellé" field should contain "Famille test non vide"
     And the "Identifiant" field should contain "famille_test"
-    And the "Unité" field should contain "kg_co2e.kg^-1"
+    And the "Unité" field should contain "kg_co2e.t^-1"
   # Modifications
     When I fill in "Libellé" with "Famille test modifiée"
     And I fill in "Identifiant" with "famille_test_modifiee"
