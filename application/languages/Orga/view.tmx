@@ -65,10 +65,34 @@
         </tu>
         <tu tuid="allInventoryStatus">
             <tuv xml:lang="fr">
-                <seg>Tous statuts d'inventaire</seg>
+                <seg>Tous statuts de collecte</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>All collection status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunched">
+            <tuv xml:lang="fr">
+                <seg>Collecte non lancée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection not launched</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryOpen">
+            <tuv xml:lang="fr">
+                <seg>Collecte en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection open</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosed">
+            <tuv xml:lang="fr">
+                <seg>Collecte cloturée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection closed</seg>
             </tuv>
         </tu>
         <tu tuid="allMembers">

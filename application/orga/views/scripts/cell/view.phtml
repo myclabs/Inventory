@@ -9,9 +9,9 @@ use Orga\Model\ACL\Role\CellObserverRole;
 $cellVWFactory = $this->cellVWFactory;
 $inventoryStatusFilters = [
     null => __('Orga', 'view', 'allInventoryStatus'),
-    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'inventory', 'notLaunched'),
-    Orga_Model_Cell::STATUS_ACTIVE => __('UI', 'property', 'open'),
-    Orga_Model_Cell::STATUS_CLOSED => __('UI', 'property', 'closed'),
+    Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'view', 'inventoryNotLaunched'),
+    Orga_Model_Cell::STATUS_ACTIVE => __('Orga', 'view', 'inventoryOpen'),
+    Orga_Model_Cell::STATUS_CLOSED => __('Orga', 'view', 'inventoryClosed'),
 ];
 $inputStatusFilters = [
     null => __('Orga', 'view', 'allInputStatus'),
