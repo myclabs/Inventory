@@ -20,6 +20,22 @@
                 <seg>Subform</seg>
             </tuv>
         </tu>
+        <tu tuid="fieldLabel">
+            <tuv xml:lang="fr">
+                <seg>Champ (libellé)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Field (label)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="fieldRef">
+            <tuv xml:lang="fr">
+                <seg>Champ (identifiant)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Field (identifier)</seg>
+            </tuv>
+        </tu>
         <tu tuid="fieldType">
             <tuv xml:lang="fr">
                 <seg>Type de champ</seg>
