@@ -134,13 +134,13 @@ $currentCell = $this->currentCell;
             </a>
             <?php endif; ?>
             <small class="cell-actions">
-                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'role', 'cellAdministrators')?>" class="withTooltip"><i class="fa fa-user-md"></i></a>
+                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'contactAdministrators')?>" class="withTooltip"><i class="fa fa-user-md"></i></a>
                 <?php if ($currentCell->showUsers) : ?>
-                <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('User', 'user', 'users')?>" class="withTooltip"><i class="fa fa-users"></i></a>
+                <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'editUsers')?>" class="withTooltip"><i class="fa fa-users"></i></a>
                 <?php endif; ?>
                 <?php if ($currentCell->showReports) : ?>
-                <a data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=__('DW', 'name', 'analyses')?>" class="withTooltip"><i class="fa fa-bar-chart-o"></i></a>
-                <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=__('UI', 'name', 'exports')?>" class="withTooltip"><i class="fa fa-download"></i></a>
+                <a data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=__('Orga', 'view', 'analyzeData')?>" class="withTooltip"><i class="fa fa-bar-chart-o"></i></a>
+                <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=__('Orga', 'view', 'exportData')?>" class="withTooltip"><i class="fa fa-download"></i></a>
                 <?php endif; ?>
             </small>
         </h2>
@@ -489,7 +489,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var usersPopup = '';
                     if (this.showUsers) {
                         usersP +=
-                            '<a data-toggle="modal" href="#users' + this.id + '" title="<?=__('User', 'user', 'users')?>" class="withTooltip">' +
+                            '<a data-toggle="modal" href="#users' + this.id + '" title="<?=__('Orga', 'view', 'editUsers')?>" class="withTooltip">' +
                                 '<i class="fa fa-users"></i>' +
                             '</a>';
                         usersPopup +=
@@ -518,7 +518,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var reportsPopup = '';
                     if (this.showReports) {
                         reportsP +=
-                            '<a data-toggle="modal" href="#reports' + this.id + '" title="<?=__('DW', 'name', 'analyses')?>" class="withTooltip">' +
+                            '<a data-toggle="modal" href="#reports' + this.id + '" title="<?=__('Orga', 'view', 'analyzeData')?>" class="withTooltip">' +
                                 '<i class="fa fa-bar-chart-o"></i>' +
                             '</a>';
                         reportsPopup +=
@@ -541,7 +541,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var exportsPopup = '';
                     if (this.showExports) {
                         exportsP +=
-                            '<a data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=__('UI', 'name', 'exports')?>" class="withTooltip">' +
+                            '<a data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=__('Orga', 'view', 'exportData')?>" class="withTooltip">' +
                                 '<i class="fa fa-download"></i>' +
                             '</a>';
                         exportsPopup +=
