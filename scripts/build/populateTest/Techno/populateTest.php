@@ -26,31 +26,31 @@ class Techno_PopulateTest extends Techno_Populate
             $categorie_contenant_famille,
             'combustion_combustible_unite_masse',
             'Combustion de combustible, mesuré en unité de masse',
-            'kg_co2e.kg^-1'
+            'kg_co2e.t^-1'
         );
         $family_masse_volumique_combustible = $this->createFamily(
             $categorie_contenant_famille,
             'masse_volumique_combustible',
             'Masse volumique de combustible',
-            'kg.m3^-1'
+            't.m3^-1'
         );
         $family_forfait_emissions_fonction_marque = $this->createFamily(
             $categorie_contenant_famille,
             'forfait_emissions_fonction_marque',
             'Forfait émissions en fonction de la marque',
-            'kg_co2e'
+            't_co2e'
         );
         $family_vide = $this->createFamily(
             $categorie_contenant_famille,
             'famille_test_vide',
             'Famille test vide',
-            'kg'
+            't'
         );
         $family_test = $this->createFamily(
             $sous_categorie_contenant_famille,
             'famille_test_non_vide',
             'Famille test non vide',
-            'kg_co2e.kg^-1',
+            'kg_co2e.t^-1',
             'h1. Documentation de la famille test'
         );
 
