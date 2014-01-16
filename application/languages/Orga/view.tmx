@@ -71,6 +71,14 @@
                 <seg>All elements ([AXIS])</seg>
             </tuv>
         </tu>
+        <tu tuid="ratioNumberFilteredCellsOverTotal">
+            <tuv xml:lang="fr">
+                <seg>Nombre d'éléments filtrés / nombre d'éléments au total</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Number of filtered elements / total number of elements</seg>
+            </tuv>
+        </tu>
 
         <!-- Titres des popups -->
 
@@ -123,8 +131,27 @@
             </tuv>
         </tu>
 
+        <!-- Suivi des collectes -->
+
+        <tu tuid="inventoryPercentExplanations">
+            <tuv xml:lang="fr">
+                <seg>Avancement de la collecte (pourcentage de saisies terminées)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection progress (finished inputs percentage)</seg>
+            </tuv>
+        </tu>
+
         <!-- Détails du statut des saisies d'un inventaire -->
 
+        <tu tuid="inventoryPercentExplanations">
+            <tuv xml:lang="fr">
+                <seg>Avancement de la saisie (pourcentage de champs obligatoires remplis)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input progress (percentage of filled field among required fields)</seg>
+            </tuv>
+        </tu>
         <tu tuid="inventoryInputsDetails">
             <tuv xml:lang="fr">
                 <seg>Statuts des saisies</seg>

@@ -123,7 +123,7 @@ class Orga_CellController extends Core_Controller
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
                 }
-                $purpose .= __('User', 'user', 'userRoles');
+                $purpose .= __('User', 'user', 'users');
             }
             // Inventory purpose.
             $isNarrowerGranularityInventory = (($granularityForInventoryStatus !== null)
