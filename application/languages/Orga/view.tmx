@@ -167,10 +167,10 @@
         </tu>
         <tu tuid="viewInventoryUsers">
             <tuv xml:lang="fr">
-                <seg>Participants à la collecte</seg>
+                <seg>Voir les participants à la collecte</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Users involved in this collection</seg>
+                <seg>See users involved in this collection</seg>
             </tuv>
         </tu>
         <tu tuid="inventoryUsersFrom">
@@ -218,7 +218,7 @@
         </tu>
         <tu tuid="inventoryClosed">
             <tuv xml:lang="fr">
-                <seg>Collecte fermée</seg>
+                <seg>Collecte clôturée</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Collection closed</seg>
