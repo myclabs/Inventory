@@ -32,19 +32,19 @@ Le script va effectuer un build update
 - Exécuter le job de rebuild des exports (long)
 
 ```
-php scripts/job/exports/rebuild.php
+php scripts/jobs/exports/rebuild.php
 ```
 
 - En cas de dépassement de mémoire, ré-exécuter le script avec l'option --no-clear (ou -c)
 
 ```
-php scripts/job/exports/rebuild.php -c
+php scripts/jobs/exports/rebuild.php -c
 ```
 
 - Redémarrer le worker
 
 ```
-sudo supervisiorctl restart XXX-worker
+sudo supervisorctl restart XXX-worker
 ```
 
 
