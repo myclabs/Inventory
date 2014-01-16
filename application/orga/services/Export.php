@@ -661,8 +661,8 @@ function getInputsDetails(AF_Model_Input $input, $path = '')
         $componentLabel = $input->getComponent()->getLabel();
         $componentRef = $input->getComponent()->getRef();
     } else {
-        $componentLabel = __('Orga', 'export', 'unknowComponent', ['COMPONENT' => $input->getRefComponent()]);
-        $componentRef = __('Orga', 'export', 'unknowComponent', ['COMPONENT' => $input->getRefComponent()]);
+        $componentLabel = __('Orga', 'export', 'unknownComponent');
+        $componentRef = __('Orga', 'export', 'unknownComponent');
     }
     if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
         $subInputs = [];

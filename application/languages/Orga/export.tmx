@@ -4,15 +4,14 @@
             creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="unknowComponent">
+        <tu tuid="unknownComponent">
             <tuv xml:lang="fr">
-                <seg>Le composant ({COMPONENT}) est introuvable</seg>
+                <seg>Aucun champ ne correspond à cette saisie.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>The component ({COMPONENT}) can not be found</seg>
+                <seg>No field matches this input.</seg>
             </tuv>
         </tu>
-
         <tu tuid="subForm">
             <tuv xml:lang="fr">
                 <seg>Sous-formulaire</seg>
