@@ -44,7 +44,7 @@ php scripts/jobs/exports/rebuild.php -c
 - Redémarrer le worker
 
 ```
-sudo supervisiorctl restart XXX-worker
+sudo supervisorctl restart XXX-worker
 ```
 
 
