@@ -10,8 +10,8 @@ Feature: Family list edit feature
     Then I should see the "familyDatagrid" datagrid
   # Affichage du datagrid
     And the row 1 of the "familyDatagrid" datagrid should contain:
-      | category                        | label                                               | ref                                | unit           |
-      | Catégorie contenant une famille | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse | kg équ. CO2/kg |
+      | category                        | label                                               | ref                                | unit          |
+      | Catégorie contenant une famille | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse | kg équ. CO2/t |
   # Ajout
     When I click "Ajouter"
     Then I should see the popup "Ajout d'une famille"

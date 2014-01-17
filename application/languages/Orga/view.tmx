@@ -19,10 +19,10 @@
 
         <tu tuid="separator">
             <tuv xml:lang="fr">
-                <seg> &amp; </seg>
+                <seg> - </seg> <!-- ou bien &amp; ? -->
             </tuv>
             <tuv xml:lang="en">
-                <seg> &amp; </seg>
+                <seg> - </seg>
             </tuv>
         </tu>
         <tu tuid="granularityExplanations">
@@ -46,10 +46,10 @@
         </tu>
         <tu tuid="viewInput">
             <tuv xml:lang="fr">
-                <seg>Cliquer pour accéder à la saisie</seg>
+                <seg>Saisir les données</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Click to access input</seg>
+                <seg>Enter data</seg>
             </tuv>
         </tu>
 
@@ -65,10 +65,34 @@
         </tu>
         <tu tuid="allInventoryStatus">
             <tuv xml:lang="fr">
-                <seg>Tous statuts d'inventaire</seg>
+                <seg>Tous statuts de collecte</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>All collection status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunched">
+            <tuv xml:lang="fr">
+                <seg>Collecte non lancée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection not launched</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryOpen">
+            <tuv xml:lang="fr">
+                <seg>Collecte en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection open</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosed">
+            <tuv xml:lang="fr">
+                <seg>Collecte cloturée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection closed</seg>
             </tuv>
         </tu>
         <tu tuid="allMembers">
@@ -89,10 +113,45 @@
         </tu>
         <tu tuid="filterNoResult">
             <tuv xml:lang="fr">
-                <seg>Aucun résultat ne correspondant au(x) filtre(s) séléctionné(s)</seg>
+                <seg>Aucun élément pour le(s) filtre(s) séléctionné(s)</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>No result matching selected filter(s)</seg>
+                <seg>No element matching selected filter(s)</seg>
+            </tuv>
+        </tu>
+
+        <!-- Tooltips des icônes -->
+
+        <tu tuid="contactAdministrators">
+            <tuv xml:lang="fr">
+                <seg>Contacter les administrateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Contact administrators</seg>
+            </tuv>
+        </tu>
+        <tu tuid="editUsers">
+            <tuv xml:lang="fr">
+                <seg>Administrer les utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Edit users</seg>
+            </tuv>
+        </tu>
+        <tu tuid="analyzeData">
+            <tuv xml:lang="fr">
+                <seg>Analyser les résultats</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analyze results</seg>
+            </tuv>
+        </tu>
+        <tu tuid="exportData">
+            <tuv xml:lang="fr">
+                <seg>Exporter les données</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Export data</seg>
             </tuv>
         </tu>
 
@@ -132,10 +191,10 @@
         </tu>
         <tu tuid="viewInventoryUsers">
             <tuv xml:lang="fr">
-                <seg>Participants à la collecte</seg>
+                <seg>Voir les participants à la collecte</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Users involved in this collection</seg>
+                <seg>See users involved in this collection</seg>
             </tuv>
         </tu>
         <tu tuid="inventoryUsersFrom">
@@ -183,7 +242,7 @@
         </tu>
         <tu tuid="inventoryClosed">
             <tuv xml:lang="fr">
-                <seg>Collecte fermée</seg>
+                <seg>Collecte clôturée</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Collection closed</seg>
