@@ -194,7 +194,7 @@ class Orga_CellController extends Core_Controller
         $addMembersForm = new UI_Form('addMember');
         $addMembersForm->setAction('orga/cell/add-member/idCell/'.$idCell);
         $selectAxis = new UI_Form_Element_Select('axis');
-        $selectAxis->setLabel(__('Orga', 'view', 'addMembersAxis'));
+        $selectAxis->setLabel(__('UI', 'name', 'axis'));
         $selectAxis->getElement()->help = __('Orga', 'view', 'addMembersAxisExplanations');
         $selectAxis->addNullOption('');
         $addMembersForm->addElement($selectAxis);
@@ -213,8 +213,8 @@ class Orga_CellController extends Core_Controller
             $axisGroup->getElement()->hidden = true;
 
             $memberInput = new UI_Form_Element_Text($axis->getRef().'_member');
-            $memberInput->setLabel(__('Orga', 'view', 'addMembersMember'));
-            $memberInput->setAttrib('placeholder', __('Orga', 'view', 'addMembersMemberExplanations', ['AXIS', $axis->getLabel()]));
+            $memberInput->setLabel(__('UI', 'name', 'element'));
+            $memberInput->setAttrib('placeholder', __('UI', 'name', 'label'));
             $axisGroup->addElement($memberInput);
             foreach ($axis->getDirectBroaders() as $broaderAxis) {
                 $selectParentMember = new UI_Form_Element_Select($axis->getRef().'_parentMember_'.$broaderAxis->getRef());

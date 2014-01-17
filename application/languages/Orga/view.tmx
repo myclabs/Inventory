@@ -113,10 +113,10 @@
         </tu>
         <tu tuid="filterNoResult">
             <tuv xml:lang="fr">
-                <seg>Aucun élément pour le(s) filtre(s) séléctionné(s)</seg>
+                <seg>Aucun élément pour le(s) filtre(s) séléctionné(s).</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>No element matching selected filter(s)</seg>
+                <seg>No element matching selected filter(s).</seg>
             </tuv>
         </tu>
 
@@ -203,6 +203,17 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Users involved in collection — </seg>
+            </tuv>
+        </tu>
+
+        <!-- Contenu popup des exports -->
+
+        <tu tuid="exportsExplanations">
+            <tuv xml:lang="fr">
+                <seg>Sélectionner le type de données à exporter puis cliquer sur « Exporter ».</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Select the kind of data that you want to export and click "Export".</seg>
             </tuv>
         </tu>
 
@@ -372,6 +383,26 @@
                 <seg>Are you sure you want to delete this analysis report ?</seg>
             </tuv>
         </tu>
+
+        <!-- Volet d'ajout d'un membre organisationnel -->
+
+        <tu tuid="addMembersAxisExplanations">
+            <tuv xml:lang="fr">
+                <seg>Axe d'organisation auquel l'élément sera ajouté.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational axis to which element will be added.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addMembersMemberExplanations">
+            <tuv xml:lang="fr">
+                <seg>Libellé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Label</seg>
+            </tuv>
+        </tu>
+
 
     </body>
 </tmx>
