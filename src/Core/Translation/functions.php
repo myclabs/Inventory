@@ -26,3 +26,20 @@ function __($package, $file, $ref, array $replacements = [])
 
     return $translate->get($package, $file, $ref, $replacements, $locale);
 }
+
+/**
+ * Alias de la fonction statique de traduction. Ajoute un encodage html des charactères spéciaux.
+ * Permet de gagner du temps dans les vues.
+ *
+ * @param string $package      Nom du module d'où est issue la traducation.
+ * @param string $file         Nom du fichier tmx dans lequel chercher la traduction.
+ * @param string $ref          Référence du texte (datagrids, champs etc...)
+ * @param array  $replacements (optionnel) Tableau de remplacement à effectuer,
+ *                             ces remplacement prennent la forme suivante : array('RECHERCHE' => 'remplacement').
+ *
+ * @return string Texte traduit
+ */
+function ___($package, $file, $ref, array $replacements = [])
+{
+    return htmlspecialchars(__($package, $file, $ref, $replacements), ENT_QUOTES | ENT_HTML5);
+}

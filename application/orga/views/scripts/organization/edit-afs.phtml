@@ -22,7 +22,7 @@ foreach ($this->granularities as $inputGranularity) :
         $datagridGranularityAfs->addCol($columnAxis);
     endforeach;
 
-    $columnAf = new UI_Datagrid_Col_List('af', __('AF', 'name', 'accountingForm'));
+    $columnAf = new UI_Datagrid_Col_List('af', ___('AF', 'name', 'accountingForm'));
     $columnAf->list = $this->afs;
     $columnAf->editable = true;
     $datagridGranularityAfs->addCol($columnAf);
@@ -63,7 +63,7 @@ $complementaryFields .= '</select>';
 $complementaryFields .= '<script>' .
 '$(\'#addGranularity'.$this->organization->getId().'_afs .inputConfigAxes\').select2({' .
         'closeOnSelect: false,' .
-        'placeholder: \'' . __('Orga', 'granularity', 'addGranularityFormChoiceSelectAxes') . '\'' .
+        'placeholder: \'' . ___('Orga', 'granularity', 'addGranularityFormChoiceSelectAxes') . '\'' .
 '});' .
 '</script>';
 echo $this->partial(

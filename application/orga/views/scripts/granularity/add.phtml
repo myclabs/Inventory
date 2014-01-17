@@ -12,7 +12,7 @@ $organization = $this->organization;
     <?=$this->complementaryFields?>
     <button class="btn btn-primary addGranularity">
         <i class="fa fa-plus-circle"></i>
-        <?=__('UI', 'verb', 'add')?>
+        <?=___('UI', 'verb', 'add')?>
     </button>
 </form>
 
@@ -20,7 +20,7 @@ $organization = $this->organization;
     $('#addGranularity<?=$organization->getId()?>_<?=$this->purpose?> .axes').select2(
         {
             closeOnSelect: false,
-            placeholder: '<?=__('Orga', 'granularity', 'addGranularitySelectAxes')?>',
+            placeholder: '<?=___('Orga', 'granularity', 'addGranularitySelectAxes')?>',
         }
     );
     $('#addGranularity<?=$organization->getId()?>_<?=$this->purpose?>').on('submit', function(e) {
@@ -33,7 +33,7 @@ $organization = $this->organization;
         $('.granularityAddInfo', form.parent()).remove();
         form.after('<div class="alert alert-info granularityAddInfo"></div>');
         var granularityInfo = $('.granularityAddInfo', form.parent());
-        granularityInfo.html('<img class="granularityLoading" src="images/ui/ajax-loader.gif"> <?=__('UI', 'loading', 'loading')?>');
+        granularityInfo.html('<img class="granularityLoading" src="images/ui/ajax-loader.gif"> <?=___('UI', 'loading', 'loading')?>');
         $.ajax({
             url: form.attr('action'),
             type: "POST",
@@ -54,7 +54,7 @@ $organization = $this->organization;
                 if (typeof(response.message) == 'string') {
                     granularityInfo.html(response.message);
                 } else {
-                    granularityInfo.html('<?=__('UI', 'loading', 'error')?>');
+                    granularityInfo.html('<?=___('UI', 'loading', 'error')?>');
                 }
                 form.attr('data-submitting', false);
             }

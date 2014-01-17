@@ -21,7 +21,7 @@
         </tu>
         <tu tuid="noHistory">
             <tuv xml:lang="fr">
-                <seg>L historique est vide.</seg>
+                <seg>L'historique est vide.</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Change log is empty.</seg>

@@ -9,10 +9,10 @@ foreach ($this->granularities as $granularity) :
         'orga'
     );
 
-    $columnReport = new UI_Datagrid_Col_Text('report', __('UI', 'name', 'label'));
+    $columnReport = new UI_Datagrid_Col_Text('report', ___('UI', 'name', 'label'));
     $datagridGranularityReports->addCol($columnReport);
 
-    $columnLink = new UI_Datagrid_Col_Link('link', __('UI', 'name', 'details'));
+    $columnLink = new UI_Datagrid_Col_Link('link', ___('UI', 'name', 'details'));
     $datagridGranularityReports->addCol($columnLink);
 
     $datagridGranularityReports->addParam('idOrganization', $this->organization->getId());
@@ -21,7 +21,7 @@ foreach ($this->granularities as $granularity) :
     $datagridGranularityReports->deleteElements = true;
 
 
-    $addButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
+    $addButton = new UI_HTML_Button(___('UI', 'verb', 'add'));
     $addButton->icon = 'plus-circle';
     $addButton->link = 'orga/granularity/view-report/idGranularity/' . $granularity->getId() . '/';
 
@@ -69,12 +69,12 @@ endif;
 ?>
 
 <fieldset class="wrapper">
-    <legend style="cursor:default"><?=__('Orga', 'configuration', 'organizationDWCubesState')?></legend>
-<p><?=__('Orga', 'configuration', 'organizationDWCubesStateComment')?></p>
+    <legend style="cursor:default"><?=___('Orga', 'configuration', 'organizationDWCubesState')?></legend>
+<p><?=___('Orga', 'configuration', 'organizationDWCubesStateComment')?></p>
 <div>
     <?=
     $this->button(
-        '<span>'.__('Orga', 'configuration', 'dWCubesState').'</span>',
+        '<span>'.___('Orga', 'configuration', 'dWCubesState').'</span>',
         'info-circle',
         ['id' => 'organizationDW', 'class' => 'btn-primary']
     );
@@ -92,13 +92,13 @@ endif;
                         button.attr('class', 'btn btn-success')
                         button.children('i').attr('class', 'fa fa-info-circle');
                         button.children('span').html(
-                            '<?=htmlentities(__('Orga', 'configuration', 'organizationDWCubesUpToDate'), ENT_QUOTES)?>'
+                            '<?=htmlentities(___('Orga', 'configuration', 'organizationDWCubesUpToDate'), ENT_QUOTES)?>'
                         );
                     } else {
                         button.attr('class', 'btn btn-danger');
                         button.children('i').attr('class', 'fa fa-refresh');
                         button.children('span').html(
-                            '<?=htmlentities(__('Orga', 'configuration', 'organizationDWCubesOutDated'), ENT_QUOTES)?>'
+                            '<?=htmlentities(___('Orga', 'configuration', 'organizationDWCubesOutDated'), ENT_QUOTES)?>'
                         );
                         button.unbind('click');
                         button.bind('click', resetOrganizationDW);
@@ -121,7 +121,7 @@ endif;
                     button.attr('class', 'btn btn-primary');
                     button.children('i').attr('class', 'fa fa-info-circle');
                     button.children('span').html(
-                        '<?=htmlentities(__('Orga', 'configuration', 'dWCubesState'), ENT_QUOTES)?>'
+                        '<?=htmlentities(___('Orga', 'configuration', 'dWCubesState'), ENT_QUOTES)?>'
                     );
                     addMessage(data, 'success');
                     button.unbind('click');
@@ -139,9 +139,9 @@ endif;
 </fieldset>
 
 <fieldset class="wrapper">
-    <legend style="cursor: default"><?=__('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
-    <p><?=__('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
-    <?= $this->button(__('DW', 'rebuild', 'outputDataRebuildButton'), 'refresh', array('id' => 'calculateInputs', 'class' => 'btn-primary')) ?>
+    <legend style="cursor: default"><?=___('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
+    <p><?=___('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
+    <?= $this->button(___('DW', 'rebuild', 'outputDataRebuildButton'), 'refresh', array('id' => 'calculateInputs', 'class' => 'btn-primary')) ?>
     <script>
         $('#calculateInputs').click(function() {
             setMask(true);

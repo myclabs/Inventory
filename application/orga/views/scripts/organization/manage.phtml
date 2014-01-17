@@ -11,7 +11,7 @@ $organizations = $this->organizations;
 
 <div class="page-header">
     <h1>
-        <?=__('Orga', 'organization', 'organizations')?>
+        <?=___('Orga', 'organization', 'organizations')?>
     </h1>
 </div>
 
@@ -24,7 +24,7 @@ $organizations = $this->organizations;
                     <a class="deleteOrganization btn btn-small btn-warning"
                        href="orga/organization/delete/idOrganization/<?=$organization->id?>">
                         <i class="fa fa-trash-o"></i>
-                        <?=__('UI', 'verb', 'delete')?>
+                        <?=___('UI', 'verb', 'delete')?>
                     </a>
                 </div>
             <?php endif; ?>
@@ -33,7 +33,7 @@ $organizations = $this->organizations;
                     <a class="editOrganization btn btn-small btn-primary"
                        href="orga/organization/edit/idOrganization/<?=$organization->id?>">
                         <i class="fa fa-wrench"></i>
-                        <?=__('UI', 'name', 'configurationOrga')?>
+                        <?=___('UI', 'name', 'configurationOrga')?>
                     </a>
                 </div>
             <?php endif; ?>
@@ -43,18 +43,18 @@ $organizations = $this->organizations;
                     <?=$organization->label?>
                     <small>
                         <i class="fa fa-external-link"></i>
-                        <?=__('Orga', 'organizationList', 'goToData')?>
+                        <?=___('Orga', 'organizationList', 'goToData')?>
                     </small>
                 </a>
             </h3>
 
             <p>
-                <strong><?=__('Orga', 'axis', 'rootAxes').__('UI', 'other', ':')?></strong>
+                <strong><?=___('Orga', 'axis', 'rootAxes').___('UI', 'other', ':')?></strong>
                 <?=implode(', ', $organization->rootAxesLabels)?>
             </p>
 
             <p>
-                <strong><?=__('Orga', 'inventory', 'inventories').__('UI', 'other', ':')?></strong>
+                <strong><?=___('Orga', 'inventory', 'inventories').___('UI', 'other', ':')?></strong>
                 <?=$organization->inventory?>
             </p>
         </div>
@@ -65,7 +65,7 @@ $organizations = $this->organizations;
         <p>
             <a href="orga/organization/add" class="btn">
                 <i class="fa fa-plus"></i>
-                <?=__('UI', 'verb', 'add')?>
+                <?=___('UI', 'verb', 'add')?>
             </a>
         </p>
     <?php endif; ?>
@@ -74,9 +74,9 @@ $organizations = $this->organizations;
 <script>
     $(function() {
         $(".deleteOrganization").confirm({
-            text: '<?=__('UI', 'message', 'areYouSure')?>',
-            confirmButton: '<i class="fa fa-check"></i> <?=__('UI', 'verb', 'confirm')?>',
-            cancelButton: '<i class="fa fa-times"></i> <?=__('UI', 'verb', 'cancel')?>',
+            text: '<?=___('UI', 'message', 'areYouSure')?>',
+            confirmButton: '<i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?>',
+            cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',
             post: true
         });
     });

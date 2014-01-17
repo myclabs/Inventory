@@ -1,8 +1,8 @@
 <div class="alert alert-info hide">
-    <?=__('Orga', 'analysis', 'detailedExcelExportPopup')?>
+    <?=___('Orga', 'analysis', 'detailedExcelExportPopup')?>
 </div>
 <?php if (count($this->exports) > 0) : ?>
-<div style="padding: 2px 0 8px; text-align: left;"><?=__('Orga', 'view', 'exportsExplanations')?></div>
+<div style="padding: 2px 0 8px; text-align: left;"><?=___('Orga', 'view', 'exportsExplanations')?></div>
 <form class="form-inline" action="orga/cell/export/idCell/<?=$this->idCell?>">
     <div class="input-prepend input-append">
         <span class="add-on format">
@@ -35,7 +35,7 @@
         <?php endif; ?>
         <button class="btn btn-primary" type="submit">
             <i class="fa fa-download"></i>
-            <?=__('UI', 'verb', 'export')?>
+            <?=___('UI', 'verb', 'export')?>
         </button>
     </div>
 </form>
@@ -59,5 +59,5 @@
     });
 </script>
 <?php else: ?>
-<?=__('Orga', 'view', 'noExportAvailable')?>
+<?=___('Orga', 'view', 'noExportAvailable')?>
 <?php endif; ?>

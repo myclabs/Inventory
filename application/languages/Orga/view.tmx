@@ -344,7 +344,7 @@
 
         <tu tuid="display-more-cells">
             <tuv xml:lang="fr">
-                <seg>Afficher davantage d éléments</seg>
+                <seg>Afficher davantage d'éléments</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Display more elements</seg>
@@ -366,7 +366,7 @@
 
         <tu tuid="askConfirmDeleteReport">
             <tuv xml:lang="fr">
-                <seg>Êtes-vous sûr de vouloir supprimer ce rapport d analyse ?</seg>
+                <seg>Êtes-vous sûr de vouloir supprimer ce rapport d'analyse ?</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Are you sure you want to delete this analysis report ?</seg>
