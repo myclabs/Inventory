@@ -246,6 +246,42 @@ class Orga_Service_OrganizationService
     }
 
     /**
+     * @param Orga_Model_Granularity $granularity
+     * @throws Exception
+     */
+    public function removeGranularity(Orga_Model_Granularity $granularity)
+    {
+        try {
+            $this->entityManager->beginTransaction();
+
+            try {
+                $granularityForInventoryStatus =  $granularity->getOrganization()->getGranularityForInventoryStatus();
+                if ($granularityForInventoryStatus === $granularity) {
+                    $granularity->getOrganization()->setGranularityForInventoryStatus();
+                }
+            } catch (Core_Exception_UndefinedAttribute $e) {
+                // Pas de granularité des inventares.
+            }
+
+            if ($granularity->getCellsWithACL() || $granularity->isInput() || $granularity->hasInputGranularities()) {
+                $granularity->setCellsWithACL(false);
+                $granularity->setInputConfigGranularity();
+                $this->entityManager->flush();
+            }
+
+            $granularity->delete();
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Exception $e) {
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
+
+            throw $e;
+        }
+    }
+
+    /**
      * @param Orga_Model_Axis $axis
      * @param $ref
      * @param $label
