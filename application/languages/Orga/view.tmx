@@ -103,6 +103,14 @@
                 <seg>All elements ([AXIS])</seg>
             </tuv>
         </tu>
+        <tu tuid="filterReverserExplanations">
+            <tuv xml:lang="fr">
+                <seg>Lorsque coché, les résultats correspondront à l'inverse des filtres sélectionnés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>When checked, results wil be the opposite of selected filters</seg>
+            </tuv>
+        </tu>
         <tu tuid="ratioNumberFilteredCellsOverTotal">
             <tuv xml:lang="fr">
                 <seg>Nombre d'éléments filtrés / nombre d'éléments au total</seg>

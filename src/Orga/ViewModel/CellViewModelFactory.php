@@ -124,6 +124,8 @@ class CellViewModelFactory
                 && ($this->aclService->isAllowed($user, Action::ALLOW(), $cell)))
         ) {
             $cellViewModel->showUsers = true;
+            $cellViewModel->numberUsers = $cell->getAdminRoles()->count() + $cell->getManagerRoles()->count()
+                + $cell->getContributorRoles()->count() + $cell->getObserverRoles()->count();
         }
 
         // Reports.

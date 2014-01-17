@@ -137,7 +137,7 @@ $currentCell = $this->currentCell;
             <small class="cell-actions">
                 <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'contactAdministrators')?>" class="withTooltip"><i class="fa fa-user-md"></i></a>
                 <?php if ($currentCell->showUsers) : ?>
-                <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'editUsers')?>" class="withTooltip"><i class="fa fa-users"></i></a>
+                <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'editUsers')?>" class="withTooltip">(<?=$currentCell->numberUsers?>) <i class="fa fa-users"></i></a>
                 <?php endif; ?>
                 <?php if ($currentCell->showReports) : ?>
                 <a data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'analyzeData')?>" class="withTooltip"><i class="fa fa-bar-chart-o"></i></a>
@@ -321,6 +321,9 @@ $currentCell = $this->currentCell;
                     <?php endforeach ?>
                 </select>
                 <?php endif; ?>
+                <span class="withTooltip" title="<?=___('Orga', 'view', 'filterReverserExplanations')?>">
+                    <input type="checkbox" class="filter-reverser">
+                </span>
                 <button class="btn reset"><i class="fa fa-search-minus"></i> <?=___('UI', 'verb', 'reset')?></button>
                 <span class="badge badge-info granularity-info withTooltip" title="<?=___('Orga', 'view', 'ratioNumberFilteredCellsOverTotal')?>" data-toggle="tooltip" data-placement="right" data-trigger="hover"></span>
             </form>
@@ -497,6 +500,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     if (this.showUsers) {
                         usersP +=
                             '<a data-toggle="modal" href="#users' + this.id + '" title="<?=___('Orga', 'view', 'editUsers')?>" class="withTooltip">' +
+                                '(' + this.numberUsers + ') ' +
                                 '<i class="fa fa-users"></i>' +
                             '</a>';
                         usersPopup +=
@@ -689,10 +693,15 @@ $('.cells-filter select').on('keyup change', function(e) {
     var form = $(this).parent();
     form.trigger('filterCells');
 });
+$('.cells-filter .filter-reverser').on('change', function(e) {
+    var form = $(this).parent();
+    form.trigger('filterCells');
+});
 $('.cells-filter').on('resetCellsFilter', function(e) {
     e.preventDefault();
     var form = $(this);
-    $('select', form).each(function() { $(this).val(''); });
+    $('select', form).val('');
+    $('.filter-reverser', form).prop('checked', false);
     form.trigger('filterCells');
 });
 $('.cells-filter').on('filterCells', function(e) {
@@ -703,15 +712,18 @@ $('.cells-filter').on('filterCells', function(e) {
 
     $('.cell', granularity).addClass('hide').removeClass('firstRowCell').removeAttr('data-filtered');
 
+    var inverseFilter = $('.filter-reverser', form).is(':checked');
     var test = '';
     $('select', form).each(function() {
         var filter = $(this).attr('data-filter');
+        var filterOperator = (filter == 'tag') ? '*=' : '=';
         var value = $(this).val();
         if (value != '') {
-            if (filter == 'tag') {
-                test += '[data-' + filter + '*=\'' + value + '\']';
+            var testExpression = '[data-' + filter + filterOperator +'\'' + value + '\']';
+            if (inverseFilter) {
+                test += ':not(' + testExpression + ')';
             } else {
-                test += '[data-' + filter + '=\'' + value + '\']';
+                test += testExpression;
             }
         }
     });

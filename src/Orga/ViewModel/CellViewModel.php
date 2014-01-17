@@ -47,6 +47,11 @@ class CellViewModel
     public $showUsers = false;
 
     /**
+     * @var int
+     */
+    public $numberUsers = 0;
+
+    /**
      * @var boolean
      */
     public $showReports = false;
