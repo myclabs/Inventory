@@ -992,7 +992,7 @@ $('body').on('click', '.inventory-status .dropdown-menu a', function(e) {
     var button = link.parent().parent().prev();
     if (link.attr('data-inventory') != button.attr('data-inventory')) {
         button.html('<i class="fa fa-spinner fa-spin"></i>');
-        button.attr('class', 'btn dropdown-toggle');
+        button.attr('class', 'btn btn-small dropdown-toggle');
         $.ajax({
             url: link.attr('href'),
             type: "POST",
