@@ -18,18 +18,18 @@
 
         <tu tuid="memberHasChild">
             <tuv xml:lang="fr">
-                <seg>Cet élément ne peut pas être supprimé, car il joue le rôle de parent direct pour au moins un autre élément.</seg>
+                <seg>Cet élément ne peut être supprimé, car il y a au moins un élément subordonné (exemple : on ne peut supprimer France alors qu’il existe Lyon subordonné à France).</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>This element cannot be deleted, since it plays the role of direct parent for at least one other element.</seg>
+                <seg>This element cannot be deleted, because at least one other element is subordinate to this one (example: one cannot delete France while there exists Lyon subordinate to France).</seg>
             </tuv>
         </tu>
         <tu tuid="deleteMemberWithUsersToCells">
             <tuv xml:lang="fr">
-                <seg>Cet élément ne peut pas être supprimé, car il existe au moins un rôle organisationnel pour une unité organisationnelle associée à cet élément.</seg>
+                <seg>Cet élément ne peut être supprimé, car il existe au moins un utilisateur qui lui est associé (exemple : on ne peut supprimer France alors qu’un utilisateur est défini au niveau France|activité A).</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>This element cannot be deleted, since there exists at least one organizational role for an organizational unit associated to this element.</seg>
+                <seg>This element cannot be deleted, because at least one user is associated to it (example: one cannot delete France while a user is defined at the level France|activity A).</seg>
             </tuv>
         </tu>
 
