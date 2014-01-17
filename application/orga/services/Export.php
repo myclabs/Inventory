@@ -360,8 +360,8 @@ class Orga_Service_Export
         $modelBuilder->bind('inputs', $inputs);
 
         $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'subForm'));
-        $modelBuilder->bind('inputLabel', __('UI', 'name', 'fieldLabel'));
-        $modelBuilder->bind('inputRef', __('UI', 'name', 'fieldRef'));
+        $modelBuilder->bind('inputLabel', __('Orga', 'export', 'fieldLabel'));
+        $modelBuilder->bind('inputRef', __('Orga', 'export', 'fieldRef'));
         $modelBuilder->bind('inputType', __('Orga', 'export', 'fieldType'));
         $modelBuilder->bind('inputValue', __('Orga', 'export', 'typedInValue'));
         $modelBuilder->bind('inputUncertainty', __('UI', 'name', 'uncertainty') . ' (%)');
@@ -427,8 +427,8 @@ class Orga_Service_Export
             // Colonnes
             $columns = array_map(function(Orga_Model_Axis $axis) { return $axis->getLabel(); }, $granularity->getAxes());
             $columns[] = __('Orga', 'export', 'subForm');
-            $columns[] = __('UI', 'name', 'fieldLabel');
-            $columns[] = __('UI', 'name', 'fieldRef');
+            $columns[] = __('Orga', 'export', 'fieldLabel');
+            $columns[] = __('Orga', 'export', 'fieldRef');
             $columns[] = __('Orga', 'export', 'fieldType');
             $columns[] = __('Orga', 'export', 'typedInValue');
             $columns[] = __('UI', 'name', 'uncertainty') . ' (%)';
@@ -661,8 +661,8 @@ function getInputsDetails(AF_Model_Input $input, $path = '')
         $componentLabel = $input->getComponent()->getLabel();
         $componentRef = $input->getComponent()->getRef();
     } else {
-        $componentLabel = __('Orga', 'export', 'unknowComponent', ['COMPONENT' => $input->getRefComponent()]);
-        $componentRef = __('Orga', 'export', 'unknowComponent', ['COMPONENT' => $input->getRefComponent()]);
+        $componentLabel = __('Orga', 'export', 'unknownComponent');
+        $componentRef = __('Orga', 'export', 'unknownComponent');
     }
     if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
         $subInputs = [];
