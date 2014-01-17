@@ -193,7 +193,10 @@ $currentCell = $this->currentCell;
         <div id="administrators<?=$currentCell->id?>" class="modal administrators hide fade">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4><?=__('Orga', 'view', 'administratorsFrom')?> <?=$currentCell->shortLabel?></h4>
+                <h4 class="withTooltip" title="<?=__('Orga', 'view', 'administratorExplanations')?>">
+                    <?=__('Orga', 'view', 'administratorsFrom')?> <?=$currentCell->shortLabel?>
+                    <i class="fa fa-question-circle"></i>
+                </h4>
             </div>
             <div class="modal-body">
                 <pre><?=implode("\n", $currentCell->administrators)?></pre>
@@ -256,7 +259,10 @@ $currentCell = $this->currentCell;
         <div id="inventoryUsers<?=$currentCell->id?>" class="modal inventory-users hide fade" data-cell="<?=$currentCell->id?>">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4><?=__('Orga', 'view', 'inventoryUsersFrom')?> <?=$currentCell->shortLabel?></h4>
+                <h4 class="withTooltip" title="<?=__('Orga', 'view', 'inventoryUsersExplanations')?>">
+                    <?=__('Orga', 'view', 'inventoryUsersFrom')?> <?=$currentCell->shortLabel?>
+                    <i class="fa fa-question-circle"></i>
+                </h4>
             </div>
             <div class="modal-body">
             </div>
@@ -611,7 +617,10 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                             '<div id="inventoryUsers' + this.id + '" class="modal inventory-users hide fade" data-cell="' + this.id + '">' +
                                 '<div class="modal-header">' +
                                     '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                    '<h4><?=__('Orga', 'view', 'inventoryUsersFrom')?>' + this.shortLabel + '</h4>' +
+                                    '<h4 class="withTooltip" title="<?=__('Orga', 'view', 'inventoryUsersExplanations')?>">' +
+                                        '<?=__('Orga', 'view', 'inventoryUsersFrom')?>' + this.shortLabel + ' ' +
+                                        '<i class="fa fa-question-circle"></i>' +
+                                    '</h4>' +
                                 '</div>' +
                                 '<div class="modal-body">' +
                                 '</div>' +
