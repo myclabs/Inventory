@@ -104,6 +104,7 @@ class User_ActionController extends UI_Controller_Captcha
             $this->view->email = $email;
             $password = $this->getParam('password');
             $password2 = $this->getParam('password2');
+            $captchaInput = $this->getParam('captcha');
 
             // Validation
             if (! $email || ! $password || ! $password2) {
@@ -116,6 +117,11 @@ class User_ActionController extends UI_Controller_Captcha
             }
             if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 UI_Message::addMessageStatic(__('User', 'editEmail', 'invalidEmail'));
+                return;
+            }
+            $captchaField = new UI_Form_Element_Captcha('captcha', $this->view->baseUrl('/user/captcha/newimage'));
+            if (! $captchaField->isValid($captchaInput)) {
+                UI_Message::addMessageStatic(__('User', 'resetPassword', 'invalidCaptchaInput'));
                 return;
             }
 

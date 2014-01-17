@@ -11,6 +11,13 @@
         <input type="password" name="password2" class="input-block-level" required
                placeholder="<?=__('User', 'login', 'passwordAgain')?>">
 
+        <?php
+        $captcha = new UI_Form_Element_Captcha('captcha', 'user/captcha/newimage');
+        $captcha->setLabel(__('User', 'resetPassword', 'captchaFieldLabel'));
+        $captcha->setRequired();
+        echo $captcha->render();
+        ?>
+
         <input type="submit" id="connection" class="btn btn-primary btn-block"
                value="<?=__('User', 'login', 'register')?>">
 
