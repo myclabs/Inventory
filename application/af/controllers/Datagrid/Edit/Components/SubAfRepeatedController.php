@@ -62,9 +62,6 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         $isVisible = $this->getAddElementValue('isVisible');
-        if (empty($isVisible)) {
-            $this->setAddElementErrorMessage('isVisible', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
         $repetition = $this->getAddElementValue('repetition');
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
