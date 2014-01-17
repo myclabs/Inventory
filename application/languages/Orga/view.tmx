@@ -46,10 +46,10 @@
         </tu>
         <tu tuid="viewInput">
             <tuv xml:lang="fr">
-                <seg>Cliquer pour accéder à la saisie</seg>
+                <seg>Saisir les données</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Click to access input</seg>
+                <seg>Enter data</seg>
             </tuv>
         </tu>
 
@@ -113,10 +113,10 @@
         </tu>
         <tu tuid="filterNoResult">
             <tuv xml:lang="fr">
-                <seg>Aucun résultat ne correspondant au(x) filtre(s) séléctionné(s)</seg>
+                <seg>Aucun élément pour le(s) filtre(s) séléctionné(s)</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>No result matching selected filter(s)</seg>
+                <seg>No element matching selected filter(s)</seg>
             </tuv>
         </tu>
 
