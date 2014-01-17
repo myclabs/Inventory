@@ -2,6 +2,7 @@
     <?=__('Orga', 'analysis', 'detailedExcelExportPopup')?>
 </div>
 <?php if (count($this->exports) > 0) : ?>
+<div style="padding: 2px 0 8px; text-align: left;"><?=__('Orga', 'view', 'exportsExplanations')?></div>
 <form class="form-inline" action="orga/cell/export/idCell/<?=$this->idCell?>">
     <div class="input-prepend input-append">
         <span class="add-on format">
