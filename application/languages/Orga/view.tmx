@@ -105,10 +105,10 @@
         </tu>
         <tu tuid="filterReverserExplanations">
             <tuv xml:lang="fr">
-                <seg>Lorsque coché, les résultats correspondront à l'inverse des filtres sélectionnés</seg>
+                <seg>Lorsque coché, les résultats correspondront à l'inverse des filtres sélectionnés.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>When checked, results wil be the opposite of selected filters</seg>
+                <seg>When checked, results will be the opposite of selected filters.</seg>
             </tuv>
         </tu>
         <tu tuid="ratioNumberFilteredCellsOverTotal">
@@ -132,10 +132,10 @@
 
         <tu tuid="contactAdministrators">
             <tuv xml:lang="fr">
-                <seg>Contacter les administrateurs</seg>
+                <seg>Contacter un référent</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Contact administrators</seg>
+                <seg>Contact a referent</seg>
             </tuv>
         </tu>
         <tu tuid="editUsers">
@@ -199,18 +199,29 @@
         </tu>
         <tu tuid="viewInventoryUsers">
             <tuv xml:lang="fr">
-                <seg>Voir les participants à la collecte</seg>
+                <seg>Voir les participants</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>See users involved in this collection</seg>
+                <seg>See users in charge</seg>
             </tuv>
         </tu>
         <tu tuid="inventoryUsersFrom">
             <tuv xml:lang="fr">
-                <seg>Participants à la collecte — </seg>
+                <seg>Participants — </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Users involved in collection — </seg>
+                <seg>Users in charge — </seg>
+            </tuv>
+        </tu>
+
+        <!-- Contenu popup des administrateurs référents -->
+
+        <tu tuid="administratorExplanations">
+            <tuv xml:lang="fr">
+                <seg>Adresses e-mail des utilisateurs disposant d'un droit d'administration sur cette unité d'organisation. Vous pouvez copier-coller une ou plusieurs adresse(s) afin d'envoyer un e-mail pour une annonce ou une demande.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>E-mail addresses of users having the right to edit all or part of this organizational unit. You can copy-paste one or several address(es) in order to send an e-mail to these users, for a notification or a request.</seg>
             </tuv>
         </tu>
 
@@ -265,6 +276,14 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Collection closed</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryUsersExplanations">
+            <tuv xml:lang="fr">
+                <seg>Adresses e-mail des utilisateurs disposant d un droit d édition sur tout ou partie de cette unité d organisation. Vous pouvez copier-coller ces adresses pour envoyer un e-mail à ces utilisateurs, pour une annonce ou une relance.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>E-mail addresses of users having the right to edit all or part of this organizational unit. You can copy-paste these addresses in order to send an e-mail to these users, for a notification or a recall.</seg>
             </tuv>
         </tu>
 
