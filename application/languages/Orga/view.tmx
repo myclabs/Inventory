@@ -280,7 +280,7 @@
         </tu>
         <tu tuid="inventoryUsersExplanations">
             <tuv xml:lang="fr">
-                <seg>Adresses e-mail des utilisateurs disposant d un droit d édition sur tout ou partie de cette unité d organisation. Vous pouvez copier-coller ces adresses pour envoyer un e-mail à ces utilisateurs, pour une annonce ou une relance.</seg>
+                <seg>Adresses e-mail des utilisateurs disposant d'un droit d'édition sur tout ou partie de cette unité d'organisation. Vous pouvez copier-coller ces adresses pour envoyer un e-mail à ces utilisateurs, pour une annonce ou une relance.</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>E-mail addresses of users having the right to edit all or part of this organizational unit. You can copy-paste these addresses in order to send an e-mail to these users, for a notification or a recall.</seg>
