@@ -5,6 +5,7 @@ set -e
 
 cat > application/configs/application.ini <<EOL
 [production]
+applicationUrl=http://localhost/inventory
 [test : production]
 [developpement : test]
 [testsunitaires : test]
