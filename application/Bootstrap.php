@@ -181,4 +181,11 @@ class Bootstrap extends Core_Bootstrap
         $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$auditTrailListener, 'onInputCreated']);
         $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
     }
+
+    protected function _initCheckApplicationUrl()
+    {
+        if ($this->container->get('application.url') == '') {
+            throw new RuntimeException("Il est nécessaire de définir 'applicationUrl' dans application.ini");
+        }
+    }
 }
