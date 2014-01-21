@@ -180,7 +180,7 @@ class Orga_Service_ACLManager
         }
 
         $cellRoles = [CellAdminRole::class, CellManagerRole::class, CellContributorRole::class, CellObserverRole::class];
-        if (empty($askedRole)) {
+        if (empty($askedRoles)) {
             $askedRoles = $cellRoles;
         }
         foreach ($askedRoles as $askedRole) {

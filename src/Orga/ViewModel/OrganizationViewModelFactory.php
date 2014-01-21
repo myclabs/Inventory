@@ -88,12 +88,11 @@ class OrganizationViewModelFactory
                 $connectedUser,
                 $organization,
                 [CellAdminRole::class]
-            );
+            )['cells'];
             /** @var Orga_Model_Cell $cell */
-            foreach ($cellsCanEdit['cells'] as $cell) {
+            foreach ($cellsCanEdit as $cell) {
                 if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
                     $viewModel->canBeEdited = true;
-                    break;
                 }
             }
         }
