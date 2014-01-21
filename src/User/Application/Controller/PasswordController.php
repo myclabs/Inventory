@@ -22,6 +22,12 @@ class User_PasswordController extends UI_Controller_Captcha
     private $userService;
 
     /**
+     * @Inject("application.url")
+     * @var string
+     */
+    private $applicationUrl;
+
+    /**
      * Formulaire de "mot de passe oublié"
      * @Secure("public")
      */
@@ -59,10 +65,10 @@ class User_PasswordController extends UI_Controller_Captcha
                 $this->entityManager->flush();
 
                 // On envoie le mail à l'utilisateur
-                $url = sprintf('http://%s/user/password/reset?code=%s',
-                    $_SERVER["SERVER_NAME"] . $this->view->baseUrl(),
+                $url = sprintf('%s/user/password/reset?code=%s',
+                    $this->applicationUrl,
                     $user->getEmailKey());
-                $urlApplication = 'http://' . $_SERVER["SERVER_NAME"] . Zend_Controller_Front::getInstance()->getBaseUrl() . '/';
+                $urlApplication = $this->applicationUrl . '/';
                 $subject = __('User', 'email', 'subjectForgottenPassword');
                 $config = Zend_Registry::get('configuration');
                 if (empty($config->emails->contact->adress)) {

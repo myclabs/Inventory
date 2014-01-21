@@ -1,5 +1,6 @@
 # Entrées définies dans le bootstrap:
 # application.name
+# application.url
 # email.contact.address
 # email.noreply.name
 # email.noreply.address
@@ -34,3 +35,7 @@ PhpAmqpLib\Connection\AMQPConnection:
     port: rabbitmq.port
     user: rabbitmq.user
     password: rabbitmq.password
+
+User\Domain\UserService:
+  constructor:
+    applicationUrl: application.url

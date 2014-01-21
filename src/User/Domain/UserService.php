@@ -32,10 +32,16 @@ class UserService
      */
     private $logger;
 
-    public function __construct(ACLService $aclService, LoggerInterface $logger)
+    /**
+     * @var string
+     */
+    private $applicationUrl;
+
+    public function __construct(ACLService $aclService, LoggerInterface $logger, $applicationUrl)
     {
         $this->aclService = $aclService;
         $this->logger = $logger;
+        $this->applicationUrl = $applicationUrl;
     }
 
     /**
@@ -143,8 +149,6 @@ class UserService
         // Sauvegarde
         $user->save();
 
-        $url = 'http://' . $_SERVER["SERVER_NAME"] . Zend_Controller_Front::getInstance()->getBaseUrl() . '/';
-
         $config = Zend_Registry::get('configuration');
         if (empty($config->emails->contact->adress)) {
             throw new Core_Exception("Le courriel de 'contact' n'a pas été défini");
@@ -157,7 +161,7 @@ class UserService
             'EMAIL'            => $email,
             'CONTACT_NAME'     => $config->emails->contact->name,
             'CONTACT_ADDRESS'  => $config->emails->contact->adress,
-            'URL_APPLICATION'  => $url,
+            'URL_APPLICATION'  => $this->applicationUrl . '/',
             'APPLICATION_NAME' => $config->emails->noreply->name,
         ]);
         $emailContent .= $extraContent;
