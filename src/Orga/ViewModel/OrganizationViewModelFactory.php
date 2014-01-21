@@ -42,13 +42,6 @@ class OrganizationViewModelFactory
             $viewModel->label = __('Orga', 'navigation', 'defaultOrganizationLabel');
         }
 
-        $viewModel->rootAxesLabels = array_map(
-            function (Orga_Model_Axis $axis) {
-                return $axis->getLabel();
-            },
-            $organization->getRootAxes()
-        );
-
         // Vérification d'accèr à l'édition.
         $viewModel->canBeEdited = $this->aclService->isAllowed(
             $connectedUser,
@@ -102,11 +95,6 @@ class OrganizationViewModelFactory
             Action::DELETE(),
             $organization
         );
-
-        try {
-            $viewModel->inventory =  $organization->getGranularityForInventoryStatus()->getLabel();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-        };
 
         return $viewModel;
     }

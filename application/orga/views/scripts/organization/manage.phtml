@@ -47,16 +47,6 @@ $organizations = $this->organizations;
                     </small>
                 </a>
             </h3>
-
-            <p>
-                <strong><?=___('Orga', 'axis', 'rootAxes').___('UI', 'other', ':')?></strong>
-                <?=implode(', ', $organization->rootAxesLabels)?>
-            </p>
-
-            <p>
-                <strong><?=___('Orga', 'inventory', 'inventories').___('UI', 'other', ':')?></strong>
-                <?=$organization->inventory?>
-            </p>
         </div>
 
     <?php endforeach; ?>
