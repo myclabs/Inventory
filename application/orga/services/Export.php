@@ -474,7 +474,7 @@ class Orga_Service_Export
                 }
                 $cellInputsEndData = $cellInputsPHPExcel->getActiveSheet()->getHighestColumn() . $cellInputsEndDataRow;
                 $cellInputsData = $cellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $cellInputsEndData);
-                $granularitySheet->fromArray($cellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1));
+                $granularitySheet->fromArray($cellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1), true);
                 $cellInputsPHPExcel->disconnectWorksheets();
                 unset($cellInputsPHPExcel);
             }
