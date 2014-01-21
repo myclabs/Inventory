@@ -104,12 +104,15 @@ class AF_Model_Output_Element extends Core_Model_Entity
 
     /**
      * @param Classif_Model_Axis $axis
+     * @throws Core_Exception_NotFound
      * @return AF_Model_Output_Index
      */
     public function getIndexForAxis(Classif_Model_Axis $axis)
     {
         foreach ($this->indexes as $index) {
             if ($index->getAxis() === $axis) {
+                return $index;
+            } else if ($index->getAxis()->isNarrowerThan($axis)) {
                 return $index;
             }
         }

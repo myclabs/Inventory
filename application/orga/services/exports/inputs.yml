@@ -12,6 +12,7 @@ sheets:
               - label: "{{ axis.label }}"
           - label: "{{ inputAncestor }}"
           - label: "{{ inputLabel }}"
+          - label: "{{ inputRef }}"
           - label: "{{ inputType }}"
           - label: "{{ inputValue }}"
           - label: "{{ inputUncertainty }}"
@@ -28,6 +29,7 @@ sheets:
                       - "{{ displayCellMemberForAxis(cell, axis) }}"
                   - "{{ input['ancestors'] }}"
                   - "{{ input['label'] }}"
+                  - "{{ input['ref'] }}"
                   - "{{ input['type'] }}"
                   - foreach: input[values] as value
                     do:
