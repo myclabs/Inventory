@@ -45,12 +45,12 @@
                 <seg>Delete this family</seg>
             </tuv>
         </tu>
-        <tu tuid="cantDeleteFamily">
+        <tu tuid="deleteConfirm">
             <tuv xml:lang="fr">
-                <seg>Cette famille ne peut pas être supprimmée, car elle possède au moins un élément choisi.</seg>
+                <seg>Attention ! Voulez-vous vraiment supprimer définitivement cette famille ?</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>This family cannot be deleted, since it contains at least one chosen element.</seg>
+                <seg>Warning! Do you really want to delete this family?</seg>
             </tuv>
         </tu>
 
