@@ -30,6 +30,15 @@ class AF_Model_Input_Checkbox extends AF_Model_Input implements Algo_Model_Input
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function hasValue()
+    {
+        // Impossible de savoir si l'utilisateur a volontairement pas coché la case.
+        return true;
+    }
+
+    /**
      * Get the value of the checbox element.
      * @return bool
      */

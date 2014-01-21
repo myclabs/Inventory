@@ -45,6 +45,14 @@ class AF_Model_Input_Text extends AF_Model_Input implements Algo_Model_Input_Num
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function hasValue()
+    {
+        return $this->value != null;
+    }
+
+    /**
      * @return string
      */
     public function getValue()

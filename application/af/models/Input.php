@@ -73,6 +73,11 @@ abstract class AF_Model_Input extends Core_Model_Entity implements Algo_Model_In
     abstract public function getNbRequiredFieldsCompleted();
 
     /**
+     * @return bool Est-ce que le champ contient une saisie
+     */
+    abstract public function hasValue();
+
+    /**
      * Retourne true si la saisie donnée est égale à la saisie actuelle
      * @param AF_Model_Input $input
      * @return boolean
