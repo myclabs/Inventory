@@ -412,14 +412,14 @@ class Orga_OrganizationController extends Core_Controller
         $editOrganizationTabs = ['organization', 'axes', 'granularities', 'consistency'];
         if (!$isUserAllowedToEditOrganization && in_array($activeTab, $editOrganizationTabs)) {
             $activeTab = 'default';
-            if ($canUserEditMembers) {
-                $activeTab = 'members';
+            if ($canUserRebuildCells) {
+                $activeTab = 'rebuild';
             }
             if ($canUserEditRelevance) {
                 $activeTab = 'relevance';
             }
-            if ($canUserRebuildCells) {
-                $activeTab = 'rebuild';
+            if ($canUserEditMembers) {
+                $activeTab = 'members';
             }
         }
         switch ($activeTab) {

@@ -329,7 +329,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                             continue 2;
                         }
                     }
-                    $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()];
+                    $members = array_merge(
+                        $members,
+                        $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()]
+                    );
                 }
             }
             $members = array_unique($members);

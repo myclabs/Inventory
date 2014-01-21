@@ -34,6 +34,12 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
+     * @var Orga_Service_ACLManager
+     */
+    private $aclManager;
+
+    /**
+     * @Inject
      * @var WorkDispatcher
      */
     private $workDispatcher;
@@ -106,6 +112,24 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('cellVWFactory', $this->cellVMFactory);
         $this->view->assign('organization', $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser));
         $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser, true));
+
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization
+        );
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization->getGranularityByRef('global')->getCellByMembers([])
+        );
+        if (!$isUserAllowToEditAllMembers) {
+            $topCellsWithEditAccess = $this->aclManager->getTopCellsWithAccessForOrganization(
+                $connectedUser,
+                $organization,
+                [CellAdminRole::class]
+            )['cells'];
+        }
 
         // Cellules enfants.
         $narrowerGranularities = [];
@@ -198,12 +222,7 @@ class Orga_CellController extends Core_Controller
         $selectAxis->getElement()->help = __('Orga', 'view', 'addMembersAxisExplanations');
         $selectAxis->addNullOption('');
         $addMembersForm->addElement($selectAxis);
-        foreach ($organization->getFirstOrderedAxes() as $axis) {
-            foreach ($granularity->getAxes() as $granularityAxis) {
-                if ($axis->isBroaderThan($granularityAxis)) {
-                    continue 2;
-                }
-            }
+        foreach ($this->aclManager->getAxesCanEdit($connectedUser, $organization) as $axis) {
             $axisOption = new UI_Form_Element_Option($axis->getRef(), $axis->getRef(), $axis->getLabel());
             $selectAxis->addOption($axisOption);
 
@@ -219,7 +238,27 @@ class Orga_CellController extends Core_Controller
             foreach ($axis->getDirectBroaders() as $broaderAxis) {
                 $selectParentMember = new UI_Form_Element_Select($axis->getRef().'_parentMember_'.$broaderAxis->getRef());
                 $selectParentMember->setLabel($broaderAxis->getLabel());
-                foreach ($broaderAxis->getMembers() as $parentMember) {
+                if (!$isUserAllowToEditAllMembers) {
+                    $members = [];
+                    foreach ($topCellsWithEditAccess as $cell) {
+                        if (!$broaderAxis->isTransverse($cell->getGranularity()->getAxes())) {
+                            foreach ($cell->getMembers() as $cellMember) {
+                                if ($broaderAxis->isBroaderThan($cellMember->getAxis())) {
+                                    continue 2;
+                                }
+                            }
+                            $members = array_merge(
+                                $members,
+                                $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()]
+                            );
+                        }
+                    }
+                    $members = array_unique($members);
+                    usort($members, [Orga_Model_Member::class, 'orderMembers']);
+                } else {
+                    $members = $broaderAxis->getMembers();
+                }
+                foreach ($members as $parentMember) {
                     $parentMemberOption = new UI_Form_Element_Option($parentMember->getId(), $parentMember->getId(), $parentMember->getLabel());
                     $selectParentMember->addOption($parentMemberOption);
                 }
