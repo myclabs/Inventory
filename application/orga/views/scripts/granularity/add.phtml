@@ -20,7 +20,7 @@ $organization = $this->organization;
     $('#addGranularity<?=$organization->getId()?>_<?=$this->purpose?> .axes').select2(
         {
             closeOnSelect: false,
-            placeholder: '<?=___('Orga', 'granularity', 'addGranularitySelectAxes')?>',
+            placeholder: '<?=(empty($this->selectAxesPlaceholder) ? ___('Orga', 'granularity', 'addGranularitySelectAxes') : $this->selectAxesPlaceholder)?>'
         }
     );
     $('#addGranularity<?=$organization->getId()?>_<?=$this->purpose?>').on('submit', function(e) {

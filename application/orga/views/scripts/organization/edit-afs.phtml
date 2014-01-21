@@ -71,7 +71,8 @@ echo $this->partial(
     [
         'organization' => $this->organization,
         'purpose' => 'afs',
-        'complementaryFields' => $complementaryFields
+        'complementaryFields' => $complementaryFields,
+        'selectAxesPlaceholder' => ___('Orga', 'granularity', 'addGranularitySelectAxesInputLevel')
     ]
 );
 if ($this->display === true) :
