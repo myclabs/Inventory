@@ -276,7 +276,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
     public function getLatestComments(Orga_Model_Cell $cell, $count)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('comment')
+        $qb->select('NEW Orga_Model_InputComment(cell, comment)')
             ->from('Social_Model_Comment', 'comment')
             ->from('Orga_Model_Cell', 'cell')
             ->where('comment MEMBER OF cell.socialCommentsForAFInputSetPrimary')
@@ -287,8 +287,9 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
 
         $comments = $qb->getQuery()->getResult();
 
-        return array_map(function (Social_Model_Comment $comment) use ($cell) {
-            return new Orga_Model_InputComment($cell, $comment);
-        }, $comments);
+//        return array_map(function (Social_Model_Comment $comment) use ($cell) {
+//            return new Orga_Model_InputComment($cell, $comment);
+//        }, $comments);
+        return $comments;
     }
 }
