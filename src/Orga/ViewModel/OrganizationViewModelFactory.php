@@ -3,6 +3,7 @@
 namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
+use Orga\Model\ACL\Role\CellAdminRole;
 use Orga_Model_Organization;
 use Orga_Model_Axis;
 use Orga_Model_Cell;
@@ -73,15 +74,27 @@ class OrganizationViewModelFactory
             }
         }
         if (!$viewModel->canBeEdited) {
-            // Edition d'au moins une granularité de pertinenc, ?
-            $relevanceGranularities = [];
+            // Edition d'au moins une granularité de pertinence ou de DW ?
+            $relevanceOnRebuildGranularities = [];
             foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
-                if ($granularity->getCellsControlRelevance()) {
-                    $relevanceGranularities[] = $granularity;
+                if ($granularity->getCellsControlRelevance() || $granularity->getCellsGenerateDWCubes()) {
+                    $viewModel->canBeEdited = true;
+                    break;
                 }
             }
-            if (count($relevanceGranularities) > 0) {
-                $viewModel->canBeEdited = true;
+        }
+        if (!$viewModel->canBeEdited) {
+            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
+                $connectedUser,
+                $organization,
+                [CellAdminRole::class]
+            );
+            /** @var Orga_Model_Cell $cell */
+            foreach ($cellsCanEdit['cells'] as $cell) {
+                if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+                    $viewModel->canBeEdited = true;
+                    break;
+                }
             }
         }
 

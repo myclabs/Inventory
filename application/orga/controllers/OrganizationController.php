@@ -4,6 +4,7 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\ViewModel\OrganizationViewModelFactory;
 use Orga\ViewModel\CellViewModelFactory;
 use User\Domain\ACL\Action;
@@ -335,10 +336,8 @@ class Orga_OrganizationController extends Core_Controller
             $relevanceGranularities = [];
             foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
                 if ($granularity->getCellsControlRelevance()) {
-                    $relevanceGranularities[] = $granularity;
+                    break;
                 }
-            }
-            if (count($relevanceGranularities) === 0) {
                 $canUserEditRelevance = false;
             }
         }
@@ -359,15 +358,6 @@ class Orga_OrganizationController extends Core_Controller
             $tabView->addTab($afTab);
         }
 
-        // Tab DW
-        if ($isUserAllowedToEditOrganization) {
-            $dwTab = new UI_Tab('reports');
-            $dwTab->label = __('DW', 'name', 'analyses');
-            $dwTab->dataSource = 'orga/organization/edit-reports'.$parameters;
-            $dwTab->useCache = false;
-            $tabView->addTab($dwTab);
-        }
-
         // Tab Consistency.
         if ($isUserAllowedToEditOrganization) {
             $consistencyTab = new UI_Tab('consistency');
@@ -377,15 +367,59 @@ class Orga_OrganizationController extends Core_Controller
             $tabView->addTab($consistencyTab);
         }
 
+        // Tab DW
+        if ($isUserAllowedToEditOrganization) {
+            $dwTab = new UI_Tab('reports');
+            $dwTab->label = __('DW', 'name', 'analyses');
+            $dwTab->dataSource = 'orga/organization/edit-reports'.$parameters;
+            $dwTab->useCache = false;
+            $tabView->addTab($dwTab);
+        }
+
+        // Tab Rebuild
+        $canUserRebuildCells = $isUserAllowedToEditCells;
+        if (!$isUserAllowedToEditOrganization) {
+            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
+                $connectedUser,
+                $organization,
+                [CellAdminRole::class]
+            )['cells'];
+            /** @var Orga_Model_Cell $cell */
+            foreach ($cellsCanEdit as $cell) {
+                if ($cell->getGranularity()->getDWCube()) {
+                    break;
+                }
+                $canUserRebuildCells = false;
+            }
+            if (!$canUserRebuildCells) {
+                foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
+                    if ($granularity->getCellsGenerateDWCubes()) {
+                        $canUserRebuildCells = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if ($canUserRebuildCells) {
+            $rebuildTab = new UI_Tab('rebuild');
+            $rebuildTab->label = __('DW', 'rebuild', 'dataRebuildTab');
+            $rebuildTab->dataSource = 'orga/organization/rebuild'.$parameters;
+            $rebuildTab->useCache = true;
+            $tabView->addTab($rebuildTab);
+        }
+
         $activeTab = $this->hasParam('tab') ? $this->getParam('tab') : 'organization';
         $editOrganizationTabs = ['organization', 'axes', 'granularities', 'consistency'];
         if (!$isUserAllowedToEditOrganization && in_array($activeTab, $editOrganizationTabs)) {
             $activeTab = 'default';
+            if ($canUserEditMembers) {
+                $activeTab = 'members';
+            }
             if ($canUserEditRelevance) {
                 $activeTab = 'relevance';
             }
-            if ($canUserEditMembers) {
-                $activeTab = 'members';
+            if ($canUserRebuildCells) {
+                $activeTab = 'rebuild';
             }
         }
         switch ($activeTab) {
@@ -407,11 +441,14 @@ class Orga_OrganizationController extends Core_Controller
             case 'afs':
                 $afTab->active = true;
                 break;
+            case 'consistency':
+                $consistencyTab->active = true;
+                break;
             case 'reports':
                 $dwTab->active = true;
                 break;
-            case 'consistency':
-                $consistencyTab->active = true;
+            case 'rebuild':
+                $rebuildTab->active = true;
                 break;
         }
 
@@ -696,6 +733,21 @@ class Orga_OrganizationController extends Core_Controller
     /**
      * @Secure("editOrganization")
      */
+    public function consistencyAction()
+    {
+        $this->view->assign('idOrganization', $this->getParam('idOrganization'));
+
+        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
+            $this->view->assign('display', false);
+        } else {
+            $this->view->assign('display', true);
+        }
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
     public function editReportsAction()
     {
         $idOrganization = $this->getParam('idOrganization');
@@ -763,34 +815,95 @@ class Orga_OrganizationController extends Core_Controller
     /**
      * @Secure("editOrganizationAndCells")
      */
-    public function dwStateAction()
+    public function rebuildAction()
     {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
         $idOrganization = $this->getParam('idOrganization');
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        set_time_limit(0);
-        $this->sendJsonResponse(
-            [
-                'organizationDWCubesState' => $this->etlStructureService->areOrganizationDWCubesUpToDate($organization)
-            ]
-        );
+        $this->view->assign('organization', $organization);
+
+        $userCanEditOrganization = false;
+        foreach ($organization->getAdminRoles() as $role) {
+            if ($role->getUser() === $connectedUser) {
+                $userCanEditOrganization = true;
+                break;
+            }
+        }
+        if ($userCanEditOrganization) {
+            $this->view->assign('cellData', $organization);
+            $this->view->assign('cellResults', $organization->getGranularityByRef('global')->getCellByMembers([]));
+        } else {
+            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
+                $connectedUser,
+                $organization,
+                [CellAdminRole::class]
+            )['cells'];
+            $this->view->assign('cells', $cellsCanEdit);
+            if (count($cellsCanEdit) === 1) {
+                $cell = array_pop(array_values($cellsCanEdit));
+                $this->view->assign('cellData', $cell);
+                $this->view->assign('cellResults', $cell);
+            }
+        }
+
+
+        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
+            $this->view->assign('display', false);
+        } else {
+            $this->view->assign('display', true);
+        }
     }
 
     /**
      * @Secure("editOrganizationAndCells")
      */
-    public function dwResetAction()
+    public function rebuildDataAction()
     {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
         $idOrganization = $this->getParam('idOrganization');
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
+        $userCanEditOrganization = false;
+        foreach ($organization->getAdminRoles() as $role) {
+            if ($role->getUser() === $connectedUser) {
+                $userCanEditOrganization = true;
+                $break;
+            }
+        }
+        if ($userCanEditOrganization) {
+            $taskName = 'resetOrganizationDWCubes';
+            $taskParameters = [$organization];
+            $organizationalUnit = __('Orga', 'organization', 'forWorkspace', ['LABEL' => $organization->getLabel()]);
+        } else {
+            $taskName = 'resetCellAndChildrenDWCubes';
+
+            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
+                $connectedUser,
+                $organization,
+                [CellAdminRole::class]
+            )['cells'];
+            if (count($cellsCanEdit) > 1) {
+                $cell = Orga_Model_Cell::load($this->getParam('cell'));
+            } else {
+                $cell = array_pop($cellsCanEdit);
+            }
+            $taskParameters = [$cell];
+            $organizationalUnit = __('Orga', 'organization', 'forOrganizationalUnit', ['LABEL' => $cell->getLabel()]);
+        }
+
         $success = function () {
-            $this->sendJsonResponse(__('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage'));
+            $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage')]);
         };
         $timeout = function () {
-            $this->sendJsonResponse(__('UI', 'message', 'operationInProgress'));
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'operationInProgress')]);
         };
         $error = function () {
             throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
@@ -799,55 +912,55 @@ class Orga_OrganizationController extends Core_Controller
         // Lance la tache en arrière plan
         $task = new ServiceCallTask(
             'Orga_Service_ETLStructure',
-            'resetOrganizationDWCubes',
-            [$organization],
-            __('Orga', 'backgroundTasks', 'resetDWOrga', ['LABEL' => $organization->getLabel()])
+            $taskName,
+            $taskParameters,
+            __('Orga', 'backgroundTasks', 'resetDWOrga', ['FOR_ORGANIZATIONAL_UNIT' => $organizationalUnit])
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
-     * @Secure("editOrganization")
+     * @Secure("editOrganizationAndCells")
      */
-    public function inputsCalculateAction()
+    public function rebuildResultsAction()
     {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
         $idOrganization = $this->getParam('idOrganization');
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
+
+        $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
+            $connectedUser,
+            $organization,
+            [CellAdminRole::class]
+        )['cells'];
+        if (count($cellsCanEdit) > 1) {
+            $cell = Orga_Model_Cell::load($this->getParam('cell'));
+        } else {
+            $cell = array_pop($cellsCanEdit);
+        }
+
         $success = function () {
-            $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'outputDataRebuildConfirmationMessage')]);
+            $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage')]);
         };
         $timeout = function () {
             $this->sendJsonResponse(['message' => __('UI', 'message', 'operationInProgress')]);
         };
         $error = function () {
-            throw new Core_Exception_User('DW', 'rebuild', 'outputDataRebuildFailMessage');
+            throw new Core_Exception_User('DW', 'rebuild', 'analysisDataRebuildFailMessage');
         };
 
         // Lance la tache en arrière plan
         $task = new ServiceCallTask(
             'Orga_Service_ETLStructure',
-            'resetCellAndChildrenCalculationsAndDWCubes',
-            [$organization->getGranularityByRef('global')->getCellByMembers([])],
-            __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $organization->getLabel()])
+            'resetCellAndChildrenDWCubes',
+            [$cell],
+            __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
-    }
-
-    /**
-     * @Secure("editOrganization")
-     */
-    public function consistencyAction()
-    {
-        $this->view->assign('idOrganization', $this->getParam('idOrganization'));
-
-        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
-            $this->_helper->layout()->disableLayout();
-            $this->view->assign('display', false);
-        } else {
-            $this->view->assign('display', true);
-        }
     }
 
     /**
