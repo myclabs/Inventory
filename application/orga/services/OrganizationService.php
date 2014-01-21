@@ -70,7 +70,7 @@ class Orga_Service_OrganizationService
      * @return Orga_Model_Organization
      * @throws Exception
      */
-    public function createOrganization($labelOrganization='')
+    public function createOrganization($labelOrganization = '')
     {
         $this->entityManager->beginTransaction();
 
@@ -195,7 +195,7 @@ class Orga_Service_OrganizationService
      *
      * @return \Orga_Model_Granularity
      */
-    public function addGranularity(Orga_Model_Organization $organization, array $axes, array $configuration=[])
+    public function addGranularity(Orga_Model_Organization $organization, array $axes, array $configuration = [])
     {
         try {
             $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
@@ -374,7 +374,8 @@ class Orga_Service_OrganizationService
         try {
             $organization->getAxisByRef($timeAxisRef);
             $timeAxisRef = 't_'.$timeAxisRef;
-        } catch (Core_Exception_NotFound $e) {}
+        } catch (Core_Exception_NotFound $e) {
+        }
         $timeAxis = new Orga_Model_Axis($organization, $timeAxisRef);
         $timeAxis->setLabel($timeAxisLabel);
         $axes['timeAxis'] = $timeAxis;
@@ -385,7 +386,8 @@ class Orga_Service_OrganizationService
             try {
                 $organization->getAxisByRef($subdivisionAxisRef);
                 $subdivisionAxisRef = 'd_'.$subdivisionAxisRef;
-            } catch (Core_Exception_NotFound $e) {}
+            } catch (Core_Exception_NotFound $e) {
+            }
             $subdivisionAxis = new Orga_Model_Axis($organization, $subdivisionAxisRef);
             $subdivisionAxis->setLabel($subdivisionAxisLabel);
             $axes['subdivisionAxis'] = $subdivisionAxis;
@@ -454,13 +456,17 @@ class Orga_Service_OrganizationService
                 }
             }
             try {
-                $inputsGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($inputsGranularityAxes));
+                $inputsGranularity = $organization->getGranularityByRef(
+                    Orga_Model_Granularity::buildRefFromAxes($inputsGranularityAxes)
+                );
             } catch (Core_Exception_NotFound $e) {
                 $inputsGranularity = new Orga_Model_Granularity($organization, $inputsGranularityAxes);
             }
             if ($inputsGranularityAxes !== $inputNavigableGranularityAxes) {
                 try {
-                    $navigableInputsGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($inputNavigableGranularityAxes));
+                    $navigableInputsGranularity = $organization->getGranularityByRef(
+                        Orga_Model_Granularity::buildRefFromAxes($inputNavigableGranularityAxes)
+                    );
                 } catch (Core_Exception_NotFound $e) {
                     $navigableInputsGranularity = new Orga_Model_Granularity($organization, $inputNavigableGranularityAxes);
                 }
@@ -482,7 +488,9 @@ class Orga_Service_OrganizationService
                     $dWGranularityAxes[] = $axes[$dWGranularityAxisId];
                 }
                 try {
-                    $dWGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($dWGranularityAxes));
+                    $dWGranularity = $organization->getGranularityByRef(
+                        Orga_Model_Granularity::buildRefFromAxes($dWGranularityAxes)
+                    );
                 } catch (Core_Exception_NotFound $e) {
                     $dWGranularity = new Orga_Model_Granularity($organization, $dWGranularityAxes);
                 }
