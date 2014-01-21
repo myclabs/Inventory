@@ -85,10 +85,10 @@
 		</tu>
         <tu tuid="configurationOrga">
             <tuv xml:lang="fr">
-                <seg>Configuration</seg>
+                <seg>Paramétrage</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Paramétrage</seg>
+                <seg>Configuration</seg>
             </tuv>
         </tu>
         <tu tuid="constant">
