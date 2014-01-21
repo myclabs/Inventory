@@ -33,7 +33,9 @@ foreach ($this->granularities as $inputGranularity) :
 
     echo $this->collapse(
         'cellAfs'.$inputGranularity->getId(),
-        $configGranularity->getLabel() . ' <small>' . $inputGranularity->getLabel() . '</small>',
+        '<span class="withTooltip" data-placement="right" title="'
+            . ___('Orga', 'inputGranularities', 'inputAndConfigLevelsExplanations') . '">'
+            . $configGranularity->getLabel() . ' <small>' . $inputGranularity->getLabel() . '</small><span>',
         $datagridGranularityAfs->getHTML()
     )->collapsed();
 
@@ -43,6 +45,7 @@ foreach ($this->granularities as $inputGranularity) :
     $script .= 'datagridCellAfs'.$inputGranularity->getId().'.filter();';
     $script .= '}';
     $script .= '});';
+    $script .= '$(\'.withTooltip\').tooltip();';
 
     if ($this->display === false) :
         echo '<script type="text/javascript">'.$datagridGranularityAfs->getScript().$script.'</script>';

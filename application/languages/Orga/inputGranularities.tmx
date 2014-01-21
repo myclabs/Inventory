@@ -36,6 +36,14 @@
                 <seg>Form choice</seg>
             </tuv>
         </tu>
+        <tu tuid="inputAndConfigLevelsExplanations">
+            <tuv xml:lang="fr">
+                <seg>Niveau de configuration des formulaires | Niveau de saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Forms configuration level | Input level</seg>
+            </tuv>
+        </tu>
 
 
     </body>
