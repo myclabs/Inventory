@@ -12,6 +12,14 @@
                 <seg>Analyses</seg>
             </tuv>
         </tu>
+        <tu tuid="analysesConfig">
+            <tuv xml:lang="fr">
+                <seg>Config. Analyses</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analyses Config.</seg>
+            </tuv>
+        </tu>
         <tu tuid="chart">
             <tuv xml:lang="fr">
                 <seg>Graphique</seg>

@@ -370,7 +370,7 @@ class Orga_OrganizationController extends Core_Controller
         // Tab DW
         if ($isUserAllowedToEditOrganization) {
             $dwTab = new UI_Tab('reports');
-            $dwTab->label = __('DW', 'name', 'analyses');
+            $dwTab->label = __('DW', 'name', 'analysesConfig');
             $dwTab->dataSource = 'orga/organization/edit-reports'.$parameters;
             $dwTab->useCache = false;
             $tabView->addTab($dwTab);
