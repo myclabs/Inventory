@@ -12,7 +12,7 @@ $container = Zend_Registry::get('container');
 $em = $container->get(EntityManager::class);
 
 // Migration d'orga
-echo "\n".'Vérification des ganularité contrôlant la pertinence…'."\n";
+echo "Vérification des ganularité contrôlant la pertinence\n";
 /** @var Orga_Model_Organization $organization */
 foreach (Orga_Model_Organization::loadList() as $organization) {
     $organization->orderGranularities();
