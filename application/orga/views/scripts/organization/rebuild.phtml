@@ -1,0 +1,135 @@
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=___('DW', 'rebuild', 'analysisDataRebuildCollapse')?></legend>
+<p><?=___('DW', 'rebuild', 'analysisDataRebuildWarningMessageOrganization')?></p>
+<div>
+    <form action="orga/organization/rebuild-data/idOrganization/<?=$this->organization->getId()?>/" class="rebuild-data">
+        <div class="input-append">
+            <?php if (count($this->cells) > 1) : ?>
+            <select name="cell">
+                <?php foreach ($this->cells as $cell) : ?>
+                <option value="<?=$cell->getId()?>"><?=$cell->getLabel()?></option>
+                <?php endforeach; ?>
+            </select>
+            <span class="addon">
+            <?php else : ?>
+            <input type="text" class="disabled" disabled value="<?=$this->cellData->getLabel()?>">
+            <?php endif; ?>
+                <button type="submit" class="btn btn-primary dw-action">
+                    <i class="fa fa-refresh"></i>
+                    <span>
+                        <?=___('DW', 'rebuild', 'analysisDataRebuildButton')?>
+                    </span>
+                </button>
+            <?php if (count($this->cells) > 1) : ?>
+            </span>
+            <?php endif; ?>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $('body').on('submit', '.rebuild-data', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            if (this.hasAttribute('data-processing')) {
+                return false;
+            }
+            form.attr('data-processing', 'true');
+            var infoButton = $('.dw-action', form);
+            infoButton.removeClass('btn-primary');
+            infoButton.addClass('btn-info');
+            infoButton.addClass('disabled');
+            $('i.fa', infoButton).addClass('fa-spin');
+            $('span', infoButton).html(
+                '<?=___('DW', 'rebuild', 'analysisDataRebuilding')?>'
+            );
+            $.ajax({
+                type: 'post',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function (data) {
+                    addMessage(data.message, 'success');
+                },
+                error: function(jqXHR) {
+                    errorHandler(jqXHR);
+                },
+                complete: function () {
+                    form.removeAttr('data-processing');
+                    infoButton.removeClass('btn-info');
+                    infoButton.removeClass('disabled');
+                    $('i.fa', infoButton).removeClass('fa-spin');
+                    infoButton.addClass('btn-primary');
+                    $('span', infoButton).html(
+                        '<?=___('DW', 'rebuild', 'analysisDataRebuildButton')?>'
+                    );
+                }
+            });
+        });
+    </script>
+</div>
+</fieldset>
+
+<fieldset class="wrapper">
+    <legend style="cursor: default"><?=___('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
+    <p><?=___('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
+    <form action="orga/organization/rebuild-results/idOrganization/<?=$this->organization->getId()?>/" class="rebuild-results">
+        <div class="input-append">
+            <?php if (count($this->cells) > 1) : ?>
+            <select name="cell">
+                <?php foreach ($this->cells as $cell) : ?>
+                    <option value="<?=$cell->getId()?>"><?=$cell->getLabel()?></option>
+                <?php endforeach; ?>
+            </select>
+            <span class="addon">
+            <?php else : ?>
+                <input type="text" class="disabled" disabled value="<?=$this->cellResults->getLabel()?>">
+            <?php endif; ?>
+                <button type="submit" class="btn btn-primary dw-action">
+                    <i class="fa fa-refresh"></i>
+                    <span>
+                        <?=___('DW', 'rebuild', 'outputDataRebuildButton')?>
+                    </span>
+                </button>
+                <?php if (count($this->cells) > 1) : ?>
+            </span>
+        <?php endif; ?>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $('body').on('submit', '.rebuild-results', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            if (this.hasAttribute('data-processing')) {
+                return false;
+            }
+            form.attr('data-processing', 'true');
+            var infoButton = $('.dw-action', form);
+            infoButton.removeClass('btn-primary');
+            infoButton.addClass('btn-info');
+            infoButton.addClass('disabled');
+            $('i.fa', infoButton).addClass('fa-spin');
+            $('span', infoButton).html(
+                '<?=___('DW', 'rebuild', 'outputDataRebuilding')?>'
+            );
+            $.ajax({
+                type: 'post',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function (data) {
+                    addMessage(data.message, 'success');
+                },
+                error: function(jqXHR) {
+                    errorHandler(jqXHR);
+                },
+                complete: function () {
+                    form.removeAttr('data-processing');
+                    infoButton.removeClass('btn-info');
+                    infoButton.removeClass('disabled');
+                    $('i.fa', infoButton).removeClass('fa-spin');
+                    infoButton.addClass('btn-primary');
+                    $('span', infoButton).html(
+                        '<?=___('DW', 'rebuild', 'outputDataRebuildButton')?>'
+                    );
+                }
+            });
+        });
+    </script>
+</fieldset>

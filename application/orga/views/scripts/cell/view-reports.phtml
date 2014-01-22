@@ -5,10 +5,10 @@ $cellReports = $this->cellReports;
     <thead>
         <tr>
             <th>
-                <?=__('UI', 'name', 'label')?>
+                <?=___('UI', 'name', 'label')?>
             </th>
             <th>
-                <?=__('UI', 'name', 'type')?>
+                <?=___('UI', 'name', 'type')?>
             </th>
             <th>
             </th>
@@ -18,16 +18,16 @@ $cellReports = $this->cellReports;
         <?php foreach ($cellReports as $cellReport): ?>
         <tr>
             <td>
-                <a href="<?=$cellReport['link']?>">
+                <a href="<?=$cellReport['link']?>" target="_blank" >
                     <?=$cellReport['label']?>
                 </a>
             </td>
             <td>
-                <?=__('DW', 'reportList', 'cellReport_'.$cellReport['type'])?>
+                <?=___('DW', 'reportList', 'cellReport_'.$cellReport['type'])?>
             </td>
             <td>
                 <?php if (isset($cellReport['delete'])): ?>
-                <a href="orga/cell/remove-report/idCell/<?=$this->idCell?>/idReport/<?=$cellReport['delete']?>/" class="deleteReport withTooltip" title="<?=__('UI', 'verb', 'delete')?>">
+                <a href="orga/cell/remove-report/idCell/<?=$this->idCell?>/idReport/<?=$cellReport['delete']?>/" class="deleteReport withTooltip" title="<?=___('UI', 'verb', 'delete')?>">
                     <i class="fa fa-trash-o"></i>
                 </a>
                 <?php endif; ?>

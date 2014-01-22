@@ -17,7 +17,7 @@ Feature: General data input feature
     When I open tab "Saisie"
   # Aperçu des résultats, champ obligatoire non rempli (on ne peut pas cliquer sur "Enregistrer")
     And I click "Aperçu des résultats"
-    Then the field "chiffre_affaire" should have error: "Merci de renseigner ce champ."
+    Then the field "chiffre_affaire" should have error: "Champ obligatoire pour atteindre le statut : complet."
     And I should see "La saisie enregistrée est incomplète, ses résultats ne peuvent être affichés."
   # Bouton "Quitter", en l'absence de saisie
     When I click "Quitter"

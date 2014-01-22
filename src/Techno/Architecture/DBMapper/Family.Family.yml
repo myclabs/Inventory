@@ -30,8 +30,6 @@ Techno\Domain\Family\Family:
       nullable: true
       gedmo:
         - translatable
-    refBaseUnit:
-      type: string
     refUnit:
       type: string
 

@@ -66,12 +66,11 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             Action::EDIT(),
             $organization
         );
-        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
             $connectedUser,
             Action::EDIT(),
             $organization->getGranularityByRef('global')->getCellByMembers([])
         );
-        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $isUserAllowedToEditGlobalCell;
 
         if (!$isUserAllowToEditAllMembers) {
             $members = [];
@@ -88,7 +87,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                             continue 2;
                         }
                     }
-                    $cell->getChildMembersForAxes([$axis])[$axis->getRef()];
+                    $members = array_merge($members, $cell->getChildMembersForAxes([$axis])[$axis->getRef()]);
                 }
             }
             $members = array_unique($members);
@@ -330,7 +329,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                             continue 2;
                         }
                     }
-                    $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()];
+                    $members = array_merge(
+                        $members,
+                        $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()]
+                    );
                 }
             }
             $members = array_unique($members);

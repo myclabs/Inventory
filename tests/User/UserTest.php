@@ -167,7 +167,6 @@ class UserMetierTest extends TestCase
      */
     public function testInviteUser()
     {
-        $_SERVER['SERVER_NAME'] = 'http://127.0.0.1';
         $email = Core_Tools::generateString(20) . '@example.com';
 
         $user = $this->userService->inviteUser($email);

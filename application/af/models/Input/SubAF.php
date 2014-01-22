@@ -11,5 +11,4 @@
  */
 abstract class AF_Model_Input_SubAF extends AF_Model_Input
 {
-
 }

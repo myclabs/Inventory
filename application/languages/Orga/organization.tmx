@@ -64,5 +64,23 @@
             </tuv>
         </tu>
 
+        <tu tuid="forWorkspace">
+            <tuv xml:lang="fr">
+                <seg>du workspace : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>for workspace: [LABEL]</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="forOrganizationalUnit">
+            <tuv xml:lang="fr">
+                <seg>de l'unité organisationnelle : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>for organizational unit: [LABEL]</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

@@ -22,12 +22,12 @@ foreach ($this->granularities as $granularity) {
     }
 
     $columnRelevance = new UI_Datagrid_Col_Bool('relevant');
-    $columnRelevance->label = __('Orga', 'cellRelevance', 'relevance');
+    $columnRelevance->label = ___('Orga', 'cellRelevance', 'relevance');
     $columnRelevance->editable = true;
-    $columnRelevance->textTrue = __('Orga', 'cellRelevance', 'relevantFem');
-    $columnRelevance->textFalse = __('Orga', 'cellRelevance', 'irrelevantFem');
-    $columnRelevance->valueTrue = '<i class="fa fa-check"></i> '.__('Orga', 'cellRelevance', 'relevantFem');
-    $columnRelevance->valueFalse = '<i class="fa fa-times"></i> '.__('Orga', 'cellRelevance', 'irrelevantFem');
+    $columnRelevance->textTrue = ___('Orga', 'cellRelevance', 'relevantFem');
+    $columnRelevance->textFalse = ___('Orga', 'cellRelevance', 'irrelevantFem');
+    $columnRelevance->valueTrue = '<i class="fa fa-check"></i> '.___('Orga', 'cellRelevance', 'relevantFem');
+    $columnRelevance->valueFalse = '<i class="fa fa-times"></i> '.___('Orga', 'cellRelevance', 'irrelevantFem');
     $datagridGranularityRelevance->addCol($columnRelevance);
 
     $datagridGranularityRelevance->addParam('idOrganization', $this->organization->getId());

@@ -80,6 +80,14 @@
                 <seg>Axes of the level to be created</seg>
             </tuv>
         </tu>
+        <tu tuid="addGranularitySelectAxesInputLevel">
+            <tuv xml:lang="fr">
+                <seg>Niveau de saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input level</seg>
+            </tuv>
+        </tu>
         <tu tuid="addGranularityFormChoiceSelectAxes">
             <tuv xml:lang="fr">
                 <seg>Niveau de choix des formulaires</seg>

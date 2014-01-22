@@ -18,7 +18,6 @@ class FamilyTest extends TestCase
     public static function generateObject()
     {
         $family = new Family(Core_Tools::generateRef(), 'Test');
-        $family->setBaseUnit(new UnitAPI('m'));
         $family->setUnit(new UnitAPI('m'));
         $family->save();
         self::getEntityManager()->flush();
@@ -96,7 +95,6 @@ class FamilyTest extends TestCase
     public function testCells1Dimension1()
     {
         $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
-        $family->setBaseUnit(new UnitAPI('m'));
         $family->setUnit(new UnitAPI('m'));
         $family->save();
         $this->entityManager->flush();

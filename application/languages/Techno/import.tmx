@@ -118,10 +118,10 @@ member2, Label of member 2</seg>
 
         <tu tuid="importSuccessful">
             <tuv xml:lang="fr">
-                <seg>[NUMBER] membres ont été ajoutés.</seg>
+                <seg>[NUMBER] membre(s) ont été ajouté(s).</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>[NUMBER] members have been added.</seg>
+                <seg>[NUMBER] member(s) have been added.</seg>
             </tuv>
         </tu>
 

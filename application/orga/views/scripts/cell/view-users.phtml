@@ -7,16 +7,16 @@ $cellUsers = $this->cellUsers;
     <thead>
         <tr>
             <th>
-                <?=__('User', 'user', 'firstName')?>
+                <?=___('User', 'user', 'firstName')?>
             </th>
             <th>
-                <?=__('User', 'user', 'lastName')?>
+                <?=___('User', 'user', 'lastName')?>
             </th>
             <th>
-                <?=__('User', 'user', 'emailAddress')?>
+                <?=___('User', 'user', 'emailAddress')?>
             </th>
             <th>
-                <?=__('User', 'role', 'role')?>
+                <?=___('User', 'role', 'role')?>
             </th>
             <th>
             </th>
@@ -38,7 +38,7 @@ $cellUsers = $this->cellUsers;
                 <?=$cellRole->getLabel()?>
             </td>
             <td>
-                <a href="orga/cell/remove-user/idCell/<?=$this->idCell?>/idRole/<?=$cellRole->getId()?>/" class="delete-user withTooltip" title="<?=__('Orga', 'role', 'deleteRole')?>">
+                <a href="orga/cell/remove-user/idCell/<?=$this->idCell?>/idRole/<?=$cellRole->getId()?>/" class="delete-user withTooltip" title="<?=___('Orga', 'role', 'deleteRole')?>">
                     <i class="fa fa-trash-o"></i>
                 </a>
             </td>

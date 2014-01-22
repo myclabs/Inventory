@@ -53,7 +53,12 @@ class Core_Translate
         $message = $this->getFromCache($id, $replacements, $locale);
 
         if ($message === false) {
-            $message = $this->translator->trans($id, $replacements, null, $locale);
+            $adaptedReplacements = [];
+            foreach ($replacements as $key => $value) {
+                $newKey = '[' . $key . ']';
+                $adaptedReplacements[$newKey] = $value;
+            }
+            $message = $this->translator->trans($id, $adaptedReplacements, null, $locale);
 
             $this->saveToCache($id, $replacements, $locale, $message);
         }

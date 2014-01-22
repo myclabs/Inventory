@@ -15,7 +15,7 @@ if (count($dimensions) === 0) {
 $tmd = new UI_TMD('elements');
 
 if ($this->edit) {
-    $tmd->formatCells = '<a href="{url}" data-target="#element_edit" data-remote="false" data-toggle="modal" data-element="{elementId}">{value} ± {uncertainty}</a>';
+    $tmd->formatCells = '<a href="{url}" data-target="#element_edit" data-remote="false" data-toggle="modal" data-element="{elementId}">{value}</a>';
 
     $editPopup = new UI_Popup_Ajax('element_edit');
     $editPopup->title = __('UI', 'loading', 'loading');
@@ -26,7 +26,7 @@ if ($this->edit) {
         .'<i class="fa fa-times"></i> '.__('UI', 'verb', 'close').'</button>';
     echo $editPopup->render();
 } else {
-    $tmd->formatCells = '{value} ± {uncertainty}';
+    $tmd->formatCells = '{value}';
 }
 
 // Ajout des dimensions/colonnes
@@ -77,8 +77,8 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
             'url'         => 'techno/element/details/idFamily/' . $family->getId()
                 . '?coordinates=' . urlencode(json_encode($membersCoordinates)),
             'elementId'   => implode('-', $membersCoordinates),
-            'value'       => $locale->formatNumber($value->getDigitalValue(), 3),
-            'uncertainty' => $locale->formatUncertainty($value->getRelativeUncertainty()),
+            'value'       => $locale->formatNumber($value->getDigitalValue(), 3)
+                . ' ± ' . $locale->formatUncertainty($value->getRelativeUncertainty()),
             'unit'        => $family->getValueUnit()->getSymbol(),
         ];
     }
@@ -86,8 +86,7 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
         'url'         => 'techno/element/details/idFamily/' . $family->getId()
             . '?coordinates=' . urlencode(json_encode($membersCoordinates)),
         'elementId'   => implode('-', $membersCoordinates),
-        'value'       => $locale->formatNumber(0, 3),
-        'uncertainty' => $locale->formatUncertainty(0),
+        'value'       => '-',
         'unit'        => $family->getValueUnit()->getSymbol(),
     ];
 };

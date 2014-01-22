@@ -72,7 +72,7 @@ Feature: My account feature
     When I fill in "email" with "emmanuel.risler.abo@gmail.com"
     And I fill in "password" with "emmanuel.risler.pro@gmail.com"
     And I click "connection"
-    Then the ".page-header h1" element should contain "Mon compte"
+    Then I should see "Vous ne disposez d'aucun droit d'accès à une unité organisationnelle."
 
   @javascript
   Scenario: Change my password
@@ -115,4 +115,4 @@ Feature: My account feature
     When I fill in "email" with "emmanuel.risler.pro@gmail.com"
     And I fill in "password" with "aaaaaaaa"
     And I click "connection"
-    Then the ".page-header h1" element should contain "Mon compte"
+    Then I should see "Vous ne disposez d'aucun droit d'accès à une unité organisationnelle."

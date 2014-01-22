@@ -44,3 +44,13 @@
     padding: 11px 18px;
     border-radius: 3px;
 }
+
+.login-form #captcha-element {
+    margin-left: 0;
+}
+.login-form .captcha {
+    display: inline-block;
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+}

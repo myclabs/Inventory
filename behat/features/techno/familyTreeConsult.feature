@@ -13,4 +13,3 @@ Feature: Family tree consult feature
     And I click "Combustion de combustible, mesuré en unité de masse"
   # Vérification
     Then I should see "Combustion de combustible, mesuré en unité de masse"
-    And I should see "Unité : kg équ. CO2/t"

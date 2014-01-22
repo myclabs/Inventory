@@ -77,14 +77,12 @@ class Techno_Populate extends Core_Script_Action
         Category $category,
         $ref,
         $label,
-        $refBaseUnit,
         $refUnit,
         $documentation = ''
     ) {
         $family = new Family($ref, $label);
 
         $family->setCategory($category);
-        $family->setBaseUnit(new UnitAPI($refBaseUnit));
         $family->setUnit(new UnitAPI($refUnit));
         $family->setDocumentation($documentation);
         $family->save();

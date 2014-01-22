@@ -8,7 +8,7 @@ use Core\Annotation\Secure;
 class Orga_Datagrid_Organization_ReportsController extends UI_Controller_Datagrid
 {
     /**
-     * @Secure("editOrganizationAndCells")
+     * @Secure("editOrganization")
      */
     public function getelementsAction()
     {
@@ -35,7 +35,7 @@ class Orga_Datagrid_Organization_ReportsController extends UI_Controller_Datagri
     }
 
     /**
-     * @Secure("editOrganizationAndCells")
+     * @Secure("editOrganization")
      */
     public function deleteelementAction()
     {

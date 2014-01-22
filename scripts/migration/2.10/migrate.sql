@@ -30,7 +30,7 @@ UPDATE Techno_Family_Dimension
   INNER JOIN Keyword_Keyword
     ON Techno_Family_Dimension.ref = Keyword_Keyword.ref
 SET
-  Techno_Family_Dimension.label = Keyword_Keyword.label;
+  Techno_Family_Dimension.label = CONCAT(UPPER(LEFT(Keyword_Keyword.label, 1)), SUBSTRING(Keyword_Keyword.label, 2));
 
 
 -- Member

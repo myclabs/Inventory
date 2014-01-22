@@ -7,7 +7,6 @@
  * @subpackage Model
  */
 
-use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -647,13 +646,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
             if ($configGranularity !== null) {
                 $configGranularity->addInputGranularity($this);
-
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocBibliographyForAFInputSetPrimary(new Bibliography());
-                }
             } else {
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocBibliographyForAFInputSetPrimary();
                     try {
                         $cell->setAFInputSetPrimary();
                     } catch (Core_Exception_UndefinedAttribute $e) {
@@ -834,7 +828,25 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function setCellsWithACL($bool)
     {
-        $this->cellsWithACL = (bool) $bool;
+        if ($this->cellsWithACL !== $bool) {
+            if ($this->cellsWithACL) {
+                foreach ($this->getCells() as $cell) {
+                    foreach ($cell->getAdminRoles() as $adminRole) {
+                        $cell->removeAdminRole($adminRole);
+                    }
+                    foreach ($cell->getManagerRoles() as $managerRole) {
+                        $cell->removeManagerRole($managerRole);
+                    }
+                    foreach ($cell->getContributorRoles() as $contributorRole) {
+                        $cell->removeContributorRole($contributorRole);
+                    }
+                    foreach ($cell->getObserverRoles() as $observerRole) {
+                        $cell->removeObserverRole($observerRole);
+                    }
+                }
+            }
+            $this->cellsWithACL = (bool) $bool;
+        }
     }
 
     /**

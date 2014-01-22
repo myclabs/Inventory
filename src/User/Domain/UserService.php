@@ -37,18 +37,22 @@ class UserService
 
     private $noReplyName;
 
+    private $applicationUrl;
+
     public function __construct(
         ACLService $aclService,
         LoggerInterface $logger,
         $contactEmail,
         $noReplyEmail,
-        $noReplyName
+        $noReplyName,
+        $applicationUrl
     ) {
         $this->aclService = $aclService;
         $this->logger = $logger;
         $this->contactEmail = $contactEmail;
         $this->noReplyEmail = $noReplyEmail;
         $this->noReplyName = $noReplyName;
+        $this->applicationUrl = $applicationUrl;
     }
 
     /**
@@ -156,8 +160,6 @@ class UserService
         // Sauvegarde
         $user->save();
 
-        $url = 'http://' . $_SERVER["SERVER_NAME"] . Zend_Controller_Front::getInstance()->getBaseUrl() . '/';
-
         $emailSubject = __('User', 'email', 'subjectAccountCreated', [
             'APPLICATION_NAME' => $this->noReplyName,
         ]);
@@ -166,7 +168,7 @@ class UserService
             'EMAIL'            => $email,
             'CONTACT_NAME'     => $this->noReplyName,
             'CONTACT_ADDRESS'  => $this->contactEmail,
-            'URL_APPLICATION'  => $url,
+            'URL_APPLICATION'  => $this->applicationUrl . '/',
             'APPLICATION_NAME' => $this->noReplyName,
         ]);
         $emailContent .= $extraContent;

@@ -16,7 +16,7 @@ $cells = $this->cells;
                     <a class="editOrganization btn btn-small btn-primary"
                        href="orga/organization/edit/idOrganization/<?=$organization->id?>">
                         <i class="fa fa-wrench"></i>
-                        <?=__('UI', 'name', 'configurationOrga')?>
+                        <?=___('UI', 'name', 'configurationOrga')?>
                     </a>
                 </small>
             </div>
@@ -32,12 +32,12 @@ $cells = $this->cells;
             <?=$cell->extendedLabel?>
             <small>
                 <i class="fa fa-external-link"></i>
-                <?=__('Orga', 'view', 'linkDetails')?>
+                <?=___('Orga', 'organizationList', 'goToData')?>
             </small>
         </a>
     </h2>
 </div>
 <?php endforeach; ?>
 <?php if (count($this->cells) === 0) : ?>
-<p><?=__('UI', 'message', 'noAccess')?></p>
+<p><?=___('UI', 'message', 'noAccess')?></p>
 <?php endif; ?>

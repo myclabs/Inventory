@@ -35,15 +35,6 @@
                 <seg>Administrator</seg>
             </tuv>
         </tu>
-        <tu tuid="cellAdministrators">
-            <tuv xml:lang="fr">
-                <seg>Administrateurs</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Administrators</seg>
-            </tuv>
-        </tu>
-
         <!-- Coordinateur de cellule -->
 
         <tu tuid="cellManager">

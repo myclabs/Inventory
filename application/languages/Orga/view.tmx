@@ -19,10 +19,18 @@
 
         <tu tuid="separator">
             <tuv xml:lang="fr">
-                <seg> &amp; </seg>
+                <seg> - </seg> <!-- ou bien &amp; ? -->
             </tuv>
             <tuv xml:lang="en">
-                <seg> &amp; </seg>
+                <seg> - </seg>
+            </tuv>
+        </tu>
+        <tu tuid="granularityExplanations">
+            <tuv xml:lang="fr">
+                <seg>Fonctionnalités disponibles à ce niveau</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Features available at this level</seg>
             </tuv>
         </tu>
 
@@ -38,10 +46,10 @@
         </tu>
         <tu tuid="viewInput">
             <tuv xml:lang="fr">
-                <seg>Cliquer pour accéder à la saisie</seg>
+                <seg>Saisir les données</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Click to access input</seg>
+                <seg>Enter data</seg>
             </tuv>
         </tu>
 
@@ -57,10 +65,34 @@
         </tu>
         <tu tuid="allInventoryStatus">
             <tuv xml:lang="fr">
-                <seg>Tous statuts d'inventaire</seg>
+                <seg>Tous statuts de collecte</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>All collection status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunched">
+            <tuv xml:lang="fr">
+                <seg>Collecte non lancée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection not launched</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryOpen">
+            <tuv xml:lang="fr">
+                <seg>Collecte en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection open</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosed">
+            <tuv xml:lang="fr">
+                <seg>Collecte cloturée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection closed</seg>
             </tuv>
         </tu>
         <tu tuid="allMembers">
@@ -69,6 +101,65 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>All elements ([AXIS])</seg>
+            </tuv>
+        </tu>
+        <tu tuid="filterReverserExplanations">
+            <tuv xml:lang="fr">
+                <seg>Lorsque coché, les résultats correspondront à l'inverse des filtres sélectionnés.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>When checked, results will be the opposite of selected filters.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ratioNumberFilteredCellsOverTotal">
+            <tuv xml:lang="fr">
+                <seg>Nombre d'éléments filtrés / nombre d'éléments au total</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Number of filtered elements / total number of elements</seg>
+            </tuv>
+        </tu>
+        <tu tuid="filterNoResult">
+            <tuv xml:lang="fr">
+                <seg>Aucun élément pour le(s) filtre(s) séléctionné(s).</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No element matching selected filter(s).</seg>
+            </tuv>
+        </tu>
+
+        <!-- Tooltips des icônes -->
+
+        <tu tuid="contactAdministrators">
+            <tuv xml:lang="fr">
+                <seg>Contacter un référent</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Contact a referent</seg>
+            </tuv>
+        </tu>
+        <tu tuid="editUsers">
+            <tuv xml:lang="fr">
+                <seg>Administrer les utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Edit users</seg>
+            </tuv>
+        </tu>
+        <tu tuid="analyzeData">
+            <tuv xml:lang="fr">
+                <seg>Analyser les résultats</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analyze results</seg>
+            </tuv>
+        </tu>
+        <tu tuid="exportData">
+            <tuv xml:lang="fr">
+                <seg>Exporter les données</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Export data</seg>
             </tuv>
         </tu>
 
@@ -108,23 +199,128 @@
         </tu>
         <tu tuid="viewInventoryUsers">
             <tuv xml:lang="fr">
-                <seg>Participants à la collecte</seg>
+                <seg>Voir les participants</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Users involved in this collection</seg>
+                <seg>See users in charge</seg>
             </tuv>
         </tu>
         <tu tuid="inventoryUsersFrom">
             <tuv xml:lang="fr">
-                <seg>Participants à la collecte — </seg>
+                <seg>Participants — </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Users involved in collection — </seg>
+                <seg>Users in charge — </seg>
             </tuv>
         </tu>
 
-        <!-- Détails du statut des saisies d'un inventaire -->
+        <!-- Contenu popup des administrateurs référents -->
 
+        <tu tuid="administratorExplanations">
+            <tuv xml:lang="fr">
+                <seg>Adresses e-mail des utilisateurs disposant d'un droit d'administration sur cette unité d'organisation. Vous pouvez copier-coller une ou plusieurs adresse(s) afin d'envoyer un e-mail pour une annonce ou une demande.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>E-mail addresses of users having the right to edit all or part of this organizational unit. You can copy-paste one or several address(es) in order to send an e-mail to these users, for a notification or a request.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Contenu popup des exports -->
+
+        <tu tuid="exportsExplanations">
+            <tuv xml:lang="fr">
+                <seg>Sélectionner le type de données à exporter puis cliquer sur « Exporter ».</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Select the kind of data that you want to export and click "Export".</seg>
+            </tuv>
+        </tu>
+
+        <!-- Suivi des collectes -->
+
+        <tu tuid="inventoryStatusExplanations">
+            <tuv xml:lang="fr">
+                <seg>Statut de la collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryPercentExplanations">
+            <tuv xml:lang="fr">
+                <seg>Avancement de la collecte (pourcentage de saisies terminées)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection progress (finished inputs percentage)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunched">
+            <tuv xml:lang="fr">
+                <seg>Collecte non lancée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection not launched</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryOpen">
+            <tuv xml:lang="fr">
+                <seg>Collecte en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection in progress</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosed">
+            <tuv xml:lang="fr">
+                <seg>Collecte clôturée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection closed</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryUsersExplanations">
+            <tuv xml:lang="fr">
+                <seg>Adresses e-mail des utilisateurs disposant d'un droit d'édition sur tout ou partie de cette unité d'organisation. Vous pouvez copier-coller ces adresses pour envoyer un e-mail à ces utilisateurs, pour une annonce ou une relance.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>E-mail addresses of users having the right to edit all or part of this organizational unit. You can copy-paste these addresses in order to send an e-mail to these users, for a notification or a recall.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Détails du statut des saisies -->
+
+        <tu tuid="statusAFNotConfigured">
+            <tuv xml:lang="fr">
+                <seg>Formulaire absent</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Missing form</seg>
+            </tuv>
+        </tu>
+        <tu tuid="statusNotStarted">
+            <tuv xml:lang="fr">
+                <seg>Saisie non démarrée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input not started</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputStatusExplanations">
+            <tuv xml:lang="fr">
+                <seg>Statut de la saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputPercentExplanations">
+            <tuv xml:lang="fr">
+                <seg>Avancement de la saisie (pourcentage de champs obligatoires remplis)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input progress (percentage of filled field among required fields)</seg>
+            </tuv>
+        </tu>
         <tu tuid="inventoryInputsDetails">
             <tuv xml:lang="fr">
                 <seg>Statuts des saisies</seg>
@@ -186,7 +382,7 @@
 
         <tu tuid="display-more-cells">
             <tuv xml:lang="fr">
-                <seg>Afficher davantage d éléments</seg>
+                <seg>Afficher davantage d'éléments</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Display more elements</seg>
@@ -208,12 +404,32 @@
 
         <tu tuid="askConfirmDeleteReport">
             <tuv xml:lang="fr">
-                <seg>Êtes-vous sûr de vouloir supprimer ce rapport d analyse ?</seg>
+                <seg>Êtes-vous sûr de vouloir supprimer ce rapport d'analyse ?</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Are you sure you want to delete this analysis report ?</seg>
             </tuv>
         </tu>
+
+        <!-- Volet d'ajout d'un membre organisationnel -->
+
+        <tu tuid="addMembersAxisExplanations">
+            <tuv xml:lang="fr">
+                <seg>Axe d'organisation auquel l'élément sera ajouté.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational axis to which element will be added.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addMembersMemberExplanations">
+            <tuv xml:lang="fr">
+                <seg>Libellé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Label</seg>
+            </tuv>
+        </tu>
+
 
     </body>
 </tmx>

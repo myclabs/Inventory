@@ -1,7 +1,8 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
-use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\Role\CellManagerRole;
+use Orga\Model\ACL\Role\OrganizationAdminRole;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\AdminRole;
 use User\Domain\User;
@@ -70,20 +71,30 @@ class Orga_Service_OrganizationService
      * @return Orga_Model_Organization
      * @throws Exception
      */
-    public function createOrganization($labelOrganization='')
+    public function createOrganization($labelOrganization = '')
     {
         $this->entityManager->beginTransaction();
-        
+
         try {
             // Création de l'organization.
             $organization = new Orga_Model_Organization();
             $organization->setLabel($labelOrganization);
-            
+
             // Création d'une granularité globale par défaut.
             $defaultGranularity = new Orga_Model_Granularity($organization);
             $defaultGranularity->setCellsWithACL(true);
 
             $organization->save();
+            $this->entityManager->flush();
+
+            // Ajout des superadmins en tant qu'administrateur de l'organisation
+            foreach (AdminRole::loadList() as $adminRole) {
+                /** @var AdminRole $adminRole */
+                $admin = $adminRole->getUser();
+                $this->aclService->addRole($admin, new OrganizationAdminRole($admin, $organization));
+            }
+
+            $this->entityManager->flush();
             $this->entityManager->commit();
             return $organization;
         } catch (Exception $e) {
@@ -124,14 +135,6 @@ class Orga_Service_OrganizationService
             // Ajout de l'utilisateur courant en tant qu'administrateur.
             $this->aclManager->addOrganizationAdministrator($organization, $administrator->getEmail(), false);
             $this->entityManager->flush();
-
-            // Ajout des superadmins en tant qu'administrateur de l'organisation
-            foreach (AdminRole::loadList() as $adminRole) {
-                /** @var AdminRole $adminRole */
-                $email = $adminRole->getUser()->getEmail();
-                $this->aclManager->addOrganizationAdministrator($organization, $email, false);
-                $this->entityManager->flush();
-            }
 
             $this->entityManager->commit();
             return $organization;
@@ -193,7 +196,7 @@ class Orga_Service_OrganizationService
      *
      * @return \Orga_Model_Granularity
      */
-    public function addGranularity(Orga_Model_Organization $organization, array $axes, array $configuration=[])
+    public function addGranularity(Orga_Model_Organization $organization, array $axes, array $configuration = [])
     {
         try {
             $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
@@ -241,6 +244,42 @@ class Orga_Service_OrganizationService
         }
 
         return $granularity;
+    }
+
+    /**
+     * @param Orga_Model_Granularity $granularity
+     * @throws Exception
+     */
+    public function removeGranularity(Orga_Model_Granularity $granularity)
+    {
+        try {
+            $this->entityManager->beginTransaction();
+
+            try {
+                $granularityForInventoryStatus =  $granularity->getOrganization()->getGranularityForInventoryStatus();
+                if ($granularityForInventoryStatus === $granularity) {
+                    $granularity->getOrganization()->setGranularityForInventoryStatus();
+                }
+            } catch (Core_Exception_UndefinedAttribute $e) {
+                // Pas de granularité des inventares.
+            }
+
+            if ($granularity->getCellsWithACL() || $granularity->isInput() || $granularity->hasInputGranularities()) {
+                $granularity->setCellsWithACL(false);
+                $granularity->setInputConfigGranularity();
+                $this->entityManager->flush();
+            }
+
+            $granularity->delete();
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Exception $e) {
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
+
+            throw $e;
+        }
     }
 
     /**
@@ -336,7 +375,8 @@ class Orga_Service_OrganizationService
         try {
             $organization->getAxisByRef($timeAxisRef);
             $timeAxisRef = 't_'.$timeAxisRef;
-        } catch (Core_Exception_NotFound $e) {}
+        } catch (Core_Exception_NotFound $e) {
+        }
         $timeAxis = new Orga_Model_Axis($organization, $timeAxisRef);
         $timeAxis->setLabel($timeAxisLabel);
         $axes['timeAxis'] = $timeAxis;
@@ -347,7 +387,8 @@ class Orga_Service_OrganizationService
             try {
                 $organization->getAxisByRef($subdivisionAxisRef);
                 $subdivisionAxisRef = 'd_'.$subdivisionAxisRef;
-            } catch (Core_Exception_NotFound $e) {}
+            } catch (Core_Exception_NotFound $e) {
+            }
             $subdivisionAxis = new Orga_Model_Axis($organization, $subdivisionAxisRef);
             $subdivisionAxis->setLabel($subdivisionAxisLabel);
             $axes['subdivisionAxis'] = $subdivisionAxis;
@@ -416,13 +457,17 @@ class Orga_Service_OrganizationService
                 }
             }
             try {
-                $inputsGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($inputsGranularityAxes));
+                $inputsGranularity = $organization->getGranularityByRef(
+                    Orga_Model_Granularity::buildRefFromAxes($inputsGranularityAxes)
+                );
             } catch (Core_Exception_NotFound $e) {
                 $inputsGranularity = new Orga_Model_Granularity($organization, $inputsGranularityAxes);
             }
             if ($inputsGranularityAxes !== $inputNavigableGranularityAxes) {
                 try {
-                    $navigableInputsGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($inputNavigableGranularityAxes));
+                    $navigableInputsGranularity = $organization->getGranularityByRef(
+                        Orga_Model_Granularity::buildRefFromAxes($inputNavigableGranularityAxes)
+                    );
                 } catch (Core_Exception_NotFound $e) {
                     $navigableInputsGranularity = new Orga_Model_Granularity($organization, $inputNavigableGranularityAxes);
                 }
@@ -444,7 +489,9 @@ class Orga_Service_OrganizationService
                     $dWGranularityAxes[] = $axes[$dWGranularityAxisId];
                 }
                 try {
-                    $dWGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($dWGranularityAxes));
+                    $dWGranularity = $organization->getGranularityByRef(
+                        Orga_Model_Granularity::buildRefFromAxes($dWGranularityAxes)
+                    );
                 } catch (Core_Exception_NotFound $e) {
                     $dWGranularity = new Orga_Model_Granularity($organization, $dWGranularityAxes);
                 }
@@ -455,7 +502,7 @@ class Orga_Service_OrganizationService
 
         $organization->save();
         $this->entityManager->flush();
-        
+
         // Définition de la création des DW après pour éviter un bug d'insertion.
         foreach ($dWGranularities as $granularityWithDW) {
             $granularityWithDW->setCellsGenerateDWCubes(true);
@@ -495,6 +542,7 @@ class Orga_Service_OrganizationService
         $granularityCategory = new Orga_Model_Granularity($organization, [$categoryAxis]);
         $granularityCategory->save();
         $granularityYear = new Orga_Model_Granularity($organization, [$timeAxis]);
+        $granularityYear->setCellsGenerateDWCubes(true);
         $granularityYear->save();
         $granularityYearCategory = new Orga_Model_Granularity($organization, [$timeAxis, $categoryAxis]);
         $granularityYearCategory->save();
@@ -509,9 +557,42 @@ class Orga_Service_OrganizationService
             ->getCellsGroupForInputGranularity($granularityYearCategory)
             ->setAF(AF_Model_AF::loadByRef('deplacement'));
 
-        // Lance l'inventaire 2014
-        $granularityYear->getCellByMembers([$year2014])
+        // Lance l'inventaire 2013
+        $granularityYear->getCellByMembers([$year2013])
             ->setInventoryStatus(Orga_Model_Cell::STATUS_ACTIVE);
+
+        $organization->save();
+        // Flush pour persistence des cellules avant l'ajout du role et ajout des rapports préconfigurés.
+        $this->entityManager->flush();
+
+        // Analyses préconfigurées
+        $report = new DW_Model_Report($granularityYear->getDWCube());
+        $report->setLabel('GES émis par catégorie');
+        $report->setChartType(DW_Model_Report::CHART_PIE);
+        $report->setWithUncertainty(false);
+        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('ges', $granularityYear->getDWCube()));
+        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube('o_categorie', $granularityYear->getDWCube()));
+        $report->setSortType(DW_Model_Report::SORT_CONVENTIONAL);
+        $report->save();
+
+        $report = new DW_Model_Report($granularityYear->getDWCube());
+        $report->setLabel('GES émis par catégorie et poste article 75');
+        $report->setChartType(DW_Model_Report::CHART_VERTICAL_STACKED);
+        $report->setWithUncertainty(false);
+        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('ges', $granularityYear->getDWCube()));
+        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube('o_categorie', $granularityYear->getDWCube()));
+        $report->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube('c_poste_article_75', $granularityYear->getDWCube()));
+        $report->setSortType(DW_Model_Report::SORT_CONVENTIONAL);
+        $report->save();
+
+        $report = new DW_Model_Report($granularityYear->getDWCube());
+        $report->setLabel('Energie finale consommée par catégorie');
+        $report->setChartType(DW_Model_Report::CHART_PIE);
+        $report->setWithUncertainty(false);
+        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('energie_finale', $granularityYear->getDWCube()));
+        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube('o_categorie', $granularityYear->getDWCube()));
+        $report->setSortType(DW_Model_Report::SORT_CONVENTIONAL);
+        $report->save();
     }
 
     /**
@@ -525,14 +606,10 @@ class Orga_Service_OrganizationService
 
         $organization = $this->createOrganization();
         $this->initOrganizationDemo($organization);
-        $organization->save();
 
-        // Flush pour persistence des cellules avant l'ajout du role.
-        $this->entityManager->flush();
-
-        // Ajoute en tant qu'admin de la cellule globale
+        // Ajoute en tant que manager de la cellule globale
         $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
-        $this->aclService->addRole($user, new CellAdminRole($user, $globalCell));
+        $this->aclService->addRole($user, new CellManagerRole($user, $globalCell));
 
         $this->entityManager->flush();
 

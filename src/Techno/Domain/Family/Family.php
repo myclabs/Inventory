@@ -68,18 +68,6 @@ class Family extends Core_Model_Entity
     protected $dimensions;
 
     /**
-     * Référence de l'unité de base
-     * @var string
-     */
-    protected $refBaseUnit;
-
-    /**
-     * Cache
-     * @var UnitAPI
-     */
-    protected $baseUnit;
-
-    /**
      * Référence de l'unité du composant
      * @var string
      */
@@ -387,46 +375,12 @@ class Family extends Core_Model_Entity
     }
 
     /**
-     * @param UnitAPI $baseUnit
-     */
-    public function setBaseUnit(UnitAPI $baseUnit)
-    {
-        $this->refBaseUnit = $baseUnit->getRef();
-        $this->baseUnit = $baseUnit;
-    }
-
-    /**
-     * @return UnitAPI
-     * @throws Core_Exception_UndefinedAttribute
-     */
-    public function getBaseUnit()
-    {
-        if ($this->refBaseUnit === null) {
-            throw new Core_Exception_UndefinedAttribute("The component base unit has not been defined");
-        }
-        // Lazy loading
-        if ($this->baseUnit === null) {
-            $this->baseUnit = new UnitAPI($this->refBaseUnit);
-        }
-        return $this->baseUnit;
-    }
-
-    /**
      * @param UnitAPI $unit
      * @throws Core_Exception_UndefinedAttribute
      * @throws Core_Exception_InvalidArgument
      */
     public function setUnit(UnitAPI $unit)
     {
-        if ($this->refBaseUnit === null) {
-            throw new Core_Exception_UndefinedAttribute("A base unit needs to be set for this component");
-        }
-        // Vérifie que l'unité est compatible avec l'unité de base
-        if (!$unit->isEquivalent($this->refBaseUnit)) {
-            throw new Core_Exception_InvalidArgument(
-                "The unit given is not compatible with the base unit of the component"
-            );
-        }
         $this->refUnit = $unit->getRef();
         $this->unit = $unit;
     }

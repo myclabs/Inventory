@@ -116,7 +116,7 @@ Feature: AF numeric parameter algo feature
       | dimension | algo                                      |
       | processus | expression_sel_coord_param |
   # Modification élément coordonnée fixée
-    When I set "gaz naturel" for column "member" of row 1 of the "coordinatesFixed" datagrid
+    When I set "Gaz naturel" for column "member" of row 1 of the "coordinatesFixed" datagrid
   # On ferme le popup pour aller fermer le message en arrière-plan
     And I click element "#algoNumericParameter_coordinates_popup .close:contains('×')"
     And I wait 5 seconds
@@ -153,7 +153,7 @@ Feature: AF numeric parameter algo feature
     Then I should see the popup "Ajout d'une coordonnée fixée"
     When I click "Valider"
     Then the field "coordinatesFixed_dimension_addForm" should have error: "Merci de renseigner ce champ."
-    When I select "processus" from "coordinatesFixed_dimension_addForm"
+    When I select "Processus" from "coordinatesFixed_dimension_addForm"
   # Le élément lui-même n'est pas déterminé dans le popup (car dépend dynamiquement du choix de la dimension).
     And I click "Valider"
   # On ferme le popup pour aller fermer le message en arrière-plan
@@ -163,14 +163,14 @@ Feature: AF numeric parameter algo feature
     Then the "coordinatesFixed" datagrid should contain 1 row
     Then the row 1 of the "coordinatesFixed" datagrid should contain:
       | dimension | member |
-      | processus |        |
+      | Processus |        |
   # Ajout coordonnée algo
     When I click element ".btn:contains('Ajouter')[data-target='#coordinatesAlgo_addPanel']"
     Then I should see the popup "Ajout d'une coordonnée déterminée par algorithme"
     When I click "Valider"
     Then the field "coordinatesAlgo_dimension_addForm" should have error: "Merci de renseigner ce champ."
     And the field "coordinatesAlgo_algo_addForm" should have error: "Merci de renseigner ce champ."
-    When I select "combustible" from "coordinatesAlgo_dimension_addForm"
+    When I select "Combustible" from "coordinatesAlgo_dimension_addForm"
     And I select "expression_sel_coord_param" from "coordinatesAlgo_algo_addForm"
     And I click "Valider"
   # On ferme le popup pour aller fermer le message en arrière-plan
@@ -180,7 +180,7 @@ Feature: AF numeric parameter algo feature
     Then the "coordinatesAlgo" datagrid should contain 1 row
     Then the row 1 of the "coordinatesAlgo" datagrid should contain:
       | dimension   | algo                                      |
-      | combustible | expression_sel_coord_param |
+      | Combustible | expression_sel_coord_param |
 
   @javascript
   Scenario: Influence of a change of family on coordinates of an algo numeric parameter scenario

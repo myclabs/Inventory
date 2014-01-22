@@ -50,7 +50,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                                                                             ['idAF' => $af->getId(),
                                                                             'idAlgo' => $algo->getId()]),
                                                         __('Techno', 'name', 'coordinates'),
-                                                        'zoom-in');
+                                                        'search');
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
                     $ref = $contextIndicator->getContext()->getRef()
@@ -62,7 +62,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                                                                             'af',
                                                                             ['id' => $algo->getId()]),
                                                         __('Algo', 'name', 'indexation'),
-                                                        'zoom-in');
+                                                        'search');
                 $this->addLine($data);
             }
         }

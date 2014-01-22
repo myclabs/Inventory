@@ -5,9 +5,9 @@
  * @package Orga
  * Contenu de l'onglet des grannularity
  */
-$datagridGranularities = new UI_Datagrid('granularity', 'datagrid_granularity', 'orga');
+$datagridGranularities = new UI_Datagrid('granularity'.$this->idOrganization, 'datagrid_granularity', 'orga');
 
-$columnAxes = new UI_Datagrid_Col_List('axes', __('UI', 'name', 'axes'));
+$columnAxes = new UI_Datagrid_Col_List('axes', ___('UI', 'name', 'axes'));
 $columnAxes->list = $this->listAxes;
 $columnAxes->multiple = true;
 $columnAxes->addable = true;
@@ -15,47 +15,47 @@ $columnAxes->withEmptyElement = false;
 $columnAxes->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
 $datagridGranularities->addCol($columnAxes);
 
-$columnRelevance = new UI_Datagrid_Col_Bool('relevance', __('Orga', 'cellRelevance', 'relevance'));
+$columnRelevance = new UI_Datagrid_Col_Bool('relevance', ___('Orga', 'cellRelevance', 'relevance'));
 $columnRelevance->addable = true;
 $columnRelevance->editable = true;
 $columnRelevance->defaultAddValue = false;
-$columnRelevance->textTrue = __('UI', 'other', 'yes');
-$columnRelevance->textFalse = __('UI', 'other', 'no');
-$columnRelevance->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'other', 'yes');
-$columnRelevance->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'other', 'no');
+$columnRelevance->textTrue = ___('UI', 'other', 'yes');
+$columnRelevance->textFalse = ___('UI', 'other', 'no');
+$columnRelevance->valueTrue = '<i class="fa fa-check"></i> '.___('UI', 'other', 'yes');
+$columnRelevance->valueFalse = '<i class="fa fa-times"></i> '.___('UI', 'other', 'no');
 $datagridGranularities->addCol($columnRelevance);
 
-$columnInput = new UI_Datagrid_Col_Bool('afs', __('UI', 'name', 'input'));
+$columnInput = new UI_Datagrid_Col_Bool('afs', ___('UI', 'name', 'input'));
 $columnInput->addable = false;
 $columnInput->editable = true;
-$columnInput->textTrue = __('UI', 'other', 'yes');
-$columnInput->textFalse = __('UI', 'other', 'no');
+$columnInput->textTrue = ___('UI', 'other', 'yes');
+$columnInput->textFalse = ___('UI', 'other', 'no');
 $datagridGranularities->addCol($columnInput);
 
-$columnCube = new UI_Datagrid_Col_Bool('reports', __('DW', 'name', 'analyses'));
+$columnCube = new UI_Datagrid_Col_Bool('reports', ___('DW', 'name', 'analyses'));
 $columnCube->addable = true;
 $columnCube->editable = true;
 $columnCube->defaultAddValue = false;
-$columnCube->textTrue = __('UI', 'other', 'yes');
-$columnCube->textFalse = __('UI', 'other', 'no');
-$columnCube->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'other', 'yes');
-$columnCube->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'other', 'no');
+$columnCube->textTrue = ___('UI', 'other', 'yes');
+$columnCube->textFalse = ___('UI', 'other', 'no');
+$columnCube->valueTrue = '<i class="fa fa-check"></i> '.___('UI', 'other', 'yes');
+$columnCube->valueFalse = '<i class="fa fa-times"></i> '.___('UI', 'other', 'no');
 $datagridGranularities->addCol($columnCube);
 
-$columnAcl = new UI_Datagrid_Col_Bool('acl', __('User', 'role', 'roles'));
+$columnAcl = new UI_Datagrid_Col_Bool('acl', ___('User', 'role', 'roles'));
 $columnAcl->addable = true;
 $columnAcl->editable = true;
 $columnAcl->defaultAddValue = false;
-$columnAcl->textTrue = __('UI', 'other', 'yes');
-$columnAcl->textFalse = __('UI', 'other', 'no');
-$columnAcl->valueTrue = '<i CLass="fa fa-check"></i> '.__('UI', 'other', 'yes');
-$columnAcl->valueFalse = '<i CLass="fa fa-times"></i> '.__('UI', 'other', 'no');
+$columnAcl->textTrue = ___('UI', 'other', 'yes');
+$columnAcl->textFalse = ___('UI', 'other', 'no');
+$columnAcl->valueTrue = '<i CLass="fa fa-check"></i> '.___('UI', 'other', 'yes');
+$columnAcl->valueFalse = '<i CLass="fa fa-times"></i> '.___('UI', 'other', 'no');
 $datagridGranularities->addCol($columnAcl);
 
 $datagridGranularities->pagination = false;
 $datagridGranularities->addParam('idOrganization', $this->idOrganization);
 $datagridGranularities->addElements = true;
-$datagridGranularities->addPanelTitle = __('Orga', 'granularity', 'addPanelTitle');
+$datagridGranularities->addPanelTitle = ___('Orga', 'granularity', 'addPanelTitle');
 $datagridGranularities->deleteElements = true;
 
 if ($this->display === false) {

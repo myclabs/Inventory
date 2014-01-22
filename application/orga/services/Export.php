@@ -360,7 +360,8 @@ class Orga_Service_Export
         $modelBuilder->bind('inputs', $inputs);
 
         $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'subForm'));
-        $modelBuilder->bind('inputLabel', __('UI', 'name', 'field'));
+        $modelBuilder->bind('inputLabel', __('Orga', 'export', 'fieldLabel'));
+        $modelBuilder->bind('inputRef', __('Orga', 'export', 'fieldRef'));
         $modelBuilder->bind('inputType', __('Orga', 'export', 'fieldType'));
         $modelBuilder->bind('inputValue', __('Orga', 'export', 'typedInValue'));
         $modelBuilder->bind('inputUncertainty', __('UI', 'name', 'uncertainty') . ' (%)');
@@ -426,7 +427,8 @@ class Orga_Service_Export
             // Colonnes
             $columns = array_map(function(Orga_Model_Axis $axis) { return $axis->getLabel(); }, $granularity->getAxes());
             $columns[] = __('Orga', 'export', 'subForm');
-            $columns[] = __('UI', 'name', 'field');
+            $columns[] = __('Orga', 'export', 'fieldLabel');
+            $columns[] = __('Orga', 'export', 'fieldRef');
             $columns[] = __('Orga', 'export', 'fieldType');
             $columns[] = __('Orga', 'export', 'typedInValue');
             $columns[] = __('UI', 'name', 'uncertainty') . ' (%)';
@@ -474,7 +476,7 @@ class Orga_Service_Export
                 }
                 $cellInputsEndData = $cellInputsPHPExcel->getActiveSheet()->getHighestColumn() . $cellInputsEndDataRow;
                 $cellInputsData = $cellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $cellInputsEndData);
-                $granularitySheet->fromArray($cellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1));
+                $granularitySheet->fromArray($cellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1), true);
                 $cellInputsPHPExcel->disconnectWorksheets();
                 unset($cellInputsPHPExcel);
             }
@@ -560,10 +562,10 @@ class Orga_Service_Export
             function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $cellMember) {
                     if ($cellMember->getAxis() === $axis) {
-                        return $cellMember->getLabel();
-                    } else if ($cellMember->getAxis()->isBroaderThan($axis)) {
+                        return $cellMember->getExtendedLabel();
+                    } else if ($cellMember->getAxis()->isNarrowerThan($axis)) {
                         try {
-                            return $cellMember->getParentForAxis($axis);
+                            return $cellMember->getParentForAxis($axis)->getExtendedLabel();
                         } catch (Core_Exception_NotFound $e) {
                             // Pas de parent pour cet axe.
                         }
@@ -577,7 +579,16 @@ class Orga_Service_Export
             'displayMemberForClassifAxis',
             function (AF_Model_Output_Element $output, Classif_Model_Axis $axis) {
                 try {
-                    return $output->getIndexForAxis($axis)->getMember()->getLabel();
+                    $member = $output->getIndexForAxis($axis)->getMember();
+                    if ($member->getAxis() !== $axis) {
+                        foreach ($member->getAllParents() as $parentMember) {
+                            if ($parentMember->getAxis() === $axis) {
+                                $member = $parentMember;
+                                break;
+                            }
+                        }
+                    }
+                    return $member->getLabel();
                 } catch (Core_Exception_NotFound $e) {
                     // Pas d'indexation suivant cet axe.
                 }
@@ -648,8 +659,10 @@ function getInputsDetails(AF_Model_Input $input, $path = '')
 {
     if ($input->getComponent() !== null) {
         $componentLabel = $input->getComponent()->getLabel();
+        $componentRef = $input->getComponent()->getRef();
     } else {
-        $componentLabel = __('Orga', 'export', 'unknowComponent', ['COMPONENT' => $input->getRefComponent()]);
+        $componentLabel = __('Orga', 'export', 'unknownComponent');
+        $componentRef = __('Orga', 'export', 'unknownComponent');
     }
     if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
         $subInputs = [];
@@ -679,6 +692,7 @@ function getInputsDetails(AF_Model_Input $input, $path = '')
         $a = [
             'ancestors' => $path,
             'label' => $componentLabel,
+            'ref' => $componentRef,
             'type' => getInputType($input),
             'values' => getInputValues($input)
         ];

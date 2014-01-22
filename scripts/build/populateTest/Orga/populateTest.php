@@ -50,7 +50,7 @@ class Orga_PopulateTest extends Orga_Populate
         // Création des granularités.
         $granularityGlobal = $this->createGranularity($organization, [],                                                        false, true,  true);
         $granularity_zone_marque = $this->createGranularity($organization, [$axis_zone, $axis_marque],                          true,  true,  false);
-        $granularity_site = $this->createGranularity($organization, [$axis_site],                                               false, true,  false);
+        $granularity_site = $this->createGranularity($organization, [$axis_site],                                               false, true,  true);
         $granularity_annee = $this->createGranularity($organization, [$axis_annee],                                             false, false, false);
         $granularity_annee_categorie = $this->createGranularity($organization, [$axis_annee, $axis_categorie],                  false, false, false);
         $granularity_annee_zone_marque = $this->createGranularity($organization, [$axis_annee, $axis_zone, $axis_marque],       false, false, false);

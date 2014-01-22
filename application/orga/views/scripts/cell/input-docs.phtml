@@ -1,10 +1,4 @@
 <?php
 if ($this->documentLibrary !== null) {
-    echo $this->partial('bibliography/view.phtml',
-        'doc',
-        [
-            'library'      => $this->documentLibrary,
-            'bibliography' => $this->documentBibliography,
-        ]
-    );
+    echo $this->partial('library/view.phtml', 'doc', [ 'library' => $this->documentLibrary ]);
 }

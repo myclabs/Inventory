@@ -6,35 +6,35 @@
  * Arbre des axes d'un organization.
  */
 $editLabelField = new UI_Form_Element_Text('editAxis_label');
-$editLabelField->setLabel(__('UI', 'name', 'label'));
+$editLabelField->setLabel(___('UI', 'name', 'label'));
 
 $editRefField = new UI_Form_Element_Text('editAxis_ref');
-$editRefField->setLabel(__('UI', 'name', 'identifier'));
+$editRefField->setLabel(___('UI', 'name', 'identifier'));
 
 // $editContextualizingField = new UI_Form_Element_Radio('editAxis_contextualizing');
-// $editContextualizingField->setLabel(__('Orga', 'axis', 'contextualizingLabel'));
-// $optionContextualizing = new UI_Form_Element_Option('editAxis_contextualizing', 'contextualizing', __('Orga', 'axis', 'contextualizingOption'));
+// $editContextualizingField->setLabel(___('Orga', 'axis', 'contextualizingLabel'));
+// $optionContextualizing = new UI_Form_Element_Option('editAxis_contextualizing', 'contextualizing', ___('Orga', 'axis', 'contextualizingOption'));
 // $editContextualizingField->addOption($optionContextualizing);
-// $optionNoneContextualizing = new UI_Form_Element_Option('editAxis_noneContextualizing', 'noneContextualizing', __('Orga', 'axis', 'notContextualizingOption'));
+// $optionNoneContextualizing = new UI_Form_Element_Option('editAxis_noneContextualizing', 'noneContextualizing', ___('Orga', 'axis', 'notContextualizingOption'));
 // $editContextualizingField->addOption($optionNoneContextualizing);
 // $editContextualizingField->setValue('noneContextualizing');
 
 $addLabelField = new UI_Form_Element_Text('addAxis_label');
-$addLabelField->setLabel(__('UI', 'name', 'label'));
+$addLabelField->setLabel(___('UI', 'name', 'label'));
 
 $addRefField = new UI_Form_Element_Text('addAxis_ref');
-$addRefField->setLabel(__('UI', 'name', 'identifier'));
+$addRefField->setLabel(___('UI', 'name', 'identifier'));
 
 // $addContextualizingField = new UI_Form_Element_Radio('addAxis_contextualizing');
-// $addContextualizingField->setLabel(__('Orga', 'axis', 'contextualizingLabel'));
-// $optionContextualizing = new UI_Form_Element_Option('addAxis_contextualizing', 'contextualizing', __('Orga', 'axis', 'contextualizingOption'));
+// $addContextualizingField->setLabel(___('Orga', 'axis', 'contextualizingLabel'));
+// $optionContextualizing = new UI_Form_Element_Option('addAxis_contextualizing', 'contextualizing', ___('Orga', 'axis', 'contextualizingOption'));
 // $addContextualizingField->addOption($optionContextualizing);
-// $optionNoneContextualizing = new UI_Form_Element_Option('addAxis_noneContextualizing', 'noneContextualizing', __('Orga', 'axis', 'notContextualizingOption'));
+// $optionNoneContextualizing = new UI_Form_Element_Option('addAxis_noneContextualizing', 'noneContextualizing', ___('Orga', 'axis', 'notContextualizingOption'));
 // $addContextualizingField->addOption($optionNoneContextualizing);
 // $addContextualizingField->setValue('noneContextualizing');
 
 $addParentField = new UI_Form_Element_Select('addAxis_parent');
-$addParentField->setLabel(__('Orga', 'axis', 'parentAxisLabel'));
+$addParentField->setLabel(___('Orga', 'axis', 'parentAxisLabel'));
 $addParentField->addNullOption('');
 foreach ($this->eligibleParents as $parentAxis) {
     $optionParent = new UI_Form_Element_Option($parentAxis->getRef(), $parentAxis->getRef(), $parentAxis->getLabel());
@@ -54,8 +54,8 @@ if ($this->idCell !== null) {
 $treeManage->addParam('idOrganization', $this->idOrganization);
 $treeManage->addNode = true;
 $treeManage->addPanelForm = $addForm;
-$treeManage->addPanelTitle = __('Orga', 'axis', 'addPanelTitle');
-$treeManage->editPanelTitle = __('Orga', 'axis', 'editPanelTitle');
+$treeManage->addPanelTitle = ___('Orga', 'axis', 'addPanelTitle');
+$treeManage->editPanelTitle = ___('Orga', 'axis', 'editPanelTitle');
 $treeManage->setEditNode(false, true, array($editLabelField, $editRefField));
 $treeManage->deleteNode = true;
 $treeManage->expandAll = false;

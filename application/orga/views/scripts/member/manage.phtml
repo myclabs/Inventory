@@ -7,12 +7,12 @@ foreach ($this->axes as $axis) {
     $datagridAxisMembers = new UI_Datagrid('listMembers'.$axis->getRef(), 'datagrid_member', 'orga');
 
     // Label du membre de l'axe.
-    $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+    $columnLabel = new UI_Datagrid_Col_Text('label', ___('UI', 'name', 'label'));
     $columnLabel->editable = true;
     $datagridAxisMembers->addCol($columnLabel);
 
     // Ref du membre de l'axe.
-    $columnRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+    $columnRef = new UI_Datagrid_Col_Text('ref', ___('UI', 'name', 'identifier'));
     $columnRef->editable = true;
     $datagridAxisMembers->addCol($columnRef);
 
@@ -39,7 +39,7 @@ foreach ($this->axes as $axis) {
     $datagridAxisMembers->addParam('refAxis', $axis->getRef());
     $datagridAxisMembers->initialLoading = false;
     $datagridAxisMembers->addElements = true;
-    $datagridAxisMembers->addPanelTitle = __('Orga', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));
+    $datagridAxisMembers->addPanelTitle = ___('Orga', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));
 
     echo $this->collapse('members'.$axis->getRef(), $axis->getLabel(), $datagridAxisMembers->getHTML())->collapsed();
 

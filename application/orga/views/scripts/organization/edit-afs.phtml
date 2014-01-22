@@ -1,6 +1,6 @@
 <?php
 
-foreach ($this->granularities as $inputGranularity) {
+foreach ($this->granularities as $inputGranularity) :
     /** @var $inputGranularity Orga_Model_Granularity */
     $configGranularity = $inputGranularity->getInputConfigGranularity();
 
@@ -10,19 +10,19 @@ foreach ($this->granularities as $inputGranularity) {
         'orga'
     );
 
-    foreach ($configGranularity->getAxes() as $axis) {
+    foreach ($configGranularity->getAxes() as $axis) :
         $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $axis->getLabel());
         $members = [];
-        foreach ($axis->getMembers() as $member) {
+        foreach ($axis->getMembers() as $member) :
             $members[$member->getTag()] = $member->getLabel();
-        }
+        endforeach;
         $columnAxis->list = $members;
         $columnAxis->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
         $columnAxis->filterName = Orga_Model_Cell::QUERY_TAG;
         $datagridGranularityAfs->addCol($columnAxis);
-    }
+    endforeach;
 
-    $columnAf = new UI_Datagrid_Col_List('af', __('AF', 'name', 'accountingForm'));
+    $columnAf = new UI_Datagrid_Col_List('af', ___('AF', 'name', 'accountingForm'));
     $columnAf->list = $this->afs;
     $columnAf->editable = true;
     $datagridGranularityAfs->addCol($columnAf);
@@ -33,7 +33,9 @@ foreach ($this->granularities as $inputGranularity) {
 
     echo $this->collapse(
         'cellAfs'.$inputGranularity->getId(),
-        $configGranularity->getLabel() . ' <small>' . $inputGranularity->getLabel() . '</small>',
+        '<span class="withTooltip" data-placement="right" title="'
+            . ___('Orga', 'inputGranularities', 'inputAndConfigLevelsExplanations') . '">'
+            . $configGranularity->getLabel() . ' <small>' . $inputGranularity->getLabel() . '</small><span>',
         $datagridGranularityAfs->getHTML()
     )->collapsed();
 
@@ -43,46 +45,45 @@ foreach ($this->granularities as $inputGranularity) {
     $script .= 'datagridCellAfs'.$inputGranularity->getId().'.filter();';
     $script .= '}';
     $script .= '});';
+    $script .= '$(\'.withTooltip\').tooltip();';
 
-    if ($this->display === false) {
+    if ($this->display === false) :
         echo '<script type="text/javascript">'.$datagridGranularityAfs->getScript().$script.'</script>';
-    } else {
+    else :
         UI_Datagrid::addHeader($datagridGranularityAfs);
         $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
-    }
-}
+    endif;
+endforeach;
 
-if ($this->isUserAllowedToEditOrganization) {
-    if (count($this->granularities) > 0) {
-        echo '<hr>';
-    }
-    $complementaryFields = '<input type="text" name="inputConfigAxes" class="inputConfigAxes" style="min-width: 250px;">';
-    $complementaryFields .= '<script>' .
-    '$(\'#addGranularity'.$this->organization->getId().'_afs .inputConfigAxes\').select2({' .
-            'closeOnSelect: false,' .
-            'placeholder: \'' . __('Orga', 'granularity', 'addGranularityFormChoiceSelectAxes') . '\',' .
-            'multiple: true,' .
-            'data: [';
-    foreach ($this->organization->getFirstOrderedAxes() as $axis) {
-        $complementaryFields .= '{ id: "' . $axis->getRef() . '", text: "' . $axis->getLabel() . '" },';
-    }
-    $complementaryFields .= ']});'.
-    '</script>';
-    echo $this->partial(
-        'granularity/add.phtml',
-        [
-            'organization' => $this->organization,
-            'purpose' => 'afs',
-            'complementaryFields' => $complementaryFields
-        ]
-    );
-    if ($this->display === true) {
+if (count($this->granularities) > 0) :
+    echo '<hr>';
+endif;
+$complementaryFields = '<select multiple name="inputConfigAxes" class="inputConfigAxes" style="min-width: 250px;">';
+foreach ($this->organization->getFirstOrderedAxes() as $axis) :
+    $complementaryFields .= '<option value="' . $axis->getRef() . '">' . $axis->getLabel() . '</option>';
+endforeach;
+$complementaryFields .= '</select>';
+$complementaryFields .= '<script>' .
+'$(\'#addGranularity'.$this->organization->getId().'_afs .inputConfigAxes\').select2({' .
+        'closeOnSelect: false,' .
+        'placeholder: \'' . ___('Orga', 'granularity', 'addGranularityFormChoiceSelectAxes') . '\'' .
+'});' .
+'</script>';
+echo $this->partial(
+    'granularity/add.phtml',
+    [
+        'organization' => $this->organization,
+        'purpose' => 'afs',
+        'complementaryFields' => $complementaryFields,
+        'selectAxesPlaceholder' => ___('Orga', 'granularity', 'addGranularitySelectAxesInputLevel')
+    ]
+);
+if ($this->display === true) :
 ?>
 <script>
-    $('#addGranularity<?=$this->organization->getId()?>_afs').on('granularityAdded', function(e) {
-        location.reload(true);
-    });
+$('#addGranularity<?=$this->organization->getId()?>_afs').on('granularityAdded', function(e) {
+    location.reload(true);
+});
 </script>
 <?php
-    }
-}
+endif;
