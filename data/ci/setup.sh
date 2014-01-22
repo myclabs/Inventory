@@ -3,12 +3,11 @@
 
 set -e
 
-cat > application/configs/application.ini <<EOL
-[production]
-applicationUrl=http://localhost/inventory
-[test : production]
-[developpement : test]
-[testsunitaires : test]
+cat > application/configs/parameters.php <<EOL
+<?php
+return [
+    'application.url' => 'whatever',
+];
 EOL
 
 cat > application/configs/env.php <<EOL
