@@ -19,4 +19,5 @@ cat > application/configs/env.php <<EOL
 defined('APPLICATION_ENV') || define('APPLICATION_ENV', 'testsunitaires');
 EOL
 
+sudo composer selfupdate
 composer install --no-progress
