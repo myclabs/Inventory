@@ -8,6 +8,7 @@ checkout:
       cat > application/configs/application.ini <<EOL
       [production]
       applicationUrl=http://localhost/inventory
+      doctrine.default.connection.host = '127.0.0.1'
       doctrine.default.connection.dbname = 'circle_test'
       doctrine.default.connection.user = 'ubuntu'
       [test : production]
