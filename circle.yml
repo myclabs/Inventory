@@ -6,8 +6,11 @@ checkout:
   post:
     - |
       cat > application/configs/application.ini <<EOL
-      [testsunitaires : test]
+      [production]
       applicationUrl=http://localhost/inventory
+      [test : production]
+      [developpement : test]
+      [testsunitaires : test]
       EOL
     - |
       cat > application/configs/env.php <<EOL
