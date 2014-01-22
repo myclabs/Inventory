@@ -265,8 +265,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initI18n()
     {
         $locale = Core_Locale::loadDefault();
-        $configuration = Zend_Registry::get('configuration');
-        Core_Locale::$minSignificantFigures = $configuration->get('locale.minSignificantFigures', null);
+        Core_Locale::$minSignificantFigures = $this->container->get('locale.minSignificantFigures', null);
 
         $translator = new Translator($locale->getId());
         $translator->addLoader('tmx', new TmxLoader());
@@ -331,7 +330,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initCheckApplicationUrl()
     {
         if ($this->container->get('application.url') == '') {
-            throw new RuntimeException("Il est nécessaire de définir 'applicationUrl' dans application.ini");
+            throw new RuntimeException("Il est nécessaire de définir 'application.url' dans parameters.php");
         }
     }
 }

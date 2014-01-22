@@ -6,6 +6,7 @@ return [
     // Nom de l'application installée
     // Ceci est un code, et ne doit pas être affiché à l'utilisateur
     'application.name' => 'Inventory',
+    'application.url' => '',
     // Namespace pour les sauvegarde en session
     'session.storage.name' => DI\link('application.name'),
 
@@ -19,7 +20,8 @@ return [
     UserService::class      => DI\object()
             ->methodParameter('__construct', 'contactEmail', DI\link('emails.contact.adress'))
             ->methodParameter('__construct', 'noReplyEmail', DI\link('emails.noreply.adress'))
-            ->methodParameter('__construct', 'noReplyName', DI\link('emails.noreply.name')),
+            ->methodParameter('__construct', 'noReplyName', DI\link('emails.noreply.name'))
+            ->methodParameter('__construct', 'applicationUrl', DI\link('application.url')),
 
     // Chemin vers les fichier de fonts (nécéssaire pour le Captcha)
     'police.path' => 'data/fonts/',
@@ -36,4 +38,7 @@ return [
 
     // Feature flags
     'feature.register' => false,
+
+    // Fonctionnalité spéciale pour art225 et art255
+    'locale.minSignificantFigures' => null,
 ];

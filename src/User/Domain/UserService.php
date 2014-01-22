@@ -12,7 +12,6 @@ use Core_Tools;
 use Psr\Log\LoggerInterface;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\UserRole;
-use Zend_Controller_Front;
 
 /**
  * Gestion des utilisateurs.
