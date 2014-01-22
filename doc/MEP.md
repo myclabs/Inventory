@@ -20,7 +20,7 @@ php scripts/build/build.php update
 - Exécuter le script de migration
 
 ```
-scripts/migration/2.10/migrate.php
+php scripts/migration/2.10/migrate.php
 ```
 
 - Faire un rebuild de DW (pour regénérer les traductions)
