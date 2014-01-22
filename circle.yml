@@ -8,6 +8,8 @@ checkout:
       cat > application/configs/application.ini <<EOL
       [production]
       applicationUrl=http://localhost/inventory
+      doctrine.default.connection.dbname = 'circle_test'
+      doctrine.default.connection.user = 'ubuntu'
       [test : production]
       [developpement : test]
       [testsunitaires : test]
@@ -24,7 +26,7 @@ dependencies:
 
 database:
   override:
-    - php scripts/build/build.php -e testsunitaires create update
+    - php scripts/build/build.php -e testsunitaires update
     - php scripts/build/build.php -e testsunitaires populate
 
 test:
