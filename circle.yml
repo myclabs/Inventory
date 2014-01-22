@@ -1,0 +1,29 @@
+machine:
+  php:
+    version: 5.5.3
+
+checkout:
+  post:
+    - |
+      cat > application/configs/application.ini <<EOL
+      [testsunitaires : test]
+      applicationUrl=http://localhost/inventory
+      EOL
+    - |
+      cat > application/configs/env.php <<EOL
+      <?php
+      defined('APPLICATION_ENV') || define('APPLICATION_ENV', 'testsunitaires');
+      EOL
+
+dependencies:
+  cache_directories:
+    - "vendor"
+
+database:
+  override:
+    - php scripts/build/build.php -e testsunitaires create update
+    - php scripts/build/build.php -e testsunitaires populate
+
+test:
+  override:
+    - phpunit
