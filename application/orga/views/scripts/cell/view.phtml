@@ -120,7 +120,7 @@ $currentCell = $this->currentCell;
 
 <div class="row-fluid">
 
-<div class="span9">
+<div class="span9" id="cellsView">
 
     <div class="currentCell well">
         <h2>
@@ -482,6 +482,8 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
             url: 'orga/cell/view-children/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId + '/',
             type: "GET",
             success: function(data) {
+                console.log('cellsLoaded fired');
+                granularity.trigger('cellsLoaded');
                 granularity.html('');
                 granularity.attr('data-total-cells', data.totalCells);
                 $(data.childCells).each(function() {
@@ -1097,3 +1099,5 @@ $(document).ready(function() {
     $('.comments > h3 a').trigger('click');
 });
 </script>
+
+<?= $this->tutorial('orga'); ?>

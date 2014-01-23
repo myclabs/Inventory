@@ -603,6 +603,7 @@ class Orga_Service_OrganizationService
     public function createDemoOrganizationAndUser($email, $password)
     {
         $user = $this->userService->createUser($email, $password);
+        $user->initTutorials();
 
         $organization = $this->createOrganization();
         $this->initOrganizationDemo($organization);

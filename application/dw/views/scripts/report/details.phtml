@@ -9,7 +9,7 @@
 
 <div class="page-header">
     <h1 id="reportLabel"><?=$this->reportLabel?><?=$this->viewConfiguration->getComplementaryPageTitle()?></h1>
-    <small>
+    <div>
         <?php if ($this->isNew) { ?>
         <a id="exportAsPdf" href="javascript: void(0)" class="btn disabled">
             <img src="images/dw/pdf_gris.png" alt="pdf" />
@@ -28,10 +28,10 @@
         <?php }?>
             <?=__('UI', 'verb','exportToExcel')?>
         </a>
-    </small>
-    <small class="pull-right">
-        <?=$this->button(__('UI', 'other', 'backButton'), 'arrow-left')->link($this->viewConfiguration->getOutputUrl())?>
-    </small>
+        <div class="pull-right">
+            <?=$this->button(__('UI', 'other', 'backButton'), 'arrow-left')->link($this->viewConfiguration->getOutputUrl())?>
+        </div>
+    </div>
 </div>
 <div class="row-fluid">
     <div class="span well" id="configurationPanel">
@@ -350,3 +350,5 @@
         ?>
     </div>
 </div>
+
+<?= $this->tutorial('dw'); ?>

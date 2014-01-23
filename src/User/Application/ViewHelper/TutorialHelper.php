@@ -39,6 +39,8 @@ class TutorialHelper extends Zend_View_Helper_Abstract
         }
         $connectedUser = User::load($auth->getIdentity());
         if (!$connectedUser->isTutorialDone($tutorialInt)) {
+            $this->view->headScript()->appendFile('introjs/intro.min.js', 'text/javascript');
+            $this->view->headLink()->prependStylesheet('introjs/introjs.min.css');
             return $this->view->partial('tutorials/'.$tutorial.'.phtml', 'user');
         }
         return null;
