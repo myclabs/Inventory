@@ -1,0 +1,29 @@
+# Orga\models\mappers\Orga_Model_CellReport.yml
+Orga_Model_CellReport:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Orga_Cell_DWReport
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  oneToOne:
+    cellDWReport:
+      targetEntity: DW_Model_Report
+      joinColumn:
+        name: idCellDWReport
+        referencedColumnName: id
+        nullable: false
+        unique: true
+        onDelete: CASCADE
+    owner:
+      targetEntity: User\Domain\User
+      joinColumn:
+        name: idOwner
+        referencedColumnName: id
+        nullable: false
+        onDelete: CASCADE

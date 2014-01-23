@@ -721,11 +721,16 @@ class Orga_CellController extends Core_Controller
             }
         }
         // Copied Reports.
+        /** @var Orga_Model_CellReport[] $usersReports */
+        $usersReports = [];
         $dWReports = $cell->getDWCube()->getReports();
         usort($dWReports, function(DW_Model_Report $a, DW_Model_Report $b) { return strcmp($a->getLabel(), $b->getLabel()); });
         foreach ($dWReports as $dWReport) {
-            if (! Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
+            try {
+                $usersReports[] = Orga_Model_CellReport::loadByCellDWReport($dWReport);
                 continue;
+            } catch (Core_Exception_NotFound $e) {
+                // Rapport Copié.
             }
             $cellReports[] = [
                 'label' => $dWReport->getLabel(),
@@ -734,22 +739,23 @@ class Orga_CellController extends Core_Controller
             ];
         }
         // User Reports.
-        $query = new Core_Model_Query();
-        $query->aclFilter->enabled = true;
-        $query->aclFilter->user = $connectedUser;
-        $query->aclFilter->action = Action::VIEW();
-        $query->filter->addCondition(DW_Model_Report::QUERY_CUBE, $cell->getDWCube());
-        $query->order->addOrder(DW_Model_Report::QUERY_LABEL);
-        foreach (DW_Model_Report::loadList($query) as $dWReport) {
+        $otherUsers = [];
+        foreach ($usersReports as $cellReport) {
             /** @var DW_Model_Report $dWReport */
             $cellReports[] = [
-                'label' => $dWReport->getLabel(),
-                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$dWReport->getId(),
+                'label' => $cellReport->getCellDWReport()->getLabel(),
+                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$cellReport->getCellDWReport()->getId(),
                 'type' => 'userReport',
-                'delete' => $dWReport->getId()
+                'owner' => $cellReport->getOwner(),
+                'delete' => ($cellReport->getOwner() === $connectedUser)
             ];
+            if ($cellReport->getOwner() !== $connectedUser) {
+                $otherUsers[$cellReport->getOwner()->getId()] = $cellReport->getOwner()->getName();
+            }
         }
         $this->view->assign('cellReports', $cellReports);
+        $this->view->assign('idConnectedUser', $connectedUser->getId());
+        $this->view->assign('otherUsers', $otherUsers);
 
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
@@ -777,20 +783,21 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
         $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
+        $reportCanBeUpdated = false;
         if ($this->hasParam('idReport')) {
-            $reportCanBeUpdated = $this->aclService->isAllowed(
-                $connectedUser,
-                Action::EDIT(),
-                DW_Model_Report::load($this->getParam('idReport'))
-            );
-        } else {
-            $reportCanBeUpdated = false;
+            $report = DW_Model_Report::load($this->getParam('idReport'));
+            try {
+                $cellReport = Orga_Model_CellReport::loadByCellDWReport($report);
+                $reportCanBeUpdated = ($cellReport->getOwner() === $connectedUser);
+            } catch (Core_Exception_NotFound $e) {
+                // Rapport copié.
+            }
         }
 
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getExtendedLabel().'</small>');
         $viewConfiguration->setOutputUrl('orga/cell/view/idCell/'.$fromIdCell.'/');
-        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$fromIdCell.'/');
+        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$fromIdCell);
         $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
         $viewConfiguration->setCanBeSavedAs(true);
 

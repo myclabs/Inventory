@@ -13,16 +13,17 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @package Orga
  * @subpackage Model
  */
-class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Event_ObserverInterface
+class Orga_Model_GranularityReport extends Core_Model_Entity
 {
     /**
      * Identifiant unique du Granularity.
+     *
      * @var int
      */
     protected $id;
 
     /**
-     * Report du Organization de DW concerné.
+     * Report du Cube de DW de la granularité concerné.
      *
      * @var DW_Model_Report
      */
@@ -36,66 +37,9 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
 
     public function __construct(DW_Model_Report $granularityDWReport)
     {
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
-        /** @var Orga_Service_ETLStructure $etlStructureService */
-        $etlStructureService = $container->get('Orga_Service_ETLStructure');
+        $this->granularityDWReport = $granularityDWReport;
 
         $this->cellDWReports = new ArrayCollection();
-
-        $this->granularityDWReport = $granularityDWReport;
-        $etlStructureService->createCellsDWReportFromGranularityReport($this);
-    }
-
-    /**
-     * @param string          $event
-     * @param DW_Model_Report $subject
-     * @param array           $arguments
-     */
-    public static function applyEvent($event, $subject, $arguments = [])
-    {
-        switch ($event) {
-            case DW_Model_Report::EVENT_SAVE:
-                try {
-                    // Nécessaire pour détecter d'où est issu le Report.
-                    if ($subject->getCube()->getId() !== null) {
-                        Orga_Model_Granularity::loadByDWCube($subject->getCube());
-                        $granularityReport = new self($subject);
-                        $granularityReport->save();
-                    }
-                } catch (Core_Exception_NotFound $e) {
-                    // Le Report n'est pas issue d'un Cube de Granularity.
-                }
-                break;
-            case DW_Model_Report::EVENT_UPDATED:
-                try {
-                    /** @var \DI\Container $container */
-                    $container = Zend_Registry::get('container');
-                    /** @var Orga_Service_ETLStructure $etlStructureService */
-                    $etlStructureService = $container->get('Orga_Service_ETLStructure');
-
-                    $etlStructureService->updateCellsDWReportFromGranularityReport(
-                        self::loadByGranularityDWReport($subject)
-                    );
-                } catch (Core_Exception_NotFound $e) {
-                    // Le Report n'est pas issue d'un Cube de DW de Granularity.
-                }
-                break;
-            case DW_Model_Report::EVENT_DELETE:
-                try {
-                    $granularityReport = self::loadByGranularityDWReport($subject);
-                    $granularityReport->delete();
-                } catch (Core_Exception_NotFound $e) {
-                    // Le Report n'est pas issue d'un Cube de Granularity.
-                    foreach (self::loadList() as $granularityReport) {
-                        /** @var self $granularityReport */
-                        if ($granularityReport->hasCellDWReport($subject)) {
-                            $granularityReport->removeCellDWReport($subject);
-                        }
-                    }
-                }
-                break;
-        }
     }
 
     /**
@@ -108,25 +52,6 @@ class Orga_Model_GranularityReport extends Core_Model_Entity implements Core_Eve
     public static function loadByGranularityDWReport($dWReport)
     {
         return self::getEntityRepository()->loadBy(array('granularityDWReport' => $dWReport));
-    }
-
-    /**
-     * Vérifie si le DWReport donné est une copie d'un DW Report de Granularity.
-     *
-     * @param DW_Model_Report $dWReport
-     *
-     * @return bool
-     */
-    public static function isDWReportCopiedFromGranularityDWReport(DW_Model_Report $dWReport)
-    {
-        foreach (self::loadList() as $granularityReport) {
-            /** @var self $granularityReport */
-            if ($granularityReport->hasCellDWReport($dWReport)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
