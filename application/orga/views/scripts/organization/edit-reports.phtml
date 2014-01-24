@@ -49,6 +49,7 @@ endforeach;
 if (count($this->granularities) > 0) :
     echo '<hr>';
 endif;
+echo '<h4>'.__('Orga', 'granularity', 'addGranularityReports').'</h4>';
 echo $this->partial(
     'granularity/add.phtml',
     [

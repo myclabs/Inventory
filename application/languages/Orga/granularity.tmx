@@ -128,6 +128,30 @@
                 <seg>Please select a set of axes without any pair of hierarchically linked axes.</seg>
             </tuv>
         </tu>
+        <tu tuid="addGranularityRelevance">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un niveau de définition de la pertinence</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a relevance configuration level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularityInput">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un niveau de saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an input level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularityReports">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un niveau de configuration des rapports d'analyses</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a reporting level</seg>
+            </tuv>
+        </tu>
 
         <!-- Modification -->
 
