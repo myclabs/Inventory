@@ -67,11 +67,12 @@ class Orga_Service_OrganizationService
     }
 
     /**
+     * @param User   $creator
      * @param string $labelOrganization
-     * @return Orga_Model_Organization
      * @throws Exception
+     * @return Orga_Model_Organization
      */
-    public function createOrganization($labelOrganization = '')
+    public function createOrganization(User $creator, $labelOrganization = '')
     {
         $this->entityManager->beginTransaction();
 
@@ -91,6 +92,10 @@ class Orga_Service_OrganizationService
             foreach (AdminRole::loadList() as $adminRole) {
                 /** @var AdminRole $adminRole */
                 $admin = $adminRole->getUser();
+                // Ignore l'admin si il est le créateur de l'organisation
+                if ($admin === $creator) {
+                    continue;
+                }
                 $this->aclService->addRole($admin, new OrganizationAdminRole($admin, $organization));
             }
 
@@ -122,7 +127,7 @@ class Orga_Service_OrganizationService
 
         try {
             $organizationLabel = $formData['organization']['elements']['organizationLabel']['value'];
-            $organization = $this->createOrganization($organizationLabel);
+            $organization = $this->createOrganization($administrator, $organizationLabel);
 
             $template = $formData['organization']['elements']['organizationTemplate']['value'];
             if ($template !== self::TEMPLATE_EMPTY) {
@@ -610,7 +615,7 @@ class Orga_Service_OrganizationService
         $user = $this->userService->createUser($email, $password);
         $user->initTutorials();
 
-        $organization = $this->createOrganization();
+        $organization = $this->createOrganization($user);
 
         $this->initOrganizationDemo($organization);
 
