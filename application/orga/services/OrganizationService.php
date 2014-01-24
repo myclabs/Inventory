@@ -96,6 +96,11 @@ class Orga_Service_OrganizationService
 
             $this->entityManager->flush();
             $this->entityManager->commit();
+
+            // Recharge l'organisation pour que les ACL soient rechargées depuis la BDD
+            $this->entityManager->refresh($organization);
+            $this->entityManager->refresh($organization->getGranularityByRef('global')->getCellByMembers([]));
+
             return $organization;
         } catch (Exception $e) {
             $this->entityManager->rollback();
@@ -606,10 +611,6 @@ class Orga_Service_OrganizationService
         $user->initTutorials();
 
         $organization = $this->createOrganization();
-
-        // Recharge l'organisation pour que les ACL soient rechargées depuis la BDD
-        $this->entityManager->refresh($organization);
-        $this->entityManager->refresh($organization->getGranularityByRef('global')->getCellByMembers([]));
 
         $this->initOrganizationDemo($organization);
 
