@@ -30,14 +30,6 @@
                 <seg>File address</seg>
             </tuv>
         </tu>
-        <tu tuid="quotations">
-            <tuv xml:lang="fr">
-                <seg>Citations</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Quotations</seg>
-            </tuv>
-        </tu>
 
         <!-- Ajout -->
 
@@ -94,4 +86,4 @@
         </tu>
 
     </body>
-</tmx>    
+</tmx>
