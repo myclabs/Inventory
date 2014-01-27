@@ -128,6 +128,31 @@
             </tuv>
         </tu>
 
+        <tu tuid="filterAllReports">
+            <tuv xml:lang="fr">
+                <seg>Tous</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All</seg>
+            </tuv>
+        </tu>
+        <tu tuid="reportTypes">
+            <tuv xml:lang="fr">
+                <seg>Standards</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Standard</seg>
+            </tuv>
+        </tu>
+        <tu tuid="otherUsersReports">
+            <tuv xml:lang="fr">
+                <seg>Autres utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Other users</seg>
+            </tuv>
+        </tu>
+
         <!-- Tooltips des icônes -->
 
         <tu tuid="contactAdministrators">

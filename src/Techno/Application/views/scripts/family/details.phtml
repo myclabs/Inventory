@@ -38,7 +38,7 @@ $tmd = $this->partial('family/details/tmd.phtml', [
     'edit'   => $this->edit,
 ]);
 if ($this->edit) {
-    $collapseTMD = new UI_HTML_Collapse('collapseTMD', __('UI', 'name', 'elements'));
+    $collapseTMD = new UI_HTML_Collapse('collapseTMD', __('Techno', 'element', 'elements'));
     $collapseTMD->body = $tmd;
     $collapseTMD->display();
 } else {

@@ -8,10 +8,6 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use DW\Model\ACL\ReportAuthorization;
-use DW\Model\ACL\Role\ReportOwnerRole;
-use User\Domain\ACL\Resource\Resource;
-use User\Domain\ACL\Resource\ResourceTrait;
 
 /**
  * Permet de gérer un report
@@ -19,11 +15,10 @@ use User\Domain\ACL\Resource\ResourceTrait;
  * @package DW
  * @subpackage Model
  */
-class DW_Model_Report extends Core_Model_Entity implements Resource
+class DW_Model_Report extends Core_Model_Entity
 {
     use Core_Event_ObservableTrait;
     use Core_Model_Entity_Translatable;
-    use ResourceTrait;
 
     // Constantes de tris et de filtres.
     const QUERY_CUBE = 'cube';
@@ -156,21 +151,10 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
      */
     protected $lastModificationTimestamp = 1;
 
-    /**
-     * @var ReportAuthorization[]|Collection
-     */
-    protected $acl;
-
-    /**
-     * @var ReportOwnerRole|null
-     */
-    protected $owner;
-
 
     public function __construct(DW_Model_Cube $cube)
     {
         $this->filters = new ArrayCollection();
-        $this->acl = new ArrayCollection();
 
         $this->cube = $cube;
         $this->cube->addReport($this);
@@ -940,21 +924,5 @@ class DW_Model_Report extends Core_Model_Entity implements Resource
             $this->getAsString()
         );
         return DW_Model_Report::getFromString($reportAsString, $cube);
-    }
-
-    /**
-     * @return ReportOwnerRole|null
-     */
-    public function getOwner()
-    {
-        return $this->owner;
-    }
-
-    /**
-     * @param ReportOwnerRole|null $owner
-     */
-    public function setOwner(ReportOwnerRole $owner = null)
-    {
-        $this->owner = $owner;
     }
 }

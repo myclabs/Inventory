@@ -938,34 +938,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Défini si les cellules de la granularité possèderont des Doc pour l'InputSetPrimary.
-     *
-     * @param bool $bool
-     *
-     * @throws Core_Exception_User
-     */
-    public function setCellsWithInputDocuments($bool)
-    {
-        if ($this->cellsWithInputDocs !== (bool) $bool) {
-            $this->cellsWithInputDocs = (bool) $bool;
-            if ($this->cellsWithInputDocs === false) {
-                foreach ($this->getCells() as $cell) {
-                    if ($cell->getDocLibraryForAFInputSetsPrimary()->hasDocuments()) {
-                        throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithInputDocs');
-                    }
-                }
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForAFInputSetsPrimary();
-                }
-            } else {
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForAFInputSetsPrimary(new Library());
-                }
-            }
-        }
-    }
-
-    /**
      * Indique si les cellules de la granularité possèdent des Doc pour l'InputSetPrimary.
      *
      * @return bool

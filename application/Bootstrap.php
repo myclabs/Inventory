@@ -8,6 +8,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Translation\Translator;
 use User\Application\Plugin\ACLPlugin;
 use User\Application\ViewHelper\IsAllowedHelper;
+use User\Application\ViewHelper\TutorialHelper;
 
 /**
  * Application bootstrap
@@ -133,10 +134,12 @@ class Bootstrap extends Core_Bootstrap
     protected function _initViewHelpers()
     {
         $this->bootstrap('View');
+        /** @var Zend_View $view */
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
         $view->registerHelper($this->container->get(IsAllowedHelper::class, true), 'isAllowed');
+        $view->registerHelper($this->container->get(TutorialHelper::class, true), 'tutorial');
     }
 
     /**

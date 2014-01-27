@@ -2,7 +2,6 @@
 
 use Core\Test\TestCase;
 use Orga\Model\ACL\Action\CellAction;
-use Orga\Model\ACL\Action\OrganizationAction;
 use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\Model\ACL\Role\CellContributorRole;
 use Orga\Model\ACL\Role\CellObserverRole;
@@ -226,17 +225,6 @@ class Orga_Test_ACL extends TestCase
      */
     protected $berlinCellObserver;
 
-
-    public static function setUpBeforeClass()
-    {
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
-
-        /** @var Core_EventDispatcher $eventDispatcher */
-        $eventDispatcher = $container->get('Core_EventDispatcher');
-        $eventDispatcher->addListener('Orga_Model_GranularityReport', 'DW_Model_Report');
-    }
-
     public function setUp()
     {
         parent::setUp();
@@ -427,20 +415,6 @@ class Orga_Test_ACL extends TestCase
         $this->granularitySite->setCellsGenerateDWCubes(true);
 
         $this->organization->save();
-
-        $this->entityManager->flush();
-
-        $reportGlobale = new DW_Model_Report($this->granularityGlobale->getDWCube());
-        $reportGlobale->setLabel('Test Globale');
-        $reportGlobale->save();
-
-        $reportZoneMarque = new DW_Model_Report($this->granularityZoneMarque->getDWCube());
-        $reportZoneMarque->setLabel('Test Zone Marque');
-        $reportZoneMarque->save();
-
-        $reportSite = new DW_Model_Report($this->granularitySite->getDWCube());
-        $reportSite->setLabel('Test Site');
-        $reportSite->save();
 
         $this->entityManager->flush();
     }
@@ -772,68 +746,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
         $this->assertTrue($this->aclService->isAllowed($user, Action::EDIT(), $cell2013LimaTransport));
         $this->assertTrue($this->aclService->isAllowed($user, Action::ALLOW(), $cell2013LimaTransport));
-
-        return;
-        // Report granularité globale.
-        $this->assertTrue($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $this->organization));
-//        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-//        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportGlobale));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportGlobale));
-//        $this->assertTrue($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportGlobale));
-//        $this->assertTrue($this->aclService->isAllowed($user, Action::DELETE(), $reportGlobale));
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportCellGlobale));
-
-        // Report granularité zone marque.
-//        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-//        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportZoneMarque));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportZoneMarque));
-//        $this->assertTrue($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportZoneMarque));
-//        $this->assertTrue($this->aclService->isAllowed($user, Action::DELETE(), $reportZoneMarque));
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeA));
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeB));
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueA));
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueB));
-
-        // Report granularité site.
-//        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-//        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportSite));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSite));
-//        $this->assertTrue($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSite));
-//        $this->assertTrue($this->aclService->isAllowed($user, Action::DELETE(), $reportSite));
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportAnnecy));
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportChambery));
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportBerlin));
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportLima));
     }
 
     /**
@@ -1147,68 +1059,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
         $this->assertTrue($this->aclService->isAllowed($user, Action::EDIT(), $cell2013LimaTransport));
         $this->assertTrue($this->aclService->isAllowed($user, Action::ALLOW(), $cell2013LimaTransport));
-
-        return;
-        // Report granularité globale.
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $this->organization));
-//        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportGlobale));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportGlobale));
-//        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportGlobale));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportGlobale));
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportCellGlobale));
-
-        // Report granularité zone marque.
-//        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportZoneMarque));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportZoneMarque));
-//        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportZoneMarque));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportZoneMarque));
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeA));
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeB));
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueA));
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueB));
-
-        // Report granularité site.
-//        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSite));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSite));
-//        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSite));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSite));
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportAnnecy));
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportChambery));
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportBerlin));
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportLima));
     }
 
     /**
@@ -1523,67 +1373,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::ALLOW(), $cell2013LimaTransport));
-
-        return;
-        // Report granularité globale.
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $this->organization));
-//        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportGlobale));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportGlobale));
-//        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportGlobale));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportGlobale));
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportCellGlobale));
-
-        // Report granularité zone marque.
-//        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportZoneMarque));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportZoneMarque));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportZoneMarque));
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeA));
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeB));
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueA));
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueB));
-
-        // Report granularité site.
-//        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSite));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSite));
-//        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSite));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSite));
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportAnnecy));
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportChambery));
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportBerlin));
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportLima));
     }
 
     /**
@@ -1897,67 +1686,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::ALLOW(), $cell2013LimaTransport));
-
-        return;
-        // Report granularité globale.
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $this->organization));
-//        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportGlobale));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportGlobale));
-//        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportGlobale));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportGlobale));
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportCellGlobale));
-
-        // Report granularité zone marque.
-//        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportZoneMarque));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportZoneMarque));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportZoneMarque));
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeA));
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeB));
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueA));
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueB));
-
-        // Report granularité site.
-//        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSite));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSite));
-//        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSite));
-//        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSite));
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportAnnecy));
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportChambery));
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportBerlin));
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportLima));
     }
 
     /**
@@ -2271,76 +1999,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::ALLOW(), $cell2013LimaTransport));
-
-        return;
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportGlobale));
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportCellGlobale));
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportZoneMarque));
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeA));
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeB));
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueA));
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueB));
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSite));
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportAnnecy));
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportChambery));
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportBerlin));
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportLima));
     }
 
     /**
@@ -2654,76 +2312,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::ALLOW(), $cell2013LimaTransport));
-
-        return;
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportGlobale));
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportCellGlobale));
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportZoneMarque));
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeA));
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeB));
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueA));
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueB));
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSite));
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportAnnecy));
-        $this->assertTrue($this->aclService->isAllowed($user, Action::EDIT(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportAnnecy));
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportChambery));
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportBerlin));
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportLima));
     }
 
     /**
@@ -3037,76 +2625,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::ALLOW(), $cell2013LimaTransport));
-
-        return;
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportGlobale));
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportCellGlobale));
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportZoneMarque));
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeA));
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeB));
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueA));
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueB));
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSite));
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportAnnecy));
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportChambery));
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportBerlin));
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportLima));
     }
 
     /**
@@ -3420,76 +2938,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $cell2013LimaTransport));
         $this->assertFalse($this->aclService->isAllowed($user, Action::ALLOW(), $cell2013LimaTransport));
-
-        return;
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportGlobale));
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportCellGlobale));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportCellGlobale));
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportZoneMarque));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportZoneMarque));
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeA));
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportEuropeB));
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueA));
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSudameriqueB));
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportSite));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportSite));
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportAnnecy));
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportChambery));
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertFalse($this->aclService->isAllowed($user, Action::VIEW(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportBerlin));
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertTrue($this->aclService->isAllowed($user, Action::VIEW(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::EDIT(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $reportLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Action::DELETE(), $reportLima));
     }
 
     /**
@@ -3538,10 +2986,6 @@ class Orga_Test_ACL extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Action::ALLOW();
-        $queryReport = new Core_Model_Query();
-        $queryReport->aclFilter->enabled = true;
-        $queryReport->aclFilter->user = $user;
-        $queryReport->aclFilter->action = OrganizationAction::EDIT_GRANULARITY_REPORTS();
 
         // Test toutes les ressources.
 
@@ -3864,85 +3308,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertContains($cellLima, $cellsInput);
         $this->assertContains($cell2013LimaTransport, $cellsEdit);
         $this->assertContains($cell2013LimaTransport, $cellsAllow);
-
-        return;
-        $reportsView = DW_Model_Report::loadList($queryView);
-        $this->assertCount(12, $reportsView);
-        $reportsEdit = DW_Model_Report::loadList($queryEdit);
-        $this->assertCount(9, $reportsEdit);
-        $reportsReport = DW_Model_Report::loadList($queryReport);
-        $this->assertCount(3, $reportsReport);
-        $reportsDelete = DW_Model_Report::loadList($queryDelete);
-        $this->assertCount(3, $reportsDelete);
-
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertContains($reportGlobale, $reportsView);
-        $this->assertNotContains($reportGlobale, $reportsEdit);
-        $this->assertContains($reportGlobale, $reportsReport);
-        $this->assertContains($reportGlobale, $reportsDelete);
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertContains($reportCellGlobale, $reportsView);
-        $this->assertContains($reportCellGlobale, $reportsEdit);
-        $this->assertNotContains($reportCellGlobale, $reportsReport);
-        $this->assertNotContains($reportCellGlobale, $reportsDelete);
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertContains($reportZoneMarque, $reportsView);
-        $this->assertNotContains($reportZoneMarque, $reportsEdit);
-        $this->assertContains($reportZoneMarque, $reportsReport);
-        $this->assertContains($reportZoneMarque, $reportsDelete);
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertContains($reportEuropeA, $reportsView);
-        $this->assertContains($reportEuropeA, $reportsEdit);
-        $this->assertNotContains($reportEuropeA, $reportsReport);
-        $this->assertNotContains($reportEuropeA, $reportsDelete);
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertContains($reportEuropeB, $reportsView);
-        $this->assertContains($reportEuropeB, $reportsEdit);
-        $this->assertNotContains($reportEuropeB, $reportsReport);
-        $this->assertNotContains($reportEuropeB, $reportsDelete);
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertContains($reportSudameriqueA, $reportsView);
-        $this->assertContains($reportSudameriqueA, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueA, $reportsReport);
-        $this->assertNotContains($reportSudameriqueA, $reportsDelete);
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertContains($reportSudameriqueB, $reportsView);
-        $this->assertContains($reportSudameriqueB, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueB, $reportsReport);
-        $this->assertNotContains($reportSudameriqueB, $reportsDelete);
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertContains($reportSite, $reportsView);
-        $this->assertNotContains($reportSite, $reportsEdit);
-        $this->assertContains($reportSite, $reportsReport);
-        $this->assertContains($reportSite, $reportsDelete);
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertContains($reportAnnecy, $reportsView);
-        $this->assertContains($reportAnnecy, $reportsEdit);
-        $this->assertNotContains($reportAnnecy, $reportsReport);
-        $this->assertNotContains($reportAnnecy, $reportsDelete);
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertContains($reportChambery, $reportsView);
-        $this->assertContains($reportChambery, $reportsEdit);
-        $this->assertNotContains($reportChambery, $reportsReport);
-        $this->assertNotContains($reportChambery, $reportsDelete);
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertContains($reportBerlin, $reportsView);
-        $this->assertContains($reportBerlin, $reportsEdit);
-        $this->assertNotContains($reportBerlin, $reportsReport);
-        $this->assertNotContains($reportBerlin, $reportsDelete);
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertContains($reportLima, $reportsView);
-        $this->assertContains($reportLima, $reportsEdit);
-        $this->assertNotContains($reportLima, $reportsReport);
-        $this->assertNotContains($reportLima, $reportsDelete);
     }
 
     /**
@@ -3977,10 +3342,6 @@ class Orga_Test_ACL extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Action::ALLOW();
-        $queryReport = new Core_Model_Query();
-        $queryReport->aclFilter->enabled = true;
-        $queryReport->aclFilter->user = $user;
-        $queryReport->aclFilter->action = OrganizationAction::EDIT_GRANULARITY_REPORTS();
 
         // Test toutes les ressources.
 
@@ -4303,85 +3664,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertContains($cellLima, $cellsInput);
         $this->assertContains($cell2013LimaTransport, $cellsEdit);
         $this->assertContains($cell2013LimaTransport, $cellsAllow);
-
-        return;
-        $reportsView = DW_Model_Report::loadList($queryView);
-        $this->assertCount(9, $reportsView);
-        $reportsEdit = DW_Model_Report::loadList($queryEdit);
-        $this->assertCount(9, $reportsEdit);
-        $reportsReport = DW_Model_Report::loadList($queryReport);
-        $this->assertCount(0, $reportsReport);
-        $reportsDelete = DW_Model_Report::loadList($queryDelete);
-        $this->assertCount(0, $reportsDelete);
-
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportGlobale, $reportsView);
-        $this->assertNotContains($reportGlobale, $reportsEdit);
-        $this->assertNotContains($reportGlobale, $reportsReport);
-        $this->assertNotContains($reportGlobale, $reportsDelete);
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertContains($reportCellGlobale, $reportsView);
-        $this->assertContains($reportCellGlobale, $reportsEdit);
-        $this->assertNotContains($reportCellGlobale, $reportsReport);
-        $this->assertNotContains($reportCellGlobale, $reportsDelete);
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportZoneMarque, $reportsView);
-        $this->assertNotContains($reportZoneMarque, $reportsEdit);
-        $this->assertNotContains($reportZoneMarque, $reportsReport);
-        $this->assertNotContains($reportZoneMarque, $reportsDelete);
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertContains($reportEuropeA, $reportsView);
-        $this->assertContains($reportEuropeA, $reportsEdit);
-        $this->assertNotContains($reportEuropeA, $reportsReport);
-        $this->assertNotContains($reportEuropeA, $reportsDelete);
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertContains($reportEuropeB, $reportsView);
-        $this->assertContains($reportEuropeB, $reportsEdit);
-        $this->assertNotContains($reportEuropeB, $reportsReport);
-        $this->assertNotContains($reportEuropeB, $reportsDelete);
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertContains($reportSudameriqueA, $reportsView);
-        $this->assertContains($reportSudameriqueA, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueA, $reportsReport);
-        $this->assertNotContains($reportSudameriqueA, $reportsDelete);
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertContains($reportSudameriqueB, $reportsView);
-        $this->assertContains($reportSudameriqueB, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueB, $reportsReport);
-        $this->assertNotContains($reportSudameriqueB, $reportsDelete);
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSite, $reportsView);
-        $this->assertNotContains($reportSite, $reportsEdit);
-        $this->assertNotContains($reportSite, $reportsReport);
-        $this->assertNotContains($reportSite, $reportsDelete);
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertContains($reportAnnecy, $reportsView);
-        $this->assertContains($reportAnnecy, $reportsEdit);
-        $this->assertNotContains($reportAnnecy, $reportsReport);
-        $this->assertNotContains($reportAnnecy, $reportsDelete);
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertContains($reportChambery, $reportsView);
-        $this->assertContains($reportChambery, $reportsEdit);
-        $this->assertNotContains($reportChambery, $reportsReport);
-        $this->assertNotContains($reportChambery, $reportsDelete);
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertContains($reportBerlin, $reportsView);
-        $this->assertContains($reportBerlin, $reportsEdit);
-        $this->assertNotContains($reportBerlin, $reportsReport);
-        $this->assertNotContains($reportBerlin, $reportsDelete);
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertContains($reportLima, $reportsView);
-        $this->assertContains($reportLima, $reportsEdit);
-        $this->assertNotContains($reportLima, $reportsReport);
-        $this->assertNotContains($reportLima, $reportsDelete);
     }
 
     /**
@@ -4416,10 +3698,6 @@ class Orga_Test_ACL extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Action::ALLOW();
-        $queryReport = new Core_Model_Query();
-        $queryReport->aclFilter->enabled = true;
-        $queryReport->aclFilter->user = $user;
-        $queryReport->aclFilter->action = OrganizationAction::EDIT_GRANULARITY_REPORTS();
 
         // Test toutes les ressources.
 
@@ -4742,85 +4020,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertNotContains($cellLima, $cellsInput);
         $this->assertNotContains($cell2013LimaTransport, $cellsEdit);
         $this->assertNotContains($cell2013LimaTransport, $cellsAllow);
-
-        return;
-        $reportsView = DW_Model_Report::loadList($queryView);
-        $this->assertCount(3, $reportsView);
-        $reportsEdit = DW_Model_Report::loadList($queryEdit);
-        $this->assertCount(0, $reportsEdit);
-        $reportsReport = DW_Model_Report::loadList($queryReport);
-        $this->assertCount(0, $reportsReport);
-        $reportsDelete = DW_Model_Report::loadList($queryDelete);
-        $this->assertCount(0, $reportsDelete);
-
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportGlobale, $reportsView);
-        $this->assertNotContains($reportGlobale, $reportsEdit);
-        $this->assertNotContains($reportGlobale, $reportsReport);
-        $this->assertNotContains($reportGlobale, $reportsDelete);
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportCellGlobale, $reportsView);
-        $this->assertNotContains($reportCellGlobale, $reportsEdit);
-        $this->assertNotContains($reportCellGlobale, $reportsReport);
-        $this->assertNotContains($reportCellGlobale, $reportsDelete);
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportZoneMarque, $reportsView);
-        $this->assertNotContains($reportZoneMarque, $reportsEdit);
-        $this->assertNotContains($reportZoneMarque, $reportsReport);
-        $this->assertNotContains($reportZoneMarque, $reportsDelete);
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertContains($reportEuropeA, $reportsView);
-        $this->assertNotContains($reportEuropeA, $reportsEdit);
-        $this->assertNotContains($reportEuropeA, $reportsReport);
-        $this->assertNotContains($reportEuropeA, $reportsDelete);
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportEuropeB, $reportsView);
-        $this->assertNotContains($reportEuropeB, $reportsEdit);
-        $this->assertNotContains($reportEuropeB, $reportsReport);
-        $this->assertNotContains($reportEuropeB, $reportsDelete);
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSudameriqueA, $reportsView);
-        $this->assertNotContains($reportSudameriqueA, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueA, $reportsReport);
-        $this->assertNotContains($reportSudameriqueA, $reportsDelete);
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSudameriqueB, $reportsView);
-        $this->assertNotContains($reportSudameriqueB, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueB, $reportsReport);
-        $this->assertNotContains($reportSudameriqueB, $reportsDelete);
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSite, $reportsView);
-        $this->assertNotContains($reportSite, $reportsEdit);
-        $this->assertNotContains($reportSite, $reportsReport);
-        $this->assertNotContains($reportSite, $reportsDelete);
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertContains($reportAnnecy, $reportsView);
-        $this->assertNotContains($reportAnnecy, $reportsEdit);
-        $this->assertNotContains($reportAnnecy, $reportsReport);
-        $this->assertNotContains($reportAnnecy, $reportsDelete);
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertContains($reportChambery, $reportsView);
-        $this->assertNotContains($reportChambery, $reportsEdit);
-        $this->assertNotContains($reportChambery, $reportsReport);
-        $this->assertNotContains($reportChambery, $reportsDelete);
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportBerlin, $reportsView);
-        $this->assertNotContains($reportBerlin, $reportsEdit);
-        $this->assertNotContains($reportBerlin, $reportsReport);
-        $this->assertNotContains($reportBerlin, $reportsDelete);
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportLima, $reportsView);
-        $this->assertNotContains($reportLima, $reportsEdit);
-        $this->assertNotContains($reportLima, $reportsReport);
-        $this->assertNotContains($reportLima, $reportsDelete);
     }
 
     /**
@@ -4855,10 +4054,6 @@ class Orga_Test_ACL extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Action::ALLOW();
-        $queryReport = new Core_Model_Query();
-        $queryReport->aclFilter->enabled = true;
-        $queryReport->aclFilter->user = $user;
-        $queryReport->aclFilter->action = OrganizationAction::EDIT_GRANULARITY_REPORTS();
 
         // Test toutes les ressources.
 
@@ -5181,85 +4376,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertNotContains($cellLima, $cellsInput);
         $this->assertNotContains($cell2013LimaTransport, $cellsEdit);
         $this->assertNotContains($cell2013LimaTransport, $cellsAllow);
-
-        return;
-        $reportsView = DW_Model_Report::loadList($queryView);
-        $this->assertCount(2, $reportsView);
-        $reportsEdit = DW_Model_Report::loadList($queryEdit);
-        $this->assertCount(0, $reportsEdit);
-        $reportsReport = DW_Model_Report::loadList($queryReport);
-        $this->assertCount(0, $reportsReport);
-        $reportsDelete = DW_Model_Report::loadList($queryDelete);
-        $this->assertCount(0, $reportsDelete);
-
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportGlobale, $reportsView);
-        $this->assertNotContains($reportGlobale, $reportsEdit);
-        $this->assertNotContains($reportGlobale, $reportsReport);
-        $this->assertNotContains($reportGlobale, $reportsDelete);
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportCellGlobale, $reportsView);
-        $this->assertNotContains($reportCellGlobale, $reportsEdit);
-        $this->assertNotContains($reportCellGlobale, $reportsReport);
-        $this->assertNotContains($reportCellGlobale, $reportsDelete);
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportZoneMarque, $reportsView);
-        $this->assertNotContains($reportZoneMarque, $reportsEdit);
-        $this->assertNotContains($reportZoneMarque, $reportsReport);
-        $this->assertNotContains($reportZoneMarque, $reportsDelete);
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportEuropeA, $reportsView);
-        $this->assertNotContains($reportEuropeA, $reportsEdit);
-        $this->assertNotContains($reportEuropeA, $reportsReport);
-        $this->assertNotContains($reportEuropeA, $reportsDelete);
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportEuropeB, $reportsView);
-        $this->assertNotContains($reportEuropeB, $reportsEdit);
-        $this->assertNotContains($reportEuropeB, $reportsReport);
-        $this->assertNotContains($reportEuropeB, $reportsDelete);
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSudameriqueA, $reportsView);
-        $this->assertNotContains($reportSudameriqueA, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueA, $reportsReport);
-        $this->assertNotContains($reportSudameriqueA, $reportsDelete);
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertContains($reportSudameriqueB, $reportsView);
-        $this->assertNotContains($reportSudameriqueB, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueB, $reportsReport);
-        $this->assertNotContains($reportSudameriqueB, $reportsDelete);
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSite, $reportsView);
-        $this->assertNotContains($reportSite, $reportsEdit);
-        $this->assertNotContains($reportSite, $reportsReport);
-        $this->assertNotContains($reportSite, $reportsDelete);
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportAnnecy, $reportsView);
-        $this->assertNotContains($reportAnnecy, $reportsEdit);
-        $this->assertNotContains($reportAnnecy, $reportsReport);
-        $this->assertNotContains($reportAnnecy, $reportsDelete);
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportChambery, $reportsView);
-        $this->assertNotContains($reportChambery, $reportsEdit);
-        $this->assertNotContains($reportChambery, $reportsReport);
-        $this->assertNotContains($reportChambery, $reportsDelete);
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportBerlin, $reportsView);
-        $this->assertNotContains($reportBerlin, $reportsEdit);
-        $this->assertNotContains($reportBerlin, $reportsReport);
-        $this->assertNotContains($reportBerlin, $reportsDelete);
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertContains($reportLima, $reportsView);
-        $this->assertNotContains($reportLima, $reportsEdit);
-        $this->assertNotContains($reportLima, $reportsReport);
-        $this->assertNotContains($reportLima, $reportsDelete);
     }
 
     /**
@@ -5294,10 +4410,6 @@ class Orga_Test_ACL extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Action::ALLOW();
-        $queryReport = new Core_Model_Query();
-        $queryReport->aclFilter->enabled = true;
-        $queryReport->aclFilter->user = $user;
-        $queryReport->aclFilter->action = OrganizationAction::EDIT_GRANULARITY_REPORTS();
 
         // Test toutes les ressources.
 
@@ -5620,85 +4732,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertNotContains($cellLima, $cellsInput);
         $this->assertNotContains($cell2013LimaTransport, $cellsEdit);
         $this->assertNotContains($cell2013LimaTransport, $cellsAllow);
-
-        return;
-        $reportsView = DW_Model_Report::loadList($queryView);
-        $this->assertCount(1, $reportsView);
-        $reportsEdit = DW_Model_Report::loadList($queryEdit);
-        $this->assertCount(1, $reportsEdit);
-        $reportsReport = DW_Model_Report::loadList($queryReport);
-        $this->assertCount(0, $reportsReport);
-        $reportsDelete = DW_Model_Report::loadList($queryDelete);
-        $this->assertCount(0, $reportsDelete);
-
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportGlobale, $reportsView);
-        $this->assertNotContains($reportGlobale, $reportsEdit);
-        $this->assertNotContains($reportGlobale, $reportsReport);
-        $this->assertNotContains($reportGlobale, $reportsDelete);
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportCellGlobale, $reportsView);
-        $this->assertNotContains($reportCellGlobale, $reportsEdit);
-        $this->assertNotContains($reportCellGlobale, $reportsReport);
-        $this->assertNotContains($reportCellGlobale, $reportsDelete);
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportZoneMarque, $reportsView);
-        $this->assertNotContains($reportZoneMarque, $reportsEdit);
-        $this->assertNotContains($reportZoneMarque, $reportsReport);
-        $this->assertNotContains($reportZoneMarque, $reportsDelete);
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportEuropeA, $reportsView);
-        $this->assertNotContains($reportEuropeA, $reportsEdit);
-        $this->assertNotContains($reportEuropeA, $reportsReport);
-        $this->assertNotContains($reportEuropeA, $reportsDelete);
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportEuropeB, $reportsView);
-        $this->assertNotContains($reportEuropeB, $reportsEdit);
-        $this->assertNotContains($reportEuropeB, $reportsReport);
-        $this->assertNotContains($reportEuropeB, $reportsDelete);
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSudameriqueA, $reportsView);
-        $this->assertNotContains($reportSudameriqueA, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueA, $reportsReport);
-        $this->assertNotContains($reportSudameriqueA, $reportsDelete);
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSudameriqueB, $reportsView);
-        $this->assertNotContains($reportSudameriqueB, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueB, $reportsReport);
-        $this->assertNotContains($reportSudameriqueB, $reportsDelete);
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSite, $reportsView);
-        $this->assertNotContains($reportSite, $reportsEdit);
-        $this->assertNotContains($reportSite, $reportsReport);
-        $this->assertNotContains($reportSite, $reportsDelete);
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertContains($reportAnnecy, $reportsView);
-        $this->assertContains($reportAnnecy, $reportsEdit);
-        $this->assertNotContains($reportAnnecy, $reportsReport);
-        $this->assertNotContains($reportAnnecy, $reportsDelete);
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportChambery, $reportsView);
-        $this->assertNotContains($reportChambery, $reportsEdit);
-        $this->assertNotContains($reportChambery, $reportsReport);
-        $this->assertNotContains($reportChambery, $reportsDelete);
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportBerlin, $reportsView);
-        $this->assertNotContains($reportBerlin, $reportsEdit);
-        $this->assertNotContains($reportBerlin, $reportsReport);
-        $this->assertNotContains($reportBerlin, $reportsDelete);
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportLima, $reportsView);
-        $this->assertNotContains($reportLima, $reportsEdit);
-        $this->assertNotContains($reportLima, $reportsReport);
-        $this->assertNotContains($reportLima, $reportsDelete);
     }
 
     /**
@@ -5733,10 +4766,6 @@ class Orga_Test_ACL extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Action::ALLOW();
-        $queryReport = new Core_Model_Query();
-        $queryReport->aclFilter->enabled = true;
-        $queryReport->aclFilter->user = $user;
-        $queryReport->aclFilter->action = OrganizationAction::EDIT_GRANULARITY_REPORTS();
 
         // Test toutes les ressources.
 
@@ -6059,85 +5088,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertNotContains($cellLima, $cellsInput);
         $this->assertNotContains($cell2013LimaTransport, $cellsEdit);
         $this->assertNotContains($cell2013LimaTransport, $cellsAllow);
-
-        return;
-        $reportsView = DW_Model_Report::loadList($queryView);
-        $this->assertCount(1, $reportsView);
-        $reportsEdit = DW_Model_Report::loadList($queryEdit);
-        $this->assertCount(0, $reportsEdit);
-        $reportsReport = DW_Model_Report::loadList($queryReport);
-        $this->assertCount(0, $reportsReport);
-        $reportsDelete = DW_Model_Report::loadList($queryDelete);
-        $this->assertCount(0, $reportsDelete);
-
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportGlobale, $reportsView);
-        $this->assertNotContains($reportGlobale, $reportsEdit);
-        $this->assertNotContains($reportGlobale, $reportsReport);
-        $this->assertNotContains($reportGlobale, $reportsDelete);
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportCellGlobale, $reportsView);
-        $this->assertNotContains($reportCellGlobale, $reportsEdit);
-        $this->assertNotContains($reportCellGlobale, $reportsReport);
-        $this->assertNotContains($reportCellGlobale, $reportsDelete);
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportZoneMarque, $reportsView);
-        $this->assertNotContains($reportZoneMarque, $reportsEdit);
-        $this->assertNotContains($reportZoneMarque, $reportsReport);
-        $this->assertNotContains($reportZoneMarque, $reportsDelete);
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportEuropeA, $reportsView);
-        $this->assertNotContains($reportEuropeA, $reportsEdit);
-        $this->assertNotContains($reportEuropeA, $reportsReport);
-        $this->assertNotContains($reportEuropeA, $reportsDelete);
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportEuropeB, $reportsView);
-        $this->assertNotContains($reportEuropeB, $reportsEdit);
-        $this->assertNotContains($reportEuropeB, $reportsReport);
-        $this->assertNotContains($reportEuropeB, $reportsDelete);
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSudameriqueA, $reportsView);
-        $this->assertNotContains($reportSudameriqueA, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueA, $reportsReport);
-        $this->assertNotContains($reportSudameriqueA, $reportsDelete);
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSudameriqueB, $reportsView);
-        $this->assertNotContains($reportSudameriqueB, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueB, $reportsReport);
-        $this->assertNotContains($reportSudameriqueB, $reportsDelete);
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSite, $reportsView);
-        $this->assertNotContains($reportSite, $reportsEdit);
-        $this->assertNotContains($reportSite, $reportsReport);
-        $this->assertNotContains($reportSite, $reportsDelete);
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportAnnecy, $reportsView);
-        $this->assertNotContains($reportAnnecy, $reportsEdit);
-        $this->assertNotContains($reportAnnecy, $reportsReport);
-        $this->assertNotContains($reportAnnecy, $reportsDelete);
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportChambery, $reportsView);
-        $this->assertNotContains($reportChambery, $reportsEdit);
-        $this->assertNotContains($reportChambery, $reportsReport);
-        $this->assertNotContains($reportChambery, $reportsDelete);
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertContains($reportBerlin, $reportsView);
-        $this->assertNotContains($reportBerlin, $reportsEdit);
-        $this->assertNotContains($reportBerlin, $reportsReport);
-        $this->assertNotContains($reportBerlin, $reportsDelete);
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportLima, $reportsView);
-        $this->assertNotContains($reportLima, $reportsEdit);
-        $this->assertNotContains($reportLima, $reportsReport);
-        $this->assertNotContains($reportLima, $reportsDelete);
     }
 
     /**
@@ -6172,10 +5122,6 @@ class Orga_Test_ACL extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Action::ALLOW();
-        $queryReport = new Core_Model_Query();
-        $queryReport->aclFilter->enabled = true;
-        $queryReport->aclFilter->user = $user;
-        $queryReport->aclFilter->action = OrganizationAction::EDIT_GRANULARITY_REPORTS();
 
         // Test toutes les ressources.
 
@@ -6498,85 +5444,6 @@ class Orga_Test_ACL extends TestCase
         $this->assertContains($cellLima, $cellsInput);
         $this->assertNotContains($cell2013LimaTransport, $cellsEdit);
         $this->assertNotContains($cell2013LimaTransport, $cellsAllow);
-
-        return;
-        $reportsView = DW_Model_Report::loadList($queryView);
-        $this->assertCount(1, $reportsView);
-        $reportsEdit = DW_Model_Report::loadList($queryEdit);
-        $this->assertCount(0, $reportsEdit);
-        $reportsReport = DW_Model_Report::loadList($queryReport);
-        $this->assertCount(0, $reportsReport);
-        $reportsDelete = DW_Model_Report::loadList($queryDelete);
-        $this->assertCount(0, $reportsDelete);
-
-        // Report granularité globale.
-        $reportGlobale = $this->granularityGlobale->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportGlobale, $reportsView);
-        $this->assertNotContains($reportGlobale, $reportsEdit);
-        $this->assertNotContains($reportGlobale, $reportsReport);
-        $this->assertNotContains($reportGlobale, $reportsDelete);
-
-        $reportCellGlobale = $cell0->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportCellGlobale, $reportsView);
-        $this->assertNotContains($reportCellGlobale, $reportsEdit);
-        $this->assertNotContains($reportCellGlobale, $reportsReport);
-        $this->assertNotContains($reportCellGlobale, $reportsDelete);
-
-        // Report granularité zone marque.
-        $reportZoneMarque = $this->granularityZoneMarque->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportZoneMarque, $reportsView);
-        $this->assertNotContains($reportZoneMarque, $reportsEdit);
-        $this->assertNotContains($reportZoneMarque, $reportsReport);
-        $this->assertNotContains($reportZoneMarque, $reportsDelete);
-
-        $reportEuropeA = $cellEuropeA->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportEuropeA, $reportsView);
-        $this->assertNotContains($reportEuropeA, $reportsEdit);
-        $this->assertNotContains($reportEuropeA, $reportsReport);
-        $this->assertNotContains($reportEuropeA, $reportsDelete);
-        $reportEuropeB = $cellEuropeB->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportEuropeB, $reportsView);
-        $this->assertNotContains($reportEuropeB, $reportsEdit);
-        $this->assertNotContains($reportEuropeB, $reportsReport);
-        $this->assertNotContains($reportEuropeB, $reportsDelete);
-        $reportSudameriqueA = $cellSudameriqueA->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSudameriqueA, $reportsView);
-        $this->assertNotContains($reportSudameriqueA, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueA, $reportsReport);
-        $this->assertNotContains($reportSudameriqueA, $reportsDelete);
-        $reportSudameriqueB = $cellSudameriqueB->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSudameriqueB, $reportsView);
-        $this->assertNotContains($reportSudameriqueB, $reportsEdit);
-        $this->assertNotContains($reportSudameriqueB, $reportsReport);
-        $this->assertNotContains($reportSudameriqueB, $reportsDelete);
-
-        // Report granularité site.
-        $reportSite = $this->granularitySite->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportSite, $reportsView);
-        $this->assertNotContains($reportSite, $reportsEdit);
-        $this->assertNotContains($reportSite, $reportsReport);
-        $this->assertNotContains($reportSite, $reportsDelete);
-
-        $reportAnnecy = $cellAnnecy->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportAnnecy, $reportsView);
-        $this->assertNotContains($reportAnnecy, $reportsEdit);
-        $this->assertNotContains($reportAnnecy, $reportsReport);
-        $this->assertNotContains($reportAnnecy, $reportsDelete);
-        $reportChambery = $cellChambery->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportChambery, $reportsView);
-        $this->assertNotContains($reportChambery, $reportsEdit);
-        $this->assertNotContains($reportChambery, $reportsReport);
-        $this->assertNotContains($reportChambery, $reportsDelete);
-        $reportBerlin = $cellBerlin->getDWCube()->getReports()[0];
-        $this->assertNotContains($reportBerlin, $reportsView);
-        $this->assertNotContains($reportBerlin, $reportsEdit);
-        $this->assertNotContains($reportBerlin, $reportsReport);
-        $this->assertNotContains($reportBerlin, $reportsDelete);
-        $reportLima = $cellLima->getDWCube()->getReports()[0];
-        $this->assertContains($reportLima, $reportsView);
-        $this->assertNotContains($reportLima, $reportsEdit);
-        $this->assertNotContains($reportLima, $reportsReport);
-        $this->assertNotContains($reportLima, $reportsDelete);
     }
 
     /**
@@ -6598,13 +5465,6 @@ class Orga_Test_ACL extends TestCase
         $this->userService->deleteUser(User::load($this->annecyCellAdministrator->getId()));
         $this->userService->deleteUser(User::load($this->berlinCellObserver->getId()));
         $this->userService->deleteUser(User::load($this->limaCellContributor->getId()));
-
-        $this->entityManager->flush();
-        $this->entityManager->clear();
-
-        foreach (Orga_Model_GranularityReport::loadList() as $granularityReport) {
-            $granularityReport->delete();
-        }
 
         $this->entityManager->flush();
         $this->entityManager->clear();

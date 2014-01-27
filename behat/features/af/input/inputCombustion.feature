@@ -32,11 +32,7 @@ Feature: Combustion input feature
   # Vérification contenu pour un algo de type "paramètre"
     When I open collapse "fe_amont"
     Then I should see "Type : Paramètre"
-    And I should see "Processus : amont de la combustion"
+    And I should see "Processus : Amont combustion"
     And I should see "Valeur : 254 kg équ. CO2/t ± 20 %"
     When I click element "#combustion_combustible_unite_masse__emissions_amont__fe_amont a:contains('Combustion de combustible, mesuré en unité de masse')"
-    And I open tab "Documentation"
     Then I should see "Il n'y a aucune documentation pour cette famille."
-
-
-

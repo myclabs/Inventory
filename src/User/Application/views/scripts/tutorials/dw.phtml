@@ -1,0 +1,37 @@
+<script>
+    function startIntro(){
+        var intro = introJs();
+        intro.setOptions({
+            steps: [
+                {
+                    element: '#configurationPanel',
+                    intro: "Ce panneau vous permet modifier le graphique affiché. Cliquez sur le bouton \"Lancer\" pour visualiser vos modifications.<br>"+
+                        "Le bouton \"Enregistrer\" vous permet de sauvegarder vos paramètres d'analyse.",
+                    position: 'right'
+                },
+                {
+                    element: '.page-header>div',
+                    intro: "Vous pouvez exporter votre analyse aux formats PDF et Excel (seuls les valeurs sont exportées en Excel).<br>"+
+                        "Le bouton \"Retour\" vous permet de revenir à l'accueil."
+                }
+            ],
+            showBullets: false,
+            nextLabel: "Suivant",
+            prevLabel: "Précédent",
+            doneLabel: "Terminer",
+            skipLabel: "Passer"
+        });
+        var stepCompleted = function () {
+            $.ajax({
+                url: 'user/profile/dismiss-tutorial/tutorial/7/',
+                type: "GET"
+            });
+        };
+        intro.onexit(stepCompleted);
+        intro.oncomplete(stepCompleted);
+        intro.start();
+    }
+    $(document).ready(function () {
+        setTimeout(startIntro, 500);
+    });
+</script>

@@ -1,0 +1,91 @@
+<script>
+    function startIntro(){
+        var intro = introJs();
+        intro.setOptions({
+            steps: [
+                {
+                    element: '.granularity-wrapper:last-child',
+                    intro: "Dans cette zone sont listés les différents formulaires de saisies de vos données comptables pour chaque année.",
+                    position: 'top'
+                },
+                {
+                    element: '.granularity-wrapper:last-child .cells-filter',
+                    intro: "Vous pouvez filtrer les formulaires de saisies par catégorie, année, statut de saisie et d'inventaires."
+                },
+                {
+                    element: '.granularity-wrapper:nth-child(2)',
+                    intro: "Cette zonne affiche l'avancement de votre campagne de collecte par année et vous permet d'accéder aux analyses de vos émission de gaz à effet de serre.",
+                    position: 'top'
+                },
+                {
+                    element: '.granularity-wrapper:nth-child(2) .inventory-status button',
+                    intro: "Vous pouvez modifier le statut d'une campagne de collecte pour la lancer ou la clôturer."
+                },
+                {
+                    element: '.granularity-wrapper:nth-child(2) .cell-actions:first-child',
+                    intro: "Ces boutons vous permettent d'accéder à la liste des analyses disponibles et d'exporter vos données."
+                },
+                {
+                    element: '#cellsView',
+                    intro: "Vous pouvez maintenant commencer à saisir des données et accéder aux analyses.",
+                    position: 'top'
+                }
+            ],
+            showBullets: false,
+            nextLabel: "Suivant",
+            prevLabel: "Précédent",
+            doneLabel: "Terminer",
+            skipLabel: "Passer"
+        });
+        var stepCompleted = function () {
+            $.ajax({
+                url: 'user/profile/dismiss-tutorial/tutorial/3/',
+                type: "GET"
+            });
+        };
+        intro.onchange(function (targetElement) {
+            if ($(targetElement).attr('id') == 'cellsView') {
+                stepCompleted();
+            }
+        })
+        intro.onexit(stepCompleted);
+        intro.oncomplete(function () {
+            stepCompleted();
+            setTimeout(function () {
+                $('div.collapse[id^="granularity"]').collapse('hide')
+            }, 500);
+        });
+        intro.start();
+    }
+    $(function () {
+        $('div.collapse[id^="granularity"]').on('cellsLoaded', function(e) {
+            $(this).collapse("show");
+        });
+        $("#welcomeModal").modal('show');
+        $("#beginTutorial").on('click', function () {
+            setTimeout(function(){startIntro()}, 700);
+        });
+        $("#dismissTutorial").on('click', function () {
+            $('div.collapse[id^="granularity"]').collapse('hide');
+            $.ajax({
+                url: 'user/profile/dismiss-tutorial/tutorial/all/',
+                type: "GET"
+            });
+        });
+    });
+</script>
+
+<div class="modal hide fade" id="welcomeModal">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Bienvenue dans My C-Tool</h3>
+    </div>
+    <div class="modal-body">
+        <p>Votre espace de travail est prêt. Vous pouvez saisir vos données comptables et analyser vos émissions de gaz à effet de serre.</p>
+        <p>Souhaitez-vous suivre une initiation ?</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" id="beginTutorial" data-dismiss="modal">Suivre l'initiation</button>
+        <button class="btn" id="dismissTutorial" data-dismiss="modal">Utiliser directement My C-Tool</button>
+    </div>
+</div>
