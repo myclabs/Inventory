@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit;
+
 use Core\Test\TestCase;
 use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use MyCLabs\UnitAPI\Operation\Result\AdditionResult;
@@ -11,25 +13,24 @@ use Unit\UnitAPI;
  * @author hugo.charboniere
  * @author yoann.croizer
  */
-class Unit_Test_UnitAPITest extends TestCase
+class UnitAPITest extends TestCase
 {
     /**
      * Test de la fonction getSymbol()
      * On vérigfie que le symbol est bien le bon
      */
-    function testGetSymbol()
+    public function testGetSymbol()
     {
         //Traitement d'un cas assez complexe utilisant tout les types d'unité (discrète, étendue et standard)
         $o = new UnitAPI('m^2.animal^-1.m^-2.g.g_co2e^2');
         $this->assertSame('m2.g.g equ. CO22/animal.m2', $o->getSymbol());
     }
 
-
     /**
      * Test de la fonction getNormalizedUnit()
      * On vérigfie que le symbol est bien le bon
      */
-    function testGetNormalizedUnit()
+    public function testGetNormalizedUnit()
     {
         //Traitement d'un cas assez complexe utilisant tout les types d'unité (discrète, étendue et standard)
         $o = new UnitAPI('g.An');
@@ -42,7 +43,7 @@ class Unit_Test_UnitAPITest extends TestCase
      * Test de la fonction isEquivalent()
      * On vérifie que deux unités equivalentes le son bien et inversement
      */
-    function testIsEquivalent()
+    public function testIsEquivalent()
     {
         //Cas ou l'on mélange plusieurs type d'unité.
         $unit1 = new UnitAPI('m^2.animal^-1.m^-2.kg.m^2.J^-5.kg_co2e^2');
@@ -67,7 +68,7 @@ class Unit_Test_UnitAPITest extends TestCase
      * Test de la fonction getConversionFactor()
      * On test si les facteurs de conversion retournés sont justes
      */
-    function testGetConversionFactor()
+    public function testGetConversionFactor()
     {
         $unit1 = new UnitAPI('m^2.animal^-1.m^-2.kg');
         $result = $unit1->getConversionFactor(new UnitAPI('m^2.animal^-1.m^-2.kg'));
@@ -84,7 +85,7 @@ class Unit_Test_UnitAPITest extends TestCase
      * pour une multiplication
      * pour une division
      */
-    function testMultiply()
+    public function testMultiply()
     {
         $operande[0]['unit'] = new UnitAPI('g.animal^-1.kg.kg_ce');
         $operande[0]['signExponent'] = 1;
@@ -102,7 +103,7 @@ class Unit_Test_UnitAPITest extends TestCase
      * pour une addition
      * pour une soustraction
      */
-    function testCalculateSum()
+    public function testCalculateSum()
     {
         $operande[] = 'g.animal^-1.kg.g_co2e';
         $operande[] = 'animal.s.an.kg^-1';
