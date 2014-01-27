@@ -33,14 +33,18 @@ class Doc_Datagrid_LibraryController extends UI_Controller_Datagrid
             $data['index'] = $document->getId();
             $data['name'] = $document->getName();
             $data['extension'] = $document->getFileExtension();
-            $data['description'] = $this->cellLongText('doc/document/popup-description/id/' . $document->getId(),
-                                                       'doc/datagrid_library/get-description/id/' . $document->getId(),
-                                                       __('UI', 'name', 'description'),
-                                                       'zoom-in');
-            $data['fileSize'] = $this->cellNumber($document->getFileSize() / 1024 / 1024);
-            $data['referenceCount'] = $this->cellNumber($document->getReferencingBibliographiesCount());
-            $data['download'] = $this->cellLink('doc/document/download/id/' . $document->getId(),
-                                                __('Doc', 'verb', 'download'), 'download');
+            $data['description'] = $this->cellLongText(
+                'doc/document/popup-description/id/' . $document->getId(),
+                'doc/datagrid_library/get-description/id/' . $document->getId(),
+                __('UI', 'name', 'description'),
+                'zoom-in'
+            );
+            $data['fileSize'] = $this->cellNumber($document->getFileSize() / 1024 / 1024, 3);
+            $data['download'] = $this->cellLink(
+                'doc/document/download/id/' . $document->getId(),
+                __('Doc', 'verb', 'download'),
+                'download'
+            );
             $this->addLine($data);
         }
 

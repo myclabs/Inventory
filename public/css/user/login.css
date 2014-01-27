@@ -38,9 +38,19 @@
     background: #f6f6f6;
     border: 1px solid #bbb;
 }
-.login-form input[type="submit"] {
-    font-size: 14px;
+.login-form .btn {
+    font-size: 15px;
     height: auto;
     padding: 11px 18px;
     border-radius: 3px;
+}
+
+.login-form #captcha-element {
+    margin-left: 0;
+}
+.login-form .captcha {
+    display: inline-block;
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
 }

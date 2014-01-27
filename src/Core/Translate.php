@@ -53,7 +53,12 @@ class Core_Translate
         $message = $this->getFromCache($id, $replacements, $locale);
 
         if ($message === false) {
-            $message = $this->translator->trans($id, $replacements, null, $locale);
+            $adaptedReplacements = [];
+            foreach ($replacements as $key => $value) {
+                $newKey = '[' . $key . ']';
+                $adaptedReplacements[$newKey] = $value;
+            }
+            $message = $this->translator->trans($id, $adaptedReplacements, null, $locale);
 
             $this->saveToCache($id, $replacements, $locale, $message);
         }
@@ -75,10 +80,8 @@ class Core_Translate
      */
     public static function exportJS($package, $file, $ref)
     {
-        /** @var Container $container */
-        $container = Zend_Registry::get('container');
         /** @var Core_Translate $translate */
-        $translate = $container->get('Core_Translate');
+        $translate = \Core\ContainerSingleton::getContainer()->get('Core_Translate');
 
         $message = $translate->get($package, $file, $ref);
 

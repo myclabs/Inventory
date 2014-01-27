@@ -118,7 +118,6 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
 {
     $view = Zend_Controller_Action_HelperBroker::getStaticHelper('Layout')->getView();
 
-    $container = Zend_Registry::get('container');
     $locale = Core_Locale::loadDefault();
 
     $title = $algo->getRef();
@@ -196,7 +195,7 @@ function displayAlgo(Algo_Model_Algo $algo, AF_Model_InputSet $inputSet, $refPre
         $popup->addAttribute('class', 'large');
         $collapse->body .= $popup->render();
         $helper = new UI_View_Helper_Button();
-        $buttonHTML = $helper->button("", 'zoom-in', ['class' => 'btn-mini'])
+        $buttonHTML = $helper->button("", 'search', ['class' => 'btn-mini'])
             ->showPopup('graph_' . $algo->getId());
         $expression = $algo->getExpression();
         $collapse->body .= "<p><strong>" . __('TEC', 'name', 'expression') . __('UI', 'other', ':')

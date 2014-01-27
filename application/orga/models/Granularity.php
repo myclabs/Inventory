@@ -7,7 +7,6 @@
  * @subpackage Model
  */
 
-use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -606,7 +605,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
     /**
      * Défini si la Granularity est utilisé pour configurer la pertinence des cellules.
-     * 
+     *
      * @param $bool
      */
     public function setCellsControlRelevance($bool)
@@ -647,13 +646,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
             if ($configGranularity !== null) {
                 $configGranularity->addInputGranularity($this);
-
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocBibliographyForAFInputSetPrimary(new Bibliography());
-                }
             } else {
                 foreach ($this->getCells() as $cell) {
-                    $cell->setDocBibliographyForAFInputSetPrimary();
                     try {
                         $cell->setAFInputSetPrimary();
                     } catch (Core_Exception_UndefinedAttribute $e) {
@@ -668,7 +662,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      * Renvoi la Granularity de configuration des saisies.
      *
      * @throws Core_Exception_UndefinedAttribute
-     * 
+     *
      * @return Orga_Model_Granularity
      */
     public function getInputConfigGranularity()
@@ -793,10 +787,8 @@ class Orga_Model_Granularity extends Core_Model_Entity
             $this->dWCube = new DW_Model_Cube();
             $this->dWCube->setLabel($this->getLabel());
 
-            /** @var \DI\Container $container */
-            $container = Zend_Registry::get('container');
             /** @var Orga_Service_ETLStructure $etlStructureService */
-            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+            $etlStructureService = \Core\ContainerSingleton::getContainer()->get(Orga_Service_ETLStructure::class);
 
             $etlStructureService->populateGranularityDWCube($this);
         }
@@ -836,7 +828,25 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function setCellsWithACL($bool)
     {
-        $this->cellsWithACL = (bool) $bool;
+        if ($this->cellsWithACL !== $bool) {
+            if ($this->cellsWithACL) {
+                foreach ($this->getCells() as $cell) {
+                    foreach ($cell->getAdminRoles() as $adminRole) {
+                        $cell->removeAdminRole($adminRole);
+                    }
+                    foreach ($cell->getManagerRoles() as $managerRole) {
+                        $cell->removeManagerRole($managerRole);
+                    }
+                    foreach ($cell->getContributorRoles() as $contributorRole) {
+                        $cell->removeContributorRole($contributorRole);
+                    }
+                    foreach ($cell->getObserverRoles() as $observerRole) {
+                        $cell->removeObserverRole($observerRole);
+                    }
+                }
+            }
+            $this->cellsWithACL = (bool) $bool;
+        }
     }
 
     /**
@@ -923,34 +933,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getCellsWithSocialContextActions()
     {
         return $this->cellsWithSocialContextActions;
-    }
-
-    /**
-     * Défini si les cellules de la granularité possèderont des Doc pour l'InputSetPrimary.
-     *
-     * @param bool $bool
-     *
-     * @throws Core_Exception_User
-     */
-    public function setCellsWithInputDocuments($bool)
-    {
-        if ($this->cellsWithInputDocs !== (bool) $bool) {
-            $this->cellsWithInputDocs = (bool) $bool;
-            if ($this->cellsWithInputDocs === false) {
-                foreach ($this->getCells() as $cell) {
-                    if ($cell->getDocLibraryForAFInputSetsPrimary()->hasDocuments()) {
-                        throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithInputDocs');
-                    }
-                }
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForAFInputSetsPrimary();
-                }
-            } else {
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForAFInputSetsPrimary(new Library());
-                }
-            }
-        }
     }
 
     /**

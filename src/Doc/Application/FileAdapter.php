@@ -2,23 +2,23 @@
 
 namespace Doc\Application;
 
+use Core\ContainerSingleton;
 use Zend_Controller_Action_HelperBroker;
 use Doc\Domain\Library;
 use Zend_File_Transfer_Adapter_Http;
 use Doc\Domain\Document;
-use Zend_Registry;
 use Core_Exception_InvalidArgument;
 use Core_Exception;
 use Core_Exception_NotFound;
 
 /**
  * Adaptateur ZF pour le transfert de document.
+ *
  * @author thibaud.rolland
  * @author matthieu.napoli
  */
 class FileAdapter
 {
-
     /**
      * @var array Messages d'erreur
      */
@@ -30,7 +30,7 @@ class FileAdapter
     private $basePath;
 
     /**
-     * @var \Doc\Domain\Library
+     * @var Library
      */
     private $library;
     /**
@@ -51,18 +51,14 @@ class FileAdapter
 
 
     /**
-     * @param \Doc\Domain\Library $library
+     * @param Library $library
      * @throws Core_Exception
      */
     public function __construct(Library $library)
     {
         $this->library = $library;
         $this->transferAdapter = new Zend_File_Transfer_Adapter_Http();
-        $config = Zend_Registry::get('configuration');
-        if (!$config->documents->path) {
-            throw new Core_Exception('The configuration should contain the target document path');
-        }
-        $this->basePath = $config->documents->path;
+        $this->basePath = ContainerSingleton::getContainer()->get('documents.path');
         $this->transferAdapter->setDestination($this->basePath);
     }
 
@@ -101,8 +97,7 @@ class FileAdapter
         $this->document = new Document($this->library, $filePath);
         $this->document->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         // Renomme le fichier avec l'ID du document
         $dirName = pathinfo($this->document->getFilePath(), PATHINFO_DIRNAME);
@@ -112,8 +107,7 @@ class FileAdapter
         $this->document->setFilePath($newFilePath);
         $this->document->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         return true;
     }
@@ -269,7 +263,7 @@ class FileAdapter
     /**
      * méthode pour récupérer le document -- Method for downloading the document
      *
-     * @param \Doc\Domain\Document $document
+     * @param Document $document
      * @throws Core_Exception_NotFound
      */
     public static function downloadDocument(Document $document)
@@ -283,7 +277,7 @@ class FileAdapter
         Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer')->setNoRender(true);
         Zend_Controller_Action_HelperBroker::getStaticHelper('layout')->disableLayout();
 
-        $mimeType = self::mimeContentType(pathinfo($filePath, PATHINFO_BASENAME));
+        $mimeType = self::mimeContentType($filePath);
 
         $downloadBaseName = self::sanitizeFileName(
             $document->getName()

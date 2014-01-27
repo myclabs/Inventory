@@ -65,10 +65,10 @@
         
         <tu tuid="analysisDataRebuildWarningMessageOrganization">
             <tuv xml:lang="fr">
-                <seg>Vous pouvez régénérer l'ensemble des données d'analyse de cette unité organisationnelle et de toutes ses sous-unités en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
+                <seg>Vous pouvez régénérer l'ensemble des données d'analyse de l'unité organisationnelle séléctionnée et de toutes ses sous-unités en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>You can rebuild all analysis data of this organizational unit and all its subunits by clicking on the button below. This operation may take time.</seg>
+                <seg>You can rebuild all analysis data of the selected organizational unit and all its subunits by clicking on the button below. This operation may take time.</seg>
             </tuv>
         </tu>
         <tu tuid="analysisDataRebuildWarningMessageSimulation">
@@ -81,10 +81,10 @@
         </tu>
         <tu tuid="outputDataRebuildWarningMessageOrganization">
             <tuv xml:lang="fr">
-                <seg>Vous pouvez relancer l'ensemble des calculs et régénérer l'ensemble des données d'analyse pour cette unité organisationnelle et pour toutes ses sous-unités en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
+                <seg>Vous pouvez relancer l'ensemble des calculs et régénérer l'ensemble des données d'analyse de l'unité organisationnelle séléctionnée et pour toutes ses sous-unités en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>You can restart all calculations and rebuild all analysis data of this organizational unit and all its subunits by clicking on the button below. This operation may take time.</seg>
+                <seg>You can restart all calculations and rebuild all analysis data of the selected organizational unit and all its subunits by clicking on the button below. This operation may take time.</seg>
             </tuv>
         </tu>
         <tu tuid="outputDataRebuildWarningMessageSimulation">
@@ -106,12 +106,28 @@
                 <seg>Rebuild analysis data</seg>
             </tuv>
         </tu>
+        <tu tuid="analysisDataRebuilding">
+            <tuv xml:lang="fr">
+                <seg>Régénération en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Rebuilding in progress</seg>
+            </tuv>
+        </tu>
         <tu tuid="outputDataRebuildButton">
             <tuv xml:lang="fr">
                 <seg>Relancer les calculs et régénérer les données d'analyse</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Restart computations and rebuild analysis data</seg>
+            </tuv>
+        </tu>
+        <tu tuid="outputDataRebuilding">
+            <tuv xml:lang="fr">
+                <seg>Recalculs en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Computing in progress</seg>
             </tuv>
         </tu>
  

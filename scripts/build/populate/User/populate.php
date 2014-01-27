@@ -12,8 +12,7 @@ class User_Populate extends Core_Script_Populate
 {
     public function populateEnvironment($environment)
     {
-        /** @var DI\Container $container */
-        $container = Zend_Registry::get('container');
+        $container = \Core\ContainerSingleton::getContainer();
 
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);

@@ -26,14 +26,4 @@ class OrganizationViewModel
      * @var boolean
      */
     public $canBeDeleted;
-
-    /**
-     * @var string[]
-     */
-    public $rootAxesLabels = [];
-
-    /**
-     * @var string
-     */
-    public $inventory;
 }

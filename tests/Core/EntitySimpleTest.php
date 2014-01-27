@@ -1,71 +1,43 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    Core
- * @subpackage Test
- */
 
-/**
- * Creation of the Test Suite.
- *
- * @package    Core
- * @subpackage Test
- */
-class Core_Test_EntitySimpleTest
+namespace Tests\Core;
+
+use Core\Domain\EntityRepository;
+use Core\Test\TestCase;
+use Core_Exception_NotFound;
+use Core_Exception_TooMany;
+use Inventory_Model_Simple;
+use PHPUnit_Framework_TestSuite;
+
+class EntitySimpleTest
 {
-    /**
-     * Déclaration de la suite de test à éffectuer.
-     */
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Core_Test_EntitySimpleCRUD');
-        $suite->addTestSuite('Core_Test_EntitySimpleOthers');
+        $suite->addTestSuite(EntitySimpleCRUD::class);
+        $suite->addTestSuite(EntitySimpleOthers::class);
         return $suite;
     }
 }
 
 /**
  * Test les fonctionnalités basiques de Core_Model_Entity.
- *
- * @package Core
- * @subpackage Event
  */
-class Core_Test_EntitySimpleCRUD extends PHPUnit_Framework_TestCase
+class EntitySimpleCRUD extends TestCase
 {
-    // Attributs des Tests.
-
     /**
-     * @var Doctrine\ORM\EntityManager
+     * @var EntityRepository
      */
-    protected $entityManager;
+    protected $simpleEntityRepository;
 
-    /**
-     * @var Doctrine\ORM\EntityRepository
-     */
-    protected $_simpleEntityRepository;
-
-
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
-    public static function setUpBeforeClass()
+    public function setUp()
     {
-    }
-
-    /**
-     * Méthode appelée avant l'exécution des tests.
-     */
-    protected function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-        $this->_simpleEntityRepository = $this->entityManager->getRepository('Inventory_Model_Simple');
+        parent::setUp();
+        $this->simpleEntityRepository = $this->entityManager->getRepository(Inventory_Model_Simple::class);
     }
 
     /**
      * Test de la création d'une entité.
-     * @return Inventory_Model_Simple
      */
     public function testCreateEntity()
     {
@@ -77,12 +49,12 @@ class Core_Test_EntitySimpleCRUD extends PHPUnit_Framework_TestCase
         //  Tant qu'aucun flush n'est fait, l'id reste nulle.
         $this->assertTrue($this->entityManager->contains($simpleEntity));
         $this->assertEmpty($simpleEntity->getKey());
-        $this->assertEmpty($this->_simpleEntityRepository->findAll());
+        $this->assertEmpty($this->simpleEntityRepository->findAll());
         // Flush !
         $this->entityManager->flush();
         //  Vérification que l'id est non nulle.
         $this->assertNotEmpty($simpleEntity->getKey());
-        $this->assertNotEmpty($this->_simpleEntityRepository->findAll());
+        $this->assertNotEmpty($this->simpleEntityRepository->findAll());
 
         return $simpleEntity;
     }
@@ -127,78 +99,40 @@ class Core_Test_EntitySimpleCRUD extends PHPUnit_Framework_TestCase
         // Vérification que l'entity existe toujours bien.
         //  Tant qu'aucun flush n'est fait, l'id existe toujours.
         $this->assertNotEmpty($simpleEntity->getKey());
-        $this->assertNotEmpty($this->_simpleEntityRepository->findAll());
+        $this->assertNotEmpty($this->simpleEntityRepository->findAll());
         // Flush !
         $this->entityManager->flush();
         //  Vérification que l'id est nulle.
         $this->assertEmpty($simpleEntity->getKey());
-        $this->assertEmpty($this->_simpleEntityRepository->findAll());
+        $this->assertEmpty($this->simpleEntityRepository->findAll());
     }
 
-    /**
-     * Méthode appelée à la fin des test.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
-     * Méthode appelée à la fin des test
-     */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Inventory_Model_Simple en base, sinon suppression !
         if (Inventory_Model_Simple::countTotal() > 0) {
             echo PHP_EOL . 'Des SimpleEntity restantes ont été trouvé après les tests, suppression en cours !';
             foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            self::getEntityManager()->flush();
         }
     }
-
 }
 
 /**
  * Test les fonctionnalités avancés de Core_Model_Entity.
- *
- * @package Core
- * @subpackage Event
  */
-class Core_Test_EntitySimpleOthers extends PHPUnit_Framework_TestCase
+class EntitySimpleOthers extends TestCase
 {
-    // Attributs des Tests.
-
-    /**
-     * @var Doctrine\ORM\EntityManager
-     */
-    protected $entityManager;
-
-
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Inventory_Model_Entity en base, sinon suppression !
         if (Inventory_Model_Simple::countTotal() > 0) {
             echo PHP_EOL . 'Des SimpleEntity restantes ont été trouvé avant les tests, suppression en cours !';
             foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            self::getEntityManager()->flush();
         }
-    }
-
-    /**
-     * Méthode appelée avant l'exécution des tests.
-     */
-    protected function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
     }
 
     /**
@@ -220,40 +154,13 @@ class Core_Test_EntitySimpleOthers extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Vérifie qu'il est impossible de spécifier un poolName sans EntityManager correspondant.
-     * @expectedException Core_Exception_Database
-     */
-    public function testSetInvalidPoolName()
-    {
-        $poolName = 'InexistentPoolName';
-        try {
-            Inventory_Model_Simple::setActivePoolName($poolName);
-        } catch (Core_Exception_Database $e) {
-            if ($e->getMessage() == 'Invalid name given, there is no EntityManager matching '.$poolName) {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
-    }
-
-    /**
      * Test l'exception sur le chargement non trouvé.
      * @expectedException Core_Exception_NotFound
      */
     public function testLoadNotFound()
     {
         $id = array('id' => 42);
-        try {
-            $entity = Inventory_Model_Simple::load($id);
-        } catch (Core_Exception_NotFound $e) {
-            ob_start();
-            var_dump($id);
-            $exportedId = ob_get_clean();
-            if ($e->getMessage() == 'No "Inventory_Model_Simple" matching key '.$exportedId) {
-                throw $e;
-            }
-        }
-        $this->fail('An expected exception has not been raised.');
+        Inventory_Model_Simple::load($id);
     }
 
     /**
@@ -282,10 +189,8 @@ class Core_Test_EntitySimpleOthers extends PHPUnit_Framework_TestCase
         // Enregistrement des SimpleEntity en base.
         $this->entityManager->flush();
 
-        $criteria = array('name' => 'A');
-
         try {
-            $entitiesA = Inventory_Model_Simple::loadByName('A');
+            Inventory_Model_Simple::loadByName('A');
         } catch (Core_Exception_TooMany $e) {
             $simpleEntityA->delete();
             $simpleEntityABis->delete();
@@ -362,27 +267,14 @@ class Core_Test_EntitySimpleOthers extends PHPUnit_Framework_TestCase
         $this->entityManager->flush();
     }
 
-    /**
-     * Méthode appelée à la fin des test.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
-     * Méthode appelée à la fin des test
-     */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Inventory_Model_Entity en base, sinon suppression !
         if (Inventory_Model_Simple::countTotal() > 0) {
             echo PHP_EOL . 'Des SimpleEntity restantes ont été trouvé après les tests, suppression en cours !';
             foreach (Inventory_Model_Simple::loadList() as $simpleEntity) {
                 $simpleEntity->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            self::getEntityManager()->flush();
         }
     }
-
 }

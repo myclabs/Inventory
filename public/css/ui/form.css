@@ -251,6 +251,12 @@
 }
 
 /* Form dans un popup : correction d'un margin en trop */
-.modal>.form-horizontal {
+.modal > form {
     margin-bottom: 0;
+}
+
+/* Affichage d'un textarea avec une police monospace */
+textarea.pre {
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-size: 12px;
 }

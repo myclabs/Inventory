@@ -26,10 +26,13 @@ class TechnoService
     }
 
     /**
-     * Retourne la valeur dans une famille aux coordonnées spécifiées
+     * Retourne la valeur dans une famille aux coordonnées spécifiées.
+     *
      * @param Family   $family
      * @param string[] $membersRef Ref des membres indexés par le ref des dimensions
-     * @throws Core_Exception_InvalidArgument
+     *
+     * @throws Core_Exception_NotFound No value defined for this coordinate.
+     * @throws Core_Exception_InvalidArgument Not enough/too many members given.
      * @return null|Calc_UnitValue
      */
     public function getFamilyValueByCoordinates(Family $family, array $membersRef)
@@ -51,6 +54,14 @@ class TechnoService
         $cell = $family->getCell($members);
 
         $value = $cell->getValue();
+
+        if ($value === null) {
+            throw new Core_Exception_NotFound(sprintf(
+                'No value is defined in family "%s" for the coordinates "%s"',
+                $family->getRef(),
+                implode(', ', $membersRef)
+            ));
+        }
 
         return new Calc_UnitValue(
             $family->getValueUnit(),

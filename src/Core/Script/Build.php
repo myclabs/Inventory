@@ -1,20 +1,22 @@
 <?php
-/**
- * @author matthieu.napoli
- * @author valentin.claras
- * @package    Core
- * @subpackage Script
- */
+
+namespace Core\Script;
+
+use Console_CommandLine;
+use Console_CommandLine_Result;
+use Core_Exception_InvalidArgument;
+use Core_Script_Action;
+use Exception;
 
 /**
  * Class for Build scripts
  *
  * A build script launches actions (Core_Script_Action)
  *
- * @package    Core
- * @subpackage Script
+ * @author matthieu.napoli
+ * @author valentin.claras
  */
-class Core_Script_Build
+class Build
 {
     /**
      * List all environments usable as option.
@@ -24,59 +26,52 @@ class Core_Script_Build
     protected $acceptedEnvironments = array('testsunitaires', 'developpement', 'test', 'production');
 
     /**
-     * Actions available in build/ directory.
-     *
-     * @var array(actionName => Core_Script_Action)
+     * @var Console_CommandLine_Result
      */
-    protected $_availableActions;
+    private $result;
 
     /**
-     * Actions available in build/ directory of the dependencies.
-     *
-     * @var array(packageName => Core_Package)
+     * @var string
      */
-    protected $_dependencies;
-
-    /**
-     * Actions available in build/ directory of the dependencies.
-     *
-     * @var array(packageName => array(actionName => Core_Script_Action))
-     */
-    protected $_availableActionsDependencies = [];
-
-    /**
-     * Console parser.
-     *
-     * @var Console_CommandLine
-     */
-    protected $_parser;
+    private $environment;
 
     /**
      * Define the CLI interface.
      */
     public function __construct()
     {
-        // Available actions.
-        $this->_availableActions = $this->getActions();
         // CLI parser.
-        $this->_parser = new Console_CommandLine(array(
+        $parser = new Console_CommandLine(array(
             'name' => "php build.php",
             'description' => "Run the build script.",
         ));
 
-        $actionChoice = implode(', ', array_keys($this->_availableActions));
-        $this->_parser->addArgument('actions', array(
-            'description' => "Actions can be $actionChoice.",
+        $parser->addArgument('actions', array(
+            'description' => "Actions to execute.",
             'multiple' => true,
             'optional' => false,
         ));
 
-        $this->_parser->addOption('environment', array(
+        $parser->addOption('environment', array(
             'short_name'  => '-e',
             'long_name'   => '--environment',
             'description' => "Environments to use for Create action. Example: '-e developpement'. ",
-            'default'     => APPLICATION_ENV,
+            'default'     => 'default',
         ));
+
+        $this->result = $parser->parse();
+
+        // Environment
+        $this->environment = $this->result->options['environment'];
+        if (($this->environment != 'default') && !in_array($this->environment, $this->acceptedEnvironments)) {
+            throw new Core_Exception_InvalidArgument(
+                'Possible values for -e are ' . implode(',', $this->acceptedEnvironments)
+            );
+        }
+
+        if ($this->environment != 'default') {
+            define('APPLICATION_ENV', $this->environment);
+        }
     }
 
     /**
@@ -86,53 +81,32 @@ class Core_Script_Build
      */
     public function run()
     {
-        $result = $this->_parser->parse();
+        $this->environment = APPLICATION_ENV;
 
-        // Options.
-        $environments = $this->parseEnvironmentOption($result->options['environment']);
+        // Available actions.
+        $availableActions = $this->getActions();
 
         // Actions.
         $actions = [];
-        foreach ($result->args['actions'] as $actionName) {
-            if (! isset($this->_availableActions[$actionName])) {
-                $actionChoice = implode(', ', array_keys($this->_availableActions));
-                throw new Core_Exception_InvalidArgument("Action '$actionName' doesn't exist. "
-                    ."Possible values for the actions are $actionChoice.");
+        foreach ($this->result->args['actions'] as $actionName) {
+            if (! isset($availableActions[$actionName])) {
+                $actionChoice = implode(', ', array_keys($availableActions));
+                throw new Core_Exception_InvalidArgument(
+                    "Action '$actionName' doesn't exist. "
+                    ."Possible values for the actions are $actionChoice."
+                );
             }
-            $actions[$actionName] = $this->_availableActions[$actionName];
+            $actions[$actionName] = $availableActions[$actionName];
         }
 
         // Run the actions.
         /* @var $action Core_Script_Action */
         foreach ($actions as $actionName => $action) {
             // Action.
-            $action->dynamicEnvironments = $environments;
+            $action->dynamicEnvironments = [$this->environment];
             echo 'Inventory > '.$actionName.PHP_EOL;
             $action->run();
         }
-    }
-
-    /**
-     * Parse the environment option.
-     *
-     * @param string $value Value given in CLI for the environment option.
-     *
-     * @throws Core_Exception_InvalidArgument
-     * @return array Array of the multiple environments.
-     */
-    private function parseEnvironmentOption($value)
-    {
-        $environments = explode(',', $value);
-
-        foreach ($environments as $environment) {
-            if (!in_array($environment, $this->acceptedEnvironments)) {
-                throw new Core_Exception_InvalidArgument(
-                    'Possible values for -e are '.implode(',', $this->acceptedEnvironments).'. '.
-                    'Values should be separated by a comma.');
-            }
-        }
-
-        return $environments;
     }
 
     /**
@@ -183,5 +157,4 @@ class Core_Script_Build
         }
         return $actions;
     }
-
 }

@@ -15,8 +15,8 @@ Feature: Subforms input feature
     And I click "Ajouter"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
-    And the field "s_f_r__nature_combustible__1" should have error: "Merci de renseigner ce champ."
-    And the field "s_f_r__quantite_combustible__1" should have error: "Merci de renseigner ce champ."
+    And the field "s_f_r__nature_combustible__1" should have error: "Champ obligatoire pour atteindre le statut : complet."
+    And the field "s_f_r__quantite_combustible__1" should have error: "Champ obligatoire pour atteindre le statut : complet."
     And I should see "33%"
   # Puis on supprime le bloc pour enregistrer une saisie complète
     When I click "Supprimer"
@@ -97,8 +97,7 @@ Feature: Subforms input feature
     When I open collapse "Sous-formulaire répété #1"
     And I open collapse "emissions_combustion"
   # Calcul effectué avec la valeur récupérée dans la bonne unité
-    Then I should see "Valeur : 3,077 t équ. CO2 ± 20 %"
+    Then I should see "Valeur : 3 077 t équ. CO2 ± 20 %"
   # Valeur récupérée dans la bonne unité
     When I open collapse "quantite_combustible"
     Then I should see "Valeur : 1 000 kg ± %"
-

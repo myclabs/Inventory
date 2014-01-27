@@ -1,0 +1,6 @@
+<?php
+
+return [
+    'application.url' => '',
+    // 'locale.minSignificantFigures' => 12,
+];

@@ -32,7 +32,11 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
                     // Si la dimension n'existe plus
                     $data['dimension'] = $this->cellList(null, __('AF', 'configTreatmentInvalidRef', 'dimension'));
                 }
-                $data['member'] = $coordinate->getMember();
+                try {
+                    $data['member'] = $coordinate->getMember();
+                } catch (Core_Exception_UndefinedAttribute $e) {
+                    $data['member'] = null;
+                }
                 $this->addLine($data);
             }
         }

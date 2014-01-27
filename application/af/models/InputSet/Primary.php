@@ -98,8 +98,7 @@ class AF_Model_InputSet_Primary extends AF_Model_InputSet
         // @todo http://www.doctrine-project.org/jira/browse/DDC-1666
         if ($this->outputSet) {
             $this->outputSet->delete();
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
 
         $this->outputSet = $outputSet;

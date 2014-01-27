@@ -34,6 +34,12 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
+     * @var Orga_Service_ACLManager
+     */
+    private $aclManager;
+
+    /**
+     * @Inject
      * @var WorkDispatcher
      */
     private $workDispatcher;
@@ -107,6 +113,24 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('organization', $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser));
         $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser, true));
 
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization
+        );
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization->getGranularityByRef('global')->getCellByMembers([])
+        );
+        if (!$isUserAllowToEditAllMembers) {
+            $topCellsWithEditAccess = $this->aclManager->getTopCellsWithAccessForOrganization(
+                $connectedUser,
+                $organization,
+                [CellAdminRole::class]
+            )['cells'];
+        }
+
         // Cellules enfants.
         $narrowerGranularities = [];
         try {
@@ -123,7 +147,7 @@ class Orga_CellController extends Core_Controller
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
                 }
-                $purpose .= __('User', 'user', 'userRoles');
+                $purpose .= __('User', 'user', 'users');
             }
             // Inventory purpose.
             $isNarrowerGranularityInventory = (($granularityForInventoryStatus !== null)
@@ -194,14 +218,11 @@ class Orga_CellController extends Core_Controller
         $addMembersForm = new UI_Form('addMember');
         $addMembersForm->setAction('orga/cell/add-member/idCell/'.$idCell);
         $selectAxis = new UI_Form_Element_Select('axis');
+        $selectAxis->setLabel(__('UI', 'name', 'axis'));
+        $selectAxis->getElement()->help = __('Orga', 'view', 'addMembersAxisExplanations');
         $selectAxis->addNullOption('');
         $addMembersForm->addElement($selectAxis);
-        foreach ($organization->getFirstOrderedAxes() as $axis) {
-            foreach ($granularity->getAxes() as $granularityAxis) {
-                if ($axis->isBroaderThan($granularityAxis)) {
-                    continue 2;
-                }
-            }
+        foreach ($this->aclManager->getAxesCanEdit($connectedUser, $organization) as $axis) {
             $axisOption = new UI_Form_Element_Option($axis->getRef(), $axis->getRef(), $axis->getLabel());
             $selectAxis->addOption($axisOption);
 
@@ -211,11 +232,33 @@ class Orga_CellController extends Core_Controller
             $axisGroup->getElement()->hidden = true;
 
             $memberInput = new UI_Form_Element_Text($axis->getRef().'_member');
+            $memberInput->setLabel(__('UI', 'name', 'element'));
+            $memberInput->setAttrib('placeholder', __('UI', 'name', 'label'));
             $axisGroup->addElement($memberInput);
             foreach ($axis->getDirectBroaders() as $broaderAxis) {
                 $selectParentMember = new UI_Form_Element_Select($axis->getRef().'_parentMember_'.$broaderAxis->getRef());
                 $selectParentMember->setLabel($broaderAxis->getLabel());
-                foreach ($broaderAxis->getMembers() as $parentMember) {
+                if (!$isUserAllowToEditAllMembers) {
+                    $members = [];
+                    foreach ($topCellsWithEditAccess as $cell) {
+                        if (!$broaderAxis->isTransverse($cell->getGranularity()->getAxes())) {
+                            foreach ($cell->getMembers() as $cellMember) {
+                                if ($broaderAxis->isBroaderThan($cellMember->getAxis())) {
+                                    continue 2;
+                                }
+                            }
+                            $members = array_merge(
+                                $members,
+                                $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()]
+                            );
+                        }
+                    }
+                    $members = array_unique($members);
+                    usort($members, [Orga_Model_Member::class, 'orderMembers']);
+                } else {
+                    $members = $broaderAxis->getMembers();
+                }
+                foreach ($members as $parentMember) {
                     $parentMemberOption = new UI_Form_Element_Option($parentMember->getId(), $parentMember->getId(), $parentMember->getLabel());
                     $selectParentMember->addOption($parentMemberOption);
                 }
@@ -230,23 +273,6 @@ class Orga_CellController extends Core_Controller
         }
         $addMembersForm->addSubmitButton('Ajouter');
         $this->view->assign('addMembersForm', $addMembersForm);
-    }
-
-    /**
-     * @Secure("viewCell")
-     */
-    public function tableViewAction()
-    {
-        $this->viewAction();
-    }
-
-    /**
-     * @Secure("viewCell")
-     */
-    public function mixitupViewAction()
-    {
-        $this->view->headScript()->appendFile('mixitup/jquery.mixitup.min.js', 'text/javascript');
-        $this->viewAction();
     }
 
     /**
@@ -310,7 +336,7 @@ class Orga_CellController extends Core_Controller
         }
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
             && $this->aclService->isAllowed($connectedUser, Action::EDIT(), $cell));
-        $showInventory = (($narrowerGranularity === $granularityForInventoryStatus)
+        $isInventory = (($narrowerGranularity === $granularityForInventoryStatus)
                 || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus)));
         $narrowerGranularityHasSubInputGranlarities = false;
         foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
@@ -319,7 +345,7 @@ class Orga_CellController extends Core_Controller
                 break;
             }
         }
-        $showInventory = $showInventory && $narrowerGranularityHasSubInputGranlarities;
+        $showInventory = $isInventory && $narrowerGranularityHasSubInputGranlarities;
 
         // Input.
         $showInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
@@ -331,10 +357,9 @@ class Orga_CellController extends Core_Controller
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $cell->getTag()) as $pathTag) {
             $relevantCriteria->andWhere($relevantCriteria->expr()->contains('tag', $pathTag));
         }
-//        $relevantCriteria->setFirstResult(0);
-//        $relevantCriteria->setMaxResults(250);
 
         $childCells = [];
+        /** @var Orga_Model_Cell $childCell */
         foreach ($narrowerGranularity->getCells()->matching($relevantCriteria) as $childCell) {
             $childCells[] = $this->cellVMFactory->createCellViewModel(
                 $childCell,
@@ -362,7 +387,6 @@ class Orga_CellController extends Core_Controller
      */
     public function viewHistoryAction()
     {
-        // TODO wat?
         session_write_close();
 
         $idCell = $this->getParam('idCell');
@@ -399,7 +423,6 @@ class Orga_CellController extends Core_Controller
      */
     public function viewCommentsAction()
     {
-        // TODO wat?
         session_write_close();
 
         /** @var Orga_Model_Cell $cell */
@@ -674,6 +697,7 @@ class Orga_CellController extends Core_Controller
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
+        $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
         $this->view->assign('idCell', $idCell);
         $cellReports = [];
@@ -689,7 +713,7 @@ class Orga_CellController extends Core_Controller
                     if (DW_Export_Specific_Pdf::isValid($specificReportsDirectoryPath.$entry)) {
                         $cellReports[] = [
                             'label' => $fileName,
-                            'link' => 'orga/cell/view-report-specific/idCell/'.$idCell.'/report/'.$fileName,
+                            'link' => 'orga/cell/view-report-specific/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/report/'.$fileName,
                             'type' => 'specificReport',
                         ];
                     }
@@ -697,35 +721,41 @@ class Orga_CellController extends Core_Controller
             }
         }
         // Copied Reports.
+        /** @var Orga_Model_CellReport[] $usersReports */
+        $usersReports = [];
         $dWReports = $cell->getDWCube()->getReports();
         usort($dWReports, function(DW_Model_Report $a, DW_Model_Report $b) { return strcmp($a->getLabel(), $b->getLabel()); });
         foreach ($dWReports as $dWReport) {
-            if (! Orga_Model_GranularityReport::isDWReportCopiedFromGranularityDWReport($dWReport)) {
+            try {
+                $usersReports[] = Orga_Model_CellReport::loadByCellDWReport($dWReport);
                 continue;
+            } catch (Core_Exception_NotFound $e) {
+                // Rapport Copié.
             }
             $cellReports[] = [
                 'label' => $dWReport->getLabel(),
-                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/idReport/'.$dWReport->getId(),
+                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$dWReport->getId(),
                 'type' => 'copiedReport',
             ];
         }
         // User Reports.
-        $query = new Core_Model_Query();
-        $query->aclFilter->enabled = true;
-        $query->aclFilter->user = $connectedUser;
-        $query->aclFilter->action = Action::VIEW();
-        $query->filter->addCondition(DW_Model_Report::QUERY_CUBE, $cell->getDWCube());
-        $query->order->addOrder(DW_Model_Report::QUERY_LABEL);
-        foreach (DW_Model_Report::loadList($query) as $dWReport) {
+        $otherUsers = [];
+        foreach ($usersReports as $cellReport) {
             /** @var DW_Model_Report $dWReport */
             $cellReports[] = [
-                'label' => $dWReport->getLabel(),
-                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/idReport/'.$dWReport->getId(),
+                'label' => $cellReport->getCellDWReport()->getLabel(),
+                'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$cellReport->getCellDWReport()->getId(),
                 'type' => 'userReport',
-                'delete' => $dWReport->getId()
+                'owner' => $cellReport->getOwner(),
+                'delete' => ($cellReport->getOwner() === $connectedUser)
             ];
+            if ($cellReport->getOwner() !== $connectedUser) {
+                $otherUsers[$cellReport->getOwner()->getId()] = $cellReport->getOwner()->getName();
+            }
         }
         $this->view->assign('cellReports', $cellReports);
+        $this->view->assign('idConnectedUser', $connectedUser->getId());
+        $this->view->assign('otherUsers', $otherUsers);
 
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
@@ -751,21 +781,23 @@ class Orga_CellController extends Core_Controller
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
+        $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
+        $reportCanBeUpdated = false;
         if ($this->hasParam('idReport')) {
-            $reportCanBeUpdated = $this->aclService->isAllowed(
-                $connectedUser,
-                Action::EDIT(),
-                DW_Model_Report::load($this->getParam('idReport'))
-            );
-        } else {
-            $reportCanBeUpdated = false;
+            $report = DW_Model_Report::load($this->getParam('idReport'));
+            try {
+                $cellReport = Orga_Model_CellReport::loadByCellDWReport($report);
+                $reportCanBeUpdated = ($cellReport->getOwner() === $connectedUser);
+            } catch (Core_Exception_NotFound $e) {
+                // Rapport copié.
+            }
         }
 
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getExtendedLabel().'</small>');
-        $viewConfiguration->setOutputUrl('orga/cell/view/idCell/'.$cell->getId().'/');
-        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$cell->getId());
+        $viewConfiguration->setOutputUrl('orga/cell/view/idCell/'.$fromIdCell.'/');
+        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$fromIdCell);
         $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
         $viewConfiguration->setCanBeSavedAs(true);
 
@@ -793,10 +825,11 @@ class Orga_CellController extends Core_Controller
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
+        $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
         if (!($this->hasParam('display') && ($this->getParam('display') == true))) {
             $exportUrl = 'orga/cell/specificexport/'.
-                'idCell/'.$idCell.'/export/'.$this->getParam('export').'/display/true';
+                'idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/export/'.$this->getParam('export').'/display/true';
         } else {
             $exportUrl = null;
         }
@@ -1075,15 +1108,7 @@ class Orga_CellController extends Core_Controller
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
-
-        $inputGranularity = $cell->getGranularity();
-        if ($cell->getGranularity()->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
-            $aF = $cell->getCellsGroupForInputGranularity($inputGranularity)->getAF();
-        } else {
-            $aF = $cell->getParentCellForGranularity(
-                $inputGranularity->getInputConfigGranularity()
-            )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
-        }
+        $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
         $isUserAllowedToInputCell = $this->aclService->isAllowed(
             $this->_helper->auth(),
@@ -1100,7 +1125,7 @@ class Orga_CellController extends Core_Controller
         $aFViewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
         $aFViewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $idCell]);
         $aFViewConfiguration->setResultsPreviewUrl('orga/cell/input-preview');
-        $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $this->getParam('fromIdCell') . '/');
+        $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $fromIdCell . '/');
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
         $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_INPUT);
@@ -1114,11 +1139,11 @@ class Orga_CellController extends Core_Controller
         $tabComments->useCache = true;
         $aFViewConfiguration->addTab($tabComments);
 
-//        $tabDocs = new UI_Tab('inputDocs');
-//        $tabDocs->label = __('Doc', 'name', 'documents');
-//        $tabDocs->dataSource = 'orga/cell/input-docs/idCell/'.$idCell;
-//        $tabDocs->useCache = true;
-//        $aFViewConfiguration->addTab($tabDocs);
+        $tabDocs = new UI_Tab('inputDocs');
+        $tabDocs->label = __('Doc', 'name', 'documents');
+        $tabDocs->dataSource = 'orga/cell/input-docs/idCell/'.$idCell;
+        $tabDocs->useCache = true;
+        $aFViewConfiguration->addTab($tabDocs);
 
         $isUserAllowedToViewCellReports = $this->aclService->isAllowed(
             $this->_helper->auth(),
@@ -1131,12 +1156,10 @@ class Orga_CellController extends Core_Controller
         }
         $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
 
-        $this->forward('display', 'af', 'af',
-            [
-                'id' => $aF->getId(),
-                'viewConfiguration' => $aFViewConfiguration
-            ]
-        );
+        $this->forward('display', 'af', 'af', [
+            'id' => $cell->getInputAFUsed()->getId(),
+            'viewConfiguration' => $aFViewConfiguration
+        ]);
     }
 
     /**
@@ -1293,21 +1316,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         $this->view->assign('idCell', $idCell);
-
-        if ($cell->getGranularity()->getCellsWithInputDocuments()) {
-            $documentLibrary = $cell->getDocLibraryForAFInputSetsPrimary();
-        } else {
-            $documentLibrary = null;
-            foreach ($cell->getGranularity()->getBroaderGranularities() as $granularity) {
-                if ($granularity->getCellsWithInputDocuments()) {
-                    $parentCell = $cell->getParentCellForGranularity($granularity);
-                    $documentLibrary = $parentCell->getDocLibraryForAFInputSetsPrimary();
-                    break;
-                }
-            }
-        }
-        $this->view->assign('documentLibrary', $documentLibrary);
-        $this->view->assign('documentBibliography', $cell->getDocBibliographyForAFInputSetPrimary());
+        $this->view->assign('documentLibrary', $cell->getDocumentLibrary());
 
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();

@@ -7,57 +7,20 @@ Feature: Organization input tab feature
   @javascript
   Scenario: Filter on organization members in Input tab
   # Accès à l'onglet "Saisies"
-    Given I am on "orga/cell/details/idCell/1"
-    And I open tab "Saisies"
-    And I open collapse "Année | Site"
-    Then I should see the "aFGranularity1Input7" datagrid
-    And the "aFGranularity1Input7" datagrid should contain 6 row
+    Given I am on "orga/cell/view/idCell/1"
+    And I wait for the page to finish loading
+    And I click element "legend[data-target='#granularity7']"
+    Then I should see "4 / 6" in the "#granularity7 span.granularity-info" element
   # Filtre sur le site "Annecy"
-    When I open collapse "Filtres"
-    And I select "Annecy" from "aFGranularity1Input7_site_filterForm"
-    And I click "Filtrer"
-    Then the "aFGranularity1Input7" datagrid should contain 2 row
+    When I select "Annecy" from "granularity7_axissite"
+    Then I should see "2 / 6" in the "#granularity7 span.granularity-info" element
   # Bouton "Réinitialiser"
-    When I open collapse "Filtres"
-    And I click "Réinitialiser"
-    Then the "aFGranularity1Input7" datagrid should contain 6 row
-
-  @javascript
-  Scenario: Display of input tab when the inventory granularity has not been defined
-    Given I am on "orga/organization/manage"
-    And I wait for the page to finish loading
-    Then I should see "Axes racine : Année, Site, Catégorie, Axe vide"
-    And I should see "Collectes : Année | Zone | Marque"
-  # Ajout d'une organisation
-    When I click "Ajouter"
-    Then I should see the popup "Ajout d'une organisation"
-    When I fill in "Libellé" with "Test"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-    And I should see "Test"
-  # Lien vers le détail de l'organisation
-    When I click "Test"
-    Then I should see "Vue globale Test"
-    # TODO : ajouter message pour indiquer qu'aucune granularité n'a été associée à des saisies.
-
-  @javascript
-  Scenario: Access to an input which is associated to the current cell
-    Given I am on "orga/cell/details/idCell/1"
-    And I wait for the page to finish loading
-  # Saisie associée à la cellule globale
-    And I open collapse "Niveau organisationnel global"
-    Then I should see the "aFGranularity1Input1" datagrid
-    And the "aFGranularity1Input1" datagrid should contain 1 row
-  # Saisie associée à une cellule non globale (Europe|Marque A)
-    When I click element ".fa-plus"
-    And I click element "#goTo2"
-    And I open collapse "Zone | Marque"
-    Then I should see the "aFGranularity2Input2" datagrid
-    And the "aFGranularity2Input2" datagrid should contain 1 row
+    When I click element "i.fa-search-minus"
+    Then I should see "6 / 6" in the "#granularity7 span.granularity-info" element
 
   @javascript
   Scenario: Display of the various columns (inventory status, input progress, input status)
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading
   # Descendre depuis la cellule globale dans une cellule de granularité site
     When I click element ".fa-plus"

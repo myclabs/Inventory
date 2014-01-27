@@ -1,25 +1,22 @@
 <?php
-/**
- * @author matthieu.napoli
- */
+
+namespace Tests\AuditTrail\Domain;
 
 use AuditTrail\Domain\AuditTrailService;
 use AuditTrail\Domain\Context\Context;
+use AuditTrail\Domain\Entry;
 use AuditTrail\Domain\EntryRepository;
 use Core\Test\TestCase;
 
-/**
- * AuditTrailService tests
- */
-class AuditTrail_AuditTrailServiceTest extends TestCase
+class AuditTrailServiceTest extends TestCase
 {
     public function testAddEntry()
     {
         /** @var Context $context */
-        $context = $this->getMockForAbstractClass('AuditTrail\Domain\Context\Context');
+        $context = $this->getMockForAbstractClass(Context::class);
 
-        /** @var PHPUnit_Framework_MockObject_MockObject|EntryRepository $repository */
-        $repository = $this->getMockForAbstractClass('AuditTrail\Domain\EntryRepository');
+        /** @var \PHPUnit_Framework_MockObject_MockObject|EntryRepository $repository */
+        $repository = $this->getMockForAbstractClass(EntryRepository::class);
         $repository->expects($this->once())
             ->method('add')
             ->with($this->attributeEqualTo('eventName', 'foo'));
@@ -27,7 +24,7 @@ class AuditTrail_AuditTrailServiceTest extends TestCase
         $service = new AuditTrailService($repository);
         $entry = $service->addEntry('foo', $context);
 
-        $this->assertInstanceOf('AuditTrail\Domain\Entry', $entry);
+        $this->assertInstanceOf(Entry::class, $entry);
         $this->assertEquals('foo', $entry->getEventName());
     }
 }

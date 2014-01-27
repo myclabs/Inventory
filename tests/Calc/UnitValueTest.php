@@ -1,13 +1,16 @@
 <?php
-/**
- * @author hugo.charbonnier
- * @author yoann.croizer
- * @package Calc
- */
 
+namespace Tests\Calc;
+
+use Calc_Calculation;
+use Calc_Calculation_UnitValue;
+use Calc_UnitValue;
+use Core\Test\TestCase;
+use Core_Exception_InvalidArgument;
+use Core_Exception_NotFound;
 use Unit\UnitAPI;
 
-class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
+class UnitValueTest extends TestCase
 {
     public function testConversion()
     {
@@ -110,9 +113,6 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
         $unitValue3->calculate();
     }
 
-    /**
-     * Test des exceptions
-     */
     public function testExceptions()
     {
         $unitValue = new Calc_Calculation_UnitValue();
@@ -158,7 +158,7 @@ class Calc_Test_UnitValueTest extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider invalidStrings
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @param string $str
      */
     public function testCreateFromStringInvalid($str)

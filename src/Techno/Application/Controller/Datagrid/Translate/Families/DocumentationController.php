@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use Gedmo\Translatable\TranslatableListener;
 use Techno\Domain\Family\Family;
 
 /**
@@ -10,13 +11,16 @@ use Techno\Domain\Family\Family;
 class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Controller_Datagrid
 {
     /**
-     * Désactivation du fallback des traductions.
+     * @Inject
+     * @var TranslatableListener
      */
-    public function init()
-    {
-        parent::init();
-        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
-    }
+    private $translatableListener;
+
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -25,13 +29,14 @@ class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Cont
      */
     public function getelementsAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         foreach (Family::loadList($this->request) as $family) {
             /** @var Family $family */
             $data = array();
             $data['index'] = $family->getId();
             $data['identifier'] = $family->getRef();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $family->reloadWithLocale($locale);
                 $brutText = Core_Tools::removeTextileMarkUp($family->getDocumentation());
@@ -59,6 +64,7 @@ class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Cont
      */
     public function updateelementAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $family = Family::load($this->update['index']);
         $family->reloadWithLocale(Core_Locale::load($this->update['column']));
         $family->setDocumentation($this->update['value']);
@@ -77,6 +83,7 @@ class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Cont
      */
     public function viewAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $this->_helper->viewRenderer->setNoRender(true);
 
         $family = Family::load($this->getParam('id'));
@@ -93,12 +100,13 @@ class Techno_Datagrid_Translate_Families_DocumentationController extends UI_Cont
      */
     public function editAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $this->_helper->viewRenderer->setNoRender(true);
 
         $family = Family::load($this->getParam('id'));
         $locale = Core_Locale::load($this->getParam('locale'));
         $family->reloadWithLocale($locale);
-        
+
         echo $family->getDocumentation();
     }
 }

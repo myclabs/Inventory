@@ -134,15 +134,29 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             // Pas de granularité des inventares.
         }
 
-        if ($granularity->getCellsWithACL()) {
+        if ($granularity->getCellsWithACL() || $granularity->isInput() || $granularity->hasInputGranularities()) {
             throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
         }
 
-        $granularity->delete();
-
-        $this->entityManager->flush();
-
-        $this->message = __('UI', 'message', 'deleted', array('GRANULARITY' => $granularity->getLabel()));
+        $success = function () {
+            $this->message = __('UI', 'message', 'removed');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'removedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+        // Lance la tache en arrière plan
+        $task = new \Core\Work\ServiceCall\ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'removeGranularity',
+            [
+                $granularity,
+            ],
+            __('Orga', 'backgroundTasks', 'removeGranularity', ['LABEL' => $granularity->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
@@ -160,9 +174,11 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 $this->data = $granularity->getCellsControlRelevance();
                 break;
             case 'acl':
-                foreach ($granularity->getCells() as $cell) {
-                    if (count($cell->getAllRoles()) > 0) {
-                        throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
+                if (!$this->update['value']) {
+                    foreach ($granularity->getCells() as $cell) {
+                        if (count($cell->getAllRoles()) > 0) {
+                            throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
+                        }
                     }
                 }
                 $granularity->setCellsWithACL((bool) $this->update['value']);

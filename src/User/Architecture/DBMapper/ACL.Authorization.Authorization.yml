@@ -13,7 +13,6 @@ User\Domain\ACL\Authorization\Authorization:
     namedResource: User\Domain\ACL\Authorization\NamedResourceAuthorization
     organization: Orga\Model\ACL\OrganizationAuthorization
     cell: Orga\Model\ACL\CellAuthorization
-    report: DW\Model\ACL\ReportAuthorization
 
   id:
     id:

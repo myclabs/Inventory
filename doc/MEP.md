@@ -20,7 +20,7 @@ php scripts/build/build.php update
 - Exécuter le script de migration
 
 ```
-scripts/migration/2.10/migrate.php
+php scripts/migration/2.10/migrate.php
 ```
 
 - Faire un rebuild de DW (pour regénérer les traductions)
@@ -59,13 +59,19 @@ Le script va effectuer un build update
 - Exécuter le job de rebuild des exports (long)
 
 ```
-php scripts/job/exports/rebuild.php
+php scripts/jobs/exports/rebuild.php
+```
+
+- En cas de dépassement de mémoire, ré-exécuter le script avec l'option --no-clear (ou -c)
+
+```
+php scripts/jobs/exports/rebuild.php -c
 ```
 
 - Redémarrer le worker
 
 ```
-sudo supervisiorctl restart XXX-worker
+sudo supervisorctl restart XXX-worker
 ```
 
 

@@ -148,25 +148,21 @@ $family = $this->family;
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h3><?=__('Techno', 'dimension', 'addMemberList')?></h3>
     </div>
-    <form id="addMemberForm" class="form-horizontal"
-          action="<?=$this->baseUrl('techno/dimension/add-members')?>" method="post">
+    <form id="addMemberForm" action="<?=$this->baseUrl('techno/dimension/add-members')?>" method="post">
         <div class="modal-body">
-                <div class="control-group">
-                    <label class="control-label" for="inputMemberList">
-                        <?=__('Techno', 'dimension', 'addMemberList')?>
-                    </label>
-                    <div class="controls">
-                        <textarea id="inputMemberList" name="members" class="input-block-level" rows="8"></textarea>
-                        <p class="help-block">
-                            <strong><span id="inputMemberListValidationOK" class="text-success"></span></strong>
-                            <strong><span id="inputMemberListValidationNOK" class="text-error"></span></strong>
-                        </p>
-                        <p><span class="help-block"><?=__('Techno', 'import', 'addMemberListHelp')?></span></p>
-                        <pre><code><?=__('Techno', 'import', 'addMemberListExample')?></code></pre>
-                    </div>
+            <div class="control-group">
+                <div class="controls">
+                    <textarea id="inputMemberList" name="members" class="pre input-block-level" rows="8"></textarea>
+                    <p class="help-block">
+                        <strong><span id="inputMemberListValidationOK" class="text-success"></span></strong>
+                        <strong><span id="inputMemberListValidationNOK" class="text-error"></span></strong>
+                    </p>
+                    <p><span class="help-block"><?=__('Techno', 'import', 'addMemberListHelp')?></span></p>
+                    <pre><code><?=__('Techno', 'import', 'addMemberListExample')?></code></pre>
                 </div>
-                <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
-                <input type="hidden" name="dimension" id="inputDimension" />
+            </div>
+            <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
+            <input type="hidden" name="dimension" id="inputDimension" />
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>

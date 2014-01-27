@@ -17,9 +17,8 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 }
 
 if ($connectedUser) {
-    $container = Zend_Registry::get('container');
     /** @var ACLService $aclService */
-    $aclService = $container->get(ACLService::class);
+    $aclService = \Core\ContainerSingleton::getContainer()->get(ACLService::class);
 
     $leftMenu = [];
 
@@ -336,7 +335,7 @@ $rightMenu = [ $connection ];
                 <span class="icon-bar"></span>
             </button>
 
-            <a class="brand" href="index"><?=__('Inventory', 'menu', 'applicationName')?></a>
+            <a class="brand" href="orga"><?=__('Inventory', 'menu', 'applicationName')?></a>
 
             <div class="btn-group pull-right">
                 <?php foreach ($rightMenu as $node) {

@@ -1,7 +1,6 @@
 <?php
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
 use User\Application\Service\AuthAdapter;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -20,6 +19,12 @@ class User_PasswordController extends UI_Controller_Captcha
      * @var UserService
      */
     private $userService;
+
+    /**
+     * @Inject("application.url")
+     * @var string
+     */
+    private $applicationUrl;
 
     /**
      * Formulaire de "mot de passe oublié"
@@ -59,22 +64,19 @@ class User_PasswordController extends UI_Controller_Captcha
                 $this->entityManager->flush();
 
                 // On envoie le mail à l'utilisateur
-                $url = sprintf('http://%s/user/password/reset?code=%s',
-                    $_SERVER["SERVER_NAME"] . $this->view->baseUrl(),
+                $url = sprintf('%s/user/password/reset?code=%s',
+                    $this->applicationUrl,
                     $user->getEmailKey());
-                $urlApplication = 'http://' . $_SERVER["SERVER_NAME"] . Zend_Controller_Front::getInstance()->getBaseUrl() . '/';
+                $urlApplication = $this->applicationUrl . '/';
                 $subject = __('User', 'email', 'subjectForgottenPassword');
-                $config = Zend_Registry::get('configuration');
-                if (empty($config->emails->contact->adress)) {
-                    throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini !');
-                }
+                $container = \Core\ContainerSingleton::getContainer();
                 $content = __('User',
                               'email',
                               'bodyForgottenPassword',
                               array(
                                    'PASSWORD_RESET_LINK' => $url,
                                    'PASSWORD_RESET_CODE' => $user->getEmailKey(),
-                                   'APPLICATION_NAME'    => $config->emails->noreply->name,
+                                   'APPLICATION_NAME'    => $container->get('emails.noreply.name'),
                                    'URL_APPLICATION'     => $urlApplication,
                               ));
                 $this->userService->sendEmail($user, $subject, $content);
@@ -147,7 +149,7 @@ class User_PasswordController extends UI_Controller_Captcha
 
             // Log in automatiquement l'utilisateur
             $auth = Zend_Auth::getInstance();
-            $authAdapter = new AuthAdapter($user->getEmail(), $password1);
+            $authAdapter = new AuthAdapter($this->userService, $user->getEmail(), $password1);
             $auth->authenticate($authAdapter);
 
             UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);

@@ -20,14 +20,20 @@ echo $editFamilyForm->render();
 ?>
 
 <script>
-    $("#deleteFamily").click(function(e) {
-        e.preventDefault();
+    $(function() {
+        $('#deleteFamily').confirm({
+            text: <?=json_encode(__('Techno', 'familyDetail', 'deleteConfirm'))?>,
+            confirm: function(button) {
+                var url = "<?=$this->baseUrl('techno/family/delete')?>";
 
-        var url = "<?=$this->baseUrl('techno/family/delete')?>";
-
-        $.post(url, {id: <?=$family->getId()?>}, function() {
-            window.location = "<?=$this->baseUrl('techno/family/tree-edit')?>";
-        })
-            .error(errorHandler);
+                $.post(url, {id: <?=$family->getId()?>}, function() {
+                    window.location = "<?=$this->baseUrl('techno/family/tree-edit')?>";
+                })
+                    .error(errorHandler);
+            },
+            confirmButton: <?=json_encode(__('UI', 'verb', 'delete'))?>,
+            cancelButton: <?=json_encode(__('UI', 'verb', 'cancel'))?>,
+            post: true
+        });
     });
 </script>

@@ -3,7 +3,6 @@
 namespace Orga\Model\ACL\Role;
 
 use Orga\Model\ACL\Action\CellAction;
-use Orga\Model\ACL\Action\OrganizationAction;
 use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Model_Organization;
@@ -36,7 +35,6 @@ class OrganizationAdminRole extends Role implements OptimizedRole
             Action::EDIT(),
             Action::DELETE(),
             Action::ALLOW(),
-            OrganizationAction::EDIT_GRANULARITY_REPORTS(),
         ]);
 
         // Admin sur la cellule globale
@@ -65,7 +63,6 @@ class OrganizationAdminRole extends Role implements OptimizedRole
         yield OrganizationAuthorization::create($this, Action::EDIT(), $this->organization, false);
         yield OrganizationAuthorization::create($this, Action::DELETE(), $this->organization, false);
         yield OrganizationAuthorization::create($this, Action::ALLOW(), $this->organization, false);
-        yield OrganizationAuthorization::create($this, OrganizationAction::EDIT_GRANULARITY_REPORTS(), $this->organization, false);
 
         // Admin sur la cellule globale
         $globalCell = $this->organization->getGranularityByRef('global')->getCellByMembers([]);

@@ -29,10 +29,10 @@
         </tu>
         <tu tuid="addMembers">
             <tuv xml:lang="fr">
-                <seg>Ajout de membres</seg>
+                <seg>Ajouter des membres</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of members</seg>
+                <seg>Add members</seg>
             </tuv>
         </tu>
         <tu tuid="addMemberList">
@@ -48,13 +48,13 @@
             <tuv xml:lang="fr">
                 <seg>
                     Attention! Si vous modifiez les dimensions, il est nécessaire de
-                    réouvrir (rafraichir) cette page si vous voulez ensuite modifier les élements.
+                    réouvrir (rafraichir) cette page si vous voulez ensuite modifier les paramètres.
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
                     Warning! If you edit the dimensions, you will need to reopen (refresh)
-                    this page if you then want to edit the elements.
+                    this page if you then want to edit the parameters.
                 </seg>
             </tuv>
         </tu>

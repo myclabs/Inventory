@@ -1,8 +1,17 @@
 <?php
 
+namespace Tests\Calc;
+
+use Calc_Calculation;
+use Calc_Calculation_Unit;
+use Calc_UnitValue;
+use Core\Test\TestCase;
+use Core_Exception_InvalidArgument;
+use Core_Exception_NotFound;
+use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
-class Calc_Test_UnitTest extends PHPUnit_Framework_TestCase
+class UnitTest extends TestCase
 {
     public function testCalculate()
     {

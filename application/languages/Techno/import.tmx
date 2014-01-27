@@ -3,6 +3,54 @@
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
+        <!-- Ajout d'éléments -->
+
+        <tu tuid="editElementListHelp">
+            <tuv xml:lang="fr">
+                <seg>
+                    Le format attendu est un paramètre par ligne : identifiant des membres pour chaque dimension,
+                    suivi par la valeur puis l'incertitude.
+                    Exemple :
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    The expected format is one paremeter per line: the identifiers of the members for each dimension,
+                    followed by the value and the uncertainty.
+                    Example:
+                </seg>
+            </tuv>
+        </tu>
+        <tu tuid="editElementListExample">
+            <tuv xml:lang="fr">
+                <seg>membre1, membre2, 123.45, 10
+membre3, membre4, 0.5, 20</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>member1, member2, 23.45, 10
+member3, member4, 0.5, 20</seg>
+            </tuv>
+        </tu>
+        <tu tuid="invalidElementsInput">
+            <tuv xml:lang="fr">
+                <seg>Saisie non reconnue, merci de respecter le format précisé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Unrecognized input, please follow the expected format.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="unknownMember">
+            <tuv xml:lang="fr">
+                <seg>Membre [MEMBER] inconnu.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Unknown member [MEMBER].</seg>
+            </tuv>
+        </tu>
+
+
+        <!-- Ajout de membres -->
+
         <tu tuid="addMemberListHelp">
             <tuv xml:lang="fr">
                 <seg>
@@ -70,10 +118,10 @@ member2, Label of member 2</seg>
 
         <tu tuid="importSuccessful">
             <tuv xml:lang="fr">
-                <seg>[NUMBER] membres ont été ajoutés.</seg>
+                <seg>[NUMBER] membre(s) ont été ajouté(s).</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>[NUMBER] members have been added.</seg>
+                <seg>[NUMBER] member(s) have been added.</seg>
             </tuv>
         </tu>
 

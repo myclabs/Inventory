@@ -38,6 +38,9 @@ User\Domain\User:
     locale:
       type: core_locale
       nullable: true
+    tutorials:
+      type: integer
+      nullable: true
 
   oneToMany:
     roles:

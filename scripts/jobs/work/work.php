@@ -11,11 +11,8 @@ define('RUN', false);
 
 require_once __DIR__ . '/../../../application/init.php';
 
-/** @var DI\Container $container */
-$container = Zend_Registry::get('container');
-
 /** @var Worker $worker */
-$worker = $container->get(Worker::class);
+$worker = \Core\ContainerSingleton::getContainer()->get(Worker::class);
 
 if ($worker instanceof SimpleWorker) {
     /** @var Psr\Log\LoggerInterface $logger */
@@ -25,3 +22,7 @@ if ($worker instanceof SimpleWorker) {
 
 // Traite une seule tache
 $worker->work(1);
+
+// Attend 1 seconde à cause d'un bug dans Supervisor qui fait que si le programme quitte trop vite
+// supervisor croit qu'il est en échec : https://github.com/Supervisor/supervisor/issues/212
+sleep(1);

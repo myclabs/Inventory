@@ -44,8 +44,8 @@ class UI_Message
     public static function getInstance()
     {
         // Récupère la session concernant les messages.
-        $configuration = Zend_Registry::get('configuration');
-        $zendSessionMessage = new Zend_Session_Namespace($configuration->sessionStorage->name.'_'.APPLICATION_ENV);
+        $sessionName = \Core\ContainerSingleton::getContainer()->get('session.storage.name');
+        $zendSessionMessage = new Zend_Session_Namespace($sessionName . '_');
         if ((!(isset($zendSessionMessage->messages))) || (!($zendSessionMessage->messages instanceof UI_Message))) {
             // Si messages n'existe pas alors il est crée.
             $zendSessionMessage->messages = new UI_Message();

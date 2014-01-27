@@ -3,13 +3,13 @@ $organizationForm = new UI_Form('organizationDetails');
 $organizationForm->setAction('orga/organization/edit-organization-submit/idOrganization/'.$this->idOrganization);
 
 $labelElementForm = new UI_Form_Element_Text('label');
-$labelElementForm->setLabel(__('UI', 'name', 'label'));
+$labelElementForm->setLabel(___('UI', 'name', 'label'));
 $labelElementForm->setValue($this->organizationLabel);
 $organizationForm->addElement($labelElementForm);
 
 if (!empty($this->granularities)) {
     $granularityForInventoryStatusElementForm = new UI_Form_Element_Select('granularityForInventoryStatus');
-    $granularityForInventoryStatusElementForm->setLabel(__('Orga', 'configuration', 'granularityForInventoryStatus'));
+    $granularityForInventoryStatusElementForm->setLabel(___('Orga', 'configuration', 'granularityForInventoryStatus'));
     $granularityForInventoryStatusElementForm->setValue($this->granularityRefForInventoryStatus);
     $organizationForm->addElement($granularityForInventoryStatusElementForm);
 
@@ -30,7 +30,7 @@ $organizationForm->addSubmitButton();
 ?>
 
 <fieldset class="wrapper">
-    <legend style="cursor:default"><?=__('UI', 'name', 'general')?></legend>
+    <legend style="cursor:default"><?=___('UI', 'name', 'general')?></legend>
     <div>
         <?php if ($this->display) { $organizationForm->display(); } else { echo $organizationForm->render(); } ?>
     </div>
@@ -45,15 +45,15 @@ $datagridUsers = new UI_Datagrid(
     'orga'
 );
 
-$columnFirstName = new UI_Datagrid_Col_Text('firstName', __('User', 'user', 'firstName'));
+$columnFirstName = new UI_Datagrid_Col_Text('firstName', ___('User', 'user', 'firstName'));
 $columnFirstName->addable = false;
 $datagridUsers->addCol($columnFirstName);
 
-$columnLastName = new UI_Datagrid_Col_Text('lastName', __('User', 'user', 'lastName'));
+$columnLastName = new UI_Datagrid_Col_Text('lastName', ___('User', 'user', 'lastName'));
 $columnLastName->addable = false;
 $datagridUsers->addCol($columnLastName);
 
-$columnEmail = new UI_Datagrid_Col_Text('email', __('User', 'user', 'emailAddress'));
+$columnEmail = new UI_Datagrid_Col_Text('email', ___('User', 'user', 'emailAddress'));
 $columnEmail->addable = true;
 $datagridUsers->addCol($columnEmail);
 

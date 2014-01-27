@@ -15,7 +15,7 @@ Orga_Model_Cell:
     membersHashKey:
       column: membersHashKey
       type: string
-      length: 7650
+      length: 40
       nullable: false
     tag:
       column: tag
@@ -36,7 +36,7 @@ Orga_Model_Cell:
       nullable: false
 
   oneToOne:
-    docLibraryForAFInputSetsPrimary:
+    documentLibrary:
       targetEntity: Doc\Domain\Library
       joinColumn:
         name: idDocLibraryForAFInputSetsPrimary
@@ -51,15 +51,6 @@ Orga_Model_Cell:
         name: idAFInputSetPrimary
         referencedColumnName: id
         nullable: true
-      orphanRemoval: true
-      cascade: [ persist, remove ]
-    docBibliographyForAFInputSetPrimary:
-      targetEntity: Doc\Domain\Bibliography
-      joinColumn:
-        name: idDocBibliographyForAFInputSetPrimary
-        referencedColumnName: id
-        nullable: true
-        unique: true
       orphanRemoval: true
       cascade: [ persist, remove ]
     dWCube:

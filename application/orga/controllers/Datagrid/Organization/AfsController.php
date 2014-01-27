@@ -10,13 +10,10 @@ use User\Domain\User;
 class Orga_Datagrid_Organization_AfsController extends UI_Controller_Datagrid
 {
     /**
-     * @Secure("editOrganizationAndCells")
+     * @Secure("editOrganization")
      */
     public function getelementsAction()
     {
-        /** @var User $connectedUser */
-        $connectedUser = $this->_helper->auth();
-
         $idGranularity = $this->getParam('idGranularity');
         /** @var Orga_Model_Granularity $granularity */
         $inputGranularity = Orga_Model_Granularity::load($idGranularity);
@@ -25,9 +22,6 @@ class Orga_Datagrid_Organization_AfsController extends UI_Controller_Datagrid
         $this->request->filter->addCondition(Orga_Model_Cell::QUERY_RELEVANT, true);
         $this->request->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
         $this->request->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $configGranularity);
-        $this->request->aclFilter->enabled = true;
-        $this->request->aclFilter->user = $connectedUser;
-        $this->request->aclFilter->action = Action::EDIT();
 
         $this->request->order->addOrder(Orga_Model_Cell::QUERY_TAG);
         /** @var Orga_Model_Cell $configCell */
@@ -52,7 +46,7 @@ class Orga_Datagrid_Organization_AfsController extends UI_Controller_Datagrid
     }
 
     /**
-     * @Secure("editOrganizationAndCells")
+     * @Secure("editOrganization")
      */
     public function updateelementAction()
     {

@@ -6,22 +6,22 @@
 
         <tu tuid="emailNotificationTitle">
             <tuv xml:lang="fr">
-                <seg>L'opération "[TASK_NAME]" a été effectuée</seg>
+                <seg>L'opération "[TASK_NAME]" est terminée</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>The operation "[TASK_NAME]" has been executed</seg>
+                <seg>The operation "[TASK_NAME]" has been completed</seg>
             </tuv>
         </tu>
 
         <tu tuid="emailNotificationContent">
             <tuv xml:lang="fr">
                 <seg>
-l'opération « [TASK_NAME] » a été effectuée en totalité sur l'application « [APPLICATION_NAME] ».
+l'opération « [TASK_NAME] » est terminée.
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-operation "[TASK_NAME]" has been completed on application "[APPLICATION_NAME]".
+operation "[TASK_NAME]" has been completed.
                 </seg>
             </tuv>
         </tu>

@@ -34,9 +34,6 @@ class RebuildACL
     }
 }
 
-/** @var \DI\Container $container */
-$container = \Zend_Registry::get('container');
-
 /** @var RebuildACL $rebuildACL */
-$rebuildACL = $container->get(RebuildACL::class);
+$rebuildACL = \Core\ContainerSingleton::getContainer()->get(RebuildACL::class);
 $rebuildACL->run();

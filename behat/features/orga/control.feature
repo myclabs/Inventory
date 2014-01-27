@@ -7,12 +7,11 @@ Feature: Control of organizational data feature
   @javascript
   Scenario: Control of organizational data scenario
   # Accès à l'onglet "Contrôle"
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
-    And I open tab "Paramétrage"
     And I open tab "Contrôle"
-    Then I should see the "consistency" datagrid
-    And the row 1 of the "consistency" datagrid should contain:
+    Then I should see the "consistency1" datagrid
+    And the row 1 of the "consistency1" datagrid should contain:
       | control                        | diagnostic | failure  |
       | Axe ne contenant aucun élément  | NOT OK     | Axe vide |
     And the row 2 of the "consistency" datagrid should contain:
@@ -28,7 +27,7 @@ Feature: Control of organizational data feature
     And I open tab "Niveaux"
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un niveau organisationnel"
-    When I additionally select "Pays" from "granularity_axes_addForm"
+    When I additionally select "Pays" from "granularity1_axes_addForm"
     # And I select "Navigable" in radio "Navigable"
     And I select "Oui" in radio "Rôles"
     And I click "Valider"

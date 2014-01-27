@@ -1,6 +1,6 @@
 <?php
 
-foreach ($this->granularities as $granularity) {
+foreach ($this->granularities as $granularity) :
     /** @var $granularity Orga_Model_Granularity */
 
     $datagridGranularityReports = new UI_Datagrid(
@@ -9,10 +9,10 @@ foreach ($this->granularities as $granularity) {
         'orga'
     );
 
-    $columnReport = new UI_Datagrid_Col_Text('report', __('UI', 'name', 'label'));
+    $columnReport = new UI_Datagrid_Col_Text('report', ___('UI', 'name', 'label'));
     $datagridGranularityReports->addCol($columnReport);
 
-    $columnLink = new UI_Datagrid_Col_Link('link', __('UI', 'name', 'details'));
+    $columnLink = new UI_Datagrid_Col_Link('link', ___('UI', 'name', 'details'));
     $datagridGranularityReports->addCol($columnLink);
 
     $datagridGranularityReports->addParam('idOrganization', $this->organization->getId());
@@ -21,7 +21,7 @@ foreach ($this->granularities as $granularity) {
     $datagridGranularityReports->deleteElements = true;
 
 
-    $addButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
+    $addButton = new UI_HTML_Button(___('UI', 'verb', 'add'));
     $addButton->icon = 'plus-circle';
     $addButton->link = 'orga/granularity/view-report/idGranularity/' . $granularity->getId() . '/';
 
@@ -38,27 +38,26 @@ foreach ($this->granularities as $granularity) {
     $script .= '}';
     $script .= '});';
 
-    if ($this->display === false) {
+    if ($this->display === false) :
         echo '<script type="text/javascript">'.$datagridGranularityReports->getScript().$script.'</script>';
-    } else {
+    else :
         UI_Datagrid::addHeader($datagridGranularityReports);
         $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
-    }
-}
+    endif;
+endforeach;
 
-if ($this->isUserAllowedToEditOrganization) {
-    if (count($this->granularities) > 0) {
-        echo '<hr>';
-    }
-    echo $this->partial(
-        'granularity/add.phtml',
-        [
-            'organization' => $this->organization,
-            'purpose' => 'reports',
-            'complementaryFields' => ''
-        ]
-    );
-    if ($this->display === true) {
+if (count($this->granularities) > 0) :
+    echo '<hr>';
+endif;
+echo $this->partial(
+    'granularity/add.phtml',
+    [
+        'organization' => $this->organization,
+        'purpose' => 'reports',
+        'complementaryFields' => ''
+    ]
+);
+if ($this->display === true) :
 ?>
 <script>
     $('#addGranularity<?=$this->organization->getId()?>_reports').on('granularityAdded', function(e) {
@@ -66,101 +65,5 @@ if ($this->isUserAllowedToEditOrganization) {
     });
 </script>
 <?php
-    }
-}
+endif;
 ?>
-
-<fieldset class="wrapper">
-    <legend style="cursor:default"><?=__('Orga', 'configuration', 'organizationDWCubesState')?></legend>
-<p><?=__('Orga', 'configuration', 'organizationDWCubesStateComment')?></p>
-<div>
-    <?=
-    $this->button(
-        '<span>'.__('Orga', 'configuration', 'dWCubesState').'</span>',
-        'info-circle',
-        ['id' => 'organizationDW', 'class' => 'btn-primary']
-    );
-    ?>
-    <script type="text/javascript">
-        var checkOrganizationDWState = function() {
-            setMask(true);
-            $.ajax({
-                type: 'GET',
-                url: 'orga/organization/dw-state/idOrganization/<?=$this->organization->getId()?>/',
-                success: function (data) {
-                    setMask(false);
-                    var button = $('#organizationDW');
-                    if (data.organizationDWState) {
-                        button.attr('class', 'btn btn-success')
-                        button.children('i').attr('class', 'fa fa-info-circle');
-                        button.children('span').html(
-                            '<?=htmlentities(__('Orga', 'configuration', 'organizationDWCubesUpToDate'), ENT_QUOTES)?>'
-                        );
-                    } else {
-                        button.attr('class', 'btn btn-danger');
-                        button.children('i').attr('class', 'fa fa-refresh');
-                        button.children('span').html(
-                            '<?=htmlentities(__('Orga', 'configuration', 'organizationDWCubesOutDated'), ENT_QUOTES)?>'
-                        );
-                        button.unbind('click');
-                        button.bind('click', resetOrganizationDW);
-                    }
-                },
-                error: function(jqXHR) {
-                    setMask(false);
-                    errorHandler(jqXHR);
-                }
-            });
-        };
-        var resetOrganizationDW = function() {
-            setMask(true);
-            $.ajax({
-                type: 'GET',
-                usl: 'orga/organization/dw-reset/idOrganization/<?=$this->organization->getId()?>',
-                success: function (data) {
-                    setMask(false);
-                    var button = $('#organizationDW');
-                    button.attr('class', 'btn btn-primary');
-                    button.children('i').attr('class', 'fa fa-info-circle');
-                    button.children('span').html(
-                        '<?=htmlentities(__('Orga', 'configuration', 'dWCubesState'), ENT_QUOTES)?>'
-                    );
-                    addMessage(data, 'success');
-                    button.unbind('click');
-                    button.bind('click', checkOrganizationDWState);
-                },
-                error: function(jqXHR) {
-                    setMask(false);
-                    errorHandler(jqXHR);
-                }
-            });
-        };
-        $('#organizationDW').unbind('click').bind('click', checkOrganizationDWState);
-    </script>
-</div>
-</fieldset>
-
-<?php if ($this->isUserAllowedToEditOrganization) : ?>
-<fieldset class="wrapper">
-    <legend style="cursor: default"><?=__('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
-    <p><?=__('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
-    <?= $this->button(__('DW', 'rebuild', 'outputDataRebuildButton'), 'refresh', array('id' => 'calculateInputs', 'class' => 'btn-primary')) ?>
-    <script>
-        $('#calculateInputs').click(function() {
-            setMask(true);
-            $.ajax({
-                type: 'POST',
-                url: 'orga/organization/inputs-calculate/idOrganization/<?=$this->organization->getId()?>',
-                success: function(data){
-                    setMask(false);
-                    addMessage(data.message, 'success');
-                },
-                error: function(jqXHR) {
-                    setMask(false);
-                    errorHandler(jqXHR);
-                }
-            });
-        });
-    </script>
-</fieldset>
-<?php endif; ?>

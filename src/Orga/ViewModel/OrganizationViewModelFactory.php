@@ -3,9 +3,11 @@
 namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
+use Orga\Model\ACL\Role\CellAdminRole;
 use Orga_Model_Organization;
 use Orga_Model_Axis;
 use Orga_Model_Cell;
+use Orga_Service_ACLManager;
 use User\Domain\User;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Action;
@@ -20,10 +22,15 @@ class OrganizationViewModelFactory
      * @var ACLService
      */
     private $aclService;
+    /**
+     * @var Orga_Service_ACLManager
+     */
+    private $aclManager;
 
-    public function __construct(ACLService $aclService)
+    public function __construct(ACLService $aclService, Orga_Service_ACLManager $aclManager)
     {
         $this->aclService = $aclService;
+        $this->aclManager = $aclManager;
     }
 
     public function createOrganizationViewModel(Orga_Model_Organization $organization, User $connectedUser)
@@ -35,39 +42,59 @@ class OrganizationViewModelFactory
             $viewModel->label = __('Orga', 'navigation', 'defaultOrganizationLabel');
         }
 
-        $viewModel->rootAxesLabels = array_map(
-            function (Orga_Model_Axis $axis) {
-                return $axis->getLabel();
-            },
-            $organization->getRootAxes()
-        );
+        // Vérification d'accèr à l'édition.
         $viewModel->canBeEdited = $this->aclService->isAllowed(
             $connectedUser,
             Action::EDIT(),
             $organization
         );
         if (!$viewModel->canBeEdited) {
-            foreach ($organization->getOrderedGranularities() as $granularity) {
-                $query = new Core_Model_Query();
-                $query->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
-                $query->aclFilter->enabled = true;
-                $query->aclFilter->user = $connectedUser;
-                $query->aclFilter->action = Action::EDIT();
-                if (Orga_Model_Cell::countTotal($query) > 0) {
+            // Edition de la cellule globale ?
+            $query = new Core_Model_Query();
+            $query->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $organization->getGranularityByRef('global'));
+            $query->aclFilter->enabled = true;
+            $query->aclFilter->user = $connectedUser;
+            $query->aclFilter->action = Action::EDIT();
+            if (Orga_Model_Cell::countTotal($query) > 0) {
+                $viewModel->canBeEdited = true;
+            }
+        }
+        if (!$viewModel->canBeEdited) {
+            // Edition d'au moins un axe ?
+            $axesCanEdit = $this->aclManager->getAxesCanEdit($connectedUser, $organization);
+            if (count($axesCanEdit) > 0) {
+                $viewModel->canBeEdited = true;
+            }
+        }
+        if (!$viewModel->canBeEdited) {
+            // Edition d'au moins une granularité de pertinence ou de DW ?
+            $relevanceOnRebuildGranularities = [];
+            foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
+                if ($granularity->getCellsControlRelevance() || $granularity->getCellsGenerateDWCubes()) {
+                    $viewModel->canBeEdited = true;
+                    break;
+                }
+            }
+        }
+        if (!$viewModel->canBeEdited) {
+            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
+                $connectedUser,
+                $organization,
+                [CellAdminRole::class]
+            )['cells'];
+            /** @var Orga_Model_Cell $cell */
+            foreach ($cellsCanEdit as $cell) {
+                if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
                     $viewModel->canBeEdited = true;
                 }
             }
         }
+
         $viewModel->canBeDeleted = $this->aclService->isAllowed(
             $connectedUser,
             Action::DELETE(),
             $organization
         );
-
-        try {
-            $viewModel->inventory =  $organization->getGranularityForInventoryStatus()->getLabel();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-        };
 
         return $viewModel;
     }

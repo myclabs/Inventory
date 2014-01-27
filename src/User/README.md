@@ -28,13 +28,13 @@ $entityManager->flush();
 You give access rights to a user by adding it a role:
 
 ```php
-$userService->addRole($user, new CellAdministrator($user, $cell));
+$aclService->addRole($user, new CellAdminRole($user, $cell));
 ```
 
 Test access rights:
 
 ```php
-$userService->isAllowed($user, Action::EDIT(), $resource);
+$aclService->isAllowed($user, Action::EDIT(), $resource);
 ```
 
 ### Extending

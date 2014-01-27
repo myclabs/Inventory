@@ -14,6 +14,11 @@ use Core\Annotation\Secure;
 class DW_Datagrid_ValuesController extends UI_Controller_Datagrid
 {
     /**
+     * @Inject("session.storage.name")
+     */
+    private $sessionStorageName;
+
+    /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      * @Secure("viewReport")
      */
@@ -22,9 +27,7 @@ class DW_Datagrid_ValuesController extends UI_Controller_Datagrid
         $locale = Core_Locale::loadDefault();
 
         $hash = $this->getParam('hashReport');
-        $configuration = Zend_Registry::get('configuration');
-        $sessionName = $configuration->sessionStorage->name.'_'.APPLICATION_ENV;
-        $zendSessionReport = new Zend_Session_Namespace($sessionName);
+        $zendSessionReport = new Zend_Session_Namespace($this->sessionStorageName);
 
         $report = DW_Model_Report::getFromString($zendSessionReport->$hash);
 

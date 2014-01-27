@@ -1,22 +1,15 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Test
- */
 
-/**
- * Test du support de l'UTF-8
- * @package    Core
- * @subpackage Test
- */
-class Core_Test_Utf8Test extends PHPUnit_Framework_TestCase
+namespace Tests\Core;
+
+use Core\Test\TestCase;
+
+class Utf8Test extends TestCase
 {
-
     /**
      * Vérification simple
      */
-    function testStrlen()
+    public function testStrlen()
     {
         $this->assertEquals('UTF-8', mb_internal_encoding());
         $this->assertEquals(3, mb_strlen('ééé', 'UTF-8'));
@@ -29,12 +22,11 @@ class Core_Test_Utf8Test extends PHPUnit_Framework_TestCase
     /**
      * Cas particulier pour les ressources des ACL
      */
-    function testSerialize()
+    public function testSerialize()
     {
         $this->assertEquals(22, mb_strlen('Informations générales'));
         $this->assertEquals('s:24:"Informations générales";', serialize('Informations générales'));
         $this->assertEquals('Informations générales', unserialize(serialize('Informations générales')));
         $this->assertEquals(22, mb_strlen(unserialize(serialize('Informations générales'))));
     }
-
 }

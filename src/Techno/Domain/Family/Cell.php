@@ -41,7 +41,7 @@ class Cell extends Core_Model_Entity
 
     /**
      * Valeur dans cette cellule.
-     * @var Calc_Value $value
+     * @var Calc_Value|null $value
      */
     protected $value;
 
@@ -75,16 +75,16 @@ class Cell extends Core_Model_Entity
 
     /**
      * Définit la valeur dans cette cellule.
-     * @param Calc_Value $value
+     * @param Calc_Value|null $value
      */
-    public function setValue($value)
+    public function setValue(Calc_Value $value = null)
     {
         $this->value = $value;
     }
 
     /**
      * Retourne la valeur associée à cette cellule.
-     * @return Calc_Value
+     * @return Calc_Value|null
      */
     public function getValue()
     {

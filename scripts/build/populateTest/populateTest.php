@@ -9,10 +9,6 @@ class Inventory_PopulateTest extends Core_Script_Populate
 {
     public function populateEnvironment($environment)
     {
-        if ($environment === 'test') {
-            return;
-        }
-
         // Classif.
         $populateClassif = new Classif_PopulateTest();
         $populateClassif->runEnvironment($environment);

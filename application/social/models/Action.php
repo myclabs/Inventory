@@ -3,7 +3,6 @@
  * @package Social
  */
 
-use Doc\Domain\Bibliography;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -39,11 +38,6 @@ abstract class Social_Model_Action extends Core_Model_Entity
      */
     protected $comments;
 
-    /**
-     * @var Bibliography
-     */
-    protected $documentBibliography;
-
 
     /**
      * Constructeur
@@ -51,7 +45,6 @@ abstract class Social_Model_Action extends Core_Model_Entity
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->documentBibliography = new Bibliography();
     }
 
     /**
@@ -111,13 +104,4 @@ abstract class Social_Model_Action extends Core_Model_Entity
             $this->comments->add($comment);
         }
     }
-
-    /**
-     * @return Bibliography
-     */
-    public function getDocumentBibliography()
-    {
-        return $this->documentBibliography;
-    }
-
 }

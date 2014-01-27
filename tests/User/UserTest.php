@@ -1,21 +1,22 @@
 <?php
 
+namespace Tests\User;
+
 use Core\Test\TestCase;
+use Core_Locale;
+use Core_Tools;
 use Doctrine\ORM\UnitOfWork;
+use PHPUnit_Framework_TestSuite;
 use User\Domain\User;
 use User\Domain\UserService;
 
 class UserTest
 {
-    /**
-     * Déclaration de la suite de test à éffectuer.
-     * @return PHPUnit_Framework_TestSuite
-     */
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('UserSetUpTest');
-        $suite->addTestSuite('UserMetierTest');
+        $suite->addTestSuite(UserSetUpTest::class);
+        $suite->addTestSuite(UserMetierTest::class);
         return $suite;
     }
 }
@@ -26,17 +27,12 @@ class UserSetUpTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun objet en base, sinon suppression
         foreach (User::loadList() as $o) {
             $o->delete();
         }
         self::getEntityManager()->flush();
     }
 
-    /**
-     * Test du constructeur
-     * @return User
-     */
     public function testConstruct()
     {
         $o = new User();
@@ -171,7 +167,6 @@ class UserMetierTest extends TestCase
      */
     public function testInviteUser()
     {
-        $_SERVER['SERVER_NAME'] = 'http://127.0.0.1';
         $email = Core_Tools::generateString(20) . '@example.com';
 
         $user = $this->userService->inviteUser($email);

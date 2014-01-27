@@ -1,44 +1,25 @@
 <?php
-/**
- * Classe Classif_Test_ContextTest
- * @author     valentin.claras
- * @author     cyril.perraud
- * @package    Classif
- * @subpackage Test
- */
 
-/**
- * Creation of the Test Suite
- * @package    Classif
- */
-class Classif_Test_ContextTest
+namespace Tests\Classif;
+
+use Classif_Model_Context;
+use Core\Test\TestCase;
+
+class ContextTest extends TestCase
 {
     /**
-     * Creation of the test suite
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Classif_Test_ContextSetUp');
-        return $suite;
-    }
-
-    /**
      * Generation de l'objet de test.
-     *
      * @param string $ref
      * @param string $label
-     *
      * @return Classif_Model_Context
      */
-    public static function generateObject($ref=null, $label=null)
+    public static function generateObject($ref = null, $label = null)
     {
         $o = new Classif_Model_Context();
         $o->setRef(($ref ===null) ? 'ref' : $ref);
         $o->setLabel(($label ===null) ? 'label' : $label);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
         return $o;
     }
 
@@ -49,32 +30,17 @@ class Classif_Test_ContextTest
     public static function deleteObject($o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
     }
 
-}
-
-/**
- * Test of the creation/modification/deletion of the entity
- * @package    Classif
- */
-class Classif_Test_ContextSetUp extends PHPUnit_Framework_TestCase
-{
-
-    /**
-     * Function called once, before all the tests
-     */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Classif_Model_Context en base, sinon suppression !
         if (Classif_Model_Context::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Context restants ont été trouvé avant les tests, suppression en cours !';
             foreach (Classif_Model_Context::loadList() as $context) {
                 $context->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            self::getEntityManager()->flush();
         }
     }
 
@@ -82,16 +48,14 @@ class Classif_Test_ContextSetUp extends PHPUnit_Framework_TestCase
      * Test le constructeur
      * @return Classif_Model_Context
      */
-    function testConstruct()
+    public function testConstruct()
     {
         $o = new Classif_Model_Context();
-        $this->assertInstanceOf('Classif_Model_Context', $o);
         $o->setRef('RefContextTest');
         $o->setLabel('LabelContextTest');
         $this->assertEquals(array(), $o->getKey());
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->assertNotEquals(array(), $o->getKey());
         return $o;
     }
@@ -99,11 +63,12 @@ class Classif_Test_ContextSetUp extends PHPUnit_Framework_TestCase
     /**
      * @depends testConstruct
      * @param Classif_Model_Context $o
+     * @return Classif_Model_Context
      */
-    function testLoad(Classif_Model_Context $o)
+    public function testLoad(Classif_Model_Context $o)
     {
          $oLoaded = Classif_Model_Context::load($o->getKey());
-         $this->assertInstanceOf('Classif_Model_Context', $o);
+         $this->assertInstanceOf(Classif_Model_Context::class, $o);
          $this->assertEquals($oLoaded->getKey(), $o->getKey());
          $this->assertEquals($oLoaded->getRef(), $o->getRef());
          $this->assertEquals($oLoaded->getLabel(), $o->getLabel());
@@ -114,11 +79,10 @@ class Classif_Test_ContextSetUp extends PHPUnit_Framework_TestCase
      * @depends testLoad
      * @param Classif_Model_Context $o
      */
-    function testDelete(Classif_Model_Context $o)
+    public function testDelete(Classif_Model_Context $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        $this->entityManager->flush();
         $this->assertEquals(array(), $o->getKey());
     }
 
@@ -127,15 +91,12 @@ class Classif_Test_ContextSetUp extends PHPUnit_Framework_TestCase
      */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Classif_Model_Context en base, sinon suppression !
         if (Classif_Model_Context::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Context restants ont été trouvé après les tests, suppression en cours !';
             foreach (Classif_Model_Context::loadList() as $context) {
                 $context->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            self::getEntityManager()->flush();
         }
     }
-
 }

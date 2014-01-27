@@ -33,10 +33,10 @@
         </tu>
         <tu tuid="cellReport_specificReport">
             <tuv xml:lang="fr">
-                <seg>Composé</seg>
+                <seg>PDF composé</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Composed</seg>
+                <seg>Composed PDF</seg>
             </tuv>
         </tu>
         <tu tuid="cellReport_userReport">

@@ -6,7 +6,7 @@
  */
 ?>
     <div class="page-header">
-        <h1><?=__('Orga', 'translate', 'granularityReports')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
+        <h1><?=___('Orga', 'translate', 'granularityReports')?> <small><?=___('UI', 'name', 'translations')?></small></h1>
     </div>
 <?php
 foreach ($this->granularities as $granularity) {
@@ -16,12 +16,12 @@ foreach ($this->granularities as $granularity) {
         $datagrid = new UI_Datagrid('datagridTranslate_DW_Model_Report_label_'.$granularity->getId(), 'datagrid_translate_granularityreports', 'orga');
         $datagrid->automaticFiltering = false;
 
-        $identifierColumn = new UI_Datagrid_Col_Text('identifier', __('UI', 'name', 'identifier'));
+        $identifierColumn = new UI_Datagrid_Col_Text('identifier', ___('UI', 'name', 'identifier'));
         $identifierColumn->editable = false;
         $datagrid->addCol($identifierColumn);
 
-        foreach (Zend_Registry::get('languages') as $language) {
-            $languageColumn = new UI_Datagrid_Col_Text($language, __('UI', 'translate', 'language' . $language));
+        foreach (\Core\ContainerSingleton::getContainer()->get('translation.languages') as $language) {
+            $languageColumn = new UI_Datagrid_Col_Text($language, ___('UI', 'translate', 'language' . $language));
             $languageColumn->editable = true;
             $datagrid->addCol($languageColumn);
         }

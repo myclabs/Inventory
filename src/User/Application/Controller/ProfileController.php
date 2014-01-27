@@ -133,6 +133,7 @@ class User_ProfileController extends Core_Controller
      */
     public function disableAction()
     {
+        $container = \Core\ContainerSingleton::getContainer();
         $connectedUser = $this->_helper->auth();
 
         /** @var $user User */
@@ -144,12 +145,9 @@ class User_ProfileController extends Core_Controller
         $this->entityManager->flush();
 
         // Envoi d'un email d'alerte
-        $config = Zend_Registry::get('configuration');
         $subject = __('User', 'email', 'subjectAccountDeactivated');
         $content = __('User', 'email', 'bodyAccountDeactivated',
-                      array(
-                           'APPLICATION_NAME' => $config->emails->noreply->name
-                      )
+                      [ 'APPLICATION_NAME' => $container->get('emails.noreply.name') ]
         );
         $this->userService->sendEmail($user, $subject, $content);
 
@@ -169,6 +167,7 @@ class User_ProfileController extends Core_Controller
      */
     public function enableAction()
     {
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var $user User */
         $user = User::load($this->getParam('id'));
 
@@ -178,12 +177,9 @@ class User_ProfileController extends Core_Controller
         $this->entityManager->flush();
 
         // Envoi d'un email d'alerte
-        $config = Zend_Registry::get('configuration');
         $subject = __('User', 'email', 'subjectAccountActivated');
         $content = __('User', 'email', 'bodyAccountActivated',
-                      array(
-                           'APPLICATION_NAME' => $config->emails->noreply->name
-                      )
+                      [ 'APPLICATION_NAME' => $container->get('emails.noreply.name') ]
         );
         $this->userService->sendEmail($user, $subject, $content);
 
@@ -199,6 +195,7 @@ class User_ProfileController extends Core_Controller
      */
     public function editEmailAction()
     {
+        $container = \Core\ContainerSingleton::getContainer();
         $loggedInUser = $this->_helper->auth();
         /** @var $user User */
         $user = User::load($this->getParam('id'));
@@ -235,23 +232,19 @@ class User_ProfileController extends Core_Controller
 
             if (!$this->hasFormError()) {
                 $subject = __('User', 'email', 'subjectEmailModified');
-                $config = Zend_Registry::get('configuration');
-                if (empty($config->emails->contact->adress)) {
-                    throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini.');
-                }
                 if ($user === $this->_helper->auth()) {
                     $content = __('User', 'email', 'bodyEmailModifiedByUser',
                                   array(
                                        'OLD_EMAIL_ADDRESS' => $oldEmail,
                                        'NEW_EMAIL_ADDRESS' => $email,
-                                       'APPLICATION_NAME'       => $config->emails->noreply->name
+                                       'APPLICATION_NAME'       => $container->get('emails.noreply.name')
                                   ));
                 } else {
                     $content = __('User', 'email', 'bodyEmailModifiedByAdmin',
                                   array(
                                        'OLD_EMAIL_ADDRESS' => $oldEmail,
                                        'NEW_EMAIL_ADDRESS' => $email,
-                                       'APPLICATION_NAME'  => $config->emails->noreply->name
+                                       'APPLICATION_NAME'  => $container->get('emails.noreply.name')
                                   ));
                 }
 
@@ -326,4 +319,18 @@ class User_ProfileController extends Core_Controller
         $this->view->user = $user;
     }
 
+    /**
+     * Passe un tutoriel (ou tous si tutorial = all)
+     * @Secure("editUser")
+     */
+    public function dismissTutorialAction()
+    {
+        $tutorial = $this->getParam('tutorial');
+
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->_helper->auth();
+        $loggedInUser->dismissTutorial($tutorial);
+
+        $this->sendJsonResponse([]);
+    }
 }

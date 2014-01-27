@@ -9,9 +9,7 @@ class Techno_PopulateTest extends Techno_Populate
 {
     public function runEnvironment($environment)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $entityManager \Doctrine\ORM\EntityManager */
-        $entityManager = $entityManagers['default'];
+        $entityManager = \Core\ContainerSingleton::getEntityManager();
 
 
         $categorie_contenant_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');
@@ -26,36 +24,31 @@ class Techno_PopulateTest extends Techno_Populate
             $categorie_contenant_famille,
             'combustion_combustible_unite_masse',
             'Combustion de combustible, mesuré en unité de masse',
-            'kg_co2e.t^-1',
-            'kg_co2e.kg^-1'
+            'kg_co2e.t^-1'
         );
         $family_masse_volumique_combustible = $this->createFamily(
             $categorie_contenant_famille,
             'masse_volumique_combustible',
             'Masse volumique de combustible',
-            't.m3^-1',
-            'kg.m3^-1'
+            't.m3^-1'
         );
         $family_forfait_emissions_fonction_marque = $this->createFamily(
             $categorie_contenant_famille,
             'forfait_emissions_fonction_marque',
             'Forfait émissions en fonction de la marque',
-            't_co2e',
-            'kg_co2e'
+            't_co2e'
         );
         $family_vide = $this->createFamily(
             $categorie_contenant_famille,
             'famille_test_vide',
             'Famille test vide',
-            't',
-            'kg'
+            't'
         );
         $family_test = $this->createFamily(
             $sous_categorie_contenant_famille,
             'famille_test_non_vide',
             'Famille test non vide',
             'kg_co2e.t^-1',
-            'kg_co2e.kg^-1',
             'h1. Documentation de la famille test'
         );
 
