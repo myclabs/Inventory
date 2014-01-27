@@ -53,10 +53,8 @@ class UnitAPI
      */
     public function exists()
     {
-        /** @var Container $container */
-        $container = \Zend_Registry::get('container');
         /** @var UnitService $unitService */
-        $unitService = $container->get(UnitService::class);
+        $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
         $locale = \Core_Locale::loadDefault()->getId();
 
         try {
@@ -90,10 +88,8 @@ class UnitAPI
      */
     public function getSymbol()
     {
-        /** @var Container $container */
-        $container = \Zend_Registry::get('container');
         /** @var UnitService $unitService */
-        $unitService = $container->get(UnitService::class);
+        $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
         $locale = \Core_Locale::loadDefault()->getId();
 
         $unit = $unitService->getUnit($this->ref, $locale);
@@ -116,10 +112,8 @@ class UnitAPI
             $ref = $ref->getRef();
         }
 
-        /** @var Container $container */
-        $container = \Zend_Registry::get('container');
         /** @var UnitOperationService $operationService */
-        $operationService = $container->get(UnitOperationService::class);
+        $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
 
         return $operationService->areCompatible($this->ref, $ref);
     }
@@ -138,10 +132,8 @@ class UnitAPI
      */
     public function getConversionFactor($refUnit)
     {
-        /** @var Container $container */
-        $container = \Zend_Registry::get('container');
         /** @var UnitOperationService $operationService */
-        $operationService = $container->get(UnitOperationService::class);
+        $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
 
         return $operationService->getConversionFactor($this->ref, $refUnit);
     }
@@ -158,10 +150,8 @@ class UnitAPI
      */
     public static function multiply($components)
     {
-        /** @var Container $container */
-        $container = \Zend_Registry::get('container');
         /** @var UnitOperationService $operationService */
-        $operationService = $container->get(UnitOperationService::class);
+        $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
 
         $operation = new Multiplication();
 
@@ -183,10 +173,8 @@ class UnitAPI
      */
     public static function calculateSum($components)
     {
-        /** @var Container $container */
-        $container = \Zend_Registry::get('container');
         /** @var UnitOperationService $operationService */
-        $operationService = $container->get(UnitOperationService::class);
+        $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
 
         $operation = new Addition();
         array_walk($components, function ($component) use ($operation) {
@@ -204,10 +192,8 @@ class UnitAPI
      */
     public function getCompatibleUnits()
     {
-        /** @var Container $container */
-        $container = \Zend_Registry::get('container');
         /** @var UnitService $unitService */
-        $unitService = $container->get(UnitService::class);
+        $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
         $locale = \Core_Locale::loadDefault()->getId();
 
         $unitDTOs = $unitService->getCompatibleUnits($this->ref, $locale);
@@ -226,10 +212,8 @@ class UnitAPI
      */
     public function getNormalizedUnit()
     {
-        /** @var Container $container */
-        $container = \Zend_Registry::get('container');
         /** @var UnitService $unitService */
-        $unitService = $container->get(UnitService::class);
+        $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
         $locale = \Core_Locale::loadDefault()->getId();
 
         return new UnitAPI($unitService->getUnitOfReference($this->ref, $locale)->id);
@@ -243,10 +227,8 @@ class UnitAPI
      */
     public function reverse()
     {
-        /** @var Container $container */
-        $container = \Zend_Registry::get('container');
         /** @var UnitOperationService $operationService */
-        $operationService = $container->get(UnitOperationService::class);
+        $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
 
         return new UnitAPI($operationService->inverse($this->ref));
     }

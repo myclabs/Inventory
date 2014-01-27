@@ -3,7 +3,11 @@
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
+use MyCLabs\UnitAPI\UnitOperationService;
+use MyCLabs\UnitAPI\UnitService;
 use Psr\Log\LoggerInterface;
+use Unit\Mock\FakeUnitOperationService;
+use Unit\Mock\FakeUnitService;
 
 return [
     // Logs
@@ -23,4 +27,10 @@ return [
 
     // RabbitMQ
     'rabbitmq.enabled'  => false,
+
+    // Units API
+    UnitService::class => DI\object(FakeUnitService::class),
+    UnitOperationService::class => DI\object(FakeUnitOperationService::class)
+        ->constructor(DI\link(UnitService::class)),
+
 ];

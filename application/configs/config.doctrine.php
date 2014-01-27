@@ -55,7 +55,6 @@ return [
 
         // Nouveaux packages utilisent le simplified driver
         $modules = [
-            'Unit',
             'User',
             'Techno',
             'Doc',
