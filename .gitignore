@@ -6,6 +6,7 @@ composer.phar
 
 behat/selenium-server-standalone.jar
 
+application/configs/parameters.php
 application/configs/application.ini
 application/configs/env.php
 public/.htaccess

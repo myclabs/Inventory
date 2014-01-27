@@ -1,24 +1,15 @@
 <?php
+
+namespace Tests\Core;
+
 use Core\Test\TestCase;
+use Core_Locale;
+use Core_Model_Order;
+use Core_Model_Query;
+use Inventory_Model_Translated;
 
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Test
- */
-
-/**
- * Test des traductions de champs d'entités
- *
- * @package Core
- * @subpackage Event
- */
-class Core_Test_EntityTranslatedTest extends TestCase
+class EntityTranslatedTest extends TestCase
 {
-
-    /**
-     * Méthode appelée avant l'exécution des tests
-     */
     public static function setUpBeforeClass()
     {
         // Vérification qu'il ne reste aucun Inventory_Model_Entity en base, sinon suppression !
@@ -26,11 +17,9 @@ class Core_Test_EntityTranslatedTest extends TestCase
             foreach (Inventory_Model_Translated::loadList() as $o) {
                 $o->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            self::getEntityManager()->flush();
         }
     }
-
 
     public function testSimpleTranslation()
     {
@@ -238,5 +227,4 @@ class Core_Test_EntityTranslatedTest extends TestCase
         $o2->delete();
         $this->entityManager->flush();
     }
-
 }

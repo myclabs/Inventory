@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Gedmo\Translatable\TranslatableListener;
 
 /**
  * Classe du controller du datagrid des traductions des options.
@@ -16,13 +17,16 @@ use Core\Annotation\Secure;
 class AF_Datagrid_Translate_OptionsController extends UI_Controller_Datagrid
 {
     /**
-     * Désactivation du fallback des traductions.
+     * @Inject
+     * @var TranslatableListener
      */
-    public function init()
-    {
-        parent::init();
-        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
-    }
+    private $translatableListener;
+
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -31,12 +35,13 @@ class AF_Datagrid_Translate_OptionsController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         foreach (AF_Model_Component_Select_Option::loadList($this->request) as $option) {
             $data = array();
             $data['index'] = $option->getId();
             $data['identifier'] = $option->getSelect()->getAF()->getRef().' | '.$option->getSelect()->getRef().' | '.$option->getRef();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $option->reloadWithLocale($locale);
                 $data[$language] = $option->getLabel();
@@ -55,6 +60,7 @@ class AF_Datagrid_Translate_OptionsController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $option = AF_Model_Component_Select_Option::load($this->update['index']);
         $option->reloadWithLocale(Core_Locale::load($this->update['column']));
         $option->setLabel($this->update['value']);

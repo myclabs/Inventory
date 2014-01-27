@@ -16,9 +16,7 @@ class Orga_PopulateTest extends Orga_Populate
     {
         parent::runEnvironment($environment);
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $entityManager \Doctrine\ORM\EntityManager */
-        $entityManager = $entityManagers['default'];
+        $entityManager = \Core\ContainerSingleton::getEntityManager();
 
 
         // Création d'une organisation.

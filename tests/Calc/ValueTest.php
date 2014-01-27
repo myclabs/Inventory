@@ -1,58 +1,23 @@
 <?php
-/**
- * Test de l'API Unit.
- * @author valentin.claras
- * @author Hugo.charbonnier
- * @author Yoann.croizer
- * @package Calc
- */
 
-/**
- * @package Calc
- */
-class Calc_Test_ValueTest
+namespace Tests\Calc;
+
+use Calc_Calculation;
+use Calc_Calculation_Value;
+use Calc_Value;
+use Core\Test\TestCase;
+use Core_Exception_InvalidArgument;
+
+class ValueTest extends TestCase
 {
-    /**
-     * Lance les autre classe de tests.
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Calc_Test_Calculation_ValueSetUp');
-        $suite->addTestSuite('Calc_Test_Calculation_ValueOthers');
-        return $suite;
-    }
-
-}
-
-/**
- * ValueSetUpTest
- * @package Calc
- */
-class Calc_Test_Calculation_ValueSetUp extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Test du constructeur d'une Calc_Value.
-     */
-    function testConstructValue()
+    public function testConstructValue()
     {
         $o = new Calc_Value();
         $this->assertEquals($o->getDigitalValue(), 0);
         $this->assertEquals($o->getRelativeUncertainty(), null);
     }
-}
 
-/**
- * Calculation_ValuetLogiqueMetierTest
- * @package Calc
- */
-class Calc_Test_Calculation_ValueOthers extends PHPUnit_Framework_TestCase
-{
-
-    /**
-     * Test de la méthode calculate.
-     */
-    function testCalculate()
+    public function testCalculate()
     {
          // Test somme OK
          $value1 = new Calc_Value(2, 0.1);
@@ -78,9 +43,6 @@ class Calc_Test_Calculation_ValueOthers extends PHPUnit_Framework_TestCase
          $this->assertEquals(0.4, $result->getDigitalValue());
     }
 
-    /**
-     * Test des exceptions
-     */
     public function testExceptions()
     {
         $value = new Calc_Calculation_Value();
@@ -153,7 +115,7 @@ class Calc_Test_Calculation_ValueOthers extends PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider invalidStrings
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @param string $str
      */
     public function testCreateFromStringInvalid($str)
@@ -168,5 +130,4 @@ class Calc_Test_Calculation_ValueOthers extends PHPUnit_Framework_TestCase
             ['foo'],
         ];
     }
-
 }

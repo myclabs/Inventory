@@ -1,8 +1,6 @@
 <?php
 // Entity Manager
-$entityManagers = Zend_Registry::get('EntityManagers');
-/** @var $entityManager \Doctrine\ORM\EntityManager */
-$entityManager = $entityManagers['default'];
+$entityManager = \Core\ContainerSingleton::getEntityManager();
 
 $temporaryLabel = 'Temporary Label';
 $translatableClasses = [

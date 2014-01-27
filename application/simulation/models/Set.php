@@ -104,10 +104,9 @@ class Simulation_Model_Set extends Core_Model_Entity
         $this->dWAxis->setRef('set');
         $this->dWAxis->setLabel(__('Simulation', 'name', 'scenario'));
 
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var Simulation_Service_ETLStructure $etlStructureService */
-        $etlStructureService = $container->get('Simulation_Service_ETLStructure');
+        $etlStructureService = $container->get(Simulation_Service_ETLStructure::class);
 
         $etlStructureService->populateSetDWCube($this);
     }

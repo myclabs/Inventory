@@ -8,9 +8,7 @@ use Techno\Domain\Family\Member;
 use Techno\Domain\Family\ProcessFamily;
 use Techno\Domain\Tag;
 
-$entityManagers = Zend_Registry::get('EntityManagers');
-/** @var $entityManager \Doctrine\ORM\EntityManager */
-$entityManager = $entityManagers['default'];
+$entityManager = \Core\ContainerSingleton::getEntityManager();
 
 $entityManager->beginTransaction();
 

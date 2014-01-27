@@ -17,9 +17,8 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 }
 
 if ($connectedUser) {
-    $container = Zend_Registry::get('container');
     /** @var ACLService $aclService */
-    $aclService = $container->get(ACLService::class);
+    $aclService = \Core\ContainerSingleton::getContainer()->get(ACLService::class);
 
     $leftMenu = [];
 

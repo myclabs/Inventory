@@ -41,8 +41,7 @@ class Unit_Test_UnitExtensionTest
         $o->setSymbol('Symbol'.$ref);
         $o->setMultiplier($multiplier);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         return $o;
     }
@@ -54,8 +53,7 @@ class Unit_Test_UnitExtensionTest
     public static function deleteObject(UnitExtension $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 }
 
@@ -76,16 +74,8 @@ class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
             foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
-    }
-
-    /**
-     * Méthode appelée avant chaque test
-     */
-    protected function setUp()
-    {
     }
 
     /**
@@ -102,8 +92,7 @@ class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
         $o->setMultiplier(1);
         $this->assertEquals(array(), $o->getKey());
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertNotEquals(array(), $o->getKey());
         return $o;
     }
@@ -114,8 +103,7 @@ class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
      */
     function testLoad($o)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear($o);
+        \Core\ContainerSingleton::getEntityManager()->clear($o);
         $oLoaded = UnitExtension::load($o->getKey());
         $this->assertInstanceOf('Unit\Domain\UnitExtension', $o);
         $this->assertEquals($oLoaded->getKey(), $o->getKey());
@@ -133,17 +121,8 @@ class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
     function testDelete(UnitExtension $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertEquals(array(), $o->getKey());
-    }
-
-    /**
-     * Méthode appelée à la fin de chaque test
-     */
-    protected function tearDown()
-    {
-
     }
 
     /**
@@ -157,8 +136,7 @@ class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
             foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 }
@@ -182,8 +160,7 @@ class Unit_Test_UnitExtensionOthers extends PHPUnit_Framework_TestCase
             foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
      }
 
@@ -193,7 +170,6 @@ class Unit_Test_UnitExtensionOthers extends PHPUnit_Framework_TestCase
      protected function setUp()
      {
         $this->extension = Unit_Test_UnitExtensionTest::generateObject();
-
      }
 
      /**
@@ -225,8 +201,7 @@ class Unit_Test_UnitExtensionOthers extends PHPUnit_Framework_TestCase
             foreach (UnitExtension::loadList() as $extensionunit) {
                 $extensionunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 }

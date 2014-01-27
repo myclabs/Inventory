@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Gedmo\Translatable\TranslatableListener;
 use User\Domain\ACL\Action;
 
 /**
@@ -17,13 +18,16 @@ use User\Domain\ACL\Action;
 class Orga_Datagrid_Translate_OrganizationsController extends UI_Controller_Datagrid
 {
     /**
-     * Désativation du fallback des traduction
+     * @Inject
+     * @var TranslatableListener
      */
-    public function init()
-    {
-        parent::init();
-        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
-    }
+    private $translatableListener;
+
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -32,6 +36,7 @@ class Orga_Datagrid_Translate_OrganizationsController extends UI_Controller_Data
      */
     public function getelementsAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $this->request->aclFilter->enabled = true;
         $this->request->aclFilter->user = $this->_helper->auth();
         $this->request->aclFilter->action = Action::VIEW();
@@ -41,7 +46,7 @@ class Orga_Datagrid_Translate_OrganizationsController extends UI_Controller_Data
             $data['index'] = $organization->getId();
             $data['identifier'] = $organization->getId();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $organization->reloadWithLocale($locale);
                 $data[$language] = $organization->getLabel();
@@ -64,6 +69,7 @@ class Orga_Datagrid_Translate_OrganizationsController extends UI_Controller_Data
      */
     public function updateelementAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $organization = Orga_Model_Organization::load($this->update['index']);
         $organization->reloadWithLocale(Core_Locale::load($this->update['column']));
         $organization->setLabel($this->update['value']);

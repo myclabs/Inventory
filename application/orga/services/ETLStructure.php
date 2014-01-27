@@ -43,9 +43,11 @@ class Orga_Service_ETLStructure
      */
     protected function translateEntity($originalEntity, $dWEntity)
     {
+        // TODO utiliser l'injection de dépendances
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
-        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
+        $defaultLocale = $container->get('translation.defaultLocale');
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
 
@@ -55,7 +57,7 @@ class Orga_Service_ETLStructure
             $dWEntity->setLabel($originalEntity->getLabel());
         }
         // Traductions.
-        foreach (Zend_Registry::get('languages') as $localeId) {
+        foreach ($container->get('translation.languages') as $localeId) {
             if (isset($originalTranslations[$localeId]['label'])) {
                 $translationRepository->translate(
                     $dWEntity,
@@ -77,6 +79,8 @@ class Orga_Service_ETLStructure
      */
     protected function areTranslationsDifferent($originalEntity, $dWEntity)
     {
+        // TODO utiliser l'injection de dépendances
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
 
@@ -84,7 +88,7 @@ class Orga_Service_ETLStructure
         $dWTranslations = $translationRepository->findTranslations($dWEntity);
 
         // Traductions
-        foreach (Zend_Registry::get('languages') as $localeId) {
+        foreach ($container->get('translation.languages') as $localeId) {
             if (isset($originalTranslations[$localeId])) {
                 $originalLabel = $originalTranslations[$localeId]['label'];
             } else {
@@ -142,17 +146,19 @@ class Orga_Service_ETLStructure
      */
     protected function updateCellDWCubeLabel(Orga_Model_Cell $cell)
     {
+        // TODO utiliser l'injection de dépendances
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
-        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
+        $defaultLocale = $container->get('translation.defaultLocale');
 
         $labels = [];
         if (!$cell->hasMembers()) {
-            foreach (Zend_Registry::get('languages') as $localeId) {
+            foreach ($container->get('translation.languages') as $localeId) {
                 $labels[$localeId] = __('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
             }
         } else {
-            foreach (Zend_Registry::get('languages') as $localeId) {
+            foreach ($container->get('translation.languages') as $localeId) {
                 $labelParts = [];
                 foreach ($cell->getMembers() as $member) {
                     $originalTranslations = $translationRepository->findTranslations($member);
@@ -178,20 +184,22 @@ class Orga_Service_ETLStructure
      */
     protected function updateGranularityDWCubeLabel(Orga_Model_Granularity $granularity)
     {
+        // TODO utiliser l'injection de dépendances
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
-        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
+        $defaultLocale = $container->get('translation.defaultLocale');
 
         $labels = [];
         if (!$granularity->hasAxes()) {
-            foreach (Zend_Registry::get('languages') as $localeId) {
+            foreach ($container->get('translation.languages') as $localeId) {
                 $labels[$localeId] = __('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
             }
         } else {
             $axes = $granularity->getAxes();
             // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
             @uasort($axes, [Orga_Model_Axis::class, 'orderAxes']);
-            foreach (Zend_Registry::get('languages') as $localeId) {
+            foreach ($container->get('translation.languages') as $localeId) {
                 $labelParts = [];
                 foreach ($axes as $axis) {
                     $originalTranslations = $translationRepository->findTranslations($axis);
@@ -247,6 +255,8 @@ class Orga_Service_ETLStructure
      */
     protected function populateDWCubeWithAF(DW_Model_Cube $dWCube)
     {
+        // TODO utiliser l'injection de dépendances
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
 
@@ -259,7 +269,7 @@ class Orga_Service_ETLStructure
         $completedDWMember = new DW_Model_Member($inputStatusDWAxis);
         $completedDWMember->setRef('completed');
 
-        foreach (Zend_Registry::get('languages') as $localeId) {
+        foreach ($container->get('translation.languages') as $localeId) {
             switch ($localeId) {
                 case 'fr':
                     $inputStatusLabel = 'Statut de saisie';
@@ -953,8 +963,9 @@ class Orga_Service_ETLStructure
      */
     public function resetGranularityAndCellsDWCubes(Orga_Model_Granularity $granularity)
     {
+        // TODO utiliser l'injection de dépendances
         /** @var Core_EventDispatcher $eventDispatcher */
-        $eventDispatcher = Zend_Registry::get('container')->get('Core_EventDispatcher');
+        $eventDispatcher = \Core\ContainerSingleton::getContainer()->get('Core_EventDispatcher');
         $eventDispatcher->removeListener('Orga_Service_Report', 'DW_Model_Report');
 
         foreach ($granularity->getCells() as $cell) {

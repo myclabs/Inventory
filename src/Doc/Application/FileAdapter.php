@@ -2,11 +2,11 @@
 
 namespace Doc\Application;
 
+use Core\ContainerSingleton;
 use Zend_Controller_Action_HelperBroker;
 use Doc\Domain\Library;
 use Zend_File_Transfer_Adapter_Http;
 use Doc\Domain\Document;
-use Zend_Registry;
 use Core_Exception_InvalidArgument;
 use Core_Exception;
 use Core_Exception_NotFound;
@@ -58,11 +58,7 @@ class FileAdapter
     {
         $this->library = $library;
         $this->transferAdapter = new Zend_File_Transfer_Adapter_Http();
-        $config = Zend_Registry::get('configuration');
-        if (!$config->documents->path) {
-            throw new Core_Exception('The configuration should contain the target document path');
-        }
-        $this->basePath = $config->documents->path;
+        $this->basePath = ContainerSingleton::getContainer()->get('documents.path');
         $this->transferAdapter->setDestination($this->basePath);
     }
 
@@ -101,8 +97,7 @@ class FileAdapter
         $this->document = new Document($this->library, $filePath);
         $this->document->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         // Renomme le fichier avec l'ID du document
         $dirName = pathinfo($this->document->getFilePath(), PATHINFO_DIRNAME);
@@ -112,8 +107,7 @@ class FileAdapter
         $this->document->setFilePath($newFilePath);
         $this->document->save();
 
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
 
         return true;
     }

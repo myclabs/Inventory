@@ -1,7 +1,6 @@
 <?php
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
 use User\Application\Service\AuthAdapter;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -70,17 +69,14 @@ class User_PasswordController extends UI_Controller_Captcha
                     $user->getEmailKey());
                 $urlApplication = $this->applicationUrl . '/';
                 $subject = __('User', 'email', 'subjectForgottenPassword');
-                $config = Zend_Registry::get('configuration');
-                if (empty($config->emails->contact->adress)) {
-                    throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini !');
-                }
+                $container = \Core\ContainerSingleton::getContainer();
                 $content = __('User',
                               'email',
                               'bodyForgottenPassword',
                               array(
                                    'PASSWORD_RESET_LINK' => $url,
                                    'PASSWORD_RESET_CODE' => $user->getEmailKey(),
-                                   'APPLICATION_NAME'    => $config->emails->noreply->name,
+                                   'APPLICATION_NAME'    => $container->get('emails.noreply.name'),
                                    'URL_APPLICATION'     => $urlApplication,
                               ));
                 $this->userService->sendEmail($user, $subject, $content);

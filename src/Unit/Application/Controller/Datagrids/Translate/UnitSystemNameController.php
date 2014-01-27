@@ -16,6 +16,12 @@ class Unit_Datagrids_Translate_UnitSystemNameController extends UI_Controller_Da
 {
 
     /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
+
+    /**
      * @Secure("viewUnit")
      */
     public function getelementsAction()
@@ -26,7 +32,7 @@ class Unit_Datagrids_Translate_UnitSystemNameController extends UI_Controller_Da
 
             $data['identifier'] = $unitSystem->getRef();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $unitSystem->reloadWithLocale($locale);
                 $data[$language] = $unitSystem->getName();
