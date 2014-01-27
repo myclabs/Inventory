@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "2c77122473ce26e9c70d9ca12bea7f99",
+    "hash": "1959b5d379b1cb5ac2c23c942ba05235",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -563,12 +563,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "6838903ecc14bd8d355df083bd056b3608c19b5c"
+                "reference": "2d3d0cb2a775dc21c2ba50e0126dfc22b4c3e93a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/6838903ecc14bd8d355df083bd056b3608c19b5c",
-                "reference": "6838903ecc14bd8d355df083bd056b3608c19b5c",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/2d3d0cb2a775dc21c2ba50e0126dfc22b4c3e93a",
+                "reference": "2d3d0cb2a775dc21c2ba50e0126dfc22b4c3e93a",
                 "shasum": ""
             },
             "require": {
@@ -596,7 +596,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2013-12-21 02:51:38"
+            "time": "2014-01-26 19:39:18"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -842,12 +842,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "0.2.1"
+                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.2.1",
-                "reference": "0.2.1",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
+                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
                 "shasum": ""
             },
             "type": "library",
@@ -873,33 +873,37 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "3.5.1",
+            "version": "4.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "a039bcd574cce6b2370577f927fbda5e90c7540f"
+                "reference": "fff8899151d932278e450d9dcd3e24e2f9c108cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/a039bcd574cce6b2370577f927fbda5e90c7540f",
-                "reference": "a039bcd574cce6b2370577f927fbda5e90c7540f",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/fff8899151d932278e450d9dcd3e24e2f9c108cd",
+                "reference": "fff8899151d932278e450d9dcd3e24e2f9c108cd",
                 "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "1.*",
                 "doctrine/cache": "1.*",
+                "mnapoli/phpdocreader": "~1.1",
                 "myclabs/php-enum": "1.*",
                 "ocramius/proxy-manager": "~0.3",
-                "php": ">=5.3.0",
+                "php": ">=5.3.3",
                 "symfony/yaml": "2.*"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "DI": "src/",
-                    "IntegrationTests": "tests/",
-                    "UnitTests": "tests/"
-                }
+                    "DI\\": "src/",
+                    "IntegrationTests\\": "tests/",
+                    "UnitTests\\": "tests/"
+                },
+                "files": [
+                    "src/DI/functions.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -912,30 +916,30 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2013-10-29 09:22:31"
+            "time": "2014-01-25 13:46:26"
         },
         {
             "name": "mnapoli/php-di-zf1",
-            "version": "1.1.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI-ZF1.git",
-                "reference": "fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43"
+                "reference": "dc8af3df550f74aab6419f07ad3a9b8dd68dd7d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI-ZF1/zipball/fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43",
-                "reference": "fc6b354cbdd11e3ca4e383d8aaa9ce01983d9a43",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI-ZF1/zipball/dc8af3df550f74aab6419f07ad3a9b8dd68dd7d9",
+                "reference": "dc8af3df550f74aab6419f07ad3a9b8dd68dd7d9",
                 "shasum": ""
             },
             "require": {
-                "mnapoli/php-di": "~3.3",
+                "mnapoli/php-di": "~4.0",
                 "zendframework/zendframework1": "1.12.*"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "DI\\ZendFramework1": "src/"
+                    "DI\\Bridge\\ZendFramework1\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -943,8 +947,43 @@
                 "MIT"
             ],
             "description": "Integrates PHP-DI to Zend Framework 1",
-            "homepage": "http://mnapoli.github.io/PHP-DI-ZF1/",
-            "time": "2013-08-12 07:23:17"
+            "homepage": "https://github.com/mnapoli/PHP-DI-ZF1",
+            "time": "2014-01-08 10:14:14"
+        },
+        {
+            "name": "mnapoli/phpdocreader",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mnapoli/PhpDocReader.git",
+                "reference": "94eed8fb141f989fe044ae3b6743cc1d87b05a7f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mnapoli/PhpDocReader/zipball/94eed8fb141f989fe044ae3b6743cc1d87b05a7f",
+                "reference": "94eed8fb141f989fe044ae3b6743cc1d87b05a7f",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "1.*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PhpDocReader": "src/",
+                    "UnitTest": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "keywords": [
+                "phpdoc",
+                "reflection"
+            ],
+            "time": "2013-12-15 22:24:08"
         },
         {
             "name": "monolog/monolog",
@@ -1127,12 +1166,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Units-API.git",
-                "reference": "cde872c49838a7d55fdd745c702c65689440f39c"
+                "reference": "e1e28394468bea6320267214b42162fadaef626b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/cde872c49838a7d55fdd745c702c65689440f39c",
-                "reference": "cde872c49838a7d55fdd745c702c65689440f39c",
+                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/e1e28394468bea6320267214b42162fadaef626b",
+                "reference": "e1e28394468bea6320267214b42162fadaef626b",
                 "shasum": ""
             },
             "require": {
@@ -1150,7 +1189,7 @@
                 "source": "https://github.com/myclabs/Units-API/tree/master",
                 "issues": "https://github.com/myclabs/Units-API/issues"
             },
-            "time": "2014-01-03 14:15:29"
+            "time": "2014-01-24 08:41:12"
         },
         {
             "name": "myclabs/work",
@@ -1536,16 +1575,16 @@
         },
         {
             "name": "phpoption/phpoption",
-            "version": "1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/php-option.git",
-                "reference": "1c7e8016289d17d83ced49c56d0f266fd0568941"
+                "reference": "5d099bcf0393908bf4ad69cc47dafb785d51f7f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/1c7e8016289d17d83ced49c56d0f266fd0568941",
-                "reference": "1c7e8016289d17d83ced49c56d0f266fd0568941",
+                "url": "https://api.github.com/repos/schmittjoh/php-option/zipball/5d099bcf0393908bf4ad69cc47dafb785d51f7f5",
+                "reference": "5d099bcf0393908bf4ad69cc47dafb785d51f7f5",
                 "shasum": ""
             },
             "require": {
@@ -1581,7 +1620,7 @@
                 "php",
                 "type"
             ],
-            "time": "2013-05-19 11:09:35"
+            "time": "2014-01-09 22:37:17"
         },
         {
             "name": "psr/log",
@@ -1623,17 +1662,17 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.3.8",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "15031c5ca7583997de218c1f5b1b406f621d18c3"
+                "reference": "4c1ed2ff514bd85ee186eebb010ccbdeeab05af7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/15031c5ca7583997de218c1f5b1b406f621d18c3",
-                "reference": "15031c5ca7583997de218c1f5b1b406f621d18c3",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/4c1ed2ff514bd85ee186eebb010ccbdeeab05af7",
+                "reference": "4c1ed2ff514bd85ee186eebb010ccbdeeab05af7",
                 "shasum": ""
             },
             "require": {
@@ -1648,7 +1687,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -1672,21 +1711,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2013-12-15 18:46:51"
+            "time": "2014-01-01 08:14:50"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "acd1707236f6eb96fbb8d58f63d289b72ebc2f6e"
+                "reference": "e3ba42f6a70554ed05749e61b829550f6ac33601"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/acd1707236f6eb96fbb8d58f63d289b72ebc2f6e",
-                "reference": "acd1707236f6eb96fbb8d58f63d289b72ebc2f6e",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/e3ba42f6a70554ed05749e61b829550f6ac33601",
+                "reference": "e3ba42f6a70554ed05749e61b829550f6ac33601",
                 "shasum": ""
             },
             "require": {
@@ -1726,21 +1765,21 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2013-12-03 14:52:22"
+            "time": "2013-12-28 08:12:03"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "72356bf0646b11af1bae666c28a639bd8ede459f"
+                "reference": "6904345cf2b3bbab1f6d6e4ce1724cb99df9f00a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/72356bf0646b11af1bae666c28a639bd8ede459f",
-                "reference": "72356bf0646b11af1bae666c28a639bd8ede459f",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/6904345cf2b3bbab1f6d6e4ce1724cb99df9f00a",
+                "reference": "6904345cf2b3bbab1f6d6e4ce1724cb99df9f00a",
                 "shasum": ""
             },
             "require": {
@@ -1773,11 +1812,11 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-26 16:40:27"
+            "time": "2014-01-01 08:14:50"
         },
         {
             "name": "symfony/property-access",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/PropertyAccess",
             "source": {
                 "type": "git",
@@ -1835,17 +1874,17 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/Translation",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Translation.git",
-                "reference": "0919e0fc709217f8c9e5049f2603419fdd4a34ff"
+                "reference": "7f76dffd7eaf2c9a3a8f47649404c71440d18c8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/0919e0fc709217f8c9e5049f2603419fdd4a34ff",
-                "reference": "0919e0fc709217f8c9e5049f2603419fdd4a34ff",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/7f76dffd7eaf2c9a3a8f47649404c71440d18c8b",
+                "reference": "7f76dffd7eaf2c9a3a8f47649404c71440d18c8b",
                 "shasum": ""
             },
             "require": {
@@ -1886,21 +1925,21 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-28 10:27:26"
+            "time": "2013-12-31 13:43:26"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "1ae235a1b9d3ad3d9f3860ff20acc072df95b7f5"
+                "reference": "4e1a237fc48145fae114b96458d799746ad89aa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/1ae235a1b9d3ad3d9f3860ff20acc072df95b7f5",
-                "reference": "1ae235a1b9d3ad3d9f3860ff20acc072df95b7f5",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/4e1a237fc48145fae114b96458d799746ad89aa0",
+                "reference": "4e1a237fc48145fae114b96458d799746ad89aa0",
                 "shasum": ""
             },
             "require": {
@@ -1933,7 +1972,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-26 16:40:27"
+            "time": "2013-12-28 08:12:03"
         },
         {
             "name": "twig/twig",
@@ -1986,16 +2025,16 @@
         },
         {
             "name": "videlalvaro/php-amqplib",
-            "version": "v2.2.2",
+            "version": "v2.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/php-amqplib.git",
-                "reference": "ffed6c575260d9ccf796e213f1383e3489b3256c"
+                "reference": "6ef2ca9a45bb9fb20872f824f4c7c1518315bd3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/ffed6c575260d9ccf796e213f1383e3489b3256c",
-                "reference": "ffed6c575260d9ccf796e213f1383e3489b3256c",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/6ef2ca9a45bb9fb20872f824f4c7c1518315bd3f",
+                "reference": "6ef2ca9a45bb9fb20872f824f4c7c1518315bd3f",
                 "shasum": ""
             },
             "require": {
@@ -2027,7 +2066,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2013-10-04 16:26:56"
+            "time": "2013-12-22 12:49:53"
         },
         {
             "name": "zendframework/zend-code",
@@ -2569,21 +2608,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/MetaConsole.git",
-                "reference": "2ddbd9edcc7fb4c1274da7664a5932bed3616ba2"
+                "reference": "98ad1a8ece627a345a993397dee2a0d4719880b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/2ddbd9edcc7fb4c1274da7664a5932bed3616ba2",
-                "reference": "2ddbd9edcc7fb4c1274da7664a5932bed3616ba2",
+                "url": "https://api.github.com/repos/mnapoli/MetaConsole/zipball/98ad1a8ece627a345a993397dee2a0d4719880b0",
+                "reference": "98ad1a8ece627a345a993397dee2a0d4719880b0",
                 "shasum": ""
             },
             "require": {
                 "mnapoli/metamodel": "dev-master",
                 "mnapoli/number-two": "0.2.*",
-                "symfony/console": "2.3.*"
+                "symfony/console": "~2.3"
             },
             "require-dev": {
-                "doctrine/orm": "2.3.*"
+                "doctrine/orm": "~2.3"
             },
             "type": "library",
             "autoload": {
@@ -2592,21 +2631,21 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-07-25 07:37:03"
+            "time": "2014-01-06 16:09:30"
         },
         {
             "name": "symfony/config",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Config.git",
-                "reference": "16068f76c0af74968f3ad8fcec3eb90df1fde394"
+                "reference": "27d0b35879ebefcfee6d218512c32ab2d6cd6a6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Config/zipball/16068f76c0af74968f3ad8fcec3eb90df1fde394",
-                "reference": "16068f76c0af74968f3ad8fcec3eb90df1fde394",
+                "url": "https://api.github.com/repos/symfony/Config/zipball/27d0b35879ebefcfee6d218512c32ab2d6cd6a6a",
+                "reference": "27d0b35879ebefcfee6d218512c32ab2d6cd6a6a",
                 "shasum": ""
             },
             "require": {
@@ -2640,21 +2679,21 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-26 16:40:27"
+            "time": "2014-01-01 08:14:50"
         },
         {
             "name": "symfony/css-selector",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/CssSelector",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/CssSelector.git",
-                "reference": "d7524797f1a6b20a8c7c31fbdd64f38fbfce1797"
+                "reference": "352552da1f50a79f6a6fa427e4a85ee2ea1945f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/CssSelector/zipball/d7524797f1a6b20a8c7c31fbdd64f38fbfce1797",
-                "reference": "d7524797f1a6b20a8c7c31fbdd64f38fbfce1797",
+                "url": "https://api.github.com/repos/symfony/CssSelector/zipball/352552da1f50a79f6a6fa427e4a85ee2ea1945f6",
+                "reference": "352552da1f50a79f6a6fa427e4a85ee2ea1945f6",
                 "shasum": ""
             },
             "require": {
@@ -2691,21 +2730,21 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-11 18:40:07"
+            "time": "2014-01-01 08:14:50"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/DependencyInjection",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DependencyInjection.git",
-                "reference": "66c1eb29c6b6b0d3631d29c85c6d3f00f83f6a6f"
+                "reference": "7e5bde3a607dde1f8ddef5180759068ad53d259c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/66c1eb29c6b6b0d3631d29c85c6d3f00f83f6a6f",
-                "reference": "66c1eb29c6b6b0d3631d29c85c6d3f00f83f6a6f",
+                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/7e5bde3a607dde1f8ddef5180759068ad53d259c",
+                "reference": "7e5bde3a607dde1f8ddef5180759068ad53d259c",
                 "shasum": ""
             },
             "require": {
@@ -2748,21 +2787,21 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "http://symfony.com",
-            "time": "2013-12-03 14:52:22"
+            "time": "2014-01-01 09:02:49"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "79acd777762e81d0f3414ca25a602deeeb48240d"
+                "reference": "b3c3b5a8108b3e5d604dc23241b4ea84a067fc78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/79acd777762e81d0f3414ca25a602deeeb48240d",
-                "reference": "79acd777762e81d0f3414ca25a602deeeb48240d",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/b3c3b5a8108b3e5d604dc23241b4ea84a067fc78",
+                "reference": "b3c3b5a8108b3e5d604dc23241b4ea84a067fc78",
                 "shasum": ""
             },
             "require": {
@@ -2795,7 +2834,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2013-11-16 15:13:54"
+            "time": "2013-12-31 13:43:26"
         }
     ],
     "aliases": [
@@ -2822,6 +2861,12 @@
             "alias_normalized": "1.7.99.0",
             "version": "dev-WriterExcel5OptionalConstructor",
             "package": "phpoffice/phpexcel"
+        },
+        {
+            "alias": "4.0.0",
+            "alias_normalized": "4.0.0.0",
+            "version": "4.0.9999999.9999999-dev",
+            "package": "mnapoli/php-di"
         }
     ],
     "minimum-stability": "dev",
@@ -2833,11 +2878,13 @@
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "myclabs/units-api": 20,
+        "mnapoli/php-di": 20,
+        "mnapoli/php-di-zf1": 20,
         "mnapoli/metaconsole": 20
     },
-    "platform": {
-        "php": ">=5.5.0"
-    },
+    "platform": [
+
+    ],
     "platform-dev": [
 
     ]
