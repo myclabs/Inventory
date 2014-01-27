@@ -5,21 +5,21 @@ machine:
 checkout:
   post:
     - |
-      cat > application/configs/application.ini <<EOL
-      [production]
-      applicationUrl=http://localhost/inventory
-      doctrine.default.connection.host = '127.0.0.1'
-      doctrine.default.connection.dbname = 'circle_test'
-      doctrine.default.connection.user = 'ubuntu'
-      [test : production]
-      [developpement : test]
-      [testsunitaires : test]
+      cat > application/configs/parameters.php <<EOL
+      <?php
+      return [
+          'application.url' => 'whatever',
+      ];
       EOL
     - |
       cat > application/configs/env.php <<EOL
       <?php
       defined('APPLICATION_ENV') || define('APPLICATION_ENV', 'testsunitaires');
       EOL
+
+dependencies:
+  cache_directories:
+    - "vendor"
 
 database:
   override:
