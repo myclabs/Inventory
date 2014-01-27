@@ -563,12 +563,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "996831bca6d0311011c1a406528b1e7929d4ca0a"
+                "reference": "2d3d0cb2a775dc21c2ba50e0126dfc22b4c3e93a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/996831bca6d0311011c1a406528b1e7929d4ca0a",
-                "reference": "996831bca6d0311011c1a406528b1e7929d4ca0a",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/2d3d0cb2a775dc21c2ba50e0126dfc22b4c3e93a",
+                "reference": "2d3d0cb2a775dc21c2ba50e0126dfc22b4c3e93a",
                 "shasum": ""
             },
             "require": {
@@ -596,7 +596,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2014-01-17 01:27:04"
+            "time": "2014-01-26 19:39:18"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -785,12 +785,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "73123357b5f2b539a56ab41d8f6c7eef6db5e8f9"
+                "reference": "fff8899151d932278e450d9dcd3e24e2f9c108cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/73123357b5f2b539a56ab41d8f6c7eef6db5e8f9",
-                "reference": "73123357b5f2b539a56ab41d8f6c7eef6db5e8f9",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/fff8899151d932278e450d9dcd3e24e2f9c108cd",
+                "reference": "fff8899151d932278e450d9dcd3e24e2f9c108cd",
                 "shasum": ""
             },
             "require": {
@@ -805,9 +805,9 @@
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "DI": "src/",
-                    "IntegrationTests": "tests/",
-                    "UnitTests": "tests/"
+                    "DI\\": "src/",
+                    "IntegrationTests\\": "tests/",
+                    "UnitTests\\": "tests/"
                 },
                 "files": [
                     "src/DI/functions.php"
@@ -824,7 +824,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2014-01-14 11:38:45"
+            "time": "2014-01-25 13:46:26"
         },
         {
             "name": "mnapoli/php-di-zf1",
