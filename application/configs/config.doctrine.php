@@ -17,7 +17,7 @@ return [
 
     // Configuration de la connexion à la BDD
     'db.host'     => 'localhost',
-    'db.port'     => 3336,
+    'db.port'     => 3306,
     'db.driver'   => 'pdo_mysql',
     'db.name'     => 'inventory',
     'db.user'     => 'myc-sense',
