@@ -5,6 +5,13 @@ machine:
 checkout:
   post:
     - |
+      cat > application/configs/application.ini <<EOL
+      [production]
+      [test : production]
+      [developpement : test]
+      [testsunitaires : test]
+      EOL
+    - |
       cat > application/configs/parameters.php <<EOL
       <?php
       return [
