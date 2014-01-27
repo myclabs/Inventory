@@ -1,5 +1,9 @@
 <?php
 
+use MyCLabs\UnitAPI\UnitOperationService;
+use MyCLabs\UnitAPI\UnitService;
+use MyCLabs\UnitAPI\WebService\UnitOperationWebService;
+use MyCLabs\UnitAPI\WebService\UnitWebService;
 use User\Domain\UserService;
 
 return [
@@ -41,4 +45,13 @@ return [
 
     // Fonctionnalité spéciale pour art225 et art255
     'locale.minSignificantFigures' => null,
+
+    // Units API
+    'units.webservice.url' => 'http://localhost:8000/api/',
+    'units.webservice.httpClient' => DI\object(\Guzzle\Http\Client::class)
+        ->constructor([ 'baseUrl' => DI\link('units.webservice.url') ]),
+    UnitService::class => DI\object(UnitWebService::class)
+        ->constructor(DI\link('units.webservice.httpClient')),
+    UnitOperationService::class => DI\object(UnitOperationWebService::class)
+        ->constructor(DI\link('units.webservice.httpClient')),
 ];

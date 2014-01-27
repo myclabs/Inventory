@@ -28,9 +28,8 @@ return [
     // RabbitMQ
     'rabbitmq.enabled'  => false,
 
-    // Units API
+    // Units API (Mock)
     UnitService::class => DI\object(FakeUnitService::class),
     UnitOperationService::class => DI\object(FakeUnitOperationService::class)
         ->constructor(DI\link(UnitService::class)),
-
 ];
