@@ -2,7 +2,6 @@
 
 use Doc\Domain\Library;
 use Orga\Model\ACL\Action\CellAction;
-use Orga\Model\ACL\Action\OrganizationAction;
 use User\Application\ForbiddenException;
 use User\Application\Plugin\ACLPlugin;
 use User\Domain\ACL\Action;
@@ -407,15 +406,11 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $idReport = $request->getParam('idReport');
         if ($idReport !== null) {
-            $isAllowed = $this->aclService->isAllowed($identity, Action::VIEW(), DW_Model_Report::load($idReport));
-            if ($isAllowed) {
-                return $isAllowed;
-            } else {
-                return $this->editOrganizationAndCellsRule($identity, $request);
-            }
+            $idCube = DW_Model_Report::load($idReport)->getCube()->getId();
+        } else {
+            $idCube = $request->getParam('idCube');
         }
 
-        $idCube = $request->getParam('idCube');
         if ($idCube !== null) {
             $dWCube = DW_Model_Cube::load($idCube);
             // Si le DWCube est d'un Granularity, vérification que l'utilisateur peut configurer le projet.
@@ -466,26 +461,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $idReport = $request->getParam('idReport');
         return $this->aclService->isAllowed($identity, Action::DELETE(), DW_Model_Report::load($idReport));
-    }
-
-    protected function viewGranularityReportsRule(User $identity, Zend_Controller_Request_Abstract $request)
-    {
-        $granularity = Orga_Model_Granularity::load($request->getParam('idGranularity'));
-        return $this->aclService->isAllowed(
-            $identity,
-            OrganizationAction::EDIT_GRANULARITY_REPORTS(),
-            $granularity->getOrganization()
-        );
-    }
-
-    protected function deleteGranularityReportsRule(User $identity, Zend_Controller_Request_Abstract $request)
-    {
-        $granularity = Orga_Model_Granularity::load($request->getParam('idGranularity'));
-        return $this->aclService->isAllowed(
-            $identity,
-            OrganizationAction::EDIT_GRANULARITY_REPORTS(),
-            $granularity->getOrganization()
-        );
     }
 
     /**

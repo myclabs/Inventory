@@ -966,7 +966,7 @@ class Orga_Service_ETLStructure
         // TODO utiliser l'injection de dépendances
         /** @var Core_EventDispatcher $eventDispatcher */
         $eventDispatcher = \Core\ContainerSingleton::getContainer()->get('Core_EventDispatcher');
-        $eventDispatcher->removeListener('Orga_Model_GranularityReport', 'DW_Model_Report');
+        $eventDispatcher->removeListener('Orga_Service_Report', 'DW_Model_Report');
 
         foreach ($granularity->getCells() as $cell) {
             $cell = Orga_Model_Cell::load($cell->getId());

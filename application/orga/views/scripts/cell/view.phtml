@@ -56,6 +56,7 @@ $currentCell = $this->currentCell;
     .reports .modal-body tr.report-message .btn { margin: 0 5px 0 5px; }
     .reports .modal-body tr.report-message .close-report-message { float: none; font-size: inherit; opacity: 1; }
     .reports .modal-body .delete-report + .tooltip.left { margin-left: -15px; }
+    .reports .filter-reports { display: inline-block; margin-bottom: 0; }
 
     .exports .modal-body { text-align: center; }
     .exports .modal-body .alert { margin-bottom: 5px; }
@@ -119,7 +120,7 @@ $currentCell = $this->currentCell;
 
 <div class="row-fluid">
 
-<div class="span9">
+<div class="span9" id="cellsView">
 
     <div class="currentCell well">
         <h2>
@@ -481,6 +482,8 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
             url: 'orga/cell/view-children/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId + '/',
             type: "GET",
             success: function(data) {
+                console.log('cellsLoaded fired');
+                granularity.trigger('cellsLoaded');
                 granularity.html('');
                 granularity.attr('data-total-cells', data.totalCells);
                 $(data.childCells).each(function() {
@@ -997,6 +1000,21 @@ $('body').on('click', 'tr.report-message .close-report-message', function(e) {
     e.preventDefault();
     $(this).parent().parent().remove();
 });
+$('body').on('keyup change', 'select[name="reportType"]', function(e) {
+    var select = $(this);
+    var reportsList = $('tbody', select.parent().parent().parent().parent().parent());
+    $('tr', reportsList).addClass('hide');
+
+    var selectValue = select.val();
+    var selector = '';
+    if (selectValue != '') {
+        selector += '[data-report-type="' + select.val() + '"]';
+        if (selectValue == 'userReport') {
+            selector += '[data-report-owner="' + select.find(":selected").attr('data-user') + '"]';
+        }
+    }
+    $('tr' + selector, reportsList).removeClass('hide');
+});
 
 $('body').on('click', '.inventory-status .dropdown-menu a', function(e) {
     e.preventDefault();
@@ -1081,3 +1099,5 @@ $(document).ready(function() {
     $('.comments > h3 a').trigger('click');
 });
 </script>
+
+<?= $this->tutorial('orga'); ?>

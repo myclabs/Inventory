@@ -16,7 +16,7 @@ class Orga_Bootstrap extends Core_Package_Bootstrap
             /** @var Core_EventDispatcher $eventDispatcher */
             $eventDispatcher = $this->container->get(Core_EventDispatcher::class);
 
-            $eventDispatcher->addListener(Orga_Model_GranularityReport::class, DW_Model_Report::class);
+            $eventDispatcher->addListener(Orga_Service_Report::class, DW_Model_Report::class);
         }
     }
 }

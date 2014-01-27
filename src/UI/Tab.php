@@ -138,6 +138,7 @@ class UI_Tab
             if ($this->useCache === true) {
                 $script .= '$(\'#'.$this->getId($tabView).'\').attr(\'data-cached\', true);';
             }
+            $script .= '$(\'#'.$this->getId($tabView).'\').trigger(\'tabLoaded\');';
             $script .= '}).error(function(data) {';
             $script .= '$(\'#'.$this->getId($tabView).'\').html(\''.$this->errorText.'\');';
             $script .= 'errorHandler(data);';

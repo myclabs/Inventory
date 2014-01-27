@@ -13,12 +13,12 @@ use Core_Exception_NotFound;
 
 /**
  * Adaptateur ZF pour le transfert de document.
+ *
  * @author thibaud.rolland
  * @author matthieu.napoli
  */
 class FileAdapter
 {
-
     /**
      * @var array Messages d'erreur
      */
@@ -30,7 +30,7 @@ class FileAdapter
     private $basePath;
 
     /**
-     * @var \Doc\Domain\Library
+     * @var Library
      */
     private $library;
     /**
@@ -51,7 +51,7 @@ class FileAdapter
 
 
     /**
-     * @param \Doc\Domain\Library $library
+     * @param Library $library
      * @throws Core_Exception
      */
     public function __construct(Library $library)
@@ -263,7 +263,7 @@ class FileAdapter
     /**
      * méthode pour récupérer le document -- Method for downloading the document
      *
-     * @param \Doc\Domain\Document $document
+     * @param Document $document
      * @throws Core_Exception_NotFound
      */
     public static function downloadDocument(Document $document)
@@ -277,7 +277,7 @@ class FileAdapter
         Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer')->setNoRender(true);
         Zend_Controller_Action_HelperBroker::getStaticHelper('layout')->disableLayout();
 
-        $mimeType = self::mimeContentType(pathinfo($filePath, PATHINFO_BASENAME));
+        $mimeType = self::mimeContentType($filePath);
 
         $downloadBaseName = self::sanitizeFileName(
             $document->getName()
