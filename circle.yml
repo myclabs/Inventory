@@ -7,6 +7,9 @@ checkout:
     - |
       cat > application/configs/application.ini <<EOL
       [production]
+      doctrine.default.connection.host = '127.0.0.1'
+      doctrine.default.connection.dbname = 'circle_test'
+      doctrine.default.connection.user = 'ubuntu'
       [test : production]
       [developpement : test]
       [testsunitaires : test]
