@@ -70,14 +70,8 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        try {
-            $unitRef = $this->getAddElementValue('unit');
-            if (empty($unitRef)) {
-                $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
-            }
-            $unit = new UnitAPI($unitRef);
-            $unit->getNormalizedUnit();
-        } catch (Core_Exception_NotFound $e) {
+        $unit = new UnitAPI($this->getAddElementValue('unit'));
+        if (! $unit->exists()) {
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
         }
         // Pas d'erreurs
@@ -137,13 +131,8 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->data = $algo->getLabel();
                 break;
             case 'unit':
-                try {
-                    if (empty($newValue)) {
-                        throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
-                    }
-                    $unit = new UnitAPI($newValue);
-                    $unit->getNormalizedUnit();
-                } catch (Core_Exception_NotFound $e) {
+                $unit = new UnitAPI($newValue);
+                if (! $unit->exists()) {
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $algo->setUnit($unit);

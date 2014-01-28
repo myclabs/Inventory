@@ -17,9 +17,8 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 }
 
 if ($connectedUser) {
-    $container = Zend_Registry::get('container');
     /** @var ACLService $aclService */
-    $aclService = $container->get(ACLService::class);
+    $aclService = \Core\ContainerSingleton::getContainer()->get(ACLService::class);
 
     $leftMenu = [];
 
@@ -190,20 +189,8 @@ if ($connectedUser) {
                     'url' => 'unit/consult/standardunits'
                 ],
                 [
-                    'name' => __('Unit', 'name', 'extendedUnits'),
-                    'url' => 'unit/consult/extendedunits'
-                ],
-                [
                     'name' => __('Unit', 'name', 'discreteUnits'),
                     'url' => 'unit/consult/discreteunits'
-                ],
-                [
-                    'name' => __('Unit', 'composedUnitIdentifier', 'menuLinkLabel'),
-                    'url' => 'unit/consult/composedunits'
-                ],
-                [
-                    'name' => __('Unit', 'name', 'physicalQuantities'),
-                    'url' => 'unit/consult/physicalquantities'
                 ],
             ]
         ];
@@ -217,16 +204,8 @@ if ($connectedUser) {
                     'url' => 'unit/consult/standardunits'
                 ],
                 [
-                    'name' => __('Unit', 'name', 'extendedUnits'),
-                    'url' => 'unit/consult/extendedunits'
-                ],
-                [
                     'name' => __('Unit', 'name', 'discreteUnits'),
                     'url' => 'unit/consult/discreteunits'
-                ],
-                [
-                    'name' => __('Unit', 'name', 'physicalQuantities'),
-                    'url' => 'unit/consult/physicalquantities'
                 ],
             ]
         ];

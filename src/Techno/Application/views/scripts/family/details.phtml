@@ -33,12 +33,18 @@ if ($this->edit) {
 echo $generalData;
 
 // TMD
-$collapseTMD = new UI_HTML_Collapse('collapseTMD', __('Techno', 'element', 'elements'));
-$collapseTMD->body = $this->partial('family/details/tmd.phtml', [
+$tmd = $this->partial('family/details/tmd.phtml', [
     'family' => $family,
     'edit'   => $this->edit,
 ]);
-$collapseTMD->display();
+if ($this->edit) {
+    $collapseTMD = new UI_HTML_Collapse('collapseTMD', __('Techno', 'element', 'elements'));
+    $collapseTMD->body = $tmd;
+    $collapseTMD->display();
+} else {
+    echo "<legend>" . __('UI', 'name', 'elements') . "</legend>";
+    echo $tmd;
+}
 
 // Edition
 if ($this->edit) {

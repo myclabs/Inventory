@@ -12,8 +12,6 @@ use Core_Tools;
 use Psr\Log\LoggerInterface;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\UserRole;
-use Zend_Controller_Front;
-use Zend_Registry;
 
 /**
  * Gestion des utilisateurs.
@@ -32,15 +30,27 @@ class UserService
      */
     private $logger;
 
-    /**
-     * @var string
-     */
+    private $contactEmail;
+
+    private $noReplyEmail;
+
+    private $noReplyName;
+
     private $applicationUrl;
 
-    public function __construct(ACLService $aclService, LoggerInterface $logger, $applicationUrl)
-    {
+    public function __construct(
+        ACLService $aclService,
+        LoggerInterface $logger,
+        $contactEmail,
+        $noReplyEmail,
+        $noReplyName,
+        $applicationUrl
+    ) {
         $this->aclService = $aclService;
         $this->logger = $logger;
+        $this->contactEmail = $contactEmail;
+        $this->noReplyEmail = $noReplyEmail;
+        $this->noReplyName = $noReplyName;
         $this->applicationUrl = $applicationUrl;
     }
 
@@ -86,7 +96,7 @@ class UserService
      *
      * @param string $email
      * @param string $password
-     * @throws Core_Exception_InvalidArgument Email invalide.
+     * @throws \Core_Exception_InvalidArgument Email invalide
      * @return User
      */
     public function createUser($email, $password)
@@ -149,20 +159,16 @@ class UserService
         // Sauvegarde
         $user->save();
 
-        $config = Zend_Registry::get('configuration');
-        if (empty($config->emails->contact->adress)) {
-            throw new Core_Exception("Le courriel de 'contact' n'a pas été défini");
-        }
         $emailSubject = __('User', 'email', 'subjectAccountCreated', [
-            'APPLICATION_NAME' => $config->emails->noreply->name,
+            'APPLICATION_NAME' => $this->noReplyName,
         ]);
         $emailContent = __('User', 'email', 'bodyAccountCreated', [
             'PASSWORD'         => $password,
             'EMAIL'            => $email,
-            'CONTACT_NAME'     => $config->emails->contact->name,
-            'CONTACT_ADDRESS'  => $config->emails->contact->adress,
+            'CONTACT_NAME'     => $this->noReplyName,
+            'CONTACT_ADDRESS'  => $this->contactEmail,
             'URL_APPLICATION'  => $this->applicationUrl . '/',
-            'APPLICATION_NAME' => $config->emails->noreply->name,
+            'APPLICATION_NAME' => $this->noReplyName,
         ]);
         $emailContent .= $extraContent;
 
@@ -206,13 +212,9 @@ class UserService
      */
     protected function getEmailConclusion()
     {
-        $config = Zend_Registry::get('configuration');
-        if (empty($config->emails->contact->adress)) {
-            throw new Core_Exception('Le courriel de "contact" n\'a pas été défini !');
-        }
         return __('User', 'email', 'defaultContentConclusion', [
-            'CONTACT_NAME' => $config->emails->contact->name,
-            'CONTACT_ADDRESS' => $config->emails->contact->adress,
+            'CONTACT_NAME' => $this->noReplyName,
+            'CONTACT_ADDRESS' => $this->contactEmail,
         ]);
     }
 
@@ -222,9 +224,8 @@ class UserService
      */
     protected function getEmailFooter()
     {
-        $config = Zend_Registry::get('configuration');
         return __('User', 'email', 'footMailContentDefault', [
-            'APPLICATION_NAME' => $config->emails->noreply->name,
+            'APPLICATION_NAME' => $this->noReplyName,
         ]);
     }
 }

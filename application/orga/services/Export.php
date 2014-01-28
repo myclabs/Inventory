@@ -6,6 +6,7 @@
  * @subpackage Service
  */
 
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use User\Domain\ACL\Role\Role;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
@@ -734,7 +735,7 @@ function getInputValues(AF_Model_Input $input)
                         $baseConvertedValue->getDigitalValue(),
                         $baseConvertedValue->getUnit()->getSymbol(),
                     ];
-                } catch (\Unit\IncompatibleUnitsException $e) {
+                } catch (IncompatibleUnitsException $e) {
                     return [
                         $inputValue->getDigitalValue(),
                         $inputValue->getRelativeUncertainty(),

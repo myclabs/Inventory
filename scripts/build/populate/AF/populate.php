@@ -12,9 +12,7 @@ class AF_Populate extends Core_Script_Action
      */
     public function runEnvironment($environment)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        /** @var $entityManager \Doctrine\ORM\EntityManager */
-        $entityManager = $entityManagers['default'];
+        $entityManager = \Core\ContainerSingleton::getEntityManager();
 
 
         // Création des catégories.

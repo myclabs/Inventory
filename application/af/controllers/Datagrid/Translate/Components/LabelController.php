@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use Gedmo\Translatable\TranslatableListener;
 
 /**
  * Classe du controller du datagrid des traductions des components.
@@ -16,13 +17,16 @@ use Core\Annotation\Secure;
 class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Datagrid
 {
     /**
-     * Désactivation du fallback des traductions.
+     * @Inject
+     * @var TranslatableListener
      */
-    public function init()
-    {
-        parent::init();
-        Zend_Registry::get('doctrineTranslate')->setTranslationFallback(false);
-    }
+    private $translatableListener;
+
+    /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
 
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
@@ -31,6 +35,7 @@ class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Dat
      */
     public function getelementsAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $this->request->filter->addCondition(
             AF_Model_Component::QUERY_REF,
             AF_Model_Component_Group::ROOT_GROUP_REF,
@@ -41,7 +46,7 @@ class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Dat
             $data['index'] = $component->getId();
             $data['identifier'] = $component->getAF()->getRef().' | '.$component->getRef();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $component->reloadWithLocale($locale);
                 $data[$language] = $component->getLabel();
@@ -60,6 +65,7 @@ class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Dat
      */
     public function updateelementAction()
     {
+        $this->translatableListener->setTranslationFallback(false);
         $component = AF_Model_Component::load($this->update['index']);
         $component->reloadWithLocale(Core_Locale::load($this->update['column']));
         $component->setLabel($this->update['value']);

@@ -1,18 +1,20 @@
 <?php
-/**
- * @author matthieu.napoli
- */
+
+namespace Tests\AuditTrail\Architecture\Repository;
 
 use AuditTrail\Architecture\Repository\DoctrineEntryRepository;
 use AuditTrail\Domain\Context\GlobalContext;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\Entry;
+use AuditTrail\Domain\EntryRepository;
 use Core\Test\TestCase;
+use Orga_Model_Axis;
+use Orga_Model_Granularity;
+use Orga_Model_Member;
+use Orga_Model_Organization;
+use Orga_Service_OrganizationService;
 
-/**
- * EntryRepositoryTest tests
- */
-class AuditTrail_DoctrineEntryRepositoryTest extends TestCase
+class DoctrineEntryRepositoryTest extends TestCase
 {
     /**
      * @var DoctrineEntryRepository
@@ -126,7 +128,7 @@ class AuditTrail_DoctrineEntryRepositoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->entryRepository = $this->get('AuditTrail\Domain\EntryRepository');
+        $this->entryRepository = $this->get(EntryRepository::class);
 
         // Vide la table si elle contient d'anciennes entrées
         foreach ($this->entryRepository->findAll() as $entry) {

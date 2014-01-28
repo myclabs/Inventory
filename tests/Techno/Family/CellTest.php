@@ -1,16 +1,19 @@
 <?php
 
+namespace Tests\Techno\Family;
+
+use Core\Test\TestCase;
 use Techno\Domain\Family\Cell;
 
-class Techno_Test_Family_CellTest extends PHPUnit_Framework_TestCase
+class CellTest extends TestCase
 {
     /**
      * Teste la génération de la hash key
      */
     public function testBuildMembersHashKey()
     {
-        $member1 = Techno_Test_Family_MemberTest::generateObject();
-        $member2 = Techno_Test_Family_MemberTest::generateObject();
+        $member1 = MemberTest::generateObject();
+        $member2 = MemberTest::generateObject();
 
         $hashKey = Cell::buildMembersHashKey([$member1, $member2]);
         $this->assertNotEmpty($hashKey);
@@ -19,8 +22,8 @@ class Techno_Test_Family_CellTest extends PHPUnit_Framework_TestCase
         $this->assertContains($member1->getRef(), $parts);
         $this->assertContains($member2->getRef(), $parts);
 
-        Techno_Test_Family_MemberTest::deleteObject($member1);
-        Techno_Test_Family_MemberTest::deleteObject($member2);
+        MemberTest::deleteObject($member1);
+        MemberTest::deleteObject($member2);
     }
 
     /**
@@ -30,8 +33,8 @@ class Techno_Test_Family_CellTest extends PHPUnit_Framework_TestCase
      */
     public function testBuildMembersHashKeyOrder()
     {
-        $member1 = Techno_Test_Family_MemberTest::generateObject();
-        $member2 = Techno_Test_Family_MemberTest::generateObject();
+        $member1 = MemberTest::generateObject();
+        $member2 = MemberTest::generateObject();
 
         $hashKey = Cell::buildMembersHashKey([$member1, $member2]);
         $this->assertNotEmpty($hashKey);
@@ -45,7 +48,7 @@ class Techno_Test_Family_CellTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($member2->getRef(), $parts[0]);
         }
 
-        Techno_Test_Family_MemberTest::deleteObject($member1);
-        Techno_Test_Family_MemberTest::deleteObject($member2);
+        MemberTest::deleteObject($member1);
+        MemberTest::deleteObject($member2);
     }
 }

@@ -1,74 +1,19 @@
 <?php
-/**
- * @author valentin.claras
- * @author hugo.charbonnier
- * @author yoann.croizer
- * @package Calc
- */
 
+namespace Tests\Calc;
+
+use Calc_Calculation;
+use Calc_Calculation_Unit;
+use Calc_UnitValue;
+use Core\Test\TestCase;
+use Core_Exception_InvalidArgument;
+use Core_Exception_NotFound;
 use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
-/**
- * @package Calc
- */
-class Calc_Test_UnitTest extends PHPUnit_Framework_TestCase
+class UnitTest extends TestCase
 {
-    /**
-     * Lance les autre classe de tests.
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Calc_Test_Calculation_UnitSetUp');
-        $suite->addTestSuite('Calc_Test_Calculation_UnitOthers');
-        return $suite;
-    }
-
-}
-
-/**
- * @package Calc
- */
-class Calc_Test_Calculation_UnitSetUp extends PHPUnit_Framework_TestCase
-{
-
-    /**
-     * Test du constructeur d'une Calc_Calculation_Unit.
-     */
-    function testConstructCalculation()
-    {
-        $o = new Calc_Calculation_Unit();
-        $this->assertEquals(true, $o instanceof Calc_Calculation_Unit);
-    }
-
-    /**
-     * Test du constructeur d'une Calc_Unit.
-     */
-    function testConstructUnitValue()
-    {
-        $o = new Calc_UnitValue();
-        $this->assertInstanceOf('Calc_UnitValue', $o);
-    }
-
-}
-
-/**
- * @package Calc
- */
-class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Méthode appelée avant chaque méthode de test.
-     */
-    function setUp()
-    {
-    }
-
-    /**
-     * Test de la méthode calculate.
-     */
-    function testCalculate()
+    public function testCalculate()
     {
         //Test produit d'unité OK.
         $unit1 = new UnitAPI('j.animal');
@@ -108,49 +53,29 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(true, $result instanceof UnitAPI);
         $this->assertEquals('m^2.animal.kg.s^-2', $result->getRef());
-
-
-        //Test somme d'unité non compatible.
-        $unit1 = new UnitAPI('g.animal');
-        $unit2 = new UnitAPI('g^2.animal');
-
-        $o2 = new Calc_Calculation_Unit();
-        $o2->setOperation(Calc_Calculation::ADD_OPERATION);
-        $o2->addComponents($unit1, Calc_Calculation::SUM);
-        $o2->addComponents($unit2, Calc_Calculation::SUBSTRACTION);
-        try {
-            $result = $o2->calculate();
-        } catch (IncompatibleUnitsException $e) {
-             $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
-        }
-
-        //Test somme avec unité inéxistante.
-        $unit1 = new UnitAPI('gramme.animal');
-        $unit2 = new UnitAPI('g^2.animal');
-
-        $o3 = new Calc_Calculation_Unit();
-        $o3->setOperation(Calc_Calculation::ADD_OPERATION);
-        $o3->addComponents($unit1, Calc_Calculation::SUM);
-        $o3->addComponents($unit2, Calc_Calculation::SUBSTRACTION);
-        try {
-            $result = $o3->calculate();
-        } catch (Core_Exception_NotFound $e) {
-            $this->assertEquals("No 'Unit\\Domain\\Unit\\Unit' matching (ref == gramme)", $e->getMessage());
-        }
-
-        //Test opération inconnue.
-        $unit1 = new UnitAPI('g.animal');
-        $unit2 = new UnitAPI('g^2.animal');
-
-        $o = new Calc_Calculation_Unit();
-        $o->addComponents($unit1, 1);
-        $o->addComponents($unit2, -1);
-
-        try {
-            $result = $o->calculate();
-        } catch (Core_Exception_InvalidArgument $e) {
-            $this->assertEquals('Unknow operation', $e->getMessage());
-        }
     }
 
+    /**
+     * @expectedException \MyCLabs\UnitAPI\Exception\IncompatibleUnitsException
+     */
+    public function testIncompatibleUnits()
+    {
+        $o = new Calc_Calculation_Unit();
+        $o->setOperation(Calc_Calculation::ADD_OPERATION);
+        $o->addComponents(new UnitAPI('g.animal'), Calc_Calculation::SUM);
+        $o->addComponents(new UnitAPI('g^2.animal'), Calc_Calculation::SUBSTRACTION);
+        $o->calculate();
+    }
+
+    /**
+     * @expectedException \MyCLabs\UnitAPI\Exception\UnknownUnitException
+     */
+    public function testUnknownUnit()
+    {
+        $o = new Calc_Calculation_Unit();
+        $o->setOperation(Calc_Calculation::ADD_OPERATION);
+        $o->addComponents(new UnitAPI('gramme.animal'), Calc_Calculation::SUM);
+        $o->addComponents(new UnitAPI('g^2.animal'), Calc_Calculation::SUBSTRACTION);
+        $o->calculate();
+    }
 }

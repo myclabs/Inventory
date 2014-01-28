@@ -5,7 +5,7 @@
 
     <testsuites>
 
-        <testsuite name="Inventory without Unit">
+        <testsuite name="Inventory test suite">
             <directory>./tests/Mapping</directory>
             <directory>./tests/Core</directory>
             <directory>./tests/User</directory>
@@ -21,7 +21,6 @@
             <directory>./tests/Orga</directory>
             <directory>./tests/Simulation</directory>
             <directory>./tests/AuditTrail</directory>
-            <exclude>./tests/Unit</exclude>
         </testsuite>
 
     </testsuites>

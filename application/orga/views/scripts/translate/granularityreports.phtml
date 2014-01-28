@@ -20,7 +20,7 @@ foreach ($this->granularities as $granularity) {
         $identifierColumn->editable = false;
         $datagrid->addCol($identifierColumn);
 
-        foreach (Zend_Registry::get('languages') as $language) {
+        foreach (\Core\ContainerSingleton::getContainer()->get('translation.languages') as $language) {
             $languageColumn = new UI_Datagrid_Col_Text($language, ___('UI', 'translate', 'language' . $language));
             $languageColumn->editable = true;
             $datagrid->addCol($languageColumn);

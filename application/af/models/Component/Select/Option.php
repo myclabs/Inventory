@@ -190,8 +190,7 @@ class AF_Model_Component_Select_Option extends Core_Model_Entity
         $query = new Core_Model_Query();
         $query->filter->addCondition(Algo_Model_Condition_Elementary_Select::QUERY_VALUE, $this->getRef());
         $algos = Algo_Model_Condition_Elementary_Select::loadList($query);
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $unitOfWork = $entityManagers['default']->getUnitOfWork();
+        $unitOfWork = \Core\ContainerSingleton::getEntityManager()->getUnitOfWork();
         foreach ($algos as $algo) {
             if ($unitOfWork->getEntityState($algo) === \Doctrine\ORM\UnitOfWork::STATE_MANAGED) {
                 throw new Core_ORM_ForeignKeyViolationException(get_class(current($algos)), 'value',

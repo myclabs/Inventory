@@ -1,43 +1,18 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    TEC
- * @subpackage Test
- */
 
+namespace Tests\TEC\Algo;
+
+use Core\Test\TestCase;
 use TEC\Algo\Numeric;
 use TEC\Component\Component;
 use TEC\Component\Composite;
 
-/**
- * @package    TEC
- * @subpackage Test
- */
-class TEC_Test_NumericTest
+class NumericTest extends TestCase
 {
-    /**
-     * lance les autre classe de tests
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('TEC_Test_AlgoNumeric');
-        return $suite;
-    }
-
-}
-
-/**
- * @package    TEC
- * @subpackage Test
- */
-class TEC_Test_AlgoNumeric extends PHPUnit_Framework_TestCase
-{
-
     /**
      * Test de la méthode getErrors()
      */
-    function testCheckNumeric()
+    public function testCheckNumeric()
     {
         $expression = new Numeric('');
         $erreur = $expression->getErrors();
@@ -97,8 +72,6 @@ class TEC_Test_AlgoNumeric extends PHPUnit_Framework_TestCase
 
     /**
      * Vérifie le parenthesage de l'expression.
-     *
-     * @return TEC__Algo_Select
      */
     public function testCorrectBrackets()
     {
@@ -124,8 +97,6 @@ class TEC_Test_AlgoNumeric extends PHPUnit_Framework_TestCase
      * Test la création d'un arbre select.
      *
      * @depends testCorrectBrackets
-     *
-     * @return TEC__Algo_Select
      */
     public function testCreateTree()
     {
@@ -340,5 +311,4 @@ class TEC_Test_AlgoNumeric extends PHPUnit_Framework_TestCase
                             .'[{v:"0-4-1-1-1",f:"J"},"0-4-1-1",""],';
         $this->assertEquals($expectedGraph, $treeAsGraph);
     }
-
 }

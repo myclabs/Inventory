@@ -8,7 +8,7 @@
  * @subpackage Model
  */
 
-use Unit\IncompatibleUnitsException;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 /**
@@ -197,7 +197,11 @@ class Classif_Model_Indicator extends Core_Model_Entity
     {
         if ($this->unit != null) {
             if (!$this->getUnit()->isEquivalent($ratioUnit)) {
-                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent.');
+                throw new IncompatibleUnitsException(sprintf(
+                    'Unit (%s) ant RatioUnit (%s) should be compatible',
+                    $this->unit,
+                    $ratioUnit->getRef()
+                ));
             }
         }
 

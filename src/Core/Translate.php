@@ -80,10 +80,8 @@ class Core_Translate
      */
     public static function exportJS($package, $file, $ref)
     {
-        /** @var Container $container */
-        $container = Zend_Registry::get('container');
         /** @var Core_Translate $translate */
-        $translate = $container->get('Core_Translate');
+        $translate = \Core\ContainerSingleton::getContainer()->get('Core_Translate');
 
         $message = $translate->get($package, $file, $ref);
 

@@ -1,42 +1,17 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    TEC
- * @subpackage Test
- */
 
+namespace Tests\TEC\Algo;
+
+use Core\Test\TestCase;
 use TEC\Algo\Select;
 use TEC\Component\Composite;
 
-/**
- * @package    TEC
- * @subpackage Test
- */
-class TEC_Test_SelectTest
+class SelectTest extends TestCase
 {
-    /**
-     * lance les autre classe de tests
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('TEC_Test_AlgoSelect');
-        return $suite;
-    }
-
-}
-
-/**
- * @package    TEC
- * @subpackage Test
- */
-class TEC_Test_AlgoSelect extends PHPUnit_Framework_TestCase
-{
-
     /**
      * Test de la méthode getErrors()
      */
-    function testCheckSelect()
+    public function testCheckSelect()
     {
         $expression = new Select('');
         $errors = $expression->getErrors();
@@ -187,5 +162,4 @@ class TEC_Test_AlgoSelect extends PHPUnit_Framework_TestCase
                         .'[{v:"-2",f:"o4"},"",""],';
         $this->assertEquals($expectedGraph, $treeAsGraph);
     }
-
 }

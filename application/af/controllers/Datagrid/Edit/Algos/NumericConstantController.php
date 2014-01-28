@@ -67,14 +67,8 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         // Unit validation
-        try {
-            $unitRef = $this->getAddElementValue('unit');
-            if (empty($unitRef)) {
-                $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
-            }
-            $unit = new UnitAPI($unitRef);
-            $unit->getNormalizedUnit();
-        } catch (Core_Exception_NotFound $e) {
+        $unit = new UnitAPI($this->getAddElementValue('unit'));
+        if (! $unit->exists()) {
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
         }
         // Value validation
@@ -150,20 +144,15 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $this->data = $algo->getLabel();
                 break;
             case 'unit':
-                try {
-                    if (empty($newValue)) {
-                        throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
-                    }
-                    $unit = new UnitAPI($newValue);
-                    $unit->getNormalizedUnit();
-                } catch (Core_Exception_NotFound $e) {
+                $unit = new UnitAPI($newValue);
+                if (! $unit->exists()) {
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $algo->setUnitValue(new Calc_UnitValue(
-                        $unit,
-                        $algo->getUnitValue()->getDigitalValue(),
-                        $algo->getUnitValue()->getRelativeUncertainty()
-                    ));
+                    $unit,
+                    $algo->getUnitValue()->getDigitalValue(),
+                    $algo->getUnitValue()->getRelativeUncertainty()
+                ));
                 $this->data = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
                 break;
             case 'value':
@@ -172,7 +161,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 }
                 try {
                     $newValue = $locale->readNumber($newValue);
-                } catch(Core_Exception_InvalidArgument $e) {
+                } catch (Core_Exception_InvalidArgument $e) {
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
                 }
                 $unitValue = $algo->getUnitValue()->copyWithNewValue($newValue);
@@ -182,7 +171,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
             case 'uncertainty':
                 try {
                     $newValue = $locale->readInteger($newValue);
-                } catch(Core_Exception_InvalidArgument $e) {
+                } catch (Core_Exception_InvalidArgument $e) {
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
                 }
                 $unitValue = $algo->getUnitValue()->copyWithNewUncertainty($newValue);

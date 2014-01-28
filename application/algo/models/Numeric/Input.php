@@ -49,13 +49,12 @@ class Algo_Model_Numeric_Input extends Algo_Model_Numeric
     {
         $errors = parent::checkConfig();
         $unit = $this->getUnit();
-        try {
-            $unit->getNormalizedUnit();
-        } catch (Core_Exception_NotFound $e) {
+        if (! $unit->exists()) {
             $configError = new Algo_ConfigError();
             $configError->isFatal(true);
-            $configError->setMessage("L'unité '" . $unit->getRef() . "' associée à l'algorithme '"
-                                         . $this->ref . "' n'existe pas.");
+            $configError->setMessage(
+                "L'unité '" . $unit->getRef() . "' associée à l'algorithme '" . $this->ref . "' n'existe pas."
+            );
             $errors[] = $configError;
         }
         if ((!isset($this->inputRef)) || ($this->inputRef === '')) {
