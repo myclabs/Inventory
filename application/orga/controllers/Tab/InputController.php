@@ -105,12 +105,12 @@ class Orga_Tab_InputController extends Core_Controller
 
         $this->view->documentLibrary = null;
         if ($cell->getGranularity()->getCellsWithInputDocuments()) {
-            $this->view->documentLibrary = $cell->getDocLibraryForAFInputSetsPrimary();
+            $this->view->documentLibrary = $cell->getDocumentLibrary();
         } else {
             foreach ($cell->getGranularity()->getBroaderGranularities() as $granularity) {
                 if ($granularity->getCellsWithInputDocuments()) {
                     $parentCell = $cell->getParentCellForGranularity($granularity);
-                    $this->view->documentLibrary = $parentCell->getDocLibraryForAFInputSetsPrimary();
+                    $this->view->documentLibrary = $parentCell->getDocumentLibrary();
                     break;
                 }
             }

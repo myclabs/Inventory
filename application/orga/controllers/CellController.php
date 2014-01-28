@@ -1145,11 +1145,11 @@ class Orga_CellController extends Core_Controller
         $tabComments->useCache = true;
         $aFViewConfiguration->addTab($tabComments);
 
-//        $tabDocs = new UI_Tab('inputDocs');
-//        $tabDocs->label = __('Doc', 'name', 'documents');
-//        $tabDocs->dataSource = 'orga/cell/input-docs/idCell/'.$idCell;
-//        $tabDocs->useCache = true;
-//        $aFViewConfiguration->addTab($tabDocs);
+        $tabDocs = new UI_Tab('inputDocs');
+        $tabDocs->label = __('Doc', 'name', 'documents');
+        $tabDocs->dataSource = 'orga/cell/input-docs/idCell/'.$idCell;
+        $tabDocs->useCache = true;
+        $aFViewConfiguration->addTab($tabDocs);
 
         $isUserAllowedToViewCellReports = $this->aclService->isAllowed(
             $this->_helper->auth(),
@@ -1162,12 +1162,10 @@ class Orga_CellController extends Core_Controller
         }
         $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
 
-        $this->forward('display', 'af', 'af',
-            [
-                'id' => $cell->getInputAFUsed()->getId(),
-                'viewConfiguration' => $aFViewConfiguration
-            ]
-        );
+        $this->forward('display', 'af', 'af', [
+            'id' => $cell->getInputAFUsed()->getId(),
+            'viewConfiguration' => $aFViewConfiguration
+        ]);
     }
 
     /**
@@ -1324,20 +1322,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         $this->view->assign('idCell', $idCell);
-
-        if ($cell->getGranularity()->getCellsWithInputDocuments()) {
-            $documentLibrary = $cell->getDocLibraryForAFInputSetsPrimary();
-        } else {
-            $documentLibrary = null;
-            foreach ($cell->getGranularity()->getBroaderGranularities() as $granularity) {
-                if ($granularity->getCellsWithInputDocuments()) {
-                    $parentCell = $cell->getParentCellForGranularity($granularity);
-                    $documentLibrary = $parentCell->getDocLibraryForAFInputSetsPrimary();
-                    break;
-                }
-            }
-        }
-        $this->view->assign('documentLibrary', $documentLibrary);
+        $this->view->assign('documentLibrary', $cell->getDocumentLibrary());
 
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();

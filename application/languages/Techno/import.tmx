@@ -8,14 +8,14 @@
         <tu tuid="editElementListHelp">
             <tuv xml:lang="fr">
                 <seg>
-                    Le format attendu est une valeur par ligne : identifiant des membres pour chaque dimension,
+                    Le format attendu est un paramètre par ligne : identifiant des membres pour chaque dimension,
                     suivi par la valeur puis l'incertitude.
                     Exemple :
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-                    The expected format is one value per line: the identifiers of the members for each dimension,
+                    The expected format is one paremeter per line: the identifiers of the members for each dimension,
                     followed by the value and the uncertainty.
                     Example:
                 </seg>
