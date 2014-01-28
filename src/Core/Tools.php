@@ -179,7 +179,7 @@ abstract class Core_Tools
      */
     public static function removeTextileMarkUp($text)
     {
-        return $text;
+        return strip_tags(self::textile($text));
     }
 
     /**
