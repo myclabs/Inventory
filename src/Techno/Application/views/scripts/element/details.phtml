@@ -26,6 +26,12 @@ $digitalValueField->setValue($locale->formatNumberForInput($value->getDigitalVal
 $digitalValueField->setRequired(true);
 $editForm->addElement($digitalValueField);
 
+// Unité
+$unitField = new UI_Form_Element_HTML('unit');
+$unitField->setLabel(__('Unit', 'name', 'unit'));
+$unitField->content = $this->family->getUnit()->getSymbol();
+$editForm->addElement($unitField);
+
 // Incertitude
 $uncertaintyField = new UI_Form_Element_Text('uncertainty');
 $uncertaintyField->setLabel(__('UI', 'name', 'uncertainty'));
