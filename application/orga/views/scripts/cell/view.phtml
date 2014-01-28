@@ -698,15 +698,63 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
 });
 $('div.collapse[id^="granularity"]').on('resizeCells', function(e) {
     var granularity = $('.granularity', $(this));
+    
     var maxHeight = 0;
+
+    var maxHeightInventoryActions = 0;
+    var maxWidthInventoryActions = 0;
+    var maxWidthInventoryInformations = 0;
+    
+    var maxHeightInputActions = 0;
+    var maxWidthInputActions = 0;
+    var maxWidthInputTitle = 0;
+
     $('.cell:not(.hide)', granularity).each(function() {
         var cellTitle = $('h4', $(this));
         cellTitle.css('height', 'auto');
         if (cellTitle.height() > maxHeight) {
             maxHeight = cellTitle.height();
         }
+
+        var inventoryActions = $('.inventory-actions', $(this));
+        inventoryActions.css('height', 'auto');
+        if (inventoryActions.height() > maxHeightInventoryActions) {
+            maxHeightInventoryActions = inventoryActions.height();
+        }
+        inventoryActions.css('width', 'auto');
+        if (inventoryActions.width() > maxWidthInventoryActions) {
+            maxWidthInventoryActions = inventoryActions.width();
+        }
+        var inventoryInformations = $('.inventory-informations', $(this));
+        inventoryInformations.css('width', 'auto');
+        if (inventoryInformations.width() > maxWidthInventoryInformations) {
+            maxWidthInventoryInformations = inventoryInformations.width();
+        }
+
+        var inputActions = $('.input-actions', $(this));
+        inputActions.css('height', 'auto');
+        if (inputActions.height() > maxHeightInputActions) {
+            maxHeightInputActions = inputActions.height();
+        }
+        inputActions.css('width', 'auto');
+        if (inputActions.width() > maxWidthInputActions) {
+            maxWidthInputActions = inputActions.width();
+        }
+        var inputTitle = $('.input-title', $(this));
+        inputTitle.css('width', 'auto');
+        if (inputTitle.width() > maxWidthInputTitle) {
+            maxWidthInputTitle = inputTitle.width();
+        }
     });
     $('.cell:not(.hide) h4', granularity).css('height', maxHeight);
+
+    $('.cell:not(.hide) .inventory-actions', granularity).css('height', maxHeightInventoryActions);
+    $('.cell:not(.hide) .inventory-actions', granularity).css('width', maxWidthInventoryActions);
+    $('.cell:not(.hide) .inventory-informations', granularity).css('width', maxWidthInventoryInformations);
+
+    $('.cell:not(.hide) .input-actions', granularity).css('height', maxHeightInputActions);
+    $('.cell:not(.hide) .input-actions', granularity).css('width', maxWidthInputActions);
+    $('.cell:not(.hide) .input-title', granularity).css('width', maxWidthInputTitle);
 });
 
 $('.cells-filter button.reset').on('click', function(e) {
@@ -1124,34 +1172,6 @@ $(document).ready(function() {
     $('div.collapse[id^="granularity"]').trigger('loadCells');
     $('.history > h3 a').trigger('click');
     $('.comments > h3 a').trigger('click');
-    <?php if ($this->granularityForInventoryStatus !== null) : ?>
-    $('div.collapse[id="granularity<?=$this->granularityForInventoryStatus->getId()?>"]').on('resizeCells', function() {
-        var granularity = $('.granularity', $(this));
-        var maxHeightActions = 0;
-        var maxWidthActions = 0;
-        var maxWidthInformations = 0;
-        $('.cell:not(.hide)', granularity).each(function() {
-            var inventoryActions = $('.inventory-actions', $(this));
-            inventoryActions.css('height', 'auto');
-            if (inventoryActions.height() > maxHeightActions) {
-                maxHeightActions = inventoryActions.height();
-            }
-            var inventoryActions = $('.inventory-actions', $(this));
-            inventoryActions.css('width', 'auto');
-            if (inventoryActions.width() > maxWidthActions) {
-                maxWidthActions = inventoryActions.width();
-            }
-            var inventoryInformations = $('.inventory-informations', $(this));
-            inventoryInformations.css('width', 'auto');
-            if (inventoryInformations.width() > maxWidthInformations) {
-                maxWidthInformations = inventoryInformations.width();
-            }
-        });
-        $('.cell:not(.hide) .inventory-actions', granularity).css('height', maxHeightActions);
-        $('.cell:not(.hide) .inventory-actions', granularity).css('width', maxWidthActions);
-        $('.cell:not(.hide) .inventory-informations', granularity).css('width', maxWidthInformations);
-    });
-    <?php endif; ?>
     var resizeTimer;
     $(window).resize(function() {
         clearTimeout(resizeTimer);
