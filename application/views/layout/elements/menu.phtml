@@ -444,9 +444,36 @@ $rightMenu = [ $connection ];
                         <?php } else { ?>
                             <li<?=$liClass?>><a<?=$mainLink?>><?=$node['name']?></a></li>
                         <?php } ?>
-                    <?php } ?>
+                    <?php }
+                    if ($this->tutorial) {
+                        echo "<li><a href='#' id='resetTutorials'>".__('User', 'menu', 'resetTutorials')."</a></li>";
+                    }
+                    ?>
                 </ul>
             </div>
         </div>
     </div>
 </div>
+
+<?php if ($this->tutorial): ?>
+<script>
+$("#resetTutorials").on("click", function () {
+    $.ajax({
+        url: 'user/profile/reset-tutorials',
+        type: "GET"
+    })
+    .done(function () {
+        addMessage('<?= __('User', 'action', 'resetTutorialsConfirmation') ?> <a href="#" id="tutorialReloadPage">' +
+                   '<?= __('User', 'action', 'resetTutorialsReloadPage') ?></a>', 'success');
+        $("#tutorialReloadPage").on("click", function () {
+            location.reload();
+            return false;
+        });
+    })
+    .fail(function () {
+        addMessage('<?= __('User', 'action', 'resetTutorialsError') ?>', 'error');
+    });
+    return false;
+});
+</script>
+<?php endif; ?>

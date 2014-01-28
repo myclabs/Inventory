@@ -45,5 +45,4 @@ class TutorialHelper extends Zend_View_Helper_Abstract
         }
         return null;
     }
-
 }
