@@ -213,6 +213,7 @@ class Orga_CellController extends Core_Controller
             }
         }
         $this->view->assign('narrowerGranularities', $narrowerGranularities);
+        $this->view->assign('granularityForInventoryStatus', $granularityForInventoryStatus);
 
         // Formulaire d'ajout des membres enfants.
         $addMembersForm = new UI_Form('addMember');
@@ -1055,13 +1056,18 @@ class Orga_CellController extends Core_Controller
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
 
-        $cell->setInventoryStatus($this->getParam('inventoryStatus'));
+        $inventoryStatus = $this->getParam('inventoryStatus');
+
+        $cell->setInventoryStatus($inventoryStatus);
 
         $this->sendJsonResponse(
             [
-                'status' => $cell->getInventoryStatus(),
-                'label' => $this->cellVMFactory->inventoryStatusList[$cell->getInventoryStatus()],
-                'style' => $this->cellVMFactory->inventoryStatusStyles[$cell->getInventoryStatus()],
+                'status' => $inventoryStatus,
+                'label' => $this->cellVMFactory->inventoryStatusList[$inventoryStatus],
+                'mainActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_ACTIVE) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_ACTIVE,
+                'mainActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction')),
+                'otherActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_NOTLAUNCHED,
+                'otherActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction')),
             ]
         );
     }

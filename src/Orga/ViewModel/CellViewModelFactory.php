@@ -29,17 +29,8 @@ class CellViewModelFactory
     /**
      * @var array
      */
-    public $inventoryStatusStyles;
-
-    /**
-     * @var array
-     */
     public $inputStatusList;
 
-    /**
-     * @var array
-     */
-    public $inputStatusStyles;
 
     /**
      * @param ACLService $aclService
@@ -53,11 +44,6 @@ class CellViewModelFactory
             Orga_Model_Cell::STATUS_ACTIVE => __('Orga', 'view', 'inventoryOpen'),
             Orga_Model_Cell::STATUS_CLOSED => __('Orga', 'view', 'inventoryClosed')
         ];
-        $this->inventoryStatusStyles = [
-            Orga_Model_Cell::STATUS_NOTLAUNCHED => 'info',
-            Orga_Model_Cell::STATUS_ACTIVE => 'info',
-            Orga_Model_Cell::STATUS_CLOSED => 'info'
-        ];
         $this->inputStatusList = [
             AF_Model_InputSet_Primary::STATUS_FINISHED => __('AF', 'inputInput', 'statusFinished'),
             AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
@@ -66,15 +52,6 @@ class CellViewModelFactory
             CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => __('Orga', 'view', 'inventoryNotLaunched'),
             CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => __('Orga', 'view', 'statusAFNotConfigured'),
             CellViewModel::AF_STATUS_NOT_STARTED => __('Orga', 'view', 'statusNotStarted'),
-        ];
-        $this->inputStatusStyles = [
-            AF_Model_InputSet_Primary::STATUS_FINISHED => 'success',
-            AF_Model_InputSet_Primary::STATUS_COMPLETE => 'warning',
-            AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => 'danger',
-            AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => 'danger',
-            CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => 'danger',
-            CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => 'danger',
-            CellViewModel::AF_STATUS_NOT_STARTED => 'danger',
         ];
     }
 
@@ -166,7 +143,6 @@ class CellViewModelFactory
                     $cellViewModel->showInventory = true;
 
                     $cellViewModel->inventoryStatusTitle = $this->inventoryStatusList[$cellViewModel->inventoryStatus];
-                    $cellViewModel->inventoryStatusStyle = $this->inventoryStatusStyles[$cellViewModel->inventoryStatus];
 
                     $cellViewModel->inventoryCompletion = 0;
                     $cellViewModel->inventoryNotStartedInputsNumber = 0;
@@ -250,15 +226,12 @@ class CellViewModelFactory
             $aFInputSetPrimary = $cell->getAFInputSetPrimary();
             if ($aFInputSetPrimary !== null) {
                 $cellViewModel->inputStatus = $aFInputSetPrimary->getStatus();
-                $cellViewModel->inputStatusTitle = $this->inputStatusList[$cellViewModel->inputStatus];
-                $cellViewModel->inputStatusStyle = $this->inputStatusStyles[$cellViewModel->inputStatus];
                 $cellViewModel->inputCompletion = $aFInputSetPrimary->getCompletion();
             } else {
                 $cellViewModel->inputStatus = $inputStatus;
-                $cellViewModel->inputStatusTitle = $this->inputStatusList[$inputStatus];
-                $cellViewModel->inputStatusStyle = $this->inputStatusStyles[$inputStatus];
                 $cellViewModel->inputCompletion = 0;
             }
+            $cellViewModel->inputStatusTitle = $this->inputStatusList[$cellViewModel->inputStatus];
         }
 
         return $cellViewModel;

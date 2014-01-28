@@ -22,36 +22,30 @@ Feature: Organization input tab feature
   Scenario: Display of the various columns (inventory status, input progress, input status)
     Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading
-  # Descendre depuis la cellule globale dans une cellule de granularité site
-    When I click element ".fa-plus"
-    And I select "Annecy" from "site"
-    And I click element "#goTo3"
   # Cas inventaire en cours, saisie complète
     When I open collapse "Année | Site"
-    Then the "aFGranularity5Input7" datagrid should contain a row:
-      | annee | inventoryStatus | advancementInput | stateInput      |
-      | 2012  | Ouvert          | 100%             | Saisie complète |
+    Then I should see "2012 | Annecy" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/']" element
+    And I should see "Collecte en cours" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/'] div.inventory-status" element
+    And I should see "Saisie complète" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/'] div.input-status" element
+    And I should see "100 %" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/'] div.progress" element
   # Cas inventaire en cours, saisie incomplète / saisie terminée
     When I close collapse "Année | Site"
     When I open collapse "Année | Site | Catégorie"
-    Then the "aFGranularity5Input8" datagrid should contain a row:
-      | annee | categorie | inventoryStatus | advancementInput | stateInput      |
-      | 2012  | Énergie   | Ouvert          | 100%             | Saisie terminée |
-    And the "aFGranularity5Input8" datagrid should contain a row:
-      | annee | categorie      | inventoryStatus | advancementInput | stateInput        |
-      | 2012  | Test affichage | Ouvert          | 14%              | Saisie incomplète |
+    Then I should see "2012 | Annecy | Énergie" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/']" element
+    And I should see "Saisie terminée" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/'] div.input-status" element
+    And I should see "100 %" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/'] div.progress" element
+    Then I should see "2012 | Annecy | Test affichage" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/']" element
+    And I should see "Saisie incomplète" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/'] div.input-status" element
+    And I should see "14 %" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/'] div.progress" element
   # Cas inventaire non lancé, inventaire clôturé
-    When I click element ".fa-plus"
-    And I click "Vue globale"
-    And I click element ".fa-plus"
-    And I select "Europe" from "zone"
-    And I select "Marque B" from "marque"
-    And I click element "#goTo2"
-    And I open collapse "Année | Site"
-    Then the "aFGranularity3Input7" datagrid should contain a row:
-      | annee | site     | inventoryStatus | advancementInput | stateInput      |
-      | 2012  | Grenoble | Fermé           | 100%             | Saisie terminée |
-    And the "aFGranularity3Input7" datagrid should contain a row:
-      | annee | site     | inventoryStatus | advancementInput | stateInput      |
-      | 2013  | Grenoble | Non lancé       |                  |                 |
+    When I open close "Année | Site | Catégorie"
+    And I click element "legend[data-target='#granularity7']"
+    Then I should see "2012 | Grenoble" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/']" element
+    And I should see "Collecte clôturée" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.inventory-status" element
+    And I should see "Saisie terminée" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.input-status" element
+    And I should see "100 %" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.progress" element
+    Then I should see "2013 | Grenoble" in the "div.cell[data-tag='/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/']" element
+    And I should see "Collecte non lancée" in the "div.cell[data-tag='/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.inventory-status" element
+    And I should see "Collecte non lancée" in the "div.cell[data-tag='/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.input-status" element
+    And I should see "0 %" in the "div.cell[data-tag='/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.progress" element
 
