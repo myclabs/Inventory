@@ -47,7 +47,7 @@ return [
     'locale.minSignificantFigures' => null,
 
     // Units API
-    'units.webservice.url' => 'http://localhost:8000/api/',
+    'units.webservice.url' => 'http://units.myc-sense.com/api/',
     'units.webservice.httpClient' => DI\object(\Guzzle\Http\Client::class)
         ->constructor([ 'baseUrl' => DI\link('units.webservice.url') ]),
     UnitService::class => DI\object(UnitWebService::class)
