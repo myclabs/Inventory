@@ -646,13 +646,13 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
             if ($configGranularity !== null) {
                 $configGranularity->addInputGranularity($this);
+                foreach ($this->getCells() as $cell) {
+                    $cell->enableDocLibraryForAFInputSetPrimary();
+                }
             } else {
                 foreach ($this->getCells() as $cell) {
-                    try {
-                        $cell->setAFInputSetPrimary();
-                    } catch (Core_Exception_UndefinedAttribute $e) {
-                        // Pas de saisie pour cette cellule.
-                    }
+                    $cell->disableDocLibraryForAFInputSetPrimary();
+                    $cell->setAFInputSetPrimary();
                 }
             }
         }

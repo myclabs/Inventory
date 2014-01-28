@@ -124,7 +124,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @var Library
      */
-    protected $documentLibrary = null;
+    protected $docLibraryForAFInputSetPrimary = null;
 
     /**
      * Collection des SocialComment utilisés pour l'AFInputSetPrimary de la cellule.
@@ -206,9 +206,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             new Orga_Model_CellsGroup($this, $inputGranularity);
         }
         // Création de la Library des Input.
-        if ($this->granularity->isInput()) {
-            $this->enableDocumentLibrary();
-        }
+        $this->enableDocLibraryForAFInputSetPrimary();
         // Création de la Library des GenericAction.
         if ($this->granularity->getCellsWithSocialGenericActions()) {
             $this->docLibraryForSocialGenericActions = new Library();
@@ -1000,7 +998,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                 $this->aFInputSetPrimary->delete();
             }
             $this->aFInputSetPrimary = $aFInputSetPrimary;
-            $this->enableDocumentLibrary();
         }
     }
 
@@ -1039,24 +1036,22 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Active la possibilité d'ajouter des documents dans cette cellule.
      */
-    public function enableDocumentLibrary()
+    public function enableDocLibraryForAFInputSetPrimary()
     {
-        if ($this->documentLibrary) {
-            return;
+        if (($this->getGranularity()->isInput()) && ($this->docLibraryForAFInputSetPrimary === null)) {
+            $this->docLibraryForAFInputSetPrimary = new Library();
         }
-        $this->documentLibrary = new Library();
     }
 
     /**
      * Désactive la possibilité d'ajouter des documents dans cette cellule.
      */
-    public function disableDocumentLibrary()
+    public function disableDocLibraryForAFInputSetPrimary()
     {
-        if ($this->documentLibrary === null) {
-            return;
+        if ((!$this->getGranularity()->isInput()) && ($this->docLibraryForAFInputSetPrimary !== null)) {
+            $this->docLibraryForAFInputSetPrimary->delete();
+            $this->docLibraryForAFInputSetPrimary = null;
         }
-        $this->documentLibrary->delete();
-        $this->documentLibrary = null;
     }
 
     /**
@@ -1066,12 +1061,12 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @return Library
      */
-    public function getDocumentLibrary()
+    public function getDocLibraryForAFInputSetPrimary()
     {
-        if ($this->documentLibrary === null) {
-            throw new Core_Exception_UndefinedAttribute('The document library for the cell has not be set');
+        if ($this->docLibraryForAFInputSetPrimary === null) {
+            throw new Core_Exception_UndefinedAttribute('The Doc library for the cell has not be set');
         }
-        return $this->documentLibrary;
+        return $this->docLibraryForAFInputSetPrimary;
     }
 
     /**

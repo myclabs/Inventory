@@ -213,7 +213,6 @@ class Orga_CellController extends Core_Controller
             }
         }
         $this->view->assign('narrowerGranularities', $narrowerGranularities);
-        $this->view->assign('granularityForInventoryStatus', $granularityForInventoryStatus);
 
         // Formulaire d'ajout des membres enfants.
         $addMembersForm = new UI_Form('addMember');
@@ -443,7 +442,9 @@ class Orga_CellController extends Core_Controller
                     . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
                     . $comment->getCell()->getLabel()
                 . '</a>' . __('UI', 'other', ':')
-                . '« ' . Core_Tools::truncateString($comment->getText(), 150) . ' ».';
+                . '« '
+                . Core_Tools::truncateString(Core_Tools::removeTextileMarkUp($comment->getText()), 150)
+                . ' ».';
 
             $date = $locale->formatDate($comment->getCreationDate());
             $time = $locale->formatTime($comment->getCreationDate());
@@ -1322,7 +1323,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         $this->view->assign('idCell', $idCell);
-        $this->view->assign('documentLibrary', $cell->getDocumentLibrary());
+        $this->view->assign('documentLibrary', $cell->getDocLibraryForAFInputSetPrimary());
 
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
