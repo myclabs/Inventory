@@ -1,6 +1,6 @@
 <?php
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\Condition\Elementary\NumericConditionAlgo;
 use AF\Domain\Algorithm\Condition\Elementary\BooleanConditionAlgo;
@@ -56,7 +56,7 @@ class AF_Edit_AlgosController extends Core_Controller
         if (!$this->getRequest()->isPost()) {
             throw new Core_Exception_NotFound("Page invalide");
         }
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('idAf'));
         $algo = ElementaryConditionAlgo::load($this->getParam('idAlgo'));
 

@@ -1,5 +1,5 @@
 <?php
-use AF\Domain\AF\Component\Component;
+use AF\Domain\Component\Component;
 
 /**
  * @author  matthieu.napoli
@@ -7,7 +7,7 @@ use AF\Domain\AF\Component\Component;
  * @package AF
  */
 
-/** @var $component \AF\Domain\AF\Component\Component */
+/** @var $component \AF\Domain\AF\Component\\AF\Domain\Component\Component */
 $component = $this->component;
 
 echo Core_Tools::textile($component->getHelp());

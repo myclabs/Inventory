@@ -4,10 +4,10 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\TextField;
-use AF\Domain\AF\Condition\ElementaryCondition;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\TextField;
+use AF\Domain\Condition\ElementaryCondition;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 use Core\Annotation\Secure;
 
@@ -25,7 +25,7 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
      */
     public function getelementsAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
@@ -161,7 +161,7 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
      */
     public function deleteelementAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         /** @var $field TextField */
         $field = TextField::load($this->getParam('index'));

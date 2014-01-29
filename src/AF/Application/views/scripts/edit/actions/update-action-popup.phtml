@@ -1,13 +1,13 @@
 <?php
-use AF\Domain\AF\Action\Action;
-use AF\Domain\AF\Action\SetAlgoValue;
-use AF\Domain\AF\Action\SetValue\SetNumericFieldValue;
-use AF\Domain\AF\Action\SetValue\SetCheckboxValue;
-use AF\Domain\AF\Action\SetValue\Select\SetSelectSingleValue;
-use AF\Domain\AF\Component\Select\SelectSingle;
+use AF\Domain\Action\Action;
+use AF\Domain\Action\SetAlgoValue;
+use AF\Domain\Action\SetValue\SetNumericFieldValue;
+use AF\Domain\Action\SetValue\SetCheckboxValue;
+use AF\Domain\Action\SetValue\Select\SetSelectSingleValue;
+use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 
-/** @var $action \AF\Domain\AF\Action\Action */
+/** @var $action \AF\Domain\Action\Action */
 $action = $this->action;
 $af = $action->getTargetComponent()->getAf();
 
@@ -18,7 +18,7 @@ $form->setAjax(false);
 $form->setAction('af/edit_actions/update-action-submit/idAf/' . $af->getId() . '/idAction/' . $action->getId());
 
 if ($action instanceof SetNumericFieldValue) {
-    /** @var $action SetNumericFieldValue */
+    /** @var $action \AF\Domain\Action\SetValue\SetNumericFieldValue */
     // Valeur numerique
     $numericValue = new UI_Form_Element_Text('numericValue');
     $numericValue->setLabel(__('AF', 'configInteractionDatagrid', 'valueToBeAssignedLabel'));
@@ -32,7 +32,7 @@ if ($action instanceof SetNumericFieldValue) {
 }
 
 if ($action instanceof SetCheckboxValue) {
-    /** @var $action SetCheckboxValue */
+    /** @var $action \AF\Domain\Action\SetValue\SetCheckboxValue */
     // Boutons radios indiquant si l'action est coché ou décoché
     $checkboxValue = new UI_Form_Element_Radio('checkboxValue');
     $optionChecked = new UI_Form_Element_Option('checked', 1);

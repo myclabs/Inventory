@@ -1,7 +1,7 @@
 <?php
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Techno\Domain\Family\MemberNotFoundException;
@@ -56,7 +56,7 @@ class AF_Service_InputService
      * Si la saisie est incomplète, les résultats seront vidés.
      *
      * @param PrimaryInputSet $inputSet
-     * @param AF               $af Permet d'uiliser un AF différent de celui de la saisie
+     * @param \AF\Domain\AF               $af Permet d'uiliser un AF différent de celui de la saisie
      */
     public function updateResults(PrimaryInputSet $inputSet, AF $af = null)
     {

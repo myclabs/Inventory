@@ -5,9 +5,9 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\Group;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\Group;
 use Core\Annotation\Secure;
 
 /**
@@ -24,7 +24,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
      */
     public function getelementsAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);

@@ -1,21 +1,21 @@
 <?php
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\Group;
-use AF\Domain\AF\Component\TextField;
-use AF\Domain\AF\Component\NumericField;
-use AF\Domain\AF\Component\Checkbox;
-use AF\Domain\AF\Component\Select\SelectSingle;
-use AF\Domain\AF\Component\Select\SelectMulti;
-use AF\Domain\AF\Component\SubAF\RepeatedSubAF;
-use AF\Domain\AF\Component\SubAF\NotRepeatedSubAF;
-use AF\Domain\AF\Input\TextFieldInput;
-use AF\Domain\AF\Input\NumericFieldInput;
-use AF\Domain\AF\Input\CheckboxInput;
-use AF\Domain\AF\Input\Select\SelectSingleInput;
-use AF\Domain\AF\Input\Select\SelectMultiInput;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\Group;
+use AF\Domain\Component\TextField;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Component\Checkbox;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Component\SubAF\RepeatedSubAF;
+use AF\Domain\Component\SubAF\NotRepeatedSubAF;
+use AF\Domain\Input\TextFieldInput;
+use AF\Domain\Input\NumericFieldInput;
+use AF\Domain\Input\CheckboxInput;
+use AF\Domain\Input\Select\SelectSingleInput;
+use AF\Domain\Input\Select\SelectMultiInput;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Doctrine\ORM\EntityManager;
 use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\Model\ACL\Role\CellManagerRole;

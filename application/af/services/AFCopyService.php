@@ -1,7 +1,7 @@
 <?php
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\SubAF;
+use AF\Domain\AF;
+use AF\Domain\Component\SubAF;
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
 use DeepCopy\Filter\KeepFilter;
@@ -17,10 +17,10 @@ use Doctrine\Common\Collections\Collection;
 class AF_Service_AFCopyService
 {
     /**
-     * @param AF $af
+     * @param \AF\Domain\AF $af
      * @param string      $newRef
      * @param string      $newLabel
-     * @return AF
+     * @return \AF\Domain\AF
      */
     public function copyAF(AF $af, $newRef, $newLabel)
     {
@@ -37,7 +37,7 @@ class AF_Service_AFCopyService
         // SubAF
         $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher(SubAF::class, 'calledAF'));
 
-        /** @var AF $newAF */
+        /** @var \AF\Domain\AF $newAF */
         $newAF = $deepCopy->copy($af);
 
         $newAF->setRef($newRef);

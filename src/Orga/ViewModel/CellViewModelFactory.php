@@ -9,7 +9,7 @@ use User\Domain\ACL\Action;
 use User\Domain\User;
 use User\Domain\ACL\ACLService;
 use Orga\Model\ACL\Action\CellAction;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\PrimaryInputSet;
 
 /**
  * Factory de CellViewModel.

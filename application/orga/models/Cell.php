@@ -1,7 +1,7 @@
 <?php
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -1009,7 +1009,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie l'InputSetPrimary associé à la cellule.
      *
-     * @return PrimaryInputSet
+     * @return \AF\Domain\InputSet\PrimaryInputSet
      */
     public function getAFInputSetPrimary()
     {

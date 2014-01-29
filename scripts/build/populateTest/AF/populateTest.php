@@ -1,5 +1,5 @@
 <?php
-use AF\Domain\AF\Action\Action;
+use AF\Domain\Action\Action;
 
 /**
  * @package AF

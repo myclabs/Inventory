@@ -1,5 +1,5 @@
 <?php
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 
 /**
  * @package Orga
@@ -101,7 +101,7 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
     /**
      * Spécifie l'AF utilisé par le groupement de cellule.
      *
-     * @param AF $aF
+     * @param \AF\Domain\AF $aF
      */
     public function setAF(AF $aF=null)
     {
@@ -115,7 +115,7 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
      *
      * @throws Core_Exception_UndefinedAttribute
      *
-     * @return AF
+     * @return \AF\Domain\AF
      */
     public function getAF()
     {

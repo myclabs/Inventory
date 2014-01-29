@@ -1,7 +1,7 @@
 <?php
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -47,7 +47,7 @@ class Orga_Service_InputService
      * Modifie la saisie d'une cellule et recalcule les résultats si la saisie est complète
      *
      * @param Orga_Model_Cell $cell
-     * @param PrimaryInputSet $newValues Nouvelles valeurs pour les saisies
+     * @param \AF\Domain\InputSet\PrimaryInputSet $newValues Nouvelles valeurs pour les saisies
      * @throws InvalidArgumentException
      */
     public function editInput(Orga_Model_Cell $cell, PrimaryInputSet $newValues)
@@ -107,8 +107,8 @@ class Orga_Service_InputService
      * Met à jour les résultats d'une saisie
      *
      * @param Orga_Model_Cell           $cell
-     * @param PrimaryInputSet $inputSet
-     * @param AF|null          $af Permet d'uiliser un AF différent de celui de la saisie
+     * @param \AF\Domain\InputSet\PrimaryInputSet $inputSet
+     * @param \AF\Domain\AF|null          $af Permet d'uiliser un AF différent de celui de la saisie
      */
     public function updateResults(Orga_Model_Cell $cell, PrimaryInputSet $inputSet, AF $af = null)
     {

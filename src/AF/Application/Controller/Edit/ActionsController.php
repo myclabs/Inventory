@@ -4,13 +4,13 @@
  * @package AF
  */
 
-use AF\Domain\AF\Action\SetAlgoValue;
-use AF\Domain\AF\Action\SetValue\SetNumericFieldValue;
-use AF\Domain\AF\Action\SetValue\SetCheckboxValue;
-use AF\Domain\AF\Action\SetValue\Select\SetSelectSingleValue;
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Action\Action;
-use AF\Domain\AF\Component\Select\SelectOption;
+use AF\Domain\Action\SetAlgoValue;
+use AF\Domain\Action\SetValue\SetNumericFieldValue;
+use AF\Domain\Action\SetValue\SetCheckboxValue;
+use AF\Domain\Action\SetValue\Select\SetSelectSingleValue;
+use AF\Domain\AF;
+use AF\Domain\Action\Action;
+use AF\Domain\Component\Select\SelectOption;
 use AF\Domain\Algorithm\Algo;
 use Core\Annotation\Secure;
 
@@ -54,17 +54,17 @@ class AF_Edit_ActionsController extends Core_Controller
                     $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/interaction');
                     return;
                 }
-                /** @var $action SetNumericFieldValue */
+                /** @var $action \AF\Domain\Action\SetValue\SetNumericFieldValue */
                 $action->setValue(new Calc_Value($value, $uncertainty));
                 break;
             case SetCheckboxValue::class:
-                /** @var $action SetCheckboxValue */
+                /** @var $action \AF\Domain\Action\SetValue\SetCheckboxValue */
                 $action->setChecked($this->getParam('checkboxValue'));
                 break;
             case SetSelectSingleValue::class:
-                /** @var $action SetSelectSingleValue */
+                /** @var $action \AF\Domain\Action\SetValue\Select\SetSelectSingleValue */
                 if ($this->getParam('selectOptionValue') != null) {
-                    /** @var $option SelectOption */
+                    /** @var $option \AF\Domain\Component\Select\SelectOption */
                     $option = SelectOption::load($this->getParam('selectOptionValue'));
                     $action->setOption($option);
                 } else {
@@ -72,7 +72,7 @@ class AF_Edit_ActionsController extends Core_Controller
                 }
                 break;
             case SetAlgoValue::class:
-                /** @var $action SetAlgoValue */
+                /** @var $action \AF\Domain\Action\SetAlgoValue */
                 if ($this->getParam('algoSelect') != null) {
                     /** @var $algo Algo */
                     $algo = Algo::load($this->getParam('algoSelect'));

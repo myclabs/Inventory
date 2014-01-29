@@ -2,7 +2,7 @@
 
 namespace AF\Domain\Algorithm\ParameterCoordinate;
 
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\InputSet;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
@@ -45,7 +45,7 @@ class FixedParameterCoordinate extends ParameterCoordinate
         $errors = parent::checkConfiguration();
 
         if (!$this->idMember) {
-            $configError = new ConfigError(__('Algo', 'configControl', 'noMember', [
+            $configError = new AlgoConfigurationError(__('Algo', 'configControl', 'noMember', [
                 'REF_DIMENSION' => $this->getDimension(),
                 'REF_ALGO'      => $this->getAlgoParameter()->getRef()
             ]), true);
@@ -55,7 +55,7 @@ class FixedParameterCoordinate extends ParameterCoordinate
                 $this->getDimension()->getMember($this->getMember());
             } catch (Core_Exception_NotFound $e) {
                 $refDimension = $this->getDimension()->getRef();
-                $errors[] = new ConfigError(__('Algo', 'configControl', 'invalidMember', [
+                $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'invalidMember', [
                     'REF_DIMENSION' => $refDimension,
                     'REF_ALGO'      => $this->getAlgoParameter()->getRef(),
                     'REF_MEMBER'    => $this->idMember

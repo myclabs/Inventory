@@ -4,10 +4,10 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Category;
-use AF\Domain\AF\Component\SubAF;
-use AF\Domain\AF\Output\OutputElement;
+use AF\Domain\AF;
+use AF\Domain\Category;
+use AF\Domain\Component\SubAF;
+use AF\Domain\Output\OutputElement;
 use Core\Annotation\Secure;
 
 /**
@@ -34,7 +34,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             $categories = Category::loadRootCategories();
             $currentCategory = null;
         } else {
-            /** @var $currentCategory Category */
+            /** @var $currentCategory \AF\Domain\Category */
             $currentCategory = $this->fromTreeId($this->idNode);
             $categories = $currentCategory->getChildCategories();
         }
@@ -94,7 +94,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             if ($node instanceof Category) {
                 $parentNode = $node->getParentCategory();
             } else {
-                /** @var AF $node */
+                /** @var \AF\Domain\AF $node */
                 $parentNode = $node->getCategory();
             }
         }
@@ -274,7 +274,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     }
 
     /**
-     * @param Category|AF $object
+     * @param \AF\Domain\Category|\AF\Domain\AF $object
      * @throws Core_Exception
      * @return string ID
      */
@@ -291,7 +291,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     /**
      * @param string $id
      * @throws Core_Exception
-     * @return Category|AF
+     * @return Category|\AF\Domain\AF
      */
     private function fromTreeId($id)
     {

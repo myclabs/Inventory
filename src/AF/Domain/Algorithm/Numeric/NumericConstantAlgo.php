@@ -2,7 +2,7 @@
 
 namespace AF\Domain\Algorithm\Numeric;
 
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\InputSet;
 use Calc_UnitValue;
 use Core_Exception_NotFound;
@@ -38,7 +38,7 @@ class NumericConstantAlgo extends NumericAlgo
 
     /**
      * Méthode utilisée au niveau de AF pour vérifier la configuration des algorithmes.
-     * @return ConfigError[]
+     * @return AlgoConfigurationError[]
      */
     public function checkConfig()
     {
@@ -47,7 +47,7 @@ class NumericConstantAlgo extends NumericAlgo
         try {
             $this->unitValue->getUnit()->getNormalizedUnit();
         } catch (Core_Exception_NotFound $e) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage("L'unité '" . $this->unitValue->getUnit()->getRef() . "' associée à l'algorithme '"
                 . $this->ref . "', n'existe pas.");
@@ -55,7 +55,7 @@ class NumericConstantAlgo extends NumericAlgo
         }
         // On vérifie que la valeur associée à cet algorithme existe bien
         if (!is_numeric($this->unitValue->getDigitalValue())) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage("Aucune valeur n'est associée à l'algorithme '" . $this->ref);
             $errors[] = $configError;

@@ -6,13 +6,13 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\NumericField;
-use AF\Domain\AF\Component\Checkbox;
-use AF\Domain\AF\Component\Field;
-use AF\Domain\AF\Component\Select\SelectSingle;
-use AF\Domain\AF\Component\Select\SelectMulti;
-use AF\Domain\AF\Condition\ElementaryCondition;
+use AF\Domain\AF;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Component\Checkbox;
+use AF\Domain\Component\Field;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Condition\ElementaryCondition;
 use AF\Domain\Algorithm\Condition\Elementary\NumericConditionAlgo;
 use AF\Domain\Algorithm\Condition\Elementary\BooleanConditionAlgo;
 use AF\Domain\Algorithm\Condition\Elementary\Select\SelectSingleConditionAlgo;

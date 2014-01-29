@@ -3,14 +3,14 @@
  * @author matthieu.napoli
  */
 
-use AF\Domain\AF\Component\Select\SelectSingle;
-use AF\Domain\AF\Component\Select\SelectMulti;
-use AF\Domain\AF\Input\Input;
-use AF\Domain\AF\Input\TextFieldInput;
-use AF\Domain\AF\Input\NumericFieldInput;
-use AF\Domain\AF\Input\CheckboxInput;
-use AF\Domain\AF\Input\Select\SelectSingleInput;
-use AF\Domain\AF\Input\Select\SelectMultiInput;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Input\Input;
+use AF\Domain\Input\TextFieldInput;
+use AF\Domain\Input\NumericFieldInput;
+use AF\Domain\Input\CheckboxInput;
+use AF\Domain\Input\Select\SelectSingleInput;
+use AF\Domain\Input\Select\SelectMultiInput;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Loggable\Entity\LogEntry;
@@ -33,7 +33,7 @@ class AF_Service_InputHistoryService
     }
 
     /**
-     * @param Input $input
+     * @param \AF\Domain\Input\Input $input
      * @return AF_Service_InputHistoryService_Entry[]
      */
     public function getInputHistory(Input $input)
@@ -72,7 +72,7 @@ class AF_Service_InputHistoryService
 
             // Valeur des sélections simples
             if ($input instanceof SelectSingleInput) {
-                /** @var SelectSingleInput $component */
+                /** @var \AF\Domain\Input\Select\SelectSingleInput $component */
                 $component = $input->getComponent();
                 if ($value) {
                     try {
@@ -87,7 +87,7 @@ class AF_Service_InputHistoryService
             if ($input instanceof SelectMultiInput) {
                 $newValue = [];
 
-                /** @var \AF\Domain\AF\Component\Select\SelectMulti $component */
+                /** @var \AF\Domain\Component\Select\SelectMulti $component */
                 $component = $input->getComponent();
                 foreach ($value as $refOption) {
                     try {

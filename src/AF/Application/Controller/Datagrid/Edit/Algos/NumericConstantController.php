@@ -6,7 +6,7 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use Core\Annotation\Secure;
 use Unit\UnitAPI;

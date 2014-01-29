@@ -6,7 +6,7 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
 use Unit\UnitAPI;
@@ -66,7 +66,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
      */
     public function addelementAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {

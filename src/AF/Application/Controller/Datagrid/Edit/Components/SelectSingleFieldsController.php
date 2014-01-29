@@ -6,12 +6,12 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\Select;
-use AF\Domain\AF\Component\Select\SelectOption;
-use AF\Domain\AF\Component\Select\SelectSingle;
-use AF\Domain\AF\Condition\ElementaryCondition;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\Select;
+use AF\Domain\Component\Select\SelectOption;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Condition\ElementaryCondition;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 use AF\Domain\Algorithm\Index\AlgoResultIndex;
 use AF\Domain\Algorithm\ParameterCoordinate\AlgoParameterCoordinate;
@@ -30,11 +30,11 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function getelementsAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $selectFields SelectSingle[] */
+        /** @var $selectFields \AF\Domain\Component\Select\SelectSingle[] */
         $selectFields = SelectSingle::loadList($this->request);
         foreach ($selectFields as $selectField) {
             $data = [];
@@ -69,7 +69,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function addelementAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
@@ -123,7 +123,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function updateelementAction()
     {
-        /** @var $selectField SelectSingle */
+        /** @var $selectField \AF\Domain\Component\Select\SelectSingle */
         $selectField = SelectSingle::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
@@ -157,7 +157,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
                 break;
             case 'defaultValue':
                 if ($newValue) {
-                    /** @var $option SelectOption */
+                    /** @var $option \AF\Domain\Component\Select\SelectOption */
                     $option = SelectOption::load($newValue);
                     $selectField->setDefaultValue($option);
                     $this->data = $this->cellList($selectField->getDefaultValue()->getId());
@@ -187,9 +187,9 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function deleteelementAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
-        /** @var $field SelectSingle */
+        /** @var $field \AF\Domain\Component\Select\SelectSingle */
         $field = SelectSingle::load($this->getParam('index'));
         // Vérifie qu'il n'y a pas d'Algo_Condition qui référence cet input
         $query = new Core_Model_Query();
@@ -226,7 +226,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
     public function getOptionListAction()
     {
         $this->addElementList(null, '');
-        /** @var $select Select */
+        /** @var $select \AF\Domain\Component\Select */
         $select = Select::load($this->getParam('index'));
         foreach ($select->getOptions() as $option) {
             $this->addElementList($option->getId(), $option->getLabel());
@@ -240,7 +240,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function getRawHelpAction()
     {
-        /** @var $select Select */
+        /** @var $select \AF\Domain\Component\Select */
         $select = Select::load($this->getParam('id'));
         $this->data = $select->getHelp();
         $this->send();

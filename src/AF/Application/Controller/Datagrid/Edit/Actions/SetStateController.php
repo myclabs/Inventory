@@ -5,10 +5,10 @@
  * @package AF
  */
 
-use AF\Domain\AF\Action\SetState;
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Component\Component;
+use AF\Domain\Action\SetState;
+use AF\Domain\AF;
+use AF\Domain\Condition\Condition;
+use AF\Domain\Component\Component;
 use Core\Annotation\Secure;
 
 /**
@@ -24,12 +24,12 @@ class AF_Datagrid_Edit_Actions_SetStateController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         //  Récupère tous les composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $components \AF\Domain\AF\Component\Component[] */
+        /** @var $components \AF\Domain\AF\Component\\AF\Domain\Component\Component[] */
         $components = Component::loadList($query);
         // Affiche les actions dans l'ordre des composants
         foreach ($components as $component) {

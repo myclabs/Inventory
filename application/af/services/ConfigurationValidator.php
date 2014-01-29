@@ -1,10 +1,10 @@
 <?php
-use AF\Domain\AF\AF;
-use AF\Domain\AF\ConfigError;
-use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Component\Component;
+use AF\Domain\AF;
+use AF\Domain\AFConfigurationError;
+use AF\Domain\Condition\Condition;
+use AF\Domain\Component\Component;
 use AF\Domain\Algorithm\Algo;
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 
 /**
  * @author  matthieu.napoli
@@ -21,8 +21,8 @@ class AF_Service_ConfigurationValidator
 
     /**
      * Méthode qui gère le controle de la configuration des AFs.
-     * @param AF $af
-     * @return ConfigError[]
+     * @param \AF\Domain\AF $af
+     * @return AlgoConfigurationError[]
      */
     public function validateAF(AF $af)
     {
@@ -36,7 +36,7 @@ class AF_Service_ConfigurationValidator
     /**
      * Méthode qui gère le control de la configuration des champs d'un Af.
      * @param AF $af
-     * @return ConfigError[]
+     * @return AlgoConfigurationError[]
      */
     protected function validateFormElements(AF $af)
     {
@@ -45,8 +45,8 @@ class AF_Service_ConfigurationValidator
 
     /**
      * Méthode qui gère le control de la configuration des algos associés à un Af.
-     * @param AF $af
-     * @return ConfigError[]
+     * @param \AF\Domain\AF $af
+     * @return AlgoConfigurationError[]
      */
     protected function validateAlgos(AF $af)
     {
@@ -63,8 +63,8 @@ class AF_Service_ConfigurationValidator
 
     /**
      * Méthode qui gère le control de la configuration des conditions associées à un Af.
-     * @param AF $af
-     * @return ConfigError[]
+     * @param \AF\Domain\AF $af
+     * @return AlgoConfigurationError[]
      */
     protected function validateConditions(AF $af)
     {
@@ -73,7 +73,7 @@ class AF_Service_ConfigurationValidator
 
     /**
      * Méthode qui récupère les erreurs sur une liste d'éléments
-     * @param Algo[]|Component[]|\AF\Domain\AF\Condition\Condition[] $elementsList
+     * @param Algo[]|Component[]|\AF\Domain\Condition\Condition[] $elementsList
      * @return array
      */
     protected function getErrors($elementsList)
@@ -86,9 +86,9 @@ class AF_Service_ConfigurationValidator
     }
 
     /**
-     * @param ConfigError[] $errors
-     * @param AF        $af
-     * @return ConfigError[]
+     * @param AlgoConfigurationError[] $errors
+     * @param \AF\Domain\AF        $af
+     * @return AlgoConfigurationError[]
      */
     protected function toAFConfigErrors(array $errors, AF $af)
     {
@@ -100,13 +100,13 @@ class AF_Service_ConfigurationValidator
     }
 
     /**
-     * @param ConfigError $error
-     * @param AF      $af
-     * @return ConfigError
+     * @param AlgoConfigurationError $error
+     * @param \AF\Domain\AF      $af
+     * @return AlgoConfigurationError
      */
-    protected function toAFConfigError(ConfigError $error, AF $af)
+    protected function toAFConfigError(AlgoConfigurationError $error, AF $af)
     {
-        return new ConfigError($error->getMessage(), $error->getFatal(), $af);
+        return new AlgoConfigurationError($error->getMessage(), $error->getFatal(), $af);
     }
 
 }

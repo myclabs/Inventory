@@ -6,8 +6,8 @@
  * @package    AF
  * @subpackage View
  */
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\SubAF\RepeatedSubAF;
+use AF\Domain\AF;
+use AF\Domain\Component\SubAF\RepeatedSubAF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use Techno\Domain\Family\Family;
 
@@ -20,7 +20,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
 
     /**
      * Renvoi le html à afficher dans l'onglet documentation
-     * @param AF $af
+     * @param \AF\Domain\AF $af
      * @return string
      */
     public function documentation(AF $af)
@@ -38,7 +38,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
 
     /**
      * Rend le html pour un AF
-     * @param AF $af
+     * @param \AF\Domain\AF $af
      * @param string      $title
      * @param bool        $repeatedSubAf
      * @return string
@@ -79,7 +79,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
 
     /**
      * Permet de récupérer la liste des familles de paramètres de techno
-     * @param AF $af
+     * @param \AF\Domain\AF $af
      * @return Family[]
      */
     protected function getFamilyList(AF $af)

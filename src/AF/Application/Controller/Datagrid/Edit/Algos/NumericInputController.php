@@ -6,7 +6,7 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use Core\Annotation\Secure;
 

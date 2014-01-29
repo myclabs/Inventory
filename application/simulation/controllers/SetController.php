@@ -4,7 +4,7 @@
  * @package Simulation
  */
 
-use AF\Domain\AF\Category;
+use AF\Domain\Category;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 

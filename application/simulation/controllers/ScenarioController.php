@@ -5,7 +5,7 @@
  */
 
 use AF\Application\AFViewConfiguration;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 

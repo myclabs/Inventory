@@ -2,7 +2,7 @@
 
 namespace AF\Domain\Algorithm\Numeric;
 
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\Input\NumericInput;
 use AF\Domain\Algorithm\InputSet;
 use Calc_UnitValue;
@@ -45,7 +45,7 @@ class NumericInputAlgo extends NumericAlgo
 
     /**
      * Méthode utilisée au niveau de AF pour vérifier la configuration des algorithmes.
-     * @return ConfigError[]
+     * @return AlgoConfigurationError[]
      */
     public function checkConfig()
     {
@@ -54,14 +54,14 @@ class NumericInputAlgo extends NumericAlgo
         try {
             $unit->getNormalizedUnit();
         } catch (Core_Exception_NotFound $e) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage("L'unité '" . $unit->getRef() . "' associée à l'algorithme '"
                 . $this->ref . "' n'existe pas.");
             $errors[] = $configError;
         }
         if ((!isset($this->inputRef)) || ($this->inputRef === '')) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage("L'algorithme '" . $this->ref . "' n'est associé à aucun champs.");
             $errors[] = $configError;

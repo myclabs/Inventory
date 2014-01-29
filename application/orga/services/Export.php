@@ -6,18 +6,18 @@
  * @subpackage Service
  */
 
-use AF\Domain\AF\Input\Input;
-use AF\Domain\AF\Input\TextFieldInput;
-use AF\Domain\AF\Input\NumericFieldInput;
-use AF\Domain\AF\Input\GroupInput;
-use AF\Domain\AF\Input\CheckboxInput;
-use AF\Domain\AF\Input\Select\SelectSingleInput;
-use AF\Domain\AF\Input\Select\SelectMultiInput;
-use AF\Domain\AF\Input\SubAF\RepeatedSubAFInput;
-use AF\Domain\AF\Input\SubAF\NotRepeatedSubAFInput;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
-use AF\Domain\AF\InputSet\SubInputSet;
-use AF\Domain\AF\Output\OutputElement;
+use AF\Domain\Input\Input;
+use AF\Domain\Input\TextFieldInput;
+use AF\Domain\Input\NumericFieldInput;
+use AF\Domain\Input\GroupInput;
+use AF\Domain\Input\CheckboxInput;
+use AF\Domain\Input\Select\SelectSingleInput;
+use AF\Domain\Input\Select\SelectMultiInput;
+use AF\Domain\Input\SubAF\RepeatedSubAFInput;
+use AF\Domain\Input\SubAF\NotRepeatedSubAFInput;
+use AF\Domain\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\SubInputSet;
+use AF\Domain\Output\OutputElement;
 use User\Domain\ACL\Role\Role;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
@@ -760,7 +760,7 @@ function getInputValues(Input $input)
                 $inputValue->getUnit()->getSymbol(),
             ];
         case SelectMultiInput::class:
-            /** @var SelectMultiInput $input */
+            /** @var \AF\Domain\Input\Select\SelectMultiInput $input */
             if (is_array($inputValue)) {
                 if ($input->getComponent() !== null) {
                     $labels = [];
@@ -784,7 +784,7 @@ function getInputValues(Input $input)
             }
             return [$value];
         case CheckboxInput::class:
-            /** @var CheckboxInput $input */
+            /** @var \AF\Domain\Input\CheckboxInput $input */
             return [($inputValue) ? __('UI', 'property', 'checked') : __('UI', 'property', 'unchecked')];
         default:
             return [$inputValue];

@@ -6,8 +6,8 @@
  * @subpackage Controller
  */
 
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\Group;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\Group;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 

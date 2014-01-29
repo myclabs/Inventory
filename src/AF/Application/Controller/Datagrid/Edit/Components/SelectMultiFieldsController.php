@@ -6,11 +6,11 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\Select;
-use AF\Domain\AF\Component\Select\SelectMulti;
-use AF\Domain\AF\Condition\ElementaryCondition;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\Select;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Condition\ElementaryCondition;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 use Core\Annotation\Secure;
 
@@ -31,7 +31,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $selectFields \AF\Domain\AF\Component\Select\SelectMulti[] */
+        /** @var $selectFields \AF\Domain\Component\Select\SelectMulti[] */
         $selectFields = SelectMulti::loadList($this->request);
         foreach ($selectFields as $selectField) {
             $data = [];
@@ -115,7 +115,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
      */
     public function updateelementAction()
     {
-        /** @var $selectField \AF\Domain\AF\Component\Select\SelectMulti */
+        /** @var $selectField \AF\Domain\Component\Select\SelectMulti */
         $selectField = SelectMulti::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
@@ -169,7 +169,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
      */
     public function deleteelementAction()
     {
-        /** @var $field \AF\Domain\AF\Component\Select\SelectMulti */
+        /** @var $field \AF\Domain\Component\Select\SelectMulti */
         $field = SelectMulti::load($this->getParam('index'));
         // Vérifie qu'il n'y a pas d'Algo_Condition qui référence cet input
         $query = new Core_Model_Query();

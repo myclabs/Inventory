@@ -1,17 +1,17 @@
 <?php
-use AF\Domain\AF\Component\Select\SelectSingle;
-use AF\Domain\AF\Component\Select\SelectMulti;
-use AF\Domain\AF\Condition\ElementaryCondition;
-use AF\Domain\AF\Condition\Elementary\NumericFieldCondition;
-use AF\Domain\AF\Condition\Elementary\CheckboxCondition;
-use AF\Domain\AF\Condition\Elementary\Select\SelectSingleCondition;
-use AF\Domain\AF\Condition\Elementary\Select\SelectMultiCondition;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Condition\ElementaryCondition;
+use AF\Domain\Condition\Elementary\NumericFieldCondition;
+use AF\Domain\Condition\Elementary\CheckboxCondition;
+use AF\Domain\Condition\Elementary\Select\SelectSingleCondition;
+use AF\Domain\Condition\Elementary\Select\SelectMultiCondition;
 
 /**
  * @author  matthieu.napoli
  * @package AF
  */
-/** @var $condition ElementaryCondition */
+/** @var $condition \AF\Domain\Condition\ElementaryCondition */
 $condition = $this->condition;
 
 $form = new UI_Form('updateCondition');
@@ -42,7 +42,7 @@ $optionNotContains = new UI_Form_Element_Option('ncontains', ElementaryCondition
 $optionNotContains->label = __('AF', 'configInteractionDatagrid', 'doesNotContainOption');
 
 if ($condition instanceof NumericFieldCondition) {
-    /** @var $condition NumericFieldCondition */
+    /** @var $condition \AF\Domain\Condition\Elementary\NumericFieldCondition */
     // Relation
     $relationSelect->addOption($optionEqual);
     $relationSelect->addOption($optionNotEqual);
@@ -58,7 +58,7 @@ if ($condition instanceof NumericFieldCondition) {
 }
 
 if ($condition instanceof CheckboxCondition) {
-    /** @var $condition CheckboxCondition */
+    /** @var $condition \AF\Domain\Condition\Elementary\CheckboxCondition */
     // Relation
     $relationSelect->addOption($optionEqual);
     // Value
@@ -75,7 +75,7 @@ if ($condition instanceof CheckboxCondition) {
 }
 
 if ($condition instanceof SelectSingleCondition) {
-    /** @var $condition SelectSingleCondition */
+    /** @var $condition \AF\Domain\Condition\Elementary\Select\SelectSingleCondition */
     // Relation
     $relationSelect->addOption($optionEqual);
     $relationSelect->addOption($optionNotEqual);
@@ -84,7 +84,7 @@ if ($condition instanceof SelectSingleCondition) {
     $selectField->setLabel(__('UI', 'name', 'referenceValue'));
     // Ajout d'une option vide
     $selectField->addNullOption('', null);
-    /** @var $selectComponent SelectSingleCondition */
+    /** @var $selectComponent \AF\Domain\Condition\Elementary\Select\SelectSingleCondition */
     $selectComponent = $condition->getField();
     foreach ($selectComponent->getOptions() as $option) {
         $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getId(), $option->getLabel());
@@ -97,7 +97,7 @@ if ($condition instanceof SelectSingleCondition) {
 }
 
 if ($condition instanceof SelectMultiCondition) {
-    /** @var $condition SelectMultiCondition */
+    /** @var $condition \AF\Domain\Condition\Elementary\Select\SelectMultiCondition */
     // Relation
     $relationSelect->addOption($optionContains);
     $relationSelect->addOption($optionNotContains);
@@ -106,7 +106,7 @@ if ($condition instanceof SelectMultiCondition) {
     $selectField->setLabel(__('UI', 'name', 'referenceValue'));
     // Ajout d'une option vide
     $selectField->addNullOption('', null);
-    /** @var $selectComponent \AF\Domain\AF\Component\Select\SelectMulti */
+    /** @var $selectComponent \AF\Domain\Component\Select\SelectMulti */
     $selectComponent = $condition->getField();
     foreach ($selectComponent->getOptions() as $option) {
         $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getId(), $option->getLabel());

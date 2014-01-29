@@ -4,13 +4,13 @@
  * @package AF
  */
 
-use AF\Domain\AF\Component\Select\SelectOption;
-use AF\Domain\AF\Condition\ExpressionCondition;
-use AF\Domain\AF\Condition\ElementaryCondition;
-use AF\Domain\AF\Condition\Elementary\NumericFieldCondition;
-use AF\Domain\AF\Condition\Elementary\CheckboxCondition;
-use AF\Domain\AF\Condition\Elementary\Select\SelectSingleCondition;
-use AF\Domain\AF\Condition\Elementary\Select\SelectMultiCondition;
+use AF\Domain\Component\Select\SelectOption;
+use AF\Domain\Condition\ExpressionCondition;
+use AF\Domain\Condition\ElementaryCondition;
+use AF\Domain\Condition\Elementary\NumericFieldCondition;
+use AF\Domain\Condition\Elementary\CheckboxCondition;
+use AF\Domain\Condition\Elementary\Select\SelectSingleCondition;
+use AF\Domain\Condition\Elementary\Select\SelectMultiCondition;
 use Core\Annotation\Secure;
 
 class AF_Edit_ConditionsController extends Core_Controller
@@ -56,7 +56,7 @@ class AF_Edit_ConditionsController extends Core_Controller
                 /** @var $condition SelectSingleCondition */
                 $condition->setRelation($this->getParam('relation'));
                 if ($this->getParam('value') != null) {
-                    /** @var $option SelectOption */
+                    /** @var $option \AF\Domain\Component\Select\SelectOption */
                     $option = SelectOption::load($this->getParam('value'));
                     $condition->setOption($option);
                 } else {
@@ -67,7 +67,7 @@ class AF_Edit_ConditionsController extends Core_Controller
                 /** @var $condition SelectMultiCondition */
                 $condition->setRelation($this->getParam('relation'));
                 if ($this->getParam('value') != null) {
-                    /** @var $option SelectOption */
+                    /** @var $option \AF\Domain\Component\Select\SelectOption */
                     $option = SelectOption::load($this->getParam('value'));
                     $condition->setOption($option);
                 } else {

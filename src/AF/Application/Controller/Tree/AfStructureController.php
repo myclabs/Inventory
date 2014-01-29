@@ -5,9 +5,9 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\Group;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\Group;
 use Core\Annotation\Secure;
 
 /**
@@ -26,7 +26,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
     public function getnodesAction()
     {
         if ($this->idNode !== null) {
-            /** @var $group Group */
+            /** @var $group \AF\Domain\Component\Group */
             $group = Group::load($this->idNode);
         } else {
             /** @var $af AF */
@@ -72,7 +72,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
 
         // Groupe
         if ($newParent != 0) {
-            /** @var $group Group */
+            /** @var $group \AF\Domain\Component\Group */
             $group = Group::load($newParent);
 
             $component->getGroup()->removeSubComponent($component);

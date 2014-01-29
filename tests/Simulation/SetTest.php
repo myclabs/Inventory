@@ -2,7 +2,7 @@
 
 namespace Tests\Simulation;
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use Core\Test\TestCase;
 use Simulation_Model_Set;
 use User\Domain\User;
@@ -12,7 +12,7 @@ class SetTest extends TestCase
     /**
      * Génere un objet pret à l'emploi pour les tests.
      * @param int $i
-     * @param \AF\Domain\AF\AF $aF
+     * @param \AF\Domain\AF $aF
      * @param User $user
      * @return Simulation_Model_Set
      */

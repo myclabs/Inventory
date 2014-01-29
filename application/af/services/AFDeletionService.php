@@ -1,7 +1,7 @@
 <?php
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Group;
+use AF\Domain\AF;
+use AF\Domain\Component\Group;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -28,7 +28,7 @@ class AF_Service_AFDeletionService
      *
      * Nécessaire car beaucoup trop de relations entre les objets d'un AF pour utiliser simplement les cascades.
      *
-     * @param AF $af
+     * @param \AF\Domain\AF $af
      */
     public function deleteAF(AF $af)
     {

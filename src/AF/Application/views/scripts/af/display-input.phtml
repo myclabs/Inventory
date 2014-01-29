@@ -1,17 +1,17 @@
 <?php
 use AF\Application\AFViewConfiguration;
-use AF\Domain\AF\AF;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
 
 /**
  * @author  matthieu.napoli
  * @package AF
  */
-/** @var $af AF */
+/** @var $af \AF\Domain\AF */
 $af = $this->af;
 /** @var $form UI_Form */
 $form = $this->form;
-/** @var $inputSet PrimaryInputSet|null */
+/** @var $inputSet \AF\Domain\InputSet\PrimaryInputSet|null */
 $inputSet = $this->inputSet;
 if ($inputSet) {
     $inputSetId = $inputSet->getId();

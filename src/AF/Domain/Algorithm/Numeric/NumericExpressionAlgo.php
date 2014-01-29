@@ -3,7 +3,7 @@
 namespace AF\Domain\Algorithm\Numeric;
 
 use AF\Domain\Algorithm\Algo;
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\InputSet;
 use Calc_UnitValue;
 use Core_Exception_NotFound;
@@ -83,14 +83,14 @@ class NumericExpressionAlgo extends NumericAlgo implements ValueInterface, UnitI
 
     /**
      * Méthode utilisée au niveau de AF pour vérifier la configuration des algorithmes
-     * @return ConfigError[]
+     * @return AlgoConfigurationError[]
      */
     public function checkConfig()
     {
         $errors = parent::checkConfig();
         // Vérifie qu'on a bien une expression
         if (!$this->expression) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage(
                 __('Algo', 'configControl', 'emptyAlgorithmExpression', ['REF' => '$this->ref']),
@@ -109,7 +109,7 @@ class NumericExpressionAlgo extends NumericAlgo implements ValueInterface, UnitI
         try {
             $calculationUnit = $calc->checkUnitCompatibility($this);
             if (!$calculationUnit->isEquivalent($this->getUnit())) {
-                $errors[] = new ConfigError(
+                $errors[] = new AlgoConfigurationError(
                     __('Algo', 'configControl', 'operandUnitsNotCompatibleWithAlgoUnit', [
                         'REF_ALGO'        => $this->ref,
                         'ALGO_UNIT'       => $this->getUnit(),
@@ -120,7 +120,7 @@ class NumericExpressionAlgo extends NumericAlgo implements ValueInterface, UnitI
                 );
             }
         } catch (IncompatibleUnitsException $e) {
-            $errors[] = new ConfigError(__('Algo', 'configControl', 'incompatibleUnitsAmongOperands', [
+            $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'incompatibleUnitsAmongOperands', [
                 'REF_ALGO'   => $this->ref,
                 'EXPRESSION' => $this->expression
             ]), true);
@@ -142,7 +142,7 @@ class NumericExpressionAlgo extends NumericAlgo implements ValueInterface, UnitI
         try {
             $algo = $this->set->getAlgoByRef($ref);
         } catch (Core_Exception_NotFound $e) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'noAlgorithmForOperand', [
                 'REF_ALGO' => $this->ref,
@@ -155,7 +155,7 @@ class NumericExpressionAlgo extends NumericAlgo implements ValueInterface, UnitI
 
         // Vérifie qu'il s'agit d'un algo numérique
         if (!$algo instanceof NumericAlgo) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'nonNumericOperandInNumericAlgorithm', [
                 'REF_ALGO' => $this->ref,

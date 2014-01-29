@@ -2,10 +2,10 @@
 
 namespace Tests\AF;
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\NumericField;
-use AF\Domain\AF\Condition\Elementary\NumericFieldCondition;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Condition\Elementary\NumericFieldCondition;
 use AF_Service_AFCopyService;
 use Core\Test\TestCase;
 use Unit\UnitAPI;
@@ -53,7 +53,7 @@ class AFCopyTest extends TestCase
         $this->entityManager->flush();
 
         $afCopyService = new AF_Service_AFCopyService();
-        /** @var \AF\Domain\AF\AF $newAF */
+        /** @var \AF\Domain\AF $newAF */
         $newAF = $afCopyService->copyAF($oldAF, 'new_ref', 'new label');
 
         $this->assertInstanceOf(get_class($oldAF), $newAF);
@@ -101,7 +101,7 @@ class AFCopyTest extends TestCase
 
         // Condition
         $this->assertSameSize($oldAF->getConditions(), $newAF->getConditions());
-        /** @var \AF\Domain\AF\Condition\Elementary\NumericFieldCondition $condition2 */
+        /** @var \AF\Domain\Condition\Elementary\NumericFieldCondition $condition2 */
         $condition2 = $newAF->getConditions()[0];
         $this->assertNotSame($condition, $condition2);
         $this->assertNull($condition2->getId());

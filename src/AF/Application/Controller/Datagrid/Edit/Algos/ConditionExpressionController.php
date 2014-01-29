@@ -6,7 +6,7 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use AF\Domain\Algorithm\Condition\ExpressionConditionAlgo;
 use Core\Annotation\Secure;
 use TEC\Exception\InvalidExpressionException;
@@ -25,7 +25,7 @@ class AF_Datagrid_Edit_Algos_ConditionExpressionController extends UI_Controller
      */
     public function getelementsAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {

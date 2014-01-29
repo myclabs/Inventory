@@ -2,7 +2,7 @@
 
 namespace AF\Domain\Algorithm\Condition;
 
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 
 /**
  * @author matthieu.napoli
@@ -42,13 +42,13 @@ abstract class ElementaryConditionAlgo extends ConditionAlgo
     {
         $errors = parent::checkConfig();
         if ((!isset($this->inputRef)) || ($this->inputRef === '')) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage("L'algorithme '" . $this->ref . "' n'est associé à aucun champ.");
             $errors[] = $configError;
         }
         if ($this->relation < 1 || $this->relation > 6) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'noRelationForElementaryCondition', [
                 'REF_ALGO' => $this->ref

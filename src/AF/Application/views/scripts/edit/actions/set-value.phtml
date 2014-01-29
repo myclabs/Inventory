@@ -1,16 +1,16 @@
 <?php
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\NumericField;
-use AF\Domain\AF\Component\Checkbox;
-use AF\Domain\AF\Component\Select\SelectSingle;
-use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Component\Component;
+use AF\Domain\AF;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Component\Checkbox;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Condition\Condition;
+use AF\Domain\Component\Component;
 
 /**
  * @author  matthieu.napoli
  * @package AF
  */
-/** @var $af AF */
+/** @var $af \AF\Domain\AF */
 $af = $this->af;
 
 // Creation du datagrid
@@ -33,7 +33,7 @@ foreach ($this->componentList as $component) {
         || $component instanceof SelectSingle
         || $component instanceof Checkbox
     ) {
-        /** @var $component \AF\Domain\AF\Component\Component */
+        /** @var $component \AF\Domain\AF\Component\\AF\Domain\Component\Component */
         $list[$component->getId()] = $component->getLabel();
     }
 }
@@ -63,7 +63,7 @@ $conditionColumn->editable = true;
 $conditionColumn->withEmptyElement = true;
 $list = [];
 foreach ($this->conditionList as $condition) {
-    /** @var $condition \AF\Domain\AF\Condition\Condition */
+    /** @var $condition \AF\Domain\Condition\Condition */
     $list[$condition->getId()] = $condition->getRef();
 }
 $conditionColumn->list = $list;

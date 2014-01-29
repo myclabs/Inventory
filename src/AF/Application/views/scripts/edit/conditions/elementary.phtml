@@ -1,14 +1,14 @@
 <?php
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\TextField;
-use AF\Domain\AF\Component\Field;
-use AF\Domain\AF\Condition\ElementaryCondition;
+use AF\Domain\AF;
+use AF\Domain\Component\TextField;
+use AF\Domain\Component\Field;
+use AF\Domain\Condition\ElementaryCondition;
 
 /**
  * @author  matthieu.napoli
  * @package AF
  */
-/** @var $af AF */
+/** @var $af \AF\Domain\AF */
 $af = $this->af;
 
 $datagrid = new UI_Datagrid('conditionsElementary', 'datagrid_edit_conditions_elementary', 'af');

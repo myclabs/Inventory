@@ -1,15 +1,15 @@
 <?php
-use AF\Domain\AF\AF;
-use AF\Domain\AF\ConfigError;
+use AF\Domain\AF;
+use AF\Domain\AFConfigurationError;
 
 /**
  * @author  matthieu.napoli
  * @package AF
  */
 
-/** @var $af AF */
+/** @var $af \AF\Domain\AF */
 $af = $this->af;
-/** @var $errors ConfigError[] */
+/** @var $errors AFConfigurationError[] */
 $errors = $this->errors;
 
 if (count($errors) == 0) {

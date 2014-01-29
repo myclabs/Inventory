@@ -6,9 +6,9 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\SubAF\NotRepeatedSubAF;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\SubAF\NotRepeatedSubAF;
 use Core\Annotation\Secure;
 
 /**
@@ -25,7 +25,7 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
      */
     public function getelementsAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
@@ -56,7 +56,7 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
      */
     public function addelementAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
@@ -80,7 +80,7 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
             $subAF->setLabel($this->getAddElementValue('label'));
             $subAF->setVisible($isVisible);
             $subAF->setHelp($this->getAddElementValue('help'));
-            /** @var $calledAF AF */
+            /** @var $calledAF \AF\Domain\AF */
             $calledAF = AF::load($this->getAddElementValue('targetAF'));
             $subAF->setCalledAF($calledAF);
             $af->addComponent($subAF);
@@ -170,7 +170,7 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
      */
     public function getRawHelpAction()
     {
-        /** @var $subAF NotRepeatedSubAF */
+        /** @var $subAF \AF\Domain\Component\SubAF\NotRepeatedSubAF */
         $subAF = NotRepeatedSubAF::load($this->getParam('id'));
         $this->data = $subAF->getHelp();
         $this->send();

@@ -1,6 +1,6 @@
 <?php
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use Core\Annotation\Secure;
 use User\Domain\ACL\Action;
 use User\Domain\User;

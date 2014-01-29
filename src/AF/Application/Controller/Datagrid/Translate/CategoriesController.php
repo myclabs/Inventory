@@ -6,7 +6,7 @@
  * @subpackage Controller
  */
 
-use AF\Domain\AF\Category;
+use AF\Domain\Category;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 

@@ -5,10 +5,10 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\Checkbox;
-use AF\Domain\AF\Condition\ElementaryCondition;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\Checkbox;
+use AF\Domain\Condition\ElementaryCondition;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 use Core\Annotation\Secure;
 
@@ -57,7 +57,7 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
      */
     public function addelementAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {

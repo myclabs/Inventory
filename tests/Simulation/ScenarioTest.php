@@ -2,7 +2,7 @@
 
 namespace Tests\Simulation;
 
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Test\TestCase;
 use Simulation_Model_Scenario;
 use Simulation_Model_Set;
@@ -12,7 +12,7 @@ class ScenarioTest extends TestCase
     /**
      * Génere un objet pret à l'emploi pour les tests.
      * @param string $label
-     * @param PrimaryInputSet $aFInputSetPrimary
+     * @param \AF\Domain\InputSet\PrimaryInputSet $aFInputSetPrimary
      * @param Simulation_Model_Set $set
      * @return Simulation_Model_Scenario
      */

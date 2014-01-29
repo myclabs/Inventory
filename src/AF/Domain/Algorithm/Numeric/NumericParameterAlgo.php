@@ -2,7 +2,7 @@
 
 namespace AF\Domain\Algorithm\Numeric;
 
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\ParameterCoordinate\ParameterCoordinate;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\ExecutionException;
@@ -80,7 +80,7 @@ class NumericParameterAlgo extends NumericAlgo
         try {
             $family = $technoService->getFamily($this->familyRef);
         } catch (Core_Exception_NotFound $e) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'invalidFamily', [
                 'REF_ALGO'   => $this->ref,
@@ -102,7 +102,7 @@ class NumericParameterAlgo extends NumericAlgo
                 }
             }
             if (!$match) {
-                $configError = new ConfigError();
+                $configError = new AlgoConfigurationError();
                 $configError->isFatal(true);
                 $configError->setMessage(__('Algo', 'configControl', 'missingCoordinate', [
                     'REF_ALGO'      => $this->ref,
@@ -115,7 +115,7 @@ class NumericParameterAlgo extends NumericAlgo
             try {
                 $coordinate->getDimension();
             } catch (Core_Exception_NotFound $e) {
-                $configError = new ConfigError();
+                $configError = new AlgoConfigurationError();
                 $configError->isFatal(true);
                 $configError->setMessage(__('Algo', 'configControl', 'invalidDimension', [
                     'REF_ALGO'      => $this->ref,

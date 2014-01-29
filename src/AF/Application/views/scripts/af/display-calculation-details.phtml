@@ -1,11 +1,11 @@
 <?php
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Input\SubAF\RepeatedSubAFInput;
-use AF\Domain\AF\Input\SubAF\NotRepeatedSubAFInput;
-use AF\Domain\AF\InputSet\InputSet;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
-use AF\Domain\AF\InputSet\SubInputSet;
-use AF\Domain\AF\Output\OutputSet;
+use AF\Domain\AF;
+use AF\Domain\Input\SubAF\RepeatedSubAFInput;
+use AF\Domain\Input\SubAF\NotRepeatedSubAFInput;
+use AF\Domain\InputSet\InputSet;
+use AF\Domain\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\SubInputSet;
+use AF\Domain\Output\OutputSet;
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
@@ -41,8 +41,8 @@ if ($outputSet && count($outputSet->getIndicators()) == 0) {
 displayAF($af, $inputSet, __('AF', 'inputDocumentation', 'masterForm'));
 
 /**
- * @param AF       $af
- * @param InputSet $inputSet
+ * @param \AF\Domain\AF       $af
+ * @param \AF\Domain\InputSet\InputSet $inputSet
  * @param string   $title
  * @param string   $refPrefix
  * @return UI_HTML_Collapse
@@ -67,7 +67,7 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
 
     // Sub-AF
     foreach (getSubAFInputSets($inputSet) as $array) {
-        /** @var $subInputSet SubInputSet */
+        /** @var $subInputSet \AF\Domain\InputSet\SubInputSet */
         $subInputSet = $array['subInputSet'];
         $componentRef = $array['componentRef'];
 
@@ -83,7 +83,7 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
 
 
 /**
- * @param InputSet $inputSet
+ * @param \AF\Domain\InputSet\InputSet $inputSet
  * @return SubInputSet[]
  */
 function getSubAFInputSets(InputSet $inputSet)
@@ -125,7 +125,7 @@ function getSubAFInputSets(InputSet $inputSet)
 
 /**
  * @param Algo     $algo
- * @param InputSet $inputSet
+ * @param \AF\Domain\InputSet\InputSet $inputSet
  * @param string   $refPrefix
  * @return UI_HTML_Collapse
  */

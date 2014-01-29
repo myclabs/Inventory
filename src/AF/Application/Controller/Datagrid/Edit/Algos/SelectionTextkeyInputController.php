@@ -6,8 +6,8 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Select\SelectSingle;
+use AF\Domain\AF;
+use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use Core\Annotation\Secure;
 

@@ -6,7 +6,7 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
@@ -32,7 +32,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
      */
     public function getelementsAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
@@ -79,7 +79,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
      */
     public function addelementAction()
     {
-        /** @var $af AF */
+        /** @var $af \AF\Domain\AF */
         $af = AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {

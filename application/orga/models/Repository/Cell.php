@@ -1,5 +1,5 @@
 <?php
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Doctrine\ORM\QueryBuilder;
 
 /**

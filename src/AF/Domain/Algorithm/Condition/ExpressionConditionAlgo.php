@@ -2,7 +2,7 @@
 
 namespace AF\Domain\Algorithm\Condition;
 
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\InputSet;
 use Core_Exception_NotFound;
 use Exec\Execution\Condition;
@@ -53,7 +53,7 @@ class ExpressionConditionAlgo extends ConditionAlgo implements ValueInterface
     {
         $errors = parent::checkConfig();
         if (!$this->expression) {
-            $errors[] = new ConfigError(__('Algo', 'configControl', 'emptyAlgorithmExpression', [
+            $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'emptyAlgorithmExpression', [
                 'REF' => '$this->ref'
             ]), true);
             return $errors;
@@ -74,7 +74,7 @@ class ExpressionConditionAlgo extends ConditionAlgo implements ValueInterface
         try {
             $algo = $this->set->getAlgoByRef($ref);
         } catch (Core_Exception_NotFound $e) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'noAlgorithmForOperand', [
                 'REF_ALGO' => $this->ref,
@@ -87,7 +87,7 @@ class ExpressionConditionAlgo extends ConditionAlgo implements ValueInterface
 
         // Vérifie qu'il s'agit d'un algo de type condition
         if (!$algo instanceof ConditionAlgo) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'nonConditionOperandInConditionAlgorithm', [
                 'REF_ALGO' => $this->ref,

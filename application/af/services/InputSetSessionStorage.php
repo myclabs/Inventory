@@ -1,6 +1,6 @@
 <?php
-use AF\Domain\AF\AF;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
 
 /**
  * @author     matthieu.napoli
@@ -20,7 +20,7 @@ class AF_Service_InputSetSessionStorage
     /**
      * @param AF $af
      * @param bool        $createIfNotFound Si l'InputSet n'est pas trouvé, en crée un nouveau automatiquement
-     * @return PrimaryInputSet|null
+     * @return \AF\Domain\InputSet\PrimaryInputSet|null
      */
     public function getInputSet(AF $af, $createIfNotFound = true)
     {
@@ -42,7 +42,7 @@ class AF_Service_InputSetSessionStorage
 
     /**
      * @param AF               $af
-     * @param PrimaryInputSet $inputSet
+     * @param \AF\Domain\InputSet\PrimaryInputSet $inputSet
      */
     public function saveInputSet(AF $af, PrimaryInputSet $inputSet)
     {

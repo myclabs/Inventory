@@ -2,7 +2,7 @@
 
 namespace AF\Domain\Algorithm\ParameterCoordinate;
 
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use Core_Model_Entity;
@@ -103,7 +103,7 @@ abstract class ParameterCoordinate extends Core_Model_Entity
     }
 
     /**
-     * @return ConfigError[]
+     * @return AlgoConfigurationError[]
      */
     public function checkConfiguration()
     {

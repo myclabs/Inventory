@@ -5,7 +5,6 @@ namespace AF\Domain\Algorithm;
 use Calc_UnitValue;
 use Core_Model_Entity;
 use Core_Tools;
-use AF\Domain\Algorithm\ConfigError;
 
 /**
  * Algorithme.
@@ -52,7 +51,7 @@ abstract class Algo extends Core_Model_Entity
 
     /**
      * Méthode utilisée au niveau de AF pour vérifier la configuration des algorithmes.
-     * @return ConfigError[]
+     * @return AlgoConfigurationError[]
      */
     public function checkConfig()
     {

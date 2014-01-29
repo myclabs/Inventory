@@ -6,9 +6,9 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Condition\ExpressionCondition;
+use AF\Domain\AF;
+use AF\Domain\Condition\Condition;
+use AF\Domain\Condition\ExpressionCondition;
 use Core\Annotation\Secure;
 use Doctrine\DBAL\DBALException;
 use TEC\Exception\InvalidExpressionException;
@@ -30,7 +30,7 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
         $af = AF::load($this->getParam('id'));
         $query = new Core_Model_Query();
         $query->filter->addCondition(Condition::QUERY_AF, $af);
-        /** @var $conditions ExpressionCondition[] */
+        /** @var $conditions \AF\Domain\Condition\ExpressionCondition[] */
         $conditions = ExpressionCondition::loadList($query);
         foreach ($conditions as $condition) {
             $data = [];

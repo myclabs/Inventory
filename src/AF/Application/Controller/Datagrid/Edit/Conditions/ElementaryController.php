@@ -6,18 +6,18 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\NumericField;
-use AF\Domain\AF\Component\Checkbox;
-use AF\Domain\AF\Component\Field;
-use AF\Domain\AF\Component\Select\SelectSingle;
-use AF\Domain\AF\Component\Select\SelectMulti;
-use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Condition\ElementaryCondition;
-use AF\Domain\AF\Condition\Elementary\NumericFieldCondition;
-use AF\Domain\AF\Condition\Elementary\CheckboxCondition;
-use AF\Domain\AF\Condition\Elementary\Select\SelectSingleCondition;
-use AF\Domain\AF\Condition\Elementary\Select\SelectMultiCondition;
+use AF\Domain\AF;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Component\Checkbox;
+use AF\Domain\Component\Field;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Condition\Condition;
+use AF\Domain\Condition\ElementaryCondition;
+use AF\Domain\Condition\Elementary\NumericFieldCondition;
+use AF\Domain\Condition\Elementary\CheckboxCondition;
+use AF\Domain\Condition\Elementary\Select\SelectSingleCondition;
+use AF\Domain\Condition\Elementary\Select\SelectMultiCondition;
 use Core\Annotation\Secure;
 use Doctrine\DBAL\DBALException;
 
@@ -96,7 +96,7 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            /** @var $field Field */
+            /** @var $field \AF\Domain\Component\Field */
             $field = Field::load($fieldId);
             switch (get_class($field)) {
                 case NumericField::class:
@@ -144,7 +144,7 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
      */
     public function updateelementAction()
     {
-        /** @var $condition ElementaryCondition */
+        /** @var $condition \AF\Domain\Condition\ElementaryCondition */
         $condition = ElementaryCondition::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
@@ -170,7 +170,7 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
      */
     public function deleteelementAction()
     {
-        /** @var $condition \AF\Domain\AF\Condition\Condition */
+        /** @var $condition \AF\Domain\AF\Condition\\AF\Domain\Condition\Condition */
         $condition = Condition::load($this->getParam('index'));
         try {
             $condition->delete();

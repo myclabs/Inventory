@@ -4,7 +4,7 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo;
 use Core\Annotation\Secure;
 use TEC\Exception\InvalidExpressionException;

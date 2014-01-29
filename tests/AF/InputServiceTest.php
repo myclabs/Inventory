@@ -2,12 +2,12 @@
 
 namespace Tests\AF;
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Checkbox;
-use AF\Domain\AF\Component\NumericField;
-use AF\Domain\AF\Input\CheckboxInput;
-use AF\Domain\AF\Input\NumericFieldInput;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\AF;
+use AF\Domain\Component\Checkbox;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Input\CheckboxInput;
+use AF\Domain\Input\NumericFieldInput;
+use AF\Domain\InputSet\PrimaryInputSet;
 use AF_Service_InputService;
 use Core\Test\TestCase;
 use Unit\UnitAPI;
@@ -23,7 +23,7 @@ class InputServiceTest extends TestCase
      */
     private $af;
     /**
-     * @var NumericField
+     * @var \AF\Domain\Component\NumericField
      */
     private $comp1;
     /**
@@ -31,7 +31,7 @@ class InputServiceTest extends TestCase
      */
     private $comp2;
     /**
-     * @var Checkbox
+     * @var \AF\Domain\Component\Checkbox
      */
     private $comp3;
 
@@ -114,7 +114,7 @@ class InputServiceTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        if (AF::countTotal() > 0) {
+        if (\AF\Domain\AF::countTotal() > 0) {
             foreach (AF::loadList() as $o) {
                 $o->delete();
             }

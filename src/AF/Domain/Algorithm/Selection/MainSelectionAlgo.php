@@ -3,7 +3,7 @@
 namespace AF\Domain\Algorithm\Selection;
 
 use AF\Domain\Algorithm\Algo;
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\Index\AlgoResultIndex;
 use AF\Domain\Algorithm\Index\FixedIndex;
 use AF\Domain\Algorithm\InputSet;
@@ -93,7 +93,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
 
         // Vérifie que l'expression n'est pas vide
         if ($this->expression == null) {
-            $errors[] = new ConfigError(__('Algo', 'configControl', 'emptyMainAlgorithmExpression'), false);
+            $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'emptyMainAlgorithmExpression'), false);
             return $errors;
         }
 
@@ -108,7 +108,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
             if ($algo instanceof NumericAlgo) {
                 if ($algo->isIndexed() && !in_array($algo, $algosInMain)) {
                     $message = __('Algo', 'configControl', 'algoIndexedNotInMain', ['REF_ALGO' => $algo->getRef()]);
-                    $errors[] = new ConfigError($message, false);
+                    $errors[] = new AlgoConfigurationError($message, false);
                 }
             }
         }
@@ -130,7 +130,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
         try {
             $algo = $this->set->getAlgoByRef($ref);
         } catch (Core_Exception_NotFound $e) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'noAlgorithmForOperandInMainAlgorithm', [
                 'EXPRESSION' => $this->expression,
@@ -142,7 +142,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
 
         // Vérifie qu'il s'agit d'un algo numérique
         if (!$algo instanceof NumericAlgo) {
-            $configError = new ConfigError();
+            $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'nonNumericOperandInMainAlgorithm', [
                 'EXPRESSION' => $this->expression,
@@ -154,7 +154,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
 
         // Vérifie que l'algorithme numérique a un label non vide
         if (!$algo->getLabel()) {
-            $errors[] = new ConfigError(__('Algo', 'configControl', 'operandWithoutLabelInMainAlgorithm', [
+            $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'operandWithoutLabelInMainAlgorithm', [
                 'EXPRESSION' => $this->expression,
                 'REF_OPERAND' => $ref
             ]), false);
@@ -162,7 +162,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
 
         // Vérifie qu'il y'a bien un context indicator
         if (!$algo->isIndexed()) {
-            $errors[] = new ConfigError(__('Algo', 'configControl', 'operandWithoutIndicatorInMainAlgorithm', [
+            $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'operandWithoutIndicatorInMainAlgorithm', [
                 'EXPRESSION' => $this->expression,
                 'REF_OPERAND' => $ref
             ]), true);
@@ -179,7 +179,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
                     'ALGO_UNIT'      => $algoUnit->getSymbol(),
                     'INDICATOR_UNIT' => $indicatorUnit->getSymbol(),
                 ]);
-                $errors[] = new ConfigError($message, true);
+                $errors[] = new AlgoConfigurationError($message, true);
             }
         } catch (Exception $e) {
         }
@@ -211,7 +211,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
             }
         }
         if (!$isIndexationValid) {
-            $errors[] = new ConfigError(__('Algo', 'configControl', 'algoIndexationInvalid', [
+            $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'algoIndexationInvalid', [
                 'REF_OPERAND' => $ref
             ]), true);
             return $errors;
@@ -220,12 +220,12 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
         // Vérifie que les index ont une valeur
         foreach ($algoIndexes as $algoIndex) {
             if ($algoIndex instanceof FixedIndex && !$algoIndex->hasClassifMember()) {
-                $errors[] = new ConfigError(__('Algo', 'configControl', 'algoIndexationInvalid', [
+                $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'algoIndexationInvalid', [
                     'REF_OPERAND' => $ref
                 ]), true);
             }
             if ($algoIndex instanceof AlgoResultIndex && !$algoIndex->getAlgo()) {
-                $errors[] = new ConfigError(__('Algo', 'configControl', 'algoIndexationInvalid', [
+                $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'algoIndexationInvalid', [
                     'REF_OPERAND' => $ref
                 ]), true);
             }

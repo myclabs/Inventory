@@ -2,7 +2,7 @@
 
 namespace AF\Domain\Algorithm\Selection\TextKey;
 
-use AF\Domain\Algorithm\ConfigError;
+use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
 use Core_Exception_NotFound;
@@ -76,7 +76,7 @@ class ExpressionSelectionAlgo extends TextKeySelectionAlgo implements ValueInter
             // Si l'opérande est le ref d'un algo, on vérifie que c'est bien un algo de sélection
             $algo = $this->getSet()->getAlgoByRef($ref);
             if (!$algo instanceof TextKeySelectionAlgo) {
-                $configError = new ConfigError();
+                $configError = new AlgoConfigurationError();
                 $configError->isFatal(true);
                 $configError->setMessage(__('Algo', 'configControl', 'nonSelectOperandInSelectAlgorithm', [
                     'REF_ALGO' => $this->ref,

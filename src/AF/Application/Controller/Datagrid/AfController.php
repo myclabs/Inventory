@@ -6,10 +6,10 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Category;
-use AF\Domain\AF\Component\SubAF;
-use AF\Domain\AF\Output\OutputElement;
+use AF\Domain\AF;
+use AF\Domain\Category;
+use AF\Domain\Component\SubAF;
+use AF\Domain\Output\OutputElement;
 use DI\Annotation\Inject;
 use Core\Annotation\Secure;
 

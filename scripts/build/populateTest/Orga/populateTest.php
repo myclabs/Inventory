@@ -2,8 +2,8 @@
 
 require_once __DIR__ . '/../../populate/Orga/populate.php';
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Select;
+use AF\Domain\AF;
+use AF\Domain\Component\Select;
 use Unit\UnitAPI;
 
 /**

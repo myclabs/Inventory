@@ -5,7 +5,7 @@
  * @subpackage Controller
  */
 
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 
 /**

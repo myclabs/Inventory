@@ -6,9 +6,9 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\SubAF\RepeatedSubAF;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\SubAF\RepeatedSubAF;
 use Core\Annotation\Secure;
 
 /**
@@ -29,7 +29,7 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $subAFList RepeatedSubAF[] */
+        /** @var $subAFList \AF\Domain\Component\SubAF\RepeatedSubAF[] */
         $subAFList = RepeatedSubAF::loadList($this->request);
         foreach ($subAFList as $subAF) {
             $data = [];
@@ -108,7 +108,7 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
      */
     public function updateelementAction()
     {
-        /** @var $subAF RepeatedSubAF */
+        /** @var $subAF \AF\Domain\Component\SubAF\RepeatedSubAF */
         $subAF = RepeatedSubAF::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {

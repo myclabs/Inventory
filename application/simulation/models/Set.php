@@ -1,5 +1,5 @@
 <?php
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use User\Domain\User;
 
 /**

@@ -1,6 +1,6 @@
 <?php
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\SubAF;
+use AF\Domain\AF;
+use AF\Domain\Component\SubAF;
 
 /**
  * Sous-AF de l'onglet "Composants"
@@ -8,7 +8,7 @@ use AF\Domain\AF\Component\SubAF;
  * @author  yoann.croizer
  * @package AF
  */
-/** @var $af AF */
+/** @var $af \AF\Domain\AF */
 $af = $this->af;
 
 // Datagrid
@@ -32,7 +32,7 @@ $datagrid->addCol($subafRef);
 $targetAF = new UI_Datagrid_Col_List('targetAF', __('AF', 'configComponentDatagrid', 'associatedFormHeader'));
 $targetAF->list = [];
 foreach (AF::loadList() as $currentAf) {
-    /** @var $currentAf AF */
+    /** @var $currentAf \AF\Domain\AF */
     if ($currentAf->getId() != $af->getId()) {
         $targetAF->list[$currentAf->getId()] = $currentAf->getLabel();
     }

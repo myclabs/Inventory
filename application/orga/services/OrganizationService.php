@@ -1,6 +1,6 @@
 <?php
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use Doctrine\ORM\EntityManager;
 use Orga\Model\ACL\Role\CellManagerRole;
 use Orga\Model\ACL\Role\OrganizationAdminRole;

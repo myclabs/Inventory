@@ -7,8 +7,8 @@
  */
 
 use AF\Application\AFViewConfiguration;
-use AF\Domain\AF\AF;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;

@@ -1,8 +1,8 @@
 <?php
 
 use AF\Application\AFViewConfiguration;
-use AF\Domain\AF\AF;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
@@ -1210,7 +1210,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         $inputSetContainer = $this->getParam('inputSetContainer');
-        /** @var $newInputSet PrimaryInputSet */
+        /** @var $newInputSet \AF\Domain\InputSet\PrimaryInputSet */
         $newInputSet = $inputSetContainer->inputSet;
 
         $this->inputService->editInput($cell, $newInputSet);

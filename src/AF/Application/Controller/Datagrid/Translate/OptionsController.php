@@ -6,7 +6,7 @@
  * @subpackage Controller
  */
 
-use AF\Domain\AF\Component\Select\SelectOption;
+use AF\Domain\Component\Select\SelectOption;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 

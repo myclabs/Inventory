@@ -1,6 +1,6 @@
 <?php
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
@@ -648,7 +648,7 @@ class Orga_OrganizationController extends Core_Controller
         $this->view->assign('granularities', $organization->getInputGranularities());
 
         $afs = [];
-        /** @var AF $af */
+        /** @var \AF\Domain\AF $af */
         foreach (AF::loadList() as $af) {
             $afs[$af->getRef()] = $af->getLabel();
         }

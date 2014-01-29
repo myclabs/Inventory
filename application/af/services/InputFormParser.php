@@ -1,26 +1,26 @@
 <?php
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Group;
-use AF\Domain\AF\Component\TextField;
-use AF\Domain\AF\Component\NumericField;
-use AF\Domain\AF\Component\Checkbox;
-use AF\Domain\AF\Component\Select\SelectSingle;
-use AF\Domain\AF\Component\Select\SelectMulti;
-use AF\Domain\AF\Component\SubAF\RepeatedSubAF;
-use AF\Domain\AF\Component\SubAF\NotRepeatedSubAF;
-use AF\Domain\AF\Input\TextFieldInput;
-use AF\Domain\AF\Input\NumericFieldInput;
-use AF\Domain\AF\Input\GroupInput;
-use AF\Domain\AF\Input\CheckboxInput;
-use AF\Domain\AF\Input\Select\SelectSingleInput;
-use AF\Domain\AF\Input\Select\SelectMultiInput;
-use AF\Domain\AF\Input\SubAF\RepeatedSubAFInput;
-use AF\Domain\AF\Input\SubAF\NotRepeatedSubAFInput;
-use AF\Domain\AF\InputSet\InputSet;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\InputSet\PrimaryInputSet;
-use AF\Domain\AF\InputSet\SubInputSet;
+use AF\Domain\AF;
+use AF\Domain\Component\Group;
+use AF\Domain\Component\TextField;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Component\Checkbox;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Component\SubAF\RepeatedSubAF;
+use AF\Domain\Component\SubAF\NotRepeatedSubAF;
+use AF\Domain\Input\TextFieldInput;
+use AF\Domain\Input\NumericFieldInput;
+use AF\Domain\Input\GroupInput;
+use AF\Domain\Input\CheckboxInput;
+use AF\Domain\Input\Select\SelectSingleInput;
+use AF\Domain\Input\Select\SelectMultiInput;
+use AF\Domain\Input\SubAF\RepeatedSubAFInput;
+use AF\Domain\Input\SubAF\NotRepeatedSubAFInput;
+use AF\Domain\InputSet\InputSet;
+use AF\Domain\Component\Component;
+use AF\Domain\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\SubInputSet;
 use Unit\UnitAPI;
 
 /**
@@ -53,7 +53,7 @@ class AF_Service_InputFormParser
      * Parse la soumission d'un AF pour remplir un InputSet
      *
      * @param array             $formContent Contenu du post du formulaire
-     * @param \AF\Domain\AF\InputSet\InputSet $inputSet
+     * @param \AF\Domain\InputSet\InputSet $inputSet
      * @param AF       $af
      *
      * @return array
@@ -97,7 +97,7 @@ class AF_Service_InputFormParser
 
     /**
      * @param string             $fullRef Le ref du champ du formulaire (avec les préfixes)
-     * @param \AF\Domain\AF\Component\Component $component
+     * @param \AF\Domain\AF\Component\\AF\Domain\Component\Component $component
      * @param InputSet  $inputSet
      * @param array              $inputContent
      *

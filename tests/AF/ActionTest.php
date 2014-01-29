@@ -2,14 +2,14 @@
 
 namespace Tests\AF;
 
-use AF\Domain\AF\Action\Action;
+use AF\Domain\Action\Action;
 use Core\Test\TestCase;
 
 class ActionTest extends TestCase
 {
     public function testConstruct()
     {
-        /** @var $o \AF\Domain\AF\Action\Action */
+        /** @var $o \AF\Domain\Action\Action */
         $o = $this->getMockForAbstractClass(Action\Action::class);
         $this->assertTrue($o instanceof Action\Action);
         return $o;
@@ -17,8 +17,8 @@ class ActionTest extends TestCase
 
     /**
      * @depends testConstruct
-     * @param \AF\Domain\AF\Action\Action $o
-     * @return \AF\Domain\AF\Action\Action
+     * @param \AF\Domain\Action\Action $o
+     * @return \AF\Domain\Action\Action
      */
     public function testLoad(Action\Action $o)
     {
@@ -28,7 +28,7 @@ class ActionTest extends TestCase
 
     /**
      * @depends testLoad
-     * @param \AF\Domain\AF\Action\Action $o
+     * @param \AF\Domain\Action\Action $o
      */
     public function testDelete(Action\Action $o)
     {
@@ -37,7 +37,7 @@ class ActionTest extends TestCase
 
     public function testCheckConfig()
     {
-        /** @var $o \AF\Domain\AF\Action\Action */
+        /** @var $o \AF\Domain\Action\Action */
         $o = $this->getMockForAbstractClass(Action\Action::class);
         $errors = $o->checkConfig();
         $this->assertCount(1, $errors);

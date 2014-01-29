@@ -1,6 +1,6 @@
 <?php
 
-use AF\Domain\AF\AF;
+use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Algorithm\ParameterCoordinate\AlgoParameterCoordinate;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;

@@ -5,10 +5,10 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\Component;
-use AF\Domain\AF\Component\NumericField;
-use AF\Domain\AF\Condition\ElementaryCondition;
+use AF\Domain\AF;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Condition\ElementaryCondition;
 use Core\Annotation\Secure;
 use Unit\UnitAPI;
 
@@ -265,7 +265,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
      */
     public function getRawHelpAction()
     {
-        /** @var $numeric NumericField */
+        /** @var $numeric \AF\Domain\Component\NumericField */
         $numeric = NumericField::load($this->getParam('id'));
         $this->data = $numeric->getHelp();
         $this->send();

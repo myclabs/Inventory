@@ -7,11 +7,11 @@
  * @package AF
  */
 
-use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\NumericField;
-use AF\Domain\AF\Component\Field;
-use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Component\Component;
+use AF\Domain\AF;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Component\Field;
+use AF\Domain\Condition\Condition;
+use AF\Domain\Component\Component;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use TEC\Exception\InvalidExpressionException;
