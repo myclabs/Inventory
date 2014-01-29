@@ -1,4 +1,4 @@
-Index:
+AF\Domain\Algorithm\Index\Index:
   type: entity
   repositoryClass: Core_Model_Repository
   table: Algo_Index
@@ -8,8 +8,8 @@ Index:
     name: type_index
     type: string
   discriminatorMap:
-    fixed: FixedIndex
-    algo: AlgoResultIndex
+    fixed: AF\Domain\Algorithm\Index\FixedIndex
+    algo: AF\Domain\Algorithm\Index\AlgoResultIndex
 
   id:
     id:
@@ -24,7 +24,7 @@ Index:
 
   manyToOne:
     algoNumeric:
-      targetEntity: NumericAlgo
+      targetEntity: AF\Domain\Algorithm\Numeric\NumericAlgo
       inversedBy: indexes
       joinColumn:
         name: idAlgoNumeric

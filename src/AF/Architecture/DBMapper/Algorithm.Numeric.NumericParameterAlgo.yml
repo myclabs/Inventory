@@ -1,4 +1,4 @@
-NumericParameterAlgo:
+AF\Domain\Algorithm\Numeric\NumericParameterAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Numeric_Parameter
@@ -10,7 +10,7 @@ NumericParameterAlgo:
 
   oneToMany:
     parameterCoordinates:
-      targetEntity: ParameterCoordinate
+      targetEntity: AF\Domain\Algorithm\ParameterCoordinate\ParameterCoordinate
       mappedBy: algoParameter
       cascade: [ all ]
       orphanRemoval: true

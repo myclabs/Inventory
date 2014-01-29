@@ -1,4 +1,4 @@
-ExpressionConditionAlgo:
+AF\Domain\Algorithm\Condition\ExpressionConditionAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Condition_Expression

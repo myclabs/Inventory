@@ -1,4 +1,4 @@
-BooleanConditionAlgo:
+AF\Domain\Algorithm\Condition\Elementary\BooleanConditionAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Condition_Elementary_Boolean

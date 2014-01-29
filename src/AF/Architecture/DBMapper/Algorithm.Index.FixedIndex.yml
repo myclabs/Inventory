@@ -1,4 +1,4 @@
-FixedIndex:
+AF\Domain\Algorithm\Index\FixedIndex:
   type: entity
   repositoryClass: Core_Model_Repository
   table: Algo_Index_Fixed

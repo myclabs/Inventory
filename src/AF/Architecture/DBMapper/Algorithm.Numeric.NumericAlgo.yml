@@ -1,4 +1,4 @@
-NumericAlgo:
+AF\Domain\Algorithm\Numeric\NumericAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Numeric
@@ -22,7 +22,7 @@ NumericAlgo:
 
   oneToMany:
     indexes:
-      targetEntity: Index
+      targetEntity: AF\Domain\Algorithm\Index\Index
       orphanRemoval: true
       mappedBy: algoNumeric
       cascade: [ all ]

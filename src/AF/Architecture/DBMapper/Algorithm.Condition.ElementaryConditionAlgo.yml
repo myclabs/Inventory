@@ -1,4 +1,4 @@
-ElementaryConditionAlgo:
+AF\Domain\Algorithm\Condition\ElementaryConditionAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Condition_Elementary

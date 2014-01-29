@@ -1,4 +1,4 @@
-FixedParameterCoordinate:
+AF\Domain\Algorithm\ParameterCoordinate\FixedParameterCoordinate:
   type: entity
   repositoryClass: Core_Model_Repository
   table: Algo_ParameterCoordinate_Fixed

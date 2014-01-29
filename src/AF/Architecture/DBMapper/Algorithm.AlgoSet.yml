@@ -1,4 +1,4 @@
-AlgoSet:
+AF\Domain\Algorithm\AlgoSet:
   type: entity
   repositoryClass: Core_Model_Repository
   table: Algo_Set
@@ -11,7 +11,7 @@ AlgoSet:
 
   oneToMany:
     algos:
-      targetEntity: Algo
+      targetEntity: AF\Domain\Algorithm\Algo
       mappedBy: set
       cascade: [ all ]
       orphanRemoval: true

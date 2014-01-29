@@ -1,4 +1,4 @@
-NumericExpressionAlgo:
+AF\Domain\Algorithm\Numeric\NumericExpressionAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Numeric_Expression

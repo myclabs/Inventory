@@ -1,4 +1,4 @@
-ContextValueSelectionAlgo:
+AF\Domain\Algorithm\Selection\TextKey\ContextValueSelectionAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Selection_TextKey_ContextValue

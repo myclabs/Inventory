@@ -1,4 +1,4 @@
-NumericConstantAlgo:
+AF\Domain\Algorithm\Numeric\NumericConstantAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Numeric_Constant

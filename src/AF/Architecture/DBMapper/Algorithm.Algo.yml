@@ -1,4 +1,4 @@
-Algo:
+AF\Domain\Algorithm\Algo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Algo
@@ -8,25 +8,25 @@ Algo:
     name: type_algo
     type: string
   discriminatorMap:
-    selection: SelectionAlgo
-    selection_main: MainSelectionAlgo
-    selection_textkey: TextKeySelectionAlgo
-    selection_textkey_input: InputSelectionAlgo
-    selection_textkey_expression: ExpressionSelectionAlgo
-    selection_textkey_contextvalue: ContextValueSelectionAlgo
-    condition: ConditionAlgo
-    condition_elementary: ElementaryConditionAlgo
-    condition_elementary_numeric: NumericConditionAlgo
-    condition_elementary_boolean: BooleanConditionAlgo
-    condition_elementary_select: SelectConditionAlgo
-    condition_elementary_select_multi: SelectMultiConditionAlgo
-    condition_elementary_select_single: SelectSingleConditionAlgo
-    condition_expression: ExpressionConditionAlgo
-    numeric: NumericAlgo
-    numeric_input: NumericInputAlgo
-    numeric_constant: NumericConstantAlgo
-    numeric_expression: NumericExpressionAlgo
-    numeric_parameter: NumericParameterAlgo
+    selection: AF\Domain\Algorithm\Selection\SelectionAlgo
+    selection_main: AF\Domain\Algorithm\Selection\MainSelectionAlgo
+    selection_textkey: AF\Domain\Algorithm\Selection\TextKeySelectionAlgo
+    selection_textkey_input: AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo
+    selection_textkey_expression: AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo
+    selection_textkey_contextvalue: AF\Domain\Algorithm\Selection\TextKey\ContextValueSelectionAlgo
+    condition: AF\Domain\Algorithm\Condition\ConditionAlgo
+    condition_elementary: AF\Domain\Algorithm\Condition\ElementaryConditionAlgo
+    condition_elementary_numeric: AF\Domain\Algorithm\Condition\Elementary\NumericConditionAlgo
+    condition_elementary_boolean: AF\Domain\Algorithm\Condition\Elementary\BooleanConditionAlgo
+    condition_elementary_select: AF\Domain\Algorithm\Condition\Elementary\SelectConditionAlgo
+    condition_elementary_select_multi: AF\Domain\Algorithm\Condition\Elementary\Select\SelectMultiConditionAlgo
+    condition_elementary_select_single: AF\Domain\Algorithm\Condition\Elementary\Select\SelectSingleConditionAlgo
+    condition_expression: AF\Domain\Algorithm\Condition\ExpressionConditionAlgo
+    numeric: AF\Domain\Algorithm\Numeric\NumericAlgo
+    numeric_input: AF\Domain\Algorithm\Numeric\NumericInputAlgo
+    numeric_constant: AF\Domain\Algorithm\Numeric\NumericConstantAlgo
+    numeric_expression: AF\Domain\Algorithm\Numeric\NumericExpressionAlgo
+    numeric_parameter: AF\Domain\Algorithm\Numeric\NumericParameterAlgo
 
   id:
     id:
@@ -41,7 +41,7 @@ Algo:
 
   manyToOne:
     set:
-      targetEntity: AlgoSet
+      targetEntity: AF\Domain\Algorithm\AlgoSet
       inversedBy: algos
       joinColumn:
         name: idSet
