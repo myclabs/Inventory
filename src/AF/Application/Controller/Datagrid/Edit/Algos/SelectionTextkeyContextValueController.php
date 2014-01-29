@@ -5,6 +5,7 @@
  */
 
 use AF\Domain\AF\AF;
+use AF\Domain\Algorithm\Selection\TextKey\ContextValueSelectionAlgo;
 use Core\Annotation\Secure;
 
 /**
@@ -24,7 +25,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyContextValueController extends UI_C
         $af = AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
-            if ($algo instanceof Algo_Model_Selection_TextKey_ContextValue) {
+            if ($algo instanceof ContextValueSelectionAlgo) {
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
@@ -51,7 +52,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyContextValueController extends UI_C
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            $algo = new Algo_Model_Selection_TextKey_ContextValue();
+            $algo = new ContextValueSelectionAlgo();
             try {
                 $algo->setRef($ref);
             } catch (Core_Exception_User $e) {
@@ -83,8 +84,8 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyContextValueController extends UI_C
      */
     public function updateelementAction()
     {
-        /** @var $algo Algo_Model_Selection_TextKey_ContextValue */
-        $algo = Algo_Model_Selection_TextKey_ContextValue::load($this->update['index']);
+        /** @var $algo ContextValueSelectionAlgo */
+        $algo = ContextValueSelectionAlgo::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'ref':
@@ -117,8 +118,8 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyContextValueController extends UI_C
      */
     public function deleteelementAction()
     {
-        /** @var $algo Algo_Model_Selection_TextKey_ContextValue */
-        $algo = Algo_Model_Selection_TextKey_ContextValue::load($this->getParam('index'));
+        /** @var $algo ContextValueSelectionAlgo */
+        $algo = ContextValueSelectionAlgo::load($this->getParam('index'));
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();

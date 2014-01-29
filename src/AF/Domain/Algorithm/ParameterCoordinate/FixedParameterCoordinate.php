@@ -1,26 +1,29 @@
 <?php
+
+namespace AF\Domain\Algorithm\ParameterCoordinate;
+
 use AF\Domain\Algorithm\ConfigError;
-use AF\Domain\Algorithm\ParameterCoordinate;
 use AF\Domain\Algorithm\InputSet;
+use Core_Exception_NotFound;
+use Core_Exception_UndefinedAttribute;
 
 /**
  * @author matthieu.napoli
  * @author cyril.perraud
  */
-class Algo_Model_ParameterCoordinate_Fixed extends ParameterCoordinate
+class FixedParameterCoordinate extends ParameterCoordinate
 {
     /**
      * @var string|null
      */
     protected $idMember;
 
-
     /**
      * {@inheritdoc}
      */
     public function getMember(InputSet $inputSet = null)
     {
-        if (! $this->idMember) {
+        if (!$this->idMember) {
             throw new Core_Exception_UndefinedAttribute("The member of the parameter coordinate is not defined");
         }
         return $this->idMember;
@@ -44,7 +47,7 @@ class Algo_Model_ParameterCoordinate_Fixed extends ParameterCoordinate
         if (!$this->idMember) {
             $configError = new ConfigError(__('Algo', 'configControl', 'noMember', [
                 'REF_DIMENSION' => $this->getDimension(),
-                'REF_ALGO' => $this->getAlgoParameter()->getRef()
+                'REF_ALGO'      => $this->getAlgoParameter()->getRef()
             ]), true);
             $errors[] = $configError;
         } else {
@@ -54,8 +57,8 @@ class Algo_Model_ParameterCoordinate_Fixed extends ParameterCoordinate
                 $refDimension = $this->getDimension()->getRef();
                 $errors[] = new ConfigError(__('Algo', 'configControl', 'invalidMember', [
                     'REF_DIMENSION' => $refDimension,
-                    'REF_ALGO' => $this->getAlgoParameter()->getRef(),
-                    'REF_MEMBER' => $this->idMember
+                    'REF_ALGO'      => $this->getAlgoParameter()->getRef(),
+                    'REF_MEMBER'    => $this->idMember
                 ]), true);
             }
         }

@@ -7,7 +7,7 @@
  */
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\Component\SubAF\NotRepeatedSubAF;
 use Core\Annotation\Secure;
 

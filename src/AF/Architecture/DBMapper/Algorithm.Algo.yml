@@ -9,11 +9,11 @@ Algo:
     type: string
   discriminatorMap:
     selection: SelectionAlgo
-    selection_main: Algo_Model_Selection_Main
-    selection_textkey: Algo_Model_Selection_TextKey
-    selection_textkey_input: Algo_Model_Selection_TextKey_Input
-    selection_textkey_expression: Algo_Model_Selection_TextKey_Expression
-    selection_textkey_contextvalue: Algo_Model_Selection_TextKey_ContextValue
+    selection_main: MainSelectionAlgo
+    selection_textkey: TextKeySelectionAlgo
+    selection_textkey_input: InputSelectionAlgo
+    selection_textkey_expression: ExpressionSelectionAlgo
+    selection_textkey_contextvalue: ContextValueSelectionAlgo
     condition: ConditionAlgo
     condition_elementary: ElementaryConditionAlgo
     condition_elementary_numeric: NumericConditionAlgo
@@ -23,10 +23,10 @@ Algo:
     condition_elementary_select_single: SelectSingleConditionAlgo
     condition_expression: ExpressionConditionAlgo
     numeric: NumericAlgo
-    numeric_input: Algo_Model_Numeric_Input
-    numeric_constant: Algo_Model_Numeric_Constant
-    numeric_expression: Algo_Model_Numeric_Expression
-    numeric_parameter: Algo_Model_Numeric_Parameter
+    numeric_input: NumericInputAlgo
+    numeric_constant: NumericConstantAlgo
+    numeric_expression: NumericExpressionAlgo
+    numeric_parameter: NumericParameterAlgo
 
   id:
     id:

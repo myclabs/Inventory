@@ -2,13 +2,11 @@
 
 namespace AF\Domain\AF;
 
-use AF\Domain\Algorithm\ConfigError;
-
 /**
  * @author hugo.charbonnier
  * @author matthieu.napoli
  */
-class ConfigError extends ConfigError
+class ConfigError extends \AF\Domain\Algorithm\ConfigError
 {
     /**
      * Le formulaire dans lequel l'erreur est présente

@@ -1,11 +1,11 @@
-Algo_Model_ParameterCoordinate_Algo:
+AlgoParameterCoordinate:
   type: entity
   repositoryClass: Core_Model_Repository
   table: Algo_ParameterCoordinate_Algo
 
   manyToOne:
     algoKeyword:
-      targetEntity: Algo_Model_Selection_TextKey
+      targetEntity: TextKeySelectionAlgo
       joinColumn:
         name: idAlgoKeyword
         referencedColumnName: id

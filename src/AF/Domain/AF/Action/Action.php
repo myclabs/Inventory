@@ -7,7 +7,7 @@ use Core_Model_Entity;
 use AF\Domain\AF\Condition\Condition;
 use AF\Domain\AF\ConfigError;
 use UI_Form_Action;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 
 /**
  * Gestion des actions associées aux champs.
@@ -39,7 +39,7 @@ abstract class Action extends Core_Model_Entity
     protected $condition;
 
     /**
-     * @var Component
+     * @var \AF\Domain\AF\Component\Component
      */
     protected $targetComponent;
 
@@ -78,7 +78,7 @@ abstract class Action extends Core_Model_Entity
     }
 
     /**
-     * @return Component
+     * @return \AF\Domain\AF\Component\Component
      */
     public function getTargetComponent()
     {
@@ -86,7 +86,7 @@ abstract class Action extends Core_Model_Entity
     }
 
     /**
-     * @param Component $targetComponent
+     * @param \AF\Domain\AF\Component\Component $targetComponent
      */
     public function setTargetComponent(Component $targetComponent)
     {

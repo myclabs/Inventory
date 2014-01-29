@@ -12,7 +12,7 @@ Component:
     name: type_component
     type: string
   discriminatorMap:
-    group: AF_Model_Component_Group
+    group: Group
     subaf: SubAF
     subaf_notrepeated: NotRepeatedSubAF
     subaf_repeated: RepeatedSubAF
@@ -61,7 +61,7 @@ Component:
         nullable: true
         onDelete: SET NULL
     group:
-      targetEntity: AF_Model_Component_Group
+      targetEntity: Group
       inversedBy: subComponents
       orderBy:
         position: ASC

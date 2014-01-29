@@ -6,8 +6,8 @@
  * @subpackage Controller
  */
 
-use AF\Domain\AF\Component;
-use AF\Domain\AF\Component\AF_Model_Component_Group;
+use AF\Domain\AF\Component\Component;
+use AF\Domain\AF\Component\Group;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 
@@ -40,7 +40,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
         $this->translatableListener->setTranslationFallback(false);
         $this->request->filter->addCondition(
             Component::QUERY_REF,
-            AF_Model_Component_Group::ROOT_GROUP_REF,
+            Group::ROOT_GROUP_REF,
             Core_Model_Filter::OPERATOR_NOT_EQUAL
         );
         foreach (Component::loadList($this->request) as $component) {

@@ -4,6 +4,8 @@
  * @package AF
  */
 
+use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
+use AF\Domain\Algorithm\ParameterCoordinate\FixedParameterCoordinate;
 use Core\Annotation\Secure;
 use Techno\Domain\Family\Dimension;
 
@@ -19,11 +21,11 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
      */
     public function getelementsAction()
     {
-        /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
+        /** @var $algo NumericParameterAlgo */
+        $algo = NumericParameterAlgo::load($this->getParam('idAlgo'));
         $coordinates = $algo->getParameterCoordinates();
         foreach ($coordinates as $coordinate) {
-            if ($coordinate instanceof Algo_Model_ParameterCoordinate_Fixed) {
+            if ($coordinate instanceof FixedParameterCoordinate) {
                 $data = [];
                 $data['index'] = $coordinate->getId();
                 try {
@@ -50,8 +52,8 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
      */
     public function addelementAction()
     {
-        /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
+        /** @var $algo NumericParameterAlgo */
+        $algo = NumericParameterAlgo::load($this->getParam('idAlgo'));
         $idDimension = $this->getAddElementValue('dimension');
         if (empty($idDimension)) {
             $this->setAddElementErrorMessage('dimension', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -60,7 +62,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
         if (empty($this->_addErrorMessages)) {
             /** @var $dimension Dimension */
             $dimension = Dimension::load($idDimension);
-            $coordinate = new Algo_Model_ParameterCoordinate_Fixed();
+            $coordinate = new FixedParameterCoordinate();
             $coordinate->setDimensionRef($dimension->getRef());
             $coordinate->save();
             $algo->addParameterCoordinates($coordinate);
@@ -78,8 +80,8 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
      */
     public function updateelementAction()
     {
-        /** @var $coordinate Algo_Model_ParameterCoordinate_Fixed */
-        $coordinate = Algo_Model_ParameterCoordinate_Fixed::load($this->update['index']);
+        /** @var $coordinate FixedParameterCoordinate */
+        $coordinate = FixedParameterCoordinate::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'member':
@@ -104,10 +106,10 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
      */
     public function deleteelementAction()
     {
-        /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
-        /** @var $coordinate Algo_Model_ParameterCoordinate_Fixed */
-        $coordinate = Algo_Model_ParameterCoordinate_Fixed::load($this->getParam('index'));
+        /** @var $algo NumericParameterAlgo */
+        $algo = NumericParameterAlgo::load($this->getParam('idAlgo'));
+        /** @var $coordinate FixedParameterCoordinate */
+        $coordinate = FixedParameterCoordinate::load($this->getParam('index'));
         $coordinate->delete();
         $algo->removeParameterCoordinates($coordinate);
         $algo->save();
@@ -122,8 +124,8 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
      */
     public function getMemberListAction()
     {
-        /** @var $coordinate Algo_Model_ParameterCoordinate_Fixed */
-        $coordinate = Algo_Model_ParameterCoordinate_Fixed::load($this->getParam('index'));
+        /** @var $coordinate FixedParameterCoordinate */
+        $coordinate = FixedParameterCoordinate::load($this->getParam('index'));
 
         try {
             $dimension = $coordinate->getDimension();

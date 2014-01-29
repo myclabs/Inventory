@@ -1,8 +1,8 @@
 <?php
+
 namespace AF\Domain\AF\Component;
 
 use AF\Domain\AF\InputSet\InputSet;
-use AF\Domain\AF\Component;
 use AF\Domain\AF\ConfigError;
 use AF\Domain\AF\GenerationHelper;
 use AF\Domain\AF\Input\GroupInput;
@@ -18,7 +18,7 @@ use UI_Form_Element_Group;
  * @author hugo.charbonnier
  * @author thibaud.rolland
  */
-class AF_Model_Component_Group extends Component
+class Group extends Component
 {
     /**
      * Constante associée à l'attribut 'unfoldaway'
@@ -135,7 +135,7 @@ class AF_Model_Component_Group extends Component
 
         foreach ($this->subComponents as $subComponent) {
             $subComponents[] = $subComponent;
-            if ($subComponent instanceof AF_Model_Component_Group) {
+            if ($subComponent instanceof Group) {
                 $subComponents = array_merge($subComponents, $subComponent->getSubComponentsRecursive());
             }
         }
@@ -180,8 +180,9 @@ class AF_Model_Component_Group extends Component
         $subComponents = $this->getSubComponents();
         // Au moins un élément
         if (count($subComponents) == 0) {
-            $errors[] = new ConfigError(__('AF', 'configControl', 'emptyGroup', ['REF' => $this->ref]),
-                false, $this->getAf());
+            $errors[] = new ConfigError(__('AF', 'configControl', 'emptyGroup', [
+                'REF' => $this->ref
+            ]), false, $this->getAf());
         }
         // Valide les sous-éléments
         foreach ($subComponents as $subComponent) {

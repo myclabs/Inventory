@@ -9,6 +9,7 @@
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF\AF;
 use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 
@@ -230,8 +231,8 @@ class AF_AfController extends Core_Controller
      */
     public function popupExpressionGraphAction()
     {
-        /** @var Algo_Model_Numeric_Expression $algo */
-        $algo = Algo_Model_Numeric_Expression::load($this->getParam('id'));
+        /** @var NumericExpressionAlgo $algo */
+        $algo = NumericExpressionAlgo::load($this->getParam('id'));
 
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->algo = $algo;

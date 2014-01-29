@@ -3,7 +3,7 @@
 namespace Tests\AF;
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\Component\NumericField;
 use AF\Domain\AF\Condition\Elementary\NumericFieldCondition;
 use AF_Service_AFCopyService;
@@ -19,7 +19,7 @@ class AFCopyTest extends TestCase
     {
         parent::setUp();
 
-        foreach (Component::loadList() as $o) {
+        foreach (Component\Component::loadList() as $o) {
             $o->delete();
         }
         foreach (AF::loadList() as $o) {

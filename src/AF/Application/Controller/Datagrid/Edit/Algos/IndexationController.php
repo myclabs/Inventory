@@ -9,6 +9,7 @@ use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\Index\AlgoResultIndex;
 use AF\Domain\Algorithm\Index\FixedIndex;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
+use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
 use Core\Annotation\Secure;
 
 /**
@@ -115,8 +116,8 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                         $newMember = Classif_Model_Member::loadByRefAndAxis($newValue, $axis);
                         $index->setClassifMember($newMember);
                     } elseif ($index instanceof AlgoResultIndex) {
-                        /** @var $newAlgo Algo_Model_Selection_TextKey */
-                        $newAlgo = Algo_Model_Selection_TextKey::loadByRef($algo->getSet(), $newValue);
+                        /** @var $newAlgo TextKeySelectionAlgo */
+                        $newAlgo = TextKeySelectionAlgo::loadByRef($algo->getSet(), $newValue);
                         $index->setAlgo($newAlgo);
                     }
 
@@ -132,8 +133,8 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                         $newMember = Classif_Model_Member::loadByRefAndAxis($newValue, $axis);
                         $index->setClassifMember($newMember);
                     } elseif ($index instanceof AlgoResultIndex) {
-                        /** @var $newAlgo Algo_Model_Selection_TextKey */
-                        $newAlgo = Algo_Model_Selection_TextKey::loadByRef($algo->getSet(), $newValue);
+                        /** @var $newAlgo TextKeySelectionAlgo */
+                        $newAlgo = TextKeySelectionAlgo::loadByRef($algo->getSet(), $newValue);
                         $index->setAlgo($newAlgo);
                     }
 
@@ -182,7 +183,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
             case AlgoResultIndex::class:
                 // Liste des algos de type sélection
                 foreach ($algo->getSet()->getAlgos() as $algo) {
-                    if ($algo instanceof Algo_Model_Selection_TextKey) {
+                    if ($algo instanceof TextKeySelectionAlgo) {
                         $this->addElementList($algo->getRef(), $algo->getRef());
                     }
                 }

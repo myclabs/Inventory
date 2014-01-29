@@ -3,7 +3,7 @@
 namespace AF\Domain\Algorithm\Index;
 
 use AF\Domain\Algorithm\InputSet;
-use Algo_Model_Selection_TextKey;
+use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
 use Classif_Model_Member;
 
 /**
@@ -15,7 +15,7 @@ use Classif_Model_Member;
 class AlgoResultIndex extends Index
 {
     /**
-     * @var Algo_Model_Selection_TextKey|null
+     * @var TextKeySelectionAlgo|null
      */
     protected $algo;
 
@@ -31,7 +31,7 @@ class AlgoResultIndex extends Index
     }
 
     /**
-     * @return Algo_Model_Selection_TextKey|null
+     * @return TextKeySelectionAlgo|null
      */
     public function getAlgo()
     {
@@ -39,9 +39,9 @@ class AlgoResultIndex extends Index
     }
 
     /**
-     * @param Algo_Model_Selection_TextKey $algo
+     * @param TextKeySelectionAlgo $algo
      */
-    public function setAlgo(Algo_Model_Selection_TextKey $algo)
+    public function setAlgo(TextKeySelectionAlgo $algo)
     {
         $this->algo = $algo;
     }

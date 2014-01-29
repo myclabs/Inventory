@@ -2,8 +2,6 @@
 
 namespace AF\Domain\AF\Component;
 
-use AF\Domain\AF\Component;
-
 /**
  * Champ de formulaire.
  *

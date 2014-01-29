@@ -3,7 +3,7 @@
 namespace Tests\Algo\TextKey;
 
 use AF\Domain\Algorithm\Algo;
-use Algo_Model_Selection_TextKey_Expression;
+use AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo;
 use AF\Domain\Algorithm\AlgoSet;
 use Classif_Model_Context;
 use Classif_Model_ContextIndicator;
@@ -40,7 +40,7 @@ class ExpressionTest extends TestCase
     }
 
     /**
-     * @return Algo_Model_Selection_TextKey_Expression
+     * @return ExpressionSelectionAlgo
      */
     public function testConstruct()
     {
@@ -49,7 +49,7 @@ class ExpressionTest extends TestCase
         $expression = self::generateExpression();
         $this->entityManager->flush();
 
-        $o = new Algo_Model_Selection_TextKey_Expression();
+        $o = new ExpressionSelectionAlgo();
         $o->setSet($set);
         $o->setRef('test');
         $o->setExpression($expression);
@@ -64,16 +64,16 @@ class ExpressionTest extends TestCase
 
     /**
      * @depends testConstruct
-     * @param Algo_Model_Selection_TextKey_Expression $o
-     * @return Algo_Model_Selection_TextKey_Expression
+     * @param \AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo $o
+     * @return ExpressionSelectionAlgo
      */
-    public function testLoad(Algo_Model_Selection_TextKey_Expression $o)
+    public function testLoad(ExpressionSelectionAlgo $o)
     {
         $this->entityManager->clear();
-        /** @var $oLoaded Algo_Model_Selection_TextKey_Expression */
-        $oLoaded = Algo_Model_Selection_TextKey_Expression::load($o->getId());
+        /** @var $oLoaded ExpressionSelectionAlgo */
+        $oLoaded = ExpressionSelectionAlgo::load($o->getId());
 
-        $this->assertInstanceOf(Algo_Model_Selection_TextKey_Expression::class, $oLoaded);
+        $this->assertInstanceOf(ExpressionSelectionAlgo::class, $oLoaded);
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getId(), $oLoaded->getId());
         $this->assertEquals($o->getRef(), $oLoaded->getRef());
@@ -84,9 +84,9 @@ class ExpressionTest extends TestCase
 
     /**
      * @depends testLoad
-     * @param Algo_Model_Selection_TextKey_Expression $o
+     * @param \AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo $o
      */
-    public function testDelete(Algo_Model_Selection_TextKey_Expression $o)
+    public function testDelete(ExpressionSelectionAlgo $o)
     {
         $o->delete();
         $o->getSet()->delete();

@@ -1,10 +1,13 @@
 <?php
 
+namespace AF\Domain\Algorithm\Numeric;
+
 use AF\Domain\Algorithm\ConfigError;
-use AF\Domain\Algorithm\ParameterCoordinate;
+use AF\Domain\Algorithm\ParameterCoordinate\ParameterCoordinate;
 use AF\Domain\Algorithm\InputSet;
-use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\ExecutionException;
+use Calc_UnitValue;
+use Core_Exception_NotFound;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Techno\Application\Service\TechnoService;
@@ -16,7 +19,7 @@ use Unit\UnitAPI;
  * @author hugo.charbonnier
  * @author thibaud.rolland
  */
-class Algo_Model_Numeric_Parameter extends NumericAlgo
+class NumericParameterAlgo extends NumericAlgo
 {
     /**
      * @var string
@@ -28,9 +31,6 @@ class Algo_Model_Numeric_Parameter extends NumericAlgo
      */
     protected $parameterCoordinates;
 
-    /**
-     * Constructeur
-     */
     public function __construct()
     {
         parent::__construct();
@@ -39,10 +39,7 @@ class Algo_Model_Numeric_Parameter extends NumericAlgo
     }
 
     /**
-     * Exécution de l'algorithme
-     * @param InputSet $inputSet
-     * @throws ExecutionException No value was found for the parameter and the coordinates
-     * @return Calc_UnitValue
+     * {@inheritdoc}
      */
     public function execute(InputSet $inputSet)
     {
@@ -86,7 +83,7 @@ class Algo_Model_Numeric_Parameter extends NumericAlgo
             $configError = new ConfigError();
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'invalidFamily', [
-                'REF_ALGO' => $this->ref,
+                'REF_ALGO'   => $this->ref,
                 'REF_FAMILY' => $this->familyRef
             ]), true);
             $errors[] = $configError;
@@ -104,11 +101,11 @@ class Algo_Model_Numeric_Parameter extends NumericAlgo
                     break;
                 }
             }
-            if (! $match) {
+            if (!$match) {
                 $configError = new ConfigError();
                 $configError->isFatal(true);
                 $configError->setMessage(__('Algo', 'configControl', 'missingCoordinate', [
-                    'REF_ALGO' => $this->ref,
+                    'REF_ALGO'      => $this->ref,
                     'REF_DIMENSION' => $dimension->getLabel()
                 ]), true);
                 $errors[] = $configError;
@@ -121,7 +118,7 @@ class Algo_Model_Numeric_Parameter extends NumericAlgo
                 $configError = new ConfigError();
                 $configError->isFatal(true);
                 $configError->setMessage(__('Algo', 'configControl', 'invalidDimension', [
-                    'REF_ALGO' => $this->ref,
+                    'REF_ALGO'      => $this->ref,
                     'REF_DIMENSION' => $coordinate->getDimensionRef()
                 ]), true);
                 $errors[] = $configError;
@@ -189,7 +186,7 @@ class Algo_Model_Numeric_Parameter extends NumericAlgo
     }
 
     /**
-     * @param ParameterCoordinate $parameterCoordinates
+     * @param \AF\Domain\Algorithm\ParameterCoordinate\ParameterCoordinate $parameterCoordinates
      * @return bool
      */
     public function hasParameterCoordinates(ParameterCoordinate $parameterCoordinates)

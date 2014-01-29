@@ -7,6 +7,8 @@
  */
 
 use AF\Domain\AF\AF;
+use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
+use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use Techno\Application\Service\TechnoService;
@@ -34,7 +36,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
         $af = AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
-            if ($algo instanceof Algo_Model_Numeric_Parameter) {
+            if ($algo instanceof NumericParameterAlgo) {
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
@@ -94,7 +96,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            $algo = new Algo_Model_Numeric_Parameter();
+            $algo = new NumericParameterAlgo();
             try {
                 $algo->setRef($ref);
             } catch (Core_Exception_User $e) {
@@ -127,8 +129,8 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
      */
     public function updateelementAction()
     {
-        /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->update['index']);
+        /** @var $algo NumericParameterAlgo */
+        $algo = NumericParameterAlgo::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'ref':
@@ -174,8 +176,8 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
      */
     public function deleteelementAction()
     {
-        /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('index'));
+        /** @var $algo NumericParameterAlgo */
+        $algo = NumericParameterAlgo::load($this->getParam('index'));
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();
@@ -190,8 +192,8 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
      */
     public function getExpressionAction()
     {
-        /** @var $algo Algo_Model_Numeric_Expression */
-        $algo = Algo_Model_Numeric_Expression::load($this->getParam('id'));
+        /** @var $algo NumericExpressionAlgo */
+        $algo = NumericExpressionAlgo::load($this->getParam('id'));
         $this->data = $algo->getExpression()->getExpression();
         $this->send();
     }

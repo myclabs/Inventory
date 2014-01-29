@@ -4,8 +4,8 @@ namespace AF\Domain\AF\Input;
 
 use AF\Domain\AF\Component\TextField;
 use AF\Domain\AF\InputSet\InputSet;
-use AF\Domain\AF\Component;
-use AF\Domain\Algorithm\Input\NumericInput;
+use AF\Domain\AF\Component\Component;
+use AF\Domain\Algorithm\Input\StringInput;
 
 /**
  * Input Element for text fields.
@@ -13,7 +13,7 @@ use AF\Domain\Algorithm\Input\NumericInput;
  * @author matthieu.napoli
  * @author yoann.croizer
  */
-class TextFieldInput extends Input implements NumericInput
+class TextFieldInput extends Input implements StringInput
 {
     /**
      * @var string

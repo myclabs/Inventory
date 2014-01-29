@@ -1,14 +1,18 @@
 <?php
+
+namespace AF\Domain\Algorithm\Selection\TextKey;
+
 use AF\Domain\Algorithm\InputSet;
+use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
 
 /**
  * Algo de sélection recherchant une valeur par une clé textuelle.
  *
  * Utilisé pour les "injections" de valeurs arbitraires dans la saisie d'AF (par Orga).
  *
- * @author  matthieu.napoli
+ * @author matthieu.napoli
  */
-class Algo_Model_Selection_TextKey_ContextValue extends Algo_Model_Selection_TextKey
+class ContextValueSelectionAlgo extends TextKeySelectionAlgo
 {
     /**
      * @var string
@@ -21,11 +25,7 @@ class Algo_Model_Selection_TextKey_ContextValue extends Algo_Model_Selection_Tex
     protected $defaultValue;
 
     /**
-     * Execute
-     * @param InputSet $inputSet
-     * @throws Core_Exception_NotFound
-     * @throws Core_Exception_InvalidArgument
-     * @return string
+     * {@inheritdoc}
      */
     public function execute(InputSet $inputSet)
     {

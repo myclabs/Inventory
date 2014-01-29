@@ -7,7 +7,7 @@
  */
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\Component\Select;
 use AF\Domain\AF\Component\Select\SelectMulti;
 use AF\Domain\AF\Condition\ElementaryCondition;

@@ -1,7 +1,7 @@
 <?php
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\AF_Model_Component_Group;
+use AF\Domain\AF\Component\Group;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -81,10 +81,10 @@ class AF_Service_AFDeletionService
         }
     }
 
-    private function deleteGroupContent(AF_Model_Component_Group $group)
+    private function deleteGroupContent(Group $group)
     {
         foreach ($group->getSubComponents() as $subComponent) {
-            if ($subComponent instanceof AF_Model_Component_Group) {
+            if ($subComponent instanceof Group) {
                 $this->deleteGroupContent($subComponent);
                 $subComponent->delete();
             } else {

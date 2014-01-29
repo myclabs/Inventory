@@ -4,7 +4,7 @@ namespace AF\Domain\AF\Input;
 
 use AF\Domain\AF\Component\NumericField;
 use AF\Domain\AF\InputSet\InputSet;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\Algorithm\Input\NumericInput;
 use Calc_UnitValue;
 
@@ -23,7 +23,7 @@ class NumericFieldInput extends Input implements NumericInput
 
     /**
      * @param InputSet  $inputSet
-     * @param Component $component
+     * @param \AF\Domain\AF\Component\Component $component
      */
     public function __construct(InputSet $inputSet, Component $component)
     {

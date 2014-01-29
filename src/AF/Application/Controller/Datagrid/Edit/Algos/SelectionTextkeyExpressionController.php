@@ -5,6 +5,7 @@
  */
 
 use AF\Domain\AF\AF;
+use AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo;
 use Core\Annotation\Secure;
 use TEC\Exception\InvalidExpressionException;
 
@@ -25,7 +26,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
         $af = AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
-            if ($algo instanceof Algo_Model_Selection_TextKey_Expression) {
+            if ($algo instanceof ExpressionSelectionAlgo) {
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
@@ -55,7 +56,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            $algo = new Algo_Model_Selection_TextKey_Expression();
+            $algo = new ExpressionSelectionAlgo();
             try {
                 $algo->setRef($ref);
             } catch (Core_Exception_User $e) {
@@ -94,8 +95,8 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
      */
     public function updateelementAction()
     {
-        /** @var $algo Algo_Model_Selection_TextKey_Expression */
-        $algo = Algo_Model_Selection_TextKey_Expression::load($this->update['index']);
+        /** @var $algo ExpressionSelectionAlgo */
+        $algo = ExpressionSelectionAlgo::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'ref':
@@ -133,8 +134,8 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
      */
     public function deleteelementAction()
     {
-        /** @var $algo Algo_Model_Selection_TextKey_Expression */
-        $algo = Algo_Model_Selection_TextKey_Expression::load($this->getParam('index'));
+        /** @var $algo ExpressionSelectionAlgo */
+        $algo = ExpressionSelectionAlgo::load($this->getParam('index'));
         $algo->delete();
         $algo->getSet()->removeAlgo($algo);
         $algo->getSet()->save();
@@ -153,8 +154,8 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
      */
     public function getExpressionAction()
     {
-        /** @var $algo Algo_Model_Selection_TextKey_Expression */
-        $algo = Algo_Model_Selection_TextKey_Expression::load($this->getParam('id'));
+        /** @var $algo ExpressionSelectionAlgo */
+        $algo = ExpressionSelectionAlgo::load($this->getParam('id'));
         $this->data = $algo->getExpression();
         $this->send();
     }

@@ -6,7 +6,7 @@
  */
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\Component\NumericField;
 use AF\Domain\AF\Condition\ElementaryCondition;
 use Core\Annotation\Secure;

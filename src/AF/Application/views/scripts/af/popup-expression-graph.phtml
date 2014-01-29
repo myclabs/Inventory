@@ -1,8 +1,9 @@
 <?php
 
+use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use TEC\Expression;
 
-/** @var Algo_Model_Numeric_Expression $algo */
+/** @var NumericExpressionAlgo $algo */
 $algo = $this->algo;
 
 $expression = new Expression($algo->getExpression());

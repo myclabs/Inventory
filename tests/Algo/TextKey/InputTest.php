@@ -5,7 +5,7 @@ namespace Tests\Algo\TextKey;
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\Input\StringInput;
 use AF\Domain\Algorithm\InputSet;
-use Algo_Model_Selection_TextKey_Input;
+use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\Algorithm\AlgoSet;
 use Classif_Model_Context;
 use Core\Test\TestCase;
@@ -15,11 +15,11 @@ use Doctrine\ORM\UnitOfWork;
 class InputTest extends TestCase
 {
     /**
-     * @return Algo_Model_Selection_TextKey_Input
+     * @return InputSelectionAlgo
      */
     public static function generateObject()
     {
-        $o = new Algo_Model_Selection_TextKey_Input();
+        $o = new InputSelectionAlgo();
         $o->setRef(strtolower(Core_Tools::generateString(20)));
         $o->setInputRef('algoOption');
 
@@ -33,9 +33,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @param Algo_Model_Selection_TextKey_Input $o
+     * @param InputSelectionAlgo $o
      */
-    public static function deleteObject(Algo_Model_Selection_TextKey_Input $o)
+    public static function deleteObject(InputSelectionAlgo $o)
     {
         $o->delete();
         $o->getSet()->delete();
@@ -62,7 +62,7 @@ class InputTest extends TestCase
         $set->save();
         $this->entityManager->flush();
 
-        $o = new Algo_Model_Selection_TextKey_Input();
+        $o = new InputSelectionAlgo();
         $o->setRef(strtolower(Core_Tools::generateString(20)));
         $o->setInputRef('ref1');
         $o->setSet($set);
@@ -75,16 +75,16 @@ class InputTest extends TestCase
 
     /**
      * @depends testConstruct
-     * @param Algo_Model_Selection_TextKey_Input $o
-     * @return Algo_Model_Selection_TextKey_Input
+     * @param \AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo $o
+     * @return \AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo
      */
-    public function testLoad(Algo_Model_Selection_TextKey_Input $o)
+    public function testLoad(InputSelectionAlgo $o)
     {
         $this->entityManager->clear();
-        /** @var $oLoaded Algo_Model_Selection_TextKey_Input */
-        $oLoaded = Algo_Model_Selection_TextKey_Input::load($o->getKey());
+        /** @var $oLoaded \AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo */
+        $oLoaded = InputSelectionAlgo::load($o->getKey());
 
-        $this->assertInstanceOf(Algo_Model_Selection_TextKey_Input::class, $oLoaded);
+        $this->assertInstanceOf(InputSelectionAlgo::class, $oLoaded);
         $this->assertNotSame($o, $oLoaded);
         $this->assertEquals($o->getKey(), $oLoaded->getKey());
         $this->assertEquals($o->getSet()->getKey(), $oLoaded->getSet()->getKey());
@@ -93,9 +93,9 @@ class InputTest extends TestCase
 
     /**
      * @depends testLoad
-     * @param Algo_Model_Selection_TextKey_Input $o
+     * @param \AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo $o
      */
-    public function testDelete(Algo_Model_Selection_TextKey_Input $o)
+    public function testDelete(InputSelectionAlgo $o)
     {
         $o->delete();
         $o->getSet()->delete();
@@ -112,7 +112,7 @@ class InputTest extends TestCase
 
     public function testExecute1()
     {
-        $algoTextKeyInput = new Algo_Model_Selection_TextKey_Input();
+        $algoTextKeyInput = new InputSelectionAlgo();
         $algoTextKeyInput->setInputRef('myInput');
 
         $input = $this->getMockForAbstractClass(StringInput::class);
@@ -138,7 +138,7 @@ class InputTest extends TestCase
      */
     public function testExecute2()
     {
-        $algoTextKeyInput = new Algo_Model_Selection_TextKey_Input();
+        $algoTextKeyInput = new InputSelectionAlgo();
         $algoTextKeyInput->setInputRef('myInput');
 
         $inputSet = $this->getMockForAbstractClass(InputSet::class);

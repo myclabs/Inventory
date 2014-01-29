@@ -4,7 +4,7 @@
  * @package AF
  */
 
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\Component\Select;
 use Core\Annotation\Secure;
 

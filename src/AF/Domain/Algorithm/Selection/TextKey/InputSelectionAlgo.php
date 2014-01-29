@@ -1,13 +1,19 @@
 <?php
+
+namespace AF\Domain\Algorithm\Selection\TextKey;
+
 use AF\Domain\Algorithm\Input\StringInput;
 use AF\Domain\Algorithm\InputSet;
+use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
+use Core_Exception_InvalidArgument;
+use Core_Exception_NotFound;
 
 /**
  * @author matthieu.napoli
  * @author hugo.charbonnier
  * @author yoann.croizer
  */
-class Algo_Model_Selection_TextKey_Input extends Algo_Model_Selection_TextKey
+class InputSelectionAlgo extends TextKeySelectionAlgo
 {
     /**
      * @var string

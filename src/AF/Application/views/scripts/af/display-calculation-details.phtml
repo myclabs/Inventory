@@ -7,7 +7,12 @@ use AF\Domain\AF\InputSet\PrimaryInputSet;
 use AF\Domain\AF\InputSet\SubInputSet;
 use AF\Domain\AF\Output\OutputSet;
 use AF\Domain\Algorithm\Algo;
+use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
+use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
+use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
+use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
+use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
 
 /** @var $af AF */
 $af = $this->af;
@@ -37,9 +42,9 @@ displayAF($af, $inputSet, __('AF', 'inputDocumentation', 'masterForm'));
 
 /**
  * @param AF       $af
- * @param \AF\Domain\AF\InputSet\InputSet $inputSet
- * @param string            $title
- * @param string            $refPrefix
+ * @param InputSet $inputSet
+ * @param string   $title
+ * @param string   $refPrefix
  * @return UI_HTML_Collapse
  */
 function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
@@ -47,7 +52,7 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
     $collapse = new UI_HTML_Collapse($refPrefix . $af->getRef(), $title);
     $collapse->foldedByDefault = true;
 
-    /** @var $mainAlgo Algo_Model_Selection_Main */
+    /** @var $mainAlgo MainSelectionAlgo */
     $mainAlgo = $af->getAlgoByRef(AF::ALGO_MAIN_REF);
     $subAlgos = $mainAlgo->getSelectedNumericAlgos($inputSet);
 
@@ -78,7 +83,7 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
 
 
 /**
- * @param \AF\Domain\AF\InputSet\InputSet $inputSet
+ * @param InputSet $inputSet
  * @return SubInputSet[]
  */
 function getSubAFInputSets(InputSet $inputSet)
@@ -119,9 +124,9 @@ function getSubAFInputSets(InputSet $inputSet)
 
 
 /**
- * @param \AF\Domain\Algorithm\Algo   $algo
- * @param \AF\Domain\AF\InputSet\InputSet $inputSet
- * @param string            $refPrefix
+ * @param Algo     $algo
+ * @param InputSet $inputSet
+ * @param string   $refPrefix
  * @return UI_HTML_Collapse
  */
 function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
@@ -139,16 +144,16 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
 
     // Type
     switch(get_class($algo)) {
-        case 'Algo_Model_Numeric_Input':
+        case NumericInputAlgo::class:
             $type = __('UI', 'name', 'input');
             break;
-        case 'Algo_Model_Numeric_Expression':
+        case NumericExpressionAlgo::class:
             $type = __('TEC', 'name', 'expression');
             break;
-        case 'Algo_Model_Numeric_Constant':
+        case NumericConstantAlgo::class:
             $type = __('UI', 'name', 'constant');
             break;
-        case 'Algo_Model_Numeric_Parameter':
+        case NumericParameterAlgo::class:
             $type = __('UI', 'name', 'parameter');
             break;
         default:
@@ -157,13 +162,13 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
     $collapse->body .= "<p><strong>" . __('UI', 'name', 'type') . __('UI', 'other', ':') . "</strong> $type</p>";
 
     // Champ de saisie
-    if ($algo instanceof Algo_Model_Numeric_Input) {
+    if ($algo instanceof NumericInputAlgo) {
         $collapse->body .= "<p><strong>" . __('UI', 'name', 'field')  . __('UI', 'other', ':')
             . "</strong> {$algo->getLabel()}</p>";
     }
 
     // Paramètre
-    if ($algo instanceof Algo_Model_Numeric_Parameter) {
+    if ($algo instanceof NumericParameterAlgo) {
         $family = $algo->getFamily();
         $collapse->body .= '<p>';
         $collapse->body .= '<strong>' . __('Techno', 'name', 'family') . __('UI', 'other', ':') . '</strong>';
@@ -190,7 +195,7 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
     }
 
     // Expression
-    if ($algo instanceof Algo_Model_Numeric_Expression) {
+    if ($algo instanceof NumericExpressionAlgo) {
         $url = $view->url([
                           'module' => 'af',
                           'controller' => 'af',
@@ -223,7 +228,7 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
     }
 
     // Opérandes de l'expression
-    if ($algo instanceof Algo_Model_Numeric_Expression) {
+    if ($algo instanceof NumericExpressionAlgo) {
         // Opérandes de l'expression
         foreach ($algo->getSubAlgos() as $subAlgo) {
             $collapse->body .= displayAlgo($subAlgo, $inputSet,

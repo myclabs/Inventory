@@ -1,7 +1,11 @@
 <?php
 
+namespace AF\Domain\Algorithm\Selection\TextKey;
+
 use AF\Domain\Algorithm\ConfigError;
 use AF\Domain\Algorithm\InputSet;
+use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
+use Core_Exception_NotFound;
 use Exec\Execution\Select;
 use Exec\Provider\ValueInterface;
 use TEC\Exception\InvalidExpressionException;
@@ -12,7 +16,7 @@ use TEC\Expression;
  * @author hugo.charbonnier
  * @author yoann.croizer
  */
-class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextKey implements ValueInterface
+class ExpressionSelectionAlgo extends TextKeySelectionAlgo implements ValueInterface
 {
     /**
      * @var string
@@ -71,11 +75,14 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
         try {
             // Si l'opérande est le ref d'un algo, on vérifie que c'est bien un algo de sélection
             $algo = $this->getSet()->getAlgoByRef($ref);
-            if (!$algo instanceof Algo_Model_Selection_TextKey) {
+            if (!$algo instanceof TextKeySelectionAlgo) {
                 $configError = new ConfigError();
                 $configError->isFatal(true);
-                $configError->setMessage(__('Algo', 'configControl', 'nonSelectOperandInSelectAlgorithm',
-                        ['REF_ALGO' => $this->ref, 'EXPRESSION' => $this->expression, 'REF_OPERAND' => $ref]));
+                $configError->setMessage(__('Algo', 'configControl', 'nonSelectOperandInSelectAlgorithm', [
+                    'REF_ALGO' => $this->ref,
+                    'EXPRESSION' => $this->expression,
+                    'REF_OPERAND' => $ref
+                ]));
                 $errors[] = $configError;
             }
         } catch (Core_Exception_NotFound $e) {

@@ -1,7 +1,7 @@
 <?php
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\AF_Model_Component_Group;
+use AF\Domain\AF\Component\Group;
 use AF\Domain\AF\Component\TextField;
 use AF\Domain\AF\Component\NumericField;
 use AF\Domain\AF\Component\Checkbox;
@@ -18,7 +18,7 @@ use AF\Domain\AF\Input\Select\SelectMultiInput;
 use AF\Domain\AF\Input\SubAF\RepeatedSubAFInput;
 use AF\Domain\AF\Input\SubAF\NotRepeatedSubAFInput;
 use AF\Domain\AF\InputSet\InputSet;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\InputSet\PrimaryInputSet;
 use AF\Domain\AF\InputSet\SubInputSet;
 use Unit\UnitAPI;
@@ -87,7 +87,7 @@ class AF_Service_InputFormParser
             $errorMessages += $this->createInputFromComponent($fullRef, $afComponent, $inputSet, $inputContent);
 
             // Groupe
-            if ($afComponent instanceof AF_Model_Component_Group) {
+            if ($afComponent instanceof Group) {
                 $errorMessages += $this->doParseForm($inputContent['elements'], $inputSet, $af);
             }
         }
@@ -97,7 +97,7 @@ class AF_Service_InputFormParser
 
     /**
      * @param string             $fullRef Le ref du champ du formulaire (avec les préfixes)
-     * @param Component $component
+     * @param \AF\Domain\AF\Component\Component $component
      * @param InputSet  $inputSet
      * @param array              $inputContent
      *
@@ -110,7 +110,7 @@ class AF_Service_InputFormParser
     ) {
         $errorMessages = [];
 
-        if ($component instanceof AF_Model_Component_Group) {
+        if ($component instanceof Group) {
             // Groupe
             $input = new GroupInput($inputSet, $component);
 

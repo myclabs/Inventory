@@ -1,8 +1,8 @@
 <?php
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component;
-use AF\Domain\AF\Component\AF_Model_Component_Group;
+use AF\Domain\AF\Component\Component;
+use AF\Domain\AF\Component\Group;
 use AF\Domain\AF\Component\TextField;
 use AF\Domain\AF\Component\NumericField;
 use AF\Domain\AF\Component\Checkbox;
@@ -228,7 +228,7 @@ class Orga_Populate extends Core_Script_Action
             $component = Component::loadByRef($refComponent, $aF);
             if (($component instanceof NotRepeatedSubAF)
                 || ($component instanceof RepeatedSubAF)
-                || ($component instanceof AF_Model_Component_Group)) {
+                || ($component instanceof Group)) {
                 continue;
             }
 

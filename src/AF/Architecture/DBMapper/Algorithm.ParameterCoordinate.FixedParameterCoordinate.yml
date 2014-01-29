@@ -1,4 +1,4 @@
-Algo_Model_ParameterCoordinate_Fixed:
+FixedParameterCoordinate:
   type: entity
   repositoryClass: Core_Model_Repository
   table: Algo_ParameterCoordinate_Fixed

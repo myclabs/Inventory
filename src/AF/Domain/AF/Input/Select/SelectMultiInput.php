@@ -5,7 +5,7 @@ namespace AF\Domain\AF\Input\Select;
 use AF\Domain\AF\Component\NumericField;
 use AF\Domain\AF\InputSet\InputSet;
 use AF\Domain\AF\Input\Input;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\Component\Select\SelectOption;
 use AF\Domain\Algorithm\Input\StringCollectionInput;
 use Core_Exception_InvalidArgument;
@@ -27,7 +27,7 @@ class SelectMultiInput extends Input implements StringCollectionInput
 
     /**
      * @param InputSet  $inputSet
-     * @param Component $component
+     * @param \AF\Domain\AF\Component\Component $component
      */
     public function __construct(InputSet $inputSet, Component $component)
     {

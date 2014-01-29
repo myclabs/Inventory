@@ -6,7 +6,7 @@ use AF\Domain\AF\InputSet\InputSet;
 use AF\Domain\AF\ConfigError;
 use AF\Domain\AF\GenerationHelper;
 use AF\Domain\AF\Input\NumericFieldInput;
-use Algo_Model_Numeric_Input;
+use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use Calc_Value;
 use Core_Exception_NotFound;
 use Core_Locale;
@@ -208,7 +208,7 @@ class NumericField extends Field
             $af = $this->getAf();
             if ($af) {
                 $algo = $af->getAlgoByRef($oldRef);
-                if ($algo instanceof Algo_Model_Numeric_Input) {
+                if ($algo instanceof NumericInputAlgo) {
                     $algo->setInputRef($ref);
                     $algo->setRef($ref);
                     $algo->save();
@@ -237,7 +237,7 @@ class NumericField extends Field
             $af = $this->getAf();
             if ($af) {
                 $algo = $af->getAlgoByRef($this->getRef());
-                if ($algo instanceof Algo_Model_Numeric_Input) {
+                if ($algo instanceof NumericInputAlgo) {
                     $algo->setUnit($unit);
                     $algo->save();
                 }

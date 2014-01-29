@@ -1,6 +1,9 @@
 <?php
 
 use AF\Domain\AF\AF;
+use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
+use AF\Domain\Algorithm\ParameterCoordinate\AlgoParameterCoordinate;
+use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
 use Core\Annotation\Secure;
 use Techno\Domain\Family\Dimension;
 
@@ -14,11 +17,11 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
      */
     public function getelementsAction()
     {
-        /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
+        /** @var $algo NumericParameterAlgo */
+        $algo = NumericParameterAlgo::load($this->getParam('idAlgo'));
         $coordinates = $algo->getParameterCoordinates();
         foreach ($coordinates as $coordinate) {
-            if ($coordinate instanceof Algo_Model_ParameterCoordinate_Algo) {
+            if ($coordinate instanceof AlgoParameterCoordinate) {
                 $data = [];
                 $data['index'] = $coordinate->getId();
                 try {
@@ -41,8 +44,8 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
     {
         /** @var $af AF */
         $af = AF::load($this->getParam('id'));
-        /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
+        /** @var $algo NumericParameterAlgo */
+        $algo = NumericParameterAlgo::load($this->getParam('idAlgo'));
         $idDimension = $this->getAddElementValue('dimension');
         if (empty($idDimension)) {
             $this->setAddElementErrorMessage('dimension', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -55,9 +58,9 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
         if (empty($this->_addErrorMessages)) {
             /** @var $dimension Dimension */
             $dimension = Dimension::load($idDimension);
-            /** @var $selectionAlgo Algo_Model_Selection_TextKey */
-            $selectionAlgo = Algo_Model_Selection_TextKey::load($idSelectionAlgo);
-            $coordinate = new Algo_Model_ParameterCoordinate_Algo();
+            /** @var $selectionAlgo TextKeySelectionAlgo */
+            $selectionAlgo = TextKeySelectionAlgo::load($idSelectionAlgo);
+            $coordinate = new AlgoParameterCoordinate();
             /** @noinspection PhpUndefinedVariableInspection */
             $coordinate->setDimensionRef($dimension->getRef());
             $coordinate->setSelectionAlgo($selectionAlgo);
@@ -75,16 +78,16 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
      */
     public function updateelementAction()
     {
-        /** @var $coordinate Algo_Model_ParameterCoordinate_Algo */
-        $coordinate = Algo_Model_ParameterCoordinate_Algo::load($this->update['index']);
+        /** @var $coordinate AlgoParameterCoordinate */
+        $coordinate = AlgoParameterCoordinate::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'algo':
                 if (empty($newValue)) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
-                /** @var $selectionAlgo Algo_Model_Selection_TextKey */
-                $selectionAlgo = Algo_Model_Selection_TextKey::load($newValue);
+                /** @var $selectionAlgo TextKeySelectionAlgo */
+                $selectionAlgo = TextKeySelectionAlgo::load($newValue);
                 $coordinate->setSelectionAlgo($selectionAlgo);
                 $this->data = $newValue;
                 break;
@@ -100,10 +103,10 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesAlgoController extends 
      */
     public function deleteelementAction()
     {
-        /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
-        /** @var $coordinate Algo_Model_ParameterCoordinate_Algo */
-        $coordinate = Algo_Model_ParameterCoordinate_Algo::load($this->getParam('index'));
+        /** @var $algo NumericParameterAlgo */
+        $algo = NumericParameterAlgo::load($this->getParam('idAlgo'));
+        /** @var $coordinate AlgoParameterCoordinate */
+        $coordinate = AlgoParameterCoordinate::load($this->getParam('index'));
         $coordinate->delete();
         $algo->removeParameterCoordinates($coordinate);
         $algo->save();

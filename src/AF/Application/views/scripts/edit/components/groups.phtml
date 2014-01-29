@@ -1,6 +1,6 @@
 <?php
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component\AF_Model_Component_Group;
+use AF\Domain\AF\Component\Group;
 
 /**
  * Configuration des groupes d'un AF
@@ -45,12 +45,12 @@ $groupDatagrid->addCol($isVisible);
 // Foldaway / Unfoldaway
 $isFoldawayGroup = new UI_Datagrid_Col_List('foldaway', __('AF', 'configComponentDatagrid', 'foldawayHeader'));
 $isFoldawayGroup->editable = true;
-$isFoldawayGroup->defaultAddValue = AF_Model_Component_Group::FOLDAWAY;
+$isFoldawayGroup->defaultAddValue = Group::FOLDAWAY;
 $isFoldawayGroup->withEmptyElement = false;
 $isFoldawayGroup->list = array(
-    AF_Model_Component_Group::FOLDAWAY => __('UI', 'property', 'foldaway'),
-    AF_Model_Component_Group::UNFOLDAWAY => __('UI', 'property', 'nonFoldaway'),
-    AF_Model_Component_Group::FOLDED => __('UI', 'property', 'folded'),
+    Group::FOLDAWAY => __('UI', 'property', 'foldaway'),
+    Group::UNFOLDAWAY => __('UI', 'property', 'nonFoldaway'),
+    Group::FOLDED => __('UI', 'property', 'folded'),
 );
 //$groupDatagrid->addCol($isFoldawayGroup);
 

@@ -1,21 +1,25 @@
 <?php
-use AF\Domain\Algorithm\ParameterCoordinate;
+
+namespace AF\Domain\Algorithm\ParameterCoordinate;
+
 use AF\Domain\Algorithm\InputSet;
+use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
+use Core_Exception_InvalidArgument;
 
 /**
  * @author matthieu.napoli
  * @author cyril.perraud
  */
-class Algo_Model_ParameterCoordinate_Algo extends ParameterCoordinate
+class AlgoParameterCoordinate extends ParameterCoordinate
 {
     /**
      * Algo Keyword associé
-     * @var Algo_Model_Selection_TextKey
+     * @var \AF\Domain\Algorithm\Selection\TextKeySelectionAlgo
      */
     protected $algoKeyword;
 
     /**
-     * Renvoi le ref de keyword calculé par l'Algo_Model_ParameterCoordinate_Algo associé
+     * Renvoi le ref de keyword calculé par l'AlgoParameterCoordinate associé
      * {@inheritdoc}
      */
     public function getMember(InputSet $inputSet = null)
@@ -27,7 +31,7 @@ class Algo_Model_ParameterCoordinate_Algo extends ParameterCoordinate
     }
 
     /**
-     * @return Algo_Model_Selection_TextKey
+     * @return \AF\Domain\Algorithm\Selection\TextKeySelectionAlgo
      */
     public function getSelectionAlgo()
     {
@@ -35,9 +39,9 @@ class Algo_Model_ParameterCoordinate_Algo extends ParameterCoordinate
     }
 
     /**
-     * @param Algo_Model_Selection_TextKey $selectionAlgo
+     * @param \AF\Domain\Algorithm\Selection\TextKeySelectionAlgo $selectionAlgo
      */
-    public function setSelectionAlgo(Algo_Model_Selection_TextKey $selectionAlgo)
+    public function setSelectionAlgo(TextKeySelectionAlgo $selectionAlgo)
     {
         $this->algoKeyword = $selectionAlgo;
     }

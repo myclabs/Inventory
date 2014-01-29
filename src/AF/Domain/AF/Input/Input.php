@@ -2,9 +2,8 @@
 
 namespace AF\Domain\AF\Input;
 
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\InputSet\InputSet;
-use AF\Domain\Algorithm\Input\Input;
 use Core_Exception_NotFound;
 use Core_Model_Entity;
 
@@ -14,7 +13,7 @@ use Core_Model_Entity;
  * @author hugo.charbonnier
  * @author yoann.croizer
  */
-abstract class Input extends Core_Model_Entity implements Input
+abstract class Input extends Core_Model_Entity implements \AF\Domain\Algorithm\Input\Input
 {
     const QUERY_COMPONENT_REF = 'refComponent';
     const QUERY_INPUTSET = 'inputSet';
@@ -50,7 +49,7 @@ abstract class Input extends Core_Model_Entity implements Input
 
     /**
      * @param InputSet $inputSet
-     * @param Component         $component
+     * @param \AF\Domain\AF\Component\Component         $component
      */
     public function __construct(InputSet $inputSet, Component $component)
     {

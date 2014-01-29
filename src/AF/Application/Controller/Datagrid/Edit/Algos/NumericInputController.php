@@ -7,6 +7,7 @@
  */
 
 use AF\Domain\AF\AF;
+use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use Core\Annotation\Secure;
 
 /**
@@ -26,7 +27,7 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
         $af = AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
-            if ($algo instanceof Algo_Model_Numeric_Input) {
+            if ($algo instanceof NumericInputAlgo) {
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
@@ -67,8 +68,8 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
      */
     public function updateelementAction()
     {
-        /** @var $algo Algo_Model_Numeric_Input */
-        $algo = Algo_Model_Numeric_Input::load($this->update['index']);
+        /** @var $algo NumericInputAlgo */
+        $algo = NumericInputAlgo::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':

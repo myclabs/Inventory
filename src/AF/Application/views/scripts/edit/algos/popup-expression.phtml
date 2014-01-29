@@ -1,5 +1,6 @@
 <?php
 
+use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use TEC\Expression;
 /**
  * Popup d'affichage d'une expression
@@ -8,7 +9,7 @@ use TEC\Expression;
  * @package AF
  */
 
-/** @var $algo Algo_Model_Numeric_Expression */
+/** @var $algo NumericExpressionAlgo */
 $algo = $this->algo;
 
 $expression = new Expression($algo->getExpression());

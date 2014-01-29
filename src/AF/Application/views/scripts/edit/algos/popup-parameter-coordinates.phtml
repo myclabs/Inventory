@@ -4,11 +4,13 @@
  * @package AF
  */
 use AF\Domain\AF\AF;
+use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
+use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
 use Techno\Domain\Family\Family;
 
 /** @var $af AF */
 $af = $this->af;
-/** @var $algo Algo_Model_Numeric_Parameter */
+/** @var $algo NumericParameterAlgo */
 $algo = $this->algo;
 /** @var $family Family */
 $family = $this->family;
@@ -56,8 +58,8 @@ $algoColumn = new UI_Datagrid_Col_List('algo', __('Algo', 'name', 'algorithm'));
 $algoColumn->editable = true;
 $algoColumn->list = [];
 foreach ($af->getAlgos() as $algo) {
-    if ($algo instanceof Algo_Model_Selection_TextKey) {
-        /** @var $algo Algo_Model_Selection_TextKey */
+    if ($algo instanceof TextKeySelectionAlgo) {
+        /** @var $algo TextKeySelectionAlgo */
         $algoColumn->list[$algo->getId()] = $algo->getRef();
     }
 }

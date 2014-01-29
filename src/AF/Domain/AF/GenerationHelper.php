@@ -6,7 +6,7 @@ use AF\Domain\AF\Action\Action;
 use AF\Domain\AF\Component\Select\SelectOption;
 use AF\Domain\AF\InputSet\InputSet;
 use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Application\AFViewConfiguration;
 use UI_Form_Action;
 use UI_Form_Condition;

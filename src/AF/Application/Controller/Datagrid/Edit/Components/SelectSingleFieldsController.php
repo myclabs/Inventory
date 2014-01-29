@@ -7,13 +7,14 @@
  */
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\Component\Select;
 use AF\Domain\AF\Component\Select\SelectOption;
 use AF\Domain\AF\Component\Select\SelectSingle;
 use AF\Domain\AF\Condition\ElementaryCondition;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 use AF\Domain\Algorithm\Index\AlgoResultIndex;
+use AF\Domain\Algorithm\ParameterCoordinate\AlgoParameterCoordinate;
 use Core\Annotation\Secure;
 
 /**
@@ -207,7 +208,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
             if ($e->isSourceEntityInstanceOf(ElementaryCondition::class)) {
                 throw new Core_Exception_User('AF', 'configComponentMessage',
                     'fieldUsedByInteractionConditionDeletionDenied');
-            } elseif ($e->isSourceEntityInstanceOf(Algo_Model_ParameterCoordinate_Algo::class)) {
+            } elseif ($e->isSourceEntityInstanceOf(AlgoParameterCoordinate::class)) {
                 throw new Core_Exception_User('AF', 'configComponentMessage', 'fieldUsedByIndexation');
             } elseif ($e->isSourceEntityInstanceOf(AlgoResultIndex::class)) {
                 throw new Core_Exception_User('AF', 'configComponentMessage', 'fieldUsedByIndexation');

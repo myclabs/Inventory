@@ -6,8 +6,8 @@
  */
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component;
-use AF\Domain\AF\Component\AF_Model_Component_Group;
+use AF\Domain\AF\Component\Component;
+use AF\Domain\AF\Component\Group;
 use Core\Annotation\Secure;
 
 /**
@@ -26,8 +26,8 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
     public function getnodesAction()
     {
         if ($this->idNode !== null) {
-            /** @var $group AF_Model_Component_Group */
-            $group = AF_Model_Component_Group::load($this->idNode);
+            /** @var $group Group */
+            $group = Group::load($this->idNode);
         } else {
             /** @var $af AF */
             $af = AF::load($this->getParam('id'));
@@ -35,7 +35,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         }
 
         foreach ($group->getSubComponents() as $component) {
-            $isLeaf = (! $component instanceof AF_Model_Component_Group);
+            $isLeaf = (! $component instanceof Group);
             $this->addNode(
                 $component->getId(),
                 $component->getLabel() . ' <em>(' . $component->getRef() . ')</em>',
@@ -72,8 +72,8 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
 
         // Groupe
         if ($newParent != 0) {
-            /** @var $group AF_Model_Component_Group */
-            $group = AF_Model_Component_Group::load($newParent);
+            /** @var $group Group */
+            $group = Group::load($newParent);
 
             $component->getGroup()->removeSubComponent($component);
             $group->addSubComponent($component);
@@ -113,7 +113,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
     {
         /** @var $af AF */
         $af = AF::load($this->getParam('id'));
-        /** @var $component Component */
+        /** @var $component \AF\Domain\AF\Component\Component */
         if ($this->idNode != null) {
             $component = Component::load($this->idNode);
             $parentGroup = $component->getGroup();
@@ -157,7 +157,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         if ($idGroup == null) {
             $group = $component->getGroup();
         } else {
-            $group = AF_Model_Component_Group::load($idGroup);
+            $group = Group::load($idGroup);
         }
 
         $siblings = $group->getSubComponents();
@@ -179,14 +179,14 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
     }
 
     /**
-     * @param AF_Model_Component_Group $group
-     * @return AF_Model_Component_Group[]
+     * @param Group $group
+     * @return Group[]
      */
-    private function getAllAFGroups(AF_Model_Component_Group $group)
+    private function getAllAFGroups(Group $group)
     {
         $groups = [];
         foreach ($group->getSubComponents() as $component) {
-            if ($component instanceof AF_Model_Component_Group) {
+            if ($component instanceof Group) {
                 $groups[$component->getId()] = $component->getLabel();
                 $groups = $groups + $this->getAllAFGroups($component);
             }

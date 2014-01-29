@@ -1,12 +1,12 @@
-Algo_Model_Numeric_Input:
+ContextValueSelectionAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
-  table: Algo_Numeric_Input
+  table: Algo_Selection_TextKey_ContextValue
 
   fields:
-    inputRef:
+    name:
       type: string
       nullable: false
-    unit:
-      type: unit_api
+    defaultValue:
+      type: string
       nullable: false

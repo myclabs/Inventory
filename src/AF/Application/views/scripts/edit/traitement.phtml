@@ -1,5 +1,6 @@
 <?php
 use AF\Domain\AF\AF;
+use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
 
 /**
  * Vue de l'onglet traitement des af
@@ -19,7 +20,7 @@ $algoMainForm->setAction('af/edit/algo-main-submit/id/' . $af->getId());
 $algoMainExpression = new UI_Form_Element_Textarea('expression');
 $algoMainExpression->setLabel('Expression');
 $algoMainExpression->setAttrib('rows', '5');
-/** @var $algo Algo_Model_Selection_Main */
+/** @var $algo MainSelectionAlgo */
 $mainAlgo = $af->getMainAlgo();
 if ($mainAlgo->getExpression()) {
     $algoMainExpression->setValue($mainAlgo->getExpression());

@@ -7,6 +7,7 @@ use AF\Domain\Algorithm\Condition\Elementary\BooleanConditionAlgo;
 use AF\Domain\Algorithm\Condition\Elementary\Select\SelectSingleConditionAlgo;
 use AF\Domain\Algorithm\Condition\Elementary\Select\SelectMultiConditionAlgo;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
+use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use Core\Annotation\Secure;
 
 /**
@@ -96,8 +97,8 @@ class AF_Edit_AlgosController extends Core_Controller
     public function popupParameterCoordinatesAction()
     {
         $this->view->af = AF::load($this->getParam('idAF'));
-        /** @var $algo Algo_Model_Numeric_Parameter */
-        $algo = Algo_Model_Numeric_Parameter::load($this->getParam('idAlgo'));
+        /** @var $algo NumericParameterAlgo */
+        $algo = NumericParameterAlgo::load($this->getParam('idAlgo'));
         try {
             $family = $algo->getFamily();
         } catch (Core_Exception_NotFound $e) {

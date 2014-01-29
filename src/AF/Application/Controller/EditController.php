@@ -11,7 +11,7 @@ use AF\Domain\AF\AF;
 use AF\Domain\AF\Component\NumericField;
 use AF\Domain\AF\Component\Field;
 use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use TEC\Exception\InvalidExpressionException;

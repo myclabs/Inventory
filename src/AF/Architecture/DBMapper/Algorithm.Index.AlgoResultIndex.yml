@@ -5,7 +5,7 @@ AlgoResultIndex:
 
   manyToOne:
     algo:
-      targetEntity: Algo_Model_Selection_TextKey
+      targetEntity: TextKeySelectionAlgo
       joinColumn:
         name: idAlgo
         referencedColumnName: id

@@ -8,6 +8,7 @@
 
 use AF\Domain\AF\AF;
 use AF\Domain\AF\Component\Select\SelectSingle;
+use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use Core\Annotation\Secure;
 
 /**
@@ -27,7 +28,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyInputController extends UI_Controll
         $af = AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
-            if ($algo instanceof Algo_Model_Selection_TextKey_Input) {
+            if ($algo instanceof InputSelectionAlgo) {
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();

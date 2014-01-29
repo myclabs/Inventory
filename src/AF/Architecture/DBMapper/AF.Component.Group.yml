@@ -1,4 +1,4 @@
-AF_Model_Component_Group:
+Group:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Component_Group

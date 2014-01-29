@@ -94,7 +94,7 @@ class PrimaryInputSet extends InputSet
     }
 
     /**
-     * @param \AF\Domain\AF\Output\OutputSet|null $outputSet
+     * @param OutputSet|null $outputSet
      */
     public function setOutputSet(OutputSet $outputSet = null)
     {

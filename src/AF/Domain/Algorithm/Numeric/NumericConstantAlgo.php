@@ -1,31 +1,25 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  yoann.croizer
- * @package Algo
- */
+
+namespace AF\Domain\Algorithm\Numeric;
+
 use AF\Domain\Algorithm\ConfigError;
 use AF\Domain\Algorithm\InputSet;
-use AF\Domain\Algorithm\Numeric\NumericAlgo;
+use Calc_UnitValue;
+use Core_Exception_NotFound;
 use Unit\UnitAPI;
 
 /**
- * @package    Algo
- * @subpackage Numeric
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
-class Algo_Model_Numeric_Constant extends NumericAlgo
+class NumericConstantAlgo extends NumericAlgo
 {
-
     /**
      * @var Calc_UnitValue
      */
     protected $unitValue;
 
-
-    /**
-     * Constructeur
-     */
     public function __construct()
     {
         parent::__construct();
@@ -56,7 +50,7 @@ class Algo_Model_Numeric_Constant extends NumericAlgo
             $configError = new ConfigError();
             $configError->isFatal(true);
             $configError->setMessage("L'unité '" . $this->unitValue->getUnit()->getRef() . "' associée à l'algorithme '"
-                                         . $this->ref . "', n'existe pas.");
+                . $this->ref . "', n'existe pas.");
             $errors[] = $configError;
         }
         // On vérifie que la valeur associée à cet algorithme existe bien
@@ -95,5 +89,4 @@ class Algo_Model_Numeric_Constant extends NumericAlgo
     {
         return $this->unitValue;
     }
-
 }

@@ -8,8 +8,8 @@ ParameterCoordinate:
     name: type_parameter
     type: string
   discriminatorMap:
-    fixed: Algo_Model_ParameterCoordinate_Fixed
-    algo: Algo_Model_ParameterCoordinate_Algo
+    fixed: FixedParameterCoordinate
+    algo: AlgoParameterCoordinate
 
   id:
     id:
@@ -24,7 +24,7 @@ ParameterCoordinate:
 
   manyToOne:
     algoParameter:
-      targetEntity: Algo_Model_Numeric_Parameter
+      targetEntity: NumericParameterAlgo
       inversedBy: parameterCoordinates
       joinColumn:
         name: idAlgo

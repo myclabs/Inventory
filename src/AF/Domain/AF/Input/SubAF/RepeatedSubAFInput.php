@@ -4,7 +4,7 @@ namespace AF\Domain\AF\Input\SubAF;
 
 use AF\Domain\AF\Component\SubAF\RepeatedSubAF;
 use AF\Domain\AF\InputSet\InputSet;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\Input\SubAFInput;
 use AF\Domain\AF\InputSet\SubInputSet;
 use Doctrine\Common\Collections\Collection;
@@ -24,7 +24,7 @@ class RepeatedSubAFInput extends SubAFInput
 
     /**
      * @param \AF\Domain\AF\InputSet\InputSet  $inputSet
-     * @param Component $component
+     * @param \AF\Domain\AF\Component\Component $component
      */
     public function __construct(InputSet $inputSet, Component $component)
     {

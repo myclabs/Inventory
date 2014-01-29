@@ -1,11 +1,11 @@
 <?php
 
-namespace AF\Domain\AF;
+namespace AF\Domain\AF\Component;
 
 use AF\Domain\AF\Action\Action;
+use AF\Domain\AF\AF;
 use AF\Domain\AF\ConfigError;
 use AF\Domain\AF\GenerationHelper;
-use AF\Domain\AF\Component\AF_Model_Component_Group;
 use AF\Domain\AF\Input\Input;
 use AF\Domain\AF\InputSet\InputSet;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
@@ -68,7 +68,7 @@ abstract class Component extends Core_Model_Entity
     protected $actions;
 
     /**
-     * @var \AF\Domain\AF\Component\AF_Model_Component_Group|null
+     * @var \AF\Domain\AF\Component\Group|null
      */
     protected $group;
 
@@ -183,9 +183,9 @@ abstract class Component extends Core_Model_Entity
     }
 
     /**
-     * @param AF_Model_Component_Group|null $group
+     * @param Group|null $group
      */
-    public function setGroup(AF_Model_Component_Group $group = null)
+    public function setGroup(Group $group = null)
     {
         if ($this->group !== $group) {
             $this->deletePosition();
@@ -200,7 +200,7 @@ abstract class Component extends Core_Model_Entity
     }
 
     /**
-     * @return AF_Model_Component_Group
+     * @return Group
      */
     public function getGroup()
     {

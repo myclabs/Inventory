@@ -2,7 +2,6 @@
 
 namespace AF\Domain\AF\Component;
 
-use AF\Domain\AF\Component\Field;
 use AF\Domain\AF\InputSet\InputSet;
 use AF\Domain\AF\GenerationHelper;
 use AF\Domain\AF\Input\TextFieldInput;

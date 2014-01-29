@@ -4,7 +4,7 @@ namespace AF\Domain\AF\Component\Select;
 
 use AF\Domain\AF\Component\Select\SelectOption;
 use UI_Form_Element_Select;
-use Algo_Model_Selection_TextKey_Input;
+use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\AF\GenerationHelper;
 use Core_Exception_NotFound;
 use AF\Domain\AF\Input\Select\SelectSingleInput;
@@ -114,7 +114,7 @@ class SelectSingle extends Select
             $af = $this->getAf();
             if ($af) {
                 $algo = $af->getAlgoByRef($oldRef);
-                if ($algo instanceof Algo_Model_Selection_TextKey_Input) {
+                if ($algo instanceof InputSelectionAlgo) {
                     $algo->setInputRef($ref);
                     $algo->setRef($ref);
                     $algo->save();

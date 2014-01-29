@@ -4,9 +4,8 @@ namespace AF\Domain\AF;
 
 use AF\Domain\AF\Condition\Condition;
 use AF\Domain\AF\InputSet\InputSet;
-use AF\Domain\AF\GenerationHelper;
-use AF\Domain\AF\Component;
-use AF\Domain\AF\Component\AF_Model_Component_Group;
+use AF\Domain\AF\Component\Component;
+use AF\Domain\AF\Component\Group;
 use AF\Domain\AF\Component\NumericField;
 use AF\Domain\AF\Component\Select\SelectSingle;
 use AF\Domain\AF\Component\SubAF;
@@ -16,9 +15,9 @@ use AF\Domain\AF\InputSet\PrimaryInputSet;
 use AF\Domain\AF\Output\OutputSet;
 use AF\Application\AFViewConfiguration;
 use AF\Domain\Algorithm\Algo;
-use Algo_Model_Numeric_Input;
-use Algo_Model_Selection_Main;
-use Algo_Model_Selection_TextKey_Input;
+use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
+use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
+use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\Algorithm\AlgoSet;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
@@ -77,7 +76,7 @@ class AF extends Core_Model_Entity
     protected $category;
 
     /**
-     * @var \AF\Domain\AF\Component\AF_Model_Component_Group
+     * @var \AF\Domain\AF\Component\Group
      */
     protected $rootGroup;
 
@@ -89,7 +88,7 @@ class AF extends Core_Model_Entity
 
     /**
      * Algo principal qui va sélectionner les sous-algos à exécuter pour cet AF
-     * @var Algo_Model_Selection_Main
+     * @var MainSelectionAlgo
      */
     protected $mainAlgo;
 
@@ -118,20 +117,20 @@ class AF extends Core_Model_Entity
         $this->algoSet = new AlgoSet();
 
         // Crée un nouvel algo principal
-        $this->mainAlgo = new Algo_Model_Selection_Main();
+        $this->mainAlgo = new MainSelectionAlgo();
         $this->mainAlgo->setRef(self::ALGO_MAIN_REF);
         $this->mainAlgo->setSet($this->algoSet);
         $this->algoSet->addAlgo($this->mainAlgo);
 
         // Crée le rootGroup des composants
-        $this->rootGroup = new AF_Model_Component_Group();
-        $this->rootGroup->setRef(AF_Model_Component_Group::ROOT_GROUP_REF);
+        $this->rootGroup = new Group();
+        $this->rootGroup->setRef(Group::ROOT_GROUP_REF);
         $this->rootGroup->setAf($this);
     }
 
     /**
      * Retourne les algos de l'AF
-     * @return \AF\Domain\Algorithm\Algo[]
+     * @return Algo[]
      */
     public function getAlgos()
     {
@@ -141,7 +140,7 @@ class AF extends Core_Model_Entity
     /**
      * Retourne un algo de l'AF par son ref
      * @param  string $ref
-     * @return \AF\Domain\Algo\\AF\Domain\Algorithm\Algo
+     * @return Algo
      * @throws Core_Exception_NotFound
      */
     public function getAlgoByRef($ref)
@@ -150,7 +149,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\Algorithm\Algo $algo
+     * @param Algo $algo
      */
     public function addAlgo(Algo $algo)
     {
@@ -159,7 +158,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\Algo\Algo $algo
+     * @param Algo $algo
      */
     public function removeAlgo(Algo $algo)
     {
@@ -210,9 +209,9 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param AF_Model_Component_Group $rootGroup
+     * @param Group $rootGroup
      */
-    public function setRootGroup(AF_Model_Component_Group $rootGroup)
+    public function setRootGroup(Group $rootGroup)
     {
         if ($this->rootGroup !== $rootGroup) {
             $this->rootGroup = $rootGroup;
@@ -221,7 +220,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @return \AF\Domain\AF\Component\AF_Model_Component_Group
+     * @return Group
      * @todo Diminuer l'utilisation de cette méthode (elle casse l'encapsulation)
      */
     public function getRootGroup()
@@ -231,8 +230,8 @@ class AF extends Core_Model_Entity
 
     /**
      * Generate a UI_Form to render it in a view
-     * @param \AF\Domain\AF\InputSet\PrimaryInputSet|null $inputSet
-     * @param string                         $mode read, write or test (default is write)
+     * @param PrimaryInputSet|null $inputSet
+     * @param string               $mode read, write or test (default is write)
      * @return UI_Form
      */
     public function generateForm(
@@ -250,8 +249,8 @@ class AF extends Core_Model_Entity
 
     /**
      * Génère un composant UI_Form de cet AF en tant que sous-AF
-     * @param GenerationHelper    $generationHelper
-     * @param InputSet|null $inputSet
+     * @param GenerationHelper $generationHelper
+     * @param InputSet|null    $inputSet
      * @return UI_Form_Element_Group
      */
     public function generateSubForm(GenerationHelper $generationHelper, InputSet $inputSet = null)
@@ -274,11 +273,11 @@ class AF extends Core_Model_Entity
     /**
      * Execute the calculation
      * @param InputSet $inputSet
-     * @return \AF\Domain\AF\Output\OutputSet
+     * @return OutputSet
      */
     public function execute(InputSet $inputSet)
     {
-        /** @var $mainAlgo Algo_Model_Selection_Main */
+        /** @var $mainAlgo MainSelectionAlgo */
         $mainAlgo = $this->getAlgoByRef(self::ALGO_MAIN_REF);
 
         // Execution de l'algo principal
@@ -438,7 +437,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @return Algo_Model_Selection_Main
+     * @return MainSelectionAlgo
      */
     public function getMainAlgo()
     {
@@ -446,9 +445,9 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param Algo_Model_Selection_Main $mainAlgo
+     * @param MainSelectionAlgo $mainAlgo
      */
-    public function setMainAlgo(Algo_Model_Selection_Main $mainAlgo)
+    public function setMainAlgo(MainSelectionAlgo $mainAlgo)
     {
         $this->mainAlgo = $mainAlgo;
     }
@@ -507,7 +506,7 @@ class AF extends Core_Model_Entity
         }
         // S'il s'agit d'un champ numérique, on crée automatiquement l'algo correspondant
         if ($component instanceof NumericField) {
-            $algo = new Algo_Model_Numeric_Input();
+            $algo = new NumericInputAlgo();
             $algo->setRef($component->getRef());
             $algo->setLabel($component->getLabel());
             $algo->setInputRef($component->getRef());
@@ -517,7 +516,7 @@ class AF extends Core_Model_Entity
         }
         // S'il s'agit d'un champ de sélection, on crée automatiquement l'algo correspondant
         if ($component instanceof SelectSingle) {
-            $algo = new Algo_Model_Selection_TextKey_Input();
+            $algo = new InputSelectionAlgo();
             $algo->setRef($component->getRef());
             $algo->setInputRef($component->getRef());
             $algo->save();

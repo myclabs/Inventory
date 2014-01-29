@@ -6,8 +6,8 @@
  */
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component;
-use AF\Domain\AF\Component\AF_Model_Component_Group;
+use AF\Domain\AF\Component\Component;
+use AF\Domain\AF\Component\Group;
 use Core\Annotation\Secure;
 
 /**
@@ -30,10 +30,10 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
         // Filtre pour exclure le rootGroup
         $this->request->filter->addCondition(Component::QUERY_REF,
-                                             AF_Model_Component_Group::ROOT_GROUP_REF,
+                                             Group::ROOT_GROUP_REF,
                                              Core_Model_Filter::OPERATOR_NOT_EQUAL);
-        /** @var $groups AF_Model_Component_Group[] */
-        $groups = AF_Model_Component_Group::loadList($this->request);
+        /** @var $groups Group[] */
+        $groups = Group::loadList($this->request);
         foreach ($groups as $group) {
             $data = [];
             $data['index'] = $group->getId();
@@ -66,7 +66,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
         }
         $isVisible = $this->getAddElementValue('isVisible');
         if (empty($this->_addErrorMessages)) {
-            $group = new AF_Model_Component_Group();
+            $group = new Group();
             $group->setAf($af);
             try {
                 $group->setRef($ref);
@@ -101,8 +101,8 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
      */
     public function updateelementAction()
     {
-        /** @var $group AF_Model_Component_Group */
-        $group = AF_Model_Component_Group::load($this->update['index']);
+        /** @var $group Group */
+        $group = Group::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'ref':
@@ -147,8 +147,8 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
      */
     public function deleteelementAction()
     {
-        /** @var $group AF_Model_Component_Group */
-        $group = AF_Model_Component_Group::load($this->getParam('index'));
+        /** @var $group Group */
+        $group = Group::load($this->getParam('index'));
         $group->delete();
         try {
             $this->entityManager->flush();
@@ -165,8 +165,8 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
      */
     public function getRawHelpAction()
     {
-        /** @var $group AF_Model_Component_Group */
-        $group = AF_Model_Component_Group::load($this->getParam('id'));
+        /** @var $group Group */
+        $group = Group::load($this->getParam('id'));
         $this->data = $group->getHelp();
         $this->send();
     }

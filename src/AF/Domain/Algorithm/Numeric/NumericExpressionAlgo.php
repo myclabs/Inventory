@@ -1,15 +1,12 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  yoann.croizer
- * @package Algo
- */
+
+namespace AF\Domain\Algorithm\Numeric;
 
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\ConfigError;
 use AF\Domain\Algorithm\InputSet;
-use AF\Domain\Algorithm\Numeric\NumericAlgo;
+use Calc_UnitValue;
+use Core_Exception_NotFound;
 use Exec\Execution\Calc;
 use Exec\Provider\UnitInterface;
 use Exec\Provider\ValueInterface;
@@ -19,13 +16,12 @@ use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 /**
- * @package    Algo
- * @subpackage Numeric
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
-class Algo_Model_Numeric_Expression extends NumericAlgo
-    implements ValueInterface, UnitInterface
+class NumericExpressionAlgo extends NumericAlgo implements ValueInterface, UnitInterface
 {
-
     /**
      * Unité pour contrôle automatique de la cohérence des unités.
      * @var UnitAPI
@@ -80,7 +76,7 @@ class Algo_Model_Numeric_Expression extends NumericAlgo
      */
     public function getUnitForExecution($ref)
     {
-        /** @var $algo \AF\Domain\Algorithm\Numeric\NumericAlgo */
+        /** @var $algo NumericAlgo */
         $algo = $this->getSet()->getAlgoByRef($ref);
         return $algo->getUnit();
     }
@@ -96,8 +92,10 @@ class Algo_Model_Numeric_Expression extends NumericAlgo
         if (!$this->expression) {
             $configError = new ConfigError();
             $configError->isFatal(true);
-            $configError->setMessage(__('Algo', 'configControl', 'emptyAlgorithmExpression', ['REF' => '$this->ref']),
-                                     true);
+            $configError->setMessage(
+                __('Algo', 'configControl', 'emptyAlgorithmExpression', ['REF' => '$this->ref']),
+                true
+            );
             $errors[] = $configError;
             return $errors;
         }
@@ -112,24 +110,20 @@ class Algo_Model_Numeric_Expression extends NumericAlgo
             $calculationUnit = $calc->checkUnitCompatibility($this);
             if (!$calculationUnit->isEquivalent($this->getUnit())) {
                 $errors[] = new ConfigError(
-                    __('Algo', 'configControl', 'operandUnitsNotCompatibleWithAlgoUnit',
-                       [
-                       'REF_ALGO'   => $this->ref,
-                       'ALGO_UNIT'   => $this->getUnit(),
-                       'EXPRESSION' => $this->expression,
-                       'EXPRESSION_UNIT' => $calculationUnit,
-                       ]
-                    ),
+                    __('Algo', 'configControl', 'operandUnitsNotCompatibleWithAlgoUnit', [
+                        'REF_ALGO'        => $this->ref,
+                        'ALGO_UNIT'       => $this->getUnit(),
+                        'EXPRESSION'      => $this->expression,
+                        'EXPRESSION_UNIT' => $calculationUnit,
+                    ]),
                     true
                 );
             }
         } catch (IncompatibleUnitsException $e) {
-            $errors[] = new ConfigError(__('Algo', 'configControl', 'incompatibleUnitsAmongOperands',
-                                                [
-                                                    'REF_ALGO' => $this->ref,
-                                                    'EXPRESSION' => $this->expression
-                                                ]),
-                                             true);
+            $errors[] = new ConfigError(__('Algo', 'configControl', 'incompatibleUnitsAmongOperands', [
+                'REF_ALGO'   => $this->ref,
+                'EXPRESSION' => $this->expression
+            ]), true);
         } catch (Core_Exception_NotFound $e) {
             // Problème référence de famille, dimension, etc.
         }
@@ -150,8 +144,11 @@ class Algo_Model_Numeric_Expression extends NumericAlgo
         } catch (Core_Exception_NotFound $e) {
             $configError = new ConfigError();
             $configError->isFatal(true);
-            $configError->setMessage(__('Algo', 'configControl', 'noAlgorithmForOperand',
-                ['REF_ALGO' => $this->ref, 'EXPRESSION' => $this->expression, 'REF_OPERAND' => $ref]));
+            $configError->setMessage(__('Algo', 'configControl', 'noAlgorithmForOperand', [
+                'REF_ALGO' => $this->ref,
+                'EXPRESSION' => $this->expression,
+                'REF_OPERAND' => $ref
+            ]));
             $errors[] = $configError;
             return $errors;
         }
@@ -160,8 +157,11 @@ class Algo_Model_Numeric_Expression extends NumericAlgo
         if (!$algo instanceof NumericAlgo) {
             $configError = new ConfigError();
             $configError->isFatal(true);
-            $configError->setMessage(__('Algo', 'configControl', 'nonNumericOperandInNumericAlgorithm',
-                ['REF_ALGO' => $this->ref, 'EXPRESSION' => $this->expression, 'REF_OPERAND' => $ref]));
+            $configError->setMessage(__('Algo', 'configControl', 'nonNumericOperandInNumericAlgorithm', [
+                'REF_ALGO' => $this->ref,
+                'EXPRESSION' => $this->expression,
+                'REF_OPERAND' => $ref
+            ]));
             $errors[] = $configError;
             return $errors;
         }
@@ -220,5 +220,4 @@ class Algo_Model_Numeric_Expression extends NumericAlgo
         }
         return $subAlgos;
     }
-
 }

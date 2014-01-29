@@ -8,7 +8,7 @@
 use AF\Domain\AF\Action\SetState;
 use AF\Domain\AF\AF;
 use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use Core\Annotation\Secure;
 
 /**
@@ -29,7 +29,7 @@ class AF_Datagrid_Edit_Actions_SetStateController extends UI_Controller_Datagrid
         //  Récupère tous les composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $components Component[] */
+        /** @var $components \AF\Domain\AF\Component\Component[] */
         $components = Component::loadList($query);
         // Affiche les actions dans l'ordre des composants
         foreach ($components as $component) {
@@ -64,7 +64,7 @@ class AF_Datagrid_Edit_Actions_SetStateController extends UI_Controller_Datagrid
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            /** @var $targetComponent Component */
+            /** @var $targetComponent \AF\Domain\AF\Component\Component */
             $targetComponent = Component::load($targetComponentId);
             if ($this->getAddElementValue('condition')) {
                 $condition = Condition::load($this->getAddElementValue('condition'));

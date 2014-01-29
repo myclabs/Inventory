@@ -1,23 +1,21 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  yoann.croizer
- * @package Algo
- */
+
+namespace AF\Domain\Algorithm\Numeric;
+
 use AF\Domain\Algorithm\ConfigError;
 use AF\Domain\Algorithm\Input\NumericInput;
 use AF\Domain\Algorithm\InputSet;
-use AF\Domain\Algorithm\Numeric\NumericAlgo;
+use Calc_UnitValue;
+use Core_Exception_NotFound;
 use Unit\UnitAPI;
 
 /**
- * @package    Algo
- * @subpackage Numeric
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
-class Algo_Model_Numeric_Input extends NumericAlgo
+class NumericInputAlgo extends NumericAlgo
 {
-
     /**
      * ref de l'input numérique associé
      * @var string
@@ -39,7 +37,7 @@ class Algo_Model_Numeric_Input extends NumericAlgo
     {
         /** @var $input NumericInput */
         $input = $inputSet->getInputByRef($this->inputRef);
-        if (! $input) {
+        if (!$input) {
             return new Calc_UnitValue($this->unit, 0, 0);
         }
         return $input->getValue();
@@ -59,7 +57,7 @@ class Algo_Model_Numeric_Input extends NumericAlgo
             $configError = new ConfigError();
             $configError->isFatal(true);
             $configError->setMessage("L'unité '" . $unit->getRef() . "' associée à l'algorithme '"
-                                         . $this->ref . "' n'existe pas.");
+                . $this->ref . "' n'existe pas.");
             $errors[] = $configError;
         }
         if ((!isset($this->inputRef)) || ($this->inputRef === '')) {
@@ -102,5 +100,4 @@ class Algo_Model_Numeric_Input extends NumericAlgo
     {
         $this->inputRef = $inputRef;
     }
-
 }

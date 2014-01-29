@@ -1,9 +1,10 @@
 <?php
 
-namespace AF\Domain\Algorithm;
+namespace AF\Domain\Algorithm\ParameterCoordinate;
 
 use AF\Domain\Algorithm\ConfigError;
-use Algo_Model_Numeric_Parameter;
+use AF\Domain\Algorithm\InputSet;
+use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use Core_Model_Entity;
 use Techno\Domain\Family\Dimension;
 
@@ -23,7 +24,7 @@ abstract class ParameterCoordinate extends Core_Model_Entity
 
     /**
      * Inverse side of the relationship
-     * @var Algo_Model_Numeric_Parameter
+     * @var NumericParameterAlgo
      */
     protected $algoParameter;
 
@@ -83,7 +84,7 @@ abstract class ParameterCoordinate extends Core_Model_Entity
     }
 
     /**
-     * @return Algo_Model_Numeric_Parameter
+     * @return NumericParameterAlgo
      */
     public function getAlgoParameter()
     {
@@ -91,9 +92,9 @@ abstract class ParameterCoordinate extends Core_Model_Entity
     }
 
     /**
-     * @param Algo_Model_Numeric_Parameter $algoParameter
+     * @param NumericParameterAlgo $algoParameter
      */
-    public function setAlgoParameter(Algo_Model_Numeric_Parameter $algoParameter)
+    public function setAlgoParameter(NumericParameterAlgo $algoParameter)
     {
         if ($this->algoParameter !== $algoParameter) {
             $this->algoParameter = $algoParameter;

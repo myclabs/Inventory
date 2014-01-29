@@ -11,7 +11,7 @@ use AF\Domain\AF\Component\NumericField;
 use AF\Domain\AF\Component\Checkbox;
 use AF\Domain\AF\Component\Select\SelectSingle;
 use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use Core\Annotation\Secure;
 
 /**
@@ -33,7 +33,7 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
         //  Récupère tous les composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $components Component[] */
+        /** @var $components \AF\Domain\AF\Component\Component[] */
         $components = Component::loadList($query);
         // Affiche les actions dans l'ordre des composants
         foreach ($components as $component) {
@@ -115,7 +115,7 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            /** @var $targetComponent Component */
+            /** @var $targetComponent \AF\Domain\AF\Component\Component */
             $targetComponent = Component::load($targetComponentId);
             $type = $this->getAddElementValue('type');
             /** @var $action \AF\Domain\AF\Action\Action */

@@ -3,7 +3,6 @@
 namespace AF\Domain\AF\Component;
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component;
 
 /**
  * Gestion des sous formulaires et des repetitions de sous formulaires

@@ -4,7 +4,7 @@ use AF\Domain\AF\Component\NumericField;
 use AF\Domain\AF\Component\Checkbox;
 use AF\Domain\AF\Component\Select\SelectSingle;
 use AF\Domain\AF\Condition\Condition;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 
 /**
  * @author  matthieu.napoli
@@ -33,7 +33,7 @@ foreach ($this->componentList as $component) {
         || $component instanceof SelectSingle
         || $component instanceof Checkbox
     ) {
-        /** @var $component Component */
+        /** @var $component \AF\Domain\AF\Component\Component */
         $list[$component->getId()] = $component->getLabel();
     }
 }

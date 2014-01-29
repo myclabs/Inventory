@@ -8,6 +8,7 @@
  */
 use AF\Domain\AF\AF;
 use AF\Domain\AF\Component\SubAF\RepeatedSubAF;
+use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use Techno\Domain\Family\Family;
 
 /**
@@ -85,7 +86,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
     {
         $families = [];
         foreach ($af->getAlgos() as $algo) {
-            if ($algo instanceof Algo_Model_Numeric_Parameter) {
+            if ($algo instanceof NumericParameterAlgo) {
                 $families[] = $algo->getFamily();
             }
         }

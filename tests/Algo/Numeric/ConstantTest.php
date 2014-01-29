@@ -4,7 +4,7 @@ namespace Tests\Algo\Numeric;
 
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\InputSet;
-use Algo_Model_Numeric_Constant;
+use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use AF\Domain\Algorithm\AlgoSet;
 use Calc_UnitValue;
 use Classif_Model_Context;
@@ -23,7 +23,7 @@ class ConstantTest extends TestCase
         $set->save();
         self::getEntityManager()->flush();
 
-        $o = new Algo_Model_Numeric_Constant();
+        $o = new NumericConstantAlgo();
         $o->setSet($set);
         $o->setRef(strtolower(Core_Tools::generateString(20)));
         $o->setUnitValue(self::generateUnitValue());
@@ -34,7 +34,7 @@ class ConstantTest extends TestCase
         return $o;
     }
 
-    public static function deleteObject(Algo_Model_Numeric_Constant $o)
+    public static function deleteObject(NumericConstantAlgo $o)
     {
         $o->delete();
         $o->getSet()->delete();
@@ -112,7 +112,7 @@ class ConstantTest extends TestCase
         $this->entityManager->flush();
         $unitValue = ConstantTest::generateUnitValue();
 
-        $o = new Algo_Model_Numeric_Constant();
+        $o = new NumericConstantAlgo();
         $o->setSet($set);
         $o->setRef(strtolower(Core_Tools::generateString(20)));
         $o->setUnitValue($unitValue);
@@ -126,24 +126,24 @@ class ConstantTest extends TestCase
 
     /**
      * @depends testConstruct
-     * @param Algo_Model_Numeric_Constant $o
-     * @return Algo_Model_Numeric_Constant $o
+     * @param \AF\Domain\Algorithm\Numeric\NumericConstantAlgo $o
+     * @return NumericConstantAlgo $o
      */
-    public function testLoad(Algo_Model_Numeric_Constant $o)
+    public function testLoad(NumericConstantAlgo $o)
     {
         $this->entityManager->clear();
-        /** @var $oLoaded Algo_Model_Numeric_Constant */
-        $oLoaded = Algo_Model_Numeric_Constant::load($o->getKey());
-        $this->assertInstanceOf(Algo_Model_Numeric_Constant::class, $oLoaded);
+        /** @var $oLoaded \AF\Domain\Algorithm\Numeric\NumericConstantAlgo */
+        $oLoaded = NumericConstantAlgo::load($o->getKey());
+        $this->assertInstanceOf(NumericConstantAlgo::class, $oLoaded);
         $this->assertEquals($o->getUnit()->getRef(), $oLoaded->getUnit()->getRef());
         return $oLoaded;
     }
 
     /**
      * @depends testLoad
-     * @param Algo_Model_Numeric_Constant $o
+     * @param \AF\Domain\Algorithm\Numeric\NumericConstantAlgo $o
      */
-    public function testDelete(Algo_Model_Numeric_Constant $o)
+    public function testDelete(NumericConstantAlgo $o)
     {
         $o->delete();
         $o->getSet()->delete();

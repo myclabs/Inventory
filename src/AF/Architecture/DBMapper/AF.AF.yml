@@ -41,7 +41,7 @@ AF:
 
   oneToOne:
     rootGroup:
-      targetEntity: AF_Model_Component_Group
+      targetEntity: Group
       joinColumn:
         name: idRootGroup
         referencedColumnName: id
@@ -58,7 +58,7 @@ AF:
       cascade: [ all ]
       orphanRemoval: true
     mainAlgo:
-      targetEntity: Algo_Model_Selection_Main
+      targetEntity: MainSelectionAlgo
       joinColumn:
         name: idMainAlgo
         referencedColumnName: id

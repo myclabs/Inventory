@@ -1,4 +1,4 @@
-Algo_Model_Numeric_Parameter:
+NumericParameterAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Numeric_Parameter

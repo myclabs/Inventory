@@ -1,4 +1,4 @@
-Algo_Model_Selection_Main:
+MainSelectionAlgo:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Algo_Selection_Main

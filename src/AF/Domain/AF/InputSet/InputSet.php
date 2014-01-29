@@ -3,12 +3,10 @@
 namespace AF\Domain\AF\InputSet;
 
 use AF\Domain\AF\AF;
-use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\Component;
 use AF\Domain\AF\Input\SubAF\NotRepeatedSubAFInput;
 use AF\Domain\AF\Input\SubAF\RepeatedSubAFInput;
 use AF\Domain\AF\Input\Input;
-use AF\Domain\Algorithm\Input\Input;
-use AF\Domain\Algorithm\InputSet;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,7 +19,7 @@ use Doctrine\ORM\PersistentCollection;
  * @author hugo.charbonnier
  * @author yoann.croizer
  */
-abstract class InputSet extends Core_Model_Entity implements InputSet
+abstract class InputSet extends Core_Model_Entity implements \AF\Domain\Algorithm\InputSet
 {
     const QUERY_COMPLETION = 'completion';
 
@@ -37,7 +35,7 @@ abstract class InputSet extends Core_Model_Entity implements InputSet
     protected $refAF;
 
     /**
-     * @var \AF\Domain\Algorithm\Input\Input[]|Collection|PersistentCollection
+     * @var Input[]|Collection|PersistentCollection
      */
     protected $inputs;
 
@@ -72,7 +70,7 @@ abstract class InputSet extends Core_Model_Entity implements InputSet
     }
 
     /**
-     * @return \AF\Domain\Algorithm\Input\Input[]
+     * @return Input[]
      */
     public function getInputs()
     {
@@ -90,7 +88,7 @@ abstract class InputSet extends Core_Model_Entity implements InputSet
     /**
      * Get the elements linked to the set by component
      * @param Component $component
-     * @return \AF\Domain\AF\Input\\AF\Domain\Algorithm\Input\Input|null
+     * @return Input|null
      */
     public function getInputForComponent(Component $component)
     {
@@ -106,8 +104,8 @@ abstract class InputSet extends Core_Model_Entity implements InputSet
 
     /**
      * Définit la saisie pour un composant
-     * @param Component $component
-     * @param \AF\Domain\Algorithm\Input\Input     $input
+     * @param \AF\Domain\AF\Component\Component $component
+     * @param Input     $input
      */
     public function setInputForComponent(Component $component, Input $input)
     {
@@ -126,7 +124,7 @@ abstract class InputSet extends Core_Model_Entity implements InputSet
 
     /**
      * Supprime une saisie de composant
-     * @param \AF\Domain\Algorithm\Input\Input $input
+     * @param Input $input
      */
     public function removeInput(Input $input)
     {
@@ -138,7 +136,7 @@ abstract class InputSet extends Core_Model_Entity implements InputSet
     /**
      * Returns an input by its ref
      * @param string $ref
-     * @return \AF\Domain\Algorithm\\AF\Domain\Algorithm\Input\Input|null
+     * @return Input|null
      */
     public function getInputByRef($ref)
     {
