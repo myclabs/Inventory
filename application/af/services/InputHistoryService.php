@@ -3,6 +3,14 @@
  * @author matthieu.napoli
  */
 
+use AF\Domain\AF\Component\Select\SelectSingle;
+use AF\Domain\AF\Component\Select\SelectMulti;
+use AF\Domain\AF\Input\Input;
+use AF\Domain\AF\Input\TextFieldInput;
+use AF\Domain\AF\Input\NumericFieldInput;
+use AF\Domain\AF\Input\CheckboxInput;
+use AF\Domain\AF\Input\Select\SelectSingleInput;
+use AF\Domain\AF\Input\Select\SelectMultiInput;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Loggable\Entity\LogEntry;
@@ -25,10 +33,10 @@ class AF_Service_InputHistoryService
     }
 
     /**
-     * @param AF_Model_Input $input
+     * @param Input $input
      * @return AF_Service_InputHistoryService_Entry[]
      */
-    public function getInputHistory(AF_Model_Input $input)
+    public function getInputHistory(Input $input)
     {
         $entries = [];
 
@@ -42,29 +50,29 @@ class AF_Service_InputHistoryService
             $value = $data['value'];
 
             // Filtre les valeurs numériques
-            if ($input instanceof AF_Model_Input_Numeric && (! $value instanceof Calc_UnitValue)) {
+            if ($input instanceof NumericFieldInput && (! $value instanceof Calc_UnitValue)) {
                 continue;
             }
             // Filtre les valeurs texte
-            if ($input instanceof AF_Model_Input_Text && !is_string($value)) {
+            if ($input instanceof TextFieldInput && !is_string($value)) {
                 continue;
             }
             // Filtre les checkbox
-            if ($input instanceof AF_Model_Input_Checkbox && !is_bool($value)) {
+            if ($input instanceof CheckboxInput && !is_bool($value)) {
                 continue;
             }
             // Filtre les sélections simples
-            if ($input instanceof AF_Model_Input_Select_Single && !(is_string($value) || is_null($value))) {
+            if ($input instanceof SelectSingleInput && !(is_string($value) || is_null($value))) {
                 continue;
             }
             // Filtre les sélections multiples
-            if ($input instanceof AF_Model_Input_Select_Multi && (! $value instanceof Collection)) {
+            if ($input instanceof SelectMultiInput && (! $value instanceof Collection)) {
                 continue;
             }
 
             // Valeur des sélections simples
-            if ($input instanceof AF_Model_Input_Select_Single) {
-                /** @var AF_Model_Component_Select_Single $component */
+            if ($input instanceof SelectSingleInput) {
+                /** @var SelectSingleInput $component */
                 $component = $input->getComponent();
                 if ($value) {
                     try {
@@ -76,10 +84,10 @@ class AF_Service_InputHistoryService
             }
 
             // Valeur des sélections multiples
-            if ($input instanceof AF_Model_Input_Select_Multi) {
+            if ($input instanceof SelectMultiInput) {
                 $newValue = [];
 
-                /** @var AF_Model_Component_Select_Multi $component */
+                /** @var \AF\Domain\AF\Component\Select\SelectMulti $component */
                 $component = $input->getComponent();
                 foreach ($value as $refOption) {
                     try {

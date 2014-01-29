@@ -1,0 +1,31 @@
+OutputSet:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Output_OutputSet
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  oneToOne:
+    inputSet:
+      targetEntity: PrimaryInputSet
+      inversedBy: outputSet
+      joinColumn:
+        name: idInputSet
+        referencedColumnName: id
+        nullable: false
+
+  oneToMany:
+    elements:
+      targetEntity: OutputElement
+      mappedBy: outputSet
+      cascade: [ all ]
+      orphanRemoval: true
+    totals:
+      targetEntity: OutputTotal
+      mappedBy: outputSet
+      cascade: [ all ]
+      orphanRemoval: true

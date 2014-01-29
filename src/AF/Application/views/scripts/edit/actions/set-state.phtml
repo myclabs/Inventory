@@ -1,0 +1,63 @@
+<?php
+use AF\Domain\AF\Action\SetState;
+use AF\Domain\AF\AF;
+use AF\Domain\AF\Condition\Condition;
+use AF\Domain\AF\Component;
+
+/**
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $af AF */
+$af = $this->af;
+
+// Creation du datagrid
+$datagrid = new UI_Datagrid('actionsSetState', 'datagrid_edit_actions_set-state', 'af');
+$datagrid->initialLoading = false;
+$datagrid->addParam('id', $af->getId());
+$datagrid->pagination = false;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('AF', 'configInteractionDatagrid', 'componentChangeActionAddPanelTitle');
+
+$datagrid->deleteElements = true;
+
+// Element de formulaire cible de l'action
+$targetComponentColumn = new UI_Datagrid_Col_List('targetComponent',
+                                             __('AF', 'configInteractionDatagrid', 'targetComponentHeader'));
+$targetComponentColumn->withEmptyElement = false;
+$list = [];
+foreach ($this->componentList as $component) {
+    /** @var $component Component */
+    if ($af->getRootGroup() !== $component) {
+        $list[$component->getId()] = $component->getLabel();
+    }
+}
+$targetComponentColumn->list = $list;
+$datagrid->addCol($targetComponentColumn);
+
+// Nature de l'action
+$typeStateColumn = new UI_Datagrid_Col_List('typeState', __('AF', 'configInteractionDatagrid', 'actionTypeHeader'));
+$typeStateColumn->withEmptyElement = false;
+$typeStateColumn->editable = true;
+$typeStateColumn->list = [
+    SetState::TYPE_SHOW    => __('UI', 'verb', 'show'),
+    SetState::TYPE_HIDE    => __('UI', 'verb', 'hide'),
+    SetState::TYPE_ENABLE  => __('UI', 'verb', 'enable'),
+    SetState::TYPE_DISABLE => __('UI', 'verb', 'disable'),
+    ];
+$datagrid->addCol($typeStateColumn);
+
+// Condition déclenchant l'action
+$conditionColumn = new UI_Datagrid_Col_List('condition',
+                                         __('UI', 'name', 'condition'));
+$conditionColumn->editable = true;
+$conditionColumn->withEmptyElement = true;
+$list = [];
+foreach ($this->conditionList as $condition) {
+    /** @var $condition Condition */
+    $list[$condition->getId()] = $condition->getRef();
+}
+$conditionColumn->list = $list;
+$datagrid->addCol($conditionColumn);
+
+echo $datagrid->render();

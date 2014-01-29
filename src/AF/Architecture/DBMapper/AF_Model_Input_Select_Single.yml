@@ -1,0 +1,14 @@
+SelectSingle:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Input_Select_Single
+
+  gedmo:
+    loggable: true
+
+  fields:
+    value:
+      type: string
+      nullable: true
+      gedmo:
+        - versioned

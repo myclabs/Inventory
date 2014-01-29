@@ -1,4 +1,6 @@
 <?php
+use AF\Domain\AF\Component\Select\SelectOption;
+use AF\Domain\AF\Input\Input;
 use User\Domain\User;
 
 /**
@@ -11,7 +13,7 @@ use User\Domain\User;
 class AF_Service_InputHistoryService_Entry
 {
     /**
-     * @var AF_Model_Input
+     * @var \AF\Domain\AF\Input\Input
      */
     private $input;
 
@@ -21,7 +23,7 @@ class AF_Service_InputHistoryService_Entry
     private $loggedAt;
 
     /**
-     * @var string|bool|Calc_UnitValue|AF_Model_Component_Select_Option|AF_Model_Component_Select_Option[]
+     * @var string|bool|Calc_UnitValue|SelectOption|SelectOption[]
      */
     private $value;
 
@@ -30,7 +32,7 @@ class AF_Service_InputHistoryService_Entry
      */
     private $author;
 
-    public function __construct(AF_Model_Input $input, DateTime $loggedAt, $value, User $author = null)
+    public function __construct(Input $input, DateTime $loggedAt, $value, User $author = null)
     {
         $this->input = $input;
         $this->loggedAt = $loggedAt;
@@ -39,7 +41,7 @@ class AF_Service_InputHistoryService_Entry
     }
 
     /**
-     * @return AF_Model_Input
+     * @return \AF\Domain\AF\Input\Input
      */
     public function getInput()
     {
@@ -55,7 +57,7 @@ class AF_Service_InputHistoryService_Entry
     }
 
     /**
-     * @return string|bool|Calc_UnitValue|AF_Model_Component_Select_Option|AF_Model_Component_Select_Option[]
+     * @return string|bool|Calc_UnitValue|SelectOption|SelectOption[]
      */
     public function getValue()
     {

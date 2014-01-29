@@ -1,0 +1,53 @@
+Algo:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Algo_Algo
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_algo
+    type: string
+  discriminatorMap:
+    selection: SelectionAlgo
+    selection_main: Algo_Model_Selection_Main
+    selection_textkey: Algo_Model_Selection_TextKey
+    selection_textkey_input: Algo_Model_Selection_TextKey_Input
+    selection_textkey_expression: Algo_Model_Selection_TextKey_Expression
+    selection_textkey_contextvalue: Algo_Model_Selection_TextKey_ContextValue
+    condition: ConditionAlgo
+    condition_elementary: ElementaryConditionAlgo
+    condition_elementary_numeric: NumericConditionAlgo
+    condition_elementary_boolean: BooleanConditionAlgo
+    condition_elementary_select: SelectConditionAlgo
+    condition_elementary_select_multi: SelectMultiConditionAlgo
+    condition_elementary_select_single: SelectSingleConditionAlgo
+    condition_expression: ExpressionConditionAlgo
+    numeric: NumericAlgo
+    numeric_input: Algo_Model_Numeric_Input
+    numeric_constant: Algo_Model_Numeric_Constant
+    numeric_expression: Algo_Model_Numeric_Expression
+    numeric_parameter: Algo_Model_Numeric_Parameter
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+
+  manyToOne:
+    set:
+      targetEntity: AlgoSet
+      inversedBy: algos
+      joinColumn:
+        name: idSet
+        referencedColumnName: id
+        nullable: false
+
+  uniqueConstraints:
+    ref:
+      columns: [idSet, ref]

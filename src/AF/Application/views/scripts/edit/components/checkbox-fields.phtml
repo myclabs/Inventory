@@ -1,0 +1,61 @@
+<?php
+use AF\Domain\AF\AF;
+
+/**
+ * @author  matthieu.napoli
+ * @author  yoann.croizer
+ * @package AF
+ */
+/** @var $af AF */
+$af = $this->af;
+
+// Datagrid
+$checkboxDatagrid = new UI_Datagrid('checkboxFieldDatagrid', 'datagrid_edit_components_checkbox-fields', 'af');
+$checkboxDatagrid->initialLoading = false;
+$checkboxDatagrid->addParam('id', $af->getId());
+$checkboxDatagrid->pagination = false;
+$checkboxDatagrid->addElements = true;
+$checkboxDatagrid->addPanelTitle = __('AF', 'configComponentDatagrid', 'checkboxAddPanelTitle');
+$checkboxDatagrid->deleteElements = true;
+// Label
+$checkboxLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$checkboxLabel->editable = true;
+$checkboxDatagrid->addCol($checkboxLabel);
+// Ref
+$checkboxRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$checkboxRef->editable = true;
+$checkboxDatagrid->addCol($checkboxRef);
+// Help
+$help = new UI_Datagrid_Col_LongText('help', __('UI', 'name', 'help'));
+$help->editable = true;
+$help->popup->title = __('UI', 'name', 'help');
+$checkboxDatagrid->addCol($help);
+// Hidden / Show
+$isVisibleCheckbox = new UI_Datagrid_Col_Bool('isVisible', __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));
+$isVisibleCheckbox->editable = true;
+$isVisibleCheckbox->defaultAddValue = true;
+$isVisibleCheckbox->textTrue = __('UI', 'property', 'visible');
+$isVisibleCheckbox->textFalse = __('UI', 'property', 'masked');
+$isVisibleCheckbox->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'visible');
+$isVisibleCheckbox->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'masked');
+$checkboxDatagrid->addCol($isVisibleCheckbox);
+// Enable / Disable
+$enabledColumn = new UI_Datagrid_Col_Bool('enabled', __('AF', 'configComponentDatagrid', 'initialActivationHeader'));
+$enabledColumn->editable = true;
+$enabledColumn->defaultAddValue = true;
+$enabledColumn->textTrue = __('UI', 'property', 'enabled');
+$enabledColumn->textFalse = __('UI', 'property', 'disabled');
+$enabledColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'enabled');
+$enabledColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'disabled');
+$checkboxDatagrid->addCol($enabledColumn);
+// Checked / Uncheked
+$defaultValueColumn = new UI_Datagrid_Col_Bool('defaultValue', __('AF', 'configComponentDatagrid', 'initialValueHeader'));
+$defaultValueColumn->editable = true;
+$defaultValueColumn->defaultAddValue = false;
+$defaultValueColumn->textFalse = __('UI', 'property', 'unchecked');
+$defaultValueColumn->textTrue = __('UI', 'property', 'checked');
+$defaultValueColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'unchecked');
+$defaultValueColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'checked');
+$checkboxDatagrid->addCol($defaultValueColumn);
+
+echo $checkboxDatagrid->render();

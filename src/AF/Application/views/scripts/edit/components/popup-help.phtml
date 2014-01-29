@@ -1,0 +1,13 @@
+<?php
+use AF\Domain\AF\Component;
+
+/**
+ * @author  matthieu.napoli
+ * @author  sidoine.tardieu
+ * @package AF
+ */
+
+/** @var $component Component */
+$component = $this->component;
+
+echo Core_Tools::textile($component->getHelp());

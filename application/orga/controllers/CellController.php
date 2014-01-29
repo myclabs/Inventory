@@ -1,5 +1,8 @@
 <?php
 
+use AF\Application\AFViewConfiguration;
+use AF\Domain\AF\AF;
+use AF\Domain\AF\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
@@ -1116,11 +1119,11 @@ class Orga_CellController extends Core_Controller
             $cell
         );
 
-        $aFViewConfiguration = new AF_ViewConfiguration();
+        $aFViewConfiguration = new AFViewConfiguration();
         if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::STATUS_CLOSED)) {
-            $aFViewConfiguration->setMode(AF_ViewConfiguration::MODE_WRITE);
+            $aFViewConfiguration->setMode(AFViewConfiguration::MODE_WRITE);
         } else {
-            $aFViewConfiguration->setMode(AF_ViewConfiguration::MODE_READ);
+            $aFViewConfiguration->setMode(AFViewConfiguration::MODE_READ);
         }
         $aFViewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
         $aFViewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $idCell]);
@@ -1128,7 +1131,7 @@ class Orga_CellController extends Core_Controller
         $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $fromIdCell . '/');
         $aFViewConfiguration->addUrlParam('idCell', $idCell);
         $aFViewConfiguration->setDisplayConfigurationLink(false);
-        $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_INPUT);
+        $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_INPUT);
         if ($cell->getAFInputSetPrimary() !== null) {
             $aFViewConfiguration->setIdInputSet($cell->getAFInputSetPrimary()->getId());
         }
@@ -1151,8 +1154,8 @@ class Orga_CellController extends Core_Controller
             $cell
         );
         if ($isUserAllowedToViewCellReports) {
-            $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_RESULT);
-            $aFViewConfiguration->addBaseTab(AF_ViewConfiguration::TAB_CALCULATION_DETAILS);
+            $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_RESULT);
+            $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS);
         }
         $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
 
@@ -1172,8 +1175,8 @@ class Orga_CellController extends Core_Controller
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
 
-        /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($idCell);
+        /** @var $af AF */
+        $af = AF::load($idCell);
 
         // Form data
         $formContent = json_decode($this->getParam($af->getRef()), true);
@@ -1207,7 +1210,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         $inputSetContainer = $this->getParam('inputSetContainer');
-        /** @var $newInputSet AF_Model_InputSet_Primary */
+        /** @var $newInputSet PrimaryInputSet */
         $newInputSet = $inputSetContainer->inputSet;
 
         $this->inputService->editInput($cell, $newInputSet);

@@ -1,5 +1,7 @@
 <?php
 
+use AF\Domain\AF\AF;
+use AF\Domain\AF\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -45,10 +47,10 @@ class Orga_Service_InputService
      * Modifie la saisie d'une cellule et recalcule les résultats si la saisie est complète
      *
      * @param Orga_Model_Cell $cell
-     * @param AF_Model_InputSet_Primary $newValues Nouvelles valeurs pour les saisies
+     * @param PrimaryInputSet $newValues Nouvelles valeurs pour les saisies
      * @throws InvalidArgumentException
      */
-    public function editInput(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $newValues)
+    public function editInput(Orga_Model_Cell $cell, PrimaryInputSet $newValues)
     {
         $inputSet = $cell->getAFInputSetPrimary();
 
@@ -105,10 +107,10 @@ class Orga_Service_InputService
      * Met à jour les résultats d'une saisie
      *
      * @param Orga_Model_Cell           $cell
-     * @param AF_Model_InputSet_Primary $inputSet
-     * @param AF_Model_AF|null          $af Permet d'uiliser un AF différent de celui de la saisie
+     * @param PrimaryInputSet $inputSet
+     * @param AF|null          $af Permet d'uiliser un AF différent de celui de la saisie
      */
-    public function updateResults(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $inputSet, AF_Model_AF $af = null)
+    public function updateResults(Orga_Model_Cell $cell, PrimaryInputSet $inputSet, AF $af = null)
     {
         // Injecte les coordonnées orga à la saisie en tant que ContextValue
         foreach ($cell->getMembers() as $member) {

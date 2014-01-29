@@ -2,10 +2,10 @@
 
 namespace Tests\Algo\Numeric;
 
-use Algo_Model_Algo;
-use Algo_Model_InputSet;
+use AF\Domain\Algorithm\Algo;
+use AF\Domain\Algorithm\InputSet;
 use Algo_Model_Numeric_Constant;
-use Algo_Model_Set;
+use AF\Domain\Algorithm\AlgoSet;
 use Calc_UnitValue;
 use Classif_Model_Context;
 use Classif_Model_ContextIndicator;
@@ -19,7 +19,7 @@ class ConstantTest extends TestCase
 {
     public static function generateObject()
     {
-        $set = new Algo_Model_Set();
+        $set = new AlgoSet();
         $set->save();
         self::getEntityManager()->flush();
 
@@ -87,10 +87,10 @@ class ConstantTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        foreach (Algo_Model_Set::loadList() as $o) {
+        foreach (AlgoSet::loadList() as $o) {
             $o->delete();
         }
-        foreach (Algo_Model_Algo::loadList() as $o) {
+        foreach (Algo::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_Context::loadList() as $o) {
@@ -107,7 +107,7 @@ class ConstantTest extends TestCase
 
     public function testConstruct()
     {
-        $set = new Algo_Model_Set();
+        $set = new AlgoSet();
         $set->save();
         $this->entityManager->flush();
         $unitValue = ConstantTest::generateUnitValue();
@@ -155,7 +155,7 @@ class ConstantTest extends TestCase
     public function testExecute()
     {
         $numericConstant = ConstantTest::generateObject();
-        $inputSet = $this->getMockForAbstractClass(Algo_Model_InputSet::class);
+        $inputSet = $this->getMockForAbstractClass(InputSet::class);
         $result = $numericConstant->execute($inputSet);
         $this->assertTrue($result instanceof Calc_UnitValue);
     }

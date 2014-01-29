@@ -6,6 +6,18 @@
  * @subpackage Service
  */
 
+use AF\Domain\AF\Input\Input;
+use AF\Domain\AF\Input\TextFieldInput;
+use AF\Domain\AF\Input\NumericFieldInput;
+use AF\Domain\AF\Input\GroupInput;
+use AF\Domain\AF\Input\CheckboxInput;
+use AF\Domain\AF\Input\Select\SelectSingleInput;
+use AF\Domain\AF\Input\Select\SelectMultiInput;
+use AF\Domain\AF\Input\SubAF\RepeatedSubAFInput;
+use AF\Domain\AF\Input\SubAF\NotRepeatedSubAFInput;
+use AF\Domain\AF\InputSet\PrimaryInputSet;
+use AF\Domain\AF\InputSet\SubInputSet;
+use AF\Domain\AF\Output\OutputElement;
 use User\Domain\ACL\Role\Role;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
@@ -348,7 +360,7 @@ class Orga_Service_Export
         }
         $inputs = [];
         foreach ($aFInputSetPrimary->getInputs() as $input) {
-            if (!$input instanceof AF_Model_Input_Group) {
+            if (!$input instanceof GroupInput) {
                 $inputs = array_merge($inputs, getInputsDetails($input));
             }
         }
@@ -577,7 +589,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayMemberForClassifAxis',
-            function (AF_Model_Output_Element $output, Classif_Model_Axis $axis) {
+            function (OutputElement $output, Classif_Model_Axis $axis) {
                 try {
                     $member = $output->getIndexForAxis($axis)->getMember();
                     if ($member->getAxis() !== $axis) {
@@ -600,16 +612,16 @@ class Orga_Service_Export
             'displayInputStatus',
             function (Orga_Model_Cell $cell) {
                 switch ($cell->getAFInputSetPrimary()->getStatus()) {
-                    case AF_Model_InputSet_Primary::STATUS_FINISHED:
+                    case PrimaryInputSet::STATUS_FINISHED:
                         return __('AF', 'inputInput', 'statusFinished');
                         break;
-                    case AF_Model_InputSet_Primary::STATUS_COMPLETE:
+                    case PrimaryInputSet::STATUS_COMPLETE:
                         return __('AF', 'inputInput', 'statusComplete');
                         break;
-                    case AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE:
+                    case PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE:
                         return __('AF', 'inputInput', 'statusCalculationIncomplete');
                         break;
-                    case AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
+                    case PrimaryInputSet::STATUS_INPUT_INCOMPLETE;
                         return __('AF', 'inputInput', 'statusInputIncomplete');
                         break;
                     default:
@@ -620,8 +632,8 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayFreeLabel',
-            function (AF_Model_Output_Element $output) {
-                if ($output->getInputSet() instanceof AF_Model_InputSet_Sub) {
+            function (OutputElement $output) {
+                if ($output->getInputSet() instanceof SubInputSet) {
                     return $output->getInputSet()->getFreeLabel();
                 }
                 return '';
@@ -655,7 +667,7 @@ class Orga_Service_Export
 
 }
 
-function getInputsDetails(AF_Model_Input $input, $path = '')
+function getInputsDetails(Input $input, $path = '')
 {
     if ($input->getComponent() !== null) {
         $componentLabel = $input->getComponent()->getLabel();
@@ -664,10 +676,10 @@ function getInputsDetails(AF_Model_Input $input, $path = '')
         $componentLabel = __('Orga', 'export', 'unknownComponent');
         $componentRef = __('Orga', 'export', 'unknownComponent');
     }
-    if ($input instanceof AF_Model_Input_SubAF_NotRepeated) {
+    if ($input instanceof NotRepeatedSubAFInput) {
         $subInputs = [];
         foreach ($input->getValue()->getInputs() as $subInput) {
-            if (!$subInput instanceof AF_Model_Input_Group) {
+            if (!$subInput instanceof GroupInput) {
                 $subInputs = array_merge(
                     $subInputs,
                     getInputsDetails($subInput, $path . $componentLabel . '/')
@@ -675,11 +687,11 @@ function getInputsDetails(AF_Model_Input $input, $path = '')
             }
         }
         return $subInputs;
-    } elseif ($input instanceof AF_Model_Input_SubAF_Repeated) {
+    } elseif ($input instanceof RepeatedSubAFInput) {
         $subInputs = [];
         foreach ($input->getValue() as $number => $subInputSet) {
             foreach ($subInputSet->getInputs() as $subInput) {
-                if (!$subInput instanceof AF_Model_Input_Group) {
+                if (!$subInput instanceof GroupInput) {
                     $subInputs = array_merge(
                         $subInputs,
                         getInputsDetails($subInput, $path . $componentLabel . '/' . ($number + 1) . ' / ')
@@ -700,29 +712,29 @@ function getInputsDetails(AF_Model_Input $input, $path = '')
     }
 }
 
-function getInputType(AF_Model_Input $input) {
+function getInputType(Input $input) {
     switch (get_class($input)) {
-        case 'AF_Model_Input_Checkbox':
+        case CheckboxInput::class:
             return __('Orga', 'export', 'checkboxField');
-        case 'AF_Model_Input_Select_Single':
+        case SelectSingleInput::class:
             return __('Orga', 'export', 'singleSelectField');
-        case 'AF_Model_Input_Select_Multi':
+        case SelectMultiInput::class:
             return __('Orga', 'export', 'multiSelectField');
-        case 'AF_Model_Input_Text':
+        case TextFieldInput::class:
             return __('Orga', 'export', 'textField');
-        case 'AF_Model_Input_Numeric':
+        case NumericFieldInput::class:
             return __('Orga', 'export', 'numericField');
         default:
             return __('Orga', 'export', 'unknownFieldType');
     }
 }
 
-function getInputValues(AF_Model_Input $input)
+function getInputValues(Input $input)
 {
     $inputValue = $input->getValue();
     switch (get_class($input)) {
-        case 'AF_Model_Input_Numeric':
-            /** @var AF_Model_Input_Numeric $input */
+        case NumericFieldInput::class:
+            /** @var NumericFieldInput $input */
             if ($input->getComponent() !== null) {
                 try {
                     $conversionFactor = $input->getComponent()->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
@@ -747,8 +759,8 @@ function getInputValues(AF_Model_Input $input)
                 $inputValue->getRelativeUncertainty(),
                 $inputValue->getUnit()->getSymbol(),
             ];
-        case 'AF_Model_Input_Select_Multi':
-            /** @var AF_Model_Input_Select_Multi $input */
+        case SelectMultiInput::class:
+            /** @var SelectMultiInput $input */
             if (is_array($inputValue)) {
                 if ($input->getComponent() !== null) {
                     $labels = [];
@@ -763,16 +775,16 @@ function getInputValues(AF_Model_Input $input)
                 }
                 return [implode(', ', $inputValue)];
             }
-        case 'AF_Model_Input_Select_Single':
-            /** @var AF_Model_Input_Select_Single $input */
+        case SelectSingleInput::class:
+            /** @var SelectSingleInput $input */
             if (empty($value)) {
                 return [''];
             } elseif ($input->getComponent() !== null) {
                 return [$input->getComponent()->getOptionByRef($value)->getLabel()];
             }
             return [$value];
-        case 'AF_Model_Input_Checkbox':
-            /** @var AF_Model_Input_Checkbox $input */
+        case CheckboxInput::class:
+            /** @var CheckboxInput $input */
             return [($inputValue) ? __('UI', 'property', 'checked') : __('UI', 'property', 'unchecked')];
         default:
             return [$inputValue];

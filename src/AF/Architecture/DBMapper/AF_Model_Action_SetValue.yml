@@ -1,0 +1,4 @@
+SetValue:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Action_SetValue

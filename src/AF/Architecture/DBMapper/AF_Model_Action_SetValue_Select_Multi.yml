@@ -1,0 +1,16 @@
+SelectMulti:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Action_SetValue_Select_Multi
+
+  manyToOne:
+    options:
+      targetEntity: SelectOption
+      joinTable:
+        name: AF_Action_SetValue_Select_Multi_Options
+        joinColumns:
+          idSelectMulti:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idOption:
+            referencedColumnName: id

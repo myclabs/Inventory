@@ -1,0 +1,16 @@
+Algo_Model_Numeric_Parameter:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Algo_Numeric_Parameter
+
+  fields:
+    familyRef:
+      type: string
+      nullable: false
+
+  oneToMany:
+    parameterCoordinates:
+      targetEntity: ParameterCoordinate
+      mappedBy: algoParameter
+      cascade: [ all ]
+      orphanRemoval: true

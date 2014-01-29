@@ -1,0 +1,84 @@
+AF:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: AF_AF
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+      unique: true
+    label:
+      type: string
+      nullable: true
+      gedmo:
+        - translatable
+    documentation:
+      type: text
+      nullable: true
+    position:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    category:
+      targetEntity: Category
+      inversedBy: afs
+      joinColumn:
+        name: idCategory
+        referencedColumnName: id
+        nullable: true
+
+  oneToOne:
+    rootGroup:
+      targetEntity: AF_Model_Component_Group
+      joinColumn:
+        name: idRootGroup
+        referencedColumnName: id
+        nullable: true
+        onDelete: "SET NULL"
+      cascade: [ all ]
+      orphanRemoval: true
+    algoSet:
+      targetEntity: AlgoSet
+      joinColumn:
+        name: idAlgoSet
+        referencedColumnName: id
+        nullable: false
+      cascade: [ all ]
+      orphanRemoval: true
+    mainAlgo:
+      targetEntity: Algo_Model_Selection_Main
+      joinColumn:
+        name: idMainAlgo
+        referencedColumnName: id
+        nullable: false
+      cascade: [ persist ]
+
+  oneToMany:
+    components:
+      targetEntity: Component
+      mappedBy: af
+      cascade: [ all ]
+      orphanRemoval: true
+    conditions:
+      targetEntity: Condition
+      mappedBy: af
+      cascade: [ all ]
+      orphanRemoval: true
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

@@ -1,0 +1,36 @@
+InputSet:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_InputSet
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: inputSetType
+    type: string
+  discriminatorMap:
+    primary: PrimaryInputSet
+    sub: SubInputSet
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    refAF:
+      type: string
+      nullable: false
+    completion:
+      type: integer
+      nullable: true
+    contextValues:
+      type: array
+      nullable: true
+
+  oneToMany:
+    inputs:
+      targetEntity: Input
+      mappedBy: inputSet
+      cascade: [ all ]
+      orphanRemoval: true

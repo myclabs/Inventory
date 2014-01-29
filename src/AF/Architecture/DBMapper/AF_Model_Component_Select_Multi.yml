@@ -1,0 +1,30 @@
+SelectMulti:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: AF_Component_Select_Multi
+
+  fields:
+    type:
+      type: integer
+      nullable: false
+
+  moneToOne:
+    defaultValue:
+      targetEntity: SelectOption
+      joinColumn:
+        name: idDefaultValue
+        referencedColumnName: id
+        nullable: true
+
+  manyToMany:
+    defaultValues:
+      targetEntity: SelectOption
+      joinTable:
+        name: AF_Component_Select_Multi_DefaultValues
+        joinColumns:
+          idSelectMulti:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idSelectOption:
+            referencedColumnName: id
+            onDelete: CASCADE

@@ -1,4 +1,7 @@
 <?php
+use AF\Domain\AF\AF;
+use AF\Domain\AF\InputSet\PrimaryInputSet;
+
 /**
  * @author     matthieu.napoli
  * @package    AF
@@ -15,17 +18,17 @@ class AF_Service_InputSetSessionStorage
     const SESSION_EXPIRATION = 3600;
 
     /**
-     * @param AF_Model_AF $af
+     * @param AF $af
      * @param bool        $createIfNotFound Si l'InputSet n'est pas trouvé, en crée un nouveau automatiquement
-     * @return AF_Model_InputSet_Primary|null
+     * @return PrimaryInputSet|null
      */
-    public function getInputSet(AF_Model_AF $af, $createIfNotFound = true)
+    public function getInputSet(AF $af, $createIfNotFound = true)
     {
         // On cherche la saisie en session
         $session = $this->getSessionStorage();
         if (!isset($session->inputSet[$af->getId()])) {
             if ($createIfNotFound) {
-                $inputSet = new AF_Model_InputSet_Primary($af);
+                $inputSet = new PrimaryInputSet($af);
                 /** @noinspection PhpUndefinedFieldInspection */
                 $session->inputSet[$af->getId()] = $inputSet;
             } else {
@@ -38,10 +41,10 @@ class AF_Service_InputSetSessionStorage
     }
 
     /**
-     * @param AF_Model_AF               $af
-     * @param AF_Model_InputSet_Primary $inputSet
+     * @param AF               $af
+     * @param PrimaryInputSet $inputSet
      */
-    public function saveInputSet(AF_Model_AF $af, AF_Model_InputSet_Primary $inputSet)
+    public function saveInputSet(AF $af, PrimaryInputSet $inputSet)
     {
         $session = $this->getSessionStorage();
         /** @noinspection PhpUndefinedFieldInspection */

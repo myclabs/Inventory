@@ -1,0 +1,4 @@
+SelectionAlgo:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Algo_Selection

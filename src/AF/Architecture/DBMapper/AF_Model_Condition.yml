@@ -1,0 +1,41 @@
+Condition:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Condition
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_condition
+    type: string
+  discriminatorMap:
+    expression: ExpressionCondition
+    elementary: ElementaryCondition
+    elementary_numeric: Numeric
+    elementary_checkbox: Checkbox
+    elementary_select_single: SelectSingle
+    elementary_select_multi: SelectMulti
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+
+  manyToOne:
+    af:
+      targetEntity: AF
+      inversedBy: conditions
+      joinColumn:
+        name: idAF
+        referencedColumnName: id
+        nullable: false
+
+  uniqueConstraints:
+    # ref unique dans un AF
+    ref:
+      columns: [idAF, ref]

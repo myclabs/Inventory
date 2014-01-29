@@ -1,5 +1,7 @@
 <?php
 
+use AF\Domain\AF\AF;
+use AF\Domain\AF\InputSet\PrimaryInputSet;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -115,7 +117,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Tableau d'état des saisies de la cellule.
      *
-     * @var AF_Model_InputSet_Primary
+     * @var PrimaryInputSet
      */
     protected $aFInputSetPrimary = null;
 
@@ -224,11 +226,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Charge la Cell correspondant à un Primary Set AF.
      *
-     * @param AF_Model_InputSet_Primary $aFInputSetPrimary
+     * @param PrimaryInputSet $aFInputSetPrimary
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByAFInputSetPrimary(AF_Model_InputSet_Primary $aFInputSetPrimary)
+    public static function loadByAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary)
     {
         return self::getEntityRepository()->loadBy(array('aFInputSetPrimary' => $aFInputSetPrimary));
     }
@@ -986,11 +988,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Spécifie l'InputSetPrimary de la cellule.
      *
-     * @param AF_Model_InputSet_Primary $aFInputSetPrimary
+     * @param PrimaryInputSet $aFInputSetPrimary
      *
      * @throws Core_Exception_Duplicate
      */
-    public function setAFInputSetPrimary(AF_Model_InputSet_Primary $aFInputSetPrimary = null)
+    public function setAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary = null)
     {
         if ($this->aFInputSetPrimary !== $aFInputSetPrimary) {
             if (($this->aFInputSetPrimary !== null) && ($aFInputSetPrimary !== null)) {
@@ -1007,7 +1009,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie l'InputSetPrimary associé à la cellule.
      *
-     * @return AF_Model_InputSet_Primary
+     * @return PrimaryInputSet
      */
     public function getAFInputSetPrimary()
     {
@@ -1017,7 +1019,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie l'AF utilisé par la cellule.
      *
-     * @return AF_Model_AF
+     * @return AF
      */
     public function getInputAFUsed()
     {

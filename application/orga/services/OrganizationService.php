@@ -1,5 +1,6 @@
 <?php
 
+use AF\Domain\AF\AF;
 use Doctrine\ORM\EntityManager;
 use Orga\Model\ACL\Role\CellManagerRole;
 use Orga\Model\ACL\Role\OrganizationAdminRole;
@@ -562,10 +563,10 @@ class Orga_Service_OrganizationService
         $granularityYearCategory->setInputConfigGranularity($granularityCategory);
         $granularityCategory->getCellByMembers([$categoryEnergy])
             ->getCellsGroupForInputGranularity($granularityYearCategory)
-            ->setAF(AF_Model_AF::loadByRef('energie'));
+            ->setAF(AF::loadByRef('energie'));
         $granularityCategory->getCellByMembers([$categoryTravel])
             ->getCellsGroupForInputGranularity($granularityYearCategory)
-            ->setAF(AF_Model_AF::loadByRef('deplacement'));
+            ->setAF(AF::loadByRef('deplacement'));
 
         // Lance l'inventaire 2013
         $granularityYear->getCellByMembers([$year2013])

@@ -1,5 +1,6 @@
 <?php
 
+use AF\Application\AFViewConfiguration;
 use Doc\Domain\Library;
 use Orga\Model\ACL\Action\CellAction;
 use User\Application\ForbiddenException;
@@ -513,9 +514,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
             $mode = $request->getParam('mode');
-            if ($mode == AF_ViewConfiguration::MODE_READ) {
+            if ($mode == AFViewConfiguration::MODE_READ) {
                 return $this->viewCellRule($identity, $request);
-            } elseif ($mode == AF_ViewConfiguration::MODE_WRITE) {
+            } elseif ($mode == AFViewConfiguration::MODE_WRITE) {
                 return $this->inputCellRule($identity, $request);
             }
 

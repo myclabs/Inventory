@@ -1,0 +1,32 @@
+Index:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Algo_Index
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_index
+    type: string
+  discriminatorMap:
+    fixed: FixedIndex
+    algo: AlgoResultIndex
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    refClassifAxis:
+      type: string
+      nullable: true
+
+  manyToOne:
+    algoNumeric:
+      targetEntity: NumericAlgo
+      inversedBy: indexes
+      joinColumn:
+        name: idAlgoNumeric
+        referencedColumnName: id
+        nullable: true

@@ -2,10 +2,10 @@
 
 namespace Tests\AF;
 
-use AF_Model_AF;
-use AF_Model_Component;
-use AF_Model_Component_Numeric;
-use AF_Model_Condition_Elementary_Numeric;
+use AF\Domain\AF\AF;
+use AF\Domain\AF\Component;
+use AF\Domain\AF\Component\NumericField;
+use AF\Domain\AF\Condition\Elementary\NumericFieldCondition;
 use AF_Service_AFCopyService;
 use Core\Test\TestCase;
 use Unit\UnitAPI;
@@ -19,10 +19,10 @@ class AFCopyTest extends TestCase
     {
         parent::setUp();
 
-        foreach (AF_Model_Component::loadList() as $o) {
+        foreach (Component::loadList() as $o) {
             $o->delete();
         }
-        foreach (AF_Model_AF::loadList() as $o) {
+        foreach (AF::loadList() as $o) {
             $o->delete();
         }
         $this->entityManager->flush();
@@ -30,30 +30,30 @@ class AFCopyTest extends TestCase
 
     public function testCopyAF()
     {
-        $oldAF = new AF_Model_AF('old_ref');
+        $oldAF = new AF('old_ref');
         $oldAF->setLabel('label');
         $oldAF->setDocumentation('documentation');
         $oldAF->save();
 
-        $component = new AF_Model_Component_Numeric();
+        $component = new NumericField();
         $component->setRef('component1');
         $component->setUnit(new UnitAPI('m'));
         $component->setAf($oldAF);
         $component->save();
         $oldAF->addComponent($component);
 
-        $condition = new AF_Model_Condition_Elementary_Numeric();
+        $condition = new NumericFieldCondition();
         $condition->setRef('condition1');
         $condition->setAf($oldAF);
         $condition->setField($component);
-        $condition->setRelation(AF_Model_Condition_Elementary_Numeric::RELATION_EQUAL);
+        $condition->setRelation(NumericFieldCondition::RELATION_EQUAL);
         $condition->setValue(0);
         $oldAF->addCondition($condition);
 
         $this->entityManager->flush();
 
         $afCopyService = new AF_Service_AFCopyService();
-        /** @var AF_Model_AF $newAF */
+        /** @var \AF\Domain\AF\AF $newAF */
         $newAF = $afCopyService->copyAF($oldAF, 'new_ref', 'new label');
 
         $this->assertInstanceOf(get_class($oldAF), $newAF);
@@ -81,7 +81,7 @@ class AFCopyTest extends TestCase
         }
 
         // Component
-        /** @var AF_Model_Component_Numeric $component2 */
+        /** @var NumericField $component2 */
         $component2 = $newAF->getRootGroup()->getSubComponentsRecursive()[0];
         $this->assertNotSame($component, $component2);
         $this->assertSame($newAF, $component2->getAf());
@@ -101,7 +101,7 @@ class AFCopyTest extends TestCase
 
         // Condition
         $this->assertSameSize($oldAF->getConditions(), $newAF->getConditions());
-        /** @var AF_Model_Condition_Elementary_Numeric $condition2 */
+        /** @var \AF\Domain\AF\Condition\Elementary\NumericFieldCondition $condition2 */
         $condition2 = $newAF->getConditions()[0];
         $this->assertNotSame($condition, $condition2);
         $this->assertNull($condition2->getId());

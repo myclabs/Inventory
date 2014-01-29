@@ -1,0 +1,9 @@
+Numeric:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Action_SetValue_Numeric
+
+  fields:
+    value:
+      type: calc_value
+      nullable: false

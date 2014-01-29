@@ -1,0 +1,29 @@
+NumericAlgo:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: Algo_Numeric
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  fields:
+    label:
+      type: string
+      nullable: true
+      gedmo:
+        - translatable
+    refContext:
+      type: string
+      nullable: true
+    refIndicator:
+      type: string
+      nullable: true
+
+  oneToMany:
+    indexes:
+      targetEntity: Index
+      orphanRemoval: true
+      mappedBy: algoNumeric
+      cascade: [ all ]
+      orphanRemoval: true

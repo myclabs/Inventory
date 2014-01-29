@@ -1,0 +1,89 @@
+Component:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: AF_Component
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_component
+    type: string
+  discriminatorMap:
+    group: AF_Model_Component_Group
+    subaf: SubAF
+    subaf_notrepeated: NotRepeatedSubAF
+    subaf_repeated: RepeatedSubAF
+    field: Field
+    checkbox: Checkbox
+    numeric: NumericField
+    text: TextField
+    select: Select
+    select_single: SelectSingle
+    select_multi: SelectMulti
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    label:
+      type: string
+      nullable: true
+      gedmo:
+        - translatable
+    help:
+      type: text
+      nullable: true
+      gedmo:
+        - translatable
+    visible:
+      type: boolean
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    af:
+      targetEntity: AF
+      inversedBy: components
+      joinColumn:
+        name: idAF
+        referencedColumnName: id
+        nullable: true
+        onDelete: SET NULL
+    group:
+      targetEntity: AF_Model_Component_Group
+      inversedBy: subComponents
+      orderBy:
+        position: ASC
+      joinColumn:
+        name: idGroup
+        referencedColumnName: id
+        nullable: true
+
+  oneToMany:
+    actions:
+      targetEntity: Action
+      mappedBy: targetComponent
+      cascade: [ all ]
+      orphanRemoval: true
+
+  uniqueConstraints:
+    # ref unique dans un AF
+    ref:
+      columns: [idAF, ref]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

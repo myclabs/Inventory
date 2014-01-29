@@ -1,4 +1,6 @@
 <?php
+use AF\Domain\Algorithm\Numeric\NumericAlgo;
+
 /**
  * Supprime les indexations d'algos inutiles
  */
@@ -18,7 +20,7 @@ foreach ($mainAlgos as $mainAlgo) {
     }
 
     foreach ($mainAlgo->getSet()->getAlgos() as $algo) {
-        if ($algo instanceof Algo_Model_Numeric) {
+        if ($algo instanceof NumericAlgo) {
             if ($algo->isIndexed() && !in_array($algo, $algosInMain, true)) {
                 echo "Correction de l'algo " . $algo->getRef() . PHP_EOL;
                 $algo->setContextIndicator(null);

@@ -1,0 +1,43 @@
+<?php
+use AF\Domain\AF\AF;
+
+/**
+ * Vue qui permet d'afficher le formulaire
+ * @package AF
+ */
+
+/** @var $af AF */
+$af = $this->af;
+
+// Formulaire d'édition
+$form = new UI_Form('generalForm');
+$form->setAction($this->baseUrl('af/edit/general-submit'));
+
+$idField = new UI_Form_Element_Hidden('id');
+$idField->setValue($af->getId());
+$form->addElement($idField);
+
+$labelField = new UI_Form_Element_Text('label');
+$labelField->setLabel(__('UI', 'name', 'label'));
+$labelField->setValue($af->getLabel());
+$form->addElement($labelField);
+
+$refField = new UI_Form_Element_Text('ref');
+$refField->setLabel(__('UI', 'name', 'identifier'));
+$refField->setValue($af->getRef());
+$form->addElement($refField);
+
+$documentationField = new UI_Form_Element_Textarea('documentation');
+$documentationField->setLabel(__('UI', 'name', 'documentation'));
+$documentationField->setValue($af->getDocumentation());
+$form->addElement($documentationField);
+
+$form->addSubmitButton();
+echo $form->render();
+?>
+
+<script type="text/javascript">
+    $(function () {
+        $("textarea").markItUp(mySettings);
+    });
+</script>

@@ -1,0 +1,51 @@
+OutputElement:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: AF_Output_Element
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    value:
+      type: calc_value
+      nullable: false
+
+  manyToOne:
+    outputSet:
+      targetEntity: OutputSet
+      inversedBy: elements
+      joinColumn:
+        name: idOutputSet
+        referencedColumnName: id
+        nullable: false
+    inputSet:
+      targetEntity: InputSet
+      joinColumn:
+        name: idInputSet
+        referencedColumnName: id
+        nullable: false
+    algo:
+      targetEntity: NumericAlgo
+      joinColumn:
+        name: idAlgo
+        referencedColumnName: id
+        nullable: true
+
+  manyToMany:
+    indexes:
+      targetEntity: OutputIndex
+      inversedBy: outputElements
+      joinTable:
+        name: AF_Output_Element_Indexes
+        joinColumns:
+          idOutputElement:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idIndex:
+            referencedColumnName: id
+      cascade: [ all ]
+      orphanRemoval: true

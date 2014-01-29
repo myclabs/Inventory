@@ -1,5 +1,7 @@
 <?php
 
+use AF\Domain\AF\AF;
+use AF\Domain\AF\Component\AF_Model_Component_Group;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -26,16 +28,16 @@ class AF_Service_AFDeletionService
      *
      * Nécessaire car beaucoup trop de relations entre les objets d'un AF pour utiliser simplement les cascades.
      *
-     * @param AF_Model_AF $af
+     * @param AF $af
      */
-    public function deleteAF(AF_Model_AF $af)
+    public function deleteAF(AF $af)
     {
         $this->entityManager->beginTransaction();
 
         $this->deleteActionsAndConditions($af);
         $this->entityManager->flush();
         $this->entityManager->clear();
-        $af = AF_Model_AF::load($af->getId());
+        $af = AF::load($af->getId());
 
         $this->deleteGroupContent($af->getRootGroup());
         $this->entityManager->flush();
@@ -44,7 +46,7 @@ class AF_Service_AFDeletionService
         $this->entityManager->flush();
 
         $this->entityManager->clear();
-        $af = AF_Model_AF::load($af->getId());
+        $af = AF::load($af->getId());
         $af->delete();
 
         $this->entityManager->flush();
@@ -53,7 +55,7 @@ class AF_Service_AFDeletionService
         $this->entityManager->commit();
     }
 
-    private function deleteActionsAndConditions(AF_Model_AF $af)
+    private function deleteActionsAndConditions(AF $af)
     {
         foreach ($af->getConditions() as $condition) {
             $condition->delete();
@@ -68,7 +70,7 @@ class AF_Service_AFDeletionService
         }
     }
 
-    private function deleteAlgos(AF_Model_AF $af)
+    private function deleteAlgos(AF $af)
     {
         $algoSet = $af->getMainAlgo()->getSet();
 

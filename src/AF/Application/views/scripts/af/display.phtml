@@ -1,0 +1,149 @@
+<?php
+use AF\Application\AFViewConfiguration;
+use AF\Domain\AF\AF;
+
+/**
+ * @author  matthieu.napoli
+ * @author  hugo.charbonnier
+ * @package AF
+ */
+
+/** @var $af AF */
+$af = $this->af;
+/** @var $viewConfiguration AFViewConfiguration */
+$viewConfiguration = $this->viewConfiguration;
+
+// Ajout des headers
+UI_Datagrid::addHeader();
+UI_Form::addHeader();
+UI_Popup_Ajax::addHeader();
+$this->headScript()->appendFile('scripts/af/input.js', 'text/javascript');
+$this->headScript()->appendFile('scripts/af/input-progress.js', 'text/javascript');
+// API Google pour les charts
+$this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["orgchart"]}]}', 'text/javascript');
+
+// Création d'un TabView.
+$tabView = new UI_Tab_View('tabs');
+$baseTabs = [];
+
+// ONGLET DE SAISIE
+$baseTabs[AFViewConfiguration::TAB_INPUT] = new UI_Tab('tabInput');
+$baseTabs[AFViewConfiguration::TAB_INPUT]->label = __('UI', 'name', 'input');
+$baseTabs[AFViewConfiguration::TAB_INPUT]->useCache = true;
+$baseTabs[AFViewConfiguration::TAB_INPUT]->active = true;
+$urlArray = array(
+    'module'            => 'af',
+    'controller'        => 'af',
+    'action'            => 'display-input',
+    'idAF'              => $af->getId(),
+    'mode'              => $viewConfiguration->getMode(),
+    'exitURL'           => urlencode($viewConfiguration->getExitURL()),
+    'resultsPreview'    => $viewConfiguration->withResultsPreview(),
+    'resultsPreviewUrl' => urlencode(json_encode($viewConfiguration->getResultsPreviewUrl())),
+    'useSession'        => $viewConfiguration->getUseSession(),
+);
+$urlArray += $viewConfiguration->getUrlParams();
+if ($viewConfiguration->getIdInputSet()) {
+    $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
+}
+$url = $this->url($urlArray, null, true);
+$url .= '?actionStack=' . urlencode(json_encode($viewConfiguration->getActionStack()));
+$baseTabs[AFViewConfiguration::TAB_INPUT]->dataSource = $url;
+
+// ONGLET DE RESULTAT
+if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_RESULT)) {
+    $baseTabs[AFViewConfiguration::TAB_RESULT] = new UI_Tab('tabResult');
+    $baseTabs[AFViewConfiguration::TAB_RESULT]->useCache = false;
+    $baseTabs[AFViewConfiguration::TAB_RESULT]->label = __('UI', 'name', 'results');
+    $urlArray = array(
+        'module'     => 'af',
+        'controller' => 'af',
+        'action'     => 'display-results',
+        'idAF'       => $af->getId(),
+        'mode'       => $viewConfiguration->getMode(),
+    );
+    $urlArray += $viewConfiguration->getUrlParams();
+    if ($viewConfiguration->getIdInputSet()) {
+        $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
+    }
+    $baseTabs[AFViewConfiguration::TAB_RESULT]->dataSource = $this->url($urlArray, null, true);
+}
+
+// ONGLET DETAIL CALCUL
+if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS)) {
+    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS] = new UI_Tab('tabCalculationDetails');
+    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->useCache = false;
+    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->label = __('AF', 'inputCalculationDetail', 'tab');
+    $urlArray = array(
+        'module'     => 'af',
+        'controller' => 'af',
+        'action'     => 'display-calculation-details',
+        'idAF'       => $af->getId(),
+        'mode'       => $viewConfiguration->getMode(),
+    );
+    $urlArray += $viewConfiguration->getUrlParams();
+    if ($viewConfiguration->getIdInputSet()) {
+        $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
+    }
+    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->dataSource = $this->url($urlArray, null, true);
+}
+
+// ONGLET DOCUMENTATION
+if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_DOCUMENTATION)) {
+    $documentationTab = new UI_Tab('tabDocumentation');
+    $documentationTab->label = __('UI', 'name', 'documentation');
+    $urlArray = array(
+        'module'     => 'af',
+        'controller' => 'af',
+        'action'     => 'display-documentation',
+        'idAF'       => $af->getId(),
+    );
+    $urlArray += $viewConfiguration->getUrlParams();
+    $documentationTab->dataSource = $this->url($urlArray, null, true);
+    $baseTabs[AFViewConfiguration::TAB_DOCUMENTATION] = $documentationTab;
+}
+
+// Ajout des onglets au TabView.
+foreach ($viewConfiguration->getTabs() as $tab) {
+    if (is_array($tab)) {
+        $tabView->addTab($tab['tab']);
+    } else {
+        $tabView->addTab($baseTabs[$tab]);
+    }
+}
+
+?>
+
+<?php if ($viewConfiguration->getDisplayConfigurationLink()) : ?>
+    <div class="navbar">
+        <div class="navbar-inner">
+
+            <a class="brand" href="#"><?=$viewConfiguration->getPageTitle()?></a>
+
+            <?php if ($viewConfiguration->getDisplayConfigurationLink()) : ?>
+
+                <ul class="nav">
+                    <li>
+                        <a href="<?=$this->baseUrl()?>/af/edit/menu/id/<?=$af->getId()?>">
+                            <?=__('UI', 'name', 'configuration');?></a>
+                    </li>
+                    <li class="active">
+                        <a href="#"><?=__('UI', 'name', 'test');?></a>
+                    </li>
+                </ul>
+
+            <?php endif; ?>
+
+        </div>
+    </div>
+<?php else: ?>
+    <div class="page-header">
+        <h1><?=$viewConfiguration->getPageTitle()?></h1>
+    </div>
+<?php endif; ?>
+
+<?php
+$tabView->display();
+
+echo $this->tutorial('af');
+?>

@@ -3,6 +3,7 @@
  * @author  matthieu.napoli
  */
 
+use AF\Domain\AF\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -54,10 +55,10 @@ class Simulation_Service_InputService
      * Modifie la saisie d'une cellule et recalcule les résultats si la saisie est complète
      *
      * @param Simulation_Model_Scenario $scenario
-     * @param AF_Model_InputSet_Primary $newValues Nouvelles valeurs pour les saisies
+     * @param PrimaryInputSet $newValues Nouvelles valeurs pour les saisies
      * @throws InvalidArgumentException
      */
-    public function editInput(Simulation_Model_Scenario $scenario, AF_Model_InputSet_Primary $newValues)
+    public function editInput(Simulation_Model_Scenario $scenario, PrimaryInputSet $newValues)
     {
         try {
             $inputSet = $scenario->getAFInputSetPrimary();

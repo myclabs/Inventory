@@ -1,5 +1,6 @@
 <?php
 
+use AF\Domain\AF\AF;
 use Core\Annotation\Secure;
 use User\Domain\ACL\Action;
 use User\Domain\User;
@@ -62,7 +63,7 @@ class Orga_Datagrid_Organization_AfsController extends UI_Controller_Datagrid
         if (empty($aFRef)) {
             $aF = null;
         } else {
-            $aF = AF_Model_AF::loadByRef($aFRef);
+            $aF = AF::loadByRef($aFRef);
         }
 
         $cellsGroupDataProvider = $configCell->getCellsGroupForInputGranularity($inputGranularity);

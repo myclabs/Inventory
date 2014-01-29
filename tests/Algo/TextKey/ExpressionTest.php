@@ -2,9 +2,9 @@
 
 namespace Tests\Algo\TextKey;
 
-use Algo_Model_Algo;
+use AF\Domain\Algorithm\Algo;
 use Algo_Model_Selection_TextKey_Expression;
-use Algo_Model_Set;
+use AF\Domain\Algorithm\AlgoSet;
 use Classif_Model_Context;
 use Classif_Model_ContextIndicator;
 use Core\Test\TestCase;
@@ -24,10 +24,10 @@ class ExpressionTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        foreach (Algo_Model_Set::loadList() as $o) {
+        foreach (AlgoSet::loadList() as $o) {
             $o->delete();
         }
-        foreach (Algo_Model_Algo::loadList() as $o) {
+        foreach (Algo::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_ContextIndicator::loadList() as $o) {
@@ -44,7 +44,7 @@ class ExpressionTest extends TestCase
      */
     public function testConstruct()
     {
-        $set = new Algo_Model_Set();
+        $set = new AlgoSet();
         $set->save();
         $expression = self::generateExpression();
         $this->entityManager->flush();

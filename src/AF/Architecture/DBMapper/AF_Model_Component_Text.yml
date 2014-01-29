@@ -1,0 +1,12 @@
+TextField:
+  type: entity
+  repositoryClass: Core_Model_Repository_Ordered
+  table: AF_Component_Text
+
+  fields:
+    type:
+      type: integer
+      nullable: false
+    required:
+      type: boolean
+      nullable: false

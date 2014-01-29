@@ -5,6 +5,7 @@
  * @subpackage Controller
  */
 
+use AF\Domain\AF\AF;
 use Core\Annotation\Secure;
 
 /**
@@ -73,7 +74,7 @@ class Simulation_Datagrid_SetController extends UI_Controller_Datagrid
             $set = new Simulation_Model_Set();
             $set->setLabel($this->getAddElementValue('labelSet'));
             $set->setUser($user);
-            $set->setAF(AF_Model_AF::loadByRef($refAF));
+            $set->setAF(AF::loadByRef($refAF));
             $set->save();
             $this->message = __('UI', 'message', 'added');
         }

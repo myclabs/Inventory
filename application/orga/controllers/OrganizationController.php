@@ -1,5 +1,6 @@
 <?php
 
+use AF\Domain\AF\AF;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
@@ -236,7 +237,7 @@ class Orga_OrganizationController extends Core_Controller
         if (count($cellsWithAccess['cells']) === 1) {
             $this->redirect('orga/cell/view/idCell/'.array_pop($cellsWithAccess['cells'])->getId());
         }
-        
+
         $organizationViewModel = $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
         $this->view->assign('organization', $organizationViewModel);
         $cellViewModels = [];
@@ -647,8 +648,8 @@ class Orga_OrganizationController extends Core_Controller
         $this->view->assign('granularities', $organization->getInputGranularities());
 
         $afs = [];
-        /** @var AF_Model_AF $af */
-        foreach (AF_Model_AF::loadList() as $af) {
+        /** @var AF $af */
+        foreach (AF::loadList() as $af) {
             $afs[$af->getRef()] = $af->getLabel();
         }
         $this->view->assign('afs', $afs);

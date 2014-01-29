@@ -2,11 +2,11 @@
 
 namespace Tests\Algo\TextKey;
 
-use Algo_Model_Algo;
-use Algo_Model_Input_String;
-use Algo_Model_InputSet;
+use AF\Domain\Algorithm\Algo;
+use AF\Domain\Algorithm\Input\StringInput;
+use AF\Domain\Algorithm\InputSet;
 use Algo_Model_Selection_TextKey_Input;
-use Algo_Model_Set;
+use AF\Domain\Algorithm\AlgoSet;
 use Classif_Model_Context;
 use Core\Test\TestCase;
 use Core_Tools;
@@ -23,7 +23,7 @@ class InputTest extends TestCase
         $o->setRef(strtolower(Core_Tools::generateString(20)));
         $o->setInputRef('algoOption');
 
-        $set = new Algo_Model_Set();
+        $set = new AlgoSet();
         $set->save();
 
         $o->setSet($set);
@@ -44,10 +44,10 @@ class InputTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        foreach (Algo_Model_Set::loadList() as $o) {
+        foreach (AlgoSet::loadList() as $o) {
             $o->delete();
         }
-        foreach (Algo_Model_Algo::loadList() as $o) {
+        foreach (Algo::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_Context::loadList() as $o) {
@@ -58,7 +58,7 @@ class InputTest extends TestCase
 
     public function testConstruct()
     {
-        $set = new Algo_Model_Set();
+        $set = new AlgoSet();
         $set->save();
         $this->entityManager->flush();
 
@@ -115,18 +115,18 @@ class InputTest extends TestCase
         $algoTextKeyInput = new Algo_Model_Selection_TextKey_Input();
         $algoTextKeyInput->setInputRef('myInput');
 
-        $input = $this->getMockForAbstractClass(Algo_Model_Input_String::class);
+        $input = $this->getMockForAbstractClass(StringInput::class);
         $input->expects($this->once())
             ->method('getValue')
             ->will($this->returnValue('Valeur'));
 
-        $inputSet = $this->getMockForAbstractClass(Algo_Model_InputSet::class);
+        $inputSet = $this->getMockForAbstractClass(InputSet::class);
         $inputSet->expects($this->once())
             ->method('getInputByRef')
             ->with('myInput')
             ->will($this->returnValue($input));
 
-        /** @var $inputSet Algo_Model_InputSet */
+        /** @var $inputSet \AF\Domain\Algorithm\InputSet */
         $result = $algoTextKeyInput->execute($inputSet);
 
         $this->assertEquals('Valeur', $result);
@@ -141,13 +141,13 @@ class InputTest extends TestCase
         $algoTextKeyInput = new Algo_Model_Selection_TextKey_Input();
         $algoTextKeyInput->setInputRef('myInput');
 
-        $inputSet = $this->getMockForAbstractClass(Algo_Model_InputSet::class);
+        $inputSet = $this->getMockForAbstractClass(InputSet::class);
         $inputSet->expects($this->once())
             ->method('getInputByRef')
             ->with('myInput')
             ->will($this->returnValue(null));
 
-        /** @var $inputSet Algo_Model_InputSet */
+        /** @var $inputSet \AF\Domain\Algorithm\InputSet */
         $algoTextKeyInput->execute($inputSet);
     }
 }

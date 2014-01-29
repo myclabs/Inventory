@@ -1,5 +1,7 @@
 <?php
 
+use AF\Domain\AF\AF;
+use AF\Domain\AF\InputSet\PrimaryInputSet;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Techno\Domain\Family\MemberNotFoundException;
@@ -30,11 +32,11 @@ class AF_Service_InputService
     /**
      * Modifie une saisie et recalcule les résultats si la saisie est complète
      *
-     * @param AF_Model_InputSet_Primary $inputSet  InputSet à modifier
-     * @param AF_Model_InputSet_Primary $newValues Nouvelles valeurs pour les saisies
+     * @param PrimaryInputSet $inputSet  InputSet à modifier
+     * @param PrimaryInputSet $newValues Nouvelles valeurs pour les saisies
      * @throws InvalidArgumentException Both InputSets should be for the same AF
      */
-    public function editInputSet(AF_Model_InputSet_Primary $inputSet, AF_Model_InputSet_Primary $newValues)
+    public function editInputSet(PrimaryInputSet $inputSet, PrimaryInputSet $newValues)
     {
         if ($inputSet->getAF() !== $newValues->getAF()) {
             throw new InvalidArgumentException("Both InputSets should be for the same AF");
@@ -53,10 +55,10 @@ class AF_Service_InputService
      *
      * Si la saisie est incomplète, les résultats seront vidés.
      *
-     * @param AF_Model_InputSet_Primary $inputSet
-     * @param AF_Model_AF               $af Permet d'uiliser un AF différent de celui de la saisie
+     * @param PrimaryInputSet $inputSet
+     * @param AF               $af Permet d'uiliser un AF différent de celui de la saisie
      */
-    public function updateResults(AF_Model_InputSet_Primary $inputSet, AF_Model_AF $af = null)
+    public function updateResults(PrimaryInputSet $inputSet, AF $af = null)
     {
         if (! $af) {
             $af = $inputSet->getAF();
