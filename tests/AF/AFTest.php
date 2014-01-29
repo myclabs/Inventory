@@ -10,28 +10,28 @@ class AFTest extends TestCase
 {
     public function testConstruct()
     {
-        $o = new \AF\Domain\AF(strtolower(Core_Tools::generateString(20)));
+        $o = new AF(strtolower(Core_Tools::generateString(20)));
         $this->assertTrue($o instanceof AF);
         return $o;
     }
 
     /**
      * @depends testConstruct
-     * @param \AF\Domain\AF $o
-     * @return \AF\Domain\AF
+     * @param AF $o
+     * @return AF
      */
-    public function testLoad(\AF\Domain\AF $o)
+    public function testLoad(AF $o)
     {
-        $this->assertTrue($o instanceof \AF\Domain\AF);
+        $this->assertTrue($o instanceof AF);
         return $o;
     }
 
     /**
      * @depends testLoad
-     * @param \AF\Domain\AF $o
+     * @param AF $o
      */
-    public function testDelete(\AF\Domain\AF $o)
+    public function testDelete(AF $o)
     {
-        $this->assertTrue($o instanceof \AF\Domain\AF);
+        $this->assertTrue($o instanceof AF);
     }
 }

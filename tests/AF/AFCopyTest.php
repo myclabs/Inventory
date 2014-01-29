@@ -19,7 +19,7 @@ class AFCopyTest extends TestCase
     {
         parent::setUp();
 
-        foreach (Component\Component::loadList() as $o) {
+        foreach (Component::loadList() as $o) {
             $o->delete();
         }
         foreach (AF::loadList() as $o) {

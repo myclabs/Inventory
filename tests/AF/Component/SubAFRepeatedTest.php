@@ -16,6 +16,6 @@ class SubAFRepeatedTest extends TestCase
         $this->assertTrue($o->isVisible());
         $this->assertFalse($o->getWithFreeLabel());
         $this->assertEquals(RepeatedSubAF::MININPUTNUMBER_0, $o->getMinInputNumber());
-        $this->assertEquals(\AF\Domain\Component\SubAF::FOLDAWAY, $o->getFoldaway());
+        $this->assertEquals(SubAF::FOLDAWAY, $o->getFoldaway());
     }
 }

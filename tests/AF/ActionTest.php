@@ -9,36 +9,36 @@ class ActionTest extends TestCase
 {
     public function testConstruct()
     {
-        /** @var $o \AF\Domain\Action\Action */
-        $o = $this->getMockForAbstractClass(Action\Action::class);
-        $this->assertTrue($o instanceof Action\Action);
+        /** @var $o Action */
+        $o = $this->getMockForAbstractClass(Action::class);
+        $this->assertTrue($o instanceof Action);
         return $o;
     }
 
     /**
      * @depends testConstruct
-     * @param \AF\Domain\Action\Action $o
-     * @return \AF\Domain\Action\Action
+     * @param Action $o
+     * @return Action
      */
-    public function testLoad(Action\Action $o)
+    public function testLoad(Action $o)
     {
-        $this->assertTrue($o instanceof Action\Action);
+        $this->assertTrue($o instanceof Action);
         return $o;
     }
 
     /**
      * @depends testLoad
-     * @param \AF\Domain\Action\Action $o
+     * @param Action $o
      */
-    public function testDelete(Action\Action $o)
+    public function testDelete(Action $o)
     {
-        $this->assertTrue($o instanceof Action\Action);
+        $this->assertTrue($o instanceof Action);
     }
 
     public function testCheckConfig()
     {
-        /** @var $o \AF\Domain\Action\Action */
-        $o = $this->getMockForAbstractClass(Action\Action::class);
+        /** @var $o Action */
+        $o = $this->getMockForAbstractClass(Action::class);
         $errors = $o->checkConfig();
         $this->assertCount(1, $errors);
         $this->assertTrue($errors[0]->getFatal());

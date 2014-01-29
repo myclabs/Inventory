@@ -23,7 +23,7 @@ class InputServiceTest extends TestCase
      */
     private $af;
     /**
-     * @var \AF\Domain\Component\NumericField
+     * @var NumericField
      */
     private $comp1;
     /**
@@ -31,7 +31,7 @@ class InputServiceTest extends TestCase
      */
     private $comp2;
     /**
-     * @var \AF\Domain\Component\Checkbox
+     * @var Checkbox
      */
     private $comp3;
 
@@ -114,7 +114,7 @@ class InputServiceTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        if (\AF\Domain\AF::countTotal() > 0) {
+        if (AF::countTotal() > 0) {
             foreach (AF::loadList() as $o) {
                 $o->delete();
             }
