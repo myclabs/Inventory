@@ -1,4 +1,4 @@
-SetOptionState:
+AF\Domain\Action\SetOptionState:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Action_SetOptionState
@@ -10,7 +10,7 @@ SetOptionState:
 
   manyToOne:
     option:
-      targetEntity: SelectOption
+      targetEntity: AF\Domain\Component\Select\SelectOption
       joinColumn:
         name: idOption
         referencedColumnName: id

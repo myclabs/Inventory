@@ -1,4 +1,4 @@
-SubAF:
+AF\Domain\Component\SubAF:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Component_SubAF
@@ -10,7 +10,7 @@ SubAF:
 
   manyToOne:
     calledAF:
-      targetEntity: AF
+      targetEntity: AF\Domain\AF
       joinColumn:
         name: idCalledAF
         referencedColumnName: id

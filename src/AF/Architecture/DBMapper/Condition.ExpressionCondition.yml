@@ -1,4 +1,4 @@
-ExpressionCondition:
+AF\Domain\Condition\ExpressionCondition:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Condition_Expression

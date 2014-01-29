@@ -1,4 +1,4 @@
-Select:
+AF\Domain\Component\Select:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Component_Select
@@ -10,7 +10,7 @@ Select:
 
   oneToMany:
     options:
-      targetEntity: SelectOption
+      targetEntity: AF\Domain\Component\Select\SelectOption
       mappedBy: select
       orderBy:
         position: ASC

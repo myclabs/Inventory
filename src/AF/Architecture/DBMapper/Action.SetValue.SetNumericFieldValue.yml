@@ -1,4 +1,4 @@
-Numeric:
+AF\Domain\Action\SetValue\Numeric:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Action_SetValue_Numeric

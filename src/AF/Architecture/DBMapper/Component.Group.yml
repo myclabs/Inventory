@@ -1,4 +1,4 @@
-Group:
+AF\Domain\Component\Group:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Component_Group
@@ -10,7 +10,7 @@ Group:
 
   oneToMany:
     subComponents:
-      targetEntity: Component
+      targetEntity: AF\Domain\Component
       mappedBy: group
       orderBy:
         position: ASC

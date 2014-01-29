@@ -1,4 +1,4 @@
-InputSet:
+AF\Domain\InputSet\InputSet:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_InputSet
@@ -8,8 +8,8 @@ InputSet:
     name: inputSetType
     type: string
   discriminatorMap:
-    primary: PrimaryInputSet
-    sub: SubInputSet
+    primary: AF\Domain\InputSet\PrimaryInputSet
+    sub: AF\Domain\InputSet\SubInputSet
 
   id:
     id:
@@ -30,7 +30,7 @@ InputSet:
 
   oneToMany:
     inputs:
-      targetEntity: Input
+      targetEntity: AF\Domain\Input\Input
       mappedBy: inputSet
       cascade: [ all ]
       orphanRemoval: true

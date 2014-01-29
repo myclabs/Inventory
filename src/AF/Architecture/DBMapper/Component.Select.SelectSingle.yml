@@ -1,4 +1,4 @@
-SelectSingle:
+AF\Domain\Component\Select\SelectSingle:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Component_Select_Single
@@ -10,7 +10,7 @@ SelectSingle:
 
   oneToOne:
     defaultValue:
-      targetEntity: SelectOption
+      targetEntity: AF\Domain\Component\Select\SelectOption
       joinColumn:
         name: idDefaultValue
         referencedColumnName: id

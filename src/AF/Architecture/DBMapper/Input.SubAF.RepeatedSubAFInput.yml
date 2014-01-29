@@ -1,11 +1,11 @@
-SubAFRepeated:
+AF\Domain\Input\SubAF\SubAFRepeated:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Input_SubAF_Repeated
 
   manyToMany:
     value:
-      targetEntity: SubInputSet
+      targetEntity: AF\Domain\InputSet\SubInputSet
       joinTable:
         name: AF_Input_SubAF_Repeated_Value
         joinColumns:

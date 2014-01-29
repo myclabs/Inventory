@@ -1,4 +1,4 @@
-OutputSet:
+AF\Domain\Output\OutputSet:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Output_OutputSet
@@ -11,7 +11,7 @@ OutputSet:
 
   oneToOne:
     inputSet:
-      targetEntity: PrimaryInputSet
+      targetEntity: AF\Domain\InputSet\PrimaryInputSet
       inversedBy: outputSet
       joinColumn:
         name: idInputSet
@@ -20,12 +20,12 @@ OutputSet:
 
   oneToMany:
     elements:
-      targetEntity: OutputElement
+      targetEntity: AF\Domain\Output\OutputElement
       mappedBy: outputSet
       cascade: [ all ]
       orphanRemoval: true
     totals:
-      targetEntity: OutputTotal
+      targetEntity: AF\Domain\Output\OutputTotal
       mappedBy: outputSet
       cascade: [ all ]
       orphanRemoval: true

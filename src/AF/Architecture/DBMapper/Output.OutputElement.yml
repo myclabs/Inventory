@@ -1,4 +1,4 @@
-OutputElement:
+AF\Domain\Output\OutputElement:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Output_Element
@@ -16,20 +16,20 @@ OutputElement:
 
   manyToOne:
     outputSet:
-      targetEntity: OutputSet
+      targetEntity: AF\Domain\Output\OutputSet
       inversedBy: elements
       joinColumn:
         name: idOutputSet
         referencedColumnName: id
         nullable: false
     inputSet:
-      targetEntity: InputSet
+      targetEntity: AF\Domain\InputSet\InputSet
       joinColumn:
         name: idInputSet
         referencedColumnName: id
         nullable: false
     algo:
-      targetEntity: NumericAlgo
+      targetEntity: AF\Domain\Algorithm\Numeric\NumericAlgo
       joinColumn:
         name: idAlgo
         referencedColumnName: id
@@ -37,7 +37,7 @@ OutputElement:
 
   manyToMany:
     indexes:
-      targetEntity: OutputIndex
+      targetEntity: AF\Domain\Output\OutputIndex
       inversedBy: outputElements
       joinTable:
         name: AF_Output_Element_Indexes

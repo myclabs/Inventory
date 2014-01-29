@@ -1,4 +1,4 @@
-TextField:
+AF\Domain\Component\TextField:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Component_Text

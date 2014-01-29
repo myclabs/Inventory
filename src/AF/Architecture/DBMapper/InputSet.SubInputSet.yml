@@ -1,4 +1,4 @@
-SubInputSet:
+AF\Domain\InputSet\SubInputSet:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_InputSet_Sub

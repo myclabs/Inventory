@@ -1,4 +1,4 @@
-Action:
+AF\Domain\Action\Action:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Action
@@ -8,13 +8,13 @@ Action:
     name: type_action
     type: string
   discriminatorMap:
-    setstate: SetState
-    setoptionstate: SetOptionState
-    setalgovalue: SetAlgoValue
-    setvalue_numeric: Numeric
-    setvalue_checkbox: Checkbox
-    setvalue_select_single: SelectSingle
-    setvalue_select_multi: SelectMulti
+    setstate: AF\Domain\Action\SetState
+    setoptionstate: AF\Domain\Action\SetOptionState
+    setalgovalue: AF\Domain\Action\SetAlgoValue
+    setvalue_numeric: AF\Domain\Action\SetValue\SetNumericFieldValue
+    setvalue_checkbox: AF\Domain\Action\SetValue\SetCheckboxValue
+    setvalue_select_single: AF\Domain\Action\SetValue\Select\SetSelectSingleValue
+    setvalue_select_multi: AF\Domain\Action\SetValue\Select\SetSelectMultiValue
 
   id:
     id:
@@ -24,14 +24,14 @@ Action:
 
   manyToOne:
     targetComponent:
-      targetEntity: Component
+      targetEntity: AF\Domain\Component\Component
       inversedBy: actions
       joinColumn:
         name: idTargetComponent
         referencedColumnName: id
         nullable: false
     condition:
-      targetEntity: Condition
+      targetEntity: AF\Domain\Condition\Condition
       joinColumn:
         name: idCondition
         referencedColumnName: id

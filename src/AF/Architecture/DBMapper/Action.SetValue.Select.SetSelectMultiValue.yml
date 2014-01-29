@@ -1,11 +1,11 @@
-SelectMulti:
+AF\Domain\Action\SetValue\Select\SelectMulti:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Action_SetValue_Select_Multi
 
   manyToOne:
     options:
-      targetEntity: SelectOption
+      targetEntity: AF\Domain\Component\Select\SelectOption
       joinTable:
         name: AF_Action_SetValue_Select_Multi_Options
         joinColumns:

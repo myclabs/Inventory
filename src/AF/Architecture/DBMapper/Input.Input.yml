@@ -1,4 +1,4 @@
-Input:
+AF\Domain\Input\Input:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Input
@@ -8,15 +8,15 @@ Input:
     name: inputType
     type: string
   discriminatorMap:
-    group: GroupInput
-    numeric: AF_Model_Input_Numeric
-    text: TextFieldInput
-    checkbox: CheckboxInput
-    select_single: SelectSingle
-    select_multi: SelectMulti
-    subaf: SubAFInput
-    subaf_notrepeated: NotRepeatedSubAF
-    subaf_repeated: SubAFRepeated
+    group: AF\Domain\Input\GroupInput
+    numeric: AF\Domain\Input\NumericInput
+    text: AF\Domain\Input\TextFieldInput
+    checkbox: AF\Domain\Input\CheckboxInput
+    select_single: AF\Domain\Input\Select\SelectSingleInput
+    select_multi: AF\Domain\Input\Select\SelectMultiInput
+    subaf: AF\Domain\Input\SubAFInput
+    subaf_notrepeated: AF\Domain\Input\SubAF\NotRepeatedSubAFInput
+    subaf_repeated: AF\Domain\Input\SubAF\SubAFRepeatedInput
 
   id:
     id:
@@ -37,7 +37,7 @@ Input:
 
   manyToOne:
     inputSet:
-      targetEntity: InputSet
+      targetEntity: AF\Domain\InputSet\InputSet
       inversedBy: inputs
       joinColumn:
         name: idInputSet

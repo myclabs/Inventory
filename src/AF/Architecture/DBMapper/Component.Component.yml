@@ -1,4 +1,4 @@
-Component:
+AF\Domain\Component\Component:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Component
@@ -12,17 +12,17 @@ Component:
     name: type_component
     type: string
   discriminatorMap:
-    group: Group
-    subaf: SubAF
-    subaf_notrepeated: NotRepeatedSubAF
-    subaf_repeated: RepeatedSubAF
-    field: Field
-    checkbox: Checkbox
-    numeric: NumericField
-    text: TextField
-    select: Select
-    select_single: SelectSingle
-    select_multi: SelectMulti
+    group: AF\Domain\Component\Group
+    subaf: AF\Domain\Component\SubAF
+    subaf_notrepeated: AF\Domain\Component\SubAF\NotRepeatedSubAF
+    subaf_repeated: AF\Domain\Component\SubAF\RepeatedSubAF
+    field: AF\Domain\Component\Field
+    checkbox: AF\Domain\Component\Checkbox
+    numeric: AF\Domain\Component\NumericField
+    text: AF\Domain\Component\TextField
+    select: AF\Domain\Component\Select
+    select_single: AF\Domain\Component\Select\SelectSingle
+    select_multi: AF\Domain\Component\Select\SelectMulti
 
   id:
     id:
@@ -53,7 +53,7 @@ Component:
 
   manyToOne:
     af:
-      targetEntity: AF
+      targetEntity: AF\Domain\AF
       inversedBy: components
       joinColumn:
         name: idAF
@@ -61,7 +61,7 @@ Component:
         nullable: true
         onDelete: SET NULL
     group:
-      targetEntity: Group
+      targetEntity: AF\Domain\Group
       inversedBy: subComponents
       orderBy:
         position: ASC
@@ -72,7 +72,7 @@ Component:
 
   oneToMany:
     actions:
-      targetEntity: Action
+      targetEntity: AF\Domain\Action\Action
       mappedBy: targetComponent
       cascade: [ all ]
       orphanRemoval: true

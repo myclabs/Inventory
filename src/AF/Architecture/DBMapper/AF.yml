@@ -1,4 +1,4 @@
-AF:
+AF\Domain\AF:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_AF
@@ -32,7 +32,7 @@ AF:
 
   manyToOne:
     category:
-      targetEntity: Category
+      targetEntity: AF\Domain\Category
       inversedBy: afs
       joinColumn:
         name: idCategory
@@ -41,7 +41,7 @@ AF:
 
   oneToOne:
     rootGroup:
-      targetEntity: Group
+      targetEntity: AF\Domain\Component\Group
       joinColumn:
         name: idRootGroup
         referencedColumnName: id
@@ -50,7 +50,7 @@ AF:
       cascade: [ all ]
       orphanRemoval: true
     algoSet:
-      targetEntity: AlgoSet
+      targetEntity: AF\Domain\Algorithm\AlgoSet
       joinColumn:
         name: idAlgoSet
         referencedColumnName: id
@@ -58,7 +58,7 @@ AF:
       cascade: [ all ]
       orphanRemoval: true
     mainAlgo:
-      targetEntity: MainSelectionAlgo
+      targetEntity: AF\Domain\Algorithm\Selection\MainSelectionAlgo
       joinColumn:
         name: idMainAlgo
         referencedColumnName: id
@@ -67,12 +67,12 @@ AF:
 
   oneToMany:
     components:
-      targetEntity: Component
+      targetEntity: AF\Domain\Component\Component
       mappedBy: af
       cascade: [ all ]
       orphanRemoval: true
     conditions:
-      targetEntity: Condition
+      targetEntity: AF\Domain\Condition\Condition
       mappedBy: af
       cascade: [ all ]
       orphanRemoval: true

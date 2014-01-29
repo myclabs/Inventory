@@ -1,4 +1,4 @@
-PrimaryInputSet:
+AF\Domain\InputSet\PrimaryInputSet:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_InputSet_Primary
@@ -16,7 +16,7 @@ PrimaryInputSet:
 
   oneToOne:
     outputSet:
-      targetEntity: OutputSet
+      targetEntity: AF\Domain\Output\OutputSet
       mappedBy: inputSet
       orphanRemoval: true
       cascade: [ all ]

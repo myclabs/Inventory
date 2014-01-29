@@ -1,4 +1,4 @@
-OutputIndex:
+AF\Domain\Output\OutputIndex:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Output_Index
@@ -19,5 +19,5 @@ OutputIndex:
 
   manyToMany:
     outputElements:
-      targetEntity: OutputElement
+      targetEntity: AF\Domain\Output\OutputElement
       mappedBy: indexes

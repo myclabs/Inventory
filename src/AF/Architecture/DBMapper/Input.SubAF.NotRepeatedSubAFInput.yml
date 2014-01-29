@@ -1,11 +1,11 @@
-NotRepeatedSubAF:
+AF\Domain\Input\SubAF\NotRepeatedSubAF:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Input_SubAF_NotRepeated
 
   manyToOne:
     value:
-      targetEntity: SubInputSet
+      targetEntity: AF\Domain\InputSet\SubInputSet
       joinColumn:
         name: idSub
         referencedColumnName: id

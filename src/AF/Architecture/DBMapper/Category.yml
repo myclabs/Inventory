@@ -1,4 +1,4 @@
-Category:
+AF\Domain\Category:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Category
@@ -24,7 +24,7 @@ Category:
 
   manyToOne:
     parentCategory:
-      targetEntity: Category
+      targetEntity: AF\Domain\Category
       inversedBy: childCategories
       joinColumn:
         name: idParentCategory
@@ -33,7 +33,7 @@ Category:
 
   oneToMany:
     childCategories:
-      targetEntity: Category
+      targetEntity: AF\Domain\Category
       mappedBy: parentCategory
       orderBy:
         position: ASC

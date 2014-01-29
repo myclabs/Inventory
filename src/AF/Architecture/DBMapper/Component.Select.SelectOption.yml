@@ -1,4 +1,4 @@
-SelectOption:
+AF\Domain\Component\Select\SelectOption:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: AF_Component_Select_Option
@@ -34,7 +34,7 @@ SelectOption:
 
   manyToOne:
     select:
-      targetEntity: Select
+      targetEntity: AF\Domain\Component\Select\Select
       inversedBy: options
       joinColumn:
         name: idSelect

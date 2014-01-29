@@ -1,11 +1,11 @@
-SelectSingle:
+AF\Domain\Condition\Elementary\Select\SelectSingle:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Condition_Elementary_Select_Single
 
   manyToOne:
     option:
-      targetEntity: SelectOption
+      targetEntity: AF\Domain\Component\Select\SelectOption
       joinColumn:
         name: idOption
         referencedColumnName: id

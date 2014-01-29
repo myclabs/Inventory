@@ -1,4 +1,4 @@
-Condition:
+AF\Domain\Condition\Condition:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Condition
@@ -8,12 +8,12 @@ Condition:
     name: type_condition
     type: string
   discriminatorMap:
-    expression: ExpressionCondition
-    elementary: ElementaryCondition
-    elementary_numeric: Numeric
-    elementary_checkbox: Checkbox
-    elementary_select_single: SelectSingle
-    elementary_select_multi: SelectMulti
+    expression: AF\Domain\Condition\ExpressionCondition
+    elementary: AF\Domain\Condition\ElementaryCondition
+    elementary_numeric: AF\Domain\Condition\Elementary\Numeric
+    elementary_checkbox: AF\Domain\Condition\Elementary\Checkbox
+    elementary_select_single: AF\Domain\Condition\Elementary\Select\SelectSingle
+    elementary_select_multi: AF\Domain\Condition\Elementary\Select\SelectMulti
 
   id:
     id:
@@ -28,7 +28,7 @@ Condition:
 
   manyToOne:
     af:
-      targetEntity: AF
+      targetEntity: AF\Domain\AF
       inversedBy: conditions
       joinColumn:
         name: idAF

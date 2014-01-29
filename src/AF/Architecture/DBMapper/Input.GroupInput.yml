@@ -1,4 +1,4 @@
-GroupInput:
+AF\Domain\Input\GroupInput:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Input_Group

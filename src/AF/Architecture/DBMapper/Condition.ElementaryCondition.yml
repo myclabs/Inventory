@@ -1,4 +1,4 @@
-ElementaryCondition:
+AF\Domain\Condition\ElementaryCondition:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Condition_Elementary
@@ -10,7 +10,7 @@ ElementaryCondition:
 
   manyToOne:
     field:
-      targetEntity: Field
+      targetEntity: AF\Domain\Component\Field
       joinColumn:
         name: idField
         referencedColumnName: id
