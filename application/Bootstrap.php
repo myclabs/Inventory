@@ -9,6 +9,7 @@ use Symfony\Component\Translation\Translator;
 use User\Application\Plugin\ACLPlugin;
 use User\Application\ViewHelper\IsAllowedHelper;
 use User\Application\ViewHelper\TutorialHelper;
+use User\Application\Plugin\TutorialPlugin;
 
 /**
  * Application bootstrap
@@ -162,6 +163,15 @@ class Bootstrap extends Core_Bootstrap
             $front->registerPlugin($this->container->get(Inventory_Plugin_Acl::class));
             Zend_Registry::set('pluginAcl', ACLPlugin::class);
         }
+    }
+
+    /**
+     * Enregistrement du plugin pour le tutorial
+     */
+    protected function _initPluginTutorial()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin($this->container->get(TutorialPlugin::class));
     }
 
     /**

@@ -340,4 +340,17 @@ class User_ProfileController extends Core_Controller
 
         $this->sendJsonResponse([]);
     }
+
+    /**
+     * Remet à zéro tous les états d'avancements des tutoriels
+     * @Secure("editUser")
+     */
+    public function resetTutorialsAction()
+    {
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->_helper->auth();
+        $loggedInUser->initTutorials();
+
+        $this->sendJsonResponse([]);
+    }
 }

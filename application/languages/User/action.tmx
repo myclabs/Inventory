@@ -12,6 +12,30 @@
                 <seg>Action</seg>
             </tuv>
         </tu>
+        <tu tuid="resetTutorialsConfirmation">
+            <tuv xml:lang="fr">
+                <seg>Les tutoriels ont été réinitialisés, vous les verrez sur les prochaines pages.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Tutorials have been reseted, you will see them on the next pages.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resetTutorialsReloadPage">
+            <tuv xml:lang="fr">
+                <seg>Recharger cette page</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Reload this page</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resetTutorialsError">
+            <tuv xml:lang="fr">
+                <seg>Une erreur est survenue lors du traitement de votre requête, merci de réessayer utlérieurement.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>An error occured while processing your request, please try again later.</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>
