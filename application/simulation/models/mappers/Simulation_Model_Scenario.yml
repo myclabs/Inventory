@@ -20,7 +20,7 @@ Simulation_Model_Scenario:
 
   oneToOne:
     aFInputSetPrimary:
-      targetEntity: PrimaryInputSet
+      targetEntity: AF\Domain\InputSet\PrimaryInputSet
       joinColumn:
         name: idAFInputSetPrimary
         referencedColumnName: id

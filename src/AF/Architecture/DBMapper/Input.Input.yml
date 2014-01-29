@@ -9,14 +9,14 @@ AF\Domain\Input\Input:
     type: string
   discriminatorMap:
     group: AF\Domain\Input\GroupInput
-    numeric: AF\Domain\Input\NumericInput
+    numeric: AF\Domain\Input\NumericFieldInput
     text: AF\Domain\Input\TextFieldInput
     checkbox: AF\Domain\Input\CheckboxInput
     select_single: AF\Domain\Input\Select\SelectSingleInput
     select_multi: AF\Domain\Input\Select\SelectMultiInput
     subaf: AF\Domain\Input\SubAFInput
     subaf_notrepeated: AF\Domain\Input\SubAF\NotRepeatedSubAFInput
-    subaf_repeated: AF\Domain\Input\SubAF\SubAFRepeatedInput
+    subaf_repeated: AF\Domain\Input\SubAF\RepeatedSubAFInput
 
   id:
     id:

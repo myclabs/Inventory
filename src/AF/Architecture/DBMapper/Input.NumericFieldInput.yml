@@ -1,4 +1,4 @@
-AF\Domain\Input\NumericInput:
+AF\Domain\Input\NumericFieldInput:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Input_Numeric

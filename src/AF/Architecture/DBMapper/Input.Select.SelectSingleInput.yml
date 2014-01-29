@@ -1,4 +1,4 @@
-AF\Domain\Input\Select\SelectSingle:
+AF\Domain\Input\Select\SelectSingleInput:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Input_Select_Single

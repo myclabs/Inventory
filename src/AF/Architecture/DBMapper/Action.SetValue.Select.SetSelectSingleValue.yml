@@ -1,4 +1,4 @@
-AF\Domain\Action\SetValue\Select\SelectSingle:
+AF\Domain\Action\SetValue\Select\SetSelectSingleValue:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Action_SetValue_Select_Single

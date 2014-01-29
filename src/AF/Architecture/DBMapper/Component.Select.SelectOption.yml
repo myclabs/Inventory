@@ -34,7 +34,7 @@ AF\Domain\Component\Select\SelectOption:
 
   manyToOne:
     select:
-      targetEntity: AF\Domain\Component\Select\Select
+      targetEntity: AF\Domain\Component\Select
       inversedBy: options
       joinColumn:
         name: idSelect

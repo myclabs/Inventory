@@ -10,7 +10,7 @@ AF\Domain\Component\Group:
 
   oneToMany:
     subComponents:
-      targetEntity: AF\Domain\Component
+      targetEntity: AF\Domain\Component\Component
       mappedBy: group
       orderBy:
         position: ASC

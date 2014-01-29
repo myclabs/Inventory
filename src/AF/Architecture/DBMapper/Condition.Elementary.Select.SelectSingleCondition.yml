@@ -1,4 +1,4 @@
-AF\Domain\Condition\Elementary\Select\SelectSingle:
+AF\Domain\Condition\Elementary\Select\SelectSingleCondition:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Condition_Elementary_Select_Single

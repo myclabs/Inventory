@@ -61,7 +61,7 @@ AF\Domain\Component\Component:
         nullable: true
         onDelete: SET NULL
     group:
-      targetEntity: AF\Domain\Group
+      targetEntity: AF\Domain\Component\Group
       inversedBy: subComponents
       orderBy:
         position: ASC

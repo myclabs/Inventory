@@ -1,4 +1,4 @@
-AF\Domain\Input\SubAF\SubAFRepeated:
+AF\Domain\Input\SubAF\RepeatedSubAFInput:
   type: entity
   repositoryClass: Core_Model_Repository
   table: AF_Input_SubAF_Repeated
