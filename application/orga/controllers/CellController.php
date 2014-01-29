@@ -1,5 +1,6 @@
 <?php
 
+use AF\Application\InputFormParser;
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
@@ -73,7 +74,7 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var AF_Service_InputFormParser
+     * @var InputFormParser
      */
     private $inputFormParser;
 

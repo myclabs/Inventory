@@ -1,6 +1,7 @@
 <?php
 
 use AF\Domain\AF;
+use AF\Domain\InputService;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\Group;
 use AF\Domain\Component\TextField;
@@ -253,8 +254,8 @@ class Orga_Populate extends Core_Script_Action
             $input->setValue($value);
         }
 
-        /* @var AF_Service_InputService $inputService */
-        $inputService = $container->get(AF_Service_InputService::class);
+        /* @var InputService $inputService */
+        $inputService = $container->get(InputService::class);
         $inputService->updateResults($inputSetPrimary);
         $inputSetPrimary->markAsFinished($finished);
         $inputSetPrimary->save();

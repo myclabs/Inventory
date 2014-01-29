@@ -6,7 +6,7 @@ use AF\Domain\AF;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Condition\Elementary\NumericFieldCondition;
-use AF_Service_AFCopyService;
+use AF\Domain\AFCopyService;
 use Core\Test\TestCase;
 use Unit\UnitAPI;
 
@@ -52,7 +52,7 @@ class AFCopyTest extends TestCase
 
         $this->entityManager->flush();
 
-        $afCopyService = new AF_Service_AFCopyService();
+        $afCopyService = new AFCopyService();
         /** @var \AF\Domain\AF $newAF */
         $newAF = $afCopyService->copyAF($oldAF, 'new_ref', 'new label');
 

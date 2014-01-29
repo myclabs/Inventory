@@ -1,14 +1,16 @@
 <?php
 
+namespace AF\Application;
+
 use AF\Domain\AF;
 use AF\Domain\Component\Group;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\SubAF\NotRepeatedSubAF;
 use AF\Domain\Component\TextField;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Component\Checkbox;
-use AF\Domain\Component\Select\SelectSingle;
-use AF\Domain\Component\Select\SelectMulti;
 use AF\Domain\Component\SubAF\RepeatedSubAF;
-use AF\Domain\Component\SubAF\NotRepeatedSubAF;
 use AF\Domain\Input\TextFieldInput;
 use AF\Domain\Input\NumericFieldInput;
 use AF\Domain\Input\GroupInput;
@@ -21,22 +23,30 @@ use AF\Domain\InputSet\InputSet;
 use AF\Domain\Component\Component;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputSet\SubInputSet;
+use Calc_UnitValue;
+use Core_Exception_InvalidArgument;
+use Core_Exception_NotFound;
+use Core_Locale;
+use Exception;
+use InvalidArgumentException;
+use UI_Generic;
 use Unit\UnitAPI;
 
 /**
- * Service responsable de parser le formulaire soumis
+ * Service responsable de parser le formulaire soumis.
  *
- * @author  matthieu.napoli
+ * TODO à mettre à jour quand http://tasks.myc-sense.com/issues/6422 sera traitée
+ *
+ * @author matthieu.napoli
  */
-class AF_Service_InputFormParser
+class InputFormParser
 {
-
     /**
      * Parse la soumission d'un AF pour remplir un InputSet
      *
-     * @param array       $formContent Contenu du post du formulaire
-     * @param AF $af
-     * @param array       $errorMessages
+     * @param array $formContent Contenu du post du formulaire
+     * @param AF    $af
+     * @param array $errorMessages
      *
      * @return PrimaryInputSet
      */
@@ -52,8 +62,8 @@ class AF_Service_InputFormParser
     /**
      * Parse la soumission d'un AF pour remplir un InputSet
      *
-     * @param array             $formContent Contenu du post du formulaire
-     * @param \AF\Domain\InputSet\InputSet $inputSet
+     * @param array    $formContent Contenu du post du formulaire
+     * @param InputSet $inputSet
      * @param AF       $af
      *
      * @return array
@@ -96,16 +106,19 @@ class AF_Service_InputFormParser
     }
 
     /**
-     * @param string             $fullRef Le ref du champ du formulaire (avec les préfixes)
-     * @param \AF\Domain\AF\Component\\AF\Domain\Component\Component $component
+     * @param string    $fullRef Le ref du champ du formulaire (avec les préfixes)
+     * @param Component $component
      * @param InputSet  $inputSet
-     * @param array              $inputContent
+     * @param array     $inputContent
      *
      * @throws InvalidArgumentException
      * @throws Exception
      * @return array Error messages indexed by the field name
      */
-    private function createInputFromComponent($fullRef, Component $component, InputSet $inputSet,
+    private function createInputFromComponent(
+        $fullRef,
+        Component $component,
+        InputSet $inputSet,
         array $inputContent
     ) {
         $errorMessages = [];
@@ -131,7 +144,7 @@ class AF_Service_InputFormParser
             if ($component->getWithUncertainty()) {
                 try {
                     $relativeUncertainty = null;
-                    // TODO à virer une fois http://dev.myc-sense.com:3000/issues/6422
+                    // TODO à virer une fois tasks.myc-sense.com/issues/6422
                     foreach ($inputContent['children'] as $key => $childInputContent) {
                         if (strpos($key, 'percent') !== false) {
                             $relativeUncertainty = $locale->readInteger($childInputContent['value']);
@@ -150,7 +163,7 @@ class AF_Service_InputFormParser
                 $relativeUncertainty = null;
             }
             // Choix de l'unite
-            // TODO à virer une fois http://dev.myc-sense.com:3000/issues/6422
+            // TODO à virer une fois tasks.myc-sense.com/issues/6422
             foreach ($inputContent['children'] as $key => $childUnitInputContent) {
                 if (strpos($key, '_unit_') !== false) {
                     $selectedUnit = new UnitAPI($childUnitInputContent['value']);
@@ -180,7 +193,7 @@ class AF_Service_InputFormParser
                 $input->setValue($inputContent['value']);
             }
 
-        } elseif ($component instanceof SelectSingleInput) {
+        } elseif ($component instanceof SelectSingle) {
             // Champ de sélection simple
             $input = new SelectSingleInput($inputSet, $component);
             if (!empty($inputContent['value'])) {
@@ -190,7 +203,7 @@ class AF_Service_InputFormParser
                 $errorMessages[$fullRef] = __("AF", "inputInput", "emptyRequiredField");
             }
 
-        } elseif ($component instanceof SelectMultiInput) {
+        } elseif ($component instanceof SelectMulti) {
             // Champ de sélection multiple
             $input = new SelectMultiInput($inputSet, $component);
             if (!empty($inputContent['value']) && is_array($inputContent['value'])) {
@@ -203,7 +216,7 @@ class AF_Service_InputFormParser
                 $errorMessages[$fullRef] = __("AF", "inputInput", "emptyRequiredField");
             }
 
-        } elseif ($component instanceof NotRepeatedSubAFInput) {
+        } elseif ($component instanceof NotRepeatedSubAF) {
             // Sous-AF non répété
             $input = new NotRepeatedSubAFInput($inputSet, $component);
             $errorMessages += $this->doParseForm(
@@ -270,5 +283,4 @@ class AF_Service_InputFormParser
 
         return $errorMessages;
     }
-
 }

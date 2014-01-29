@@ -1,19 +1,22 @@
 <?php
+
+namespace AF\Domain\InputHistoryService;
+
 use AF\Domain\Component\Select\SelectOption;
 use AF\Domain\Input\Input;
+use Calc_UnitValue;
+use DateTime;
 use User\Domain\User;
 
 /**
+ * Input history entry.
+ *
  * @author matthieu.napoli
  */
-
-/**
- * Input history entry
- */
-class AF_Service_InputHistoryService_Entry
+class Entry
 {
     /**
-     * @var \AF\Domain\Input\Input
+     * @var Input
      */
     private $input;
 
@@ -23,7 +26,7 @@ class AF_Service_InputHistoryService_Entry
     private $loggedAt;
 
     /**
-     * @var string|bool|Calc_UnitValue|\AF\Domain\Component\Select\SelectOption|\AF\Domain\Component\Select\SelectOption[]
+     * @var string|bool|Calc_UnitValue|SelectOption|SelectOption[]
      */
     private $value;
 
@@ -41,7 +44,7 @@ class AF_Service_InputHistoryService_Entry
     }
 
     /**
-     * @return \AF\Domain\Input\Input
+     * @return Input
      */
     public function getInput()
     {
@@ -57,7 +60,7 @@ class AF_Service_InputHistoryService_Entry
     }
 
     /**
-     * @return string|bool|Calc_UnitValue|\AF\Domain\Component\Select\SelectOption|\AF\Domain\Component\Select\SelectOption[]
+     * @return string|bool|Calc_UnitValue|SelectOption|SelectOption[]
      */
     public function getValue()
     {

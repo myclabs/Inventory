@@ -8,6 +8,7 @@
  */
 
 use AF\Domain\AF;
+use AF\Domain\AFConfigurationValidator;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Component\Field;
 use AF\Domain\Condition\Condition;
@@ -27,7 +28,7 @@ class AF_EditController extends Core_Controller
 
     /**
      * @Inject
-     * @var AF_Service_ConfigurationValidator
+     * @var AFConfigurationValidator
      */
     private $afConfigurationValidator;
 

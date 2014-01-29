@@ -7,7 +7,9 @@
  */
 
 use AF\Application\AFViewConfiguration;
+use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
+use AF\Domain\AFCopyService;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
@@ -22,13 +24,13 @@ class AF_AfController extends Core_Controller
 
     /**
      * @Inject
-     * @var AF_Service_InputSetSessionStorage
+     * @var InputSetSessionStorage
      */
     private $inputSetSessionStorage;
 
     /**
      * @Inject
-     * @var AF_Service_AFCopyService
+     * @var AFCopyService
      */
     private $afCopyService;
 

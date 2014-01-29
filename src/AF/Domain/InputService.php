@@ -1,17 +1,21 @@
 <?php
 
-use AF\Domain\AF;
+namespace AF\Domain;
+
 use AF\Domain\InputSet\PrimaryInputSet;
+use AF\Domain\InputService\InputSetUpdater;
+use Exception;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Techno\Domain\Family\MemberNotFoundException;
 
 /**
- * Service responsable de la gestion des saisies des AF
+ * Service responsable de la gestion des saisies des AF.
  *
- * @author  matthieu.napoli
+ * @author matthieu.napoli
  */
-class AF_Service_InputService
+class InputService
 {
     /**
      * @var EventDispatcher
@@ -43,7 +47,7 @@ class AF_Service_InputService
         }
 
         // Met à jour l'InputSet sauvegardé
-        $updater = new AF_Service_InputService_InputSetUpdater($inputSet, $newValues);
+        $updater = new InputSetUpdater($inputSet, $newValues);
         $updater->run();
 
         // Met à jour les résultats
@@ -56,11 +60,11 @@ class AF_Service_InputService
      * Si la saisie est incomplète, les résultats seront vidés.
      *
      * @param PrimaryInputSet $inputSet
-     * @param \AF\Domain\AF               $af Permet d'uiliser un AF différent de celui de la saisie
+     * @param AF              $af Permet d'uiliser un AF différent de celui de la saisie
      */
     public function updateResults(PrimaryInputSet $inputSet, AF $af = null)
     {
-        if (! $af) {
+        if (!$af) {
             $af = $inputSet->getAF();
         }
 
@@ -68,7 +72,7 @@ class AF_Service_InputService
         $inputSet->updateCompletion();
 
         // Si la saisie est incomplète
-        if (! $inputSet->isInputComplete()) {
+        if (!$inputSet->isInputComplete()) {
             $inputSet->clearOutputSet();
             return;
         }

@@ -2,12 +2,13 @@
 
 use AF\Domain\Component\Component;
 use AF\Domain\Component\Select\SelectOption;
+use AF\Domain\InputHistoryService\Entry;
 use Doctrine\Common\Collections\Collection;
 use Gedmo\Loggable\Entity\LogEntry;
 
 /** @var Component $component */
 $component = $this->component;
-/** @var AF_Service_InputHistoryService_Entry[] $entries */
+/** @var Entry[] $entries */
 $entries = $this->entries;
 
 $locale = Core_Locale::loadDefault();

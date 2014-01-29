@@ -1,17 +1,18 @@
 <?php
 
-use AF\Domain\AF;
+namespace AF\Domain;
+
 use AF\Domain\Component\Group;
 use Doctrine\ORM\EntityManager;
 
 /**
  * Service de suppression d'un AF
  *
- * Ce service devrait à terme passer dans la couche architecture, dans le repository des AF (à créer)
+ * Ce service devrait à terme passer dans la couche architecture dans le repository des AF (à créer)
  *
  * @author matthieu.napoli
  */
-class AF_Service_AFDeletionService
+class AFDeletionService
 {
     /**
      * @var EntityManager
@@ -28,7 +29,7 @@ class AF_Service_AFDeletionService
      *
      * Nécessaire car beaucoup trop de relations entre les objets d'un AF pour utiliser simplement les cascades.
      *
-     * @param \AF\Domain\AF $af
+     * @param AF $af
      */
     public function deleteAF(AF $af)
     {

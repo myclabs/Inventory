@@ -3,6 +3,7 @@
  * @author  matthieu.napoli
  */
 
+use AF\Domain\InputService;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
@@ -14,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class Simulation_Service_InputService
 {
     /**
-     * @var AF_Service_InputService
+     * @var InputService
      */
     private $afInputService;
 
@@ -34,13 +35,13 @@ class Simulation_Service_InputService
     private $workDispatcher;
 
     /**
-     * @param AF_Service_InputService    $afInputService
+     * @param InputService    $afInputService
      * @param Simulation_Service_ETLData $etlDataService
      * @param EventDispatcher            $eventDispatcher
      * @param WorkDispatcher             $workDispatcher
      */
     public function __construct(
-        AF_Service_InputService $afInputService,
+        InputService $afInputService,
         Simulation_Service_ETLData $etlDataService,
         EventDispatcher $eventDispatcher,
         WorkDispatcher $workDispatcher

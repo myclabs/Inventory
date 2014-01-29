@@ -7,6 +7,7 @@
  */
 
 use AF\Domain\AF;
+use AF\Domain\AFDeletionService;
 use AF\Domain\Category;
 use AF\Domain\Component\SubAF;
 use AF\Domain\Output\OutputElement;
@@ -22,7 +23,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var AF_Service_AFDeletionService
+     * @var AFDeletionService
      */
     private $afDeletionService;
 

@@ -1,27 +1,23 @@
 <?php
-use AF\Domain\AF;
-use AF\Domain\AFConfigurationError;
-use AF\Domain\Condition\Condition;
+
+namespace AF\Domain;
+
 use AF\Domain\Component\Component;
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\AlgoConfigurationError;
+use AF\Domain\Condition\Condition;
 
 /**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @package AF
+ * Vérifie la configuration des AF.
+ *
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
  */
-
-/**
- * Classe responsable de la vérification de la configuration des AF
- * @package AF
- */
-class AF_Service_ConfigurationValidator
+class AFConfigurationValidator
 {
-
     /**
      * Méthode qui gère le controle de la configuration des AFs.
-     * @param \AF\Domain\AF $af
+     * @param AF $af
      * @return AlgoConfigurationError[]
      */
     public function validateAF(AF $af)
@@ -45,7 +41,7 @@ class AF_Service_ConfigurationValidator
 
     /**
      * Méthode qui gère le control de la configuration des algos associés à un Af.
-     * @param \AF\Domain\AF $af
+     * @param AF $af
      * @return AlgoConfigurationError[]
      */
     protected function validateAlgos(AF $af)
@@ -55,15 +51,17 @@ class AF_Service_ConfigurationValidator
         // Valide les algos des sous-AF
         foreach ($af->getSubAfList() as $subAF) {
             $calledAF = $subAF->getCalledAF();
-            $errors = array_merge($errors,
-                                  $this->toAFConfigErrors($this->getErrors($calledAF->getAlgos()), $calledAF));
+            $errors = array_merge(
+                $errors,
+                $this->toAFConfigErrors($this->getErrors($calledAF->getAlgos()), $calledAF)
+            );
         }
         return $errors;
     }
 
     /**
      * Méthode qui gère le control de la configuration des conditions associées à un Af.
-     * @param \AF\Domain\AF $af
+     * @param AF $af
      * @return AlgoConfigurationError[]
      */
     protected function validateConditions(AF $af)
@@ -73,13 +71,13 @@ class AF_Service_ConfigurationValidator
 
     /**
      * Méthode qui récupère les erreurs sur une liste d'éléments
-     * @param Algo[]|Component[]|\AF\Domain\Condition\Condition[] $elementsList
+     * @param Algo[]|Component[]|Condition[] $elementList
      * @return array
      */
-    protected function getErrors($elementsList)
+    protected function getErrors($elementList)
     {
         $errors = [];
-        foreach ($elementsList as $element) {
+        foreach ($elementList as $element) {
             $errors = array_merge($errors, $element->checkConfig());
         }
         return $errors;
@@ -87,7 +85,7 @@ class AF_Service_ConfigurationValidator
 
     /**
      * @param AlgoConfigurationError[] $errors
-     * @param \AF\Domain\AF        $af
+     * @param AF                       $af
      * @return AlgoConfigurationError[]
      */
     protected function toAFConfigErrors(array $errors, AF $af)
@@ -101,12 +99,11 @@ class AF_Service_ConfigurationValidator
 
     /**
      * @param AlgoConfigurationError $error
-     * @param \AF\Domain\AF      $af
+     * @param AF                     $af
      * @return AlgoConfigurationError
      */
     protected function toAFConfigError(AlgoConfigurationError $error, AF $af)
     {
         return new AlgoConfigurationError($error->getMessage(), $error->getFatal(), $af);
     }
-
 }

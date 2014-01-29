@@ -1,26 +1,21 @@
 <?php
-/**
- * Génère la documentation d'un AF
- * @author     matthieu.napoli
- * @author     yoann.croizer
- * @package    AF
- * @subpackage View
- */
+
 use AF\Domain\AF;
 use AF\Domain\Component\SubAF\RepeatedSubAF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use Techno\Domain\Family\Family;
 
 /**
- * @package    AF
- * @subpackage View
+ * Génère la documentation d'un AF.
+ *
+ * @author matthieu.napoli
+ * @author yoann.croizer
  */
 class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
 {
-
     /**
      * Renvoi le html à afficher dans l'onglet documentation
-     * @param \AF\Domain\AF $af
+     * @param AF $af
      * @return string
      */
     public function documentation(AF $af)
@@ -38,9 +33,9 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
 
     /**
      * Rend le html pour un AF
-     * @param \AF\Domain\AF $af
-     * @param string      $title
-     * @param bool        $repeatedSubAf
+     * @param AF     $af
+     * @param string $title
+     * @param bool   $repeatedSubAf
      * @return string
      */
     protected function renderAf(AF $af, $title, $repeatedSubAf = false)
@@ -79,7 +74,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
 
     /**
      * Permet de récupérer la liste des familles de paramètres de techno
-     * @param \AF\Domain\AF $af
+     * @param AF $af
      * @return Family[]
      */
     protected function getFamilyList(AF $af)
@@ -92,5 +87,4 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
         }
         return $families;
     }
-
 }

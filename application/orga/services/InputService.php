@@ -1,6 +1,7 @@
 <?php
 
 use AF\Domain\AF;
+use AF\Domain\InputService;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
@@ -14,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class Orga_Service_InputService
 {
     /**
-     * @var AF_Service_InputService
+     * @var InputService
      */
     private $afInputService;
 
@@ -29,12 +30,12 @@ class Orga_Service_InputService
     private $workDispatcher;
 
     /**
-     * @param AF_Service_InputService $afInputService
+     * @param InputService $afInputService
      * @param EventDispatcher         $eventDispatcher
      * @param WorkDispatcher          $workDispatcher
      */
     public function __construct(
-        AF_Service_InputService $afInputService,
+        InputService $afInputService,
         EventDispatcher $eventDispatcher,
         WorkDispatcher $workDispatcher
     ) {

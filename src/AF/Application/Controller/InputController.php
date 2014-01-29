@@ -4,7 +4,11 @@
  * @package AF
  */
 
+use AF\Application\InputFormParser;
+use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
+use AF\Domain\InputHistoryService;
+use AF\Domain\InputService;
 use AF\Domain\Input\Input;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
@@ -23,25 +27,25 @@ class AF_InputController extends Core_Controller
 
     /**
      * @Inject
-     * @var AF_Service_InputService
+     * @var InputService
      */
     private $inputService;
 
     /**
      * @Inject
-     * @var AF_Service_InputSetSessionStorage
+     * @var InputSetSessionStorage
      */
     private $inputSetSessionStorage;
 
     /**
      * @Inject
-     * @var AF_Service_InputHistoryService
+     * @var InputHistoryService
      */
     private $inputHistoryService;
 
     /**
      * @Inject
-     * @var AF_Service_InputFormParser
+     * @var InputFormParser
      */
     private $inputFormParser;
 

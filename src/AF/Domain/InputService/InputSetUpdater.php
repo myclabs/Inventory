@@ -1,5 +1,7 @@
 <?php
 
+namespace AF\Domain\InputService;
+
 use AF\Domain\Input\TextFieldInput;
 use AF\Domain\Input\NumericFieldInput;
 use AF\Domain\Input\CheckboxInput;
@@ -13,25 +15,25 @@ use AF\Domain\InputSet\SubInputSet;
 use ArrayComparator\ArrayComparator;
 
 /**
- * Helper mettant à jour un InputSet à partir d'un autre InputSet
+ * Helper mettant à jour un InputSet à partir d'un autre InputSet.
  *
- * @author  matthieu.napoli
+ * @author matthieu.napoli
  */
-class AF_Service_InputService_InputSetUpdater extends ArrayComparator
+class InputSetUpdater extends ArrayComparator
 {
     /**
-     * @var \AF\Domain\InputSet\InputSet
+     * @var InputSet
      */
     private $inputSet;
 
     /**
-     * @var \AF\Domain\InputSet\InputSet
+     * @var InputSet
      */
     private $newValues;
 
     /**
-     * @param \AF\Domain\InputSet\InputSet $inputSet InputSet à modifier
-     * @param \AF\Domain\InputSet\InputSet $newValues Autre InputSet contenant les nouvelles valeurs
+     * @param InputSet $inputSet  InputSet à modifier
+     * @param InputSet $newValues Autre InputSet contenant les nouvelles valeurs
      */
     public function __construct(InputSet $inputSet, InputSet $newValues)
     {
@@ -61,10 +63,10 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
     /**
      * {@inheritdoc}
      * Compares 2 items and returns if they have the same identity (if they represent the same item)
-     * @param mixed          $key1
-     * @param mixed          $key2
-     * @param \AF\Domain\Input\Input $input1
-     * @param \AF\Domain\Input\Input $input2
+     * @param mixed $key1
+     * @param mixed $key2
+     * @param Input $input1
+     * @param Input $input2
      * @return boolean
      */
     protected function areSame($key1, $key2, $input1, $input2)
@@ -75,8 +77,8 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
     /**
      * {@inheritdoc}
      * Compares 2 items and returns if there are differences
-     * @param \AF\Domain\Input\Input $input1
-     * @param \AF\Domain\Input\Input $input2
+     * @param Input $input1
+     * @param Input $input2
      * @return boolean
      */
     protected function areEqual($input1, $input2)
@@ -86,7 +88,7 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
             && $input2 instanceof NotRepeatedSubAFInput
         ) {
             // Lance une mise à jour du sous-inputSet
-            $subUpdater = new AF_Service_InputService_InputSetUpdater($input1->getValue(), $input2->getValue());
+            $subUpdater = new InputSetUpdater($input1->getValue(), $input2->getValue());
             $subUpdater->run();
         }
         if ($input1 instanceof RepeatedSubAFInput && $input2 instanceof RepeatedSubAFInput) {
@@ -99,8 +101,8 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
 
     /**
      * Handler appelé lorsque des éléments différents sont trouvés entre les 2 input set
-     * @param \AF\Domain\Input\Input $input1
-     * @param \AF\Domain\Input\Input $input2
+     * @param Input $input1
+     * @param Input $input2
      */
     protected function whenDifferentHandler(Input $input1, Input $input2)
     {
@@ -120,7 +122,7 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
             $input1->setValue($input2->getValue());
         }
         if ($input1 instanceof CheckboxInput) {
-            /** @var \AF\Domain\Input\CheckboxInput $input2 */
+            /** @var CheckboxInput $input2 */
             $input1->setValue($input2->getValue());
         }
         if ($input1 instanceof SelectSingleInput) {
@@ -128,7 +130,7 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
             $input1->setValueFrom($input2);
         }
         if ($input1 instanceof SelectMultiInput) {
-            /** @var \AF\Domain\Input\Select\SelectMultiInput $input2 */
+            /** @var SelectMultiInput $input2 */
             $input1->setValueFrom($input2);
         }
         if ($input1 instanceof TextFieldInput) {
@@ -141,7 +143,7 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
 
     /**
      * Handler appelé lorsqu'un élément de l'input set a été supprimé dans la nouvelle saisie
-     * @param \AF\Domain\Input\Input $input1
+     * @param Input $input1
      */
     protected function whenMissingRightHandler(Input $input1)
     {
@@ -151,7 +153,7 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
 
     /**
      * Handler appelé lorsqu'un nouvel élément est présent dans la nouvelle saisie
-     * @param \AF\Domain\Input\Input $input2
+     * @param Input $input2
      */
     protected function whenMissingLeftHandler(Input $input2)
     {
@@ -161,7 +163,7 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
 
     /**
      * Compare et synchronise des saisies de sous-AF répétés
-     * @param \AF\Domain\Input\SubAF\RepeatedSubAFInput $input1
+     * @param RepeatedSubAFInput $input1
      * @param RepeatedSubAFInput $input2
      */
     private function compareInputSubAFRepeated(
@@ -179,7 +181,7 @@ class AF_Service_InputService_InputSetUpdater extends ArrayComparator
         $comparator->whenDifferent(
             function (SubInputSet $inputSet1, SubInputSet $inputSet2) {
                 // Met à jour l'inputSet sauvegardé en prenant en compte les valeurs de la nouvelle saisie
-                $subUpdater = new AF_Service_InputService_InputSetUpdater($inputSet1, $inputSet2);
+                $subUpdater = new InputSetUpdater($inputSet1, $inputSet2);
                 $subUpdater->run();
             }
         );

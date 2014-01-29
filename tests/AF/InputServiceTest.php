@@ -8,14 +8,14 @@ use AF\Domain\Component\NumericField;
 use AF\Domain\Input\CheckboxInput;
 use AF\Domain\Input\NumericFieldInput;
 use AF\Domain\InputSet\PrimaryInputSet;
-use AF_Service_InputService;
+use AF\Domain\InputService;
 use Core\Test\TestCase;
 use Unit\UnitAPI;
 
 class InputServiceTest extends TestCase
 {
     /**
-     * @var AF_Service_InputService
+     * @var InputService
      */
     private $inputService;
     /**
@@ -78,8 +78,8 @@ class InputServiceTest extends TestCase
     {
         parent::setUp();
 
-        /** @var AF_Service_InputService $inputService */
-        $this->inputService = $this->get(AF_Service_InputService::class);
+        /** @var InputService $inputService */
+        $this->inputService = $this->get(InputService::class);
 
         $this->af = new AF('test');
 

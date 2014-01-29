@@ -1,6 +1,7 @@
 <?php
 
-use AF\Domain\AF;
+namespace AF\Domain;
+
 use AF\Domain\Component\SubAF;
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
@@ -12,15 +13,17 @@ use DeepCopy\Matcher\PropertyTypeMatcher;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * AF copy service
+ * Service de copie d'un AF.
+ *
+ * @author matthieu.napoli
  */
-class AF_Service_AFCopyService
+class AFCopyService
 {
     /**
-     * @param \AF\Domain\AF $af
-     * @param string      $newRef
-     * @param string      $newLabel
-     * @return \AF\Domain\AF
+     * @param AF     $af
+     * @param string $newRef
+     * @param string $newLabel
+     * @return AF
      */
     public function copyAF(AF $af, $newRef, $newLabel)
     {
@@ -37,7 +40,7 @@ class AF_Service_AFCopyService
         // SubAF
         $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher(SubAF::class, 'calledAF'));
 
-        /** @var \AF\Domain\AF $newAF */
+        /** @var AF $newAF */
         $newAF = $deepCopy->copy($af);
 
         $newAF->setRef($newRef);

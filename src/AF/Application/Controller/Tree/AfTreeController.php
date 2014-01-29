@@ -5,6 +5,7 @@
  */
 
 use AF\Domain\AF;
+use AF\Domain\AFDeletionService;
 use AF\Domain\Category;
 use AF\Domain\Component\SubAF;
 use AF\Domain\Output\OutputElement;
@@ -18,7 +19,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
 {
     /**
      * @Inject
-     * @var AF_Service_AFDeletionService
+     * @var AFDeletionService
      */
     private $afDeletionService;
 

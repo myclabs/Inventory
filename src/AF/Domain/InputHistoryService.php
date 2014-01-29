@@ -1,16 +1,18 @@
 <?php
-/**
- * @author matthieu.napoli
- */
 
-use AF\Domain\Component\Select\SelectSingle;
+namespace AF\Domain;
+
 use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Input\Input;
 use AF\Domain\Input\TextFieldInput;
 use AF\Domain\Input\NumericFieldInput;
 use AF\Domain\Input\CheckboxInput;
 use AF\Domain\Input\Select\SelectSingleInput;
 use AF\Domain\Input\Select\SelectMultiInput;
+use AF\Domain\InputHistoryService\Entry;
+use Calc_UnitValue;
+use Core_Exception_NotFound;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Loggable\Entity\LogEntry;
@@ -18,9 +20,11 @@ use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
 use User\Domain\User;
 
 /**
- * Service responsable de l'historique des saisies des AF
+ * Service responsable de l'historique des saisies des AF.
+ *
+ * @author matthieu.napoli
  */
-class AF_Service_InputHistoryService
+class InputHistoryService
 {
     /**
      * @var EntityManager
@@ -33,15 +37,15 @@ class AF_Service_InputHistoryService
     }
 
     /**
-     * @param \AF\Domain\Input\Input $input
-     * @return AF_Service_InputHistoryService_Entry[]
+     * @param Input $input
+     * @return Entry[]
      */
     public function getInputHistory(Input $input)
     {
         $entries = [];
 
         /** @var LogEntryRepository $repository */
-        $repository = $this->entityManager->getRepository('Gedmo\Loggable\Entity\LogEntry');
+        $repository = $this->entityManager->getRepository(\Gedmo\Loggable\Entity\LogEntry::class);
         /** @var LogEntry[] $logEntries */
         $logEntries = $repository->getLogEntries($input);
 
@@ -50,7 +54,7 @@ class AF_Service_InputHistoryService
             $value = $data['value'];
 
             // Filtre les valeurs numériques
-            if ($input instanceof NumericFieldInput && (! $value instanceof Calc_UnitValue)) {
+            if ($input instanceof NumericFieldInput && (!$value instanceof Calc_UnitValue)) {
                 continue;
             }
             // Filtre les valeurs texte
@@ -66,13 +70,13 @@ class AF_Service_InputHistoryService
                 continue;
             }
             // Filtre les sélections multiples
-            if ($input instanceof SelectMultiInput && (! $value instanceof Collection)) {
+            if ($input instanceof SelectMultiInput && (!$value instanceof Collection)) {
                 continue;
             }
 
             // Valeur des sélections simples
             if ($input instanceof SelectSingleInput) {
-                /** @var \AF\Domain\Input\Select\SelectSingleInput $component */
+                /** @var SelectSingle $component */
                 $component = $input->getComponent();
                 if ($value) {
                     try {
@@ -87,7 +91,7 @@ class AF_Service_InputHistoryService
             if ($input instanceof SelectMultiInput) {
                 $newValue = [];
 
-                /** @var \AF\Domain\Component\Select\SelectMulti $component */
+                /** @var SelectMulti $component */
                 $component = $input->getComponent();
                 foreach ($value as $refOption) {
                     try {
@@ -107,7 +111,7 @@ class AF_Service_InputHistoryService
                 $author = null;
             }
 
-            $entries[] = new AF_Service_InputHistoryService_Entry($input, $logEntry->getLoggedAt(), $value, $author);
+            $entries[] = new Entry($input, $logEntry->getLoggedAt(), $value, $author);
         }
 
         return $entries;

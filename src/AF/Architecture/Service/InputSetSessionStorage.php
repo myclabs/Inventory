@@ -1,26 +1,24 @@
 <?php
+
+namespace AF\Architecture\Service;
+
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
+use Zend_Session_Namespace;
 
 /**
- * @author     matthieu.napoli
- * @package    AF
- * @subpackage Service
+ * Service permettant de stocker un InputSet en session.
+ *
+ * @author matthieu.napoli
  */
-
-/**
- * @package    AF
- * @subpackage Service
- */
-class AF_Service_InputSetSessionStorage
+class InputSetSessionStorage
 {
-
     const SESSION_EXPIRATION = 3600;
 
     /**
-     * @param AF $af
-     * @param bool        $createIfNotFound Si l'InputSet n'est pas trouvé, en crée un nouveau automatiquement
-     * @return \AF\Domain\InputSet\PrimaryInputSet|null
+     * @param AF   $af
+     * @param bool $createIfNotFound Si l'InputSet n'est pas trouvé, en crée un nouveau automatiquement
+     * @return PrimaryInputSet|null
      */
     public function getInputSet(AF $af, $createIfNotFound = true)
     {
@@ -41,8 +39,8 @@ class AF_Service_InputSetSessionStorage
     }
 
     /**
-     * @param AF               $af
-     * @param \AF\Domain\InputSet\PrimaryInputSet $inputSet
+     * @param AF              $af
+     * @param PrimaryInputSet $inputSet
      */
     public function saveInputSet(AF $af, PrimaryInputSet $inputSet)
     {
@@ -64,5 +62,4 @@ class AF_Service_InputSetSessionStorage
         }
         return $session;
     }
-
 }
