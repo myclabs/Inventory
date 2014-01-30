@@ -215,64 +215,68 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('narrowerGranularities', $narrowerGranularities);
 
         // Formulaire d'ajout des membres enfants.
-        $addMembersForm = new UI_Form('addMember');
-        $addMembersForm->setAction('orga/cell/add-member/idCell/'.$idCell);
-        $selectAxis = new UI_Form_Element_Select('axis');
-        $selectAxis->setLabel(__('UI', 'name', 'axis'));
-        $selectAxis->getElement()->help = __('Orga', 'view', 'addMembersAxisExplanations');
-        $selectAxis->addNullOption('');
-        $addMembersForm->addElement($selectAxis);
-        foreach ($this->aclManager->getAxesCanEdit($connectedUser, $organization) as $axis) {
-            $axisOption = new UI_Form_Element_Option($axis->getRef(), $axis->getRef(), $axis->getLabel());
-            $selectAxis->addOption($axisOption);
+        $axesCanEdit = $this->aclManager->getAxesCanEdit($connectedUser, $organization);
+        $this->view->assign('canAddMembers', (count($axesCanEdit) > 0));
+        if (count($axesCanEdit) > 0) {
+            $addMembersForm = new UI_Form('addMember');
+            $addMembersForm->setAction('orga/cell/add-member/idCell/'.$idCell);
+            $selectAxis = new UI_Form_Element_Select('axis');
+            $selectAxis->setLabel(__('UI', 'name', 'axis'));
+            $selectAxis->getElement()->help = __('Orga', 'view', 'addMembersAxisExplanations');
+            $selectAxis->addNullOption('');
+            $addMembersForm->addElement($selectAxis);
+            foreach ($axesCanEdit as $axis) {
+                $axisOption = new UI_Form_Element_Option($axis->getRef(), $axis->getRef(), $axis->getLabel());
+                $selectAxis->addOption($axisOption);
 
-            $axisGroup = new UI_Form_Element_Group($axis->getRef().'_group');
-            $axisGroup->setLabel('');
-            $axisGroup->foldaway = false;
-            $axisGroup->getElement()->hidden = true;
+                $axisGroup = new UI_Form_Element_Group($axis->getRef().'_group');
+                $axisGroup->setLabel('');
+                $axisGroup->foldaway = false;
+                $axisGroup->getElement()->hidden = true;
 
-            $memberInput = new UI_Form_Element_Text($axis->getRef().'_member');
-            $memberInput->setLabel(__('UI', 'name', 'element'));
-            $memberInput->setAttrib('placeholder', __('UI', 'name', 'label'));
-            $axisGroup->addElement($memberInput);
-            foreach ($axis->getDirectBroaders() as $broaderAxis) {
-                $selectParentMember = new UI_Form_Element_Select($axis->getRef().'_parentMember_'.$broaderAxis->getRef());
-                $selectParentMember->setLabel($broaderAxis->getLabel());
-                if (!$isUserAllowToEditAllMembers) {
-                    $members = [];
-                    foreach ($topCellsWithEditAccess as $cell) {
-                        if (!$broaderAxis->isTransverse($cell->getGranularity()->getAxes())) {
-                            foreach ($cell->getMembers() as $cellMember) {
-                                if ($broaderAxis->isBroaderThan($cellMember->getAxis())) {
-                                    continue 2;
+                $memberInput = new UI_Form_Element_Text($axis->getRef().'_member');
+                $memberInput->setLabel(__('UI', 'name', 'element'));
+                $memberInput->setAttrib('placeholder', __('UI', 'name', 'label'));
+                $axisGroup->addElement($memberInput);
+                foreach ($axis->getDirectBroaders() as $broaderAxis) {
+                    $selectParentMember = new UI_Form_Element_Select($axis->getRef().'_parentMember_'.$broaderAxis->getRef());
+                    $selectParentMember->setLabel($broaderAxis->getLabel());
+                    if (!$isUserAllowToEditAllMembers) {
+                        $members = [];
+                        foreach ($topCellsWithEditAccess as $cell) {
+                            if (!$broaderAxis->isTransverse($cell->getGranularity()->getAxes())) {
+                                foreach ($cell->getMembers() as $cellMember) {
+                                    if ($broaderAxis->isBroaderThan($cellMember->getAxis())) {
+                                        continue 2;
+                                    }
                                 }
+                                $members = array_merge(
+                                    $members,
+                                    $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()]
+                                );
                             }
-                            $members = array_merge(
-                                $members,
-                                $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()]
-                            );
                         }
+                        $members = array_unique($members);
+                        usort($members, [Orga_Model_Member::class, 'orderMembers']);
+                    } else {
+                        $members = $broaderAxis->getMembers();
                     }
-                    $members = array_unique($members);
-                    usort($members, [Orga_Model_Member::class, 'orderMembers']);
-                } else {
-                    $members = $broaderAxis->getMembers();
+                    foreach ($members as $parentMember) {
+                        $parentMemberOption = new UI_Form_Element_Option($parentMember->getId(), $parentMember->getId(), $parentMember->getLabel());
+                        $selectParentMember->addOption($parentMemberOption);
+                    }
+                    $axisGroup->addElement($selectParentMember);
                 }
-                foreach ($members as $parentMember) {
-                    $parentMemberOption = new UI_Form_Element_Option($parentMember->getId(), $parentMember->getId(), $parentMember->getLabel());
-                    $selectParentMember->addOption($parentMemberOption);
-                }
-                $axisGroup->addElement($selectParentMember);
+
+                $displayGroupAction = new UI_Form_Action_Show($axis->getRef().'_toggle');
+                $displayGroupAction->condition = new UI_Form_Condition_Elementary('', $selectAxis, UI_Form_Condition_Elementary::EQUAL, $axis->getRef());
+                $axisGroup->getElement()->addAction($displayGroupAction);
+
+                $addMembersForm->addElement($axisGroup);
             }
-
-            $displayGroupAction = new UI_Form_Action_Show($axis->getRef().'_toggle');
-            $displayGroupAction->condition = new UI_Form_Condition_Elementary('', $selectAxis, UI_Form_Condition_Elementary::EQUAL, $axis->getRef());
-            $axisGroup->getElement()->addAction($displayGroupAction);
-
-            $addMembersForm->addElement($axisGroup);
+            $addMembersForm->addSubmitButton('Ajouter');
+            $this->view->assign('addMembersForm', $addMembersForm);
         }
-        $addMembersForm->addSubmitButton('Ajouter');
-        $this->view->assign('addMembersForm', $addMembersForm);
     }
 
     /**

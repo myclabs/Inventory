@@ -378,7 +378,7 @@ $currentCell = $this->currentCell;
             <?=___('UI', 'loading', 'error')?>
         </div>
     </div>
-    <?php if ($organization->canBeEdited) : ?>
+    <?php if ($this->canAddMembers) : ?>
     <div class="addMember">
         <h3>
             <div class="pull-right">

@@ -377,30 +377,7 @@ class Orga_OrganizationController extends Core_Controller
         }
 
         // Tab Rebuild
-        $canUserRebuildCells = $isUserAllowedToEditCells;
-        if (!$isUserAllowedToEditOrganization) {
-            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
-                $connectedUser,
-                $organization,
-                [CellAdminRole::class]
-            )['cells'];
-            /** @var Orga_Model_Cell $cell */
-            foreach ($cellsCanEdit as $cell) {
-                if ($cell->getGranularity()->getDWCube()) {
-                    break;
-                }
-                $canUserRebuildCells = false;
-            }
-            if (!$canUserRebuildCells) {
-                foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
-                    if ($granularity->getCellsGenerateDWCubes()) {
-                        $canUserRebuildCells = true;
-                        break;
-                    }
-                }
-            }
-        }
-        if ($canUserRebuildCells) {
+        if ($canUserEditMembers) {
             $rebuildTab = new UI_Tab('rebuild');
             $rebuildTab->label = __('DW', 'rebuild', 'dataRebuildTab');
             $rebuildTab->dataSource = 'orga/organization/rebuild'.$parameters;
@@ -412,9 +389,6 @@ class Orga_OrganizationController extends Core_Controller
         $editOrganizationTabs = ['organization', 'axes', 'granularities', 'consistency'];
         if (!$isUserAllowedToEditOrganization && in_array($activeTab, $editOrganizationTabs)) {
             $activeTab = 'default';
-            if ($canUserRebuildCells) {
-                $activeTab = 'rebuild';
-            }
             if ($canUserEditRelevance) {
                 $activeTab = 'relevance';
             }
