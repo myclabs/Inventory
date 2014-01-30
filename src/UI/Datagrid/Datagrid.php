@@ -437,7 +437,7 @@ class Datagrid extends UI_Generic
         $this->deletePanelText = __('UI', 'deletionConfirmationPopup', 'text');
         $this->deletePanelConfirmIcon = 'check';
         $this->deletePanelConfirmLabel = __('UI', 'verb', 'confirm');
-        $this->deletePanelCancelIcon = 'minus';
+        $this->deletePanelCancelIcon = 'times';
         $this->deletePanelCancelLabel = __('UI', 'verb', 'cancel');
 
         // Bouton et popup d'ajout
@@ -446,7 +446,7 @@ class Datagrid extends UI_Generic
         $this->addPanelTitle = __('UI', 'name', 'addition');
         $this->addPanelConfirmIcon = 'check';
         $this->addPanelConfirmLabel = __('UI', 'verb', 'validate');
-        $this->addPanelCancelIcon = 'minus';
+        $this->addPanelCancelIcon = 'times';
         $this->addPanelCancelLabel = __('UI', 'verb', 'cancel');
 
         // Filtres
@@ -458,7 +458,7 @@ class Datagrid extends UI_Generic
         $this->filterConfirmButton->icon = 'search-plus';
         $this->filterResetButton = new UI_HTML_Button(__('UI', 'verb', 'reset'));
         $this->filterResetButton->icon = 'search-minus';
-        $this->filterIconResetFieldSuffix = 'minus';
+        $this->filterIconResetFieldSuffix = 'times';
         $this->defaultSorting['state'] = false;
         $this->defaultSorting['column'] = null;
         $this->defaultSorting['direction'] = Criteria::ASC;
