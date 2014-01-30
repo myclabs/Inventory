@@ -1,4 +1,4 @@
-AF\Domain\Algorithm\Condition\Elementary\SelectConditionAlgo:
+AF\Domain\Algorithm\Condition\SelectConditionAlgo:
   type: entity
   repositoryClass: \Core_Model_Repository_Ordered
   table: Algo_Condition_Elementary_Select

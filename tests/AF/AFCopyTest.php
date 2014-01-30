@@ -5,7 +5,7 @@ namespace Tests\AF;
 use AF\Domain\AF;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\NumericField;
-use AF\Domain\Condition\Elementary\NumericFieldCondition;
+use AF\Domain\Condition\NumericFieldCondition;
 use AF\Domain\AFCopyService;
 use Core\Test\TestCase;
 use Unit\UnitAPI;
@@ -101,7 +101,7 @@ class AFCopyTest extends TestCase
 
         // Condition
         $this->assertSameSize($oldAF->getConditions(), $newAF->getConditions());
-        /** @var \AF\Domain\Condition\Elementary\NumericFieldCondition $condition2 */
+        /** @var \AF\Domain\Condition\NumericFieldCondition $condition2 */
         $condition2 = $newAF->getConditions()[0];
         $this->assertNotSame($condition, $condition2);
         $this->assertNull($condition2->getId());

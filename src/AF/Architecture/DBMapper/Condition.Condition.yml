@@ -10,10 +10,10 @@ AF\Domain\Condition\Condition:
   discriminatorMap:
     expression: AF\Domain\Condition\ExpressionCondition
     elementary: AF\Domain\Condition\ElementaryCondition
-    elementary_numeric: AF\Domain\Condition\Elementary\NumericFieldCondition
-    elementary_checkbox: AF\Domain\Condition\Elementary\CheckboxCondition
-    elementary_select_single: AF\Domain\Condition\Elementary\Select\SelectSingleCondition
-    elementary_select_multi: AF\Domain\Condition\Elementary\Select\SelectMultiCondition
+    elementary_numeric: AF\Domain\Condition\NumericFieldCondition
+    elementary_checkbox: AF\Domain\Condition\CheckboxCondition
+    elementary_select_single: AF\Domain\Condition\Select\SelectSingleCondition
+    elementary_select_multi: AF\Domain\Condition\Select\SelectMultiCondition
 
   id:
     id:

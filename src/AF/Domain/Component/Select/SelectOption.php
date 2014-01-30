@@ -3,7 +3,7 @@
 namespace AF\Domain\Component\Select;
 
 use AF\Domain\Component\Select;
-use AF\Domain\Algorithm\Condition\Elementary\SelectConditionAlgo;
+use AF\Domain\Algorithm\Condition\SelectConditionAlgo;
 use Core_Exception_InvalidArgument;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;

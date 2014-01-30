@@ -1,7 +1,7 @@
-AF\Domain\Condition\Elementary\Select\SelectMultiCondition:
+AF\Domain\Condition\Select\SelectSingleCondition:
   type: entity
   repositoryClass: \Core_Model_Repository
-  table: AF_Condition_Elementary_Select_Multi
+  table: AF_Condition_Elementary_Select_Single
 
   manyToOne:
     option:

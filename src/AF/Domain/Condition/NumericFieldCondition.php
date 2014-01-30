@@ -1,8 +1,7 @@
 <?php
 
-namespace AF\Domain\Condition\Elementary;
+namespace AF\Domain\Condition;
 
-use AF\Domain\Condition\ElementaryCondition;
 use Core_Exception;
 use UI_Form_Condition_Elementary;
 use Core_Exception_InvalidArgument;

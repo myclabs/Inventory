@@ -14,10 +14,10 @@ use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Component\Select\SelectMulti;
 use AF\Domain\Condition\Condition;
 use AF\Domain\Condition\ElementaryCondition;
-use AF\Domain\Condition\Elementary\NumericFieldCondition;
-use AF\Domain\Condition\Elementary\CheckboxCondition;
-use AF\Domain\Condition\Elementary\Select\SelectSingleCondition;
-use AF\Domain\Condition\Elementary\Select\SelectMultiCondition;
+use AF\Domain\Condition\NumericFieldCondition;
+use AF\Domain\Condition\CheckboxCondition;
+use AF\Domain\Condition\Select\SelectSingleCondition;
+use AF\Domain\Condition\Select\SelectMultiCondition;
 use Core\Annotation\Secure;
 use Doctrine\DBAL\DBALException;
 

@@ -1,8 +1,6 @@
 <?php
 
-namespace AF\Domain\Algorithm\Condition\Elementary;
-
-use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
+namespace AF\Domain\Algorithm\Condition;
 
 /**
  * @author matthieu.napoli

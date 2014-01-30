@@ -1,6 +1,6 @@
 <?php
 
-namespace AF\Domain\Condition\Elementary\Select;
+namespace AF\Domain\Condition\Select;
 
 use AF\Domain\Component\Select\SelectOption;
 use Core_Exception;

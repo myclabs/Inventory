@@ -13,10 +13,10 @@ use AF\Domain\Component\Field;
 use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Component\Select\SelectMulti;
 use AF\Domain\Condition\ElementaryCondition;
-use AF\Domain\Algorithm\Condition\Elementary\NumericConditionAlgo;
-use AF\Domain\Algorithm\Condition\Elementary\BooleanConditionAlgo;
-use AF\Domain\Algorithm\Condition\Elementary\Select\SelectSingleConditionAlgo;
-use AF\Domain\Algorithm\Condition\Elementary\Select\SelectMultiConditionAlgo;
+use AF\Domain\Algorithm\Condition\NumericConditionAlgo;
+use AF\Domain\Algorithm\Condition\BooleanConditionAlgo;
+use AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo;
+use AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 use Core\Annotation\Secure;
 

@@ -2,10 +2,10 @@
 use AF\Domain\AF;
 use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Component\Select\SelectMulti;
-use AF\Domain\Algorithm\Condition\Elementary\NumericConditionAlgo;
-use AF\Domain\Algorithm\Condition\Elementary\BooleanConditionAlgo;
-use AF\Domain\Algorithm\Condition\Elementary\Select\SelectSingleConditionAlgo;
-use AF\Domain\Algorithm\Condition\Elementary\Select\SelectMultiConditionAlgo;
+use AF\Domain\Algorithm\Condition\NumericConditionAlgo;
+use AF\Domain\Algorithm\Condition\BooleanConditionAlgo;
+use AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo;
+use AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 
 /**
@@ -62,7 +62,7 @@ if ($algo instanceof NumericConditionAlgo) {
 }
 
 if ($algo instanceof BooleanConditionAlgo) {
-    /** @var $algo BooleanConditionAlgo */
+    /** @var $algo \AF\Domain\Algorithm\Condition\BooleanConditionAlgo */
     // Relation
     $relationSelect->addOption($optionEqual);
     // Value
@@ -79,7 +79,7 @@ if ($algo instanceof BooleanConditionAlgo) {
 }
 
 if ($algo instanceof SelectSingleConditionAlgo) {
-    /** @var $algo SelectSingleConditionAlgo */
+    /** @var $algo \AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo */
     // Relation
     $relationSelect->addOption($optionEqual);
     $relationSelect->addOption($optionNotEqual);
@@ -99,7 +99,7 @@ if ($algo instanceof SelectSingleConditionAlgo) {
 }
 
 if ($algo instanceof SelectMultiConditionAlgo) {
-    /** @var $algo SelectMultiConditionAlgo */
+    /** @var $algo \AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo */
     // Relation
     $relationSelect->addOption($optionContains);
     $relationSelect->addOption($optionNotContains);

@@ -2,10 +2,10 @@
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Algo;
-use AF\Domain\Algorithm\Condition\Elementary\NumericConditionAlgo;
-use AF\Domain\Algorithm\Condition\Elementary\BooleanConditionAlgo;
-use AF\Domain\Algorithm\Condition\Elementary\Select\SelectSingleConditionAlgo;
-use AF\Domain\Algorithm\Condition\Elementary\Select\SelectMultiConditionAlgo;
+use AF\Domain\Algorithm\Condition\NumericConditionAlgo;
+use AF\Domain\Algorithm\Condition\BooleanConditionAlgo;
+use AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo;
+use AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use Core\Annotation\Secure;
@@ -62,7 +62,7 @@ class AF_Edit_AlgosController extends Core_Controller
 
         switch (get_class($algo)) {
             case NumericConditionAlgo::class:
-                /** @var $algo NumericConditionAlgo */
+                /** @var $algo \AF\Domain\Algorithm\Condition\NumericConditionAlgo */
                 $algo->setRelation($this->getParam('relation'));
                 if ($this->getParam('value') === null || $this->getParam('value') === '') {
                     $algo->setValue(null);
@@ -71,16 +71,16 @@ class AF_Edit_AlgosController extends Core_Controller
                 }
                 break;
             case BooleanConditionAlgo::class:
-                /** @var $algo BooleanConditionAlgo */
+                /** @var $algo \AF\Domain\Algorithm\Condition\BooleanConditionAlgo */
                 $algo->setValue($this->getParam('value'));
                 break;
             case SelectSingleConditionAlgo::class:
-                /** @var $algo SelectSingleConditionAlgo */
+                /** @var $algo \AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo */
                 $algo->setRelation($this->getParam('relation'));
                 $algo->setValue($this->getParam('value'));
                 break;
             case SelectMultiConditionAlgo::class:
-                /** @var $algo SelectMultiConditionAlgo */
+                /** @var $algo \AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo */
                 $algo->setRelation($this->getParam('relation'));
                 $algo->setValue($this->getParam('value'));
                 break;

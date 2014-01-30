@@ -1,4 +1,4 @@
-AF\Domain\Condition\Elementary\NumericFieldCondition:
+AF\Domain\Condition\NumericFieldCondition:
   type: entity
   repositoryClass: \Core_Model_Repository
   table: AF_Condition_Elementary_Numeric

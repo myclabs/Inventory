@@ -7,10 +7,10 @@
 use AF\Domain\Component\Select\SelectOption;
 use AF\Domain\Condition\ExpressionCondition;
 use AF\Domain\Condition\ElementaryCondition;
-use AF\Domain\Condition\Elementary\NumericFieldCondition;
-use AF\Domain\Condition\Elementary\CheckboxCondition;
-use AF\Domain\Condition\Elementary\Select\SelectSingleCondition;
-use AF\Domain\Condition\Elementary\Select\SelectMultiCondition;
+use AF\Domain\Condition\NumericFieldCondition;
+use AF\Domain\Condition\CheckboxCondition;
+use AF\Domain\Condition\Select\SelectSingleCondition;
+use AF\Domain\Condition\Select\SelectMultiCondition;
 use Core\Annotation\Secure;
 
 class AF_Edit_ConditionsController extends Core_Controller

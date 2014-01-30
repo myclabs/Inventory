@@ -1,4 +1,4 @@
-AF\Domain\Condition\Elementary\CheckboxCondition:
+AF\Domain\Condition\CheckboxCondition:
   type: entity
   repositoryClass: \Core_Model_Repository
   table: AF_Condition_Elementary_Checkbox
