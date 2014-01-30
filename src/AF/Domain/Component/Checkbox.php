@@ -2,7 +2,6 @@
 
 namespace AF\Domain\Component;
 
-use AF\Domain\Component\Field;
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\AFGenerationHelper;
 use AF\Domain\Input\CheckboxInput;

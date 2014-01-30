@@ -1,6 +1,6 @@
 AF\Domain\Action\Action:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: AF_Action
 
   inheritanceType: joined

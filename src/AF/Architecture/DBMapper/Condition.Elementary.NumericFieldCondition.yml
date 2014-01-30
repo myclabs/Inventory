@@ -1,6 +1,6 @@
 AF\Domain\Condition\Elementary\NumericFieldCondition:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: AF_Condition_Elementary_Numeric
 
   fields:

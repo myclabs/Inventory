@@ -1,6 +1,6 @@
 AF\Domain\Algorithm\Index\AlgoResultIndex:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Algo_Index_Algo
 
   manyToOne:

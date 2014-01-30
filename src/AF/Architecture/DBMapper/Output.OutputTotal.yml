@@ -1,6 +1,6 @@
 AF\Domain\Output\OutputTotal:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: AF_Output_Total
 
   id:

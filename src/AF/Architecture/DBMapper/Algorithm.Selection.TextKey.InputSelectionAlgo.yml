@@ -1,6 +1,6 @@
 AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo:
   type: entity
-  repositoryClass: Core_Model_Repository_Ordered
+  repositoryClass: \Core_Model_Repository_Ordered
   table: Algo_Selection_TextKey_Input
 
   fields:

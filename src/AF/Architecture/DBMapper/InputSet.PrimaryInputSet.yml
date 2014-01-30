@@ -1,6 +1,6 @@
 AF\Domain\InputSet\PrimaryInputSet:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: AF_InputSet_Primary
 
   fields:

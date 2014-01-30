@@ -1,6 +1,6 @@
 AF\Domain\Algorithm\ParameterCoordinate\ParameterCoordinate:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Algo_ParameterCoordinate
 
   inheritanceType: joined

@@ -1,6 +1,6 @@
 AF\Domain\InputSet\InputSet:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: AF_InputSet
 
   inheritanceType: joined

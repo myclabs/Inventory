@@ -1,6 +1,6 @@
 AF\Domain\AF:
   type: entity
-  repositoryClass: Core_Model_Repository_Ordered
+  repositoryClass: \Core_Model_Repository_Ordered
   table: AF_AF
 
   gedmo:

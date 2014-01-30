@@ -1,6 +1,6 @@
 AF\Domain\Input\SubAF\NotRepeatedSubAFInput:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: AF_Input_SubAF_NotRepeated
 
   manyToOne:

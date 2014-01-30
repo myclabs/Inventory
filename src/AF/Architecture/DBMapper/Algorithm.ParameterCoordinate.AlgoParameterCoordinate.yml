@@ -1,6 +1,6 @@
 AF\Domain\Algorithm\ParameterCoordinate\AlgoParameterCoordinate:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Algo_ParameterCoordinate_Algo
 
   manyToOne:

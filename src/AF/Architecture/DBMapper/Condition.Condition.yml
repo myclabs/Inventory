@@ -1,6 +1,6 @@
 AF\Domain\Condition\Condition:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: AF_Condition
 
   inheritanceType: joined

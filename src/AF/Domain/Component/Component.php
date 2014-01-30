@@ -4,7 +4,6 @@ namespace AF\Domain\Component;
 
 use AF\Domain\Action\Action;
 use AF\Domain\AF;
-use AF\Domain\Component\Group;
 use AF\Domain\AFConfigurationError;
 use AF\Domain\AFGenerationHelper;
 use AF\Domain\Input\Input;

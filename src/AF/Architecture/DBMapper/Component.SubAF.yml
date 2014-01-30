@@ -1,6 +1,6 @@
 AF\Domain\Component\SubAF:
   type: entity
-  repositoryClass: Core_Model_Repository_Ordered
+  repositoryClass: \Core_Model_Repository_Ordered
   table: AF_Component_SubAF
 
   fields:

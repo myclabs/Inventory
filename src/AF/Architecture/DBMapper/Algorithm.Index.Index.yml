@@ -1,6 +1,6 @@
 AF\Domain\Algorithm\Index\Index:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Algo_Index
 
   inheritanceType: joined

@@ -1,6 +1,6 @@
 AF\Domain\Condition\Elementary\Select\SelectSingleCondition:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: AF_Condition_Elementary_Select_Single
 
   manyToOne:

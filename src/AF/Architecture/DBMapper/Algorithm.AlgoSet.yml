@@ -1,6 +1,6 @@
 AF\Domain\Algorithm\AlgoSet:
   type: entity
-  repositoryClass: Core_Model_Repository
+  repositoryClass: \Core_Model_Repository
   table: Algo_Set
 
   id:
