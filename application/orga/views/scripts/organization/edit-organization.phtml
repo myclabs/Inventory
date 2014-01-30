@@ -35,35 +35,3 @@ $organizationForm->addSubmitButton();
         <?php if ($this->display) { $organizationForm->display(); } else { echo $organizationForm->render(); } ?>
     </div>
 </fieldset>
-
-<hr>
-
-<?php
-$datagridUsers = new UI_Datagrid(
-    'datagridUsers'.$this->idOrganization,
-    'datagrid_organization_acl',
-    'orga'
-);
-
-$columnFirstName = new UI_Datagrid_Col_Text('firstName', ___('User', 'user', 'firstName'));
-$columnFirstName->addable = false;
-$datagridUsers->addCol($columnFirstName);
-
-$columnLastName = new UI_Datagrid_Col_Text('lastName', ___('User', 'user', 'lastName'));
-$columnLastName->addable = false;
-$datagridUsers->addCol($columnLastName);
-
-$columnEmail = new UI_Datagrid_Col_Text('email', ___('User', 'user', 'emailAddress'));
-$columnEmail->addable = true;
-$datagridUsers->addCol($columnEmail);
-
-$datagridUsers->addParam('idOrganization', $this->idOrganization);
-$datagridUsers->addElements = true;
-$datagridUsers->deleteElements = true;
-$datagridUsers->pagination = false;
-
-if ($this->display === false) {
-    echo $datagridUsers->render();
-} else {
-    $datagridUsers->display();
-}

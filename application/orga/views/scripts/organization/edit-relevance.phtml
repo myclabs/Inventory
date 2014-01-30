@@ -65,7 +65,8 @@ if ($this->isUserAllowedToEditOrganization) {
         [
             'organization' => $this->organization,
             'purpose' => 'relevance',
-            'complementaryFields' => ''
+            'complementaryFields' => '',
+            'selectAxesPlaceholder' => ___('Orga', 'granularity', 'addGranularitySelectAxesRelevanceLevel')
         ]
     );
     if ($this->display === true) {

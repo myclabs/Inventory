@@ -321,15 +321,6 @@ class Orga_OrganizationController extends Core_Controller
             $tabView->addTab($membersTab);
         }
 
-        // Tab Granularities.
-        if ($isUserAllowedToEditOrganization) {
-            $granularityTab = new UI_Tab('granularities');
-            $granularityTab->label = __('Orga', 'granularity', 'granularities');
-            $granularityTab->dataSource = 'orga/granularity/manage'.$parameters;
-            $granularityTab->useCache = false;
-            $tabView->addTab($granularityTab);
-        }
-
         // Tab Relevant.
         $canUserEditRelevance = $isUserAllowedToEditCells;
         if (!$isUserAllowedToEditOrganization) {
@@ -356,6 +347,24 @@ class Orga_OrganizationController extends Core_Controller
             $afTab->dataSource = 'orga/organization/edit-afs'.$parameters;
             $afTab->useCache = false;
             $tabView->addTab($afTab);
+        }
+
+        // Tab ACL.
+        if ($isUserAllowedToEditOrganization) {
+            $aclTab = new UI_Tab('acl');
+            $aclTab->label = __('User', 'role', 'roles');
+            $aclTab->dataSource = 'orga/organization/edit-acl'.$parameters;
+            $aclTab->useCache = false;
+            $tabView->addTab($aclTab);
+        }
+
+        // Tab Granularities.
+        if ($isUserAllowedToEditOrganization) {
+            $granularityTab = new UI_Tab('granularities');
+            $granularityTab->label = __('Orga', 'granularity', 'granularities');
+            $granularityTab->dataSource = 'orga/granularity/manage'.$parameters;
+            $granularityTab->useCache = false;
+            $tabView->addTab($granularityTab);
         }
 
         // Tab Consistency.
@@ -406,14 +415,17 @@ class Orga_OrganizationController extends Core_Controller
             case 'members':
                 $membersTab->active = true;
                 break;
-            case 'granularities':
-                $granularityTab->active = true;
-                break;
             case 'relevance':
                 $relevanceTab->active = true;
                 break;
             case 'afs':
                 $afTab->active = true;
+                break;
+            case 'acl':
+                $aclTab->active = true;
+                break;
+            case 'granularities':
+                $granularityTab->active = true;
                 break;
             case 'consistency':
                 $consistencyTab->active = true;
@@ -699,6 +711,74 @@ class Orga_OrganizationController extends Core_Controller
                     ['afs' => $configAxes]
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $inputAxes)])
+            );
+            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        }
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
+    public function editAclAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $this->view->assign('organization', $organization);
+        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria->where(Doctrine\Common\Collections\Criteria::expr()->eq('cellsWithACL', true));
+        $criteria->orderBy(['position' => 'ASC']);
+        $aclGranularities = $organization->getGranularities()->matching($criteria)->toArray();
+        $this->view->assign('aclGranularities', $aclGranularities);
+
+        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
+            $this->view->assign('display', false);
+        } else {
+            $this->view->assign('display', true);
+        }
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
+    public function addGranularityAclAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $axes = $this->getAxesAddGranularity($organization);
+
+        try {
+            $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
+            if ($granularity->getCellsGenerateDWCubes()) {
+                throw new Core_Exception_User('Orga', 'edit', 'granularityAlreadyConfigured');
+            }
+            $granularity->setCellsGenerateDWCubes(true);
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+        } catch (Core_Exception_NotFound $e) {
+            $success = function () {
+                $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+            };
+            $timeout = function () {
+                $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
+            };
+            $error = function (Exception $e) {
+                throw $e;
+            };
+
+            // Lance la tache en arrière plan
+            $task = new ServiceCallTask(
+                'Orga_Service_OrganizationService',
+                'addGranularity',
+                [
+                    $organization,
+                    $axes,
+                    ['acl' => true]
+                ],
+                __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
             );
             $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
         }

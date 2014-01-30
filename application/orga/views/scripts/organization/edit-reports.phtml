@@ -55,7 +55,8 @@ echo $this->partial(
     [
         'organization' => $this->organization,
         'purpose' => 'reports',
-        'complementaryFields' => ''
+        'complementaryFields' => '',
+        'selectAxesPlaceholder' => ___('Orga', 'granularity', 'addGranularitySelectAxesReportsLevel')
     ]
 );
 if ($this->display === true) :
