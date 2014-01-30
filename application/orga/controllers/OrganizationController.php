@@ -800,13 +800,8 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign('organization', $organization);
 
-        $userCanEditOrganization = false;
-        foreach ($organization->getAdminRoles() as $role) {
-            if ($role->getUser() === $connectedUser) {
-                $userCanEditOrganization = true;
-                break;
-            }
-        }
+        $userCanEditOrganization = $this->aclService->isAllowed($connectedUser, Action::EDIT(), $organization);
+        $this->view->assign('canEditOrganization', $userCanEditOrganization);
         if ($userCanEditOrganization) {
             $this->view->assign('cellData', $organization);
             $this->view->assign('cellResults', $organization->getGranularityByRef('global')->getCellByMembers([]));
@@ -845,13 +840,7 @@ class Orga_OrganizationController extends Core_Controller
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        $userCanEditOrganization = false;
-        foreach ($organization->getAdminRoles() as $role) {
-            if ($role->getUser() === $connectedUser) {
-                $userCanEditOrganization = true;
-                $break;
-            }
-        }
+        $userCanEditOrganization = $this->aclService->isAllowed($connectedUser, Action::EDIT(), $organization);
         if ($userCanEditOrganization) {
             $taskName = 'resetOrganizationDWCubes';
             $taskParameters = [$organization];
