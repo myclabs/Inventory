@@ -305,7 +305,7 @@ $currentCell = $this->currentCell;
              <?=$narrowerGranularityArray['isInventory'] ? ' data-inventory' : ''?>
              <?=$narrowerGranularityArray['isInput'] ? ' data-input' : ''?>
              <?=$narrowerGranularityArray['isAnalyses'] ? ' data-analyses' : ''?>
-             class="collapse<?=((count($this->narrowerGranularities) === 1)?' in':'')?>">
+             class="collapse<?=(count($this->narrowerGranularities) === 1) ? ' in': $narrowerGranularityArray['isInput'] ? ' in' : ''?>">
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
             <form class="form-inline cells-filter">
                 <?php foreach ($narrowerGranularityArray['filterAxes'] as $refAxis => $memberOptions) : ?>

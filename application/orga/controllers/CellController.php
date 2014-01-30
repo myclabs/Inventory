@@ -1078,7 +1078,7 @@ class Orga_CellController extends Core_Controller
     }
 
     /**
-     * @Secure("editCell")
+     * @Secure("viewCell")
      */
     public function viewInventoryUsersAction()
     {
