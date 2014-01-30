@@ -836,7 +836,7 @@ class Orga_CellController extends Core_Controller
             $exportUrl = null;
         }
 
-        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
+        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificReports/'.
             $cell->getGranularity()->getOrganization()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         $specificReports = new DW_Export_Specific_Pdf(
