@@ -1,6 +1,17 @@
 # Mise en production
 
 
+## 2.11
+
+- Déployer l'application **sans build update ni redémarrage du worker**
+
+- Copier `application/configs/parameters.php.default` vers `application/configs/parameters.php`
+
+- Configurer `application/configs/parameters.php` en s'inspirant du `application.ini`
+
+- Faire un build update et redémarrer le worker.
+
+
 ## 2.10
 
 - Déployer normalement l'application **sans build update**
