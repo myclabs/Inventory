@@ -66,9 +66,10 @@ $complementaryFields .= '</select>';
 $complementaryFields .= '<script>' .
 '$(\'#addGranularity'.$this->organization->getId().'_afs .inputConfigAxes\').select2({' .
         'closeOnSelect: false,' .
-        'placeholder: \'' . ___('Orga', 'granularity', 'addGranularityFormChoiceSelectAxes') . '\'' .
+        'placeholder: \'' . ___('Orga', 'granularity', 'addGranularitySelectAxesAFConfigLevel') . '\'' .
 '});' .
 '</script>';
+echo '<h4>'.__('Orga', 'granularity', 'addGranularityInput').'</h4>';
 echo $this->partial(
     'granularity/add.phtml',
     [

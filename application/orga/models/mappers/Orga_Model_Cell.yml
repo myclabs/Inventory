@@ -36,7 +36,7 @@ Orga_Model_Cell:
       nullable: false
 
   oneToOne:
-    documentLibrary:
+    docLibraryForAFInputSetPrimary:
       targetEntity: Doc\Domain\Library
       joinColumn:
         name: idDocLibraryForAFInputSetsPrimary

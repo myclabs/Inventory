@@ -59,12 +59,14 @@ if ($this->isUserAllowedToEditOrganization) {
     if (count($this->granularities) > 0) {
         echo '<hr>';
     }
+    echo '<h4>'.__('Orga', 'granularity', 'addGranularityRelevance').'</h4>';
     echo $this->partial(
         'granularity/add.phtml',
         [
             'organization' => $this->organization,
             'purpose' => 'relevance',
-            'complementaryFields' => ''
+            'complementaryFields' => '',
+            'selectAxesPlaceholder' => ___('Orga', 'granularity', 'addGranularitySelectAxesRelevanceLevel')
         ]
     );
     if ($this->display === true) {

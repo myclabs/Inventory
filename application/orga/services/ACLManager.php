@@ -170,13 +170,10 @@ class Orga_Service_ACLManager
      */
     public function getTopCellsWithAccessForOrganization(User $user, Orga_Model_Organization $organization, $askedRoles=[])
     {
-        foreach ($organization->getAdminRoles() as $role) {
-            if ($role->getUser() === $user) {
-                return [
-                    'cells' => [$organization->getGranularityByRef('global')->getCellByMembers([])],
-                    'accesses' => [$role->getLabel()]
-                ];
-            }
+        if ($this->aclService->isAllowed($user, Action::EDIT(), $organization)) {
+            return [
+                'cells' => [$organization->getGranularityByRef('global')->getCellByMembers([])],
+            ];
         }
 
         $cellRoles = [CellAdminRole::class, CellManagerRole::class, CellContributorRole::class, CellObserverRole::class];

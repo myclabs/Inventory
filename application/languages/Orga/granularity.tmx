@@ -20,6 +20,14 @@
                 <seg>Levels</seg>
             </tuv>
         </tu>
+        <tu tuid="aclGranularities">
+            <tuv xml:lang="fr">
+                <seg>Niveaux contrôlant les accès utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Levels controlling users access</seg>
+            </tuv>
+        </tu>
 
         <!-- Datagrid -->
 
@@ -80,6 +88,14 @@
                 <seg>Axes of the level to be created</seg>
             </tuv>
         </tu>
+        <tu tuid="addGranularitySelectAxesRelevanceLevel">
+            <tuv xml:lang="fr">
+                <seg>Niveau pour la pertinence</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Relevance level</seg>
+            </tuv>
+        </tu>
         <tu tuid="addGranularitySelectAxesInputLevel">
             <tuv xml:lang="fr">
                 <seg>Niveau de saisie</seg>
@@ -88,20 +104,28 @@
                 <seg>Input level</seg>
             </tuv>
         </tu>
-        <tu tuid="addGranularityFormChoiceSelectAxes">
+        <tu tuid="addGranularitySelectAxesAFConfigLevel">
             <tuv xml:lang="fr">
                 <seg>Niveau de choix des formulaires</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Level for the choice of forms</seg>
+                <seg>Forms choice level</seg>
             </tuv>
         </tu>
-        <tu tuid="addGranularityInputSelectAxes">
+        <tu tuid="addGranularitySelectAxesReportsLevel">
             <tuv xml:lang="fr">
-                <seg>Niveau pour la saisie</seg>
+                <seg>Niveau pour la gestion des rapports</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Level for input</seg>
+                <seg>Reports management level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularitySelectAxesAclLevel">
+            <tuv xml:lang="fr">
+                <seg>Niveau pour la gestion des droits</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users access management level</seg>
             </tuv>
         </tu>
         <tu tuid="emptyGranularity">
@@ -126,6 +150,38 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Please select a set of axes without any pair of hierarchically linked axes.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularityRelevance">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un niveau de définition de la pertinence</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a relevance configuration level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularityInput">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un niveau de saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an input level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularityReports">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un niveau de configuration des rapports d'analyses</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a reporting level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularityAcl">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un niveau de configuration des accès utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a user access control level</seg>
             </tuv>
         </tu>
 

@@ -69,6 +69,14 @@ class Simulation_Model_Scenario extends Core_Model_Entity
     }
 
     /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Spécifie le label de la simulation.
      * @param string $label
      */

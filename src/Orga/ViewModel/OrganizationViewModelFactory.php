@@ -76,19 +76,6 @@ class OrganizationViewModelFactory
                 }
             }
         }
-        if (!$viewModel->canBeEdited) {
-            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
-                $connectedUser,
-                $organization,
-                [CellAdminRole::class]
-            )['cells'];
-            /** @var Orga_Model_Cell $cell */
-            foreach ($cellsCanEdit as $cell) {
-                if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-                    $viewModel->canBeEdited = true;
-                }
-            }
-        }
 
         $viewModel->canBeDeleted = $this->aclService->isAllowed(
             $connectedUser,

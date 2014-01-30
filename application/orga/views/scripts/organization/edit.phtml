@@ -37,6 +37,10 @@ $this->tabView->display();
         addMessage(data.message, 'success');
         $.fn.loadTaborga_afs();
     });
+    $('#orga_acl').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_acl'), function(e, data) {
+        addMessage(data.message, 'success');
+        $.fn.loadTaborga_acl();
+    });
     $('#orga_reports').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_reports'), function(e, data) {
         addMessage(data.message, 'success');
         $.fn.loadTaborga_reports();

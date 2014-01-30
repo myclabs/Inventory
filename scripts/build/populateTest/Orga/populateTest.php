@@ -176,7 +176,6 @@ qui officia deserunt mollit anim id est laborum.',
         $entityManager->flush();
 
         // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
-        $this->addOrganizationAdministrator('admin@myc-sense.com', $organization);
         $this->addOrganizationAdministrator('administrateur.workspace@toto.com', $organization);
 
         // Ajout d'un role sur une cellule à un utilisateur existant.
