@@ -834,17 +834,17 @@ class Orga_CellController extends Core_Controller
         $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
         if (!($this->hasParam('display') && ($this->getParam('display') == true))) {
-            $exportUrl = 'orga/cell/specificexport/'.
-                'idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/export/'.$this->getParam('export').'/display/true';
+            $exportUrl = 'orga/cell/view-report-specific/'.
+                'idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/report/'.$this->getParam('report').'/display/true';
         } else {
             $exportUrl = null;
         }
 
-        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
+        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificReports/'.
             $cell->getGranularity()->getOrganization()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         $specificReports = new DW_Export_Specific_Pdf(
-            $specificReportsDirectoryPath.$this->getParam('export').'.xml',
+            $specificReportsDirectoryPath.$this->getParam('report').'.xml',
             $cell->getDWCube(),
             $exportUrl
         );
