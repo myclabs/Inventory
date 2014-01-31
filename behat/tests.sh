@@ -19,17 +19,16 @@ export DISPLAY=:0
 # Start selenium server
 java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 
-sleep 8
+sleep 7
+
+# Clear Memcached
+echo 'flush_all' | netcat localhost 11211
+
+# Composer
+composer install --optimize-autoloader
 
 # Export the databases
-php ../scripts/build/build.php create update
-php ../scripts/build/build.php populate
-mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/emptyOneUser.sql
-php ../scripts/build/build.php populateTest
-mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/full.sql
-php ../scripts/build/build.php create update
-php ../scripts/build/build.php populate populateTestDWUpToDate
-mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/forTestDWUpToDate.sql
+./generate-db.sh
 
 # Zombie.js
 #export NODE_PATH=/usr/local/lib/node_modules
