@@ -486,27 +486,48 @@ class Orga_OrganizationController extends Core_Controller
         $idOrganization = $this->getParam('idOrganization');
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
+
         $formData = $this->getFormData('organizationDetails');
+
+        $updated = false;
+
+        $label = (string) $formData->getValue('label');
+        if (empty($label)) {
+            $this->addFormError(
+                'label',
+                __('UI', 'formValidation', 'emptyRequiredField')
+            );
+        } else if ($organization->getLabel() !== $label) {
+            $organization->setLabel($label);
+            $updated = true;
+        }
 
         $refGranularityForInventoryStatus = $formData->getValue('granularityForInventoryStatus');
         if (!empty($refGranularityForInventoryStatus)) {
-            $granularityForInventoryStatus = $organization->getGranularityByRef($refGranularityForInventoryStatus);
+            $newGranularityForInventoryStatus = $organization->getGranularityByRef($refGranularityForInventoryStatus);
             try {
-                $organization->setGranularityForInventoryStatus($granularityForInventoryStatus);
-            } catch (Core_Exception_InvalidArgument $e) {
-                $this->addFormError(
-                    'granularityForInventoryStatus',
-                    __('Orga', 'exception', 'broaderInputGranularity')
-                );
+                $currentGranularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+            } catch (Core_Exception_UndefinedAttribute $e) {
+                $currentGranularityForInventoryStatus = null;
+            }
+            if ($currentGranularityForInventoryStatus !== $newGranularityForInventoryStatus) {
+                try {
+                    $organization->setGranularityForInventoryStatus($newGranularityForInventoryStatus);
+                    $updated = true;
+                } catch (Core_Exception_InvalidArgument $e) {
+                    $this->addFormError(
+                        'granularityForInventoryStatus',
+                        __('Orga', 'exception', 'broaderInputGranularity')
+                    );
+                }
             }
         }
 
-        $label = (string) $formData->getValue('label');
-        if ($organization->getLabel() !== $label) {
-            $organization->setLabel($label);
+        if ($this->hasFormError() || !$updated) {
+            $this->setFormMessage(__('UI', 'message', 'nullUpdated'));
+        } else {
+            $this->setFormMessage(__('UI', 'message', 'updated'));
         }
-
-        $this->setFormMessage(__('UI', 'message', 'updated'));
 
         $this->sendFormResponse();
     }
