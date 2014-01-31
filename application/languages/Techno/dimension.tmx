@@ -47,8 +47,9 @@
         <tu tuid="warningEditingDimensions">
             <tuv xml:lang="fr">
                 <seg>
-                    Attention! Si vous modifiez les dimensions, il est nécessaire de
-                    réouvrir (rafraichir) cette page si vous voulez ensuite modifier les paramètres.
+                    Attention ! si vous effectuez une modification sur une dimension,
+                    il est nécessaire de réouvrir (rafraichir) cette page pour que la modification
+                    soit visible sur le tableau des paramètres ci-dessus.
                 </seg>
             </tuv>
             <tuv xml:lang="en">
