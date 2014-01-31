@@ -3,7 +3,7 @@
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
-        <!-- Ajout d'éléments -->
+        <!-- Ajout de paramètres -->
 
         <tu tuid="editElementListHelp">
             <tuv xml:lang="fr">
@@ -41,46 +41,46 @@ member3, member4, 0.5, 20</seg>
         </tu>
         <tu tuid="unknownMember">
             <tuv xml:lang="fr">
-                <seg>Membre [MEMBER] inconnu.</seg>
+                <seg>Élément [MEMBER] inconnu.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Unknown member [MEMBER].</seg>
+                <seg>Unknown element [MEMBER].</seg>
             </tuv>
         </tu>
 
 
-        <!-- Ajout de membres -->
+        <!-- Ajout d'éléments de la dimension -->
 
         <tu tuid="addMemberListHelp">
             <tuv xml:lang="fr">
                 <seg>
-                    Le format attendu est un membre par ligne : identifiant suivi d'une virgule et du libellé.
+                    Le format attendu est un élément par ligne : identifiant suivi d'une virgule et du libellé.
                     Exemple :
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-                    The expected format is one member per line: the identifier followed by a comma and the label.
+                    The expected format is one element per line: the identifier followed by a comma and the label.
                     Example:
                 </seg>
             </tuv>
         </tu>
         <tu tuid="addMemberListExample">
             <tuv xml:lang="fr">
-                <seg>membre1, Libellé du membre 1
-membre2, Libellé du membre 2</seg>
+                <seg>element1, Libellé de l'élément 1
+element2, Libellé de l'élément 2</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>member1, Label of member 1
-member2, Label of member 2</seg>
+                <seg>element1, Label of element 1
+element2, Label of element 2</seg>
             </tuv>
         </tu>
         <tu tuid="membersFound">
             <tuv xml:lang="fr">
-                <seg>membre(s) prêts à être ajoutés</seg>
+                <seg>éléments(s) prêts à être ajoutés</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>member(s) ready to be created</seg>
+                <seg>element(s) ready to be created</seg>
             </tuv>
         </tu>
         <tu tuid="invalidMembersInput">
@@ -118,19 +118,19 @@ member2, Label of member 2</seg>
 
         <tu tuid="importSuccessful">
             <tuv xml:lang="fr">
-                <seg>[NUMBER] membre(s) ont été ajouté(s).</seg>
+                <seg>[NUMBER] élément(s) ont été ajouté(s).</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>[NUMBER] member(s) have been added.</seg>
+                <seg>[NUMBER] element(s) have been added.</seg>
             </tuv>
         </tu>
 
         <tu tuid="dimensionHasMember">
             <tuv xml:lang="fr">
-                <seg>Le membre [REF] existe déjà dans la dimension.</seg>
+                <seg>L'élément [REF] existe déjà dans la dimension.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>The member [REF] already exists in that dimension.</seg>
+                <seg>The element [REF] already exists in that dimension.</seg>
             </tuv>
         </tu>
 
