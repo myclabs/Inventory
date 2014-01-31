@@ -60,5 +60,40 @@
             </tuv>
         </tu>
 
+        <tu tuid="warningDeletingDimension">
+            <tuv xml:lang="fr">
+                <seg>
+                    Attention !
+                    La suppression d'une dimension implique la recréation de tous les paramètres de la famille.
+                    Les paramètres déjà saisis seront perdus.
+                    Voulez-vous vraiment supprimer cette dimension ?
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Warning!
+                    Deleting a dimension means recreating every parameters too.
+                    The parameters already defined will be lost.
+                    Do you really want to delete that dimension?
+                </seg>
+            </tuv>
+        </tu>
+        <tu tuid="warningAddingDimension">
+            <tuv xml:lang="fr">
+                <seg>
+                    Attention !
+                    L'ajout d'une dimension implique la recréation de tous les paramètres de la famille.
+                    Les paramètres déjà saisis seront perdus.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Warning!
+                    Adding a dimension means recreating every parameters too.
+                    The parameters already defined will be lost.
+                </seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

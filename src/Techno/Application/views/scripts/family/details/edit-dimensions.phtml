@@ -78,6 +78,10 @@ $family = $this->family;
     </div>
     <form class="form-horizontal" action="<?=$this->baseUrl('techno/dimension/add')?>" method="post">
         <div class="modal-body">
+            <p class="alert alert-warning">
+                <?=__('Techno', 'dimension', 'warningAddingDimension')?>
+            </p>
+            <p></p>
             <div class="control-group">
                 <label class="control-label" for="addDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
                 <div class="controls">
@@ -190,7 +194,7 @@ $family = $this->family;
         $('.deleteDimensionButton')
             .tooltip()
             .confirm({
-                text: <?=json_encode(__('UI', 'message', 'areYouSure'))?>,
+                text: <?=json_encode(__('Techno', 'dimension', 'warningDeletingDimension'))?>,
                 confirmButton: <?=json_encode(__('UI', 'verb', 'confirm'))?>,
                 cancelButton: <?=json_encode(__('UI', 'verb', 'cancel'))?>
             });
