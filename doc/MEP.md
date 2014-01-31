@@ -3,6 +3,8 @@
 
 ## 2.10
 
+- Renomer l'éventuel dossier data/specificExports en data/specificReports
+
 - Déployer normalement l'application **sans build update**
 
 - Exécuter le script de migration SQL
