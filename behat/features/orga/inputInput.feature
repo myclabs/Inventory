@@ -4,13 +4,13 @@ Feature: Organization input input feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Global administrator direct access to input scenario
     Given I am on "orga/cell/input/idCell/28/fromIdCell/1"
     And I wait for the page to finish loading
     Then I should see "Saisie 2012 | Annecy | Énergie"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Display of existing input with correct values and uncertainties scenario
     Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading
@@ -27,11 +27,11 @@ Feature: Organization input input feature
     Then I should see "Valeur : 10 t ± 15 %"
 
 
-  @javascript
+  @javascript @readOnly
   Scenario: Display of existing input for a closed inventory scenario
     Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading
-    And I click element "legend[data-target='#granularity7']"myc-53n53
+    And I click element "legend[data-target='#granularity7']"
   # Vérification contenu datagrid
     Then I should see "Saisie terminée" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/']" element
     Then I should see "100 %" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.progress-success" element

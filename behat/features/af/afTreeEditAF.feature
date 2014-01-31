@@ -7,7 +7,7 @@ Feature: AF tree edit AF feature
   @javascript
   Scenario: Edition of the label of an AF in AF tree edit
     Given I am on "af/af/tree"
-    And I wait 7 seconds
+    And I wait 2 seconds
   # Modification du libellé, libellé vide
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I fill in "afTree_labelEdit" with ""
@@ -22,7 +22,7 @@ Feature: AF tree edit AF feature
   @javascript
   Scenario: Edition of the position and parent of an AF in AF tree edit
     Given I am on "af/af/tree"
-    And I wait 7 seconds
+    And I wait 2 seconds
   # Déplacement dans une autre catégorie
     And I click "Combustion de combustible, mesuré en unité de masse"
     And I select "Catégorie contenant une sous-catégorie" from "afTree_changeParent"
@@ -52,7 +52,7 @@ Feature: AF tree edit AF feature
   @javascript
   Scenario: Deletion of an AF in AF tree edit, forbidden
     Given I am on "af/af/tree"
-    And I wait 7 seconds
+    And I wait 2 seconds
   # Tentative de suppression, formulaire associé à des saisies
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I click "Supprimer"
@@ -92,9 +92,9 @@ Feature: AF tree edit AF feature
 
   @javascript
   Scenario: Deletion of an AF in AF tree edit, authorized
-    #6193 	Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
+    #6193 Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
     Given I am on "af/af/tree"
-    And I wait 7 seconds
+    And I wait 2 seconds
   # Suppression sans obstacle, formulaire vide
     When I click "Formulaire vide"
     And I click "Supprimer"
@@ -119,20 +119,20 @@ Feature: AF tree edit AF feature
     And I should not see "Formulaire test"
     And I should not see "Formulaire avec sous-formulaires"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Link towards configuration view, from AF tree edit
     Given I am on "af/af/tree"
-    And I wait 7 seconds
+    And I wait 2 seconds
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I click "Configuration"
   # Vérification qu'on est bien sur la page "Configuration"
     And I open tab "Contrôle"
     Then I should see "Combustion de combustible, mesuré en unité de masse"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Link towards test view, from AF tree edit
     Given I am on "af/af/tree"
-    And I wait 7 seconds
+    And I wait 2 seconds
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I click "Test"
   # Vérification qu'on est bien sur la page "Test"

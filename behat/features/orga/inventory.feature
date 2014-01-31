@@ -35,7 +35,7 @@ Feature: Organization inventory tab feature
       | annee | inventoryStatus |
       | 2012  | Fermé          |
 
-  @javascript
+  @javascript @readOnly
   Scenario: View non editable inventory status scenario
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
@@ -63,7 +63,7 @@ Feature: Organization inventory tab feature
     Then I should see the "inventories6" datagrid
     And I should see a ".fa-pencil-square-o" element
 
-  @javascript
+  @javascript @readOnly
   Scenario: Test inventory filter scenario
   # Accès à l'onglet "Collectes"
     Given I am on "orga/cell/details/idCell/1"
@@ -78,7 +78,7 @@ Feature: Organization inventory tab feature
     And I click "Filtrer"
     Then the "inventories6" datagrid should contain 2 row
 
-  @javascript
+  @javascript @readOnly
   Scenario: Percentage of complete and finished inputs scenario
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading

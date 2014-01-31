@@ -4,7 +4,7 @@ Feature: Organization inventory tab, involved users column feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Organization inventory tab, involved users column scenario, cell 2012 Europe Marque A
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
@@ -40,7 +40,7 @@ Feature: Organization inventory tab, involved users column feature
     And I should see "observateur.site@toto.com"
   # Rôles associés à Chambéry : les mêmes
 
-  @javascript
+  @javascript @readOnly
   Scenario: Organization inventory tab, involved users column scenario, cell 2012 Annecy
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
@@ -60,7 +60,7 @@ Feature: Organization inventory tab, involved users column feature
   # Libellé granularités pour les granularités non plus grossières que ou égales à la granularité de la cellule associée
     # Aucune
   # Rôles associés à l'organisation
-    # TODO : Faut-il afficher ou non les administrateurs système et workspace ? 
+    # TODO : Faut-il afficher ou non les administrateurs système et workspace ?
     # Then I should see "admin@myc-sense.com"
     # And I should see "administrateur.workspace@toto.com"
   # Rôles associés à la cellule globale

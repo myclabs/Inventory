@@ -4,7 +4,7 @@ Feature: Family element tab edit feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Family edit, display elements
     Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
@@ -32,7 +32,7 @@ Feature: Family element tab edit feature
   # Ajout d'un élément puis annulation sans enregistrement
   # TODO : actuellement l'élément est tout de même créé.
 
-  @javascript
+  @javascript @readOnly
   Scenario: Family edit, creation of an element scenario, incorrect input
     Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
@@ -69,7 +69,7 @@ Feature: Family element tab edit feature
     Then the following message is shown and closed: "Modification effectuée."
     And I should see "1 230 ± 12 %" in the "#elements-charbon-combustion" element
 
-  @javascript
+  @javascript @readOnly
   Scenario: Family edit, edition of an element scenario, incorrect input
     Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading

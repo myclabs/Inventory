@@ -1,10 +1,10 @@
-@dbFull
+@dbEmpty
 Feature: Expression interpreter feature
 
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Arithmetic expression interpreter scenario
     # TODO : tester bouton "Réinitialiser"
     Given I am on "tec/expression/test"
@@ -45,7 +45,7 @@ Feature: Expression interpreter feature
     And I click "Interpréter"
     Then I should see "Il manque un opérateur dans l'expression « a:b »."
 
-  @javascript
+  @javascript @readOnly
   Scenario: Arithmetic wrong expression interpreter scenario
   # Divers messages d'erreurs qui peuvent être renvoyés
     Given I am on "tec/expression/test"
@@ -66,7 +66,7 @@ Feature: Expression interpreter feature
     And I click "Interpréter"
     Then I should see "L'opérande « bépo » contient des caractères non autorisés."
 
-  @javascript
+  @javascript @readOnly
   Scenario: Boolean expression interpreter scenario
     Given I am on "tec/expression/test"
     And I wait for the page to finish loading
@@ -97,7 +97,7 @@ Feature: Expression interpreter feature
     And I click "Interpréter"
     Then I should see "Il manque un opérateur dans l'expression « a:b »."
 
-  @javascript
+  @javascript @readOnly
   Scenario: Boolean wrong expression interpreter scenario
   # Divers messages d'erreurs qui peuvent être renvoyés
     Given I am on "tec/expression/test"
@@ -119,7 +119,7 @@ Feature: Expression interpreter feature
     And I click "Interpréter"
     Then I should see "L'opérande « bépo » contient des caractères non autorisés."
 
-  @javascript
+  @javascript @readOnly
   Scenario: Selection expression interpreter scenario
     Given I am on "tec/expression/test"
     And I wait for the page to finish loading
@@ -145,7 +145,7 @@ Feature: Expression interpreter feature
     And I click "Interpréter"
     Then I should see "Il manque un opérateur dans l'expression « a&b »."
 
-  @javascript
+  @javascript @readOnly
   Scenario: Selection wrong expression interpreter scenario
   # Divers messages d'erreurs qui peuvent être renvoyés
     Given I am on "tec/expression/test"

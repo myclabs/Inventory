@@ -4,7 +4,7 @@ Feature: Family list consult feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Family list consult scenario
   # Affichage du datagrid
     Given I am on "techno/family/list"
