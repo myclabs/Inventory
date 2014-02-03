@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\ORM\EntityManager;
+
 require_once __DIR__ . '/Classif/populateTest.php';
 require_once __DIR__ . '/Techno/populateTest.php';
 require_once __DIR__ . '/Orga/populateTest.php';
@@ -9,6 +11,10 @@ class Inventory_PopulateTest extends Core_Script_Populate
 {
     public function populateEnvironment($environment)
     {
+        $container = \Core\ContainerSingleton::getContainer();
+        $entityManager = $container->get(EntityManager::class);
+        $entityManager->clear();
+
         // Classif.
         $populateClassif = new Classif_PopulateTest();
         $populateClassif->runEnvironment($environment);
