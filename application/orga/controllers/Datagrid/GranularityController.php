@@ -47,16 +47,16 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $data['axes'] = $this->cellList($listAxes);
             $data['relevance'] = $granularity->getCellsControlRelevance();
             $data['input'] = $granularity->isInput();
-            if (!$data['input']) {
-                $this->editableCell($data['input'], false);
-            }
             $data['afs'] = $granularity->hasInputGranularities();
             $data['inventory'] = ($granularity === $granularityForinventoryStatus);
             $data['reports'] = $granularity->getCellsGenerateDWCubes();
             $data['acl'] = $granularity->getCellsWithACL();
-            if (!($granularity->hasAxes())
+            if ((!$granularity->hasAxes())
                 || $data['relevance'] || $data['input'] || $data['afs'] || $data['reports'] || $data['acl']) {
                 $data['delete'] = false;
+            }
+            if (!$data['input']) {
+                $this->editableCell($data['input'], false);
             }
             $this->addLine($data);
         }
