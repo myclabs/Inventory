@@ -27,13 +27,13 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         $locale = Core_Locale::loadDefault();
         //  Récupère tous les composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $components \AF\Domain\AF\Component\\AF\Domain\Component\Component[] */
+        /** @var $components Component[] */
         $components = Component::loadList($query);
         // Affiche les actions dans l'ordre des composants
         foreach ($components as $component) {
@@ -41,7 +41,7 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
                 // On ne garde que les action de type setValue
                 if ($action instanceof SetValue || $action instanceof SetAlgoValue) {
                     $data = [];
-                    /** @var $action \AF\Domain\AF\Action\\AF\Domain\Action\Action */
+                    /** @var $action Action */
                     $data['index'] = $action->getId();
                     $condition = $action->getCondition();
                     if ($condition) {
@@ -64,16 +64,16 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
                                 $data['value'] .= ' %';
                             }
                             break;
-                        case Checkbox::class:
-                            /** @var $action Checkbox */
+                        case SetCheckboxValue::class:
+                            /** @var $action SetCheckboxValue */
                             if ((bool) $action->getChecked()) {
                                 $data['value'] = __('UI', 'property', 'checked');
                             } else {
                                 $data['value'] = __('UI', 'property', 'unchecked');
                             }
                             break;
-                        case SelectSingle::class:
-                            /** @var $action \AF\Domain\Component\Select\SelectSingle */
+                        case SetSelectSingleValue::class:
+                            /** @var $action SetSelectSingleValue */
                             if (null !== $action->getOption()) {
                                 $data['value'] = $action->getOption()->getLabel();
                             } else {
@@ -115,10 +115,10 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            /** @var $targetComponent \AF\Domain\AF\Component\\AF\Domain\Component\Component */
+            /** @var $targetComponent Component */
             $targetComponent = Component::load($targetComponentId);
             $type = $this->getAddElementValue('type');
-            /** @var $action \AF\Domain\AF\Action\\AF\Domain\Action\Action */
+            /** @var $action Action */
             if ($type == 'setValue') {
                 switch (get_class($targetComponent)) {
                     case NumericField::class:
@@ -161,13 +161,13 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        /** @var $action \AF\Domain\AF\Action\\AF\Domain\Action\Action */
+        /** @var $action Action */
         $action = Action::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'condition':
                 if ($newValue) {
-                    /** @var $condition \AF\Domain\AF\Condition\\AF\Domain\Condition\Condition */
+                    /** @var $condition Condition */
                     $condition = Condition::load($newValue);
                     $action->setCondition($condition);
                     $this->data = $this->cellList($condition->getId());
@@ -189,7 +189,7 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        /** @var $action \AF\Domain\AF\Action\\AF\Domain\Action\Action */
+        /** @var $action Action */
         $action = Action::load($this->getParam('index'));
         $action->delete();
         $action->getTargetComponent()->removeAction($action);
@@ -198,5 +198,4 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
-
 }

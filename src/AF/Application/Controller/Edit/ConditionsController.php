@@ -1,8 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 
 use AF\Domain\Component\Select\SelectOption;
 use AF\Domain\Condition\ExpressionCondition;
@@ -13,6 +9,9 @@ use AF\Domain\Condition\Select\SelectSingleCondition;
 use AF\Domain\Condition\Select\SelectMultiCondition;
 use Core\Annotation\Secure;
 
+/**
+ * @author matthieu.napoli
+ */
 class AF_Edit_ConditionsController extends Core_Controller
 {
     /**
@@ -56,7 +55,7 @@ class AF_Edit_ConditionsController extends Core_Controller
                 /** @var $condition SelectSingleCondition */
                 $condition->setRelation($this->getParam('relation'));
                 if ($this->getParam('value') != null) {
-                    /** @var $option \AF\Domain\Component\Select\SelectOption */
+                    /** @var $option SelectOption */
                     $option = SelectOption::load($this->getParam('value'));
                     $condition->setOption($option);
                 } else {
@@ -67,7 +66,7 @@ class AF_Edit_ConditionsController extends Core_Controller
                 /** @var $condition SelectMultiCondition */
                 $condition->setRelation($this->getParam('relation'));
                 if ($this->getParam('value') != null) {
-                    /** @var $option \AF\Domain\Component\Select\SelectOption */
+                    /** @var $option SelectOption */
                     $option = SelectOption::load($this->getParam('value'));
                     $condition->setOption($option);
                 } else {

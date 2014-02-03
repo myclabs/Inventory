@@ -254,10 +254,10 @@ class Orga_Populate extends Core_Script_Action
             } elseif ($component instanceof Checkbox) {
                 // Champ checkbox
                 $inputType = CheckboxInput::class;
-            } elseif ($component instanceof SelectSingleInput) {
+            } elseif ($component instanceof SelectSingle) {
                 // Champ de sélection simple
                 $inputType = SelectSingleInput::class;
-            } elseif ($component instanceof SelectMultiInput) {
+            } elseif ($component instanceof SelectMulti) {
                 // Champ de sélection multiple
                 $inputType = SelectMultiInput::class;
             }

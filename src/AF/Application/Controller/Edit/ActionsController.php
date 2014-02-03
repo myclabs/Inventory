@@ -1,8 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 
 use AF\Domain\Action\SetAlgoValue;
 use AF\Domain\Action\SetValue\SetNumericFieldValue;
@@ -15,7 +11,7 @@ use AF\Domain\Algorithm\Algo;
 use Core\Annotation\Secure;
 
 /**
- * @package AF
+ * @author matthieu.napoli
  */
 class AF_Edit_ActionsController extends Core_Controller
 {
@@ -54,17 +50,17 @@ class AF_Edit_ActionsController extends Core_Controller
                     $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/interaction');
                     return;
                 }
-                /** @var $action \AF\Domain\Action\SetValue\SetNumericFieldValue */
+                /** @var $action SetNumericFieldValue */
                 $action->setValue(new Calc_Value($value, $uncertainty));
                 break;
             case SetCheckboxValue::class:
-                /** @var $action \AF\Domain\Action\SetValue\SetCheckboxValue */
+                /** @var $action SetCheckboxValue */
                 $action->setChecked($this->getParam('checkboxValue'));
                 break;
             case SetSelectSingleValue::class:
-                /** @var $action \AF\Domain\Action\SetValue\Select\SetSelectSingleValue */
+                /** @var $action SetSelectSingleValue */
                 if ($this->getParam('selectOptionValue') != null) {
-                    /** @var $option \AF\Domain\Component\Select\SelectOption */
+                    /** @var $option SelectOption */
                     $option = SelectOption::load($this->getParam('selectOptionValue'));
                     $action->setOption($option);
                 } else {
@@ -72,7 +68,7 @@ class AF_Edit_ActionsController extends Core_Controller
                 }
                 break;
             case SetAlgoValue::class:
-                /** @var $action \AF\Domain\Action\SetAlgoValue */
+                /** @var $action SetAlgoValue */
                 if ($this->getParam('algoSelect') != null) {
                     /** @var $algo Algo */
                     $algo = Algo::load($this->getParam('algoSelect'));

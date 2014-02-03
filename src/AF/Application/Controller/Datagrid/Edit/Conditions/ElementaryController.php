@@ -96,19 +96,19 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            /** @var $field \AF\Domain\Component\Field */
+            /** @var $field Field */
             $field = Field::load($fieldId);
             switch (get_class($field)) {
                 case NumericField::class:
                     $condition = new NumericFieldCondition();
                     break;
-                case CheckboxCondition::class:
+                case Checkbox::class:
                     $condition = new CheckboxCondition();
                     break;
-                case SelectSingleCondition::class:
+                case SelectSingle::class:
                     $condition = new SelectSingleCondition();
                     break;
-                case SelectMultiCondition::class:
+                case SelectMulti::class:
                     $condition = new SelectMultiCondition();
                     break;
                 default:
@@ -170,7 +170,7 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
      */
     public function deleteelementAction()
     {
-        /** @var $condition \AF\Domain\AF\Condition\\AF\Domain\Condition\Condition */
+        /** @var $condition Condition */
         $condition = Condition::load($this->getParam('index'));
         try {
             $condition->delete();

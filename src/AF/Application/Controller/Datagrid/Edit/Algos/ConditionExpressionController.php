@@ -25,7 +25,7 @@ class AF_Datagrid_Edit_Algos_ConditionExpressionController extends UI_Controller
      */
     public function getelementsAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {

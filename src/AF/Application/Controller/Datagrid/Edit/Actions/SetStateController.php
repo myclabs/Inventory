@@ -1,9 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  yoann.croizer
- * @package AF
- */
 
 use AF\Domain\Action\SetState;
 use AF\Domain\AF;
@@ -12,11 +7,11 @@ use AF\Domain\Component\Component;
 use Core\Annotation\Secure;
 
 /**
- * @package AF
+ * @author matthieu.napoli
+ * @author yoann.croizer
  */
 class AF_Datagrid_Edit_Actions_SetStateController extends UI_Controller_Datagrid
 {
-
     /**
      * (non-PHPdoc)
      * @see UI_Controller_Datagrid::getelementsAction()
@@ -24,12 +19,12 @@ class AF_Datagrid_Edit_Actions_SetStateController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         //  Récupère tous les composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $components \AF\Domain\AF\Component\\AF\Domain\Component\Component[] */
+        /** @var $components Component[] */
         $components = Component::loadList($query);
         // Affiche les actions dans l'ordre des composants
         foreach ($components as $component) {
@@ -64,7 +59,7 @@ class AF_Datagrid_Edit_Actions_SetStateController extends UI_Controller_Datagrid
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
-            /** @var $targetComponent \AF\Domain\AF\Component\Component */
+            /** @var $targetComponent Component */
             $targetComponent = Component::load($targetComponentId);
             if ($this->getAddElementValue('condition')) {
                 $condition = Condition::load($this->getAddElementValue('condition'));
@@ -134,5 +129,4 @@ class AF_Datagrid_Edit_Actions_SetStateController extends UI_Controller_Datagrid
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
-
 }

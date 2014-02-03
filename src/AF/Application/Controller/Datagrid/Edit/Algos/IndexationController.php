@@ -163,7 +163,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
      */
     public function getValueListAction()
     {
-        /** @var $algo \AF\Domain\Algorithm\Numeric\NumericAlgo */
+        /** @var $algo NumericAlgo */
         $algo = NumericAlgo::load($this->getParam('idAlgo'));
         /** @var $axis Classif_Model_Axis */
         $axis = Classif_Model_Axis::load($this->getParam('index'));

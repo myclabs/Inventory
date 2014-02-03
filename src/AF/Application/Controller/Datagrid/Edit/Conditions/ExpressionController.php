@@ -30,7 +30,7 @@ class AF_Datagrid_Edit_Conditions_ExpressionController extends UI_Controller_Dat
         $af = AF::load($this->getParam('id'));
         $query = new Core_Model_Query();
         $query->filter->addCondition(Condition::QUERY_AF, $af);
-        /** @var $conditions \AF\Domain\Condition\ExpressionCondition[] */
+        /** @var $conditions ExpressionCondition[] */
         $conditions = ExpressionCondition::loadList($query);
         foreach ($conditions as $condition) {
             $data = [];

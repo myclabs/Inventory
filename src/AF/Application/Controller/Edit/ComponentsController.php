@@ -1,19 +1,14 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 
 use AF\Domain\Component\Component;
 use AF\Domain\Component\Select;
 use Core\Annotation\Secure;
 
 /**
- * @package AF
+ * @author matthieu.napoli
  */
 class AF_Edit_ComponentsController extends Core_Controller
 {
-
     /**
      * Popup qui affiche l'aide d'un composant
      * @Secure("editAF")
@@ -33,5 +28,4 @@ class AF_Edit_ComponentsController extends Core_Controller
         $this->view->selectField = Select::load($this->getParam('idSelect'));
         $this->_helper->layout()->disableLayout();
     }
-
 }

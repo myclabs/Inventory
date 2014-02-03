@@ -56,13 +56,13 @@ class AF_Edit_AlgosController extends Core_Controller
         if (!$this->getRequest()->isPost()) {
             throw new Core_Exception_NotFound("Page invalide");
         }
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('idAf'));
         $algo = ElementaryConditionAlgo::load($this->getParam('idAlgo'));
 
         switch (get_class($algo)) {
             case NumericConditionAlgo::class:
-                /** @var $algo \AF\Domain\Algorithm\Condition\NumericConditionAlgo */
+                /** @var $algo NumericConditionAlgo */
                 $algo->setRelation($this->getParam('relation'));
                 if ($this->getParam('value') === null || $this->getParam('value') === '') {
                     $algo->setValue(null);
@@ -71,16 +71,16 @@ class AF_Edit_AlgosController extends Core_Controller
                 }
                 break;
             case BooleanConditionAlgo::class:
-                /** @var $algo \AF\Domain\Algorithm\Condition\BooleanConditionAlgo */
+                /** @var $algo BooleanConditionAlgo */
                 $algo->setValue($this->getParam('value'));
                 break;
             case SelectSingleConditionAlgo::class:
-                /** @var $algo \AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo */
+                /** @var $algo SelectSingleConditionAlgo */
                 $algo->setRelation($this->getParam('relation'));
                 $algo->setValue($this->getParam('value'));
                 break;
             case SelectMultiConditionAlgo::class:
-                /** @var $algo \AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo */
+                /** @var $algo SelectMultiConditionAlgo */
                 $algo->setRelation($this->getParam('relation'));
                 $algo->setValue($this->getParam('value'));
                 break;

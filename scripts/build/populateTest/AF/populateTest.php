@@ -1,9 +1,6 @@
 <?php
-use AF\Domain\Action\Action;
 
-/**
- * @package AF
- */
+use AF\Domain\Action\Action;
 
 require_once __DIR__ . '/../../populate/AF/populate.php';
 
@@ -12,7 +9,6 @@ require_once __DIR__ . '/../../populate/AF/populate.php';
  */
 class AF_PopulateTest extends AF_Populate
 {
-
     /**
      * {@inheritdoc}
      */
@@ -182,5 +178,4 @@ class AF_PopulateTest extends AF_Populate
 
         echo "\t\tAF created".PHP_EOL;
     }
-
 }
