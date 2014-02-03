@@ -4,7 +4,7 @@ Feature: Organization navigation feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Organization navigation scenario
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading
@@ -38,7 +38,7 @@ Feature: Organization navigation feature
   # Vérification que l'élément "Vue globale" cliquable est présent, pour tester à l'inverse qu'il est absent dans les tests ACL
     And I should see a "#navigationParent a:contains('Vue globale')" element
 
-  @javascript
+  @javascript @readOnly
   Scenario: Try to reach a non relevant cell using navigation tool
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading

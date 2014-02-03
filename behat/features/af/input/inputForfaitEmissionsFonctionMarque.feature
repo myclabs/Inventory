@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @readOnly
 Feature: Forfait emissions input feature
 
   Background:

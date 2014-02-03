@@ -4,7 +4,7 @@ Feature: Unit feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Display of standard units page
     Given I am on "unit/consult/standardunits"
   # Tentative d'utiliser le menu de haut de page
@@ -22,7 +22,7 @@ Feature: Unit feature
     | name     | ref | symbol | physicalQuantity | multiplier   | unitSystem    |
     | gramme   | g   | g      | Masse            | 0,001        | International |
 
-  @javascript
+  @javascript @readOnly
   Scenario: Display of extended units page
     Given I am on "unit/consult/extendedunits"
     And I wait for the page to finish loading
@@ -34,7 +34,7 @@ Feature: Unit feature
       | name                  | ref     | symbol     | multiplier |
       | gramme équivalent CO2 | g_co2e  | g équ. CO2 | 0          |
 
-  @javascript
+  @javascript @readOnly
   Scenario: Display of discrete units page
     Given I am on "unit/consult/discreteunits"
     And I wait for the page to finish loading
@@ -44,7 +44,7 @@ Feature: Unit feature
       | name    | ref     |
       | animal  | animal  |
 
-  @javascript
+  @javascript @readOnly
   Scenario: Display of physical quantities page
     Given I am on "unit/consult/physicalquantities"
     And I wait for the page to finish loading
@@ -54,7 +54,7 @@ Feature: Unit feature
       | name    | referenceUnit  | l | m | t | numeraire |
       | Longueur  | mètre        | 1 | 0 | 0 | 0         |
 
-  @javascript
+  @javascript @readOnly
   Scenario: Standard units filters
     Given I am on "unit/consult/standardunits"
     And I wait for the page to finish loading

@@ -26,7 +26,7 @@ Feature: Family list edit feature
       | Catégorie contenant une famille | AAA   | aaa  | m    |
   # TODO : autoriser la création à la racine
 
-  @javascript
+  @javascript @readOnly
   Scenario: Creation of a parameter family, incorrect input
     Given I am on "techno/family/list-edit"
     Then I should see the "familyDatagrid" datagrid
@@ -56,7 +56,7 @@ Feature: Family list edit feature
     And I click "Valider"
     Then the field "familyDatagrid_unit_addForm" should have error: "Merci de saisir un identifiant d'unité valide."
 
-  @javascript
+  @javascript @readOnly
   Scenario: Link to reach a parameter family from the family list edit datagrid
     Given I am on "techno/family/list-edit"
     Then I should see the "familyDatagrid" datagrid

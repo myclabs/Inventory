@@ -1,7 +1,7 @@
 @dbFull
 Feature: Connected user feature
 
-  @javascript
+  @javascript @readOnly
   Scenario: Connected user scenario
   # TODO : Tester l'affichage et le clic sur les onglets du menu
     Given I am on the homepage

@@ -4,7 +4,7 @@ Feature: Family tree consult feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Consult family tree
     Given I am on "techno/family/tree"
     And I wait for the page to finish loading

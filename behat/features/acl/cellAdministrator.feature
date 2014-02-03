@@ -1,7 +1,7 @@
 @dbFull
 Feature: Cell administrator feature
 
-  @javascript
+  @javascript @readOnly
   Scenario: Global cell administrator login scenario
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -22,7 +22,7 @@ Feature: Cell administrator feature
     And I should not see "Niveaux"
     And I should not see "Contrôle"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Single cell administrator login scenario
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -45,7 +45,7 @@ Feature: Cell administrator feature
     Then I should see "Historique des valeurs"
     And I should see a "code:contains('10 k€ ± 15 %')" element
 
-  @javascript
+  @javascript @readOnly
   Scenario: Several cells administrator login scenario
     Given I am on the homepage
     And I wait for the page to finish loading

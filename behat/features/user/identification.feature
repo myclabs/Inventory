@@ -2,6 +2,7 @@
 Feature: Identification feature
   The login form authenticates users.
 
+  @readOnly @readOnly
   Scenario: Login redirection
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -9,7 +10,7 @@ Feature: Identification feature
     And I should see "Vous n'êtes pas connecté"
     And I should see "Connexion"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Logging in with wrong password
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -18,7 +19,7 @@ Feature: Identification feature
     And I click "connection"
     Then I should see "Attention ! Le mot de passe indiqué est invalide."
 
-  @javascript
+  @javascript @readOnly
   Scenario: Logging in correctly
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -27,7 +28,7 @@ Feature: Identification feature
     And I click "connection"
     Then I should see "Workspaces"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Logging out
     Given I am logged in
     And I am on the homepage
@@ -39,14 +40,14 @@ Feature: Identification feature
     And I should see "Vous n'êtes pas connecté"
     And I should see "Connexion"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Forgottent password
   # TODO : à tester, pour l'instant l'accès à la page du captcha pose problème (installation des fontes) donc non testé.
     Given I am on the homepage
     And I wait for the page to finish loading
   #  And I click "Mot de passe oublié ?"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Trying to reach an url without being connected
     Given I am on the homepage
     And I go to "orga/granularity/report/idCell/1/"

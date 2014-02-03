@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @readOnly
 Feature: Combustion input feature
 
   Background:

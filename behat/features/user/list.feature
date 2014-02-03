@@ -4,7 +4,7 @@ Feature: User list feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: User list content scenario
     Given I am on "user/profile/list"
     Then I should see the "users" datagrid

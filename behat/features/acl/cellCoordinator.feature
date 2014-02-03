@@ -1,7 +1,7 @@
 @dbFull
 Feature: Cell coordinator feature
 
-  @javascript
+  @javascript @readOnly
   Scenario: Coordinator of a single cell
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -29,7 +29,7 @@ Feature: Cell coordinator feature
     And I should not see "Rôles"
     And I should not see "Reconstruction"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Coordinator of several cells
     Given I am on the homepage
     And I wait for the page to finish loading
