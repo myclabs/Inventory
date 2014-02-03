@@ -195,7 +195,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 $granularity->setCellsWithACL((bool) $this->update['value']);
                 $this->data = $granularity->getCellsWithACL();
                 break;
-            case 'afs':
+            case 'input':
                 $granularity->setInputConfigGranularity();
                 $this->data = ['value' => $granularity->isInput(), 'editable' => false];
                 break;
