@@ -12,9 +12,6 @@ use AF\Domain\InputService;
 use AF\Domain\Input\Input;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
-use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
-use Unit\UnitAPI;
 
 /**
  * Saisie des AF
@@ -58,7 +55,7 @@ class AF_InputController extends Core_Controller
      */
     public function submitAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         $this->setParam('af', $af);
 
@@ -107,7 +104,7 @@ class AF_InputController extends Core_Controller
     public function submitSendResponseAction()
     {
         $inputSetContainer = $this->getParam('inputSetContainer');
-        /** @var $inputSet \AF\Domain\InputSet\PrimaryInputSet */
+        /** @var $inputSet PrimaryInputSet */
         $inputSet = $inputSetContainer->inputSet;
 
         $this->addFormErrors($this->getParam('errorMessages', []));
@@ -142,7 +139,7 @@ class AF_InputController extends Core_Controller
     public function submitTestAction()
     {
         $inputSetContainer = $this->getParam('inputSetContainer');
-        /** @var $inputSet \AF\Domain\InputSet\PrimaryInputSet */
+        /** @var $inputSet PrimaryInputSet */
         $inputSet = $inputSetContainer->inputSet;
 
         // Met à jour les résultats
@@ -210,11 +207,19 @@ class AF_InputController extends Core_Controller
             $this->inputSetSessionStorage->saveInputSet($af, $inputSet);
         }
 
+        switch ($inputSet->getStatus()) {
+            case PrimaryInputSet::STATUS_FINISHED:
+                $message = __("AF", "inputInput", "inputValidated");
+                break;
+            default:
+                $message = __("AF", "inputInput", "inputReopened");
+                break;
+        }
+
         $this->sendJsonResponse([
-                                'message'    => __("AF", "inputInput", "progressStatusUpdated"),
-                                'status'     => $inputSet->getStatus(),
-                                'completion' => $inputSet->getCompletion(),
-                                ]);
+            'message'    => $message,
+            'status'     => $inputSet->getStatus(),
+        ]);
     }
 
     /**
@@ -228,7 +233,7 @@ class AF_InputController extends Core_Controller
 
         // Pour gérer le cas où on demande l'historique dans l'interface de test des AF
         if ($idInput !== null) {
-            /** @var $input \AF\Domain\AF\Input\\AF\Domain\Input\Input */
+            /** @var $input Input */
             $input = Input::load($this->getParam('idInput'));
 
             $entries = $this->inputHistoryService->getInputHistory($input);

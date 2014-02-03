@@ -58,35 +58,22 @@
 		</tu>
 
 		<!-- Marquer la saisie comme terminée -->
-
-		<tu tuid="markInputAsFinished">
-			<tuv xml:lang="fr">
-				<seg>Marquer la saisie comme terminée</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Mark input as finished</seg>
-			</tuv>
-		</tu>
-		<tu tuid="markInProgressInputAsFinishedTooltip">
-			<tuv xml:lang="fr">
-				<seg>Modifications en cours, merci d'enregistrer pour pouvoir
-					marquer la saisie comme terminée.</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Changes have been made, if you want to mark as finished please
-					save first.</seg>
-			</tuv>
-		</tu>
-		<tu tuid="markIncompleteInputAsFinishedTooltip">
-			<tuv xml:lang="fr">
-				<seg>Saisie incomplète, merci de compléter la saisie pour pouvoir la
-					marquer comme terminée.</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Input is incomplete, if you want to mark as finished please
-					complete first.</seg>
-			</tuv>
-		</tu>
+        <tu tuid="validate">
+            <tuv xml:lang="fr">
+                <seg>Valider la saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Validate the input</seg>
+            </tuv>
+        </tu>
+        <tu tuid="reopen">
+            <tuv xml:lang="fr">
+                <seg>Rouvrir la saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Reopen the input</seg>
+            </tuv>
+        </tu>
 
 		<!-- Contenu du formulaire -->
 
@@ -202,12 +189,20 @@
 
         <!-- Message lors de la modification du caractère terminée ou non -->
 
-        <tu tuid="progressStatusUpdated">
+        <tu tuid="inputValidated">
             <tuv xml:lang="fr">
-                <seg>Statut d'avancement modifié.</seg>
+                <seg>Saisie validée et fermée.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Progress status updated.</seg>
+                <seg>Input validated and closed.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputReopened">
+            <tuv xml:lang="fr">
+                <seg>Saisie réouverte.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input reopened.</seg>
             </tuv>
         </tu>
 
