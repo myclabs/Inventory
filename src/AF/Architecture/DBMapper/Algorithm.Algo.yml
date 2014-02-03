@@ -1,0 +1,53 @@
+AF\Domain\Algorithm\Algo:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Algo_Algo
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_algo
+    type: string
+  discriminatorMap:
+    selection: AF\Domain\Algorithm\Selection\SelectionAlgo
+    selection_main: AF\Domain\Algorithm\Selection\MainSelectionAlgo
+    selection_textkey: AF\Domain\Algorithm\Selection\TextKeySelectionAlgo
+    selection_textkey_input: AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo
+    selection_textkey_expression: AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo
+    selection_textkey_contextvalue: AF\Domain\Algorithm\Selection\TextKey\ContextValueSelectionAlgo
+    condition: AF\Domain\Algorithm\Condition\ConditionAlgo
+    condition_elementary: AF\Domain\Algorithm\Condition\ElementaryConditionAlgo
+    condition_elementary_numeric: AF\Domain\Algorithm\Condition\NumericConditionAlgo
+    condition_elementary_boolean: AF\Domain\Algorithm\Condition\BooleanConditionAlgo
+    condition_elementary_select: AF\Domain\Algorithm\Condition\SelectConditionAlgo
+    condition_elementary_select_multi: AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo
+    condition_elementary_select_single: AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo
+    condition_expression: AF\Domain\Algorithm\Condition\ExpressionConditionAlgo
+    numeric: AF\Domain\Algorithm\Numeric\NumericAlgo
+    numeric_input: AF\Domain\Algorithm\Numeric\NumericInputAlgo
+    numeric_constant: AF\Domain\Algorithm\Numeric\NumericConstantAlgo
+    numeric_expression: AF\Domain\Algorithm\Numeric\NumericExpressionAlgo
+    numeric_parameter: AF\Domain\Algorithm\Numeric\NumericParameterAlgo
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+
+  manyToOne:
+    set:
+      targetEntity: AF\Domain\Algorithm\AlgoSet
+      inversedBy: algos
+      joinColumn:
+        name: idSet
+        referencedColumnName: id
+        nullable: false
+
+  uniqueConstraints:
+    ref:
+      columns: [idSet, ref]

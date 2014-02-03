@@ -1,0 +1,54 @@
+<?php
+use AF\Domain\AF;
+use AF\Domain\AFConfigurationError;
+
+/**
+ * @author  matthieu.napoli
+ * @package AF
+ */
+
+/** @var $af \AF\Domain\AF */
+$af = $this->af;
+/** @var $errors AFConfigurationError[] */
+$errors = $this->errors;
+
+if (count($errors) == 0) {
+    echo "<p>Aucune erreur détectée.</p>";
+    return;
+}
+
+?>
+
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Criticité</th>
+        <th>Message</th>
+        <th>Formulaire</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($errors as $error) : ?>
+        <tr>
+            <td>
+                <?=$error->getFatal()?'<span class="label label-important">Erreur</span>':''?>
+                <?=$error->getFatal()?'':'<span class="label label-warning">Avertissement</span>'?>
+            </td>
+            <td>
+                <?=$error->getMessage()?>
+            </td>
+            <td>
+                <?php
+                if ($error->getAf()) {
+                    if ($error->getAf() === $af) {
+                        echo "Formulaire maître";
+                    } else {
+                        echo $error->getAf()->getLabel();
+                    }
+                }
+                ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

@@ -1,0 +1,29 @@
+<?php
+
+use AF\Domain\Condition\ExpressionCondition;
+use TEC\Expression;
+
+/** @var $condition ExpressionCondition */
+$condition = $this->condition;
+
+$expression = new Expression($condition->getExpression());
+$graphExpression = $expression->getGraph();
+?>
+
+<code><?=$condition->getExpression()?></code>
+
+<hr>
+
+<div id="graph_<?=$condition->getRef()?>"></div>
+
+<script>
+    $(function() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Feuille');
+        data.addColumn('string', 'Noeud');
+        data.addColumn('string', 'Attribut');
+        data.addRows([<?=$graphExpression?>]);
+        var chart = new google.visualization.OrgChart(document.getElementById('graph_<?=$condition->getRef()?>'));
+        chart.draw(data, {allowHtml:true, allowCollapse:true});
+    });
+</script>

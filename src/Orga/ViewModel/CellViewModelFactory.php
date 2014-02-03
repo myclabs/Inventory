@@ -9,7 +9,7 @@ use User\Domain\ACL\Action;
 use User\Domain\User;
 use User\Domain\ACL\ACLService;
 use Orga\Model\ACL\Action\CellAction;
-use AF_Model_InputSet_Primary;
+use AF\Domain\InputSet\PrimaryInputSet;
 
 /**
  * Factory de CellViewModel.
@@ -45,10 +45,10 @@ class CellViewModelFactory
             Orga_Model_Cell::STATUS_CLOSED => __('Orga', 'view', 'inventoryClosed')
         ];
         $this->inputStatusList = [
-            AF_Model_InputSet_Primary::STATUS_FINISHED => __('AF', 'inputInput', 'statusFinished'),
-            AF_Model_InputSet_Primary::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
-            AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
-            AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
+            PrimaryInputSet::STATUS_FINISHED => __('AF', 'inputInput', 'statusFinished'),
+            PrimaryInputSet::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
+            PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
+            PrimaryInputSet::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
             CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => __('Orga', 'view', 'inventoryNotLaunched'),
             CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => __('Orga', 'view', 'statusAFNotConfigured'),
             CellViewModel::AF_STATUS_NOT_STARTED => __('Orga', 'view', 'statusNotStarted'),

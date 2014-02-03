@@ -2,9 +2,9 @@
 
 namespace Tests\Algo\Index;
 
-use Algo_Model_Algo;
-use Algo_Model_Index_Algo;
-use Algo_Model_Set;
+use AF\Domain\Algorithm\Algo;
+use AF\Domain\Algorithm\Index\AlgoResultIndex;
+use AF\Domain\Algorithm\AlgoSet;
 use Classif_Model_Axis;
 use Classif_Model_Context;
 use Classif_Model_ContextIndicator;
@@ -20,10 +20,10 @@ class AlgoIndexTest extends TestCase
     public static function setUpBeforeClass()
     {
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Algo_Model_Set::loadList() as $o) {
+        foreach (AlgoSet::loadList() as $o) {
             $o->delete();
         }
-        foreach (Algo_Model_Algo::loadList() as $o) {
+        foreach (Algo::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_Context::loadList() as $o) {
@@ -48,7 +48,7 @@ class AlgoIndexTest extends TestCase
         $algoNumeric = ConstantTest::generateObject();
         $selectionAlgo = InputTest::generateObject();
 
-        $o = new Algo_Model_Index_Algo($classifAxis, $algoNumeric);
+        $o = new AlgoResultIndex($classifAxis, $algoNumeric);
         $o->setAlgo($selectionAlgo);
         $o->save();
         $this->entityManager->flush();
@@ -62,15 +62,15 @@ class AlgoIndexTest extends TestCase
 
     /**
      * @depends testConstruct
-     * @param Algo_Model_Index_Algo $o
-     * @return Algo_Model_Index_Algo $o
+     * @param \AF\Domain\Algorithm\Index\AlgoResultIndex $o
+     * @return \AF\Domain\Algorithm\Index\AlgoResultIndex $o
      */
-    public function testLoad(Algo_Model_Index_Algo $o)
+    public function testLoad(AlgoResultIndex $o)
     {
         $this->entityManager->clear();
-        /** @var $oLoaded Algo_Model_Index_Algo */
-        $oLoaded = Algo_Model_Index_Algo::load($o->getKey());
-        $this->assertInstanceOf(Algo_Model_Index_Algo::class, $oLoaded);
+        /** @var $oLoaded \AF\Domain\Algorithm\Index\AlgoResultIndex */
+        $oLoaded = AlgoResultIndex::load($o->getKey());
+        $this->assertInstanceOf(AlgoResultIndex::class, $oLoaded);
         $this->assertEquals($o->getClassifAxis()->getKey(), $oLoaded->getClassifAxis()->getKey());
         $this->assertEquals($o->getAlgoNumeric()->getKey(), $oLoaded->getAlgoNumeric()->getKey());
         $this->assertEquals($o->getAlgo()->getKey(), $oLoaded->getAlgo()->getKey());
@@ -79,9 +79,9 @@ class AlgoIndexTest extends TestCase
 
     /**
      * @depends testLoad
-     * @param Algo_Model_Index_Algo $o
+     * @param \AF\Domain\Algorithm\Index\AlgoResultIndex $o
      */
-    public function testDelete(Algo_Model_Index_Algo $o)
+    public function testDelete(AlgoResultIndex $o)
     {
         $o->delete();
         $o->getClassifAxis()->delete();

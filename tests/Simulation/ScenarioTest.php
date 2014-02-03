@@ -2,7 +2,7 @@
 
 namespace Tests\Simulation;
 
-use AF_Model_InputSet_Primary;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Test\TestCase;
 use Simulation_Model_Scenario;
 use Simulation_Model_Set;
@@ -12,7 +12,7 @@ class ScenarioTest extends TestCase
     /**
      * Génere un objet pret à l'emploi pour les tests.
      * @param string $label
-     * @param AF_Model_InputSet_Primary $aFInputSetPrimary
+     * @param \AF\Domain\InputSet\PrimaryInputSet $aFInputSetPrimary
      * @param Simulation_Model_Set $set
      * @return Simulation_Model_Scenario
      */
@@ -22,7 +22,7 @@ class ScenarioTest extends TestCase
             $set = SetTest::generateObject();
         }
         if ($aFInputSetPrimary === null) {
-            $aFInputSetPrimary = new AF_Model_InputSet_Primary($set->getAF());
+            $aFInputSetPrimary = new PrimaryInputSet($set->getAF());
             $aFInputSetPrimary->save();
         }
 
@@ -91,7 +91,7 @@ class ScenarioTest extends TestCase
     public function testConstruct()
     {
         $set = SetTest::generateObject();
-        $aFInputSetPrimary = new AF_Model_InputSet_Primary($set->getAF());
+        $aFInputSetPrimary = new PrimaryInputSet($set->getAF());
         $aFInputSetPrimary->save();
         self::getEntityManager()->flush();
 

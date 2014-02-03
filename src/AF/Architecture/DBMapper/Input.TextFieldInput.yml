@@ -1,0 +1,14 @@
+AF\Domain\Input\TextFieldInput:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: AF_Input_Text
+
+  gedmo:
+    loggable: true
+
+  fields:
+    value:
+      type: text
+      nullable: true
+      gedmo:
+        - versioned

@@ -34,8 +34,6 @@ return [
             APPLICATION_PATH . '/models/mappers',
             APPLICATION_PATH . '/classif/models/mappers',
             APPLICATION_PATH . '/dw/models/mappers',
-            APPLICATION_PATH . '/algo/models/mappers',
-            APPLICATION_PATH . '/af/models/mappers',
             APPLICATION_PATH . '/social/models/mappers',
             APPLICATION_PATH . '/orga/models/mappers',
             APPLICATION_PATH . '/simulation/models/mappers',
@@ -60,6 +58,7 @@ return [
             'Techno',
             'Doc',
             'AuditTrail',
+            'AF',
         ];
         foreach ($modules as $module) {
             $yamlDriver = new SimplifiedYamlDriver(

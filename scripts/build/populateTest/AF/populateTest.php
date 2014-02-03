@@ -1,7 +1,6 @@
 <?php
-/**
- * @package AF
- */
+
+use AF\Domain\Action\Action;
 
 require_once __DIR__ . '/../../populate/AF/populate.php';
 
@@ -10,7 +9,6 @@ require_once __DIR__ . '/../../populate/AF/populate.php';
  */
 class AF_PopulateTest extends AF_Populate
 {
-
     /**
      * {@inheritdoc}
      */
@@ -106,12 +104,12 @@ class AF_PopulateTest extends AF_Populate
 
         $cond_comp_inter = $this->createConditionExpression($aF_test, 'cond_comp_inter', 'a&(b|c)&d');
 
-        $this->createActionSetState($c_n_test_cible_activation, AF_Model_Action::TYPE_ENABLE, $cond_el_inter_util_act_setstate);
+        $this->createActionSetState($c_n_test_cible_activation, Action::TYPE_ENABLE, $cond_el_inter_util_act_setstate);
 
         $calcValueToBeSet = new Calc_Value(1234.56789, 5.9);
-        $this->createActionSetValue($c_n_test_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, $calcValueToBeSet, $cond_el_inter_util_act_setvalue);
-        $this->createActionSetValue($c_s_s_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, null);
-        $this->createActionSetValue($c_b_cible_setvalue, AF_Model_Action::TYPE_SETVALUE, true, $cond_el_inter_util_act_setvalue);
+        $this->createActionSetValue($c_n_test_cible_setvalue, Action::TYPE_SETVALUE, $calcValueToBeSet, $cond_el_inter_util_act_setvalue);
+        $this->createActionSetValue($c_s_s_cible_setvalue, Action::TYPE_SETVALUE, null);
+        $this->createActionSetValue($c_b_cible_setvalue, Action::TYPE_SETVALUE, true, $cond_el_inter_util_act_setvalue);
 
         // Algorithmes
         $aF_test->getMainAlgo()->setExpression(':c_n;');
@@ -180,5 +178,4 @@ class AF_PopulateTest extends AF_Populate
 
         echo "\t\tAF created".PHP_EOL;
     }
-
 }

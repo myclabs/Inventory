@@ -1,0 +1,110 @@
+<?php
+use AF\Domain\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\SubInputSet;
+use AF\Domain\Output\OutputSet;
+
+/** @var $inputSet PrimaryInputSet|null */
+$inputSet = $this->inputSet;
+$locale = Core_Locale::loadDefault();
+
+
+if (!$inputSet || !$inputSet->isInputComplete()) {
+    echo '<p>' . __('AF', 'inputInput', 'incompleteInput') . '</p>';
+    return;
+}
+
+if (!$inputSet->isCalculationComplete()) {
+    echo '<p>' . __('AF', 'inputInput', 'completeInputIncompleteCalculations') . '</p>';
+    return;
+}
+
+
+/** @var $outputSet OutputSet */
+$outputSet = $inputSet->getOutputSet();
+$indicators = $outputSet ? $outputSet->getIndicators() : [];
+
+if (count($indicators) == 0) {
+    echo '<p>' . __('AF', 'inputInput', 'completeInputNoResult') . '</p>';
+}
+
+
+// Affiche les résultats pour chaque indicateur
+foreach ($indicators as $indicator) {
+
+    $refIndicator = $indicator->getRef();
+    $outputTotal = $outputSet->getTotalByIndicator($indicator);
+    $formattedUnit = $indicator->getUnit()->getSymbol();
+
+    echo "<h2>{$indicator->getLabel()}</h2>";
+
+    if (!empty($outputTotal)) {
+        echo "<h3>" . __('UI', 'name', 'total') . __('UI', 'other', ':')
+            . $locale->formatNumber($outputTotal->getValue()->getDigitalValue(), 3) . " "
+            . $formattedUnit . "</h3>";
+    }
+
+    $contextIndicators = $outputSet->getContextIndicatorsByIndicator($indicator);
+
+    // Détail des résultats pour chaque contexte.
+    foreach ($contextIndicators as $contextIndicator) {
+
+        $axes = $contextIndicator->getAxes();
+
+        // On n'affiche pas le libellé du contexte.
+        $columnLabel = __('UI', 'name', 'label');
+        $columnValue = __('UI', 'name', 'value');
+        $columnUncertainty = __('UI', 'name', 'uncertainty');
+        $columnFreeLabel = __('AF', 'inputInput', 'freeLabel');
+
+        $indexColumns = "";
+        foreach ($axes as $axis) {
+            $indexColumns .= "<th>" . $axis->getLabel() . "</th>";
+        }
+
+        echo "<table class='table table-bordered table-hover'>
+                <thead>
+                <tr>
+                    <th>$columnLabel</th>
+                    <th>$columnValue ($formattedUnit)</th>
+                    <th>$columnUncertainty (%)</th>
+                    $indexColumns
+                    <th>$columnFreeLabel</th>
+                </tr>
+                </thead>
+                <tbody>";
+
+        $outputSet = $inputSet->getOutputSet();
+        foreach ($outputSet->getElements() as $outputElement) {
+            if ($outputElement->getContextIndicator() !== $contextIndicator) {
+                continue;
+            }
+            echo "<tr>";
+            echo "<td>" . $outputElement->getLabel() . "</td>";
+            echo "<td>" . $locale->formatNumber($outputElement->getValue()->getDigitalValue(), 3) . "</td>";
+            echo "<td>" . $locale->formatInteger($outputElement->getValue()->getRelativeUncertainty()) . "</td>";
+
+            // Indexation de l'élément
+            foreach ($axes as $axis) {
+                $index = $outputElement->getIndexForAxis($axis);
+                $member = $index->getMember();
+                if ($member) {
+                    echo "<td>" . $member->getLabel() . "</td>";
+                }
+            }
+
+            // Free label
+            $elementInputSet = $outputElement->getInputSet();
+            if ($elementInputSet instanceof SubInputSet) {
+                echo "<td>" . $elementInputSet->getFreeLabel() . "</td>";
+            } else {
+                echo "<td></td>";
+            }
+
+            echo "</tr>";
+        }
+
+        echo "</tbody>
+            </table>";
+    }
+
+}

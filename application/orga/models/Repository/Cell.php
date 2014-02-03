@@ -1,4 +1,5 @@
 <?php
+use AF\Domain\InputSet\PrimaryInputSet;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -28,7 +29,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
         }
 
         $arrayAuthorisedAFQuery = array(
-            AF_Model_InputSet_Primary::getAlias().AF_Model_InputSet_Primary::QUERY_COMPLETION,
+            PrimaryInputSet::getAlias().PrimaryInputSet::QUERY_COMPLETION,
         );
 
         $needsJoinToAF = false;
@@ -52,7 +53,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
         if ($needsJoinToAF) {
             $queryBuilder->leftJoin(
                 Orga_Model_Cell::getAlias().'.aFInputSetPrimary',
-                AF_Model_InputSet_Primary::getAlias()
+                PrimaryInputSet::getAlias()
             );
         }
     }

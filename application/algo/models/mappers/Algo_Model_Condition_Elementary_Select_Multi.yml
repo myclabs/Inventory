@@ -1,4 +1,0 @@
-Algo_Model_Condition_Elementary_Select_Multi:
-  type: entity
-  repositoryClass: Core_Model_Repository_Ordered
-  table: Algo_Condition_Elementary_Select_Multi

@@ -1,0 +1,38 @@
+AF\Domain\Action\Action:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: AF_Action
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_action
+    type: string
+  discriminatorMap:
+    setstate: AF\Domain\Action\SetState
+    setoptionstate: AF\Domain\Action\SetOptionState
+    setalgovalue: AF\Domain\Action\SetAlgoValue
+    setvalue_numeric: AF\Domain\Action\SetValue\SetNumericFieldValue
+    setvalue_checkbox: AF\Domain\Action\SetValue\SetCheckboxValue
+    setvalue_select_single: AF\Domain\Action\SetValue\Select\SetSelectSingleValue
+    setvalue_select_multi: AF\Domain\Action\SetValue\Select\SetSelectMultiValue
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  manyToOne:
+    targetComponent:
+      targetEntity: AF\Domain\Component\Component
+      inversedBy: actions
+      joinColumn:
+        name: idTargetComponent
+        referencedColumnName: id
+        nullable: false
+    condition:
+      targetEntity: AF\Domain\Condition\Condition
+      joinColumn:
+        name: idCondition
+        referencedColumnName: id
+        nullable: true

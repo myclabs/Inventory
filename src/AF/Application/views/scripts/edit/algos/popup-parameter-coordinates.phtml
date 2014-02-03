@@ -1,0 +1,75 @@
+<?php
+/**
+ * @author  matthieu.napoli
+ * @package AF
+ */
+use AF\Domain\AF;
+use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
+use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
+use Techno\Domain\Family\Family;
+
+/** @var $af AF */
+$af = $this->af;
+/** @var $algo NumericParameterAlgo */
+$algo = $this->algo;
+/** @var $family Family */
+$family = $this->family;
+
+if ($family === null) {
+    echo __('AF', '', 'familyNotFound');
+    return;
+}
+
+// Datagrid des coordonnées fixées
+$datagridFixed = new UI_Datagrid('coordinatesFixed', 'datagrid_edit_algos_numeric-parameter_coordinates-fixed', 'af');
+$datagridFixed->pagination = false;
+$datagridFixed->addElements = true;
+$datagridFixed->addPanelTitle = __('AF', 'configTreatmentDatagrid', 'fixedCoordinateAddPanelTitle');
+$datagridFixed->deleteElements = true;
+$datagridFixed->addParam('id', $af->getId());
+$datagridFixed->addParam('idAlgo', $algo->getId());
+// Colonne dimension
+$dimensionColumn = new UI_Datagrid_Col_List('dimension', __('Techno', 'name', 'dimension'));
+$dimensionColumn->list = [];
+foreach ($family->getDimensions() as $dimension) {
+    $dimensionColumn->list[$dimension->getId()] = $dimension->getLabel();
+}
+$datagridFixed->addCol($dimensionColumn);
+// Colonne membre
+$memberRef = new UI_Datagrid_Col_List('member', __('UI', 'name', 'element'));
+$memberRef->editable = true;
+$memberRef->addable = false;
+$memberRef->dynamicList = true;
+$memberRef->list = $this->baseUrl('af/datagrid_edit_algos_numeric-parameter_coordinates-fixed/get-member-list/');
+$datagridFixed->addCol($memberRef);
+
+// Datagrid des coordonnées déterminées par un algorithme
+$datagridAlgo = new UI_Datagrid('coordinatesAlgo', 'datagrid_edit_algos_numeric-parameter_coordinates-algo', 'af');
+$datagridAlgo->pagination = false;
+$datagridAlgo->addElements = true;
+$datagridAlgo->addPanelTitle = __('AF', 'configTreatmentDatagrid', 'algoCoordinateAddPanelTitle');
+$datagridAlgo->deleteElements = true;
+$datagridAlgo->addParam('id', $af->getId());
+$datagridAlgo->addParam('idAlgo', $algo->getId());
+// Colonne dimension
+$datagridAlgo->addCol($dimensionColumn);
+// Algorithme
+$algoColumn = new UI_Datagrid_Col_List('algo', __('Algo', 'name', 'algorithm'));
+$algoColumn->editable = true;
+$algoColumn->list = [];
+foreach ($af->getAlgos() as $algo) {
+    if ($algo instanceof TextKeySelectionAlgo) {
+        /** @var $algo TextKeySelectionAlgo */
+        $algoColumn->list[$algo->getId()] = $algo->getRef();
+    }
+}
+$datagridAlgo->addCol($algoColumn);
+?>
+
+<h2><?=__('AF', 'configTreatmentDatagrid', 'fixedCoordinatesPopupTitle')?></h2>
+
+<?=$datagridFixed->render()?>
+
+<h2><?=__('AF', 'configTreatmentDatagrid', 'algoCoordinatesPopupTitle')?></h2>
+
+<?=$datagridAlgo->render();

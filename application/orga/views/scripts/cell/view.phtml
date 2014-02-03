@@ -1,4 +1,5 @@
 <?php
+use AF\Domain\InputSet\PrimaryInputSet;
 use Orga\ViewModel\CellViewModel;
 use Orga\ViewModel\CellViewModelFactory;
 use Orga\Model\ACL\Role\CellAdminRole;
@@ -16,10 +17,10 @@ $inventoryStatusFilters = [
 ];
 $inputStatusFilters = [
     null => ___('Orga', 'view', 'allInputStatus'),
-    AF_Model_InputSet_Primary::STATUS_FINISHED => ___('AF', 'inputInput', 'statusFinished'),
-    AF_Model_InputSet_Primary::STATUS_COMPLETE => ___('AF', 'inputInput', 'statusComplete'),
-    AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => ___('AF', 'inputInput', 'statusCalculationIncomplete'),
-    AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => ___('AF', 'inputInput', 'statusInputIncomplete'),
+    PrimaryInputSet::STATUS_FINISHED => ___('AF', 'inputInput', 'statusFinished'),
+    PrimaryInputSet::STATUS_COMPLETE => ___('AF', 'inputInput', 'statusComplete'),
+    PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE => ___('AF', 'inputInput', 'statusCalculationIncomplete'),
+    PrimaryInputSet::STATUS_INPUT_INCOMPLETE => ___('AF', 'inputInput', 'statusInputIncomplete'),
     \Orga\ViewModel\CellViewModel::AF_STATUS_NOT_STARTED => ___('Orga', 'view', 'statusNotStarted'),
     \Orga\ViewModel\CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => ___('Orga', 'view', 'statusAFNotConfigured'),
     \Orga\ViewModel\CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => ___('Orga', 'view', 'inventoryNotLaunched'),

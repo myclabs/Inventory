@@ -1,5 +1,22 @@
 <?php
 
+use AF\Domain\AF;
+use AF\Domain\InputService;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\Group;
+use AF\Domain\Component\TextField;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Component\Checkbox;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Component\SubAF\RepeatedSubAF;
+use AF\Domain\Component\SubAF\NotRepeatedSubAF;
+use AF\Domain\Input\TextFieldInput;
+use AF\Domain\Input\NumericFieldInput;
+use AF\Domain\Input\CheckboxInput;
+use AF\Domain\Input\Select\SelectSingleInput;
+use AF\Domain\Input\Select\SelectMultiInput;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Doctrine\ORM\EntityManager;
 use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\Model\ACL\Role\CellManagerRole;
@@ -194,7 +211,7 @@ class Orga_Populate extends Core_Script_Action
         $refAF
     ) {
         $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)->setAF(
-            AF_Model_AF::loadByRef($refAF)
+            AF::loadByRef($refAF)
         );
     }
 
@@ -218,39 +235,39 @@ class Orga_Populate extends Core_Script_Action
             )->getAF();
         }
 
-        $inputSetPrimary = new AF_Model_InputSet_Primary($aF);
+        $inputSetPrimary = new PrimaryInputSet($aF);
 
         foreach ($values as $refComponent => $value) {
-            $component = AF_Model_Component::loadByRef($refComponent, $aF);
-            if (($component instanceof AF_Model_Component_SubAF_NotRepeated)
-                || ($component instanceof AF_Model_Component_SubAF_Repeated)
-                || ($component instanceof AF_Model_Component_Group)) {
+            $component = Component::loadByRef($refComponent, $aF);
+            if (($component instanceof NotRepeatedSubAF)
+                || ($component instanceof RepeatedSubAF)
+                || ($component instanceof Group)) {
                 continue;
             }
 
-            if ($component instanceof AF_Model_Component_Numeric) {
+            if ($component instanceof NumericField) {
                 // Champ numérique
-                $inputType = AF_Model_Input_Numeric::class;
-            } elseif ($component instanceof AF_Model_Component_Text) {
+                $inputType = NumericFieldInput::class;
+            } elseif ($component instanceof TextField) {
                 // Champ texte
-                $inputType = AF_Model_Input_Text::class;
-            } elseif ($component instanceof AF_Model_Component_Checkbox) {
+                $inputType = TextFieldInput::class;
+            } elseif ($component instanceof Checkbox) {
                 // Champ checkbox
-                $inputType = AF_Model_Input_Checkbox::class;
-            } elseif ($component instanceof AF_Model_Component_Select_Single) {
+                $inputType = CheckboxInput::class;
+            } elseif ($component instanceof SelectSingle) {
                 // Champ de sélection simple
-                $inputType = AF_Model_Input_Select_Single::class;
-            } elseif ($component instanceof AF_Model_Component_Select_Multi) {
+                $inputType = SelectSingleInput::class;
+            } elseif ($component instanceof SelectMulti) {
                 // Champ de sélection multiple
-                $inputType = AF_Model_Input_Select_Multi::class;
+                $inputType = SelectMultiInput::class;
             }
 
             $input = new $inputType($inputSetPrimary, $component);
             $input->setValue($value);
         }
 
-        /* @var AF_Service_InputService $inputService */
-        $inputService = $container->get(AF_Service_InputService::class);
+        /* @var InputService $inputService */
+        $inputService = $container->get(InputService::class);
         $inputService->updateResults($inputSetPrimary);
         $inputSetPrimary->markAsFinished($finished);
         $inputSetPrimary->save();

@@ -1,0 +1,14 @@
+AF\Domain\Input\CheckboxInput:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: AF_Input_Checkbox
+
+  gedmo:
+    loggable: true
+
+  fields:
+    value:
+      type: boolean
+      nullable: false
+      gedmo:
+        - versioned

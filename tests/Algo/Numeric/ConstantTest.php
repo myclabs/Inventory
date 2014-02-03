@@ -2,10 +2,10 @@
 
 namespace Tests\Algo\Numeric;
 
-use Algo_Model_Algo;
-use Algo_Model_InputSet;
-use Algo_Model_Numeric_Constant;
-use Algo_Model_Set;
+use AF\Domain\Algorithm\Algo;
+use AF\Domain\Algorithm\InputSet;
+use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
+use AF\Domain\Algorithm\AlgoSet;
 use Calc_UnitValue;
 use Classif_Model_Context;
 use Classif_Model_ContextIndicator;
@@ -19,11 +19,11 @@ class ConstantTest extends TestCase
 {
     public static function generateObject()
     {
-        $set = new Algo_Model_Set();
+        $set = new AlgoSet();
         $set->save();
         self::getEntityManager()->flush();
 
-        $o = new Algo_Model_Numeric_Constant();
+        $o = new NumericConstantAlgo();
         $o->setSet($set);
         $o->setRef(strtolower(Core_Tools::generateString(20)));
         $o->setUnitValue(self::generateUnitValue());
@@ -34,7 +34,7 @@ class ConstantTest extends TestCase
         return $o;
     }
 
-    public static function deleteObject(Algo_Model_Numeric_Constant $o)
+    public static function deleteObject(NumericConstantAlgo $o)
     {
         $o->delete();
         $o->getSet()->delete();
@@ -87,10 +87,10 @@ class ConstantTest extends TestCase
 
     public static function setUpBeforeClass()
     {
-        foreach (Algo_Model_Set::loadList() as $o) {
+        foreach (AlgoSet::loadList() as $o) {
             $o->delete();
         }
-        foreach (Algo_Model_Algo::loadList() as $o) {
+        foreach (Algo::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_Context::loadList() as $o) {
@@ -107,12 +107,12 @@ class ConstantTest extends TestCase
 
     public function testConstruct()
     {
-        $set = new Algo_Model_Set();
+        $set = new AlgoSet();
         $set->save();
         $this->entityManager->flush();
         $unitValue = ConstantTest::generateUnitValue();
 
-        $o = new Algo_Model_Numeric_Constant();
+        $o = new NumericConstantAlgo();
         $o->setSet($set);
         $o->setRef(strtolower(Core_Tools::generateString(20)));
         $o->setUnitValue($unitValue);
@@ -126,24 +126,24 @@ class ConstantTest extends TestCase
 
     /**
      * @depends testConstruct
-     * @param Algo_Model_Numeric_Constant $o
-     * @return Algo_Model_Numeric_Constant $o
+     * @param \AF\Domain\Algorithm\Numeric\NumericConstantAlgo $o
+     * @return NumericConstantAlgo $o
      */
-    public function testLoad(Algo_Model_Numeric_Constant $o)
+    public function testLoad(NumericConstantAlgo $o)
     {
         $this->entityManager->clear();
-        /** @var $oLoaded Algo_Model_Numeric_Constant */
-        $oLoaded = Algo_Model_Numeric_Constant::load($o->getKey());
-        $this->assertInstanceOf(Algo_Model_Numeric_Constant::class, $oLoaded);
+        /** @var $oLoaded \AF\Domain\Algorithm\Numeric\NumericConstantAlgo */
+        $oLoaded = NumericConstantAlgo::load($o->getKey());
+        $this->assertInstanceOf(NumericConstantAlgo::class, $oLoaded);
         $this->assertEquals($o->getUnit()->getRef(), $oLoaded->getUnit()->getRef());
         return $oLoaded;
     }
 
     /**
      * @depends testLoad
-     * @param Algo_Model_Numeric_Constant $o
+     * @param \AF\Domain\Algorithm\Numeric\NumericConstantAlgo $o
      */
-    public function testDelete(Algo_Model_Numeric_Constant $o)
+    public function testDelete(NumericConstantAlgo $o)
     {
         $o->delete();
         $o->getSet()->delete();
@@ -155,7 +155,7 @@ class ConstantTest extends TestCase
     public function testExecute()
     {
         $numericConstant = ConstantTest::generateObject();
-        $inputSet = $this->getMockForAbstractClass(Algo_Model_InputSet::class);
+        $inputSet = $this->getMockForAbstractClass(InputSet::class);
         $result = $numericConstant->execute($inputSet);
         $this->assertTrue($result instanceof Calc_UnitValue);
     }

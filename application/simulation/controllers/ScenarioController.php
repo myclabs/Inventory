@@ -4,6 +4,8 @@
  * @package Simulation
  */
 
+use AF\Application\AFViewConfiguration;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 
@@ -36,7 +38,7 @@ class Simulation_ScenarioController extends Core_Controller
         $scenario = Simulation_Model_Scenario::load($this->getParam('idScenario'));
 
 
-        $viewConfiguration = new AF_ViewConfiguration();
+        $viewConfiguration = new AFViewConfiguration();
         $viewConfiguration->setPageTitle(
             $scenario->getLabel().
                 ' <small> '.$scenario->getSet()->getLabel().' | '.$scenario->getSet()->getAF()->getLabel().'</small>'
@@ -70,7 +72,7 @@ class Simulation_ScenarioController extends Core_Controller
         /** @var Simulation_Model_Scenario $scenario */
         $scenario = Simulation_Model_Scenario::load($this->getParam('idScenario'));
         $inputSetContainer = $this->getParam('inputSetContainer');
-        /** @var $newInputSet AF_Model_InputSet_Primary */
+        /** @var $newInputSet PrimaryInputSet */
         $newInputSet = $inputSetContainer->inputSet;
 
         $this->inputService->editInput($scenario, $newInputSet);

@@ -1,0 +1,22 @@
+AF\Domain\InputSet\PrimaryInputSet:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: AF_InputSet_Primary
+
+  fields:
+    finished:
+      type: boolean
+      nullable: false
+    calculationComplete:
+      type: boolean
+      nullable: false
+    errorMessage:
+      type: string
+      nullable: true
+
+  oneToOne:
+    outputSet:
+      targetEntity: AF\Domain\Output\OutputSet
+      mappedBy: inputSet
+      orphanRemoval: true
+      cascade: [ all ]

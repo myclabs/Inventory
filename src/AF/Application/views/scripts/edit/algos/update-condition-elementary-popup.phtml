@@ -1,0 +1,120 @@
+<?php
+use AF\Domain\AF;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Algorithm\Condition\NumericConditionAlgo;
+use AF\Domain\Algorithm\Condition\BooleanConditionAlgo;
+use AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo;
+use AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo;
+use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
+
+/**
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $af AF */
+$af = $this->af;
+/** @var $algo ElementaryConditionAlgo */
+$algo = $this->algo;
+
+$form = new UI_Form('updateConditionElementary');
+$form->setAjax(false);
+$form->setAction('af/edit_algos/update-condition-elementary-submit/idAf/' . $af->getId()
+                     . '/idAlgo/' . $algo->getId());
+
+// Relation
+$relationSelect = new UI_Form_Element_Select('relation');
+$relationSelect->setLabel(__('UI', 'name', 'relation'));
+$relationSelect->setValue($algo->getRelation());
+$form->addElement($relationSelect);
+// Options de la liste
+$optionEqual = new UI_Form_Element_Option('equal', ElementaryConditionAlgo::RELATION_EQUAL);
+$optionEqual->label = __('AF', 'configInteractionDatagrid', 'equalOption');
+$optionNotEqual = new UI_Form_Element_Option('nequal', ElementaryConditionAlgo::RELATION_NOTEQUAL);
+$optionNotEqual->label = __('AF', 'configInteractionDatagrid', 'differentOption');
+$optionSuperior = new UI_Form_Element_Option('gt', ElementaryConditionAlgo::RELATION_GT);
+$optionSuperior->label = __('AF', 'configInteractionDatagrid', 'greaterOption');
+$optionInferior = new UI_Form_Element_Option('lt', ElementaryConditionAlgo::RELATION_LT);
+$optionInferior->label = __('AF', 'configInteractionDatagrid', 'lowerOption');
+$optionSuperiorOrEqual = new UI_Form_Element_Option('ge', ElementaryConditionAlgo::RELATION_GE);
+$optionSuperiorOrEqual->label = __('AF', 'configInteractionDatagrid', 'greaterOrEqualOption');
+$optionInferiorOrEqual = new UI_Form_Element_Option('le', ElementaryConditionAlgo::RELATION_LE);
+$optionInferiorOrEqual->label = __('AF', 'configInteractionDatagrid', 'lowerOrEqualOption');
+$optionContains = new UI_Form_Element_Option('contains', ElementaryConditionAlgo::RELATION_CONTAINS);
+$optionContains->label = __('AF', 'configInteractionDatagrid', 'containsOption');
+$optionNotContains = new UI_Form_Element_Option('notcontains', ElementaryConditionAlgo::RELATION_NOTCONTAINS);
+$optionNotContains->label = __('AF', 'configInteractionDatagrid', 'doesNotContainOption');
+
+if ($algo instanceof NumericConditionAlgo) {
+    /** @var $algo NumericConditionAlgo */
+    // Relation
+    $relationSelect->addOption($optionEqual);
+    $relationSelect->addOption($optionNotEqual);
+    $relationSelect->addOption($optionSuperior);
+    $relationSelect->addOption($optionInferior);
+    $relationSelect->addOption($optionSuperiorOrEqual);
+    $relationSelect->addOption($optionInferiorOrEqual);
+    // Value
+    $numericValueField = new UI_Form_Element_Text('value');
+    $numericValueField->setLabel(__('UI', 'name', 'referenceValue'));
+    $numericValueField->setValue($algo->getValue());
+    $form->addElement($numericValueField);
+}
+
+if ($algo instanceof BooleanConditionAlgo) {
+    /** @var $algo \AF\Domain\Algorithm\Condition\BooleanConditionAlgo */
+    // Relation
+    $relationSelect->addOption($optionEqual);
+    // Value
+    $checkboxValueField = new UI_Form_Element_Select('value');
+    $checkboxValueField->setLabel(__('UI', 'name', 'referenceValue'));
+    $optionChecked = new UI_Form_Element_Option('checked', 1);
+    $optionChecked->label = __('UI', 'property', 'checked');
+    $checkboxValueField->addOption($optionChecked);
+    $optionUncheked = new UI_Form_Element_Option('unchecked', 0);
+    $optionUncheked->label = __('UI', 'property', 'unchecked');
+    $checkboxValueField->addOption($optionUncheked);
+    $checkboxValueField->setValue($algo->getValue());
+    $form->addElement($checkboxValueField);
+}
+
+if ($algo instanceof SelectSingleConditionAlgo) {
+    /** @var $algo \AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo */
+    // Relation
+    $relationSelect->addOption($optionEqual);
+    $relationSelect->addOption($optionNotEqual);
+    // Value
+    $selectSingleField = new UI_Form_Element_Select('value');
+    $selectSingleField->setLabel(__('UI', 'name', 'referenceValue'));
+    // Ajout d'une option vide
+    $selectSingleField->addNullOption('', null);
+    /** @var $field SelectSingle */
+    $field = SelectSingle::loadByRef($algo->getInputRef(), $af);
+    foreach ($field->getOptions() as $option) {
+        $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getRef(), $option->getRef());
+        $selectSingleField->addOption($uiOption);
+    }
+    $selectSingleField->setValue($algo->getValue());
+    $form->addElement($selectSingleField);
+}
+
+if ($algo instanceof SelectMultiConditionAlgo) {
+    /** @var $algo \AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo */
+    // Relation
+    $relationSelect->addOption($optionContains);
+    $relationSelect->addOption($optionNotContains);
+    // Value
+    $selectField = new UI_Form_Element_Select('value');
+    $selectField->setLabel(__('UI', 'name', 'referenceValue'));
+    /** @var $field SelectMulti */
+    $field = SelectMulti::loadByRef($algo->getInputRef(), $af);
+    foreach ($field->getOptions() as $option) {
+        $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getRef(), $option->getRef());
+        $selectField->addOption($uiOption);
+    }
+    $selectField->setValue($algo->getValue());
+    $form->addElement($selectField);
+}
+
+$form->addSubmitButton();
+echo $form->render();

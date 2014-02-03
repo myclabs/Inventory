@@ -1,0 +1,69 @@
+<?php
+use AF\Domain\AF;
+use AF\Domain\Component\SubAF;
+
+/**
+ * Sous-AF de l'onglet "Composants"
+ * @author  matthieu.napoli
+ * @author  yoann.croizer
+ * @package AF
+ */
+/** @var $af \AF\Domain\AF */
+$af = $this->af;
+
+// Datagrid
+$datagrid = new UI_Datagrid('subAfNotRepeatedDatagrid', 'datagrid_edit_components_sub-af-not-repeated', 'af');
+$datagrid->initialLoading = false;
+$datagrid->addParam('id', $af->getId());
+$datagrid->pagination = false;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('AF', 'configComponentDatagrid', 'nonRepeatedSubformAddPanelTitle');
+$datagrid->deleteElements = true;
+
+// Label
+$subafLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$subafLabel->editable = true;
+$datagrid->addCol($subafLabel);
+// Ref
+$subafRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$subafRef->editable = true;
+$datagrid->addCol($subafRef);
+// Ref du formulaire associé
+$targetAF = new UI_Datagrid_Col_List('targetAF', __('AF', 'configComponentDatagrid', 'associatedFormHeader'));
+$targetAF->list = [];
+foreach (AF::loadList() as $currentAf) {
+    /** @var $currentAf \AF\Domain\AF */
+    if ($currentAf->getId() != $af->getId()) {
+        $targetAF->list[$currentAf->getId()] = $currentAf->getLabel();
+    }
+}
+$targetAF->withEmptyElement = false;
+$targetAF->editable = true;
+$datagrid->addCol($targetAF);
+// Help
+$help = new UI_Datagrid_Col_LongText('help', __('UI', 'name', 'help'));
+$help->editable = true;
+$help->popup->title = __('UI', 'name', 'help');
+$datagrid->addCol($help);
+// Hidden / Show
+$isVisible = new UI_Datagrid_Col_Bool('isVisible', __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));
+$isVisible->editable = true;
+$isVisible->defaultAddValue = true;
+$isVisible->textTrue = __('UI', 'property', 'visible');
+$isVisible->textFalse = __('UI', 'property', 'masked');
+$isVisible->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'visible');
+$isVisible->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'masked');
+$datagrid->addCol($isVisible);
+// Foldaway / Unfoldaway
+$foldaway = new UI_Datagrid_Col_List('foldaway', __('AF', 'configComponentDatagrid', 'foldawayHeader'));
+$foldaway->editable = true;
+$foldaway->defaultAddValue = SubAF::FOLDAWAY;
+$foldaway->withEmptyElement = false;
+$foldaway->list = [
+    SubAF::UNFOLDAWAY => __('UI', 'property', 'nonFoldaway'),
+    SubAF::FOLDAWAY   => __('UI', 'property', 'foldaway'),
+    SubAF::FOLDED     => __('UI', 'property', 'folded'),
+];
+//$datagrid->addCol($foldaway);
+
+echo $datagrid->render();

@@ -1,9 +1,0 @@
-Algo_Model_Selection_TextKey_Expression:
-  type: entity
-  repositoryClass: Core_Model_Repository_Ordered
-  table: Algo_Selection_TextKey_Expression
-
-  fields:
-    expression:
-      type: text
-      nullable: false
