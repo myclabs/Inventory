@@ -553,6 +553,9 @@ class Orga_Service_OrganizationService
         $timeAxis = new Orga_Model_Axis($organization, 'annee');
         $timeAxis->setLabel('Année');
         $timeAxis->save();
+        $year2013 = new Orga_Model_Member($timeAxis, '2012');
+        $year2013->setLabel('2012');
+        $year2013->save();
         $year2013 = new Orga_Model_Member($timeAxis, '2013');
         $year2013->setLabel('2013');
         $year2013->save();
