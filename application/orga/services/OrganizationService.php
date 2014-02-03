@@ -83,6 +83,9 @@ class Orga_Service_OrganizationService
             $organization = new Orga_Model_Organization();
             $organization->setLabel($labelOrganization);
 
+            $organization->save();
+            $this->entityManager->flush();
+
             // Création d'une granularité globale par défaut.
             $defaultGranularity = new Orga_Model_Granularity($organization);
             $defaultGranularity->setCellsWithACL(true);
