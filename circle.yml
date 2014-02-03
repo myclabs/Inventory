@@ -39,3 +39,4 @@ database:
 test:
   override:
     - phpunit
+    - php scripts/build/build.php -e testsunitaires create update populate populateTest

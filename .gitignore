@@ -3,6 +3,7 @@
 .vagrant/*
 vendor/*
 composer.phar
+bin/
 
 behat/selenium-server-standalone.jar
 

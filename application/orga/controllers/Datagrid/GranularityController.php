@@ -27,6 +27,13 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+
+        try {
+            $granularityForinventoryStatus = $organization->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForinventoryStatus = null;
+        }
+
         $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_ORGANIZATION, $organization);
         $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
         /**@var Orga_Model_Granularity $granularity */
@@ -39,13 +46,16 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             }
             $data['axes'] = $this->cellList($listAxes);
             $data['relevance'] = $granularity->getCellsControlRelevance();
-            $data['afs'] = $granularity->isInput();
-            if (!$data['afs']) {
-                $this->editableCell($data['afs'], false);
+            $data['input'] = $granularity->isInput();
+            if (!$data['input']) {
+                $this->editableCell($data['input'], false);
             }
+            $data['afs'] = $granularity->hasInputGranularities();
+            $data['inventory'] = ($granularity === $granularityForinventoryStatus);
             $data['reports'] = $granularity->getCellsGenerateDWCubes();
             $data['acl'] = $granularity->getCellsWithACL();
-            if (!($granularity->hasAxes())) {
+            if (!($granularity->hasAxes())
+                || $data['relevance'] || $data['input'] || $data['afs'] || $data['reports'] || $data['acl']) {
                 $data['delete'] = false;
             }
             $this->addLine($data);
@@ -134,7 +144,8 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             // Pas de granularité des inventares.
         }
 
-        if ($granularity->getCellsWithACL() || $granularity->isInput() || $granularity->hasInputGranularities()) {
+        if ($granularity->getCellsWithACL() || $granularity->isInput() || $granularity->getCellsControlRelevance()
+            || $granularity->hasInputGranularities() || $granularity->getCellsGenerateDWCubes()) {
             throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
         }
 

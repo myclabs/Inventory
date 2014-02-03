@@ -1,5 +1,6 @@
 <?php
 use AF\Domain\InputSet\PrimaryInputSet;
+use Orga\ViewModel\CellViewModel;
 use Orga\ViewModel\CellViewModelFactory;
 use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\Model\ACL\Role\CellManagerRole;
@@ -32,13 +33,6 @@ $currentCell = $this->currentCell;
 ?>
 
 <style>
-    .label-danger, .badge-danger { background-color: #b94a48; }
-    .label-important[href], .badge-important[href] { background-color: #953B39; }
-    .progress { margin-bottom: 5px; margin-top: 5px; }
-
-    .cell-actions a { margin-left: 8px; padding: 5px; }
-    .cell-actions a:hover, .users .modal-body a:hover, .reports .modal-body a:hover { opacity: 0.25; }
-
     .users .user-message { font-weight: bold; }
     .users .modal-body { padding: 0; }
     .users .modal-body table { margin: 0; }
@@ -63,35 +57,61 @@ $currentCell = $this->currentCell;
     .exports .modal-body .alert { margin-bottom: 5px; }
     .exports .modal-body form { margin: 0; }
 
-    .inventory-status .label { font-size: 11.9px; font-weight: normal; padding: 4px 12px; }
-    .inventory-status > a { margin: 0 5px; }
-    .input-status .badge { font-size: 11.9px; font-weight: normal; line-height: nomal; padding: 4px 12px; }
-    .input-status > a { margin: 0 5px; }
+    .cell { padding: 5px; font-size: 16px; }
+    .cell h2, .cell h4 { margin: 10px; overflow: hidden; }
+    .cell .cell-actions { float: right; }
+    .cell .inventory-status { position: relative; border-top: 1px solid #bbbbbb; color: #ffffff; background-color: #dddddd; }
+    .cell .inventory-status .inventory-progress { position: absolute; top: 0; left: 0; height: 100%; background-color: #bbbbbb; }
+    .cell .inventory-status .inventory-informations { display: inline-block; position: relative; overflow: hidden; vertical-align: top; }
+    .cell .inventory-status .inventory-informations .inventory-title { display: inline-block; margin-top: 15px; margin-bottom: 15px; margin-left: 10px; }
+    .cell .inventory-status .inventory-informations .inventory-completion { display: inline-block; margin-left: 5px; vertical-align: bottom; color: #222222; opacity: 0.15; font-size: 45px; font-weight: bold; }
+    .cell .inventory-status .inventory-actions { display: inline-block; position: relative; float:right; text-align: right; }
+    .cell .inventory-status .inventory-actions > a { display: inline-block; margin-top: 10px; margin-right: 10px; text-align: left; }
+    .cell .inventory-status .inventory-actions > .btn-group { display: inline-block; margin-top: 10px; margin-right: 5px; text-align: left; }
+    .cell[data-inventory-status="<?=Orga_Model_Cell::STATUS_ACTIVE?>"] .inventory-status { background-color: #a4e3f0; }
+    .cell[data-inventory-status="<?=Orga_Model_Cell::STATUS_ACTIVE?>"] .inventory-progress { background-color: #49afcd; }
+    .cell .inventory-status + .input-status { margin-top: 5px; }
+    .cell .input-status { position: relative; border-top: 1px solid #bbbbbb; color: #ffffff; background-color: #dd514c; }
+    .cell .input-status .input-actions { display: inline-block; position: relative; float:right; text-align: right; }
+    .cell .input-status .input-actions > a { display: inline-block; margin-top: 10px; margin-right: 10px; text-align: left; }
+    .cell .input-status .input-title { display: inline-block; margin-top: 15px; margin-bottom: 15px; margin-left: 10px; }
+    .cell[data-input-status="<?=AF_Model_InputSet_Primary::STATUS_FINISHED?>"] .input-status { background-color: #57a957; }
+    .cell[data-input-status="<?=AF_Model_InputSet_Primary::STATUS_COMPLETE?>"] .input-status { background-color: #f0aD4e; }
+    .cell[data-input-status="<?=AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE?>"] .input-status { background-color: #f0aD4e; }
 
     .granularity-wrapper .cells-filter > * { margin-top: 2px; }
     .granularity-wrapper .cells-filter .granularity-info { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
-    .granularity-wrapper .granularity .cell-actions { float: right; }
     .granularity-wrapper .granularity > .cell.firstRowCell { margin-left: 0; }
     .granularity-wrapper .display-more-cells { margin-left: 0; }
     .granularity-wrapper .no-cell { margin-left: 0; text-align: center; vertical-align: middle; padding: 8px 12px; font-size: 14px; font-weight: normal; }
 
-    .history { margin-bottom: 15px; }
-    .history > h3 { margin: 0; }
-    .history > hr { margin: 0 0 5px; }
-    .history > div { text-align: center; }
-    .history h4 { margin: 0 0 5px; }
-    .history .dl-horizontal { text-align: left; margin-top: 0px; }
-    .history .dl-horizontal dt { width: 65px; margin-right: 5px; }
-    .history .dl-horizontal dd { margin-left: 25px; }
-
-    .comments { margin-bottom: 15px; }
-    .comments > h3 { margin: 0; }
-    .comments > hr { margin: 0 0 5px; }
-    .comments > div { text-align: center; }
-    .comments h4 { margin: 0 0 5px; }
-    .comments .dl-horizontal { text-align: left; margin-top: 0px; }
-    .comments .dl-horizontal dt { width: 65px; margin-right: 5px; }
-    .comments .dl-horizontal dd { margin-left: 25px; }
+    .history,
+    .comments
+    { margin-bottom: 15px; }
+    .history > h3,
+    .comments > h3
+    { margin: 0; }
+    .history > h3 small,
+    .comments > h3 small
+    { margin-top: 15px; }
+    .history > hr,
+    .comments > hr
+    { margin: 0 0 5px; }
+    .history h4,
+    .comments h4
+    { border-bottom: 1px solid #eeeeee; margin-bottom: 20px; margin-top: 0; }
+    .history h4 span,
+    .comments h4 span
+    { position: relative; top: 10px; background-color: #ffffff; padding-right: 5px; color: #999999; }
+    .history div.row-fluid div.span2,
+    .comments div.row-fluid div.span2
+    { color: #999999; font-size: small; font-weight: normal; text-align: right; }
+    .history div.row-fluid + div.row-fluid,
+    .comments div.row-fluid + div.row-fluid
+    { border-top: solid 1px #eeeeee; margin-top: 8px; padding-top: 8px; }
+    .history > div > div + div,
+    .comments >div > div + div
+    { margin-top: 5px;  }
 
     #addMember { margin: 0; }
     #addMember .controls { margin-left: 0; float: right; }
@@ -123,73 +143,66 @@ $currentCell = $this->currentCell;
 
 <div class="span9" id="cellsView">
 
-    <div class="currentCell well">
+    <div class="cell current-cell well" data-inventory-status="<?=$currentCell->inventoryStatus?>" data-input-status="<?=$currentCell->inputStatus?>">
         <h2>
-            <?php if ($currentCell->showInput) : ?>
-            <a href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>" class="withTooltip">
-            <?php endif; ?>
             <?=$currentCell->extendedLabel?>
-            <?php if ($currentCell->showInput) : ?>
-            <small>
-                <i class="fa fa-external-link"></i>
-                <?=___('Orga', 'view', 'inputLinkDetail')?>
-            </small>
-            </a>
-            <?php endif; ?>
-            <small class="cell-actions">
-                <a data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'contactAdministrators')?>" class="withTooltip"><i class="fa fa-user-md"></i></a>
+            <small class="cell-actions btn-group">
+                <a class="btn btn-default withTooltip" data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'contactAdministrators')?>" data-container="body"><i class="fa fa-user-md"></i></a>
                 <?php if ($currentCell->showUsers) : ?>
-                <a data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'editUsers')?>" class="withTooltip">(<?=$currentCell->numberUsers?>) <i class="fa fa-users"></i></a>
+                <a class="btn btn-default withTooltip" data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'editUsers')?>" data-container="body">(<?=$currentCell->numberUsers?>) <i class="fa fa-users"></i></a>
                 <?php endif; ?>
                 <?php if ($currentCell->showReports) : ?>
-                <a data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'analyzeData')?>" class="withTooltip"><i class="fa fa-bar-chart-o"></i></a>
-                <a data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'exportData')?>" class="withTooltip"><i class="fa fa-download"></i></a>
+                <a class="btn btn-default withTooltip" data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body"><i class="fa fa-bar-chart-o"></i></a>
+                <a class="btn btn-default withTooltip" data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body"><i class="fa fa-download"></i></a>
                 <?php endif; ?>
             </small>
         </h2>
         <?php // Inventory ?>
         <?php if ($currentCell->showInventory) : ?>
         <div class="inventory-status">
-            <?php if ($currentCell->canEditInventory) : ?>
-            <div class="btn-group withTooltip" title="<?=___('Orga', 'view', 'inventoryStatusExplanations')?>">
-                <button class="btn btn-small dropdown-toggle btn-<?=$currentCell->inventoryStatusStyle?>" data-toggle="dropdown" data-inventory="<?=$currentCell->inventoryStatus?>">
-                    <i class="fa fa-pencil-square-o"></i>
+            <div class="inventory-progress" style="width: <?=$currentCell->inventoryCompletion?>%;"></div>
+            <div class="inventory-actions">
+                <?php if ($currentCell->canEditInventory) : ?>
+                <div class="btn-group">
+                    <a class="btn btn-default change-inventory-status" href="orga/cell/edit-inventory-status/idCell/<?=$currentCell->id?>/inventoryStatus/<?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_ACTIVE) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_ACTIVE?>/">
+                        <?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($currentCell->inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction'))?>
+                    </a>
+                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="change-inventory-status" href="orga/cell/edit-inventory-status/idCell/<?=$currentCell->id?>/inventoryStatus/<?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_NOTLAUNCHED?>/">
+                                <?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($currentCell->inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction'))?>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <?php endif; ?>
+                <a class="btn btn-default withTooltip" data-toggle="modal" href="#inventoryUsers<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'viewInventoryUsers')?>"><i class="fa fa-bullhorn"></i></a>
+            </div>
+            <div class="inventory-informations withPopover" title="<?=___('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsNotStartedMany') : ___('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsStartedMany') : ___('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? ___('Orga', 'view', 'inputsCompletedMany') : ___('Orga', 'view', 'inputsCompletedSingle')?>" data-container="body">
+                <div class="inventory-title">
                     <?=$currentCell->inventoryStatusTitle?>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <?php foreach ($cellVWFactory->inventoryStatusList as $inventoryStatusValue => $inventoryStatusLabel) : ?>
-                    <li>
-                        <a href="orga/cell/edit-inventory-status/idCell/<?=$currentCell->id?>/" data-inventory="<?=$inventoryStatusValue?>">
-                            <?=$inventoryStatusLabel?>
-                        </a>
-                    </li>
-                    <?php endforeach; ?>
-                </ul>
+                </div>
+                <div class="inventory-completion">
+                    <?=$currentCell->inventoryCompletion?>%
+                </div>
             </div>
-            <?php else: ?>
-            <span class="label label-<?=$currentCell->inventoryStatusStyle?> withTooltip" title="<?=___('Orga', 'view', 'inventoryStatusExplanations')?>">
-                <?=$currentCell->inventoryStatusTitle?>
-            </span>
-            <?php endif; ?>
-            <a href="#" class="withPopover inventoryInputsDetails" title="<?=___('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="right" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsNotStartedMany') : ___('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsStartedMany') : ___('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? ___('Orga', 'view', 'inputsCompletedMany') : ___('Orga', 'view', 'inputsCompletedSingle')?>"><i class="fa fa-tasks"></i></a>
-            <a data-toggle="modal" href="#inventoryUsers<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip"><i class="fa fa-bullhorn"></i></a>
-        </div>
-        <div class="progress withTooltip" title="<?=___('Orga', 'view', 'inventoryPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">
-            <div class="bar" style="width: <?=$currentCell->inventoryCompletion?>%">
-                <?=$currentCell->inventoryCompletion?> %
-            </div>
+            <a href="#" class="withPopover inventory-inputs-details" <i class="fa fa-tasks"></i></a>
         </div>
         <?php endif; ?>
         <?php // Input ?>
         <?php if ($currentCell->showInput) : ?>
         <div class="input-status">
-            <span class="badge badge-<?=$currentCell->inputStatusStyle?> withTooltip" title="<?=___('Orga', 'view', 'inputStatusExplanations')?>">
+            <div class="input-actions">
+                <a class="btn btn-default withTooltip" href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">
+                    <?=___('Orga', 'view', 'inputLinkDetail')?>
+                </a>
+            </div>
+            <div class="input-title">
                 <?=$currentCell->inputStatusTitle?>
-            </span>
-        </div>
-        <div class="progress progress-<?=$currentCell->inputStatusStyle?> withTooltip" title="<?=___('Orga', 'view', 'inputPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">
-            <div class="bar" style="width: <?=$currentCell->inputCompletion?>%"><?=$currentCell->inputCompletion?> %</div>
+            </div>
         </div>
         <?php endif; ?>
 
@@ -293,7 +306,7 @@ $currentCell = $this->currentCell;
              <?=$narrowerGranularityArray['isInventory'] ? ' data-inventory' : ''?>
              <?=$narrowerGranularityArray['isInput'] ? ' data-input' : ''?>
              <?=$narrowerGranularityArray['isAnalyses'] ? ' data-analyses' : ''?>
-             class="collapse<?=((count($this->narrowerGranularities) === 1)?' in':'')?>">
+             class="collapse<?=(count($this->narrowerGranularities) === 1) ? ' in': $narrowerGranularityArray['isInput'] ? ' in' : ''?>">
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
             <form class="form-inline cells-filter">
                 <?php foreach ($narrowerGranularityArray['filterAxes'] as $refAxis => $memberOptions) : ?>
@@ -349,7 +362,6 @@ $currentCell = $this->currentCell;
                 </a>
             </small>
         </h3>
-        <hr/>
         <div>
             <?=___('UI', 'loading', 'error')?>
         </div>
@@ -363,12 +375,11 @@ $currentCell = $this->currentCell;
                 </a>
             </small>
         </h3>
-        <hr/>
         <div>
             <?=___('UI', 'loading', 'error')?>
         </div>
     </div>
-    <?php if ($organization->canBeEdited) : ?>
+    <?php if ($this->canAddMembers) : ?>
     <div class="addMember">
         <h3>
             <div class="pull-right">
@@ -403,13 +414,15 @@ $('.comments a.refresh').on('click', function(e) {
             if (data.length > 0) {
                 $.each(data, function() {
                     var date = this.date;
-                    $('.comments > div').append('<div data-date="' + date + '"><h4 class="label">' + date + '</h4></div>');
+                    $('.comments > div').append('<div data-date="' + date + '"><h4><span>' + date + '</span></h4></div>');
                     var divDate = $('.comments > div > div[data-date="' + date + '"]');
-                    divDate.append('<dl class="dl-horizontal"></dl>');
-                    var dlDate = $('dl', divDate);
                     $.each(this.comments, function() {
-                        dlDate.append('<dt><span class="badge badge-info">' + this.time + '</span></dt>');
-                        dlDate.append('<dd>' + this.comment + '</dd>');
+                        divDate.append(
+                            '<div class="row-fluid">' +
+                                '<div class="span2">' + this.time + '</div>' +
+                                '<div class="span10">' + this.comment + '</div>' +
+                            '</div>'
+                        );
                     });
                 });
             } else {
@@ -435,13 +448,15 @@ $('.history a.refresh').on('click', function(e) {
             if (data.length > 0) {
                 $.each(data, function() {
                     var date = this.date;
-                    $('.history > div').append('<div data-date="' + date + '"><h4 class="label">' + date + '</h4></div>');
+                    $('.history > div').append('<div data-date="' + date + '"><h4><span>' + date + '</span></h4></div>');
                     var divDate = $('.history > div > div[data-date="' + date + '"]');
-                    divDate.append('<dl class="dl-horizontal"></dl>');
-                    var dlDate = $('dl', divDate);
                     $.each(this.events, function() {
-                        dlDate.append('<dt><span class="badge badge-info">' + this.time + '</span></dt>');
-                        dlDate.append('<dd>' + this.event + '</dd>');
+                        divDate.append(
+                            '<div class="row-fluid">' +
+                                '<div class="span2">' + this.time + '</div>' +
+                                '<div class="span10">' + this.event + '</div>' +
+                            '</div>'
+                        );
                     });
                 });
             } else {
@@ -483,27 +498,16 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
             url: 'orga/cell/view-children/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId + '/',
             type: "GET",
             success: function(data) {
-                console.log('cellsLoaded fired');
                 granularity.trigger('cellsLoaded');
                 granularity.html('');
                 granularity.attr('data-total-cells', data.totalCells);
                 $(data.childCells).each(function() {
                     var cellTitle = this.extendedLabel;
-                    if (this.showInputLink) {
-                        cellTitle =
-                        '<a href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>" class="withTooltip">' +
-                            cellTitle +
-                            '<small>' +
-                            ' <i class="fa fa-external-link"></i> ' +
-                            '<?=___('Orga', 'view', 'inputLinkDetail')?>' +
-                            '</small>' +
-                        '</a>';
-                    }
                     var usersP = '';
                     var usersPopup = '';
                     if (this.showUsers) {
                         usersP +=
-                            '<a data-toggle="modal" href="#users' + this.id + '" title="<?=___('Orga', 'view', 'editUsers')?>" class="withTooltip">' +
+                            '<a class="btn withTooltip" data-toggle="modal" href="#users' + this.id + '" title="<?=___('Orga', 'view', 'editUsers')?>" data-container="body">' +
                                 '(' + this.numberUsers + ') ' +
                                 '<i class="fa fa-users"></i>' +
                             '</a>';
@@ -533,7 +537,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var reportsPopup = '';
                     if (this.showReports) {
                         reportsP +=
-                            '<a data-toggle="modal" href="#reports' + this.id + '" title="<?=___('Orga', 'view', 'analyzeData')?>" class="withTooltip">' +
+                            '<a class="btn withTooltip" data-toggle="modal" href="#reports' + this.id + '" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body">' +
                                 '<i class="fa fa-bar-chart-o"></i>' +
                             '</a>';
                         reportsPopup +=
@@ -556,7 +560,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var exportsPopup = '';
                     if (this.showExports) {
                         exportsP +=
-                            '<a data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=___('Orga', 'view', 'exportData')?>" class="withTooltip">' +
+                            '<a class="btn withTooltip" data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body">' +
                                 '<i class="fa fa-download"></i>' +
                             '</a>';
                         exportsPopup +=
@@ -575,34 +579,39 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var inventoryPopup = '';
                     if (this.showInventory) {
                         inventoryP +=
-                            '<div class="inventory-status">';
+                            '<div class="inventory-status">' +
+                                '<div class="inventory-progress" style="width: ' + this.inventoryCompletion + '%;">' +
+                                '</div>' +
+                                '<div class="inventory-actions">';
                         if (this.canEditInventory) {
+                            var mainActionStatus = (this.inventoryStatus == '<?=Orga_Model_Cell::STATUS_ACTIVE?>') ? '<?=Orga_Model_Cell::STATUS_CLOSED?>' : '<?=Orga_Model_Cell::STATUS_ACTIVE?>';
+                            var mainActionLabel = (this.inventoryStatus == '<?=Orga_Model_Cell::STATUS_NOTLAUNCHED?>') ? '<?=___('Orga', 'view', 'inventoryNotLaunchedMainAction')?>' : (this.inventoryStatus == '<?=Orga_Model_Cell::STATUS_ACTIVE?>') ? '<?=___('Orga', 'view', 'inventoryActiveMainAction')?>' : '<?=___('Orga', 'view', 'inventoryClosedMainAction')?>';
+                            var otherActionStatus = (this.inventoryStatus == '<?=Orga_Model_Cell::STATUS_NOTLAUNCHED?>') ? '<?=Orga_Model_Cell::STATUS_CLOSED?>' : '<?=Orga_Model_Cell::STATUS_NOTLAUNCHED?>';
+                            var otherActionLabel = (this.inventoryStatus == '<?=Orga_Model_Cell::STATUS_NOTLAUNCHED?>') ? '<?=___('Orga', 'view', 'inventoryNotLaunchedOtherAction')?>' : (this.inventoryStatus == '<?=Orga_Model_Cell::STATUS_ACTIVE?>') ? '<?=___('Orga', 'view', 'inventoryActiveOtherAction')?>' : '<?=___('Orga', 'view', 'inventoryClosedOtherAction')?>';
                             inventoryP +=
-                                '<div class="btn-group withTooltip" title="<?=___('Orga', 'view', 'inventoryStatusExplanations')?>">' +
-                                    '<button class="btn btn-small dropdown-toggle btn-' + this.inventoryStatusStyle + '" data-toggle="dropdown" data-inventory="' + this.inventoryStatus + '">' +
-                                        '<i class="fa fa-pencil-square-o"></i> ' +
-                                        this.inventoryStatusTitle +
-                                        ' <span class="caret"></span>' +
-                                    '</button>' +
-                                    '<ul class="dropdown-menu">' +
-                                        <?php foreach ($cellVWFactory->inventoryStatusList as $inventoryStatusValue => $inventoryStatusLabel) : ?>
-                                        '<li>' +
-                                            '<a href="orga/cell/edit-inventory-status/idCell/' + this.id + '/" data-inventory="<?=$inventoryStatusValue?>">' +
-                                                '<?=$inventoryStatusLabel?>' +
-                                            '</a>' +
-                                        '</li>' +
-                                        <?php endforeach; ?>
-                                    '</ul>' +
-                                '</div>';
-                        } else {
-                            inventoryP +=
-                                '<span class="label label-' + this.inventoryStatusStyle + ' withTooltip" title="<?=___('Orga', 'view', 'inventoryStatusExplanations')?>">' +
-                                    this.inventoryStatusTitle +
-                                '</span>';
+                                    '<div class="btn-group">' +
+                                        '<a class="btn btn-default change-inventory-status" href="orga/cell/edit-inventory-status/idCell/' + this.id + '/inventoryStatus/' + mainActionStatus + '/">' +
+                                            mainActionLabel +
+                                        '</a>' +
+                                        '<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">' +
+                                            '<span class="caret"></span>' +
+                                        '</button>' +
+                                        '<ul class="dropdown-menu">' +
+                                            '<li>' +
+                                                '<a class="change-inventory-status" href="orga/cell/edit-inventory-status/idCell/' + this.id + '/inventoryStatus/' + otherActionStatus + '/">' +
+                                                    otherActionLabel +
+                                                '</a>' +
+                                            '</li>' +
+                                        '</ul>' +
+                                    '</div>';
                         }
                         inventoryP +=
-                                ' <a href="#" class="withPopover inventoryInputsDetails" title="<?=___('Orga', 'view', 'inventoryInputsDetails')?>"' +
-                                    'data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true"' +
+                                    '<a class="btn btn-default withTooltip" data-toggle="modal" href="#inventoryUsers' + this.id + '" title="<?=___('Orga', 'view', 'viewInventoryUsers')?>">' +
+                                        '<i class="fa fa-bullhorn"></i>' +
+                                    '</a>' +
+                                '</div>' +
+                                '<div class="inventory-informations withPopover" title="<?=___('Orga', 'view', 'inventoryInputsDetails')?>"' +
+                                    'data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-container="body" data-html="true"' +
                                     'data-content="' +
                                     this.inventoryNotStartedInputsNumber + ' ' +
                                     ((this.inventoryNotStartedInputsNumber > 1) ? '<?=___('Orga', 'view', 'inputsNotStartedMany')?>' : '<?=___('Orga', 'view', 'inputsNotStartedSingle')?>') +
@@ -613,14 +622,13 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                     this.inventoryCompletedInputsNumber + ' ' +
                                     ((this.inventoryCompletedInputsNumber > 1) ? '<?=___('Orga', 'view', 'inputsCompletedMany')?>' : '<?=___('Orga', 'view', 'inputsCompletedSingle')?>') +
                                     '">' +
-                                    '<i class="fa fa-tasks"></i>' +
-                                '</a>' +
-                                '<a data-toggle="modal" href="#inventoryUsers' + this.id + '" title="<?=___('Orga', 'view', 'viewInventoryUsers')?>" class="withTooltip">' +
-                                    '<i class="fa fa-bullhorn"></i>' +
-                                '</a>' +
-                            '</div>' +
-                            '<div class="progress withTooltip" title="<?=___('Orga', 'view', 'inventoryPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">' +
-                                '<div class="bar" style="width: ' + this.inventoryCompletion + '%">' + this.inventoryCompletion + '%</div>' +
+                                    '<div class="inventory-title">' +
+                                        this.inventoryStatusTitle +
+                                    '</div>' +
+                                    '<div class="inventory-completion">' +
+                                        this.inventoryCompletion + '% ' +
+                                    '</div>' +
+                                '</div> ' +
                             '</div>';
                         inventoryPopup +=
                             '<div id="inventoryUsers' + this.id + '" class="modal inventory-users hide fade" data-cell="' + this.id + '">' +
@@ -639,18 +647,20 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     if (this.showInput) {
                         inputStatusP =
                             '<div class="input-status">' +
-                                '<span class="badge badge-' + this.inputStatusStyle + ' withTooltip" title="<?=___('Orga', 'view', 'inputStatusExplanations')?>">' +
+                                '<div class="input-actions">' +
+                                    '<a class="btn btn-default withTooltip" href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">' +
+                                        '<?=___('Orga', 'view', 'inputLinkDetail')?>' +
+                                    '</a>' +
+                                '</div>' +
+                                '<div class="input-title">' +
                                     this.inputStatusTitle +
-                                '</span>' +
-                            '</div>' +
-                            '<div class="progress progress-' + this.inputStatusStyle + ' withTooltip" title="<?=___('Orga', 'view', 'inputPercentExplanations')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover">' +
-                                '   <div class="bar" style="width: ' + this.inputCompletion + '%">' + this.inputCompletion + ' %</div>' +
+                                '</div>' +
                             '</div>';
                     }
                     granularity.append(
                         '<div class="span4 well cell hide" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
                             '<h4>'+
-                                '<small class="cell-actions">' +
+                                '<small class="btn-group cell-actions">' +
                                     usersP +
                                     reportsP +
                                     exportsP +
@@ -686,6 +696,66 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
             }
         });
     }
+});
+$('div.collapse[id^="granularity"]').on('resizeCells', function(e) {
+    var granularity = $('.granularity', $(this));
+    
+    var maxHeight = 0;
+
+    var maxHeightInventoryActions = 0;
+    var maxWidthInventoryActions = 0;
+    var maxWidthInventoryInformations = 0;
+    
+    var maxHeightInputActions = 0;
+    var maxWidthInputActions = 0;
+    var maxWidthInputTitle = 0;
+
+    $('.cell:not(.hide)', granularity).each(function() {
+        var cellTitle = $('h4', $(this));
+        cellTitle.css('height', 'auto');
+        if (cellTitle.height() > maxHeight) {
+            maxHeight = cellTitle.height();
+        }
+
+        var inventoryActions = $('.inventory-actions', $(this));
+        inventoryActions.css('height', 'auto');
+        if (inventoryActions.height() > maxHeightInventoryActions) {
+            maxHeightInventoryActions = inventoryActions.height();
+        }
+        inventoryActions.css('width', 'auto');
+        if (inventoryActions.width() > maxWidthInventoryActions) {
+            maxWidthInventoryActions = inventoryActions.width();
+        }
+        var inventoryInformations = $('.inventory-informations', $(this));
+        inventoryInformations.css('width', 'auto');
+        if (inventoryInformations.width() > maxWidthInventoryInformations) {
+            maxWidthInventoryInformations = inventoryInformations.width();
+        }
+
+        var inputActions = $('.input-actions', $(this));
+        inputActions.css('height', 'auto');
+        if (inputActions.height() > maxHeightInputActions) {
+            maxHeightInputActions = inputActions.height();
+        }
+        inputActions.css('width', 'auto');
+        if (inputActions.width() > maxWidthInputActions) {
+            maxWidthInputActions = inputActions.width();
+        }
+        var inputTitle = $('.input-title', $(this));
+        inputTitle.css('width', 'auto');
+        if (inputTitle.width() > maxWidthInputTitle) {
+            maxWidthInputTitle = inputTitle.width();
+        }
+    });
+    $('.cell:not(.hide) h4', granularity).css('height', maxHeight);
+
+    $('.cell:not(.hide) .inventory-actions', granularity).css('height', maxHeightInventoryActions);
+    $('.cell:not(.hide) .inventory-actions', granularity).css('width', maxWidthInventoryActions);
+    $('.cell:not(.hide) .inventory-informations', granularity).css('width', maxWidthInventoryInformations);
+
+    $('.cell:not(.hide) .input-actions', granularity).css('height', maxHeightInputActions);
+    $('.cell:not(.hide) .input-actions', granularity).css('width', maxWidthInputActions);
+    $('.cell:not(.hide) .input-title', granularity).css('width', maxWidthInputTitle);
 });
 
 $('.cells-filter button.reset').on('click', function(e) {
@@ -746,7 +816,6 @@ $('div.collapse[id^="granularity"]').on('showCells', function(e) {
     $('.display-more-cells', granularity).remove();
 
     var numberElement = 0;
-    var maxHeight = 0;
     $('.cell[data-filtered]', granularity).each(function() {
         var cell = $(this);
         cell.removeClass('hide');
@@ -755,18 +824,12 @@ $('div.collapse[id^="granularity"]').on('showCells', function(e) {
             cell.addClass('firstRowCell');
         }
 
-        var cellTitle = $('h4', cell);
-        cellTitle.css('height', 'auto');
-        if (cellTitle.height() > maxHeight) {
-            maxHeight = cellTitle.height();
-        }
-
         numberElement++;
         if (numberElement > 5) {
             return false;
         }
     });
-    $('.cell:not(.hide) h4', granularity).css('height', maxHeight);
+    $(this).trigger('resizeCells');
 
     if ($('.cell[data-filtered]', granularity).length > 0) {
         granularity.append(
@@ -1017,46 +1080,58 @@ $('body').on('keyup change', 'select[name="reportType"]', function(e) {
     $('tr' + selector, reportsList).removeClass('hide');
 });
 
-$('body').on('click', '.inventory-status .dropdown-menu a', function(e) {
+$('body').on('click', '.inventory-status .inventory-actions a.change-inventory-status', function(e) {
     e.preventDefault();
     var link = $(this);
-    var button = link.parent().parent().prev();
-    if (link.attr('data-inventory') != button.attr('data-inventory')) {
-        button.html('<i class="fa fa-spinner fa-spin"></i>');
-        button.attr('class', 'btn btn-small dropdown-toggle');
-        $.ajax({
-            url: link.attr('href'),
-            type: "POST",
-            data: { inventoryStatus: link.attr('data-inventory') },
-            success: function (data) {
-                button.attr('data-inventory', data.status);
-                button.addClass('btn-' + data.style);
-                button.html('<i class="fa fa-pencil-square-o"></i> ' + data.label + ' <span class="caret"></span>');
-                button.parent().parent().parent().attr('data-inventory-status', data.status);
-                var collapse = button.parent().parent().parent().parent().parent();
-                $('.cells-filter', collapse).trigger('filterCells');
-                $('.collapse[data-inventory][id!="' + collapse.attr('id') + '"]').each(function() {
-                    $(this).trigger('loadCells');
-                });
-            },
-            error: function (jqXHR) {
-                button.attr('data-inventory', null);
-                var response = $.parseJSON(jqXHR.responseText);
-                if ((typeof(response.typeError) == 'string') && (response.typeError != 'error')) {
-                    button.addClass('btn-' + response.typeError);
-                } else {
-                    button.addClass('btn-danger');
-                }
-                if (typeof(response.message) == 'string') {
-                    button.html(response.message + ' <span class="caret"></span>');
-                } else {
-                    button.html('<?=___('Core', 'exception', 'applicationError')?> <span class="caret"></span>');
-                }
+    var buttonGroup = link.parents('.btn-group');
+    var mainButton = $('> a.change-inventory-status', buttonGroup);
+    var otherButton = $('> ul li a.change-inventory-status', buttonGroup);
+    $('.inventory-status-message', buttonGroup).remove();
+    buttonGroup.prepend('<button class="btn btn-default inventory-status-message"></button>');
+    var loadingButton = $('.inventory-status-message', buttonGroup);
+    loadingButton.html('<i class="fa fa-spinner fa-spin"></i>');
+    mainButton.addClass('hide');
+    $('> button.dropdown-toggle', buttonGroup).addClass('hide');
+    $.ajax({
+        url: link.attr('href'),
+        type: "POST",
+        success: function (data) {
+            buttonGroup.parents('.cell').attr('data-inventory-status', data.status);
+            $('.inventory-title', buttonGroup.parents('div.cell')).html(data.label);
+            mainButton.html(data.mainActionLabel);
+            mainButton.attr('href', mainButton.attr('href').replace(/inventoryStatus\/[a-zA-Z]+/, 'inventoryStatus/' + data.mainActionStatus));
+            otherButton.html(data.otherActionLabel);
+            otherButton.attr('href', otherButton.attr('href').replace(/inventoryStatus\/[a-zA-Z]+/, 'inventoryStatus/' + data.otherActionStatus));
+            var collapse = buttonGroup.parents('.collapse[data-inventory]');
+            $('.cells-filter', collapse).trigger('filterCells');
+            $('.collapse[data-inventory][id!="' + collapse.attr('id') + '"]').trigger('loadCells');
+            $('button.dropdown-toggle', buttonGroup).removeClass('hide');
+            loadingButton.remove();
+        },
+        error: function (jqXHR) {
+            var response = $.parseJSON(jqXHR.responseText);
+            if ((typeof(response.typeError) == 'string') && (response.typeError != 'error')) {
+                loadingButton.addClass('btn-' + response.typeError);
+            } else {
+                loadingButton.addClass('btn-danger');
             }
-        });
-    }
+            if (typeof(response.message) == 'string') {
+                loadingButton.html(response.message);
+            } else {
+                loadingButton.html('<?=___('Core', 'exception', 'applicationError')?>');
+            }
+        },
+        complete: function () {
+            mainButton.removeClass('hide');
+            $('button.dropdown-toggle', buttonGroup).removeClass('hide');
+            buttonGroup.parents('div.collapse[id^="granularity"]').trigger('resizeCells');
+        }
+    });
 });
-$('body').on('click', 'a.inventoryInputsDetails', function(e) {
+$('body').on('click', '.inventory-status .inventory-actions .inventory-status-message', function(e) {
+    $(this).remove();
+});
+$('body').on('click', 'a.inventory-inputs-details', function(e) {
     e.preventDefault();
 });
 $('body').on('show', '.inventory-users', function(e) {
@@ -1098,6 +1173,19 @@ $(document).ready(function() {
     $('div.collapse[id^="granularity"]').trigger('loadCells');
     $('.history > h3 a').trigger('click');
     $('.comments > h3 a').trigger('click');
+    var resizeTimer;
+    $(window).resize(function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() { $('div.collapse[id^="granularity"]').trigger('resizeCells'); }, 500);
+    });
+    <?php if ($currentCell->showInventory) : ?>
+    $('.current-cell .inventory-status').on('mouseenter', function() {
+        $('.current-cell .inventory-status .inventory-informations').popover('show');
+    });
+    $('.current-cell .inventory-status').on('mouseleave', function() {
+        $('.current-cell .inventory-status .inventory-informations').popover('hide');
+    });
+    <?php endif; ?>
 });
 </script>
 

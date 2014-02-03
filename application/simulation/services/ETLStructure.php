@@ -220,7 +220,7 @@ class Simulation_Service_ETLStructure
      */
     private function isDWCubeUpToDate($dWCube)
     {
-        return !($this->areDWIndicatorsUpToDate($dWCube) || $this->areDWAxesUpToDate($dWCube));
+        return $this->areDWIndicatorsUpToDate($dWCube) && $this->areDWAxesUpToDate($dWCube);
     }
 
     /**

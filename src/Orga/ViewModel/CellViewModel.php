@@ -82,11 +82,6 @@ class CellViewModel
     public $inventoryStatusTitle = '';
 
     /**
-     * @var string
-     */
-    public $inventoryStatusStyle = '';
-
-    /**
      * @var int
      */
     public $inventoryNotStartedInputsNumber = 0;
@@ -125,11 +120,6 @@ class CellViewModel
      * @var string
      */
     public $inputStatusTitle = '';
-
-    /**
-     * @var int
-     */
-    public $inputStatusStyle = '';
 
     /**
      * @var int

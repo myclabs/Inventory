@@ -67,6 +67,7 @@
 </div>
 </fieldset>
 
+<?php if ($this->canEditOrganization) : ?>
 <fieldset class="wrapper">
     <legend style="cursor: default"><?=___('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
     <p><?=___('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
@@ -133,3 +134,4 @@
         });
     </script>
 </fieldset>
+<?php endif; ?>

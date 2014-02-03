@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "a9b7508dfe612ac0be2551c71d5bf5ea",
+    "hash": "81161fcbc3042406a5cc3c4503a1a91a",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -563,12 +563,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "2d3d0cb2a775dc21c2ba50e0126dfc22b4c3e93a"
+                "reference": "03ad3265797a338dce2d7064edd0cb4ebedb052b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/2d3d0cb2a775dc21c2ba50e0126dfc22b4c3e93a",
-                "reference": "2d3d0cb2a775dc21c2ba50e0126dfc22b4c3e93a",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/03ad3265797a338dce2d7064edd0cb4ebedb052b",
+                "reference": "03ad3265797a338dce2d7064edd0cb4ebedb052b",
                 "shasum": ""
             },
             "require": {
@@ -596,7 +596,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2014-01-26 19:39:18"
+            "time": "2014-01-28 21:47:06"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -785,12 +785,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "fff8899151d932278e450d9dcd3e24e2f9c108cd"
+                "reference": "c0162aba889ebedc9a03a94e968363acf3c9bf1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/fff8899151d932278e450d9dcd3e24e2f9c108cd",
-                "reference": "fff8899151d932278e450d9dcd3e24e2f9c108cd",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/c0162aba889ebedc9a03a94e968363acf3c9bf1c",
+                "reference": "c0162aba889ebedc9a03a94e968363acf3c9bf1c",
                 "shasum": ""
             },
             "require": {
@@ -824,7 +824,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2014-01-25 13:46:26"
+            "time": "2014-01-30 14:44:36"
         },
         {
             "name": "mnapoli/php-di-zf1",
@@ -860,16 +860,16 @@
         },
         {
             "name": "mnapoli/phpdocreader",
-            "version": "1.1.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PhpDocReader.git",
-                "reference": "94eed8fb141f989fe044ae3b6743cc1d87b05a7f"
+                "reference": "0da1a14d38df6233d7783d9917cdccba9bcfe536"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PhpDocReader/zipball/94eed8fb141f989fe044ae3b6743cc1d87b05a7f",
-                "reference": "94eed8fb141f989fe044ae3b6743cc1d87b05a7f",
+                "url": "https://api.github.com/repos/mnapoli/PhpDocReader/zipball/0da1a14d38df6233d7783d9917cdccba9bcfe536",
+                "reference": "0da1a14d38df6233d7783d9917cdccba9bcfe536",
                 "shasum": ""
             },
             "require": {
@@ -891,7 +891,7 @@
                 "phpdoc",
                 "reflection"
             ],
-            "time": "2013-12-15 22:24:08"
+            "time": "2014-01-28 14:49:44"
         },
         {
             "name": "monolog/monolog",

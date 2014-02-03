@@ -38,10 +38,10 @@
 
         <tu tuid="inputLinkDetail">
             <tuv xml:lang="fr">
-                <seg>Saisie</seg>
+                <seg>Accéder à la saisie</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Input</seg>
+                <seg>Go to Input</seg>
             </tuv>
         </tu>
         <tu tuid="viewInput">
@@ -301,6 +301,54 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Collection closed</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunchedMainAction">
+            <tuv xml:lang="fr">
+                <seg>Démarrer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Start</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryActiveMainAction">
+            <tuv xml:lang="fr">
+                <seg>Clôturer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Close</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosedMainAction">
+            <tuv xml:lang="fr">
+                <seg>Rouvrir</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Re-open</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunchedOtherAction">
+            <tuv xml:lang="fr">
+                <seg>Clôturer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Close</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryActiveOtherAction">
+            <tuv xml:lang="fr">
+                <seg>Revenir à "Non démarrée"</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Revert to "Not launched"</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosedOtherAction">
+            <tuv xml:lang="fr">
+                <seg>Revenir à "Non démarrée"</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Revert to "Not launched"</seg>
             </tuv>
         </tu>
         <tu tuid="inventoryUsersExplanations">

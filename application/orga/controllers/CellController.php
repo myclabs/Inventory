@@ -219,64 +219,68 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('narrowerGranularities', $narrowerGranularities);
 
         // Formulaire d'ajout des membres enfants.
-        $addMembersForm = new UI_Form('addMember');
-        $addMembersForm->setAction('orga/cell/add-member/idCell/'.$idCell);
-        $selectAxis = new UI_Form_Element_Select('axis');
-        $selectAxis->setLabel(__('UI', 'name', 'axis'));
-        $selectAxis->getElement()->help = __('Orga', 'view', 'addMembersAxisExplanations');
-        $selectAxis->addNullOption('');
-        $addMembersForm->addElement($selectAxis);
-        foreach ($this->aclManager->getAxesCanEdit($connectedUser, $organization) as $axis) {
-            $axisOption = new UI_Form_Element_Option($axis->getRef(), $axis->getRef(), $axis->getLabel());
-            $selectAxis->addOption($axisOption);
+        $axesCanEdit = $this->aclManager->getAxesCanEdit($connectedUser, $organization);
+        $this->view->assign('canAddMembers', (count($axesCanEdit) > 0));
+        if (count($axesCanEdit) > 0) {
+            $addMembersForm = new UI_Form('addMember');
+            $addMembersForm->setAction('orga/cell/add-member/idCell/'.$idCell);
+            $selectAxis = new UI_Form_Element_Select('axis');
+            $selectAxis->setLabel(__('UI', 'name', 'axis'));
+            $selectAxis->getElement()->help = __('Orga', 'view', 'addMembersAxisExplanations');
+            $selectAxis->addNullOption('');
+            $addMembersForm->addElement($selectAxis);
+            foreach ($axesCanEdit as $axis) {
+                $axisOption = new UI_Form_Element_Option($axis->getRef(), $axis->getRef(), $axis->getLabel());
+                $selectAxis->addOption($axisOption);
 
-            $axisGroup = new UI_Form_Element_Group($axis->getRef().'_group');
-            $axisGroup->setLabel('');
-            $axisGroup->foldaway = false;
-            $axisGroup->getElement()->hidden = true;
+                $axisGroup = new UI_Form_Element_Group($axis->getRef().'_group');
+                $axisGroup->setLabel('');
+                $axisGroup->foldaway = false;
+                $axisGroup->getElement()->hidden = true;
 
-            $memberInput = new UI_Form_Element_Text($axis->getRef().'_member');
-            $memberInput->setLabel(__('UI', 'name', 'element'));
-            $memberInput->setAttrib('placeholder', __('UI', 'name', 'label'));
-            $axisGroup->addElement($memberInput);
-            foreach ($axis->getDirectBroaders() as $broaderAxis) {
-                $selectParentMember = new UI_Form_Element_Select($axis->getRef().'_parentMember_'.$broaderAxis->getRef());
-                $selectParentMember->setLabel($broaderAxis->getLabel());
-                if (!$isUserAllowToEditAllMembers) {
-                    $members = [];
-                    foreach ($topCellsWithEditAccess as $cell) {
-                        if (!$broaderAxis->isTransverse($cell->getGranularity()->getAxes())) {
-                            foreach ($cell->getMembers() as $cellMember) {
-                                if ($broaderAxis->isBroaderThan($cellMember->getAxis())) {
-                                    continue 2;
+                $memberInput = new UI_Form_Element_Text($axis->getRef().'_member');
+                $memberInput->setLabel(__('UI', 'name', 'element'));
+                $memberInput->setAttrib('placeholder', __('UI', 'name', 'label'));
+                $axisGroup->addElement($memberInput);
+                foreach ($axis->getDirectBroaders() as $broaderAxis) {
+                    $selectParentMember = new UI_Form_Element_Select($axis->getRef().'_parentMember_'.$broaderAxis->getRef());
+                    $selectParentMember->setLabel($broaderAxis->getLabel());
+                    if (!$isUserAllowToEditAllMembers) {
+                        $members = [];
+                        foreach ($topCellsWithEditAccess as $cell) {
+                            if (!$broaderAxis->isTransverse($cell->getGranularity()->getAxes())) {
+                                foreach ($cell->getMembers() as $cellMember) {
+                                    if ($broaderAxis->isBroaderThan($cellMember->getAxis())) {
+                                        continue 2;
+                                    }
                                 }
+                                $members = array_merge(
+                                    $members,
+                                    $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()]
+                                );
                             }
-                            $members = array_merge(
-                                $members,
-                                $cell->getChildMembersForAxes([$broaderAxis])[$broaderAxis->getRef()]
-                            );
                         }
+                        $members = array_unique($members);
+                        usort($members, [Orga_Model_Member::class, 'orderMembers']);
+                    } else {
+                        $members = $broaderAxis->getMembers();
                     }
-                    $members = array_unique($members);
-                    usort($members, [Orga_Model_Member::class, 'orderMembers']);
-                } else {
-                    $members = $broaderAxis->getMembers();
+                    foreach ($members as $parentMember) {
+                        $parentMemberOption = new UI_Form_Element_Option($parentMember->getId(), $parentMember->getId(), $parentMember->getLabel());
+                        $selectParentMember->addOption($parentMemberOption);
+                    }
+                    $axisGroup->addElement($selectParentMember);
                 }
-                foreach ($members as $parentMember) {
-                    $parentMemberOption = new UI_Form_Element_Option($parentMember->getId(), $parentMember->getId(), $parentMember->getLabel());
-                    $selectParentMember->addOption($parentMemberOption);
-                }
-                $axisGroup->addElement($selectParentMember);
+
+                $displayGroupAction = new UI_Form_Action_Show($axis->getRef().'_toggle');
+                $displayGroupAction->condition = new UI_Form_Condition_Elementary('', $selectAxis, UI_Form_Condition_Elementary::EQUAL, $axis->getRef());
+                $axisGroup->getElement()->addAction($displayGroupAction);
+
+                $addMembersForm->addElement($axisGroup);
             }
-
-            $displayGroupAction = new UI_Form_Action_Show($axis->getRef().'_toggle');
-            $displayGroupAction->condition = new UI_Form_Condition_Elementary('', $selectAxis, UI_Form_Condition_Elementary::EQUAL, $axis->getRef());
-            $axisGroup->getElement()->addAction($displayGroupAction);
-
-            $addMembersForm->addElement($axisGroup);
+            $addMembersForm->addSubmitButton('Ajouter');
+            $this->view->assign('addMembersForm', $addMembersForm);
         }
-        $addMembersForm->addSubmitButton('Ajouter');
-        $this->view->assign('addMembersForm', $addMembersForm);
     }
 
     /**
@@ -446,7 +450,9 @@ class Orga_CellController extends Core_Controller
                     . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
                     . $comment->getCell()->getLabel()
                 . '</a>' . __('UI', 'other', ':')
-                . '« ' . Core_Tools::truncateString($comment->getText(), 150) . ' ».';
+                . '« '
+                . Core_Tools::truncateString(Core_Tools::removeTextileMarkUp($comment->getText()), 150)
+                . ' ».';
 
             $date = $locale->formatDate($comment->getCreationDate());
             $time = $locale->formatTime($comment->getCreationDate());
@@ -832,17 +838,17 @@ class Orga_CellController extends Core_Controller
         $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
         if (!($this->hasParam('display') && ($this->getParam('display') == true))) {
-            $exportUrl = 'orga/cell/specificexport/'.
-                'idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/export/'.$this->getParam('export').'/display/true';
+            $exportUrl = 'orga/cell/view-report-specific/'.
+                'idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/report/'.$this->getParam('report').'/display/true';
         } else {
             $exportUrl = null;
         }
 
-        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificExports/'.
+        $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificReports/'.
             $cell->getGranularity()->getOrganization()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         $specificReports = new DW_Export_Specific_Pdf(
-            $specificReportsDirectoryPath.$this->getParam('export').'.xml',
+            $specificReportsDirectoryPath.$this->getParam('report').'.xml',
             $cell->getDWCube(),
             $exportUrl
         );
@@ -1059,19 +1065,24 @@ class Orga_CellController extends Core_Controller
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
 
-        $cell->setInventoryStatus($this->getParam('inventoryStatus'));
+        $inventoryStatus = $this->getParam('inventoryStatus');
+
+        $cell->setInventoryStatus($inventoryStatus);
 
         $this->sendJsonResponse(
             [
-                'status' => $cell->getInventoryStatus(),
-                'label' => $this->cellVMFactory->inventoryStatusList[$cell->getInventoryStatus()],
-                'style' => $this->cellVMFactory->inventoryStatusStyles[$cell->getInventoryStatus()],
+                'status' => $inventoryStatus,
+                'label' => $this->cellVMFactory->inventoryStatusList[$inventoryStatus],
+                'mainActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_ACTIVE) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_ACTIVE,
+                'mainActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction')),
+                'otherActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_NOTLAUNCHED,
+                'otherActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction')),
             ]
         );
     }
 
     /**
-     * @Secure("editCell")
+     * @Secure("viewCell")
      */
     public function viewInventoryUsersAction()
     {
@@ -1320,7 +1331,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         $this->view->assign('idCell', $idCell);
-        $this->view->assign('documentLibrary', $cell->getDocumentLibrary());
+        $this->view->assign('documentLibrary', $cell->getDocLibraryForAFInputSetPrimary());
 
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();

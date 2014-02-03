@@ -2,9 +2,11 @@
 
 use AF\Domain\AF;
 use Doctrine\ORM\EntityManager;
+use Orga\Model\ACL\Action\CellAction;
+use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\Role\CellManagerRole;
-use Orga\Model\ACL\Role\OrganizationAdminRole;
 use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Role\AdminRole;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -68,12 +70,11 @@ class Orga_Service_OrganizationService
     }
 
     /**
-     * @param User   $creator
      * @param string $labelOrganization
      * @throws Exception
      * @return Orga_Model_Organization
      */
-    public function createOrganization(User $creator, $labelOrganization = '')
+    public function createOrganization($labelOrganization = '')
     {
         $this->entityManager->beginTransaction();
 
@@ -89,15 +90,26 @@ class Orga_Service_OrganizationService
             $organization->save();
             $this->entityManager->flush();
 
-            // Ajout des superadmins en tant qu'administrateur de l'organisation
-            foreach (AdminRole::loadList() as $adminRole) {
-                /** @var AdminRole $adminRole */
-                $admin = $adminRole->getUser();
-                // Ignore l'admin si il est le créateur de l'organisation
-                if ($admin === $creator) {
-                    continue;
+            // Héritage des ACL sur toutes les organizations, sur la cellule globale de la nouvelle.
+            $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
+            /** @var AdminRole $admin */
+            foreach (AdminRole::loadList() as $admin) {
+                // Cellule global
+                $cellAuthorizations = CellAuthorization::createMany($admin, $globalCell, [
+                    Action::VIEW(),
+                    Action::EDIT(),
+                    Action::ALLOW(),
+                    CellAction::COMMENT(),
+                    CellAction::INPUT(),
+                    CellAction::VIEW_REPORTS(),
+                ]);
+
+                // Cellules filles
+                foreach ($globalCell->getChildCells() as $childCell) {
+                    foreach ($cellAuthorizations as $authorization) {
+                        CellAuthorization::createChildAuthorization($authorization, $childCell);
+                    }
                 }
-                $this->aclService->addRole($admin, new OrganizationAdminRole($admin, $organization));
             }
 
             $this->entityManager->flush();
@@ -128,7 +140,7 @@ class Orga_Service_OrganizationService
 
         try {
             $organizationLabel = $formData['organization']['elements']['organizationLabel']['value'];
-            $organization = $this->createOrganization($administrator, $organizationLabel);
+            $organization = $this->createOrganization($organizationLabel);
 
             $template = $formData['organization']['elements']['organizationTemplate']['value'];
             if ($template !== self::TEMPLATE_EMPTY) {
@@ -616,7 +628,8 @@ class Orga_Service_OrganizationService
         $user = $this->userService->createUser($email, $password);
         $user->initTutorials();
 
-        $organization = $this->createOrganization($user);
+        $organization = $this->createOrganization();
+        $organization->setLabel(__('Orga', 'navigation', 'demoOrganizationLabel', ['LABEL' => rand(1000, 9999)]));
 
         $this->initOrganizationDemo($organization);
 
