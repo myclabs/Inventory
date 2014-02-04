@@ -51,8 +51,8 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $data['inventory'] = ($granularity === $granularityForinventoryStatus);
             $data['reports'] = $granularity->getCellsGenerateDWCubes();
             $data['acl'] = $granularity->getCellsWithACL();
-            if ((!$granularity->hasAxes())
-                || $data['relevance'] || $data['input'] || $data['afs'] || $data['reports'] || $data['acl']) {
+            if ((!$granularity->hasAxes()) || $data['relevance'] || $data['input']
+                || $data['afs'] || $data['reports'] || $data['acl'] || $data['inventory']) {
                 $data['delete'] = false;
             }
             if (!$data['input']) {
@@ -150,10 +150,10 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         }
 
         $success = function () {
-            $this->message = __('UI', 'message', 'removed');
+            $this->message = __('UI', 'message', 'deleted');
         };
         $timeout = function () {
-            $this->message = __('UI', 'message', 'removedLater');
+            $this->message = __('UI', 'message', 'deletedLater');
         };
         $error = function (Exception $e) {
             throw $e;
