@@ -13,6 +13,8 @@ return [
     // Namespace pour les sauvegarde en session
     'session.storage.name' => DI\link('application.name'),
 
+    'debug.login' => false,
+
     // Répertoire d'upload les documents
     'documents.path' => PACKAGE_PATH . '/data/documents',
 
