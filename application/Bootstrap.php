@@ -12,7 +12,6 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\DBAL\Types\Type;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Translation\Translator;
 use User\Application\ViewHelper\IsAllowedHelper;
 use User\Application\ViewHelper\TutorialHelper;
@@ -67,9 +66,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initUTF8()
     {
-        if (APPLICATION_ENV != 'testsunitaires') {
-            header('Content-Type: text/html; charset=utf-8');
-        }
+        header('Content-Type: text/html; charset=utf-8');
         // Définit l'encodage pour l'extension mb_string
         mb_internal_encoding('UTF-8');
     }
@@ -101,9 +98,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 break;
         }
 
-        if (file_exists(APPLICATION_PATH . '/configs/parameters.php')) {
-            $builder->addDefinitions(APPLICATION_PATH . '/configs/parameters.php');
-        }
+        $builder->addDefinitions(APPLICATION_PATH . '/configs/parameters.php');
 
         $diConfig = $configuration->get('di', null);
 
@@ -267,7 +262,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initI18n()
     {
         $locale = Core_Locale::loadDefault();
-        Core_Locale::$minSignificantFigures = $this->container->get('locale.minSignificantFigures', null);
+        Core_Locale::$minSignificantFigures = $this->container->get('locale.minSignificantFigures');
 
         $translator = new Translator($locale->getId());
         $translator->addLoader('tmx', new TmxLoader());
@@ -287,8 +282,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
-        $view->registerHelper($this->container->get(IsAllowedHelper::class, true), 'isAllowed');
-        $view->registerHelper($this->container->get(TutorialHelper::class, true), 'tutorial');
+        $view->registerHelper($this->container->get(IsAllowedHelper::class), 'isAllowed');
+        $view->registerHelper($this->container->get(TutorialHelper::class), 'tutorial');
     }
 
     /**
@@ -305,9 +300,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initPluginAcl()
     {
-        $front = Zend_Controller_Front::getInstance();
-        // Plugin des Acl
         if ($this->container->get('enable.acl')) {
+            $front = Zend_Controller_Front::getInstance();
             $front->registerPlugin($this->container->get(Inventory_Plugin_Acl::class));
         }
     }
@@ -319,25 +313,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $front = Zend_Controller_Front::getInstance();
         $front->registerPlugin($this->container->get(TutorialPlugin::class));
-    }
-
-    /**
-     * Event listeners
-     */
-    protected function _initEventListeners()
-    {
-        /** @var EventDispatcher $eventDispatcher */
-        $eventDispatcher = $this->container->get(EventDispatcher::class);
-
-        // User events (plus prioritaire)
-        $userEventListener = $this->container->get(\User\Domain\Event\EventListener::class, true);
-        $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
-        $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
-
-        // AuditTrail
-        $auditTrailListener = $this->container->get(AuditTrail\Application\Service\EventListener::class, true);
-        $eventDispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$auditTrailListener, 'onInputCreated']);
-        $eventDispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
     }
 
     protected function _initCheckApplicationUrl()

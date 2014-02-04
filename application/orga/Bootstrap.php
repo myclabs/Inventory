@@ -1,7 +1,5 @@
 <?php
 
-use User\Domain\ACL\ACLService;
-
 /**
  * @author valentin.claras
  */

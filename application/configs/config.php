@@ -1,5 +1,8 @@
 <?php
 
+use DI\Container;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use User\Application\ViewHelper\IsAllowedHelper;
 use User\Domain\UserService;
 
 return [
@@ -39,6 +42,27 @@ return [
     // Feature flags
     'feature.register' => false,
 
+    // Surcharge du nombre de chiffres significatifs
     // Fonctionnalité spéciale pour art225 et art255
     'locale.minSignificantFigures' => null,
+
+    IsAllowedHelper::class => DI\object()
+        ->lazy(),
+
+    // Event manager
+    EventDispatcher::class => DI\factory(function (Container $c) {
+        $dispatcher = new EventDispatcher();
+
+        // User events (plus prioritaire)
+        $userEventListener = $c->get(\User\Domain\Event\EventListener::class);
+        $dispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
+        $dispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
+
+        // AuditTrail
+        $auditTrailListener = $c->get(AuditTrail\Application\Service\EventListener::class);
+        $dispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$auditTrailListener, 'onInputCreated']);
+        $dispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
+
+        return $dispatcher;
+    }),
 ];
