@@ -30,28 +30,21 @@ trait DatabaseFeatureContext
 
     private static function loadFileToDatabase($fileName)
     {
-        $environment = 'developpement';
+        $container = \Core\ContainerSingleton::getContainer();
 
-        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', $environment);
-        $configShared = new Zend_Config_Ini(APPLICATION_PATH . '/configs/shared.ini', $environment, true);
-        $configShared->merge($config);
-        $config = $configShared;
-
-        $connectionSettings = $config->doctrine->default->connection;
-
-        $commandBase = $config->mysqlBin->path
-            . ' -h' . $connectionSettings->host
-            . ' -u' . $connectionSettings->user;
-        if (!empty($connectionSettings->password)) {
-            $commandBase .= ' -p' . $connectionSettings->password;
+        $commandBase = $container->get('mysqlBin.path')
+            . ' -h' . $container->get('db.host')
+            . ' -u' . $container->get('db.user');
+        if (!empty($container->get('db.password'))) {
+            $commandBase .= ' -p' . $container->get('db.password');
         }
-        if (!empty($connectionSettings->port)) {
-            $commandBase .= ' --port=' . $connectionSettings->port;
+        if (!empty($container->get('db.port'))) {
+            $commandBase .= ' --port=' . $container->get('db.port');
         }
 
         $filePath = PACKAGE_PATH . '/behat/fixtures/' . $fileName;
 
-        $command = $commandBase . ' ' . $connectionSettings->dbname . ' < "' . $filePath . '"';
+        $command = $commandBase . ' ' . $container->get('db.name') . ' < "' . $filePath . '"';
 
         shell_exec($command);
     }
