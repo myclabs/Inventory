@@ -2,7 +2,7 @@
 Feature: Identification feature
   The login form authenticates users.
 
-  @readOnly @readOnly
+  @readOnly
   Scenario: Login redirection
     Given I am on the homepage
     And I wait for the page to finish loading

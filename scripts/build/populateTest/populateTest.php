@@ -9,9 +9,6 @@ class Inventory_PopulateTest extends Core_Script_Populate
 {
     public function populateEnvironment($environment)
     {
-        if ($environment === 'test') {
-            return;
-        }
         // Initalisation Unit.
         $populateUnit = new Unit_Populate();
         $populateUnit->initUnitEntityManager($environment);
