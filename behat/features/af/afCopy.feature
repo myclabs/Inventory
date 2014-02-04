@@ -46,7 +46,7 @@ Feature: AF copy feature
     When I click "×"
     Then I should see "Valeur : 2,54 t équ. CO2 ± 20 %"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Copy of the combustion form, incorrect input
     Given I am on "af/af/list"
     And I wait for the page to finish loading

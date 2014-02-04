@@ -1,7 +1,7 @@
 @dbFull
 Feature: Cell observer feature
 
-  @javascript
+  @javascript @readOnly
   Scenario: Observer of a single cell
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -38,7 +38,7 @@ Feature: Cell observer feature
     And I should not see a "#container a:contains('Rôles')" element
     And I should not see a "#container a:contains('Reconstruction')" element
 
-  @javascript
+  @javascript @readOnly
   Scenario: Observer of several cells
     Given I am on the homepage
     And I wait for the page to finish loading

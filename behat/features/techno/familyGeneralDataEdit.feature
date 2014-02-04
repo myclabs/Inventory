@@ -29,7 +29,7 @@ Feature: Family general data edit feature
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
 
-  @javascript
+  @javascript @readOnly
   Scenario: Family edit general data scenario, incorrect input
     Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading

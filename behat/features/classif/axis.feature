@@ -39,7 +39,7 @@ Feature: Classification axis feature
     And I wait 7 seconds
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
 
-  @javascript
+  @javascript @readOnly
   Scenario: Creation of a classification axis, incorrect input
     Given I am on "classif/axis/manage"
     And I wait for the page to finish loading

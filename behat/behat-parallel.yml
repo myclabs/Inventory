@@ -1,10 +1,11 @@
+# Tests qui peuvent être exécutés en parallèle car ne modifiant pas les données
 default:
 
   paths:
     features: features
 
   filters:
-    tags: ~@skipped
+    tags: @readOnly&&@dbEmpty&&~@skipped
 
   extensions:
     Behat\MinkExtension\Extension:
@@ -16,3 +17,6 @@ default:
       selenium2:
         browser: 'chrome'
         wd_host: 'http://localhost:4444/wd/hub'
+
+    shvetsgroup\ParallelRunner\Extension:
+      process_count: 4

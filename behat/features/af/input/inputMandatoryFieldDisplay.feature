@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @readOnly
 Feature: Input mandatory field display feature
 
   Background:

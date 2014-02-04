@@ -4,7 +4,7 @@ Feature: Family consult feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Non empty family consult scenario
     Given I am on "techno/family/details/id/5"
     And I wait for the page to finish loading
@@ -26,7 +26,7 @@ Feature: Family consult feature
   # Affichage cellules vides
     And I should see "-" in the "#elements-gaz_naturel-amont_combustion" element
 
-  @javascript
+  @javascript @readOnly
   Scenario: Empty family consult scenario
     Given I am on "techno/family/details/id/4"
     And I wait for the page to finish loading

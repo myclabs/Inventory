@@ -4,7 +4,7 @@ Feature: Combustion input feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Change input unit for a numeric field scenario
     Given I am on "af/af/test/id/1"
     And I wait for the page to finish loading

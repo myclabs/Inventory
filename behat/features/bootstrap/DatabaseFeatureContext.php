@@ -6,25 +6,66 @@
 trait DatabaseFeatureContext
 {
     /**
+     * Sauvegarde la BDD actuellement chargée.
+     * @var string
+     */
+    private static $currentDb;
+
+    /**
+     * Est-ce qu'il faut importer la BDD.
+     * @var bool
+     */
+    private static $needDbImport = true;
+
+    /**
      * @BeforeScenario @dbEmpty
      */
     public function loadEmptyDatabase()
     {
+        if (self::$currentDb == 'dbEmpty' && self::$needDbImport == false) {
+            return;
+        }
         self::loadFileToDatabase('emptyOneUser.sql');
+        self::$currentDb = 'dbEmpty';
     }
     /**
      * @BeforeScenario @dbFull
      */
     public function loadFilledDatabase()
     {
+        if (self::$currentDb == 'dbFull' && self::$needDbImport == false) {
+            return;
+        }
         self::loadFileToDatabase('full.sql');
+        self::$currentDb = 'dbFull';
     }
     /**
      * @BeforeScenario @dbForTestDWUpToDate
      */
     public function loadForTestDWUpToDateDatabase()
     {
+        if (self::$currentDb == 'dbForTestDWUpToDate' && self::$needDbImport == false) {
+            return;
+        }
         self::loadFileToDatabase('forTestDWUpToDate.sql');
+        self::$currentDb = 'dbForTestDWUpToDate';
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function scenarioUpdatesDb()
+    {
+        self::$needDbImport = true;
+    }
+
+    /**
+     * Les scénarios marqués comme readOnly n'entrainent pas un rechargement de la BDD.
+     * @AfterScenario @readOnly
+     */
+    public function scenarioWasReadOnly()
+    {
+        self::$needDbImport = false;
     }
 
 

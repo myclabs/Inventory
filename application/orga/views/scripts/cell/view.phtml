@@ -336,9 +336,6 @@ $currentCell = $this->currentCell;
                     <?php endforeach ?>
                 </select>
                 <?php endif; ?>
-                <span class="withTooltip" title="<?=___('Orga', 'view', 'filterReverserExplanations')?>">
-                    <input type="checkbox" class="filter-reverser">
-                </span>
                 <button class="btn reset"><i class="fa fa-search-minus"></i> <?=___('UI', 'verb', 'reset')?></button>
                 <span class="badge badge-info granularity-info withTooltip" title="<?=___('Orga', 'view', 'ratioNumberFilteredCellsOverTotal')?>" data-toggle="tooltip" data-placement="right" data-trigger="hover"></span>
             </form>
@@ -767,15 +764,10 @@ $('.cells-filter select').on('keyup change', function(e) {
     var form = $(this).parent();
     form.trigger('filterCells');
 });
-$('.cells-filter .filter-reverser').on('change', function(e) {
-    var form = $(this).parent();
-    form.trigger('filterCells');
-});
 $('.cells-filter').on('resetCellsFilter', function(e) {
     e.preventDefault();
     var form = $(this);
     $('select', form).val('');
-    $('.filter-reverser', form).prop('checked', false);
     form.trigger('filterCells');
 });
 $('.cells-filter').on('filterCells', function(e) {
@@ -786,19 +778,13 @@ $('.cells-filter').on('filterCells', function(e) {
 
     $('.cell', granularity).addClass('hide').removeClass('firstRowCell').removeAttr('data-filtered');
 
-    var inverseFilter = $('.filter-reverser', form).is(':checked');
     var test = '';
     $('select', form).each(function() {
         var filter = $(this).attr('data-filter');
         var filterOperator = (filter == 'tag') ? '*=' : '=';
         var value = $(this).val();
         if (value != '') {
-            var testExpression = '[data-' + filter + filterOperator +'\'' + value + '\']';
-            if (inverseFilter) {
-                test += ':not(' + testExpression + ')';
-            } else {
-                test += testExpression;
-            }
+            test += '[data-' + filter + filterOperator +'\'' + value + '\']';
         }
     });
 

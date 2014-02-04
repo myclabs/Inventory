@@ -4,7 +4,7 @@ Feature: Organization input tab feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Filter on organization members in Input tab
   # Accès à l'onglet "Saisies"
     Given I am on "orga/cell/view/idCell/1"
@@ -18,7 +18,7 @@ Feature: Organization input tab feature
     When I click element "i.fa-search-minus"
     Then I should see "6 / 6" in the "#granularity7 span.granularity-info" element
 
-  @javascript
+  @javascript @readOnly
   Scenario: Display of the various columns (inventory status, input progress, input status)
     Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading

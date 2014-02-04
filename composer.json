@@ -41,6 +41,7 @@
         "behat/mink": "~1.5",
         "behat/mink-extension": "*",
         "behat/mink-selenium2-driver": "*",
+        "shvetsgroup/parallelrunner": "dev-master",
         "mnapoli/metaconsole": "dev-master"
     },
     "minimum-stability": "dev",

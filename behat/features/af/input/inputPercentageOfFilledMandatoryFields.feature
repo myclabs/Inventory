@@ -4,7 +4,7 @@ Feature: Percentage of filled mandatory fields feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Percentage of filled mandatory fields scenario, all fiels are mandatory scenario
   # Accès interface de test
     Given I am on "af/af/test/id/5"
@@ -84,7 +84,7 @@ Feature: Percentage of filled mandatory fields feature
   # La saisie est complète
     Then the "#tabs_tabInput .inputProgress .bar" element should contain "100%"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Percentage of filled mandatory fields scenario, all fields are mandatory and completed scenario
     Given I am on "af/af/test/id/5"
     And I wait for the page to finish loading
