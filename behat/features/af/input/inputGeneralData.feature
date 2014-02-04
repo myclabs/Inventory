@@ -89,30 +89,13 @@ Feature: General data input feature
     Then I should see "Type : Saisie"
     And I should see "Champ : Chiffre d'affaire"
     And I should see "Valeur : 0,1236 k€ ± %"
-  # Modification saisie existante
+    # Bouton "Quitter", retour direct au datagrid des formulaires
     When I open tab "Saisie"
-    When I fill in "chiffre_affaire" with ""
-    Then I should see "Saisie en cours"
-  # Bouton "Réinitialiser"
-    And I click "Réinitialiser"
-    And I click "Confirmer"
-    Then I should see "Saisie complète"
-  # Marquer la saisie comme terminée
-    When I check "Marquer la saisie comme terminée"
-    And I wait 5 seconds
-    Then the following message is shown and closed: "Statut d'avancement modifié."
-    And I should see "Saisie terminée"
-  # Marquer la saisie comme non terminée
-    When I uncheck "Marquer la saisie comme terminée"
-    And I wait 5 seconds
-    Then the following message is shown and closed: "Statut d'avancement modifié."
-    And I should see "Saisie complète"
-  # Bouton "Quitter" (colorié en gris), retour direct au datagrid des formulaires
     When I click "Quitter"
     Then I should see the "listAF" datagrid
 
   @javascript
-  Scenario: General data change input unit scenario
+  Scenario: General data edit input unit scenario
     Given I am on "af/af/test/id/2"
     And I wait for the page to finish loading
   # Saisie valeur
@@ -137,5 +120,3 @@ Feature: General data input feature
     And I click "Test" in the row 2 of the "listAF" datagrid
     And I click "Aperçu des résultats"
     Then I should see "Total : 1 k€"
-
-
