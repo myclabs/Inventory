@@ -80,6 +80,6 @@ return [
 
     // Notifications
     TaskNotifier::class => DI\object(EmailTaskNotifier::class)
-            ->methodParameter('__construct', 'applicationName', DI\link('email.noreply.name')),
+            ->methodParameter('__construct', 'applicationName', DI\link('emails.noreply.name')),
 
 ];
