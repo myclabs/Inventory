@@ -83,7 +83,7 @@
         <!-- Champs -->
         <tu tuid="organizationLabel">
             <tuv xml:lang="fr">
-                <seg>Label de l'organisation</seg>
+                <seg>Libellé de l'organisation</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Organization label</seg>
@@ -91,7 +91,7 @@
         </tu>
         <tu tuid="organizationTemplate">
             <tuv xml:lang="fr">
-                <seg>Template</seg>
+                <seg>Modèle</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Template</seg>
@@ -107,7 +107,7 @@
         </tu>
         <tu tuid="organizationMainAxisLabel">
             <tuv xml:lang="fr">
-                <seg>Label de l'axe principal</seg>
+                <seg>Libellé de l'axe principal</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Main axis label</seg>
@@ -139,7 +139,7 @@
         </tu>
         <tu tuid="organizationMainSubAxisLabel">
             <tuv xml:lang="fr">
-                <seg>Label de l'axe d'agrégation</seg>
+                <seg>Libellé de l'axe d'agrégation</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Aggregation axis label</seg>
@@ -155,7 +155,7 @@
         </tu>
         <tu tuid="organizationTimeAxisLabel">
             <tuv xml:lang="fr">
-                <seg>Label de l'axe temporel</seg>
+                <seg>Libellé de l'axe temporel</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Time axis label</seg>
@@ -171,7 +171,7 @@
         </tu>
         <tu tuid="organizationInputsAxisLabel">
             <tuv xml:lang="fr">
-                <seg>Label de l'axe de catégorisation des saisies</seg>
+            <seg>Libellé de l'axe de catégorisation des saisies</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Inputs categorization axis label</seg>
@@ -197,7 +197,7 @@
         <!-- Legendes -->
         <tu tuid="organizationMainAxisTitle">
             <tuv xml:lang="fr">
-                <seg>Choix dee axes principaux</seg>
+                <seg>Choix des axes principaux</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Choice of main axes</seg>
