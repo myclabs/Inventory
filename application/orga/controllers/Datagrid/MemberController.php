@@ -153,7 +153,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     $broaderMember = $directBroaderAxis->getMemberByCompleteRef($refBroaderMember);
                     $broaderMembers[] = $broaderMember;
                 } catch (Core_Exception_NotFound $e) {
-                    $this->setAddElementErrorMessage($formFieldRef, __('UI', 'exception', 'unknownError'));
+                    $this->setAddElementErrorMessage($formFieldRef, __('Core', 'exception', 'applicationError'));
                     continue;
                 }
                 if ($broaderMember->getAxis()->isContextualizing()) {

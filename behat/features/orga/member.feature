@@ -7,9 +7,8 @@ Feature: Organizational member feature
   @javascript
   Scenario: Creation of an organizational member, correct input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
-    And I open tab "Paramétrage"
     And I open tab "Éléments"
   # Accès au datagrid des sites
     And I open collapse "Site"
@@ -32,9 +31,8 @@ Feature: Organizational member feature
   @javascript
   Scenario: Creation of an organizational member, incorrect input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
-    And I open tab "Paramétrage"
     And I open tab "Éléments"
     Then I should see "Site"
   # Déplier un volet
@@ -64,9 +62,8 @@ Feature: Organizational member feature
   @javascript
   Scenario: Edition of an organizational member's attributes (label and identifier), correct input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
-    And I open tab "Paramétrage"
     And I open tab "Éléments"
   # Ajout élément axe Pays, zone non renseignée
     When I open collapse "Site"
@@ -81,9 +78,8 @@ Feature: Organizational member feature
   @javascript
   Scenario: Edition of an organizational member's attributes (label and identifier), incorrect input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
-    And I open tab "Paramétrage"
     And I open tab "Éléments"
   # Ajout élément axe Pays, zone non renseignée
     When I open collapse "Site"
@@ -101,9 +97,8 @@ Feature: Organizational member feature
   @javascript
   Scenario: Edition of parent member of an organizational member
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
-    And I open tab "Paramétrage"
     And I open tab "Éléments"
     When I open collapse "Site"
     Then the row 1 of the "listMemberssite" datagrid should contain:
@@ -121,21 +116,3 @@ Feature: Organizational member feature
     And the "listMemberssite" datagrid should contain a row:
       | label  | ref      | broaderpays    | broadermarque |
       | Annecy | annecy   | France         | Marque B      |
-
-  @javascript
-  Scenario: Check list of members of an axis when the current cell is not the global cell
-    Given I am on "orga/cell/details/idCell/1"
-    And I wait for the page to finish loading
-  # Descendre dans la cellule "Europe | Marque B"
-    When I click element ".fa-plus"
-    And I select "Europe" from "zone"
-    And I select "Marque B" from "marque"
-    And I click element "#goTo2"
-  # Vérification du contenu du datagrid des éléments de l'axe "Site"
-    And I open tab "Paramétrage"
-    And I open tab "Éléments"
-    And I open collapse "Site"
-    Then I should see the "listMemberssite" datagrid
-    And the row 1 of the "listMemberssite" datagrid should contain:
-      | label | ref |
-      | Grenoble | grenoble |
