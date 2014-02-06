@@ -1,6 +1,9 @@
 <?php
 
 use DI\Container;
+use Doctrine\ORM\EntityManager;
+use Inventory\Command\CreateDBCommand;
+use Inventory\Command\UpdateDBCommand;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use User\Application\ViewHelper\IsAllowedHelper;
 use User\Domain\UserService;
@@ -67,4 +70,16 @@ return [
 
         return $dispatcher;
     }),
+
+    CreateDBCommand::class => DI\object()
+            ->constructor(
+                DI\link(UpdateDBCommand::class),
+                DI\link('db.host'),
+                DI\link('db.port'),
+                DI\link('db.user'),
+                DI\link('db.password'),
+                DI\link('db.name')
+            ),
+    UpdateDBCommand::class => DI\object()
+            ->constructor(DI\link(EntityManager::class), DI\link('db.name')),
 ];
