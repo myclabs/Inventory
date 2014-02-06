@@ -541,7 +541,7 @@ class Orga_OrganizationController extends Core_Controller
      */
     protected function getAxesAddGranularity(Orga_Model_Organization $organization)
     {
-        $refAxes = explode(',', $this->getParam('axes'));
+        $refAxes = $this->getParam('axes');
 
         /** @var Orga_Model_Axis $axes */
         $axes = [];
@@ -611,7 +611,7 @@ class Orga_OrganizationController extends Core_Controller
         try {
             $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
             if ($granularity->getCellsControlRelevance()) {
-                throw new Core_Exception_User('Orga', 'edit', 'granularityAlreadyConfigured');
+                throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
             $granularity->setCellsControlRelevance(true);
             $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
@@ -679,7 +679,7 @@ class Orga_OrganizationController extends Core_Controller
 
         $inputAxes = $this->getAxesAddGranularity($organization);
 
-        $refConfigAxes = explode(',', $this->getParam('inputConfigAxes'));
+        $refConfigAxes = $this->getParam('inputConfigAxes');
         /** @var Orga_Model_Axis[] $configAxes */
         $configAxes = [];
         if (!empty($this->getParam('inputConfigAxes')))
@@ -775,7 +775,7 @@ class Orga_OrganizationController extends Core_Controller
         try {
             $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
             if ($granularity->getCellsGenerateDWCubes()) {
-                throw new Core_Exception_User('Orga', 'edit', 'granularityAlreadyConfigured');
+                throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
             $granularity->setCellsGenerateDWCubes(true);
             $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
@@ -857,7 +857,7 @@ class Orga_OrganizationController extends Core_Controller
         try {
             $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
             if ($granularity->getCellsGenerateDWCubes()) {
-                throw new Core_Exception_User('Orga', 'edit', 'granularityAlreadyConfigured');
+                throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
             $granularity->setCellsGenerateDWCubes(true);
             $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
