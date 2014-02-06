@@ -1184,7 +1184,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         /** @var $af AF_Model_AF */
-        $af = AF_Model_AF::load($idCell);
+        $af = AF_Model_AF::load($this->getParam('id'));
 
         // Form data
         $formContent = json_decode($this->getParam($af->getRef()), true);
