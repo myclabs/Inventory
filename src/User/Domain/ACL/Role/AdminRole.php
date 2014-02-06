@@ -37,10 +37,10 @@ class AdminRole extends Role implements OptimizedRole
 
         // Inheritance
         $allUsers = User::loadList();
-        foreach ($allUsers as $organization) {
-            /** @var User $organization */
+        foreach ($allUsers as $user) {
+            /** @var User $user */
             foreach ($userAuthorizations as $userAuthorization) {
-                UserAuthorization::createChildAuthorization($userAuthorization, $organization);
+                UserAuthorization::createChildAuthorization($userAuthorization, $user);
             }
         }
 
@@ -106,10 +106,10 @@ class AdminRole extends Role implements OptimizedRole
 
         // Inheritance
         $allUsers = User::loadList();
-        foreach ($allUsers as $organization) {
-            /** @var User $organization */
+        foreach ($allUsers as $user) {
+            /** @var User $user */
             foreach ($userAuthorizations as $userAuthorization) {
-                yield UserAuthorization::createChildAuthorization($userAuthorization, $organization, null, false);
+                yield UserAuthorization::createChildAuthorization($userAuthorization, $user, null, false);
             }
         }
 
