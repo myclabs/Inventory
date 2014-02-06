@@ -58,7 +58,7 @@ endforeach;
 if (count($this->granularities) > 0) :
     echo '<hr>';
 endif;
-$complementaryFields = '<select multiple name="inputConfigAxes" class="inputConfigAxes" style="min-width: 250px;">';
+$complementaryFields = '<select multiple name="inputConfigAxes[]" class="inputConfigAxes" style="min-width: 250px;">';
 foreach ($this->organization->getFirstOrderedAxes() as $axis) :
     $complementaryFields .= '<option value="' . $axis->getRef() . '">' . $axis->getLabel() . '</option>';
 endforeach;

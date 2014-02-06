@@ -81,13 +81,25 @@ class UI_Chart_Bar extends UI_Chart_Generic
             $this->addAttribute('legend', 'none');
         }
         if ($this->vertical) {
-            $this->addAttribute('vAxis', '{minValue: 0}');
+            if (isset($this->_attributes['vAxis'])) {
+                $this->_attributes['vAxis'] = substr($this->_attributes['vAxis'], 0, -1) . ', minValue: 0}';
+            } else {
+                $this->addAttribute('vAxis', '{minValue: 0}');
+            }
         } else {
-            $this->addAttribute('hAxis', '{minValue: 0}');
+            if (isset($this->_attributes['hAxis'])) {
+                $this->_attributes['hAxis'] = substr($this->_attributes['hAxis'], 0, -1) . ', minValue: 0}';
+            } else {
+                $this->addAttribute('hAxis', '{minValue: 0}');
+            }
         }
         if ($this->slantedText) {
             if ($this->vertical) {
-                $this->addAttribute('hAxis', '{minValue: 0, slantedText: true, slantedTextAngle: '.$this->slantedTextAngle.'}');
+                if (isset($this->_attributes['hAxis'])) {
+                    $this->_attributes['hAxis'] = substr($this->_attributes['hAxis'], 0, -1) . ', slantedText: true, slantedTextAngle: '.$this->slantedTextAngle.'}';
+                } else {
+                    $this->addAttribute('hAxis', '{slantedText: true, slantedTextAngle: '.$this->slantedTextAngle.'}');
+                }
             }
         }
 

@@ -65,7 +65,6 @@ class Orga_Service_OrganizationService
             self::TEMPLATE_EMPTY => __('Orga', 'add', 'templateEmpty'),
             self::TEMPLATE_USER_INVENTORY => __('Orga', 'add', 'templateUserInventory'),
             self::TEMPLATE_USER_REPORTING => __('Orga', 'add', 'templateUserReports'),
-            self::TEMPLATE_DEMO => __('Orga', 'add', 'templateDemo'),
         ];
     }
 

@@ -262,11 +262,11 @@
                     '</div>' +
                     '<hr />' +
                     '<p>' + data.info + '</p>' +
-                    '<a class="btn btn-primary" href="orga/organization">' +
+                    '<a class="btn btn-primary pull-left" href="orga/organization">' +
                         '<i class="fa fa-home"></i> ' +
                         '<?=___('Orga', 'add', 'organizationBuildingGoHome')?>' +
                     '</a> ' +
-                    '<a class="btn" href="orga/organization/add">' +
+                    '<a class="btn pull-right" href="orga/organization/add">' +
                         '<i class="fa fa-plus"></i> ' +
                         '<?=___('Orga', 'add', 'organizationBuildingAddMore')?>' +
                     '</a> '
@@ -280,11 +280,11 @@
                 if (typeof(response.typeError) == 'string') {
                     errorType = response.typeError;
                 }
-                var message = '<?=___('Orga', 'view', 'errorWhileCreatingOrganization')?>';
+                var message = '<?=___('Orga', 'add', 'errorWhileCreatingOrganization')?>';
                 if (typeof(response.message) == 'string') {
                     message = response.message;
                 }
-                var complementaryInfo = '<?=___('Orga', 'view', 'organizationTryAgainOrContactAdministrators')?>';
+                var complementaryInfo = '<?=___('Orga', 'add', 'organizationTryAgainOrContactAdministrators')?>';
                 if (typeof(response.info) == 'string') {
                     complementaryInfo = response.complementary;
                 }
@@ -382,7 +382,7 @@
                 '<label class="control-label" for="' + identifier + '"><?=___('Orga', 'add', 'organizationMainSubAxisLabel')?></label>' +
                 '<div class="controls">' +
                     '<div class="input">' +
-                        '<input type="text" id="' + identifier + '" name="' + identifier + '" placeholder="pays, zone, marque,…">' +
+                        '<input type="text" id="' + identifier + '" name="' + identifier + '" placeholder="<?=___('Orga', 'add', 'organizationMainSubAxisPlaceholder')?>">' +
                         '<input type="hidden" id="' + identifier + '-parent" name="' + identifier + '-parent" value="' + parentAxisId + '">' +
                     '</div>' +
                     '<div class="input">' +
@@ -625,7 +625,7 @@
                         state = false;
                     } else if ($('input[name="' + $(this).val() + '"]').val() == '') {
                         $(this).parent().parent().parent().addClass('warning');
-                        $(this).after('<span class="help-block"><?=___('UI', 'formValidation', 'usingEmptyField')?></span>');
+                        $(this).after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                         $('input[name="' + $(this).val() + '"]').parent().parent().parent().addClass('warning');
                         $('input[name="' + $(this).val() + '"]').after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                         state = false;

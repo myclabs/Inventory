@@ -4,6 +4,7 @@ namespace User\Domain\ACL\Role;
 
 use Orga\Model\ACL\Action\CellAction;
 use Orga\Model\ACL\CellAuthorization;
+use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Model_Organization;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Authorization\NamedResourceAuthorization;
@@ -37,10 +38,10 @@ class AdminRole extends Role implements OptimizedRole
 
         // Inheritance
         $allUsers = User::loadList();
-        foreach ($allUsers as $organization) {
-            /** @var User $organization */
+        foreach ($allUsers as $user) {
+            /** @var User $user */
             foreach ($userAuthorizations as $userAuthorization) {
-                UserAuthorization::createChildAuthorization($userAuthorization, $organization);
+                UserAuthorization::createChildAuthorization($userAuthorization, $user);
             }
         }
 
@@ -60,7 +61,7 @@ class AdminRole extends Role implements OptimizedRole
         foreach ($allOrganizations as $organization) {
             /** @var Orga_Model_Organization $organization */
             foreach ($organizationAuthorizations as $organizationAuthorization) {
-                UserAuthorization::createChildAuthorization($organizationAuthorization, $organization);
+                OrganizationAuthorization::createChildAuthorization($organizationAuthorization, $organization);
             }
 
             // Cellule global
@@ -106,10 +107,10 @@ class AdminRole extends Role implements OptimizedRole
 
         // Inheritance
         $allUsers = User::loadList();
-        foreach ($allUsers as $organization) {
-            /** @var User $organization */
+        foreach ($allUsers as $user) {
+            /** @var User $user */
             foreach ($userAuthorizations as $userAuthorization) {
-                yield UserAuthorization::createChildAuthorization($userAuthorization, $organization, null, false);
+                yield UserAuthorization::createChildAuthorization($userAuthorization, $user, null, false);
             }
         }
 
@@ -133,7 +134,12 @@ class AdminRole extends Role implements OptimizedRole
         foreach ($allOrganizations as $organization) {
             /** @var Orga_Model_Organization $organization */
             foreach ($organizationAuthorizations as $organizationAuthorization) {
-                yield UserAuthorization::createChildAuthorization($organizationAuthorization, $organization, null, false);
+                yield OrganizationAuthorization::createChildAuthorization(
+                    $organizationAuthorization,
+                    $organization,
+                    null,
+                    false
+                );
             }
 
             // Admin sur la cellule globale

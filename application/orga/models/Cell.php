@@ -1212,7 +1212,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function getPopulatingCells()
     {
         // Renvoie une exception si la cellule ne possède pas de cube de DW.
-        $this->getDWCube();
+        if ($this->getGranularity()->getCellsGenerateDWCubes()) {
+            $this->getDWCube();
+        }
 
         $populatingCells = [];
 

@@ -184,6 +184,14 @@
                 <seg>Creation of a user access control level</seg>
             </tuv>
         </tu>
+        <tu tuid="granularityAlreadyConfigured">
+            <tuv xml:lang="fr">
+                <seg>Ce niveau est déjà configurée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This level is already configured</seg>
+            </tuv>
+        </tu>
 
         <!-- Modification -->
 
