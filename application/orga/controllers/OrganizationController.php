@@ -324,12 +324,12 @@ class Orga_OrganizationController extends Core_Controller
         // Tab Relevant.
         $canUserEditRelevance = $isUserAllowedToEditCells;
         if (!$isUserAllowedToEditOrganization) {
-            $relevanceGranularities = [];
+            $canUserEditRelevance = false;
             foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
                 if ($granularity->getCellsControlRelevance()) {
+                    $canUserEditRelevance = true;
                     break;
                 }
-                $canUserEditRelevance = false;
             }
         }
         if ($canUserEditRelevance) {
