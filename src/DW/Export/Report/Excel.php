@@ -193,7 +193,7 @@ class DW_Export_Report_Excel extends Export_Excel
                     }
                     $line[] = floatval(
                         str_replace(
-                            '&Acirc;&nbsp;',
+                            ['&Acirc;', '&nbsp;'],
                             '',
                             htmlentities(str_replace(',', '.', $locale->formatNumber($value['value'], 3)))
                         )
@@ -210,7 +210,7 @@ class DW_Export_Report_Excel extends Export_Excel
                     $line[] = array_shift($value['members'])->getLabel();
                     $line[] = floatval(
                         str_replace(
-                            '&Acirc;&nbsp;',
+                            ['&Acirc;', '&nbsp;'],
                             '',
                             htmlentities(str_replace(',', '.', $locale->formatNumber($value['value'], 3)))
                         )
