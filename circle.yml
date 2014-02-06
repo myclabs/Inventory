@@ -33,10 +33,11 @@ dependencies:
 
 database:
   override:
-    - php scripts/build/build.php -e testsunitaires update
-    - php scripts/build/build.php -e testsunitaires populate
+    - bin/tests db:populate
 
 test:
   override:
     - phpunit
-    - php scripts/build/build.php -e testsunitaires create update populate populateTest
+    # Test des scripts populate
+    - bin/inventory populate test
+    - bin/inventory populate testDW
