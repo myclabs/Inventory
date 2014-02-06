@@ -882,11 +882,12 @@ class Orga_CellController extends Core_Controller
         // Liste des exports.
         $exports = [];
 
-        $displayOrgaExport = $this->aclService->isAllowed(
-            $connectedUser,
-            Action::EDIT(),
-            $cell
-        );
+        $displayOrgaExport = (count($cell->getGranularity()->getNarrowerGranularities()) > 0)
+            && $this->aclService->isAllowed(
+                $connectedUser,
+                Action::EDIT(),
+                $cell
+            );
         if ($displayOrgaExport) {
             if (!$cell->getGranularity()->hasAxes()) {
                 // Orga Structure.
