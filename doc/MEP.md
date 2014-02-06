@@ -27,6 +27,12 @@ php scripts/migration/2.10/migrate.php
 
 - Faire un rebuild de DW (pour regénérer les traductions)
 
+- Lancer le script de rebuild des ACL
+
+```
+php scripts/jobs/acl/rebuild.php acl:rebuild
+```
+
 - Si il reste des traductions de DW dans `ext_translations`, les supprimer
 
 
