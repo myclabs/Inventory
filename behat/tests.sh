@@ -21,8 +21,8 @@ java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 
 sleep 7
 
-# Clear Memcached
-echo 'flush_all' | netcat localhost 11211
+# Clear caches
+../bin/inventory cache:clear
 
 # Composer
 cd ..
