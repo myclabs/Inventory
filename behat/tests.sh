@@ -19,7 +19,7 @@ export DISPLAY=:0
 # Start selenium server
 java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 
-sleep 7
+sleep 5
 
 # Clear caches
 ../bin/inventory cache:clear
