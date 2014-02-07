@@ -82,4 +82,9 @@ return [
             ),
     UpdateDBCommand::class => DI\object()
             ->constructor(DI\link(EntityManager::class), DI\link('db.name')),
+
+    Orga_Service_ETLStructure::class => DI\object()
+            ->constructorParameter('defaultLocale', DI\link('translation.defaultLocale'))
+            ->constructorParameter('locales', DI\link('translation.languages')),
+
 ];
