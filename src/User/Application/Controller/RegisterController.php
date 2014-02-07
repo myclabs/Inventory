@@ -2,7 +2,6 @@
 
 use Core\Annotation\Secure;
 use User\Application\Service\AuthAdapter;
-use User\Domain\User;
 use User\Domain\UserService;
 
 /**
@@ -22,9 +21,9 @@ class User_RegisterController extends UI_Controller_Captcha
 
     /**
      * @Inject
-     * @var Orga_Service_OrganizationService
+     * @var Orga_Service_PublicDemoService
      */
-    private $organizationService;
+    private $publicDemoService;
 
     /**
      * @Inject("feature.register")
@@ -49,14 +48,16 @@ class User_RegisterController extends UI_Controller_Captcha
         }
 
         if ($this->getRequest()->isPost()) {
-            $email = $this->getParam('email');
-            $this->view->email = $email;
+            $projectName = trim($this->getParam('projectName'));
+            $this->view->assign('projectName', $projectName);
+            $email = trim($this->getParam('email'));
+            $this->view->assign('email', $email);
             $password = $this->getParam('password');
             $password2 = $this->getParam('password2');
             $captchaInput = $this->getParam('captcha');
 
             // Validation du formulaire
-            if (! $email || ! $password || ! $password2) {
+            if (! $projectName || ! $email || ! $password || ! $password2) {
                 UI_Message::addMessageStatic(__('UI', 'formValidation', 'allFieldsRequired'));
                 return;
             }
@@ -76,13 +77,16 @@ class User_RegisterController extends UI_Controller_Captcha
 
             try {
                 $this->entityManager->beginTransaction();
-                $this->organizationService->createDemoOrganizationAndUser($email, $password);
+                $this->publicDemoService->createDemoAccount($email, $password);
                 $this->entityManager->flush();
                 $this->entityManager->commit();
             } catch (Core_ORM_DuplicateEntryException $e) {
                 $this->entityManager->rollback();
                 UI_Message::addMessageStatic(__('User', 'editEmail', 'emailAlreadyUsed'));
                 return;
+            } catch (\Exception $e) {
+                $this->entityManager->rollback();
+                throw $e;
             }
 
             // Authentification dans la foulée

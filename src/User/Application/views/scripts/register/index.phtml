@@ -1,28 +1,31 @@
 <div class="login-form">
 
-    <h3><?=__('User', 'login', 'register')?></h3>
+    <h3><?=__('User', 'register', 'register')?></h3>
 
     <form action="user/register" method="post">
+        <input type="text" name="projectName" class="input-block-level" required
+               placeholder="<?=__('User', 'register', 'projectName')?>"
+               value="<?=$this->projectName?>">
         <input type="text" name="email" class="input-block-level" required
                placeholder="<?=__('User', 'user', 'emailAddress')?>"
                value="<?=$this->email?>">
         <input type="password" name="password" class="input-block-level" required autocomplete="off"
-               placeholder="<?=__('User', 'login', 'password')?>">
+               placeholder="<?=__('User', 'register', 'password')?>">
         <input type="password" name="password2" class="input-block-level" required
-               placeholder="<?=__('User', 'login', 'passwordAgain')?>">
+               placeholder="<?=__('User', 'register', 'passwordAgain')?>">
 
         <?php
         $captcha = new UI_Form_Element_Captcha('captcha', 'user/captcha/newimage');
-        $captcha->setLabel(__('User', 'resetPassword', 'captchaFieldLabel'));
+        $captcha->setLabel(__('User', 'register', 'captchaFieldLabel'));
         $captcha->setRequired();
         echo $captcha->render();
         ?>
 
         <input type="submit" id="connection" class="btn btn-primary btn-block"
-               value="<?=__('User', 'login', 'register')?>">
+               value="<?=__('User', 'register', 'register')?>">
 
         <p>
-            <?=__('User', 'login', 'alreadyRegistered')?>
+            <?=__('User', 'register', 'alreadyRegistered')?>
         </p>
 
         <a href="user/action/login" class="btn btn-block">
