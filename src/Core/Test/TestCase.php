@@ -2,6 +2,7 @@
 
 namespace Core\Test;
 
+use DI\Container;
 use Doctrine\ORM\EntityManager;
 use PHPUnit_Framework_TestCase;
 
@@ -19,11 +20,18 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
     protected $entityManager;
 
     /**
+     * @var Container
+     */
+    private $container;
+
+    /**
      * Set up
      */
     public function setUp()
     {
-        \Core\ContainerSingleton::getContainer()->injectOn($this);
+        $this->container = \Core\ContainerSingleton::getContainer();
+
+        $this->container->injectOn($this);
     }
 
     /**
@@ -33,13 +41,13 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
      */
     protected function get($name)
     {
-        return \Core\ContainerSingleton::getContainer()->get($name);
+        return $this->container->get($name);
     }
 
     /**
      * À utiliser uniquement dans des méthodes statiques.
      *
-     * @return \Doctrine\ORM\EntityManager
+     * @return EntityManager
      */
     protected static function getEntityManager()
     {

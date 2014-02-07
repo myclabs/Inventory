@@ -26,11 +26,15 @@ class Orga_Service_ETLStructure
     private $eventDispatcher;
 
     /**
+     * La locale par défaut de l'application.
+     *
      * @var string
      */
     private $defaultLocale;
 
     /**
+     * Les différentes locales de l'application.
+     *
      * @var array|string[]
      */
     private $locales;
@@ -600,10 +604,8 @@ class Orga_Service_ETLStructure
      */
     protected function isDWCubeUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
-        return (
-            $this->areDWIndicatorsUpToDate($dWCube)
-            && $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
-        );
+        return $this->areDWIndicatorsUpToDate($dWCube)
+            && $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters);
     }
 
     /**
@@ -621,7 +623,7 @@ class Orga_Service_ETLStructure
         foreach (Classif_Model_Indicator::loadList() as $classifIndex => $classifIndicator) {
             /** @var Classif_Model_Indicator $classifIndicator */
             foreach ($dWCube->getIndicators() as $dWIndex => $dWIndicator) {
-                if (!($this->isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator))) {
+                if (! $this->isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator)) {
                     unset($classifIndicators[$classifIndex]);
                     unset($dWIndicators[$dWIndex]);
                 }
@@ -1032,35 +1034,36 @@ class Orga_Service_ETLStructure
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
         if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-            try {
-                // Début de transaction.
-                $this->entityManager->beginTransaction();
+            return;
+        }
 
-                $this->etlDataService->clearDWResultsForCell($cell);
-                $this->entityManager->flush();
+        try {
+            // Début de transaction.
+            $this->entityManager->beginTransaction();
 
-                $this->updateCellDWCubeLabel($cell);
-                $this->resetDWCube(
-                    $cell->getDWCube(),
-                    $cell->getGranularity()->getOrganization(),
-                    array(
-                        'axes' => $cell->getGranularity()->getAxes(),
-                        'members' => $cell->getMembers()
-                    )
-                );
+            $this->etlDataService->clearDWResultsForCell($cell);
+            $this->entityManager->flush();
 
-                $this->etlDataService->populateDWResultsForCell($cell);
-                $this->entityManager->flush();
+            $this->updateCellDWCubeLabel($cell);
+            $this->resetDWCube(
+                $cell->getDWCube(),
+                $cell->getGranularity()->getOrganization(),
+                array(
+                    'axes' => $cell->getGranularity()->getAxes(),
+                    'members' => $cell->getMembers()
+                )
+            );
 
-                // Fin de transaction.
-                $this->entityManager->commit();
-            } catch (ErrorException $e) {
-                // Annulation de la transaction.
-                $this->entityManager->rollback();
+            $this->etlDataService->populateDWResultsForCell($cell);
+            $this->entityManager->flush();
 
-                throw $e;
-            }
+            // Fin de transaction.
+            $this->entityManager->commit();
+        } catch (ErrorException $e) {
+            // Annulation de la transaction.
+            $this->entityManager->rollback();
 
+            throw $e;
         }
     }
 
