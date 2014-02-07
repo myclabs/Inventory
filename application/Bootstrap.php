@@ -85,6 +85,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $builder->addDefinitions(APPLICATION_PATH . '/configs/config.doctrine.php');
         $builder->addDefinitions(APPLICATION_PATH . '/configs/config.work.php');
 
+        // Modules
+        $builder->addDefinitions(PACKAGE_PATH . '/src/User/Application/config.php');
+        $builder->addDefinitions(APPLICATION_PATH . '/orga/config.php');
+
         switch (APPLICATION_ENV) {
             case 'testsunitaires':
                 $builder->addDefinitions(APPLICATION_PATH . '/configs/config.env.tests.php');

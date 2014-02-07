@@ -25,11 +25,6 @@ return [
     'emails.noreply.name'   => 'My C-Tool',
     'emails.noreply.adress' => 'noreply@myc-sense.com',
     'emails.contact.adress' => 'contact@myc-sense.com',
-    UserService::class      => DI\object()
-            ->methodParameter('__construct', 'contactEmail', DI\link('emails.contact.adress'))
-            ->methodParameter('__construct', 'noReplyEmail', DI\link('emails.noreply.adress'))
-            ->methodParameter('__construct', 'noReplyName', DI\link('emails.noreply.name'))
-            ->methodParameter('__construct', 'applicationUrl', DI\link('application.url')),
 
     // Chemin vers les fichier de fonts (nécéssaire pour le Captcha)
     'police.path' => 'data/fonts/',
@@ -50,9 +45,6 @@ return [
     // Surcharge du nombre de chiffres significatifs
     // Fonctionnalité spéciale pour art225 et art255
     'locale.minSignificantFigures' => null,
-
-    IsAllowedHelper::class => DI\object()
-        ->lazy(),
 
     // Event manager
     EventDispatcher::class => DI\factory(function (Container $c) {
