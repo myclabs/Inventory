@@ -285,6 +285,27 @@ class Inventory_Plugin_Acl extends ACLPlugin
     }
 
     /**
+     * @param User                             $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    protected function editInventoryStatusRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $canInput = $this->aclService->isAllowed(
+            $identity,
+            CellAction::INPUT(),
+            $this->getCell($request)
+        );
+        $canViewReports = $this->aclService->isAllowed(
+            $identity,
+            CellAction::VIEW_REPORTS(),
+            $this->getCell($request)
+        );
+
+        return $canInput && $canViewReports;
+    }
+
+    /**
      * @param User      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
