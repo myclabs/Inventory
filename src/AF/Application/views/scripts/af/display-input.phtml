@@ -21,7 +21,7 @@ if ($inputSet) {
 ?>
 
 <style type="text/css">
-    #formActionGroup .alert {
+    .alertValidateInput {
         margin-top: -20px;
         margin-bottom: 10px;
     }
@@ -63,7 +63,7 @@ HTML;
     }
 
     $actionGroup->content = <<<HTML
-        <div class="alert alert-success">
+        <div class="alert alert-success alertValidateInput hide">
             La saisie est complète, vous devez la valider si vous ne comptez plus y apporter de modifications.
         </div>
         <button type="button" class="inputSave btn" data-loading-text="$loadingText">
