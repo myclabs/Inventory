@@ -20,6 +20,13 @@ if ($inputSet) {
 }
 ?>
 
+<style type="text/css">
+    #formActionGroup .alert {
+        margin-top: -20px;
+        margin-bottom: 10px;
+    }
+</style>
+
 <div class="inputProgress row-fluid">
 
     <div class="progress span9">
@@ -56,6 +63,9 @@ HTML;
     }
 
     $actionGroup->content = <<<HTML
+        <div class="alert alert-success">
+            La saisie est complète, vous devez la valider si vous ne comptez plus y apporter de modifications.
+        </div>
         <button type="button" class="inputSave btn" data-loading-text="$loadingText">
             $saveButtonLabel
         </button>

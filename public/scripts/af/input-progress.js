@@ -85,7 +85,7 @@ AF.InputProgress.prototype = {
     },
 
     /**
-     * Saisie complète
+     * Saisie terminée
      */
     inputFinished: function () {
         $('.inputProgress .progress .bar')
