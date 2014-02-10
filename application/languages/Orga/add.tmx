@@ -7,26 +7,26 @@
         <!-- Templates -->
         <tu tuid="templateEmpty">
             <tuv xml:lang="fr">
-                <seg>Organisation vide</seg>
+                <seg>Aucun modèle</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Empty organization</seg>
+                <seg>No template</seg>
             </tuv>
         </tu>
         <tu tuid="templateUserInventory">
             <tuv xml:lang="fr">
-                <seg>Organisation de collecte</seg>
+                <seg>Modèle de collecte</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Inventory organization</seg>
+                <seg>Inventory and reporting template</seg>
             </tuv>
         </tu>
         <tu tuid="templateUserReports">
             <tuv xml:lang="fr">
-                <seg>Organisation de collecte et d'analyse</seg>
+                <seg>Modèle de collecte et d'analyse</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Reporting organization</seg>
+                <seg>Reporting template</seg>
             </tuv>
         </tu>
         <tu tuid="docLibraryForSocialAction">
@@ -63,12 +63,28 @@
                 <seg>Elements</seg>
             </tuv>
         </tu>
-        <tu tuid="granularities">
+        <tu tuid="inventory">
             <tuv xml:lang="fr">
-                <seg>Niveaux</seg>
+                <seg>Collecte</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Levels</seg>
+                <seg>Inventory</seg>
+            </tuv>
+        </tu>
+        <tu tuid="acl">
+            <tuv xml:lang="fr">
+                <seg>Utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users</seg>
+            </tuv>
+        </tu>
+        <tu tuid="reports">
+            <tuv xml:lang="fr">
+                <seg>Analyses</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Reports</seg>
             </tuv>
         </tu>
         <tu tuid="validation">
@@ -83,10 +99,18 @@
         <!-- Champs -->
         <tu tuid="organizationLabel">
             <tuv xml:lang="fr">
-                <seg>Libellé de l'organisation</seg>
+                <seg>Libellé du du workspace</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organization label</seg>
+                <seg>Workspace label</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationLabelPlaceholder">
+            <tuv xml:lang="fr">
+                <seg>Organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organization</seg>
             </tuv>
         </tu>
         <tu tuid="organizationTemplate">
@@ -99,7 +123,7 @@
         </tu>
         <tu tuid="organizationTemplateExplanation">
             <tuv xml:lang="fr">
-                <seg>Choix du type de l'organization. Ce choix n'est là que pour aider lors de la configuration initiale.</seg>
+                <seg>Choix du type de l'organization. Ce choix est là pour aider lors de la configuration initiale.</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Organization type. This is only meant to help the first configuration.</seg>
@@ -107,18 +131,10 @@
         </tu>
         <tu tuid="organizationMainAxisLabel">
             <tuv xml:lang="fr">
-                <seg>Libellé de l'axe principal</seg>
+                <seg>Libellé de l'axe géographique</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Main axis label</seg>
-            </tuv>
-        </tu>
-        <tu tuid="organizationMainAxisHelp">
-            <tuv xml:lang="fr">
-                <seg>Axe principal autour duquel gravite l'organisation.</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Main axis of the organization.</seg>
+                <seg>Geographic axis label</seg>
             </tuv>
         </tu>
         <tu tuid="organizationMainAxisPlaceholder">
@@ -147,7 +163,7 @@
         </tu>
         <tu tuid="organizationMainSubAxisPlaceholder">
             <tuv xml:lang="fr">
-                <seg>Pays, Zone, Marque, …</seg>
+                <seg>Pays, Zone, Marque, Activités, …</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Country, Zone, Brand, …</seg>
@@ -179,7 +195,7 @@
         </tu>
         <tu tuid="organizationInputsAxisPlaceholder">
             <tuv xml:lang="fr">
-                <seg>Catégorie, type, …</seg>
+                <seg>Catégorie, Type, Rubrique, …</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Category, Type, …</seg>
@@ -197,10 +213,10 @@
         <!-- Legendes -->
         <tu tuid="organizationMainAxisTitle">
             <tuv xml:lang="fr">
-                <seg>Choix des axes principaux</seg>
+                <seg>Choix de l'axe géographique et de ses agrégation</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Choice of main axes</seg>
+                <seg>Choice of the geographic axis and his aggregations</seg>
             </tuv>
         </tu>
         <tu tuid="organizationTimeAxisTitle">
@@ -213,7 +229,7 @@
         </tu>
         <tu tuid="organizationInputsAxisTitle">
             <tuv xml:lang="fr">
-                <seg>Choix de l'axe de catégorisation des saisies</seg>
+                <seg>Choix de l'axe de découpage des formulaires</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Choice of inputs categorization axis</seg>
@@ -221,23 +237,23 @@
         </tu>
         <tu tuid="inventoryGranularityTitle">
             <tuv xml:lang="fr">
-                <seg>Choix de niveau de contrôle des collecte</seg>
+                <seg>Choix de niveau de gestion des collecte</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Choice of inventory control level</seg>
+                <seg>Choice of inventory management level</seg>
             </tuv>
         </tu>
-        <tu tuid="inputsGranularitiesTitle">
+        <tu tuid="aclGranularitiesTitle">
             <tuv xml:lang="fr">
-                <seg>Choix des niveaux de saisies</seg>
+                <seg>Choix des niveaux d'affectacion des utilisateurs</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Choice of inputs levels</seg>
+                <seg>Choice of users assignment levels</seg>
             </tuv>
         </tu>
         <tu tuid="reportsGranularitiesTitle">
             <tuv xml:lang="fr">
-                <seg>Choix des niveaux d'analye</seg>
+                <seg>Choix des niveaux d'analyse</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Choice of analysis levels</seg>
@@ -245,10 +261,10 @@
         </tu>
         <tu tuid="addValidationTitle">
             <tuv xml:lang="fr">
-                <seg>Résumé de l'organisation</seg>
+                <seg>Résumé du workspace</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organization summary</seg>
+                <seg>Workspace summary</seg>
             </tuv>
         </tu>
         <tu tuid="inventoryGranularityLabel">
@@ -259,12 +275,12 @@
                 <seg>Inventory level</seg>
             </tuv>
         </tu>
-        <tu tuid="inputsGranularitiesLabel">
+        <tu tuid="aclGranularitiesLabel">
             <tuv xml:lang="fr">
-                <seg>Niveaux de saisies</seg>
+                <seg>Niveaux d'affectation des utilisateurs</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Inputs levevls</seg>
+                <seg>Users assignment levels</seg>
             </tuv>
         </tu>
         <tu tuid="reportsGranularitiesLabel">
@@ -295,15 +311,15 @@
         </tu>
         <tu tuid="navigationEnd">
             <tuv xml:lang="fr">
-                <seg>Terminer la configuration</seg>
+                <seg>Initialiser la configuration</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>End the configuration</seg>
+                <seg>Initialize the configuration</seg>
             </tuv>
         </tu>
         <tu tuid="warning">
             <tuv xml:lang="fr">
-                <seg>Atention</seg>
+                <seg>Attention</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Warning</seg>
@@ -311,28 +327,28 @@
         </tu>
         <tu tuid="resetAfterAxesStep">
             <tuv xml:lang="fr">
-                <seg>Revenir à cette étape par la suite, effacera les configuration établies entre temps.</seg>
+                <seg>Revenir à cette étape par la suite, vous fera recommencer la configuration.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Coming back to this step will erase any configuration made meanwhile.</seg>
+                <seg>Returning to this step will makes you start the configuration again.</seg>
             </tuv>
         </tu>
         <tu tuid="addValidationMessage">
             <tuv xml:lang="fr">
-                <seg>Configuration terminée. Cliquer sur "Terminer" constuira l'organisation.</seg>
+                <seg>Cliquer sur "Initialiser" constuira votre workspace. Vous pourrez compléter la configuration en allant dans "Paramétrage".</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Configuration completed. Clicking on "End" will build the organization.</seg>
+                <seg>Clicking on "Initialize" will build your workspace. You can complete the configuration by going in "Configuration"</seg>
             </tuv>
         </tu>
 
         <!-- Popup -->
         <tu tuid="organizationBuildingPopupTitle">
             <tuv xml:lang="fr">
-                <seg>Construction de l'organisation</seg>
+                <seg>Initialisation du workspace</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Building organization</seg>
+                <seg>Initialization of the workspace</seg>
             </tuv>
         </tu>
         <tu tuid="organizationBuildingMessage">
@@ -385,10 +401,10 @@
         </tu>
         <tu tuid="complementaryInfo">
             <tuv xml:lang="fr">
-                <seg>Vous pourrez désormais voir l'organisation sur la page d'accueil.</seg>
+                <seg>Vous pouvez aller compléter la configuration en cliquant sur "Paramétrage" du workspace depuis la page d'accueil.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>You can now see the organization on the home page.</seg>
+                <seg>You can go complete the configuration by clicking "Configuration" in the workspace from the home page.</seg>
             </tuv>
         </tu>
 
