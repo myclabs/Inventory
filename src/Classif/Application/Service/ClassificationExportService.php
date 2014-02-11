@@ -1,30 +1,26 @@
 <?php
-/**
- * Classe Classif_Service_Export
- * @author valentin.claras
- * @package    Classif
- * @subpackage Service
- */
+
+namespace Classif\Application\Service;
 
 use Classif\Domain\AxisMember;
 use Classif\Domain\ContextIndicator;
 use Classif\Domain\IndicatorAxis;
 use Classif\Domain\Context;
 use Classif\Domain\Indicator;
+use PHPExcel_Writer_Excel2007;
+use PHPExcel_Writer_Excel5;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
 
 /**
- * Service Classif.
- * @package    Classif
- * @subpackage Service
+ * Export des données de classification.
+ *
+ * @author valentin.claras
  */
-class Classif_Service_Export
+class ClassificationExportService
 {
     /**
-     * Exporte la version de classif.
-     *
      * @param string $format
      */
     public function stream($format)
@@ -54,10 +50,10 @@ class Classif_Service_Export
         $modelBuilder->bind('contextindicators', ContextIndicator::loadList());
         $modelBuilder->bindFunction(
             'displayContextIndicatorAxes',
-            function(ContextIndicator $contextIndicator) {
+            function (ContextIndicator $contextIndicator) {
                 $axesLabelRef = [];
                 foreach ($contextIndicator->getAxes() as $axis) {
-                        $axesLabelRef[] = $axis->getLabel() . ' (' . $axis->getRef() . ')';
+                    $axesLabelRef[] = $axis->getLabel() . ' (' . $axis->getRef() . ')';
                 }
                 return implode(' - ', $axesLabelRef);
             }
@@ -72,7 +68,7 @@ class Classif_Service_Export
         $modelBuilder->bind('axes', IndicatorAxis::loadListOrderedAsAscendantTree());
         $modelBuilder->bindFunction(
             'displayAxisDirectNarrower',
-            function(IndicatorAxis $axis) {
+            function (IndicatorAxis $axis) {
                 if ($axis->getDirectNarrower() !== null) {
                     return $axis->getDirectNarrower()->getLabel() . ' (' . $axis->getDirectNarrower()->getRef() . ')';
                 }
@@ -87,7 +83,7 @@ class Classif_Service_Export
         $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bindFunction(
             'displayParentMemberForAxis',
-            function(AxisMember $member, IndicatorAxis $broaderAxis) {
+            function (AxisMember $member, IndicatorAxis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
                         return $directParent->getLabel();
@@ -96,7 +92,6 @@ class Classif_Service_Export
                 return '';
             }
         );
-
 
         switch ($format) {
             case 'xls':
@@ -109,10 +104,9 @@ class Classif_Service_Export
         }
 
         $export->export(
-            $modelBuilder->build(new YamlMappingReader(__DIR__.'/export.yml')),
+            $modelBuilder->build(new YamlMappingReader(__DIR__ . '/export.yml')),
             'php://output',
             $writer
         );
     }
-
 }

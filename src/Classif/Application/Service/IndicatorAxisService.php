@@ -1,19 +1,19 @@
 <?php
-/**
- * Classe Classif_Service_Axis
- * @author valentin.claras
- * @package    Classif
- * @subpackage Service
- */
+
+namespace Classif\Application\Service;
+
 use Classif\Domain\ContextIndicator;
 use Classif\Domain\IndicatorAxis;
+use Core_Exception_User;
+use Core_Model_Query;
+use Core_Tools;
 
 /**
  * Service Axis.
- * @package    Classif
- * @subpackage Service
+ *
+ * @author valentin.claras
  */
-class Classif_Service_Axis
+class IndicatorAxisService
 {
     /**
      * Ajoute un Axis et le renvoie.
@@ -24,7 +24,7 @@ class Classif_Service_Axis
      *
      * @return IndicatorAxis
      */
-    public function add($ref, $label, $refParent=null)
+    public function add($ref, $label, $refParent = null)
     {
         $axis = new IndicatorAxis();
 
@@ -110,7 +110,7 @@ class Classif_Service_Axis
      *
      * @return string
      */
-    public function updateParent($axisRef, $newParentRef, $newPosition=null)
+    public function updateParent($axisRef, $newParentRef, $newPosition = null)
     {
         $axis = IndicatorAxis::loadByRef($axisRef);
 
@@ -130,7 +130,7 @@ class Classif_Service_Axis
      * Change la position d'un Axis puis renvoie ce dernier.
      *
      * @param string $axisRef
-     * @param int $newPosition
+     * @param int    $newPosition
      *
      * @return string
      */
@@ -212,5 +212,4 @@ class Classif_Service_Axis
             throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
     }
-
 }

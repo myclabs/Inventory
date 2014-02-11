@@ -11,19 +11,19 @@ Classif\Domain\ContextIndicator:
 
   manyToOne:
     context:
-      targetEntity: Context
+      targetEntity: Classif\Domain\Context
       joinColumn:
         name: idContext
         referencedColumnName: id
     indicator:
-      targetEntity: Indicator
+      targetEntity: Classif\Domain\Indicator
       joinColumn:
         name: idIndicator
         referencedColumnName: id
 
   manyToMany:
     axes:
-      targetEntity: IndicatorAxis
+      targetEntity: Classif\Domain\IndicatorAxis
       joinTable:
         name: Classif_ContextIndicator_Axes
         joinColumns:

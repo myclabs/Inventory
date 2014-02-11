@@ -1,6 +1,6 @@
 Classif\Domain\AxisMember:
   type: entity
-  repositoryClass: Core_Model_Repository_Ordered
+  repositoryClass: \Core_Model_Repository_Ordered
   table: Classif_Member
 
   gedmo:
@@ -29,16 +29,16 @@ Classif\Domain\AxisMember:
 
   manyToOne:
     axis:
-      targetEntity: IndicatorAxis
+      targetEntity: Classif\Domain\IndicatorAxis
       inversedBy: members
       joinColumn:
         name: idAxis
         referencedColumnName: id
 
   manyToMany:
-    _directChildren:
-      targetEntity: AxisMember
-      inversedBy: _directParents
+    directChildren:
+      targetEntity: Classif\Domain\AxisMember
+      inversedBy: directParents
       joinTable:
         name: Classif_Member_Association
         joinColumns:
@@ -47,9 +47,9 @@ Classif\Domain\AxisMember:
         inverseJoinColumns:
           idChild:
             referencedColumnName: id
-    _directParents:
-      targetEntity: AxisMember
-      mappedBy: _directChildren
+    directParents:
+      targetEntity: Classif\Domain\AxisMember
+      mappedBy: directChildren
       orderBy:
         position: ASC
 

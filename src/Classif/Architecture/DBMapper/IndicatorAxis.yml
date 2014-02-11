@@ -1,6 +1,6 @@
 Classif\Domain\IndicatorAxis:
   type: entity
-  repositoryClass: Core_Model_Repository_Ordered
+  repositoryClass: \Core_Model_Repository_Ordered
   table: Classif_Axis
 
   gedmo:
@@ -30,7 +30,7 @@ Classif\Domain\IndicatorAxis:
 
   manyToOne:
     directNarrower:
-      targetEntity: IndicatorAxis
+      targetEntity: Classif\Domain\IndicatorAxis
       inversedBy: directBroaders
       joinColumn:
         name: idDirectNarrower
@@ -38,13 +38,13 @@ Classif\Domain\IndicatorAxis:
 
   oneToMany:
     directBroaders:
-      targetEntity: IndicatorAxis
+      targetEntity: Classif\Domain\IndicatorAxis
       mappedBy: directNarrower
       cascade: [ remove ]
       orderBy:
         position: ASC
     members:
-      targetEntity: AxisMember
+      targetEntity: Classif\Domain\AxisMember
       mappedBy: axis
       cascade: [ remove ]
       orderBy:

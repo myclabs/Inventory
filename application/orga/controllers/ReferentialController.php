@@ -1,5 +1,6 @@
 <?php
 
+use Classif\Application\Service\ClassificationExportService;
 use Core\Annotation\Secure;
 use Techno\Application\Service\ExportService;
 use User\Domain\User;
@@ -80,7 +81,7 @@ class Orga_ReferentialController extends Core_Controller
 
         switch ($export) {
             case 'Classif':
-            $exportService = new Classif_Service_Export();
+            $exportService = new ClassificationExportService();
             $streamFunction = 'stream';
             $baseFilename = __('Classif', 'classification', 'classification');
             break;

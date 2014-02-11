@@ -7,6 +7,7 @@
  * @subpackage Controller
  */
 
+use Classif\Application\Service\IndicatorAxisService;
 use Classif\Domain\IndicatorAxis;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
@@ -20,7 +21,7 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
 {
     /**
      * @Inject
-     * @var Classif_Service_Axis
+     * @var IndicatorAxisService
      */
     private $axisService;
 

@@ -2,7 +2,6 @@
 
 namespace Classif\Domain;
 
-use Classif\Domain\AxisMember;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;

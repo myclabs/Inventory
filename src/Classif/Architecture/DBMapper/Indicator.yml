@@ -1,7 +1,7 @@
-Classif\Domain\Context:
+Classif\Domain\Indicator:
   type: entity
-  repositoryClass: Core_Model_Repository_Ordered
-  table: Classif_Context
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Classif_Indicator
 
   gedmo:
     translation:
@@ -26,6 +26,14 @@ Classif\Domain\Context:
         - translatable
     position:
       type: integer
+      nullable: false
+    unit:
+      column: refUnit
+      type: string
+      nullable: false
+    ratioUnit:
+      column: refRatioUnit
+      type: string
       nullable: false
 
   lifecycleCallbacks:
