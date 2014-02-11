@@ -37,6 +37,7 @@ echo $form->render();
 ?>
 
 <script type="text/javascript">
+    $(document).ready(function() { refFromLabel('label', 'ref') });
     $(function () {
         $("textarea").markItUp(mySettings);
     });

@@ -63,6 +63,7 @@ $datagrid->display();
 ?>
 
 <script type="text/javascript">
+    $(document).ready(function() { refFromLabel('listAF_label_addForm', 'listAF_ref_addForm') });
     $("#submit").click(function () {
         $("#duplicateAF").submit();
     });

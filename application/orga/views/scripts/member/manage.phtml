@@ -49,6 +49,7 @@ foreach ($this->axes as $axis) {
     $script .= 'listMembers'.$axis->getRef().'.filter();';
     $script .= '}';
     $script .= '});';
+    $script .= 'refFromLabel(\'listMembers'.$axis->getRef().'_label_addForm\', \'listMembers'.$axis->getRef().'_ref_addForm\');';
 
     if ($this->display === false) {
         echo '<script type="text/javascript">'.$datagridAxisMembers->getScript().$script.'</script>';

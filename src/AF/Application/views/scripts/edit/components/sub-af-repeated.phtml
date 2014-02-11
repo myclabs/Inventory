@@ -98,3 +98,7 @@ $hasFreeLabel->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'other', 'no
 $datagrid->addCol($hasFreeLabel);
 
 echo $datagrid->render();
+?>
+<script type="text/javascript">
+    $(document).ready(function() { refFromLabel('subAfRepeatedDatagrid_label_addForm', 'subAfRepeatedDatagrid_ref_addForm') });
+</script>

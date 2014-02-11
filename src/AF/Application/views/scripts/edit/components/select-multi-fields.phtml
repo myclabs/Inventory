@@ -79,3 +79,7 @@ $selectOption->popup->addAttribute('class', 'large');
 $selectDatagrid->addCol($selectOption);
 
 echo $selectDatagrid->render();
+?>
+<script type="text/javascript">
+    $(document).ready(function() { refFromLabel('selectMultiFieldDatagrid_label_addForm', 'selectMultiFieldDatagrid_ref_addForm') });
+</script>

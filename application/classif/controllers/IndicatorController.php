@@ -32,6 +32,7 @@ class Classif_IndicatorController extends Core_Controller
      */
     public function manageAction()
     {
+        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     }
 
 }
