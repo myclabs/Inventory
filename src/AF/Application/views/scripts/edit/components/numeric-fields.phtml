@@ -114,3 +114,7 @@ $defaultValueReminder->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'pro
 $numericDatagrid->addCol($defaultValueReminder);
 
 echo $numericDatagrid->render();
+?>
+<script type="text/javascript">
+    $(document).ready(function() { refFromLabel('numericFieldDatagrid_label_addForm', 'numericFieldDatagrid_ref_addForm') });
+</script>

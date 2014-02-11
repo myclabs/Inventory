@@ -34,6 +34,7 @@ class Classification_MemberController extends Core_Controller
     public function manageAction()
     {
         $this->view->listAxes = IndicatorAxis::loadListOrderedAsAscendantTree();
+        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     }
 
 }

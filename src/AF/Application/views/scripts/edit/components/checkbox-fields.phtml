@@ -59,3 +59,7 @@ $defaultValueColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'proper
 $checkboxDatagrid->addCol($defaultValueColumn);
 
 echo $checkboxDatagrid->render();
+?>
+<script type="text/javascript">
+    $(document).ready(function() { refFromLabel('checkboxFieldDatagrid_label_addForm', 'checkboxFieldDatagrid_ref_addForm') });
+</script>

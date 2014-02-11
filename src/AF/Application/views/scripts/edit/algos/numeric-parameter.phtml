@@ -66,4 +66,5 @@ echo $datagrid->render();
     $('#algoNumericParameter_addPanel').on('hidden', function() {
         $('#algoNumericParameter_family_addForm').val('').trigger('change');
     });
+    $(document).ready(function() { refFromLabel('algoNumericParameter_label_addForm', 'algoNumericParameter_ref_addForm') });
 </script>
