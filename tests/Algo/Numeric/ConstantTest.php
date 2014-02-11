@@ -7,9 +7,9 @@ use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use AF\Domain\Algorithm\AlgoSet;
 use Calc_UnitValue;
-use Classif\Domain\Context;
-use Classif\Domain\ContextIndicator;
-use Classif\Domain\Indicator;
+use Classification\Domain\Context;
+use Classification\Domain\ContextIndicator;
+use Classification\Domain\Indicator;
 use Core\Test\TestCase;
 use Core_Tools;
 use Doctrine\ORM\UnitOfWork;
@@ -57,11 +57,11 @@ class ConstantTest extends TestCase
     {
         $context = new Context();
         $context->setRef(Core_Tools::generateString(20));
-        $context->setLabel('Classif context');
+        $context->setLabel('Classification context');
         $context->save();
         $indicator = new Indicator();
         $indicator->setRef(Core_Tools::generateString(20));
-        $indicator->setLabel('Classif indicator');
+        $indicator->setLabel('Classification indicator');
         $indicator->setUnit(new UnitAPI('g'));
         $indicator->setRatioUnit($indicator->getUnit());
         $indicator->save();

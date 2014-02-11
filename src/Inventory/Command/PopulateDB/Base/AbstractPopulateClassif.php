@@ -2,11 +2,11 @@
 
 namespace Inventory\Command\PopulateDB\Base;
 
-use Classif\Domain\IndicatorAxis;
-use Classif\Domain\Context;
-use Classif\Domain\ContextIndicator;
-use Classif\Domain\Indicator;
-use Classif\Domain\AxisMember;
+use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Context;
+use Classification\Domain\ContextIndicator;
+use Classification\Domain\Indicator;
+use Classification\Domain\AxisMember;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
 
@@ -44,8 +44,8 @@ abstract class AbstractPopulateClassif
     /**
      * @param string $ref
      * @param string $label
-     * @param \Classif\Domain\IndicatorAxis|null $narrower
-     * @return \Classif\Domain\IndicatorAxis
+     * @param \Classification\Domain\IndicatorAxis|null $narrower
+     * @return \Classification\Domain\IndicatorAxis
      */
     protected function createAxis($ref, $label, IndicatorAxis $narrower = null)
     {
@@ -60,11 +60,11 @@ abstract class AbstractPopulateClassif
     }
 
     /**
-     * @param \Classif\Domain\IndicatorAxis $axis
+     * @param \Classification\Domain\IndicatorAxis $axis
      * @param string $ref
      * @param string $label
      * @param array $parents
-     * @return \Classif\Domain\AxisMember
+     * @return \Classification\Domain\AxisMember
      */
     protected function createMember(IndicatorAxis $axis, $ref, $label, array $parents = [])
     {
@@ -104,7 +104,7 @@ abstract class AbstractPopulateClassif
     /**
      * @param string $ref
      * @param string $label
-     * @return \Classif\Domain\Context
+     * @return \Classification\Domain\Context
      */
     protected function createContext($ref, $label)
     {
@@ -118,8 +118,8 @@ abstract class AbstractPopulateClassif
     /**
      * @param Context $context
      * @param Indicator $indicator
-     * @param \Classif\Domain\IndicatorAxis[] $axes
-     * @return \Classif\Domain\ContextIndicator
+     * @param \Classification\Domain\IndicatorAxis[] $axes
+     * @return \Classification\Domain\ContextIndicator
      */
     protected function createContextIndicator(
         Context $context,

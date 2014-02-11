@@ -2,8 +2,8 @@
 
 namespace AF\Domain\Output;
 
-use Classif\Domain\IndicatorAxis;
-use Classif\Domain\AxisMember;
+use Classification\Domain\IndicatorAxis;
+use Classification\Domain\AxisMember;
 use Core_Model_Entity;
 
 /**
@@ -17,13 +17,13 @@ class OutputIndex extends Core_Model_Entity
     protected $id;
 
     /**
-     * Reference of the classif axis
+     * Reference of the classification axis
      * @var string
      */
     protected $refAxis;
 
     /**
-     * Reference of the classif member
+     * Reference of the classification member
      * @var string
      */
     protected $refMember;
@@ -37,7 +37,7 @@ class OutputIndex extends Core_Model_Entity
 
 
     /**
-     * @param \Classif\Domain\IndicatorAxis   $axis
+     * @param \Classification\Domain\IndicatorAxis   $axis
      * @param AxisMember $member
      */
     public function __construct(IndicatorAxis $axis, AxisMember $member)
@@ -47,7 +47,7 @@ class OutputIndex extends Core_Model_Entity
     }
 
     /**
-     * @return \Classif\Domain\IndicatorAxis
+     * @return \Classification\Domain\IndicatorAxis
      */
     public function getAxis()
     {

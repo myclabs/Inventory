@@ -1,8 +1,8 @@
 <?php
 
-use Classif\Domain\AxisMember;
-use Classif\Domain\IndicatorAxis;
-use Classif\Domain\Indicator;
+use Classification\Domain\AxisMember;
+use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Indicator;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 
@@ -134,7 +134,7 @@ class Orga_Service_ETLStructure
 
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif et Orga.
+     * Peuple le cube de DW avec les données issues de Classification et Orga.
      *
      * @param Orga_Model_Cell $cell
      */
@@ -149,7 +149,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif et Orga.
+     * Peuple le cube de DW avec les données issues de Classification et Orga.
      *
      * @param Orga_Model_Granularity $granularity
      */
@@ -253,7 +253,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif et Orga.
+     * Peuple le cube de DW avec les données issues de Classification et Orga.
      *
      * @param DW_Model_Cube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
@@ -311,7 +311,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif.
+     * Peuple le cube de DW avec les données issues de Classification.
      *
      * @param DW_Model_Cube $dWCube
      */
@@ -337,7 +337,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Copie un indicateur de Classif dans un cube de DW.
+     * Copie un indicateur de Classification dans un cube de DW.
      *
      * @param Indicator $classifIndicator
      * @param DW_Model_Cube $dWCube
@@ -352,7 +352,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Copie un axe de Classif dans un cube DW.
+     * Copie un axe de Classification dans un cube DW.
      *
      * @param IndicatorAxis $classifAxis
      * @param DW_Model_Cube $dwCube
@@ -390,7 +390,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif.
+     * Peuple le cube de DW avec les données issues de Classification.
      *
      * @param DW_Model_Cube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
@@ -534,7 +534,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Indique si les cubes de DW d'un projt donné est à jour vis à vis de données de Classif et Orga.
+     * Indique si les cubes de DW d'un projt donné est à jour vis à vis de données de Classification et Orga.
      *
      * @param Orga_Model_Organization $organization
      *
@@ -560,7 +560,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Indique si le cube de DW d'un Granularity donné est à jour vis à vis des données de Classif et Orga.
+     * Indique si le cube de DW d'un Granularity donné est à jour vis à vis des données de Classification et Orga.
      *
      * @param Orga_Model_Granularity $granularity
      *
@@ -578,7 +578,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Indique si le cube de DW d'un Cell donné est à jour vis à vis des données de Classif et Orga.
+     * Indique si le cube de DW d'un Cell donné est à jour vis à vis des données de Classification et Orga.
      *
      * @param Orga_Model_Cell $cell
      *
@@ -597,7 +597,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Indique les différences entre un cube de DW donné el les données de Classif et Orga.
+     * Indique les différences entre un cube de DW donné el les données de Classification et Orga.
      *
      * @param DW_Model_Cube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
@@ -612,7 +612,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
+     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
      * @param DW_Model_Cube $dWCube
      *
@@ -640,7 +640,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
+     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
      * @param DW_Model_Indicator $dWIndicator
      * @param Indicator $classifIndicator
@@ -661,7 +661,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
+     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
      * @param DW_Model_Cube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
@@ -679,7 +679,7 @@ class Orga_Service_ETLStructure
         );
         $dWRootAxes = $dWCube->getRootAxes();
 
-        // Classif.
+        // Classification.
         $classifRootAxes = IndicatorAxis::loadList($queryClassifRootAxes);
         foreach (IndicatorAxis::loadList($queryClassifRootAxes) as $classifIndex => $classifAxis) {
             /** @var IndicatorAxis $classifAxis */
@@ -710,7 +710,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare un axe de DW et un de Classif.
+     * Compare un axe de DW et un de Classification.
      *
      * @param DW_Model_Axis $dWAxis
      * @param IndicatorAxis $classifAxis
@@ -749,7 +749,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare un membre de DW et un de Classif.
+     * Compare un membre de DW et un de Classification.
      *
      * @param DW_Model_Axis $dWAxis
      * @param IndicatorAxis $classifAxis
@@ -778,7 +778,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare un membre de DW et un de Classif.
+     * Compare un membre de DW et un de Classification.
      *
      * @param DW_Model_Member $dWMember
      * @param AxisMember $classifMember

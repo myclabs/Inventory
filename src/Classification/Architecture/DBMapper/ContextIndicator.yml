@@ -1,0 +1,36 @@
+Classification\Domain\ContextIndicator:
+  type: entity
+  repositoryClass: \Classification\Architecture\Repository\ContextIndicatorRepository
+  table: Classif_ContextIndicator
+
+  id:
+    context:
+      associationKey: true
+    indicator:
+      associationKey: true
+
+  manyToOne:
+    context:
+      targetEntity: Classification\Domain\Context
+      joinColumn:
+        name: idContext
+        referencedColumnName: id
+    indicator:
+      targetEntity: Classification\Domain\Indicator
+      joinColumn:
+        name: idIndicator
+        referencedColumnName: id
+
+  manyToMany:
+    axes:
+      targetEntity: Classification\Domain\IndicatorAxis
+      joinTable:
+        name: Classif_ContextIndicator_Axes
+        joinColumns:
+          idContext:
+            referencedColumnName: idContext
+          idIndicator:
+            referencedColumnName: idIndicator
+        inverseJoinColumns:
+          idAxis:
+            referencedColumnName: id

@@ -4,8 +4,8 @@ namespace AF\Domain\Algorithm\Index;
 
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
-use Classif\Domain\IndicatorAxis;
-use Classif\Domain\AxisMember;
+use Classification\Domain\IndicatorAxis;
+use Classification\Domain\AxisMember;
 use Core_Exception_NotFound;
 use Core_Model_Entity;
 
@@ -22,7 +22,7 @@ abstract class Index extends Core_Model_Entity
     protected $id;
 
     /**
-     * The classif axis
+     * The classification axis
      * @var string|null
      */
     protected $refClassifAxis;
@@ -34,7 +34,7 @@ abstract class Index extends Core_Model_Entity
 
 
     /**
-     * @param \Classif\Domain\IndicatorAxis|null $classifAxis
+     * @param \Classification\Domain\IndicatorAxis|null $classifAxis
      * @param NumericAlgo|null        $algoNumeric
      */
     public function __construct(IndicatorAxis $classifAxis = null, NumericAlgo $algoNumeric = null)
@@ -46,14 +46,14 @@ abstract class Index extends Core_Model_Entity
     }
 
     /**
-     * Return the Classif member associated with the Result index
+     * Return the Classification member associated with the Result index
      * @param InputSet $inputSet
      * @return AxisMember|null
      */
     abstract public function getClassifMember(InputSet $inputSet = null);
 
     /**
-     * @return \Classif\Domain\IndicatorAxis|null The classif axis associated to the value index
+     * @return \Classification\Domain\IndicatorAxis|null The classification axis associated to the value index
      */
     public function getClassifAxis()
     {

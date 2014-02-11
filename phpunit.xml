@@ -12,7 +12,7 @@
             <directory>./tests/Calc</directory>
             <directory>./tests/TEC</directory>
             <directory>./tests/Exec</directory>
-            <directory>./tests/Classif</directory>
+            <directory>./tests/Classification</directory>
             <directory>./tests/Export</directory>
             <directory>./tests/Techno</directory>
             <directory>./tests/Algo</directory>

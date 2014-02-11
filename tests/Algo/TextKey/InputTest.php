@@ -7,7 +7,7 @@ use AF\Domain\Algorithm\Input\StringInput;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\Algorithm\AlgoSet;
-use Classif\Domain\Context;
+use Classification\Domain\Context;
 use Core\Test\TestCase;
 use Core_Tools;
 use Doctrine\ORM\UnitOfWork;

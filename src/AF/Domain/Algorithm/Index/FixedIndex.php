@@ -3,7 +3,7 @@
 namespace AF\Domain\Algorithm\Index;
 
 use AF\Domain\Algorithm\InputSet;
-use Classif\Domain\AxisMember;
+use Classification\Domain\AxisMember;
 use Core_Exception_NotFound;
 
 /**
@@ -14,7 +14,7 @@ use Core_Exception_NotFound;
 class FixedIndex extends Index
 {
     /**
-     * The classif member associated to the index
+     * The classification member associated to the index
      * @var string|null
      */
     protected $refClassifMember;

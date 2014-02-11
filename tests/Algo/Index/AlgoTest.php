@@ -5,10 +5,10 @@ namespace Tests\Algo\Index;
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\Index\AlgoResultIndex;
 use AF\Domain\Algorithm\AlgoSet;
-use Classif\Domain\IndicatorAxis;
-use Classif\Domain\Context;
-use Classif\Domain\ContextIndicator;
-use Classif\Domain\Indicator;
+use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Context;
+use Classification\Domain\ContextIndicator;
+use Classification\Domain\Indicator;
 use Core\Test\TestCase;
 use Core_Tools;
 use Doctrine\ORM\UnitOfWork;
@@ -43,7 +43,7 @@ class AlgoIndexTest extends TestCase
         // Fixtures
         $classifAxis = new IndicatorAxis();
         $classifAxis->setRef(Core_Tools::generateString(20));
-        $classifAxis->setLabel('Classif Axis');
+        $classifAxis->setLabel('Classification Axis');
         $classifAxis->save();
         $algoNumeric = ConstantTest::generateObject();
         $selectionAlgo = InputTest::generateObject();

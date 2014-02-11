@@ -4,7 +4,7 @@ namespace AF\Domain\Algorithm\Index;
 
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
-use Classif\Domain\AxisMember;
+use Classification\Domain\AxisMember;
 
 /**
  * Indexation avec le résultat d'un algorithme.
@@ -20,9 +20,9 @@ class AlgoResultIndex extends Index
     protected $algo;
 
     /**
-     * Return the Classif member associated with the index
+     * Return the Classification member associated with the index
      * @param InputSet $inputSet
-     * @return \Classif\Domain\AxisMember
+     * @return \Classification\Domain\AxisMember
      */
     public function getClassifMember(InputSet $inputSet = null)
     {

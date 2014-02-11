@@ -8,7 +8,7 @@
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
-use Classif\Domain\ContextIndicator;
+use Classification\Domain\ContextIndicator;
 use Core\Annotation\Secure;
 
 /**

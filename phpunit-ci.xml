@@ -12,7 +12,7 @@
             <directory>./tests/Calc</directory>
             <directory>./tests/TEC</directory>
             <directory>./tests/Exec</directory>
-            <directory>./tests/Classif</directory>
+            <directory>./tests/Classification</directory>
             <directory>./tests/Export</directory>
             <directory>./tests/Techno</directory>
             <directory>./tests/Algo</directory>
@@ -52,10 +52,10 @@
                 <directory suffix=".php">src/AuditTrail/Application/Controller</directory>
                 <directory suffix=".php">src/AuditTrail/Application/views</directory>
                 <file>src/AuditTrail/Application/Bootstrap.php</file>
-                <!-- Classif -->
-                <directory suffix=".php">application/classif/controllers</directory>
+                <!-- Classification -->
+                <directory suffix=".php">application/classification/controllers</directory>
                 <!-- Doc -->
-                <directory suffix=".php">application/classif/controllers</directory>
+                <directory suffix=".php">application/classification/controllers</directory>
                 <!-- DW -->
                 <directory suffix=".php">application/dw/controllers</directory>
                 <directory suffix=".php">application/dw/forms</directory>

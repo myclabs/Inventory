@@ -1,0 +1,12 @@
+<?php
+/**
+ * @author valentin.claras
+ * @package Classification
+ * Traduction des Indicator
+ */
+?>
+    <div class="page-header">
+        <h1><?=__('Classification', 'indicator', 'indicators')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
+    </div>
+<?php
+echo $this->translateDatagrid('Classification\Domain\Indicator', 'label', 'datagrid_translate_indicators', 'classification')->simple();

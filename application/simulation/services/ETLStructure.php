@@ -4,9 +4,9 @@
  * @subpackage Service
  */
 
-use Classif\Domain\AxisMember;
-use Classif\Domain\IndicatorAxis;
-use Classif\Domain\Indicator;
+use Classification\Domain\AxisMember;
+use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Indicator;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -113,7 +113,7 @@ class Simulation_Service_ETLStructure
 
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif.
+     * Peuple le cube de DW avec les données issues de Classification.
      *
      * @param Simulation_Model_Set $set
      */
@@ -123,7 +123,7 @@ class Simulation_Service_ETLStructure
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif.
+     * Peuple le cube de DW avec les données issues de Classification.
      *
      * @param DW_Model_Cube $dWCube
      */
@@ -149,7 +149,7 @@ class Simulation_Service_ETLStructure
     }
 
     /**
-     * Copie un indicateur de Classif dans un cube de DW.
+     * Copie un indicateur de Classification dans un cube de DW.
      *
      * @param Indicator $classifIndicator
      * @param DW_Model_Cube $dWCube
@@ -164,7 +164,7 @@ class Simulation_Service_ETLStructure
     }
 
     /**
-     * Copie un axe de Classif dans un cube DW.
+     * Copie un axe de Classification dans un cube DW.
      *
      * @param IndicatorAxis $classifAxis
      * @param DW_Model_Cube $dwCube
@@ -202,7 +202,7 @@ class Simulation_Service_ETLStructure
     }
 
     /**
-     * Indique si un cube de DW donné est à jour vis à vis de données de Classif.
+     * Indique si un cube de DW donné est à jour vis à vis de données de Classification.
      *
      * @param Simulation_Model_Set $set
      *
@@ -215,7 +215,7 @@ class Simulation_Service_ETLStructure
 
 
     /**
-     * Indique les différences entre un cube de DW donné el les données de Classif.
+     * Indique les différences entre un cube de DW donné el les données de Classification.
      *
      * @param DW_Model_Cube $dWCube
      *
@@ -227,7 +227,7 @@ class Simulation_Service_ETLStructure
     }
 
     /**
-     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
+     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
      * @param DW_Model_Cube $dWCube
      *
@@ -256,7 +256,7 @@ class Simulation_Service_ETLStructure
     }
 
     /**
-     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
+     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
      * @param DW_Model_Indicator $dWIndicator
      * @param Indicator $classifIndicator
@@ -277,7 +277,7 @@ class Simulation_Service_ETLStructure
     }
 
     /**
-     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
+     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
      * @param DW_Model_Cube $dWCube
      *
@@ -313,7 +313,7 @@ class Simulation_Service_ETLStructure
     }
 
     /**
-     * Compare un axe de DW et un de Classif.
+     * Compare un axe de DW et un de Classification.
      *
      * @param DW_Model_Axis $dWAxis
      * @param IndicatorAxis $classifAxis
@@ -352,7 +352,7 @@ class Simulation_Service_ETLStructure
     }
 
     /**
-     * Compare un membre de DW et un de Classif.
+     * Compare un membre de DW et un de Classification.
      *
      * @param DW_Model_Axis $dWAxis
      * @param IndicatorAxis $classifAxis
@@ -381,7 +381,7 @@ class Simulation_Service_ETLStructure
     }
 
     /**
-     * Compare un membre de DW et un de Classif.
+     * Compare un membre de DW et un de Classification.
      *
      * @param DW_Model_Member $dWMember
      * @param AxisMember $classifMember

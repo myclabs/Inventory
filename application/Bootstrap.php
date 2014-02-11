@@ -196,7 +196,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'Unit',
             'User',
             'TEC',
-            'Classif',
+            'Classification',
             'Techno',
             'Doc',
             'DW',

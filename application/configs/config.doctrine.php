@@ -54,7 +54,7 @@ return [
         $modules = [
             'Unit',
             'User',
-            'Classif',
+            'Classification',
             'Techno',
             'Doc',
             'AuditTrail',

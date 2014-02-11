@@ -109,32 +109,32 @@ if ($connectedUser) {
     }
     if ($isAllowedToEditRepository) {
         $subMenuRepository[] = [
-            'name' => __('Classif', 'classification', 'classification'),
+            'name' => __('Classification', 'classification', 'classification'),
             'url' => '#',
             'submenu' => [
                 [
                     'name' => __('UI', 'name', 'axes'),
-                    'url' => 'classif/axis/manage'
+                    'url' => 'classification/axis/manage'
                 ],
                 [
                     'name' => __('UI', 'name', 'members'),
-                    'url' => 'classif/member/manage'
+                    'url' => 'classification/member/manage'
                 ],
                 [
-                    'name' => __('Classif', 'indicator', 'indicators'),
-                    'url' => 'classif/indicator/manage'
+                    'name' => __('Classification', 'indicator', 'indicators'),
+                    'url' => 'classification/indicator/manage'
                 ],
                 [
-                    'name' => __('Classif', 'context', 'contexts'),
-                    'url' => 'classif/context/manage'
+                    'name' => __('Classification', 'context', 'contexts'),
+                    'url' => 'classification/context/manage'
                 ],
                 [
-                    'name' => __('Classif', 'contextIndicator', 'contextIndicators'),
-                    'url' => 'classif/contextindicator/manage'
+                    'name' => __('Classification', 'contextIndicator', 'contextIndicators'),
+                    'url' => 'classification/contextindicator/manage'
                 ],
                 [
                     'name'    => __('UI', 'name', 'control'),
-                    'url'     => 'classif/consistency/check',
+                    'url'     => 'classification/consistency/check',
                 ],
             ]
         ];
@@ -288,24 +288,24 @@ if ($connectedUser) {
             ];
 
             $subMenuTranslation[] = [
-                'name' => __('Classif', 'classification', 'classification'),
+                'name' => __('Classification', 'classification', 'classification'),
                 'url' => '#',
                 'submenu' => [
                     [
                         'name' => __('UI', 'name', 'axes'),
-                        'url' => 'classif/translate/axes'
+                        'url' => 'classification/translate/axes'
                     ],
                     [
                         'name' => __('UI', 'name', 'members'),
-                        'url' => 'classif/translate/members'
+                        'url' => 'classification/translate/members'
                     ],
                     [
-                        'name' => __('Classif', 'indicator', 'indicators'),
-                        'url' => 'classif/translate/indicators'
+                        'name' => __('Classification', 'indicator', 'indicators'),
+                        'url' => 'classification/translate/indicators'
                     ],
                     [
-                        'name' => __('Classif', 'context', 'contexts'),
-                        'url' => 'classif/translate/contexts'
+                        'name' => __('Classification', 'context', 'contexts'),
+                        'url' => 'classification/translate/contexts'
                     ],
                 ]
             ];

@@ -6,8 +6,8 @@ use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Index\Index;
 use AF\Domain\Algorithm\Output;
-use Classif\Domain\IndicatorAxis;
-use Classif\Domain\ContextIndicator;
+use Classification\Domain\IndicatorAxis;
+use Classification\Domain\ContextIndicator;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity_Translatable;
@@ -75,7 +75,7 @@ abstract class NumericAlgo extends Algo
             throw new Core_Exception_UndefinedAttribute("The numeric algo can't be executed without an indicator");
         }
         $result = $this->execute($inputSet);
-        // On récupère les membres de classif
+        // On récupère les membres de classification
         $classifMembers = [];
         foreach ($this->indexes as $resultIndex) {
             $classifMembers[] = $resultIndex->getClassifMember($inputSet);
@@ -100,7 +100,7 @@ abstract class NumericAlgo extends Algo
     }
 
     /**
-     * @return \Classif\Domain\ContextIndicator
+     * @return \Classification\Domain\ContextIndicator
      */
     public function getContextIndicator()
     {
@@ -140,7 +140,7 @@ abstract class NumericAlgo extends Algo
 
     /**
      * Retourne l'index correspondant à l'axe passé en paramètre
-     * @param \Classif\Domain\IndicatorAxis $axis
+     * @param \Classification\Domain\IndicatorAxis $axis
      * @return Index|null
      */
     public function getIndexForAxis(IndicatorAxis $axis)
@@ -191,7 +191,7 @@ abstract class NumericAlgo extends Algo
     }
 
     /**
-     * Indicate if the Algo could be indexed by Classif indicator and members
+     * Indicate if the Algo could be indexed by Classification indicator and members
      * @return bool
      */
     public function isIndexed()

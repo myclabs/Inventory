@@ -2,7 +2,7 @@
 namespace AF\Domain\Output;
 
 use Calc_Value;
-use Classif\Domain\Indicator;
+use Classification\Domain\Indicator;
 use Core_Model_Entity;
 
 /**
@@ -53,7 +53,7 @@ class OutputTotal extends Core_Model_Entity
     }
 
     /**
-     * @param \Classif\Domain\Indicator $classifIndicator
+     * @param \Classification\Domain\Indicator $classifIndicator
      */
     public function setClassifIndicator(Indicator $classifIndicator)
     {

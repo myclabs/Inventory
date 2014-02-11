@@ -7,8 +7,8 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Algorithm\Output;
 use Calc_Calculation;
 use Calc_Calculation_Value;
-use Classif\Domain\ContextIndicator;
-use Classif\Domain\Indicator;
+use Classification\Domain\ContextIndicator;
+use Classification\Domain\Indicator;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -76,7 +76,7 @@ class OutputSet extends Core_Model_Entity
     }
 
     /**
-     * Calcule le total des outputs elements classé par indicateur de classif
+     * Calcule le total des outputs elements classé par indicateur de classification
      */
     public function calculateTotals()
     {

@@ -1,6 +1,6 @@
 <?php
 
-use Classif\Application\Service\ClassificationExportService;
+use Classification\Application\Service\ClassificationExportService;
 use Core\Annotation\Secure;
 use Techno\Application\Service\ExportService;
 use User\Domain\User;
@@ -40,11 +40,11 @@ class Orga_ReferentialController extends Core_Controller
         // Liste des exports.
         $this->view->exports = [];
 
-        // Classif.
-        $this->view->exports['Classif'] = [
-            'label' => __('Classif', 'classification', 'classification'),
+        // Classification.
+        $this->view->exports['Classification'] = [
+            'label' => __('Classification', 'classification', 'classification'),
             'versions' => [
-                'latest' => __('Classif', 'classification', 'classification')
+                'latest' => __('Classification', 'classification', 'classification')
             ]
         ];
 
@@ -80,10 +80,10 @@ class Orga_ReferentialController extends Core_Controller
         $version = null;
 
         switch ($export) {
-            case 'Classif':
+            case 'Classification':
             $exportService = new ClassificationExportService();
             $streamFunction = 'stream';
-            $baseFilename = __('Classif', 'classification', 'classification');
+            $baseFilename = __('Classification', 'classification', 'classification');
             break;
             case 'Techno':
                 $exportService = new ExportService();

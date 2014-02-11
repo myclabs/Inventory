@@ -6,7 +6,7 @@ Feature: Control of classification data
 
   @javascript @readOnly
   Scenario: Control of classification data scenario
-    When I am on "classif/consistency/check"
+    When I am on "classification/consistency/check"
     Then I should see the "coherence" datagrid
     And the row 1 of the "coherence" datagrid should contain:
       | control                        | diag       | fail      |

@@ -23,7 +23,7 @@ class PopulateClassif extends AbstractPopulateClassif
 
     public function run(OutputInterface $output)
     {
-        $output->writeln('  <info>Populating Classif</info>');
+        $output->writeln('  <info>Populating Classification</info>');
 
         // Création des axes.
         // Params : ref, label

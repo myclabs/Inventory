@@ -10,8 +10,8 @@ use AF\Domain\Algorithm\Index\AlgoResultIndex;
 use AF\Domain\Algorithm\Index\FixedIndex;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
-use Classif\Domain\AxisMember;
-use Classif\Domain\IndicatorAxis;
+use Classification\Domain\AxisMember;
+use Classification\Domain\IndicatorAxis;
 use Core\Annotation\Secure;
 
 /**

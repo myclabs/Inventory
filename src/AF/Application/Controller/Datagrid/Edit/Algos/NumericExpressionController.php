@@ -8,7 +8,7 @@
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
-use Classif\Domain\ContextIndicator;
+use Classification\Domain\ContextIndicator;
 use Core\Annotation\Secure;
 use Unit\UnitAPI;
 use TEC\Exception\InvalidExpressionException;

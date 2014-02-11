@@ -1257,7 +1257,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             try {
                 $dWIndicator = DW_Model_Indicator::loadByRefAndCube($refClassifIndicator, $dWCube);
             } catch (Core_Exception_NotFound $e) {
-                // Indexation selon l'indicateur de classif non trouvée. Impossible de créer le résultat.
+                // Indexation selon l'indicateur de classification non trouvée. Impossible de créer le résultat.
                 continue;
             }
 
@@ -1270,7 +1270,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                     $dWMember = DW_Model_Member::loadByRefAndAxis($outputIndex->getRefMember(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
-                    // Indexation selon classif non trouvée.
+                    // Indexation selon classification non trouvée.
                 }
 
                 foreach ($outputIndex->getMember()->getAllParents() as $classifParentMember) {
@@ -1279,7 +1279,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                         $dWParentMember = DW_Model_Member::loadByRefAndAxis($classifParentMember->getRef(), $dWBroaderAxis);
                         $dWResult->addMember($dWParentMember);
                     } catch (Core_Exception_NotFound $e) {
-                        // Indexation selon classif non trouvée.
+                        // Indexation selon classification non trouvée.
                     }
                 }
             }

@@ -18,8 +18,8 @@ use AF\Domain\Input\SubAF\NotRepeatedSubAFInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputSet\SubInputSet;
 use AF\Domain\Output\OutputElement;
-use Classif\Domain\IndicatorAxis;
-use Classif\Domain\Indicator;
+use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Indicator;
 use User\Domain\ACL\Role\Role;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
@@ -67,7 +67,7 @@ class Orga_Service_Export
 
         $modelBuilder->bind('axisColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('axisColumnRef', __('UI', 'name', 'identifier'));
-        $modelBuilder->bind('axisColumnNarrower', __('Classif', 'export', 'axisColumnNarrower'));
+        $modelBuilder->bind('axisColumnNarrower', __('Classification', 'export', 'axisColumnNarrower'));
         $modelBuilder->bindFunction(
             'displayAxisDirectNarrower',
             function (Orga_Model_Axis $axis) {

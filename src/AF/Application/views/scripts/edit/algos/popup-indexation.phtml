@@ -24,7 +24,7 @@ $typeColumn->list = [
 ];
 $datagrid->addCol($typeColumn);
 
-// Colonne liste des membre de classif ou algo en fonction du type
+// Colonne liste des membre de classification ou algo en fonction du type
 $valueColumn = new UI_Datagrid_Col_List('value', __('UI', 'name', 'value'));
 $valueColumn->dynamicList = true;
 $valueColumn->list = $this->baseUrl('af/datagrid_edit_algos_indexation/get-value-list');

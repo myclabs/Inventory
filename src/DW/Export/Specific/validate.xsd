@@ -131,7 +131,7 @@
                 <se:attribute name="source" use="required">
                     <se:simpleType>
                         <se:restriction base="se:string">
-                            <se:enumeration value="classif"/>
+                            <se:enumeration value="classification"/>
                             <se:enumeration value="orga"/>
                         </se:restriction>
                     </se:simpleType>
@@ -154,7 +154,7 @@
         <se:attribute name="source" use="required">
             <se:simpleType>
                 <se:restriction base="se:string">
-                    <se:enumeration value="classif"/>
+                    <se:enumeration value="classification"/>
                     <se:enumeration value="orga"/>
                 </se:restriction>
             </se:simpleType>

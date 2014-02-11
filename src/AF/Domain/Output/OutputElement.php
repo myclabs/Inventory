@@ -6,8 +6,8 @@ use AF\Domain\InputSet\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\Output;
 use Calc_Value;
-use Classif\Domain\IndicatorAxis;
-use Classif\Domain\ContextIndicator;
+use Classification\Domain\IndicatorAxis;
+use Classification\Domain\ContextIndicator;
 use Core_Exception_NotFound;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\Collection;
@@ -92,7 +92,7 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @return \Classif\Domain\ContextIndicator
+     * @return \Classification\Domain\ContextIndicator
      */
     public function getContextIndicator()
     {

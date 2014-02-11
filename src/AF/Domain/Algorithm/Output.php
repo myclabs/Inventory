@@ -5,7 +5,7 @@ namespace AF\Domain\Algorithm;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use Calc_UnitValue;
 use Calc_Value;
-use Classif\Domain\AxisMember;
+use Classification\Domain\AxisMember;
 
 /**
  * This class is used to index a value output from numeric algo
@@ -35,7 +35,7 @@ class Output
 
     /**
      * Members indexing the value
-     * @var \Classif\Domain\AxisMember[]
+     * @var \Classification\Domain\AxisMember[]
      */
     protected $classifMembers = [];
 
@@ -45,7 +45,7 @@ class Output
      *
      * @param Calc_UnitValue         $value
      * @param NumericAlgo            $algo
-     * @param \Classif\Domain\AxisMember[] $classifMembers
+     * @param \Classification\Domain\AxisMember[] $classifMembers
      */
     public function __construct(Calc_UnitValue $value, NumericAlgo $algo, array $classifMembers)
     {
