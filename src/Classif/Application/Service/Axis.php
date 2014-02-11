@@ -5,6 +5,8 @@
  * @package    Classif
  * @subpackage Service
  */
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\IndicatorAxis;
 
 /**
  * Service Axis.
@@ -20,11 +22,11 @@ class Classif_Service_Axis
      * @param string $label
      * @param string $refParent
      *
-     * @return Classif_Model_Axis
+     * @return IndicatorAxis
      */
     public function add($ref, $label, $refParent=null)
     {
-        $axis = new Classif_Model_Axis();
+        $axis = new IndicatorAxis();
 
         if (empty($ref)) {
             $ref = $label;
@@ -34,7 +36,7 @@ class Classif_Service_Axis
         $axis->setRef($ref);
         $axis->setLabel($label);
         if ($refParent != null) {
-            $axis->setDirectNarrower(Classif_Model_Axis::loadByRef($refParent));
+            $axis->setDirectNarrower(IndicatorAxis::loadByRef($refParent));
         }
 
         $axis->save();
@@ -52,7 +54,7 @@ class Classif_Service_Axis
      */
     public function updateRef($axisRef, $newRef)
     {
-        $axis = Classif_Model_Axis::loadByRef($axisRef);
+        $axis = IndicatorAxis::loadByRef($axisRef);
 
         $this->checkAxisRef($newRef);
 
@@ -71,7 +73,7 @@ class Classif_Service_Axis
      */
     public function updateLabel($axisRef, $newLabel)
     {
-        $axis = Classif_Model_Axis::loadByRef($axisRef);
+        $axis = IndicatorAxis::loadByRef($axisRef);
 
         $axis->setLabel($newLabel);
 
@@ -89,7 +91,7 @@ class Classif_Service_Axis
      */
     public function updateRefAndLabel($axisRef, $newRef, $newLabel)
     {
-        $axis = Classif_Model_Axis::loadByRef($axisRef);
+        $axis = IndicatorAxis::loadByRef($axisRef);
 
         $this->checkAxisRef($newRef);
 
@@ -110,12 +112,12 @@ class Classif_Service_Axis
      */
     public function updateParent($axisRef, $newParentRef, $newPosition=null)
     {
-        $axis = Classif_Model_Axis::loadByRef($axisRef);
+        $axis = IndicatorAxis::loadByRef($axisRef);
 
         if ($newParentRef === null) {
             $axis->setDirectNarrower();
         } else {
-            $axis->setDirectNarrower(Classif_Model_Axis::loadByRef($newParentRef));
+            $axis->setDirectNarrower(IndicatorAxis::loadByRef($newParentRef));
         }
         if ($newPosition !== null) {
             $axis->setPosition($newPosition);
@@ -134,7 +136,7 @@ class Classif_Service_Axis
      */
     public function updatePosition($axisRef, $newPosition)
     {
-        $axis = Classif_Model_Axis::loadByRef($axisRef);
+        $axis = IndicatorAxis::loadByRef($axisRef);
 
         $axis->setPosition($newPosition);
 
@@ -151,7 +153,7 @@ class Classif_Service_Axis
      */
     public function delete($axisRef)
     {
-        $axis = Classif_Model_Axis::loadByRef($axisRef);
+        $axis = IndicatorAxis::loadByRef($axisRef);
 
         if ($axis->hasDirectBroaders()) {
             throw new Core_Exception_User('Classif', 'axis', 'axisHasDirectBroaders');
@@ -159,8 +161,8 @@ class Classif_Service_Axis
         if ($axis->hasMembers()) {
             throw new Core_Exception_User('Classif', 'axis', 'axisHasMembers');
         }
-        foreach (Classif_Model_ContextIndicator::loadList() as $contextIndicator) {
-            /** @var Classif_Model_ContextIndicator $contextIndicator */
+        foreach (ContextIndicator::loadList() as $contextIndicator) {
+            /** @var ContextIndicator $contextIndicator */
             if ($contextIndicator->hasAxis($axis)) {
                 throw new Core_Exception_User('Classif', 'axis', 'axisIsUsedInContextIndicator');
             }
@@ -186,8 +188,8 @@ class Classif_Service_Axis
             return $e->getMessage();
         }
         $queryRefUsed = new Core_Model_Query();
-        $queryRefUsed->filter->addCondition(Classif_Model_Axis::QUERY_REF, $ref);
-        if (Classif_Model_Axis::countTotal($queryRefUsed) > 0) {
+        $queryRefUsed->filter->addCondition(IndicatorAxis::QUERY_REF, $ref);
+        if (IndicatorAxis::countTotal($queryRefUsed) > 0) {
             return __('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
 
@@ -205,8 +207,8 @@ class Classif_Service_Axis
     {
         Core_Tools::checkRef($ref);
         $queryRefUsed = new Core_Model_Query();
-        $queryRefUsed->filter->addCondition(Classif_Model_Axis::QUERY_REF, $ref);
-        if (Classif_Model_Axis::countTotal($queryRefUsed) > 0) {
+        $queryRefUsed->filter->addCondition(IndicatorAxis::QUERY_REF, $ref);
+        if (IndicatorAxis::countTotal($queryRefUsed) > 0) {
             throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
     }

@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\IndicatorAxis;
 use Core\Annotation\Secure;
 
 
@@ -32,7 +33,7 @@ class Classif_MemberController extends Core_Controller
      */
     public function manageAction()
     {
-        $this->view->listAxes = Classif_Model_Axis::loadListOrderedAsAscendantTree();
+        $this->view->listAxes = IndicatorAxis::loadListOrderedAsAscendantTree();
     }
 
 }

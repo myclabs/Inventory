@@ -2,8 +2,8 @@
 
 namespace Tests\Classif;
 
-use Classif_Model_Axis;
-use Classif_Model_Member;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\AxisMember;
 use Core\Test\TestCase;
 use PHPUnit_Framework_TestSuite;
 
@@ -21,12 +21,12 @@ class MemberTest
      * Generation de l'objet de test.
      * @param string $ref
      * @param string $label
-     * @param Classif_Model_Axis $axis
-     * @return Classif_Model_Member
+     * @param IndicatorAxis $axis
+     * @return AxisMember
      */
     public static function generateObject($ref = null, $label = null, $axis = null)
     {
-        $o = new Classif_Model_Member();
+        $o = new AxisMember();
         $o->setRef(($ref ===null) ? 'ref' : $ref);
         $o->setLabel(($label ===null) ? 'label' : $label);
         $o->setAxis(($axis ===null) ? AxisTest::generateObject($o->getRef(), $o->getLabel()) : $axis);
@@ -37,10 +37,10 @@ class MemberTest
 
     /**
      * Suppression d'un objet cree avec generateObject
-     * @param Classif_Model_Member $o
+     * @param AxisMember $o
      * @param bool                 $deleteAxis
      */
-    public static function deleteObject(Classif_Model_Member $o, $deleteAxis = true)
+    public static function deleteObject(AxisMember $o, $deleteAxis = true)
     {
         if ($deleteAxis === true) {
             $o->getAxis()->delete();
@@ -54,16 +54,16 @@ class MemberSetUp extends TestCase
 {
     public static function setUpBeforeClass()
     {
-        if (Classif_Model_Member::countTotal() > 0) {
+        if (AxisMember::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Member restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Member::loadList() as $member) {
+            foreach (AxisMember::loadList() as $member) {
                 $member->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Axis::countTotal() > 0) {
+        if (IndicatorAxis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Axis::loadList() as $axis) {
+            foreach (IndicatorAxis::loadList() as $axis) {
                 $axis->delete();
             }
             self::getEntityManager()->flush();
@@ -73,7 +73,7 @@ class MemberSetUp extends TestCase
     public function testConstruct()
     {
         $axis = AxisTest::generateObject('MemberSetUpTest', 'MemberSetUpTest');
-        $o = new Classif_Model_Member();
+        $o = new AxisMember();
         $o->setRef('RefMemberTest');
         $o->setLabel('LabelMemberTest');
         $o->setAxis($axis);
@@ -86,13 +86,13 @@ class MemberSetUp extends TestCase
 
     /**
      * @depends testConstruct
-     * @param Classif_Model_Member $o
-     * @return Classif_Model_Member
+     * @param AxisMember $o
+     * @return AxisMember
      */
-    public function testLoad(Classif_Model_Member $o)
+    public function testLoad(AxisMember $o)
     {
-         $oLoaded = Classif_Model_Member::load($o->getKey());
-         $this->assertInstanceOf(Classif_Model_Member::class, $o);
+         $oLoaded = AxisMember::load($o->getKey());
+         $this->assertInstanceOf(AxisMember::class, $o);
          $this->assertEquals($oLoaded->getKey(), $o->getKey());
          $this->assertEquals($oLoaded->getRef(), $o->getRef());
          $this->assertSame($oLoaded->getAxis(), $o->getAxis());
@@ -102,9 +102,9 @@ class MemberSetUp extends TestCase
 
     /**
      * @depends testLoad
-     * @param Classif_Model_Member $o
+     * @param AxisMember $o
      */
-    public function testDelete(Classif_Model_Member $o)
+    public function testDelete(AxisMember $o)
     {
         $o->delete();
         $this->entityManager->flush();
@@ -114,16 +114,16 @@ class MemberSetUp extends TestCase
 
     public static function tearDownAfterClass()
     {
-        if (Classif_Model_Member::countTotal() > 0) {
+        if (AxisMember::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Member restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Member::loadList() as $member) {
+            foreach (AxisMember::loadList() as $member) {
                 $member->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Axis::countTotal() > 0) {
+        if (IndicatorAxis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Axis::loadList() as $axis) {
+            foreach (IndicatorAxis::loadList() as $axis) {
                 $axis->delete();
             }
             self::getEntityManager()->flush();
@@ -134,22 +134,22 @@ class MemberSetUp extends TestCase
 class MemberOther extends TestCase
 {
     /**
-     * @var Classif_Model_Member
+     * @var \Classif\Domain\AxisMember
      */
     protected $member;
 
     public static function setUpBeforeClass()
     {
-        if (Classif_Model_Member::countTotal() > 0) {
+        if (AxisMember::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Member restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Member::loadList() as $member) {
+            foreach (AxisMember::loadList() as $member) {
                 $member->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Axis::countTotal() > 0) {
+        if (IndicatorAxis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Axis::loadList() as $axis) {
+            foreach (IndicatorAxis::loadList() as $axis) {
                 $axis->delete();
             }
             self::getEntityManager()->flush();
@@ -295,16 +295,16 @@ class MemberOther extends TestCase
 
     public static function tearDownAfterClass()
     {
-        if (Classif_Model_Member::countTotal() > 0) {
+        if (AxisMember::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Member restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Member::loadList() as $member) {
+            foreach (AxisMember::loadList() as $member) {
                 $member->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Axis::countTotal() > 0) {
+        if (IndicatorAxis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Axis::loadList() as $axis) {
+            foreach (IndicatorAxis::loadList() as $axis) {
                 $axis->delete();
             }
             self::getEntityManager()->flush();

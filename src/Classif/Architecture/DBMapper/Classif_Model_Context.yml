@@ -1,5 +1,4 @@
-# classif\models\mappers\Classif_Model_Context.yml
-Classif_Model_Context:
+Classif\Domain\Context:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Classif_Context

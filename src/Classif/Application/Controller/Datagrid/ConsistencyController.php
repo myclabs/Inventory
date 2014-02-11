@@ -4,6 +4,9 @@
  * @package Classif
  */
 
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\Indicator;
 use Core\Annotation\Secure;
 
 /**
@@ -26,7 +29,7 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
         $listIndicatorsWithNoncoherentUnits = array();
         $listContextIndicatorsWithLinkedAxes = array();
 
-        foreach (Classif_Model_Axis::loadList() as $axis) {
+        foreach (IndicatorAxis::loadList() as $axis) {
             if (!$axis->hasMembers()) {
                 $listAxisWithoutMember[] = $axis->getLabel();
             } else {
@@ -64,7 +67,7 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
             }
         }
 
-        foreach (Classif_Model_Indicator::loadList() as $indicator) {
+        foreach (Indicator::loadList() as $indicator) {
             $unit = $indicator->getUnit();
             $ratioUnit = $indicator->getRatioUnit();
             try {
@@ -85,7 +88,7 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
             }
         }
 
-        foreach (Classif_Model_ContextIndicator::loadList() as $contextIndicator) {
+        foreach (ContextIndicator::loadList() as $contextIndicator) {
             $contextIndicatorAxes = $contextIndicator->getAxes();
             $contextIndicatorErrors = array();
             foreach ($contextIndicatorAxes as $contextIndicatorAxis) {
@@ -115,10 +118,10 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
         $data['diag'] = empty($listAxisWithMemberNotLinkedToNarrower);
         $data['fail'] = '';
         foreach ($listAxisWithMemberNotLinkedToNarrower as $refAxis => $members) {
-            $axis = Classif_Model_Axis::loadByRef($refAxis);
+            $axis = IndicatorAxis::loadByRef($refAxis);
             $data['fail'] .= $axis->getLabel() . ' : { ';
             foreach ($members as $refNarrowerAxis => $refMember) {
-                $narrowerAxis = Classif_Model_Axis::loadByRef($refNarrowerAxis);
+                $narrowerAxis = IndicatorAxis::loadByRef($refNarrowerAxis);
                 $data['fail'] .= $narrowerAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);
@@ -134,10 +137,10 @@ class Classif_Datagrid_ConsistencyController extends UI_Controller_Datagrid
         $data['diag'] = empty($listAxisWithMemberNotLinkedToBroader);
         $data['fail'] = '';
         foreach ($listAxisWithMemberNotLinkedToBroader as $refAxis => $members) {
-            $axis = Classif_Model_Axis::loadByRef($refAxis);
+            $axis = IndicatorAxis::loadByRef($refAxis);
             $data['fail'] .= $axis->getLabel() . ' : { ';
             foreach ($members as $refBroaderAxis => $refMember) {
-                $broaderAxis = Classif_Model_Axis::loadByRef($refBroaderAxis);
+                $broaderAxis = IndicatorAxis::loadByRef($refBroaderAxis);
                 $data['fail'] .= $broaderAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);

@@ -8,6 +8,7 @@
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
+use Classif\Domain\ContextIndicator;
 use Core\Annotation\Secure;
 
 /**
@@ -111,8 +112,8 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
     public function getContextIndicatorListAction()
     {
         $this->addElementList(null, '');
-        /** @var $contextIndicators Classif_Model_ContextIndicator[] */
-        $contextIndicators = Classif_Model_ContextIndicator::loadList();
+        /** @var $contextIndicators ContextIndicator[] */
+        $contextIndicators = ContextIndicator::loadList();
         foreach ($contextIndicators as $contextIndicator) {
             $this->addElementList($this->getContextIndicatorRef($contextIndicator),
                                   $this->getContextIndicatorLabel($contextIndicator));
@@ -121,10 +122,10 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
     }
 
     /**
-     * @param Classif_Model_ContextIndicator $contextIndicator
+     * @param ContextIndicator $contextIndicator
      * @return string
      */
-    private function getContextIndicatorRef(Classif_Model_ContextIndicator $contextIndicator)
+    private function getContextIndicatorRef(ContextIndicator $contextIndicator)
     {
         return $contextIndicator->getContext()->getRef()
             . '#' . $contextIndicator->getIndicator()->getRef();
@@ -132,7 +133,7 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
 
     /**
      * @param string $ref
-     * @return Classif_Model_ContextIndicator
+     * @return ContextIndicator
      */
     private function getContextIndicatorByRef($ref)
     {
@@ -140,14 +141,14 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
             return null;
         }
         list($refContext, $refIndicator) = explode('#', $ref);
-        return Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator);
+        return ContextIndicator::loadByRef($refContext, $refIndicator);
     }
 
     /**
-     * @param Classif_Model_ContextIndicator $contextIndicator
+     * @param ContextIndicator $contextIndicator
      * @return string
      */
-    private function getContextIndicatorLabel(Classif_Model_ContextIndicator $contextIndicator)
+    private function getContextIndicatorLabel(ContextIndicator $contextIndicator)
     {
         return $contextIndicator->getIndicator()->getLabel() . ' - ' . $contextIndicator->getContext()->getLabel();
     }

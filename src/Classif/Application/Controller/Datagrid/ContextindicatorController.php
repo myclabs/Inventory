@@ -6,6 +6,10 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\Context;
+use Classif\Domain\Indicator;
 use Core\Annotation\Secure;
 
 /**
@@ -23,17 +27,17 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $this->request->order->addOrder(
-            Classif_Model_Context::QUERY_POSITION,
+            Context::QUERY_POSITION,
             Core_Model_Order::ORDER_ASC,
-            Classif_Model_Context::getAlias()
+            Context::getAlias()
         );
         $this->request->order->addOrder(
-            Classif_Model_Indicator::QUERY_POSITION,
+            Indicator::QUERY_POSITION,
             Core_Model_Order::ORDER_ASC,
-            Classif_Model_Indicator::getAlias()
+            Indicator::getAlias()
         );
 
-        foreach (Classif_Model_ContextIndicator::loadList($this->request) as $contextIndicator) {
+        foreach (ContextIndicator::loadList($this->request) as $contextIndicator) {
             $data = array();
             $data['index'] = $contextIndicator->getContext()->getRef().'#'.$contextIndicator->getIndicator()->getRef();
             $data['context'] = $this->cellList($contextIndicator->getContext()->getRef());
@@ -45,7 +49,7 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
             $data['axes'] = $this->cellList($refAxes);
             $this->addline($data);
         }
-        $this->totalElements = Classif_Model_ContextIndicator::countTotal($this->request);
+        $this->totalElements = ContextIndicator::countTotal($this->request);
 
         $this->send();
     }
@@ -67,24 +71,24 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
         }
 
         if (empty($this->_addErrorMessages)) {
-            $context = Classif_Model_Context::loadByRef($refContext);
-            $indicator = Classif_Model_Indicator::loadByRef($refIndicator);
+            $context = Context::loadByRef($refContext);
+            $indicator = Indicator::loadByRef($refIndicator);
             try {
-                $contextIndicator = Classif_Model_ContextIndicator::load(array(
+                $contextIndicator = ContextIndicator::load(array(
                         'context' => $context,
                         'indicator' => $indicator
                 ));
                 $this->setAddElementErrorMessage('context', __('Classif', 'contextIndicator', 'ContextIndicatorAlreadyExists'));
                 $this->setAddElementErrorMessage('indicator', __('Classif', 'contextIndicator', 'ContextIndicatorAlreadyExists'));
             } catch (Core_Exception_NotFound $e) {
-                $contextIndicator = new Classif_Model_ContextIndicator();
+                $contextIndicator = new ContextIndicator();
                 $contextIndicator->setContext($context);
                 $contextIndicator->setIndicator($indicator);
 
                 try {
                     if ($this->getAddElementValue('axes') != null) {
                         foreach ($this->getAddElementValue('axes') as $refAxis) {
-                            $axis = Classif_Model_Axis::loadByRef($refAxis);
+                            $axis = IndicatorAxis::loadByRef($refAxis);
                             $contextIndicator->addAxis($axis);
                         }
                     }
@@ -108,9 +112,9 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         list($refContext, $refIndicator) = explode('#', $this->delete);
-        $context = Classif_Model_Context::loadByRef($refContext);
-        $indicator = Classif_Model_Indicator::loadByRef($refIndicator);
-        $contextIndicator = Classif_Model_ContextIndicator::load(array(
+        $context = Context::loadByRef($refContext);
+        $indicator = Indicator::loadByRef($refIndicator);
+        $contextIndicator = ContextIndicator::load(array(
                     'context' => $context,
                     'indicator' => $indicator
                 ));
@@ -131,9 +135,9 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
     public function updateelementAction()
     {
         list($refContext, $refIndicator) = explode('#', $this->update['index']);
-        $context = Classif_Model_Context::loadByRef($refContext);
-        $indicator = Classif_Model_Indicator::loadByRef($refIndicator);
-        $contextIndicator = Classif_Model_ContextIndicator::load(array(
+        $context = Context::loadByRef($refContext);
+        $indicator = Indicator::loadByRef($refIndicator);
+        $contextIndicator = ContextIndicator::load(array(
                     'context' => $context,
                     'indicator' => $indicator
                 ));
@@ -153,7 +157,7 @@ class Classif_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
                     }
                 }
                 foreach ($listRefAxes as $refAxis) {
-                    $axis = Classif_Model_Axis::loadByRef($refAxis);
+                    $axis = IndicatorAxis::loadByRef($refAxis);
                     try {
                         $contextIndicator->addAxis($axis);
                     } catch (Core_Exception_InvalidArgument $e) {

@@ -5,6 +5,8 @@
  * @package Classif
  * Contenu de l'onglet des membres
  */
+use Classif\Domain\AxisMember;
+
 ?>
 <div class="page-header">
 	<h1><?=__('Classif', 'member', 'pageTitle')?></h1>
@@ -39,7 +41,7 @@ foreach ($this->listAxes as $axis) {
     $columnPosition = new UI_Datagrid_Col_Order('position');
     $columnPosition->editable = true;
     $columnPosition->addable = false;
-    $columnPosition->sortName = Classif_Model_Member::QUERY_POSITION;
+    $columnPosition->sortName = AxisMember::QUERY_POSITION;
     $datagridAxis->addCol($columnPosition);
 
     $datagridAxis->deleteElements = true;

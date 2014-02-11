@@ -1,20 +1,20 @@
 <?php
-/**
- * Classe Classif_Model_Context
- * @author     valentin.claras
- * @author     cyril.perraud
- * @package    Classif
- * @subpackage Model
- */
+
+namespace Classif\Domain;
+
+use Core_Model_Entity;
+use Core_Strategy_Ordered;
+use Core_Model_Entity_Translatable;
+use Core_Exception_UndefinedAttribute;
 
 /**
- * Permet de gérer un context.
- * @package    Classif
- * @subpackage Model
+ * Contexte de classification.
+ *
+ * @author valentin.claras
+ * @author cyril.perraud
  */
-class Classif_Model_Context extends Core_Model_Entity
+class Context extends Core_Model_Entity
 {
-
     use Core_Strategy_Ordered;
     use Core_Model_Entity_Translatable;
 
@@ -24,73 +24,34 @@ class Classif_Model_Context extends Core_Model_Entity
     const QUERY_POSITION = 'position';
 
     /**
-     * Identifiant unique du Context.
-     *
      * @var int
      */
     protected $id;
 
     /**
-     * Référence unique du Context.
+     * Référence unique.
      *
      * @var string
      */
     protected $ref;
 
     /**
-     * Label du Context.
+     * Libellé.
      *
      * @var string
      */
     protected $label;
 
-
     /**
-     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
-     */
-    public function preSave()
-    {
-        try {
-            $this->checkHasPosition();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->setPosition();
-        }
-    }
-
-    /**
-     * Fonction appelée avant un update de l'objet (défini dans le mapper).
-     */
-    public function preUpdate()
-    {
-        $this->checkHasPosition();
-    }
-
-    /**
-     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
-     */
-    public function preDelete()
-    {
-        $this->deletePosition();
-    }
-
-    /**
-     * Fonction appelée après un load de l'objet (défini dans le mapper).
-     */
-    public function postLoad()
-    {
-        $this->updateCachePosition();
-    }
-
-    /**
-     * Charge un Context à partir de sa ref.
+     * Charge un Context à partir de son ref.
      *
      * @param string $ref
      *
-     * @return Classif_Model_Context
+     * @return Context
      */
     public static function loadByRef($ref = null)
     {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref));
+        return self::getEntityRepository()->loadBy(['ref' => $ref]);
     }
 
     /**
@@ -149,4 +110,39 @@ class Classif_Model_Context extends Core_Model_Entity
         return $this->ref;
     }
 
+    /**
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
+     */
+    public function preSave()
+    {
+        try {
+            $this->checkHasPosition();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $this->setPosition();
+        }
+    }
+
+    /**
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
+     */
+    public function preUpdate()
+    {
+        $this->checkHasPosition();
+    }
+
+    /**
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
+     */
+    public function preDelete()
+    {
+        $this->deletePosition();
+    }
+
+    /**
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
+     */
+    public function postLoad()
+    {
+        $this->updateCachePosition();
+    }
 }

@@ -1,5 +1,4 @@
-# classif\models\mappers\Classif_Model_Axis.yml
-Classif_Model_Axis:
+Classif\Domain\IndicatorAxis:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Classif_Axis
@@ -31,7 +30,7 @@ Classif_Model_Axis:
 
   manyToOne:
     directNarrower:
-      targetEntity: Classif_Model_Axis
+      targetEntity: IndicatorAxis
       inversedBy: directBroaders
       joinColumn:
         name: idDirectNarrower
@@ -39,13 +38,13 @@ Classif_Model_Axis:
 
   oneToMany:
     directBroaders:
-      targetEntity: Classif_Model_Axis
+      targetEntity: IndicatorAxis
       mappedBy: directNarrower
       cascade: [ remove ]
       orderBy:
         position: ASC
     members:
-      targetEntity: Classif_Model_Member
+      targetEntity: AxisMember
       mappedBy: axis
       cascade: [ remove ]
       orderBy:

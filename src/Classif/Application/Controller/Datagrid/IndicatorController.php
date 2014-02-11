@@ -6,6 +6,8 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\Indicator;
 use Core\Annotation\Secure;
 use Unit\UnitAPI;
 use Unit\IncompatibleUnitsException;
@@ -24,7 +26,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        foreach (Classif_Model_Indicator::loadList($this->request) as $indicator) {
+        foreach (Indicator::loadList($this->request) as $indicator) {
             $data = array();
             $data['index'] = $indicator->getRef();
             $data['label'] = $this->cellText($indicator->getLabel());
@@ -36,7 +38,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
             $data['position'] = $this->cellPosition($indicator->getPosition(), $canUp, $canDown);
             $this->addline($data);
         }
-        $this->totalElements = Classif_Model_Indicator::countTotal($this->request);
+        $this->totalElements = Indicator::countTotal($this->request);
 
         $this->send();
     }
@@ -66,10 +68,10 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
         try {
             Core_Tools::checkRef($ref);
             try {
-                Classif_Model_Indicator::loadByRef($ref);
+                Indicator::loadByRef($ref);
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
-                $indicator = new Classif_Model_Indicator();
+                $indicator = new Indicator();
                 $indicator->setRef($ref);
                 $indicator->setLabel($label);
             }
@@ -94,11 +96,11 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $indicator = Classif_Model_Indicator::loadByRef($this->delete);
+        $indicator = Indicator::loadByRef($this->delete);
 
         $queryContextIndicator = new Core_Model_Query();
-        $queryContextIndicator->filter->addCondition(Classif_Model_ContextIndicator::QUERY_INDICATOR, $indicator);
-        if (Classif_Model_ContextIndicator::countTotal($queryContextIndicator) > 0) {
+        $queryContextIndicator->filter->addCondition(ContextIndicator::QUERY_INDICATOR, $indicator);
+        if (ContextIndicator::countTotal($queryContextIndicator) > 0) {
             throw new Core_Exception_User('Classif', 'indicator', 'IndicatorIsUsedInContextIndicator');
         }
 
@@ -114,7 +116,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $indicator = Classif_Model_Indicator::loadByRef($this->update['index']);
+        $indicator = Indicator::loadByRef($this->update['index']);
         switch ($this->update['column']) {
             case 'label':
                 $indicator->setLabel($this->update['value']);
@@ -123,7 +125,7 @@ class Classif_Datagrid_IndicatorController extends UI_Controller_Datagrid
             case 'ref':
                 Core_Tools::checkRef($this->update['value']);
                 try {
-                    if (Classif_Model_Indicator::loadByRef($this->update['value']) !== $indicator) {
+                    if (Indicator::loadByRef($this->update['value']) !== $indicator) {
                         throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
                     }
                 } catch (Core_Exception_NotFound $e) {

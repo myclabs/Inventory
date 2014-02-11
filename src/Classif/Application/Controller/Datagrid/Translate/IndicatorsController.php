@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\Indicator;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 
@@ -36,7 +37,7 @@ class Classif_Datagrid_Translate_IndicatorsController extends UI_Controller_Data
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        foreach (Classif_Model_Indicator::loadList($this->request) as $indicator) {
+        foreach (Indicator::loadList($this->request) as $indicator) {
             $data = array();
             $data['index'] = $indicator->getRef();
             $data['identifier'] = $indicator->getRef();
@@ -48,7 +49,7 @@ class Classif_Datagrid_Translate_IndicatorsController extends UI_Controller_Data
             }
             $this->addline($data);
         }
-        $this->totalElements = Classif_Model_Indicator::countTotal($this->request);
+        $this->totalElements = Indicator::countTotal($this->request);
 
         $this->send();
     }
@@ -61,7 +62,7 @@ class Classif_Datagrid_Translate_IndicatorsController extends UI_Controller_Data
     public function updateelementAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $indicator = Classif_Model_Indicator::loadByRef($this->update['index']);
+        $indicator = Indicator::loadByRef($this->update['index']);
         $indicator->reloadWithLocale(Core_Locale::load($this->update['column']));
         $indicator->setLabel($this->update['value']);
         $this->data = $indicator->getLabel();

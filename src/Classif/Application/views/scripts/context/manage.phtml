@@ -5,6 +5,8 @@
  * @package Classif
  * Contenu de l'onglet des membres
  */
+use Classif\Domain\Context;
+
 ?>
 <div class="page-header">
 	<h1><?=__('Classif', 'context', 'pageTitle')?></h1>
@@ -23,7 +25,7 @@
     $columnPosition = new UI_Datagrid_Col_Order('position');
     $columnPosition->editable = true;
     $columnPosition->addable = false;
-    $columnPosition->sortName = Classif_Model_Context::QUERY_POSITION;
+    $columnPosition->sortName = Context::QUERY_POSITION;
     $datagrid->addCol($columnPosition);
 
     $datagrid->deleteElements = true;

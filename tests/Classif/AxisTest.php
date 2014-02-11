@@ -2,7 +2,7 @@
 
 namespace Tests\Classif;
 
-use Classif_Model_Axis;
+use Classif\Domain\IndicatorAxis;
 use Core\Test\TestCase;
 use PHPUnit_Framework_TestSuite;
 
@@ -20,11 +20,11 @@ class AxisTest
      * Generation de l'objet de test.
      * @param string $ref
      * @param string $label
-     * @return Classif_Model_Axis
+     * @return \Classif\Domain\IndicatorAxis
      */
     public static function generateObject($ref = null, $label = null)
     {
-        $o = new Classif_Model_Axis();
+        $o = new IndicatorAxis();
         $o->setRef(($ref ===null) ? 'ref' : $ref);
         $o->setLabel(($label ===null) ? 'label' : $label);
         $o->save();
@@ -34,7 +34,7 @@ class AxisTest
 
     /**
      * Suppression d'un objet cree avec generateObject
-     * @param Classif_Model_Axis $o
+     * @param \Classif\Domain\IndicatorAxis $o
      */
     public static function deleteObject($o)
     {
@@ -47,9 +47,9 @@ class AxisSetUp extends TestCase
 {
     public static function setUpBeforeClass()
     {
-        if (Classif_Model_Axis::countTotal() > 0) {
+        if (IndicatorAxis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Axis::loadList() as $axis) {
+            foreach (IndicatorAxis::loadList() as $axis) {
                 $axis->delete();
             }
             self::getEntityManager()->flush();
@@ -58,8 +58,7 @@ class AxisSetUp extends TestCase
 
     public function testConstruct()
     {
-        $o = new Classif_Model_Axis();
-        $this->assertInstanceOf('Classif_Model_Axis', $o);
+        $o = new IndicatorAxis();
         $o->setRef('RefAxisTest');
         $o->setLabel('LabelAxisTest');
         $this->assertEquals(array(), $o->getKey());
@@ -71,12 +70,12 @@ class AxisSetUp extends TestCase
 
     /**
      * @depends testConstruct
-     * @param Classif_Model_Axis $o
+     * @param \Classif\Domain\IndicatorAxis $o
      */
-    public function testLoad(Classif_Model_Axis $o)
+    public function testLoad(IndicatorAxis $o)
     {
-         $oLoaded = Classif_Model_Axis::load($o->getKey());
-         $this->assertInstanceOf('Classif_Model_Axis', $o);
+         $oLoaded = IndicatorAxis::load($o->getKey());
+        $this->assertInstanceOf(IndicatorAxis::class, $o);
          $this->assertEquals($oLoaded->getKey(), $o->getKey());
          $this->assertEquals($oLoaded->getRef(), $o->getRef());
          $this->assertEquals($oLoaded->getLabel(), $o->getLabel());
@@ -85,9 +84,9 @@ class AxisSetUp extends TestCase
 
     /**
      * @depends testLoad
-     * @param Classif_Model_Axis $o
+     * @param \Classif\Domain\IndicatorAxis $o
      */
-    public function testDelete(Classif_Model_Axis $o)
+    public function testDelete(IndicatorAxis $o)
     {
         $o->delete();
         \Core\ContainerSingleton::getEntityManager()->flush();
@@ -96,9 +95,9 @@ class AxisSetUp extends TestCase
 
     public static function tearDownAfterClass()
     {
-        if (Classif_Model_Axis::countTotal() > 0) {
+        if (IndicatorAxis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Axis::loadList() as $axis) {
+            foreach (IndicatorAxis::loadList() as $axis) {
                 $axis->delete();
             }
             self::getEntityManager()->flush();
@@ -109,15 +108,15 @@ class AxisSetUp extends TestCase
 class AxisOther extends TestCase
 {
     /**
-     * @var Classif_Model_Axis
+     * @var \Classif\Domain\IndicatorAxis
      */
     protected $axis;
 
     public static function setUpBeforeClass()
     {
-        if (Classif_Model_Axis::countTotal() > 0) {
+        if (IndicatorAxis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Axis::loadList() as $axis) {
+            foreach (IndicatorAxis::loadList() as $axis) {
                 $axis->delete();
             }
             self::getEntityManager()->flush();
@@ -209,9 +208,9 @@ class AxisOther extends TestCase
 
     public static function tearDownAfterClass()
     {
-        if (Classif_Model_Axis::countTotal() > 0) {
+        if (IndicatorAxis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Axis::loadList() as $axis) {
+            foreach (IndicatorAxis::loadList() as $axis) {
                 $axis->delete();
             }
             self::getEntityManager()->flush();

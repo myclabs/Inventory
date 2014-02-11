@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\IndicatorAxis;
 use Core\Annotation\Secure;
 
 
@@ -32,7 +33,7 @@ class Classif_AxisController extends Core_Controller
      */
     public function manageAction()
     {
-        $this->view->listParents = Classif_Model_Axis::loadList();
+        $this->view->listParents = IndicatorAxis::loadList();
     }
 
 }

@@ -2,10 +2,10 @@
 
 namespace Tests\Classif;
 
-use Classif_Model_Axis;
-use Classif_Model_Context;
-use Classif_Model_ContextIndicator;
-use Classif_Model_Indicator;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\Context;
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\Indicator;
 use Core\Test\TestCase;
 use Core_Exception_NotFound;
 use PHPUnit_Framework_TestSuite;
@@ -22,13 +22,13 @@ class ContextIndicatorTest
 
     /**
      * Generation of a test object
-     * @param Classif_Model_Context $context
-     * @param Classif_Model_Indicator $indicator
-     * @return Classif_Model_ContextIndicator
+     * @param \Classif\Domain\Context $context
+     * @param Indicator $indicator
+     * @return ContextIndicator
      */
     public static function generateObject($context = null, $indicator = null)
     {
-        $o = new Classif_Model_ContextIndicator();
+        $o = new ContextIndicator();
         $o->setContext(($context ===null) ? ContextTest::generateObject() : $context);
         $o->setIndicator(($indicator ===null) ? IndicatorTest::generateObject() : $indicator);
         $o->save();
@@ -38,7 +38,7 @@ class ContextIndicatorTest
 
     /**
      * Deletion of an object created with generateObject
-     * @param Classif_Model_ContextIndicator $o
+     * @param \Classif\Domain\ContextIndicator $o
      * @param bool $deleteContext
      * @param bool $deleteIndicator
      */
@@ -59,23 +59,23 @@ class ContextIndicatorSetUp extends TestCase
 {
     public static function setUpBeforeClass()
     {
-        if (Classif_Model_ContextIndicator::countTotal() > 0) {
+        if (ContextIndicator::countTotal() > 0) {
             echo PHP_EOL . 'Des ContextIndicator restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_ContextIndicator::loadList() as $contextIndicator) {
+            foreach (ContextIndicator::loadList() as $contextIndicator) {
                 $contextIndicator->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Context::countTotal() > 0) {
+        if (Context::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Context restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Context::loadList() as $context) {
+            foreach (Context::loadList() as $context) {
                 $context->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Indicator::countTotal() > 0) {
+        if (Indicator::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Indicator restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Indicator::loadList() as $indicator) {
+            foreach (Indicator::loadList() as $indicator) {
                 $indicator->delete();
             }
             self::getEntityManager()->flush();
@@ -86,11 +86,11 @@ class ContextIndicatorSetUp extends TestCase
     {
         $context = ContextTest::generateObject('ContextIndicatorSetUpTest');
         $indicator = IndicatorTest::generateObject('ContextIndicatorSetUpTest');
-        $o = new Classif_Model_ContextIndicator();
+        $o = new ContextIndicator();
         $o->setContext($context);
         $o->setIndicator($indicator);
         try {
-            Classif_Model_ContextIndicator::load($o->getKey());
+            ContextIndicator::load($o->getKey());
             $this->assertTrue(false);
         } catch (Core_Exception_NotFound $e) {
             $this->assertTrue(true);
@@ -103,13 +103,13 @@ class ContextIndicatorSetUp extends TestCase
 
     /**
      * @depends testConstruct
-     * @param Classif_Model_ContextIndicator $o
-     * @return Classif_Model_ContextIndicator
+     * @param ContextIndicator $o
+     * @return ContextIndicator
      */
-    public function testLoad(Classif_Model_ContextIndicator $o)
+    public function testLoad(ContextIndicator $o)
     {
-         $oLoaded = Classif_Model_ContextIndicator::load($o->getKey());
-         $this->assertInstanceOf(Classif_Model_ContextIndicator::class, $o);
+         $oLoaded = ContextIndicator::load($o->getKey());
+         $this->assertInstanceOf(ContextIndicator::class, $o);
          $this->assertEquals($oLoaded->getKey(), $o->getKey());
          $this->assertEquals($oLoaded->getContext(), $o->getContext());
          $this->assertEquals($oLoaded->getIndicator(), $o->getIndicator());
@@ -118,14 +118,14 @@ class ContextIndicatorSetUp extends TestCase
 
     /**
      * @depends testLoad
-     * @param Classif_Model_ContextIndicator $o
+     * @param \Classif\Domain\ContextIndicator $o
      */
-    public function testDelete(Classif_Model_ContextIndicator $o)
+    public function testDelete(ContextIndicator $o)
     {
         $o->delete();
         $this->entityManager->flush();
         try {
-            Classif_Model_ContextIndicator::load($o->getKey());
+            ContextIndicator::load($o->getKey());
             $this->assertTrue(false);
         } catch (Core_Exception_NotFound $e) {
             $this->assertTrue(true);
@@ -136,23 +136,23 @@ class ContextIndicatorSetUp extends TestCase
 
     public static function tearDownAfterClass()
     {
-        if (Classif_Model_ContextIndicator::countTotal() > 0) {
+        if (ContextIndicator::countTotal() > 0) {
             echo PHP_EOL . 'Des ContextIndicator restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_ContextIndicator::loadList() as $contextIndicator) {
+            foreach (ContextIndicator::loadList() as $contextIndicator) {
                 $contextIndicator->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Context::countTotal() > 0) {
+        if (Context::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Context restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Context::loadList() as $context) {
+            foreach (Context::loadList() as $context) {
                 $context->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Indicator::countTotal() > 0) {
+        if (Indicator::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Indicator restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Indicator::loadList() as $indicator) {
+            foreach (Indicator::loadList() as $indicator) {
                 $indicator->delete();
             }
             self::getEntityManager()->flush();
@@ -163,36 +163,36 @@ class ContextIndicatorSetUp extends TestCase
 class ContextIndicatorOther extends TestCase
 {
     /**
-     * @var Classif_Model_ContextIndicator
+     * @var ContextIndicator
      */
     protected $contextIndicator;
 
     public static function setUpBeforeClass()
     {
-        if (Classif_Model_ContextIndicator::countTotal() > 0) {
+        if (ContextIndicator::countTotal() > 0) {
             echo PHP_EOL . 'Des ContextIndicator restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_ContextIndicator::loadList() as $contextIndicator) {
+            foreach (ContextIndicator::loadList() as $contextIndicator) {
                 $contextIndicator->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Context::countTotal() > 0) {
+        if (Context::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Context restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Context::loadList() as $context) {
+            foreach (Context::loadList() as $context) {
                 $context->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Indicator::countTotal() > 0) {
+        if (Indicator::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Indicator restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Indicator::loadList() as $indicator) {
+            foreach (Indicator::loadList() as $indicator) {
                 $indicator->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Axis::countTotal() > 0) {
+        if (IndicatorAxis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Classif_Model_Axis::loadList() as $axis) {
+            foreach (IndicatorAxis::loadList() as $axis) {
                 $axis->delete();
             }
             self::getEntityManager()->flush();
@@ -249,7 +249,7 @@ class ContextIndicatorOther extends TestCase
 
     public function loadByRef()
     {
-        $contextIndicator = Classif_Model_ContextIndicator::loadByRef(
+        $contextIndicator = ContextIndicator::loadByRef(
             $this->contextIndicator->getContext()->getRef(),
             $this->contextIndicator->getIndicator()->getRef()
         );
@@ -265,30 +265,30 @@ class ContextIndicatorOther extends TestCase
 
     public static function tearDownAfterClass()
     {
-        if (Classif_Model_ContextIndicator::countTotal() > 0) {
+        if (ContextIndicator::countTotal() > 0) {
             echo PHP_EOL . 'Des ContextIndicator restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_ContextIndicator::loadList() as $contextIndicator) {
+            foreach (ContextIndicator::loadList() as $contextIndicator) {
                 $contextIndicator->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Context::countTotal() > 0) {
+        if (Context::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Context restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Context::loadList() as $context) {
+            foreach (Context::loadList() as $context) {
                 $context->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Indicator::countTotal() > 0) {
+        if (Indicator::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Indicator restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Indicator::loadList() as $indicator) {
+            foreach (Indicator::loadList() as $indicator) {
                 $indicator->delete();
             }
             self::getEntityManager()->flush();
         }
-        if (Classif_Model_Axis::countTotal() > 0) {
+        if (IndicatorAxis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Classif_Model_Axis::loadList() as $axis) {
+            foreach (IndicatorAxis::loadList() as $axis) {
                 $axis->delete();
             }
             self::getEntityManager()->flush();

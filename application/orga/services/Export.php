@@ -18,6 +18,8 @@ use AF\Domain\Input\SubAF\NotRepeatedSubAFInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputSet\SubInputSet;
 use AF\Domain\Output\OutputElement;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\Indicator;
 use User\Domain\ACL\Role\Role;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
@@ -526,7 +528,7 @@ class Orga_Service_Export
         $modelBuilder->bind('cell', $cell);
         $modelBuilder->bind('populatingCells', $cell->getPopulatingCells());
 
-        $modelBuilder->bind('indicators', Classif_Model_Indicator::loadList());
+        $modelBuilder->bind('indicators', Indicator::loadList());
 
         $queryOrganizationAxes = new Core_Model_Query();
         $queryOrganizationAxes->filter->addCondition(Orga_Model_Axis::QUERY_ORGANIZATION, $cell->getGranularity()->getOrganization());
@@ -545,7 +547,7 @@ class Orga_Service_Export
         }
         $modelBuilder->bind('orgaAxes', $orgaAxes);
 
-        $modelBuilder->bind('classifAxes', Classif_Model_Axis::loadListOrderedAsAscendantTree());
+        $modelBuilder->bind('classifAxes', IndicatorAxis::loadListOrderedAsAscendantTree());
 
         $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
         $modelBuilder->bind('resultLabel', __('UI', 'name', 'label'));
@@ -556,7 +558,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'getOutputsForIndicator',
-            function (Orga_Model_Cell $cell, Classif_Model_Indicator $indicator) {
+            function (Orga_Model_Cell $cell, Indicator $indicator) {
                 $results = [];
                 if (($cell->getAFInputSetPrimary() !== null) && ($cell->getAFInputSetPrimary()->getOutputSet() !== null)) {
                     foreach ($cell->getAFInputSetPrimary()->getOutputSet()->getElements() as $result) {
@@ -589,7 +591,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayMemberForClassifAxis',
-            function (OutputElement $output, Classif_Model_Axis $axis) {
+            function (OutputElement $output, IndicatorAxis $axis) {
                 try {
                     $member = $output->getIndexForAxis($axis)->getMember();
                     if ($member->getAxis() !== $axis) {

@@ -1,5 +1,4 @@
-# classif\models\mappers\Classif_Model_Indicator.yml
-Classif_Model_Indicator:
+Classif\Domain\Indicator:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Classif_Indicator

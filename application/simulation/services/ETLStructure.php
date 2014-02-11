@@ -4,6 +4,9 @@
  * @subpackage Service
  */
 
+use Classif\Domain\AxisMember;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\Indicator;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -38,7 +41,7 @@ class Simulation_Service_ETLStructure
     /**
      * Traduit les labels des objets originaux dans DW.
      *
-     * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param Indicator|IndicatorAxis|AxisMember|Orga_Model_Axis|Orga_Model_Member $originalEntity
      * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
      */
     protected function translateEntity($originalEntity, $dWEntity)
@@ -72,7 +75,7 @@ class Simulation_Service_ETLStructure
     /**
      * Vérifie que les traductions sont à jour entre les objets originaux et ceux de DW.
      *
-     * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param Indicator|IndicatorAxis|AxisMember|Orga_Model_Axis|Orga_Model_Member $originalEntity
      * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
      *
      * @return bool
@@ -127,20 +130,20 @@ class Simulation_Service_ETLStructure
     public function populateDWCubeWithClassif($dWCube)
     {
         $queryOrdered = new Core_Model_Query();
-        $queryOrdered->order->addOrder(Classif_Model_Indicator::QUERY_POSITION);
-        foreach (Classif_Model_Indicator::loadList($queryOrdered) as $classifIndicator) {
-            /** @var Classif_Model_Indicator $classifIndicator */
+        $queryOrdered->order->addOrder(Indicator::QUERY_POSITION);
+        foreach (Indicator::loadList($queryOrdered) as $classifIndicator) {
+            /** @var Indicator $classifIndicator */
             $this->copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube);
         }
 
         $queryRootAxes = new Core_Model_Query();
         $queryRootAxes->filter->addCondition(
-            Classif_Model_Axis::QUERY_NARROWER,
+            IndicatorAxis::QUERY_NARROWER,
             null,
             Core_Model_Filter::OPERATOR_NULL
         );
-        foreach (Classif_Model_Axis::loadList($queryRootAxes) as $classifAxis) {
-            /** @var Classif_Model_Axis $classifAxis */
+        foreach (IndicatorAxis::loadList($queryRootAxes) as $classifAxis) {
+            /** @var IndicatorAxis $classifAxis */
             $this->copyAxisAndMembersFromClassifToDW($classifAxis, $dWCube);
         }
     }
@@ -148,7 +151,7 @@ class Simulation_Service_ETLStructure
     /**
      * Copie un indicateur de Classif dans un cube de DW.
      *
-     * @param Classif_Model_Indicator $classifIndicator
+     * @param Indicator $classifIndicator
      * @param DW_Model_Cube $dWCube
      */
     private function copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube)
@@ -163,7 +166,7 @@ class Simulation_Service_ETLStructure
     /**
      * Copie un axe de Classif dans un cube DW.
      *
-     * @param Classif_Model_Axis $classifAxis
+     * @param IndicatorAxis $classifAxis
      * @param DW_Model_Cube $dwCube
      * @param array &$associationArray
      */
@@ -232,11 +235,11 @@ class Simulation_Service_ETLStructure
      */
     private function areDWIndicatorsUpToDate($dWCube)
     {
-        $classifIndicators = Classif_Model_Indicator::loadList();
+        $classifIndicators = Indicator::loadList();
         $dWIndicators = $dWCube->getIndicators();
 
-        foreach (Classif_Model_Indicator::loadList() as $classifIndex => $classifIndicator) {
-            /** @var Classif_Model_Indicator $classifIndicator */
+        foreach (Indicator::loadList() as $classifIndex => $classifIndicator) {
+            /** @var Indicator $classifIndicator */
             foreach ($dWCube->getIndicators() as $dWIndex => $dWIndicator) {
                 if (!($this->isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator))) {
                     unset($classifIndicators[$classifIndex]);
@@ -256,7 +259,7 @@ class Simulation_Service_ETLStructure
      * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
      *
      * @param DW_Model_Indicator $dWIndicator
-     * @param Classif_Model_Indicator $classifIndicator
+     * @param Indicator $classifIndicator
      *
      * @return bool
      */
@@ -284,16 +287,16 @@ class Simulation_Service_ETLStructure
     {
         $queryClassifRootAxes = new Core_Model_Query();
         $queryClassifRootAxes->filter->addCondition(
-            Classif_Model_Axis::QUERY_NARROWER,
+            IndicatorAxis::QUERY_NARROWER,
             null,
             Core_Model_Filter::OPERATOR_NULL
         );
-        $classifRootAxes = Classif_Model_Axis::loadList($queryClassifRootAxes);
+        $classifRootAxes = IndicatorAxis::loadList($queryClassifRootAxes);
         $dWRootAxes = $dWCube->getRootAxes();
 
         foreach ($dWCube->getRootAxes() as $dWIndex => $dWAxis) {
             if ($dWAxis->getRef() !== 'set') {
-                foreach (Classif_Model_Axis::loadList($queryClassifRootAxes) as $classifIndex => $classifAxis) {
+                foreach (IndicatorAxis::loadList($queryClassifRootAxes) as $classifIndex => $classifAxis) {
                     if (!($this->isDWAxisDifferentFromClassif($dWAxis, $classifAxis))) {
                         unset($classifRootAxes[$classifIndex]);
                         unset($dWRootAxes[$dWIndex]);
@@ -313,7 +316,7 @@ class Simulation_Service_ETLStructure
      * Compare un axe de DW et un de Classif.
      *
      * @param DW_Model_Axis $dWAxis
-     * @param Classif_Model_Axis $classifAxis
+     * @param IndicatorAxis $classifAxis
      *
      * @return bool
      */
@@ -352,7 +355,7 @@ class Simulation_Service_ETLStructure
      * Compare un membre de DW et un de Classif.
      *
      * @param DW_Model_Axis $dWAxis
-     * @param Classif_Model_Axis $classifAxis
+     * @param IndicatorAxis $classifAxis
      *
      * @return bool
      */
@@ -381,7 +384,7 @@ class Simulation_Service_ETLStructure
      * Compare un membre de DW et un de Classif.
      *
      * @param DW_Model_Member $dWMember
-     * @param Classif_Model_Member $classifMember
+     * @param AxisMember $classifMember
      *
      * @return bool
      */

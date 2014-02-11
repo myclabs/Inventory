@@ -45,9 +45,9 @@ use AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo;
 use AF\Domain\Algorithm\Selection\TextKey\ContextValueSelectionAlgo;
 use Calc_UnitValue;
 use Calc_Value;
-use Classif_Model_Axis;
-use Classif_Model_ContextIndicator;
-use Classif_Model_Member;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\AxisMember;
 use Core_Exception;
 use Techno\Domain\Family\Family;
 use Unit\UnitAPI;
@@ -624,11 +624,11 @@ abstract class AbstractPopulateAF
      */
     protected function createFixedIndexForAlgoNumeric(NumericAlgo $numeric, $refContext, $refIndicator, $indexes)
     {
-        $numeric->setContextIndicator(Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator));
+        $numeric->setContextIndicator(ContextIndicator::loadByRef($refContext, $refIndicator));
         foreach ($indexes as $refAxis => $refMember) {
-            $classifAxis = Classif_Model_Axis::loadByRef($refAxis);
-            $index = new FixedIndex(Classif_Model_Axis::loadByRef($refAxis));
-            $index->setClassifMember(Classif_Model_Member::loadByRefAndAxis($refMember, $classifAxis));
+            $classifAxis = IndicatorAxis::loadByRef($refAxis);
+            $index = new FixedIndex(IndicatorAxis::loadByRef($refAxis));
+            $index->setClassifMember(AxisMember::loadByRefAndAxis($refMember, $classifAxis));
             $index->setAlgoNumeric($numeric);
             $index->save();
         }
@@ -642,9 +642,9 @@ abstract class AbstractPopulateAF
      */
     protected function createAlgoIndexForAlgoNumeric(NumericAlgo $numeric, $refContext, $refIndicator, $indexes)
     {
-        $numeric->setContextIndicator(Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator));
+        $numeric->setContextIndicator(ContextIndicator::loadByRef($refContext, $refIndicator));
         foreach ($indexes as $refAxis => $algo) {
-            $index = new AlgoResultIndex(Classif_Model_Axis::loadByRef($refAxis));
+            $index = new AlgoResultIndex(IndicatorAxis::loadByRef($refAxis));
             $index->setAlgo($algo);
             $index->setAlgoNumeric($numeric);
             $index->save();

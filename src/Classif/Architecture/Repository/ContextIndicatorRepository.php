@@ -1,49 +1,53 @@
 <?php
-/**
- * Classe Classif_Model_Repository_ContextIndicator
- * @author     valentin.claras
- * @package    Classif
- * @subpackage Model
- */
+
+namespace Classif\Architecture\Repository;
+
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\Context;
+use Classif\Domain\Indicator;
+use Core_Model_Query;
+use Core_Model_Repository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
- * Gère les ContextIndicator.
- * @package    Classif
- * @subpackage Repository
+ * Repository d'indicateurs contextualisés.
+ *
+ * @author valentin.claras
  */
-class Classif_Model_Repository_ContextIndicator extends Core_Model_Repository
+class ContextIndicatorRepository extends Core_Model_Repository
 {
-
     /**
      * Ajoute des paramètres personnalisés au QueryBuilder utilisé par le loadList et le countTotal.
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder     $queryBuilder
      * @param Core_Model_Query $queryParameters
      */
-    protected function addCustomParametersToQueryBuilder($queryBuilder, Core_Model_Query $queryParameters=null)
+    protected function addCustomParametersToQueryBuilder($queryBuilder, Core_Model_Query $queryParameters = null)
     {
         if ($queryParameters === null) {
             return;
         }
 
         $arrayAuthorisedContextQuery = array(
-            Classif_Model_Context::getAlias().Classif_Model_Context::QUERY_POSITION,
-            Classif_Model_Context::getAlias().Classif_Model_Context::QUERY_REF,
-            Classif_Model_Context::getAlias().Classif_Model_Context::QUERY_LABEL,
+            Context::getAlias() . Context::QUERY_POSITION,
+            Context::getAlias() . Context::QUERY_REF,
+            Context::getAlias() . Context::QUERY_LABEL,
         );
         $arrayAuthorisedIndicatorQuery = array(
-            Classif_Model_Indicator::getAlias().Classif_Model_Indicator::QUERY_POSITION,
-            Classif_Model_Indicator::getAlias().Classif_Model_Indicator::QUERY_REF,
-            Classif_Model_Indicator::getAlias().Classif_Model_Indicator::QUERY_LABEL,
+            Indicator::getAlias() . Indicator::QUERY_POSITION,
+            Indicator::getAlias() . Indicator::QUERY_REF,
+            Indicator::getAlias() . Indicator::QUERY_LABEL,
         );
 
         $needsJoinToContext = false;
         $needsJoinToIndicator = false;
         foreach ($queryParameters->filter->getConditions() as $filterConditionArray) {
-            if (in_array($filterConditionArray['alias'].$filterConditionArray['name'], $arrayAuthorisedContextQuery)) {
+            if (in_array($filterConditionArray['alias'] . $filterConditionArray['name'], $arrayAuthorisedContextQuery)
+            ) {
                 $needsJoinToContext = true;
             }
-            if (in_array($filterConditionArray['alias'].$filterConditionArray['name'], $arrayAuthorisedIndicatorQuery)) {
+            if (in_array($filterConditionArray['alias'] . $filterConditionArray['name'], $arrayAuthorisedIndicatorQuery)
+            ) {
                 $needsJoinToIndicator = true;
             }
             if ($needsJoinToContext && $needsJoinToIndicator) {
@@ -51,10 +55,10 @@ class Classif_Model_Repository_ContextIndicator extends Core_Model_Repository
             }
         }
         foreach ($queryParameters->order->getOrders() as $orderArray) {
-            if (in_array($orderArray['alias'].$orderArray['name'], $arrayAuthorisedContextQuery)) {
+            if (in_array($orderArray['alias'] . $orderArray['name'], $arrayAuthorisedContextQuery)) {
                 $needsJoinToContext = true;
             }
-            if (in_array($orderArray['alias'].$orderArray['name'], $arrayAuthorisedIndicatorQuery)) {
+            if (in_array($orderArray['alias'] . $orderArray['name'], $arrayAuthorisedIndicatorQuery)) {
                 $needsJoinToIndicator = true;
             }
             if ($needsJoinToContext && $needsJoinToIndicator) {
@@ -64,14 +68,14 @@ class Classif_Model_Repository_ContextIndicator extends Core_Model_Repository
 
         if ($needsJoinToContext) {
             $queryBuilder->leftJoin(
-                Classif_Model_ContextIndicator::getAlias().'.context',
-                Classif_Model_Context::getAlias()
+                ContextIndicator::getAlias() . '.context',
+                Context::getAlias()
             );
         }
         if ($needsJoinToIndicator) {
             $queryBuilder->leftJoin(
-                Classif_Model_ContextIndicator::getAlias().'.indicator',
-                Classif_Model_Indicator::getAlias()
+                ContextIndicator::getAlias() . '.indicator',
+                Indicator::getAlias()
             );
         }
     }
@@ -98,5 +102,4 @@ class Classif_Model_Repository_ContextIndicator extends Core_Model_Repository
 
         return $this->getQueryFromQueryBuilder($queryBuilderCountTotal)->getSingleScalarResult();
     }
-
 }

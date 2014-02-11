@@ -2,11 +2,11 @@
 
 namespace Inventory\Command\PopulateDB\Base;
 
-use Classif_Model_Axis;
-use Classif_Model_Context;
-use Classif_Model_ContextIndicator;
-use Classif_Model_Indicator;
-use Classif_Model_Member;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\Context;
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\Indicator;
+use Classif\Domain\AxisMember;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
 
@@ -44,12 +44,12 @@ abstract class AbstractPopulateClassif
     /**
      * @param string $ref
      * @param string $label
-     * @param Classif_Model_Axis|null $narrower
-     * @return Classif_Model_Axis
+     * @param \Classif\Domain\IndicatorAxis|null $narrower
+     * @return \Classif\Domain\IndicatorAxis
      */
-    protected function createAxis($ref, $label, Classif_Model_Axis $narrower = null)
+    protected function createAxis($ref, $label, IndicatorAxis $narrower = null)
     {
-        $axis = new Classif_Model_Axis();
+        $axis = new IndicatorAxis();
         $axis->setRef($ref);
         $axis->setLabel($label);
         if ($narrower !== null) {
@@ -60,15 +60,15 @@ abstract class AbstractPopulateClassif
     }
 
     /**
-     * @param Classif_Model_Axis $axis
+     * @param \Classif\Domain\IndicatorAxis $axis
      * @param string $ref
      * @param string $label
      * @param array $parents
-     * @return Classif_Model_Member
+     * @return \Classif\Domain\AxisMember
      */
-    protected function createMember(Classif_Model_Axis $axis, $ref, $label, array $parents = [])
+    protected function createMember(IndicatorAxis $axis, $ref, $label, array $parents = [])
     {
-        $member = new Classif_Model_Member();
+        $member = new AxisMember();
         $member->setAxis($axis);
         $member->setRef($ref);
         $member->setLabel($label);
@@ -84,11 +84,11 @@ abstract class AbstractPopulateClassif
      * @param string $label
      * @param string $unitRef
      * @param string|null $ratioUnitRef
-     * @return Classif_Model_Indicator
+     * @return Indicator
      */
     protected function createIndicator($ref, $label, $unitRef, $ratioUnitRef = null)
     {
-        $indicator = new Classif_Model_Indicator();
+        $indicator = new Indicator();
         $indicator->setRef($ref);
         $indicator->setLabel($label);
         $indicator->setUnit(new UnitAPI($unitRef));
@@ -104,11 +104,11 @@ abstract class AbstractPopulateClassif
     /**
      * @param string $ref
      * @param string $label
-     * @return Classif_Model_Context
+     * @return \Classif\Domain\Context
      */
     protected function createContext($ref, $label)
     {
-        $context = new Classif_Model_Context();
+        $context = new Context();
         $context->setRef($ref);
         $context->setLabel($label);
         $context->save();
@@ -116,17 +116,17 @@ abstract class AbstractPopulateClassif
     }
 
     /**
-     * @param Classif_Model_Context $context
-     * @param Classif_Model_Indicator $indicator
-     * @param Classif_Model_Axis[] $axes
-     * @return Classif_Model_ContextIndicator
+     * @param Context $context
+     * @param Indicator $indicator
+     * @param \Classif\Domain\IndicatorAxis[] $axes
+     * @return \Classif\Domain\ContextIndicator
      */
     protected function createContextIndicator(
-        Classif_Model_Context $context,
-        Classif_Model_Indicator $indicator,
+        Context $context,
+        Indicator $indicator,
         array $axes = []
     ) {
-        $contextIndicator = new Classif_Model_ContextIndicator();
+        $contextIndicator = new ContextIndicator();
         $contextIndicator->setContext($context);
         $contextIndicator->setIndicator($indicator);
         foreach ($axes as $axis) {

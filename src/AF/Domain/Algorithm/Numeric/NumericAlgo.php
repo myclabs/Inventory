@@ -6,8 +6,8 @@ use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Index\Index;
 use AF\Domain\Algorithm\Output;
-use Classif_Model_Axis;
-use Classif_Model_ContextIndicator;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\ContextIndicator;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity_Translatable;
@@ -100,7 +100,7 @@ abstract class NumericAlgo extends Algo
     }
 
     /**
-     * @return Classif_Model_ContextIndicator
+     * @return \Classif\Domain\ContextIndicator
      */
     public function getContextIndicator()
     {
@@ -108,16 +108,16 @@ abstract class NumericAlgo extends Algo
             return null;
         }
         try {
-            return Classif_Model_ContextIndicator::loadByRef($this->refContext, $this->refIndicator);
+            return ContextIndicator::loadByRef($this->refContext, $this->refIndicator);
         } catch (Core_Exception_NotFound $e) {
             return null;
         }
     }
 
     /**
-     * @param Classif_Model_ContextIndicator|null $contextIndicator
+     * @param ContextIndicator|null $contextIndicator
      */
-    public function setContextIndicator(Classif_Model_ContextIndicator $contextIndicator = null)
+    public function setContextIndicator(ContextIndicator $contextIndicator = null)
     {
         if ($contextIndicator) {
             $this->refContext = $contextIndicator->getContext()->getRef();
@@ -140,10 +140,10 @@ abstract class NumericAlgo extends Algo
 
     /**
      * Retourne l'index correspondant à l'axe passé en paramètre
-     * @param Classif_Model_Axis $axis
+     * @param \Classif\Domain\IndicatorAxis $axis
      * @return Index|null
      */
-    public function getIndexForAxis(Classif_Model_Axis $axis)
+    public function getIndexForAxis(IndicatorAxis $axis)
     {
         foreach ($this->indexes as $index) {
             if ($index->getClassifAxis() === $axis) {

@@ -16,7 +16,7 @@ class Classif_TranslateController extends Core_Controller
 {
 
     /**
-     * Liste des libellés des Classif_Model_Axis en mode traduction.
+     * Liste des libellés des IndicatorAxis en mode traduction.
      *
      * @Secure("editClassif")
      */
@@ -34,7 +34,7 @@ class Classif_TranslateController extends Core_Controller
     }
 
     /**
-     * Liste des libellés des Classif_Model_Indicator en mode traduction.
+     * Liste des libellés des Indicator en mode traduction.
      *
      * @Secure("editClassif")
      */
@@ -43,7 +43,7 @@ class Classif_TranslateController extends Core_Controller
     }
 
     /**
-     * Liste des libellés des Classif_Model_Context en mode traduction.
+     * Liste des libellés des Context en mode traduction.
      *
      * @Secure("editClassif")
      */

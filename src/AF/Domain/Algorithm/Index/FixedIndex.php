@@ -3,7 +3,7 @@
 namespace AF\Domain\Algorithm\Index;
 
 use AF\Domain\Algorithm\InputSet;
-use Classif_Model_Member;
+use Classif\Domain\AxisMember;
 use Core_Exception_NotFound;
 
 /**
@@ -21,7 +21,7 @@ class FixedIndex extends Index
 
     /**
      * @param InputSet $inputSet
-     * @return Classif_Model_Member|null
+     * @return AxisMember|null
      */
     public function getClassifMember(InputSet $inputSet = null)
     {
@@ -29,16 +29,16 @@ class FixedIndex extends Index
             return null;
         }
         try {
-            return Classif_Model_Member::loadByRefAndAxis($this->refClassifMember, $this->getClassifAxis());
+            return AxisMember::loadByRefAndAxis($this->refClassifMember, $this->getClassifAxis());
         } catch (Core_Exception_NotFound $e) {
             return null;
         }
     }
 
     /**
-     * @param Classif_Model_Member $member
+     * @param AxisMember $member
      */
-    public function setClassifMember(Classif_Model_Member $member)
+    public function setClassifMember(AxisMember $member)
     {
         $this->refClassifMember = $member->getRef();
     }
@@ -53,7 +53,7 @@ class FixedIndex extends Index
             return false;
         }
         try {
-            Classif_Model_Member::loadByRefAndAxis($this->refClassifMember, $this->getClassifAxis());
+            AxisMember::loadByRefAndAxis($this->refClassifMember, $this->getClassifAxis());
             return true;
         } catch (Core_Exception_NotFound $e) {
             return false;

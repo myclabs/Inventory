@@ -7,6 +7,7 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\IndicatorAxis;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 
@@ -43,12 +44,12 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
     {
         if ($this->idNode === null) {
             $queryRootAxes = new Core_Model_Query();
-            $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null,
+            $queryRootAxes->filter->addCondition(IndicatorAxis::QUERY_NARROWER, null,
                 Core_Model_Filter::OPERATOR_NULL);
-            $queryRootAxes->order->addOrder(Classif_Model_Axis::QUERY_POSITION);
-            $axes = Classif_Model_Axis::loadList($queryRootAxes);
+            $queryRootAxes->order->addOrder(IndicatorAxis::QUERY_POSITION);
+            $axes = IndicatorAxis::loadList($queryRootAxes);
         } else {
-            $axes = Classif_Model_Axis::loadByRef($this->idNode)->getDirectBroaders();
+            $axes = IndicatorAxis::loadByRef($this->idNode)->getDirectBroaders();
         }
         foreach ($axes as $axis) {
             $axisLabel = '<b>' . $axis->getLabel() . '</b> <i>('.$axis->getRef().')</i>';
@@ -105,7 +106,7 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
      */
     public function editnodeAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->idNode);
+        $axis = IndicatorAxis::loadByRef($this->idNode);
         $newLabel = $this->getEditElementValue('label');
         $newRef = $this->getEditElementValue('ref');
         $newParentRef = $this->getEditElementValue('changeParent');
@@ -121,17 +122,17 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
                     $newPosition = $axis->getLastEligiblePosition();
                 } else if ($newParentRef === null) {
                     $queryRootAxis = new Core_Model_Query();
-                    $queryRootAxis->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null,
+                    $queryRootAxis->filter->addCondition(IndicatorAxis::QUERY_NARROWER, null,
                         Core_Model_Filter::OPERATOR_NULL);
-                    $newPosition = Classif_Model_Axis::countTotal($queryRootAxis) + 1;
+                    $newPosition = IndicatorAxis::countTotal($queryRootAxis) + 1;
                 } else {
-                    $newPosition = count(Classif_Model_Axis::loadByRef($this->idNode)->getDirectBroaders()) + 1;
+                    $newPosition = count(IndicatorAxis::loadByRef($this->idNode)->getDirectBroaders()) + 1;
                 }
             break;
             case 'after':
                 $refAfter = $this->_form[$this->id.'_changeOrder']['children'][$this->id.'_selectAfter_child']['value'];
-                $currentAxisPosition = Classif_Model_Axis::loadByRef($this->idNode)->getPosition();
-                $newPosition = Classif_Model_Axis::loadByRef($refAfter)->getPosition();
+                $currentAxisPosition = IndicatorAxis::loadByRef($this->idNode)->getPosition();
+                $newPosition = IndicatorAxis::loadByRef($refAfter)->getPosition();
                 if (($newParentRef !== '') || ($currentAxisPosition > $newPosition)) {
                     $newPosition += 1;
                 }
@@ -186,21 +187,21 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
     public function getlistparentsAction()
     {
         $this->addElementList(null, '');
-        if (($this->idNode != null) && (Classif_Model_Axis::loadByRef($this->idNode)->getDirectNarrower() !== null)) {
+        if (($this->idNode != null) && (IndicatorAxis::loadByRef($this->idNode)->getDirectNarrower() !== null)) {
             $this->addElementList($this->id.'_root', __('Classif', 'axis', 'rootParentAxisLabel'));
         }
         $queryOrdered = new Core_Model_Query();
         if (!empty($this->idNode)) {
             $queryOrdered->filter->addCondition(
-                Classif_Model_Axis::QUERY_REF,
+                IndicatorAxis::QUERY_REF,
                 $this->idNode,
                 Core_Model_Filter::OPERATOR_NOT_EQUAL
             );
         }
-        $queryOrdered->order->addOrder(Classif_Model_Axis::QUERY_NARROWER);
-        $queryOrdered->order->addOrder(Classif_Model_Axis::QUERY_POSITION);
-        foreach (Classif_Model_Axis::loadList($queryOrdered) as $axis) {
-            /** @var Classif_Model_Axis $axis */
+        $queryOrdered->order->addOrder(IndicatorAxis::QUERY_NARROWER);
+        $queryOrdered->order->addOrder(IndicatorAxis::QUERY_POSITION);
+        foreach (IndicatorAxis::loadList($queryOrdered) as $axis) {
+            /** @var IndicatorAxis $axis */
             $this->addElementList($axis->getRef(), $axis->getLabel());
         }
         $this->send();
@@ -219,16 +220,16 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
      */
     public function getlistsiblingsAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->idNode);
+        $axis = IndicatorAxis::loadByRef($this->idNode);
         if (($this->getParam('idParent') != null) && ($this->getParam('idParent') !== $this->id.'_root')) {
-            $axisParent = Classif_Model_Axis::loadByRef($this->getParam('idParent'));
+            $axisParent = IndicatorAxis::loadByRef($this->getParam('idParent'));
             $siblingAxes = $axisParent->getDirectBroaders();
         } else if (($axis->getDirectNarrower() === null) || ($this->getParam('idParent') === $this->id.'_root')) {
             $queryRootAxes = new Core_Model_Query();
-            $queryRootAxes->filter->addCondition(Classif_Model_Axis::QUERY_NARROWER, null,
+            $queryRootAxes->filter->addCondition(IndicatorAxis::QUERY_NARROWER, null,
                 Core_Model_Filter::OPERATOR_NULL);
-            $queryRootAxes->order->addOrder(Classif_Model_Axis::QUERY_POSITION);
-            $siblingAxes = Classif_Model_Axis::loadList($queryRootAxes);
+            $queryRootAxes->order->addOrder(IndicatorAxis::QUERY_POSITION);
+            $siblingAxes = IndicatorAxis::loadList($queryRootAxes);
         } else {
             $siblingAxes = $axis->getDirectNarrower()->getDirectBroaders();
         }
@@ -249,7 +250,7 @@ class Classif_Tree_AxisController extends UI_Controller_Tree
      */
     public function getinfoeditAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->idNode);
+        $axis = IndicatorAxis::loadByRef($this->idNode);
         $this->data['ref'] = $axis->getRef();
         $this->data['label'] = $axis->getLabel();
         $this->send();

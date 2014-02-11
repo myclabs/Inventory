@@ -5,8 +5,8 @@ namespace Tests\Algo\TextKey;
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo;
 use AF\Domain\Algorithm\AlgoSet;
-use Classif_Model_Context;
-use Classif_Model_ContextIndicator;
+use Classif\Domain\Context;
+use Classif\Domain\ContextIndicator;
 use Core\Test\TestCase;
 use Doctrine\ORM\UnitOfWork;
 use TEC\Expression;
@@ -30,10 +30,10 @@ class ExpressionTest extends TestCase
         foreach (Algo::loadList() as $o) {
             $o->delete();
         }
-        foreach (Classif_Model_ContextIndicator::loadList() as $o) {
+        foreach (ContextIndicator::loadList() as $o) {
             $o->delete();
         }
-        foreach (Classif_Model_Context::loadList() as $o) {
+        foreach (Context::loadList() as $o) {
             $o->delete();
         }
         self::getEntityManager()->flush();

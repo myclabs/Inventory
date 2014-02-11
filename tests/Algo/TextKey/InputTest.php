@@ -7,7 +7,7 @@ use AF\Domain\Algorithm\Input\StringInput;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\Algorithm\AlgoSet;
-use Classif_Model_Context;
+use Classif\Domain\Context;
 use Core\Test\TestCase;
 use Core_Tools;
 use Doctrine\ORM\UnitOfWork;
@@ -50,7 +50,7 @@ class InputTest extends TestCase
         foreach (Algo::loadList() as $o) {
             $o->delete();
         }
-        foreach (Classif_Model_Context::loadList() as $o) {
+        foreach (Context::loadList() as $o) {
             $o->delete();
         }
         self::getEntityManager()->flush();

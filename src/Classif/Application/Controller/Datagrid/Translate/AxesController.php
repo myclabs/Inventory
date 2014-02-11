@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\IndicatorAxis;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 
@@ -36,7 +37,7 @@ class Classif_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        foreach (Classif_Model_Axis::loadList($this->request) as $axis) {
+        foreach (IndicatorAxis::loadList($this->request) as $axis) {
             $data = array();
             $data['index'] = $axis->getRef();
             $data['identifier'] = $axis->getRef();
@@ -48,7 +49,7 @@ class Classif_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
             }
             $this->addline($data);
         }
-        $this->totalElements = Classif_Model_Axis::countTotal($this->request);
+        $this->totalElements = IndicatorAxis::countTotal($this->request);
 
         $this->send();
     }
@@ -61,7 +62,7 @@ class Classif_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
     public function updateelementAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $axis = Classif_Model_Axis::loadByRef($this->update['index']);
+        $axis = IndicatorAxis::loadByRef($this->update['index']);
         $axis->reloadWithLocale(Core_Locale::load($this->update['column']));
         $axis->setLabel($this->update['value']);
         $this->data = $axis->getLabel();

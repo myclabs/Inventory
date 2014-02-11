@@ -1,5 +1,4 @@
-# classif\models\mappers\Classif_Model_Member.yml
-Classif_Model_Member:
+Classif\Domain\AxisMember:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
   table: Classif_Member
@@ -30,7 +29,7 @@ Classif_Model_Member:
 
   manyToOne:
     axis:
-      targetEntity: Classif_Model_Axis
+      targetEntity: IndicatorAxis
       inversedBy: members
       joinColumn:
         name: idAxis
@@ -38,7 +37,7 @@ Classif_Model_Member:
 
   manyToMany:
     _directChildren:
-      targetEntity: Classif_Model_Member
+      targetEntity: AxisMember
       inversedBy: _directParents
       joinTable:
         name: Classif_Member_Association
@@ -49,7 +48,7 @@ Classif_Model_Member:
           idChild:
             referencedColumnName: id
     _directParents:
-      targetEntity: Classif_Model_Member
+      targetEntity: AxisMember
       mappedBy: _directChildren
       orderBy:
         position: ASC

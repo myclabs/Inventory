@@ -10,6 +10,8 @@ use AF\Domain\Algorithm\Index\AlgoResultIndex;
 use AF\Domain\Algorithm\Index\FixedIndex;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
+use Classif\Domain\AxisMember;
+use Classif\Domain\IndicatorAxis;
 use Core\Annotation\Secure;
 
 /**
@@ -78,8 +80,8 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     {
         /** @var $algo NumericAlgo */
         $algo = NumericAlgo::load($this->getParam('idAlgo'));
-        /** @var $axis Classif_Model_Axis */
-        $axis = Classif_Model_Axis::load($this->update['index']);
+        /** @var $axis IndicatorAxis */
+        $axis = IndicatorAxis::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'type':
@@ -113,7 +115,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                     }
                     // Modification de la valeur d'un index
                     if ($index instanceof FixedIndex) {
-                        $newMember = Classif_Model_Member::loadByRefAndAxis($newValue, $axis);
+                        $newMember = AxisMember::loadByRefAndAxis($newValue, $axis);
                         $index->setClassifMember($newMember);
                     } elseif ($index instanceof AlgoResultIndex) {
                         /** @var $newAlgo TextKeySelectionAlgo */
@@ -130,7 +132,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                     $algo->save();
                     // Définition de la valeur de l'index
                     if ($index instanceof FixedIndex) {
-                        $newMember = Classif_Model_Member::loadByRefAndAxis($newValue, $axis);
+                        $newMember = AxisMember::loadByRefAndAxis($newValue, $axis);
                         $index->setClassifMember($newMember);
                     } elseif ($index instanceof AlgoResultIndex) {
                         /** @var $newAlgo TextKeySelectionAlgo */
@@ -165,8 +167,8 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     {
         /** @var $algo NumericAlgo */
         $algo = NumericAlgo::load($this->getParam('idAlgo'));
-        /** @var $axis Classif_Model_Axis */
-        $axis = Classif_Model_Axis::load($this->getParam('index'));
+        /** @var $axis IndicatorAxis */
+        $axis = IndicatorAxis::load($this->getParam('index'));
         $index = $algo->getIndexForAxis($axis);
         if ($index) {
             $type = get_class($index);
@@ -195,11 +197,11 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     /**
      * Saves the index type that the user chosen, stored in session
      * @param Algo               $algo
-     * @param Classif_Model_Axis $axis
+     * @param IndicatorAxis $axis
      * @param string             $type
      * @return void
      */
-    private function setChosenIndexType(Algo $algo, Classif_Model_Axis $axis, $type)
+    private function setChosenIndexType(Algo $algo, IndicatorAxis $axis, $type)
     {
         $session = new Zend_Session_Namespace(get_class());
         if (!isset($session->chosenType)) {
@@ -213,10 +215,10 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     /**
      * Returns the index type that the user chosen, stored in session
      * @param Algo               $algo
-     * @param Classif_Model_Axis $axis
+     * @param IndicatorAxis $axis
      * @return string|null
      */
-    private function getChosenIndexType(Algo $algo, Classif_Model_Axis $axis)
+    private function getChosenIndexType(Algo $algo, IndicatorAxis $axis)
     {
         $session = new Zend_Session_Namespace(get_class());
         if (isset($session->chosenType[$algo->getRef()][$axis->getRef()])) {

@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\AxisMember;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 
@@ -36,7 +37,7 @@ class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagri
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        foreach (Classif_Model_Member::loadList($this->request) as $member) {
+        foreach (AxisMember::loadList($this->request) as $member) {
             $data = array();
             $data['index'] = $member->getId();
             $data['identifier'] = $member->getAxis()->getRef().' | '.$member->getRef();
@@ -48,7 +49,7 @@ class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagri
             }
             $this->addline($data);
         }
-        $this->totalElements = Classif_Model_Member::countTotal($this->request);
+        $this->totalElements = AxisMember::countTotal($this->request);
 
         $this->send();
     }
@@ -61,7 +62,7 @@ class Classif_Datagrid_Translate_MembersController extends UI_Controller_Datagri
     public function updateelementAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $member = Classif_Model_Member::load($this->update['index']);
+        $member = AxisMember::load($this->update['index']);
         $member->reloadWithLocale(Core_Locale::load($this->update['column']));
         $member->setLabel($this->update['value']);
         $this->data = $member->getLabel();

@@ -2,8 +2,8 @@
 
 namespace AF\Domain\Output;
 
-use Classif_Model_Axis;
-use Classif_Model_Member;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\AxisMember;
 use Core_Model_Entity;
 
 /**
@@ -37,43 +37,43 @@ class OutputIndex extends Core_Model_Entity
 
 
     /**
-     * @param Classif_Model_Axis   $axis
-     * @param Classif_Model_Member $member
+     * @param \Classif\Domain\IndicatorAxis   $axis
+     * @param AxisMember $member
      */
-    public function __construct(Classif_Model_Axis $axis, Classif_Model_Member $member)
+    public function __construct(IndicatorAxis $axis, AxisMember $member)
     {
         $this->setAxis($axis);
         $this->setMember($member);
     }
 
     /**
-     * @return Classif_Model_Axis
+     * @return \Classif\Domain\IndicatorAxis
      */
     public function getAxis()
     {
-        return Classif_Model_Axis::loadByRef($this->refAxis);
+        return IndicatorAxis::loadByRef($this->refAxis);
     }
 
     /**
-     * @param Classif_Model_Axis $classifAxis
+     * @param IndicatorAxis $classifAxis
      */
-    public function setAxis(Classif_Model_Axis $classifAxis)
+    public function setAxis(IndicatorAxis $classifAxis)
     {
         $this->refAxis = $classifAxis->getRef();
     }
 
     /**
-     * @return Classif_Model_Member
+     * @return AxisMember
      */
     public function getMember()
     {
-        return Classif_Model_Member::loadByRefAndAxis($this->refMember, $this->getAxis());
+        return AxisMember::loadByRefAndAxis($this->refMember, $this->getAxis());
     }
 
     /**
-     * @param Classif_Model_Member $classifMember
+     * @param AxisMember $classifMember
      */
-    public function setMember(Classif_Model_Member $classifMember)
+    public function setMember(AxisMember $classifMember)
     {
         $this->refMember = $classifMember->getRef();
     }

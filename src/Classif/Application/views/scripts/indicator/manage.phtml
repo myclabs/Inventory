@@ -5,6 +5,8 @@
  * @package Classif
  * Contenu de l'onglet des membres
  */
+use Classif\Domain\Indicator;
+
 ?>
 <div class="page-header">
 	<h1><?=__('Classif', 'indicator', 'indicators')?></h1>
@@ -31,7 +33,7 @@
     $columnPosition = new UI_Datagrid_Col_Order('position');
     $columnPosition->editable = true;
     $columnPosition->addable = false;
-    $columnPosition->sortName = Classif_Model_Indicator::QUERY_POSITION;
+    $columnPosition->sortName = Indicator::QUERY_POSITION;
     $datagrid->addCol($columnPosition);
 
     $datagrid->deleteElements = true;

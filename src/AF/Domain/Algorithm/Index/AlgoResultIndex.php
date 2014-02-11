@@ -4,7 +4,7 @@ namespace AF\Domain\Algorithm\Index;
 
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
-use Classif_Model_Member;
+use Classif\Domain\AxisMember;
 
 /**
  * Indexation avec le résultat d'un algorithme.
@@ -22,12 +22,12 @@ class AlgoResultIndex extends Index
     /**
      * Return the Classif member associated with the index
      * @param InputSet $inputSet
-     * @return Classif_Model_Member
+     * @return \Classif\Domain\AxisMember
      */
     public function getClassifMember(InputSet $inputSet = null)
     {
         $refClassifMember = $this->getAlgo()->execute($inputSet);
-        return Classif_Model_Member::loadByRefAndAxis($refClassifMember, $this->getClassifAxis());
+        return AxisMember::loadByRefAndAxis($refClassifMember, $this->getClassifAxis());
     }
 
     /**

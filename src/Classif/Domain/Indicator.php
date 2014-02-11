@@ -1,25 +1,22 @@
 <?php
-/**
- * Classe Classif_Model_Indicator
- *
- * @author     valentin.claras
- * @author     cyril.perraud
- * @package    Classif
- * @subpackage Model
- */
 
+namespace Classif\Domain;
+
+use Core_Exception_UndefinedAttribute;
+use Core_Model_Entity;
+use Core_Model_Entity_Translatable;
+use Core_Strategy_Ordered;
 use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 /**
- * Permet de gérer un indicateur.
+ * Indicateur de classification.
  *
- * @package    Classif
- * @subpackage Model
+ * @author valentin.claras
+ * @author cyril.perraud
  */
-class Classif_Model_Indicator extends Core_Model_Entity
+class Indicator extends Core_Model_Entity
 {
-
     use Core_Strategy_Ordered;
     use Core_Model_Entity_Translatable;
 
@@ -29,10 +26,7 @@ class Classif_Model_Indicator extends Core_Model_Entity
     const QUERY_UNIT = 'unit';
     const QUERY_POSITION = 'position';
 
-
     /**
-     * Identifiant de l'indicateur.
-     *
      * @var int
      */
     protected $id;
@@ -40,14 +34,14 @@ class Classif_Model_Indicator extends Core_Model_Entity
     /**
      * Référent textuel de l'indicateur.
      *
-     * @var String
+     * @var string
      */
     protected $ref;
 
     /**
      * Label de l'indicateur.
      *
-     * @var String
+     * @var string
      */
     protected $label;
 
@@ -67,49 +61,13 @@ class Classif_Model_Indicator extends Core_Model_Entity
 
 
     /**
-     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
-     */
-    public function preSave()
-    {
-        try {
-            $this->checkHasPosition();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->setPosition();
-        }
-    }
-
-    /**
-     * Fonction appelée avant un update de l'objet (défini dans le mapper).
-     */
-    public function preUpdate()
-    {
-        $this->checkHasPosition();
-    }
-
-    /**
-     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
-     */
-    public function preDelete()
-    {
-        $this->deletePosition();
-    }
-
-    /**
-     * Fonction appelée après un load de l'objet (défini dans le mapper).
-     */
-    public function postLoad()
-    {
-        $this->updateCachePosition();
-    }
-
-    /**
      * Retourne un indicateur à partir de son ref
      * @param string $ref
-     * @return Classif_Model_Indicator $indicator
+     * @return Indicator $indicator
      */
     public static function loadByRef($ref)
     {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref));
+        return self::getEntityRepository()->loadBy(['ref' => $ref]);
     }
 
     /**
@@ -170,7 +128,7 @@ class Classif_Model_Indicator extends Core_Model_Entity
     {
         if ($this->ratioUnit != null) {
             if (!$this->getRatioUnit()->isEquivalent($unit)) {
-                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent.');
+                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent');
             }
         }
 
@@ -197,7 +155,7 @@ class Classif_Model_Indicator extends Core_Model_Entity
     {
         if ($this->unit != null) {
             if (!$this->getUnit()->isEquivalent($ratioUnit)) {
-                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent.');
+                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent');
             }
         }
 
@@ -215,8 +173,6 @@ class Classif_Model_Indicator extends Core_Model_Entity
     }
 
     /**
-     * Représentation de l'instance.
-     *
      * @return string
      */
     public function __toString()
@@ -224,4 +180,39 @@ class Classif_Model_Indicator extends Core_Model_Entity
         return $this->ref;
     }
 
+    /**
+     * Fonction appelée avant un persist de l'objet (défini dans le mapper).
+     */
+    public function preSave()
+    {
+        try {
+            $this->checkHasPosition();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $this->setPosition();
+        }
+    }
+
+    /**
+     * Fonction appelée avant un update de l'objet (défini dans le mapper).
+     */
+    public function preUpdate()
+    {
+        $this->checkHasPosition();
+    }
+
+    /**
+     * Fonction appelée avant un delete de l'objet (défini dans le mapper).
+     */
+    public function preDelete()
+    {
+        $this->deletePosition();
+    }
+
+    /**
+     * Fonction appelée après un load de l'objet (défini dans le mapper).
+     */
+    public function postLoad()
+    {
+        $this->updateCachePosition();
+    }
 }

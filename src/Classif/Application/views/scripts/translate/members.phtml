@@ -1,12 +1,8 @@
 <?php
-/**
- * @author valentin.claras
- * @package Classif
- * Traduction des Member
- */
+use Classif\Domain\AxisMember;
 ?>
     <div class="page-header">
         <h1><?=__('Classif', 'member', 'pageTitle')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
     </div>
 <?php
-echo $this->translateDatagrid('Classif_Model_Member', 'label', 'datagrid_translate_members', 'classif')->simple();
+echo $this->translateDatagrid(AxisMember::class, 'label', 'datagrid_translate_members', 'classif')->simple();

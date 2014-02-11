@@ -7,6 +7,8 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\AxisMember;
+use Classif\Domain\IndicatorAxis;
 use Core\Annotation\Secure;
 
 /**
@@ -23,10 +25,10 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->getParam('refAxis'));
+        $axis = IndicatorAxis::loadByRef($this->getParam('refAxis'));
 
-        $this->request->filter->addCondition(Classif_Model_Member::QUERY_AXIS, $axis);
-        foreach (Classif_Model_Member::loadList($this->request) as $member) {
+        $this->request->filter->addCondition(AxisMember::QUERY_AXIS, $axis);
+        foreach (AxisMember::loadList($this->request) as $member) {
             $data = array();
             $data['index'] = $member->getRef();
             $data['label'] = $this->cellText($member->getLabel());
@@ -46,7 +48,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
             }
             $this->addLine($data);
         }
-        $this->totalElements = Classif_Model_Member::countTotal($this->request);
+        $this->totalElements = AxisMember::countTotal($this->request);
 
         $this->send();
     }
@@ -59,7 +61,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->getParam('refAxis'));
+        $axis = IndicatorAxis::loadByRef($this->getParam('refAxis'));
         $label = $this->getAddElementValue('label');
         $ref = $this->getAddElementValue('ref');
         try {
@@ -76,7 +78,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
                 $this->setAddElementErrorMessage($formFieldRef, __('UI', 'formValidation', 'emptyRequiredField'));
             } else {
                 try {
-                    $broaderMembers[] = Classif_Model_Member::loadByRefAndAxis($refBroaderMember, $directBroader);
+                    $broaderMembers[] = AxisMember::loadByRefAndAxis($refBroaderMember, $directBroader);
                 } catch (Core_Exception_NotFound $e) {
                     $this->setAddElementErrorMessage($formFieldRef, __('Core', 'exception', 'applicationError'));
                 }
@@ -84,11 +86,11 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
         }
 
         try {
-            Classif_Model_Member::loadByRefAndAxis($ref, $axis);
+            AxisMember::loadByRefAndAxis($ref, $axis);
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
         } catch (Core_Exception_NotFound $e) {
             if (empty($this->_addErrorMessages)) {
-                $member = new Classif_Model_Member();
+                $member = new AxisMember();
                 $member->setRef($ref);
                 $member->setLabel($label);
                 $member->setAxis($axis);
@@ -110,8 +112,8 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->getParam('refAxis'));
-        $member = Classif_Model_Member::loadByRefAndAxis($this->delete, $axis);
+        $axis = IndicatorAxis::loadByRef($this->getParam('refAxis'));
+        $member = AxisMember::loadByRefAndAxis($this->delete, $axis);
         $member->delete();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
@@ -124,8 +126,8 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $axis = Classif_Model_Axis::loadByRef($this->getParam('refAxis'));
-        $member = Classif_Model_Member::loadByRefAndAxis($this->update['index'], $axis);
+        $axis = IndicatorAxis::loadByRef($this->getParam('refAxis'));
+        $member = AxisMember::loadByRefAndAxis($this->update['index'], $axis);
 
         switch ($this->update['column']) {
             case 'label':
@@ -135,7 +137,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
             case 'ref':
                 Core_Tools::checkRef($this->update['value']);
                 try {
-                    if (Classif_Model_Member::loadByRefAndAxis($this->update['value'], $axis) !== $member) {
+                    if (AxisMember::loadByRefAndAxis($this->update['value'], $axis) !== $member) {
                         throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
                     }
                 } catch (Core_Exception_NotFound $e) {
@@ -170,7 +172,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
             default:
                 try {
                     $refBroaderAxis = substr($this->update['column'], 7);
-                    $broaderAxis = Classif_Model_Axis::loadByRef($refBroaderAxis);
+                    $broaderAxis = IndicatorAxis::loadByRef($refBroaderAxis);
                     foreach ($member->getDirectParents() as $parentMember) {
                         if (($parentMember->getAxis()->getRef() === $refBroaderAxis)
                                 && ($parentMember->getRef() === $this->update['value'])) {
@@ -179,7 +181,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
                             $member->removeDirectParent($parentMember);
                         }
                     }
-                    $parentMember = Classif_Model_Member::loadByRefAndAxis($this->update['value'], $broaderAxis);
+                    $parentMember = AxisMember::loadByRefAndAxis($this->update['value'], $broaderAxis);
                     $member->addDirectParent($parentMember);
                     $this->message = __('UI', 'message', 'updated');
                 } catch (Core_Exception_NotFound $e) {
@@ -199,7 +201,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function getparentsAction()
     {
-        $broaderAxis = Classif_Model_Axis::loadByRef($this->getParam('refParentAxis'));
+        $broaderAxis = IndicatorAxis::loadByRef($this->getParam('refParentAxis'));
 
         if (($this->hasParam('source')) && ($this->getParam('source') === 'add')) {
             $this->addElementList('', '');

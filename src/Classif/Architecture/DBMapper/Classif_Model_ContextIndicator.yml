@@ -1,7 +1,6 @@
-# classif\models\mappers\Classif_Model_ContextIndicator.yml
-Classif_Model_ContextIndicator:
+Classif\Domain\ContextIndicator:
   type: entity
-  repositoryClass: Classif_Model_Repository_ContextIndicator
+  repositoryClass: \Classif\Architecture\Repository\ContextIndicatorRepository
   table: Classif_ContextIndicator
 
   id:
@@ -12,19 +11,19 @@ Classif_Model_ContextIndicator:
 
   manyToOne:
     context:
-      targetEntity: Classif_Model_Context
+      targetEntity: Context
       joinColumn:
         name: idContext
         referencedColumnName: id
     indicator:
-      targetEntity: Classif_Model_Indicator
+      targetEntity: Indicator
       joinColumn:
         name: idIndicator
         referencedColumnName: id
 
   manyToMany:
     axes:
-      targetEntity: Classif_Model_Axis
+      targetEntity: IndicatorAxis
       joinTable:
         name: Classif_ContextIndicator_Axes
         joinColumns:

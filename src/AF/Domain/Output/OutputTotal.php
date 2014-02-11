@@ -2,7 +2,7 @@
 namespace AF\Domain\Output;
 
 use Calc_Value;
-use Classif_Model_Indicator;
+use Classif\Domain\Indicator;
 use Core_Model_Entity;
 
 /**
@@ -45,17 +45,17 @@ class OutputTotal extends Core_Model_Entity
     }
 
     /**
-     * @return Classif_Model_Indicator
+     * @return Indicator
      */
     public function getClassifIndicator()
     {
-        return Classif_Model_Indicator::loadByRef($this->refIndicator);
+        return Indicator::loadByRef($this->refIndicator);
     }
 
     /**
-     * @param Classif_Model_Indicator $classifIndicator
+     * @param \Classif\Domain\Indicator $classifIndicator
      */
-    public function setClassifIndicator(Classif_Model_Indicator $classifIndicator)
+    public function setClassifIndicator(Indicator $classifIndicator)
     {
         $this->refIndicator = $classifIndicator->getRef();
     }

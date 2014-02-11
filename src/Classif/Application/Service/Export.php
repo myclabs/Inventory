@@ -6,6 +6,11 @@
  * @subpackage Service
  */
 
+use Classif\Domain\AxisMember;
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\Context;
+use Classif\Domain\Indicator;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
@@ -33,23 +38,23 @@ class Classif_Service_Export
         $modelBuilder->bind('contextTableLabel', __('Classif', 'context', 'contexts'));
         $modelBuilder->bind('contextColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('contextColumnRef', __('UI', 'name', 'identifier'));
-        $modelBuilder->bind('contexts', Classif_Model_Context::loadList());
+        $modelBuilder->bind('contexts', Context::loadList());
 
         $modelBuilder->bind('indicatorTableLabel', __('Classif', 'indicator', 'indicators'));
         $modelBuilder->bind('indicatorColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('indicatorColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bind('indicatorColumnUnit', __('Unit', 'name', 'unit'));
         $modelBuilder->bind('indicatorColumnRatioUnit', __('Unit', 'name', 'ratioUnit'));
-        $modelBuilder->bind('indicators', Classif_Model_Indicator::loadList());
+        $modelBuilder->bind('indicators', Indicator::loadList());
 
         $modelBuilder->bind('contextindicatorTableLabel', __('Classif', 'contextIndicator', 'contextIndicators'));
         $modelBuilder->bind('contextindicatorColumnContext', __('Classif', 'context', 'context'));
         $modelBuilder->bind('contextindicatorColumnIndicator', __('Classif', 'indicator', 'indicator'));
         $modelBuilder->bind('contextindicatorColumnAxes', __('UI', 'name', 'axes'));
-        $modelBuilder->bind('contextindicators', Classif_Model_ContextIndicator::loadList());
+        $modelBuilder->bind('contextindicators', ContextIndicator::loadList());
         $modelBuilder->bindFunction(
             'displayContextIndicatorAxes',
-            function(Classif_Model_ContextIndicator $contextIndicator) {
+            function(ContextIndicator $contextIndicator) {
                 $axesLabelRef = [];
                 foreach ($contextIndicator->getAxes() as $axis) {
                         $axesLabelRef[] = $axis->getLabel() . ' (' . $axis->getRef() . ')';
@@ -64,10 +69,10 @@ class Classif_Service_Export
         $modelBuilder->bind('axisColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('axisColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bind('axisColumnNarrower', __('Classif', 'export', 'axisColumnNarrower'));
-        $modelBuilder->bind('axes', Classif_Model_Axis::loadListOrderedAsAscendantTree());
+        $modelBuilder->bind('axes', IndicatorAxis::loadListOrderedAsAscendantTree());
         $modelBuilder->bindFunction(
             'displayAxisDirectNarrower',
-            function(Classif_Model_Axis $axis) {
+            function(IndicatorAxis $axis) {
                 if ($axis->getDirectNarrower() !== null) {
                     return $axis->getDirectNarrower()->getLabel() . ' (' . $axis->getDirectNarrower()->getRef() . ')';
                 }
@@ -82,7 +87,7 @@ class Classif_Service_Export
         $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bindFunction(
             'displayParentMemberForAxis',
-            function(Classif_Model_member $member, Classif_Model_Axis $broaderAxis) {
+            function(AxisMember $member, IndicatorAxis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
                         return $directParent->getLabel();

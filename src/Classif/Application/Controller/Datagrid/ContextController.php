@@ -6,6 +6,8 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\Context;
 use Core\Annotation\Secure;
 
 /**
@@ -22,7 +24,7 @@ class Classif_Datagrid_ContextController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        foreach (Classif_Model_Context::loadList($this->request) as $context) {
+        foreach (Context::loadList($this->request) as $context) {
             $data = array();
             $data['index'] = $context->getRef();
             $data['label'] = $this->cellText($context->getLabel());
@@ -32,7 +34,7 @@ class Classif_Datagrid_ContextController extends UI_Controller_Datagrid
             $data['position'] = $this->cellPosition($context->getPosition(), $canUp, $canDown);
             $this->addline($data);
         }
-        $this->totalElements = Classif_Model_Context::countTotal($this->request);
+        $this->totalElements = Context::countTotal($this->request);
 
         $this->send();
     }
@@ -50,10 +52,10 @@ class Classif_Datagrid_ContextController extends UI_Controller_Datagrid
         try {
             Core_Tools::checkRef($ref);
             try {
-                Classif_Model_Context::loadByRef($ref);
+                Context::loadByRef($ref);
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
-                $context = new Classif_Model_Context();
+                $context = new Context();
                 $context->setRef($ref);
                 $context->setLabel($label);
                 $context->save();
@@ -73,11 +75,11 @@ class Classif_Datagrid_ContextController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $context = Classif_Model_Context::loadByRef($this->delete);
+        $context = Context::loadByRef($this->delete);
 
         $queryContextIndicator = new Core_Model_Query();
-        $queryContextIndicator->filter->addCondition(Classif_Model_ContextIndicator::QUERY_CONTEXT, $context);
-        if (Classif_Model_ContextIndicator::countTotal($queryContextIndicator) > 0) {
+        $queryContextIndicator->filter->addCondition(ContextIndicator::QUERY_CONTEXT, $context);
+        if (ContextIndicator::countTotal($queryContextIndicator) > 0) {
             throw new Core_Exception_User('Classif', 'context', 'ContextIsUsedInContextIndicator');
         }
 
@@ -93,7 +95,7 @@ class Classif_Datagrid_ContextController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $context = Classif_Model_Context::loadByRef($this->update['index']);
+        $context = Context::loadByRef($this->update['index']);
         switch ($this->update['column']) {
             case 'label':
                 $context->setLabel($this->update['value']);
@@ -102,7 +104,7 @@ class Classif_Datagrid_ContextController extends UI_Controller_Datagrid
             case 'ref':
                 Core_Tools::checkRef($this->update['value']);
                 try {
-                    if (Classif_Model_Context::loadByRef($this->update['value']) !== $context) {
+                    if (Context::loadByRef($this->update['value']) !== $context) {
                         throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
                     }
                 } catch (Core_Exception_NotFound $e) {

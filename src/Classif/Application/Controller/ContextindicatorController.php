@@ -6,6 +6,9 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\Context;
+use Classif\Domain\Indicator;
 use Core\Annotation\Secure;
 
 
@@ -33,15 +36,15 @@ class Classif_ContextindicatorController extends Core_Controller
     public function manageAction()
     {
         $this->view->listContexts = array();
-        foreach (Classif_Model_Context::loadList() as $context) {
+        foreach (Context::loadList() as $context) {
             $this->view->listContexts[$context->getRef()] = $context->getLabel();
         }
         $this->view->listIndicators = array();
-        foreach (Classif_Model_Indicator::loadList() as $indicator) {
+        foreach (Indicator::loadList() as $indicator) {
             $this->view->listIndicators[$indicator->getRef()] = $indicator->getLabel();
         }
         $this->view->listAxes = array();
-        foreach (Classif_Model_Axis::loadList() as $axis) {
+        foreach (IndicatorAxis::loadList() as $axis) {
             $this->view->listAxes[$axis->getRef()] = $axis->getLabel();
         }
     }

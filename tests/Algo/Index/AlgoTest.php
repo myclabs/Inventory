@@ -5,10 +5,10 @@ namespace Tests\Algo\Index;
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\Index\AlgoResultIndex;
 use AF\Domain\Algorithm\AlgoSet;
-use Classif_Model_Axis;
-use Classif_Model_Context;
-use Classif_Model_ContextIndicator;
-use Classif_Model_Indicator;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\Context;
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\Indicator;
 use Core\Test\TestCase;
 use Core_Tools;
 use Doctrine\ORM\UnitOfWork;
@@ -26,13 +26,13 @@ class AlgoIndexTest extends TestCase
         foreach (Algo::loadList() as $o) {
             $o->delete();
         }
-        foreach (Classif_Model_Context::loadList() as $o) {
+        foreach (Context::loadList() as $o) {
             $o->delete();
         }
-        foreach (Classif_Model_Indicator::loadList() as $o) {
+        foreach (Indicator::loadList() as $o) {
             $o->delete();
         }
-        foreach (Classif_Model_ContextIndicator::loadList() as $o) {
+        foreach (ContextIndicator::loadList() as $o) {
             $o->delete();
         }
         self::getEntityManager()->flush();
@@ -41,7 +41,7 @@ class AlgoIndexTest extends TestCase
     public function testConstruct()
     {
         // Fixtures
-        $classifAxis = new Classif_Model_Axis();
+        $classifAxis = new IndicatorAxis();
         $classifAxis->setRef(Core_Tools::generateString(20));
         $classifAxis->setLabel('Classif Axis');
         $classifAxis->save();

@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classif\Domain\Context;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 
@@ -36,7 +37,7 @@ class Classif_Datagrid_Translate_ContextsController extends UI_Controller_Datagr
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        foreach (Classif_Model_Context::loadList($this->request) as $context) {
+        foreach (Context::loadList($this->request) as $context) {
             $data = array();
             $data['index'] = $context->getRef();
             $data['identifier'] = $context->getRef();
@@ -48,7 +49,7 @@ class Classif_Datagrid_Translate_ContextsController extends UI_Controller_Datagr
             }
             $this->addline($data);
         }
-        $this->totalElements = Classif_Model_Context::countTotal($this->request);
+        $this->totalElements = Context::countTotal($this->request);
 
         $this->send();
     }
@@ -61,7 +62,7 @@ class Classif_Datagrid_Translate_ContextsController extends UI_Controller_Datagr
     public function updateelementAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $context = Classif_Model_Context::loadByRef($this->update['index']);
+        $context = Context::loadByRef($this->update['index']);
         $context->reloadWithLocale(Core_Locale::load($this->update['column']));
         $context->setLabel($this->update['value']);
         $this->data = $context->getLabel();

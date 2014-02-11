@@ -4,8 +4,8 @@ namespace AF\Domain\Algorithm\Index;
 
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
-use Classif_Model_Axis;
-use Classif_Model_Member;
+use Classif\Domain\IndicatorAxis;
+use Classif\Domain\AxisMember;
 use Core_Exception_NotFound;
 use Core_Model_Entity;
 
@@ -34,10 +34,10 @@ abstract class Index extends Core_Model_Entity
 
 
     /**
-     * @param Classif_Model_Axis|null $classifAxis
+     * @param \Classif\Domain\IndicatorAxis|null $classifAxis
      * @param NumericAlgo|null        $algoNumeric
      */
-    public function __construct(Classif_Model_Axis $classifAxis = null, NumericAlgo $algoNumeric = null)
+    public function __construct(IndicatorAxis $classifAxis = null, NumericAlgo $algoNumeric = null)
     {
         if ($classifAxis) {
             $this->refClassifAxis = $classifAxis->getRef();
@@ -48,12 +48,12 @@ abstract class Index extends Core_Model_Entity
     /**
      * Return the Classif member associated with the Result index
      * @param InputSet $inputSet
-     * @return Classif_Model_Member|null
+     * @return AxisMember|null
      */
     abstract public function getClassifMember(InputSet $inputSet = null);
 
     /**
-     * @return Classif_Model_Axis|null The classif axis associated to the value index
+     * @return \Classif\Domain\IndicatorAxis|null The classif axis associated to the value index
      */
     public function getClassifAxis()
     {
@@ -61,16 +61,16 @@ abstract class Index extends Core_Model_Entity
             return null;
         }
         try {
-            return Classif_Model_Axis::loadByRef($this->refClassifAxis);
+            return IndicatorAxis::loadByRef($this->refClassifAxis);
         } catch (Core_Exception_NotFound $e) {
             return null;
         }
     }
 
     /**
-     * @param Classif_Model_Axis $classifAxis
+     * @param IndicatorAxis $classifAxis
      */
-    public function setClassifAxis(Classif_Model_Axis $classifAxis)
+    public function setClassifAxis(IndicatorAxis $classifAxis)
     {
         $this->refClassifAxis = $classifAxis->getRef();
     }

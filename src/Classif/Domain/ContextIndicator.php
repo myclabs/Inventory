@@ -1,71 +1,67 @@
 <?php
+
+namespace Classif\Domain;
+
+use Core_Exception_InvalidArgument;
+use Core_Exception_NotFound;
+use Core_Exception_TooMany;
+use Core_Model_Entity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine;
+use Doctrine\ORM\NoResultException;
+
 /**
- * Classe Classif_Model_ContextIndicator
+ * Indicateur de classification contextualisé.
+ *
  * @author valentin.claras
  * @author cyril.perraud
- * @package    Classif
- * @subpackage Model
  */
-
-/**
- * Permet de gérer un indicateur contextualisé.
- * @package    Classif
- * @subpackage Model
- */
-class Classif_Model_ContextIndicator extends Core_Model_Entity
+class ContextIndicator extends Core_Model_Entity
 {
-
     // Constantes de tris et de filtres.
     const QUERY_CONTEXT = 'context';
     const QUERY_INDICATOR = 'indicator';
 
-
     /**
-     * Contexte contextualisant.
+     * Contexte de l'indicateur.
      *
-     * @var Classif_Model_Context
+     * @var Context
      */
     protected $context;
 
     /**
-     * Indicator contextualisé.
+     * Indicateur.
      *
-     * @var Classif_Model_Indicator
+     * @var Indicator
      */
     protected $indicator;
 
     /**
-     * Collection d'Axis regroupé dans le ContextIndicator.
-     * @var Doctrine\Common\Collections\Collection|Classif_Model_Axis[]
+     * Collection d'axes regroupé dans l'indicateur contextualisé.
+     *
+     * @var Collection|IndicatorAxis[]
      */
     protected $axes;
 
-
-    /**
-     * Constructeur de la classe ContextIndicator.
-     */
     public function __construct()
     {
-        $this->axes = new Doctrine\Common\Collections\ArrayCollection();
+        $this->axes = new ArrayCollection();
     }
 
     /**
-     * Spécifie le Context.
-     *
-     * @param Classif_Model_Context $context
+     * @param Context $context
      */
     public function setContext($context)
     {
         if ($this->context !== null) {
-            throw new Core_Exception_TooMany('The Context has already been defined.');
+            throw new Core_Exception_TooMany('The Context has already been defined');
         }
         $this->context = $context;
     }
 
     /**
-     * Retourne le context.
-     *
-     * @return Classif_Model_Context
+     * @return Context
      */
     public function getContext()
     {
@@ -73,22 +69,18 @@ class Classif_Model_ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * Spécifie l'Indicator.
-     *
-     * @param Classif_Model_Indicator $indicator
+     * @param Indicator $indicator
      */
     public function setIndicator($indicator)
     {
         if ($this->indicator !== null) {
-            throw new Core_Exception_TooMany('The Indicator has already been defined.');
+            throw new Core_Exception_TooMany('The Indicator has already been defined');
         }
         $this->indicator = $indicator;
     }
 
     /**
-     * Retourne l'Indicator.
-     *
-     * @return Classif_Model_Indicator
+     * @return Indicator
      */
     public function getIndicator()
     {
@@ -96,13 +88,10 @@ class Classif_Model_ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * Ajoute un Axis donné à la collection du ContextIndicator.
-     *
-     * @param Classif_Model_Axis $axis
-     *
+     * @param IndicatorAxis $axis
      * @throws Core_Exception_InvalidArgument
      */
-    public function addAxis(Classif_Model_Axis $axis)
+    public function addAxis(IndicatorAxis $axis)
     {
         if (!($this->hasAxis($axis))) {
             foreach ($this->getAxes() as $existentAxis) {
@@ -116,21 +105,16 @@ class Classif_Model_ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * Vérifie si l'Axis donné est bien dans la collection du ContextIndicator.
-     *
-     * @param Classif_Model_Axis $axis
-     *
+     * @param IndicatorAxis $axis
      * @return boolean
      */
-    public function hasAxis(Classif_Model_Axis $axis)
+    public function hasAxis(IndicatorAxis $axis)
     {
         return $this->axes->contains($axis);
     }
 
     /**
-     * Supprime l'Axis de la collection du ContextIndicator.
-     *
-     * @param Classif_Model_Axis $axis
+     * @param IndicatorAxis $axis
      */
     public function removeAxis($axis)
     {
@@ -140,9 +124,7 @@ class Classif_Model_ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * Indique si le ContextIndicator possède des Axis.
-     *
-     * @return bool
+     * @return bool Est-ce que l'indicateur contextualisé possède des axes ?
      */
     public function hasAxes()
     {
@@ -150,9 +132,7 @@ class Classif_Model_ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * Retourne l'ensemble des Axis du ContextIndicator.
-     *
-     * @return Classif_Model_Axis[]
+     * @return IndicatorAxis[]
      */
     public function getAxes()
     {
@@ -160,26 +140,30 @@ class Classif_Model_ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * Charge un ContextIndicator
+     * Charge un indicateur contextualisé par les refs.
      *
      * @param string $refContext
      * @param string $refIndicator
-     * @return Classif_Model_ContextIndicator
+     *
+     * @throws Core_Exception_NotFound
+     * @return ContextIndicator
      */
     public static function loadByRef($refContext, $refIndicator)
     {
         $query = self::getEntityManager()->createQuery(
-            "SELECT ci FROM Classif_Model_ContextIndicator ci
+            "SELECT ci FROM Classif\\Domain\\ContextIndicator ci
             LEFT JOIN ci.context c
             LEFT JOIN ci.indicator i
-            WHERE c.ref = ?1 AND i.ref = ?2");
+            WHERE c.ref = ?1 AND i.ref = ?2"
+        );
         $query->setParameters([1 => $refContext, 2 => $refIndicator]);
+
         try {
             return $query->getSingleResult();
-        } catch (Doctrine\ORM\NoResultException $e) {
-            throw new Core_Exception_NotFound("ContextIndicator not found matching context=$refContext "
-                                                  . "and indicator=$refIndicator");
+        } catch (NoResultException $e) {
+            throw new Core_Exception_NotFound(
+                "ContextIndicator not found matching context=$refContext and indicator=$refIndicator"
+            );
         }
     }
-
 }

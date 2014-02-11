@@ -7,9 +7,9 @@ use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use AF\Domain\Algorithm\AlgoSet;
 use Calc_UnitValue;
-use Classif_Model_Context;
-use Classif_Model_ContextIndicator;
-use Classif_Model_Indicator;
+use Classif\Domain\Context;
+use Classif\Domain\ContextIndicator;
+use Classif\Domain\Indicator;
 use Core\Test\TestCase;
 use Core_Tools;
 use Doctrine\ORM\UnitOfWork;
@@ -51,22 +51,22 @@ class ConstantTest extends TestCase
     }
 
     /**
-     * @return Classif_Model_ContextIndicator
+     * @return ContextIndicator
      */
     public static function generateContextIndicator()
     {
-        $context = new Classif_Model_Context();
+        $context = new Context();
         $context->setRef(Core_Tools::generateString(20));
         $context->setLabel('Classif context');
         $context->save();
-        $indicator = new Classif_Model_Indicator();
+        $indicator = new Indicator();
         $indicator->setRef(Core_Tools::generateString(20));
         $indicator->setLabel('Classif indicator');
         $indicator->setUnit(new UnitAPI('g'));
         $indicator->setRatioUnit($indicator->getUnit());
         $indicator->save();
         self::getEntityManager()->flush();
-        $contextIndicator = new Classif_Model_ContextIndicator();
+        $contextIndicator = new ContextIndicator();
         $contextIndicator->setContext($context);
         $contextIndicator->setIndicator($indicator);
         $contextIndicator->save();
@@ -75,9 +75,9 @@ class ConstantTest extends TestCase
     }
 
     /**
-     * @param Classif_Model_ContextIndicator $contextIndicator
+     * @param ContextIndicator $contextIndicator
      */
-    public static function deleteContextIndicator(Classif_Model_ContextIndicator $contextIndicator)
+    public static function deleteContextIndicator(ContextIndicator $contextIndicator)
     {
         $contextIndicator->delete();
         $contextIndicator->getIndicator()->delete();
@@ -93,13 +93,13 @@ class ConstantTest extends TestCase
         foreach (Algo::loadList() as $o) {
             $o->delete();
         }
-        foreach (Classif_Model_Context::loadList() as $o) {
+        foreach (Context::loadList() as $o) {
             $o->delete();
         }
-        foreach (Classif_Model_Indicator::loadList() as $o) {
+        foreach (Indicator::loadList() as $o) {
             $o->delete();
         }
-        foreach (Classif_Model_ContextIndicator::loadList() as $o) {
+        foreach (ContextIndicator::loadList() as $o) {
             $o->delete();
         }
         self::getEntityManager()->flush();
