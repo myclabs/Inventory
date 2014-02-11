@@ -133,7 +133,7 @@ class CellViewModelFactory
 
                 if (($editInventory)
                     || (($cell->getGranularity() === $granularityForInventoryStatus)
-                        && ($this->aclService->isAllowed($user, Action::EDIT(), $cell)))) {
+                        && ($this->aclService->isAllowed($user, CellAction::INPUT(), $cell)))) {
                     $cellViewModel->canEditInventory = true;
                 }
 
