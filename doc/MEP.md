@@ -11,6 +11,12 @@
 
 - Faire un build update et redémarrer le worker.
 
+- Lancer le script de rebuild des ACL
+
+```
+bin/inventory export:rebuild
+```
+
 
 ## 2.10
 
