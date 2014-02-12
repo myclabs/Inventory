@@ -1,23 +1,18 @@
 <?php
+
 use AF\Domain\AF;
+use Doctrine\Common\Collections\ArrayCollection;
 use User\Domain\User;
 
 /**
- * @package Simulation
- * @subpackage Model
- */
-/**
  * Classe regroupant l'ensemble des simulation d'un utilisateur pour AF donné.
+ *
  * @author valentin.claras
- * @package Simulation
- * @subpackage ModelProvider
  */
 class Simulation_Model_Set extends Core_Model_Entity
 {
     /**
      * Indique un filtre sur l'utilisateur du Set.
-     *
-     * @var const
      */
     const QUERY_USER = 'user';
 
@@ -27,7 +22,7 @@ class Simulation_Model_Set extends Core_Model_Entity
      *
      * @var int
      */
-    protected $id = null;
+    protected $id;
 
     /**
      * Label du jeu de Simulations.
@@ -41,43 +36,40 @@ class Simulation_Model_Set extends Core_Model_Entity
      *
      * @var AF
      */
-    protected $aF = null;
+    protected $aF;
 
     /**
      * Collection des Simulations du Set.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var ArrayCollection
      */
-    protected $scenarios = null;
+    protected $scenarios;
 
     /**
      * Cube peuplé par les Simulations.
      *
      * @var DW_Model_Cube
      */
-    protected $dWCube = null;
+    protected $dWCube;
 
     /**
      * Axis de DW correspondant au Set.
      *
      * @var DW_Model_Axis
      */
-    protected $dWAxis = null;
+    protected $dWAxis;
 
     /**
      * Utilisateur effectuant les Simulations.
      *
      * @var User
      */
-    protected $user = null;
+    protected $user;
 
 
-    /**
-     * Constructeur de la classe Set.
-     */
     public function __construct()
     {
-        $this->scenarios = new  Doctrine\Common\Collections\ArrayCollection();
+        $this->scenarios = new ArrayCollection();
 
         $this->createDWCube();
     }
@@ -91,7 +83,7 @@ class Simulation_Model_Set extends Core_Model_Entity
      */
     public static function loadByDWCube($dWCube)
     {
-        return self::getEntityRepository()->loadBy(array('dWCube' => $dWCube));
+        return self::getEntityRepository()->loadBy(['dWCube' => $dWCube]);
     }
 
     /**

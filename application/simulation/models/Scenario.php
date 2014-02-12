@@ -1,17 +1,14 @@
 <?php
+
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Output\OutputElement;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @package Simulation
- * @subpackage ModelProvider
- */
-/**
- * Classe gerant l'association entre une saisie de simulation et un set de simulaitons.
+ * Classe gerant l'association entre une saisie de simulation et un set de simulations.
+ *
  * @author valentin.claras
- * @package Simulation
- * @subpackage ModelProvider
  */
 class Simulation_Model_Scenario extends Core_Model_Entity
 {
@@ -23,7 +20,7 @@ class Simulation_Model_Scenario extends Core_Model_Entity
      *
      * @var int
      */
-    protected $id = null;
+    protected $id;
 
     /**
      * Label du Scenario.
@@ -37,25 +34,25 @@ class Simulation_Model_Scenario extends Core_Model_Entity
      *
      * @var Simulation_Model_Set
      */
-    protected $set = null;
+    protected $set;
 
     /**
      * Member de DW correspondant à la simulation.
      *
      * @var DW_Model_Member
      */
-    protected $dWMember = null;
+    protected $dWMember;
 
     /**
      * Identifiant unique de la saisie.
      *
      * @var PrimaryInputSet
      */
-    protected $aFInputSetPrimary = null;
+    protected $aFInputSetPrimary;
 
     /**
      * Résultats créés par le primarySet.
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var ArrayCollection
      */
     protected $dWResults = array();
 
@@ -69,7 +66,7 @@ class Simulation_Model_Scenario extends Core_Model_Entity
      */
     public static function loadByAFInputSetPrimary($aFInputSetPrimary)
     {
-        return self::getEntityRepository()->loadBy(array('aFInputSetPrimary' => $aFInputSetPrimary));
+        return self::getEntityRepository()->loadBy(['aFInputSetPrimary' => $aFInputSetPrimary]);
     }
 
     /**
@@ -156,7 +153,7 @@ class Simulation_Model_Scenario extends Core_Model_Entity
     /**
      * Spécifie l'InputSetPrimary du scenario.
      *
-     * @param \AF\Domain\InputSet\PrimaryInputSet $aFInputSetPrimary
+     * @param PrimaryInputSet $aFInputSetPrimary
      */
     public function setAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary)
     {
@@ -173,7 +170,7 @@ class Simulation_Model_Scenario extends Core_Model_Entity
     /**
      * Renvoie l'InputSetPrimary associé au scenario.
      *
-     * @return \AF\Domain\InputSet\PrimaryInputSet
+     * @return PrimaryInputSet
      */
     public function getAFInputSetPrimary()
     {
@@ -206,7 +203,7 @@ class Simulation_Model_Scenario extends Core_Model_Entity
     /**
      * (non-PHPdoc)
      * @see Simulation_ETLDataProvider::addETLDataSource()
-     * @param \AF\Domain\InputSet\PrimaryInputSet $source
+     * @param PrimaryInputSet $source
      */
     public function addETLDataSource(PrimaryInputSet $source)
     {
@@ -216,7 +213,7 @@ class Simulation_Model_Scenario extends Core_Model_Entity
     /**
      * (non-PHPdoc)
      * @see Simulation_ETLDataProvider::deleteETLDataSource()
-     * @param \AF\Domain\InputSet\PrimaryInputSet $source
+     * @param PrimaryInputSet $source
      */
     public function deleteETLDataSource(PrimaryInputSet $source)
     {
@@ -225,8 +222,6 @@ class Simulation_Model_Scenario extends Core_Model_Entity
 
     /**
      * Créer les Result de DW à partir de l'InputSetPrimary du Scenario.
-     *
-     * @param \AF\Domain\Output\OutputElement $output
      */
     public function createDWResults()
     {
@@ -242,9 +237,9 @@ class Simulation_Model_Scenario extends Core_Model_Entity
     /**
      * Créer un Result de DW et l'ajout à un cube à partir d'un Output d'AF.
      *
-     * @param \AF\Domain\Output\OutputElement $output
+     * @param OutputElement $output
      */
-    protected  function createDWResult(OutputElement $output)
+    protected function createDWResult(OutputElement $output)
     {
         $dWCube = $this->getSet()->getDWCube();
         $refClassifIndicator = $output->getContextIndicator()->getIndicator()->getRef();
