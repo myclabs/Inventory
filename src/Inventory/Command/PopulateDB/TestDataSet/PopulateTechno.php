@@ -5,6 +5,7 @@ namespace Inventory\Command\PopulateDB\TestDataSet;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateTechno;
 use Symfony\Component\Console\Output\OutputInterface;
+use Techno\Domain\ParameterLibrary;
 
 /**
  * Remplissage de la base de données avec des données de test
@@ -25,11 +26,17 @@ class PopulateTechno extends AbstractPopulateTechno
     {
         $output->writeln('  <info>Populating Techno</info>');
 
+        $library = new ParameterLibrary('Défaut');
+        $library->save();
+
         $categorie_contenant_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');
+        $library->addRootCategory($categorie_contenant_sous_categorie);
         $categorie_sous_categorie = $this->createCategory('Sous-catégorie', $categorie_contenant_sous_categorie);
         $categorie_contenant_famille = $this->createCategory('Catégorie contenant une famille');
+        $library->addRootCategory($categorie_contenant_famille);
         $sous_categorie_contenant_famille = $this->createCategory('Sous-catégorie contenant une famille', $categorie_contenant_famille);
         $categorie_vide = $this->createCategory('Catégorie vide');
+        $library->addRootCategory($categorie_vide);
 
         // $family_1 = $this->createFamily($category_contenant_famille, 'ref1', 'Label 1', 'km', 'm', '');
 
