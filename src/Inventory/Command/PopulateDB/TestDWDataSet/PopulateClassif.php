@@ -2,6 +2,7 @@
 
 namespace Inventory\Command\PopulateDB\TestDWDataSet;
 
+use Classification\Domain\IndicatorLibrary;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateClassif;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,6 +26,9 @@ class PopulateClassif extends AbstractPopulateClassif
     {
         $output->writeln('  <info>Populating Classification</info>');
 
+        $library = new IndicatorLibrary('Défaut');
+        $library->save();
+
         // Création des axes.
         // Params : ref, label
         // OptionalParams : Axis parent=null
@@ -43,7 +47,7 @@ class PopulateClassif extends AbstractPopulateClassif
         // Params : ref, label, unitRef
         // OptionalParams : ratioUnitRef=unitRef
 
-        $indicator_ges = $this->createIndicator('ges', 'GES', 't_co2e', 'kg_co2e');
+        $indicator_ges = $this->createIndicator($library, 'ges', 'GES', 't_co2e', 'kg_co2e');
 
         // Création des contextes.
         // Params : ref, label
