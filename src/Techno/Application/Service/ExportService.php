@@ -14,15 +14,17 @@ use Xport\MappingReader\YamlMappingReader;
 
 /**
  * @author valentin.claras
+ * @author matthieu.napoli
  */
 class ExportService
 {
     /**
-     * Exporte la version de techno.
+     * Exporte les paramètres.
      *
      * @param string $format
+     * @param string $file
      */
-    public function stream($format)
+    public function export($format, $file = 'php://output')
     {
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
@@ -38,9 +40,9 @@ class ExportService
 
         // Skip les catégories vides sinon onglet vide et -> https://github.com/PHPOffice/PHPExcel/issues/193
         $categories = array_filter(Category::loadRootCategories(), function (Category $category) use ($getAllFamilies) {
-            $families = $getAllFamilies($category);
-            return !empty($families);
+            return !empty($getAllFamilies($category));
         });
+
         $modelBuilder->bind('categories', $categories);
         $modelBuilder->bind('cellDigitalValue', __('UI', 'name', 'value'));
         $modelBuilder->bind('cellRelativeUncertainty', '+/- (%)');
@@ -85,10 +87,8 @@ class ExportService
                 break;
         }
 
-        $export->export(
-            $modelBuilder->build(new YamlMappingReader(__DIR__ . '/export.yml')),
-            'php://output',
-            $writer
-        );
+        $model = $modelBuilder->build(new YamlMappingReader(__DIR__ . '/export.yml'));
+
+        $export->export($model, $file, $writer);
     }
 }
