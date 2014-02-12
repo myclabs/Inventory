@@ -7,6 +7,7 @@ use Classification\Domain\Context;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
 use Classification\Domain\AxisMember;
+use Classification\Domain\IndicatorLibrary;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
 
@@ -80,24 +81,22 @@ abstract class AbstractPopulateClassif
     }
 
     /**
-     * @param string $ref
-     * @param string $label
-     * @param string $unitRef
-     * @param string|null $ratioUnitRef
+     * @param IndicatorLibrary $library
+     * @param string           $ref
+     * @param string           $label
+     * @param string           $unitRef
+     * @param string|null      $ratioUnitRef
      * @return Indicator
      */
-    protected function createIndicator($ref, $label, $unitRef, $ratioUnitRef = null)
+    protected function createIndicator(IndicatorLibrary $library, $ref, $label, $unitRef, $ratioUnitRef = null)
     {
-        $indicator = new Indicator();
-        $indicator->setRef($ref);
-        $indicator->setLabel($label);
-        $indicator->setUnit(new UnitAPI($unitRef));
-        if ($ratioUnitRef !== null) {
-            $indicator->setRatioUnit(new UnitAPI($ratioUnitRef));
-        } else {
-            $indicator->setRatioUnit($indicator->getUnit());
-        }
+        $ratioUnit = $ratioUnitRef ? new UnitAPI($ratioUnitRef) : null;
+
+        $indicator = new Indicator($library, $ref, $label, new UnitAPI($unitRef), $ratioUnit);
         $indicator->save();
+
+        $library->addIndicator($indicator);
+
         return $indicator;
     }
 

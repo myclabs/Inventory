@@ -1,6 +1,13 @@
 # Mise en production
 
 
+## 3.0
+
+- Migration des traductions (noms des classes) suite au renommage en namespaces de Classif : TODO
+
+- Migration des unités des indicateurs (colonne string to unit_api) : TODO
+
+
 ## 2.11
 
 - Déployer l'application **sans build update ni redémarrage du worker**

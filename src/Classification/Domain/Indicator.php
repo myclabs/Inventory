@@ -32,6 +32,11 @@ class Indicator extends Core_Model_Entity
     protected $id;
 
     /**
+     * @var IndicatorLibrary
+     */
+    protected $library;
+
+    /**
      * Référent textuel de l'indicateur.
      *
      * @var string
@@ -46,7 +51,7 @@ class Indicator extends Core_Model_Entity
     protected $label;
 
     /**
-     * Unité dans laquelle est l'indicateur.
+     * Unité de l'indicateur.
      *
      * @var UnitAPI
      */
@@ -68,6 +73,24 @@ class Indicator extends Core_Model_Entity
     public static function loadByRef($ref)
     {
         return self::getEntityRepository()->loadBy(['ref' => $ref]);
+    }
+
+    /**
+     * @param IndicatorLibrary $library
+     * @param string           $ref       Identifiant textuel
+     * @param string           $label     Libellé
+     * @param UnitAPI          $unit      Unité de l'indicateur.
+     * @param UnitAPI|null     $ratioUnit Unité utilisé pour les ratios. Si null, l'unité de l'indicateur est utilisée.
+     *
+     * @throws IncompatibleUnitsException Unit ant RatioUnit should be compatible
+     */
+    public function __construct(IndicatorLibrary $library, $ref, $label, UnitAPI $unit, UnitAPI $ratioUnit = null)
+    {
+        $this->library = $library;
+        $this->ref = $ref;
+        $this->label = $label;
+        $this->setUnit($unit);
+        $this->setRatioUnit($ratioUnit ?: $unit);
     }
 
     /**
@@ -126,13 +149,11 @@ class Indicator extends Core_Model_Entity
      */
     public function setUnit(UnitAPI $unit)
     {
-        if ($this->ratioUnit != null) {
-            if (!$this->getRatioUnit()->isEquivalent($unit)) {
-                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent');
-            }
+        if ($this->ratioUnit && !$this->ratioUnit->isEquivalent($unit)) {
+            throw new IncompatibleUnitsException('Unit ant RatioUnit should be compatible');
         }
 
-        $this->unit = (string) $unit;
+        $this->unit = $unit;
     }
 
     /**
@@ -142,7 +163,7 @@ class Indicator extends Core_Model_Entity
      */
     public function getUnit()
     {
-        return new UnitAPI($this->unit);
+        return $this->unit;
     }
 
     /**
@@ -153,13 +174,11 @@ class Indicator extends Core_Model_Entity
      */
     public function setRatioUnit(UnitAPI $ratioUnit)
     {
-        if ($this->unit != null) {
-            if (!$this->getUnit()->isEquivalent($ratioUnit)) {
-                throw new IncompatibleUnitsException('Unit ant RatioUnit should be equivalent');
-            }
+        if ($this->unit && !$this->unit->isEquivalent($ratioUnit)) {
+            throw new IncompatibleUnitsException('Unit ant RatioUnit should be compatible');
         }
 
-        $this->ratioUnit = (string) $ratioUnit;
+        $this->ratioUnit = $ratioUnit;
     }
 
     /**
@@ -169,7 +188,7 @@ class Indicator extends Core_Model_Entity
      */
     public function getRatioUnit()
     {
-        return new UnitAPI($this->ratioUnit);
+        return $this->ratioUnit;
     }
 
     /**

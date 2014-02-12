@@ -1,0 +1,31 @@
+Classification\Domain\IndicatorLibrary:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Classif_IndicatorLibrary
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    label:
+      type: string
+      nullable: false
+      gedmo:
+        - translatable
+
+  oneToMany:
+    indicators:
+      targetEntity: Indicator
+      orphanRemoval: true
+      mappedBy: library
+      orderBy:
+        position: ASC
+      cascade: [ persist, remove ]

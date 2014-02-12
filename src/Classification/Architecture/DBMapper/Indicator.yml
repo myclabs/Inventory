@@ -28,13 +28,18 @@ Classification\Domain\Indicator:
       type: integer
       nullable: false
     unit:
-      column: refUnit
-      type: string
+      type: unit_api
       nullable: false
     ratioUnit:
-      column: refRatioUnit
-      type: string
+      type: unit_api
       nullable: false
+
+  manyToOne:
+    library:
+      targetEntity: IndicatorLibrary
+      inversedBy: indicators
+      joinColumn:
+        nullable: false
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

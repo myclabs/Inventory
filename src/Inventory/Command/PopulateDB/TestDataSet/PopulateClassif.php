@@ -2,6 +2,7 @@
 
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
+use Classification\Domain\IndicatorLibrary;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateClassif;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,6 +26,9 @@ class PopulateClassif extends AbstractPopulateClassif
     {
         $output->writeln('  <info>Populating Classification</info>');
 
+        $library = new IndicatorLibrary('Défaut');
+        $library->save();
+
         // Création des axes.
         $axis_gaz = $this->createAxis('gaz', 'Gaz');
         $axis_poste_article_75 = $this->createAxis('poste_article_75', 'Poste article 75');
@@ -47,10 +51,10 @@ class PopulateClassif extends AbstractPopulateClassif
         $member_deplacement = $this->createMember($axis_type_deplacement, 'professionnel', 'Professionnel');
 
         // Création des indicateurs.
-        $indicator_ges = $this->createIndicator('ges', 'GES', 't_co2e', 'kg_co2e');
-        $indicator_chiffre_affaire = $this->createIndicator('chiffre_affaire', 'Chiffre d\'affaires', 'kiloeuro', 'euro');
-        $indicator_no_context_indicator = $this->createIndicator('sans_indicateur_contextualise', 'Sans indicateur contextualisé', 't', 't');
-        $indicator_related_axes = $this->createIndicator('axes_relies', 'Axes hiérarchiquement reliés', 't', 't');
+        $indicator_ges = $this->createIndicator($library, 'ges', 'GES', 't_co2e', 'kg_co2e');
+        $indicator_chiffre_affaire = $this->createIndicator($library, 'chiffre_affaire', 'Chiffre d\'affaires', 'kiloeuro', 'euro');
+        $indicator_no_context_indicator = $this->createIndicator($library, 'sans_indicateur_contextualise', 'Sans indicateur contextualisé', 't', 't');
+        $indicator_related_axes = $this->createIndicator($library, 'axes_relies', 'Axes hiérarchiquement reliés', 't', 't');
 
         // Création des contextes.
         $context_general = $this->createContext('general', 'Général');
