@@ -701,14 +701,18 @@ function getInputsDetails(Input $input, $path = '')
         }
         return $subInputs;
     } else {
-        $a = [
-            'ancestors' => $path,
-            'label' => $componentLabel,
-            'ref' => $componentRef,
-            'type' => getInputType($input),
-            'values' => getInputValues($input)
+        if (!$input->hasValue()) {
+            return [];
+        }
+        return [
+            [
+                'ancestors' => $path,
+                'label' => $componentLabel,
+                'ref' => $componentRef,
+                'type' => getInputType($input),
+                'values' => getInputValues($input)
+            ]
         ];
-        return [$a];
     }
 }
 
