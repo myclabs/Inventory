@@ -5,7 +5,7 @@ use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Algorithm\ParameterCoordinate\AlgoParameterCoordinate;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
 use Core\Annotation\Secure;
-use Techno\Domain\Family\Dimension;
+use Parameter\Domain\Family\Dimension;
 
 /**
  * @author matthieu.napoli

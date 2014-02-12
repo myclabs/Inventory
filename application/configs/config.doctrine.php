@@ -55,7 +55,7 @@ return [
             'Unit',
             'User',
             'Classification',
-            'Techno',
+            'Parameter',
             'Doc',
             'AuditTrail',
             'AF',

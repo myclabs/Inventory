@@ -141,7 +141,6 @@ class AFViewConfiguration
      * Check if the viewConfiguration is usable
      * Usable iff: every tab is an instance of UI_Tab or a string
      *             the input tab is in the tabs list
-     *             the refTechnoDB and the ouputURL are specified
      * @return bool
      */
     public function isUsable()

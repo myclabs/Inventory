@@ -5,7 +5,7 @@
  * @package AF
  */
 use AF\Domain\AF;
-use Techno\Domain\Family\Family;
+use Parameter\Domain\Family\Family;
 
 /** @var $af \AF\Domain\AF */
 $af = $this->af;
@@ -29,7 +29,7 @@ $refColumn->editable = true;
 $datagrid->addCol($refColumn);
 
 // Famille
-$familyColumn = new UI_Datagrid_Col_List('family', __('Techno', 'name', 'family'));
+$familyColumn = new UI_Datagrid_Col_List('family', __('Parameter', 'name', 'family'));
 $familyColumn->list = [];
 foreach (Family::loadList() as $family) {
     /** @var $family Family */
@@ -40,7 +40,7 @@ $familyColumn->editable = true;
 $datagrid->addCol($familyColumn);
 
 // Coordonnées
-$coordinatesColumn = new UI_Datagrid_Col_Popup('coordinates', __('Techno', 'name', 'coordinates'));
+$coordinatesColumn = new UI_Datagrid_Col_Popup('coordinates', __('Parameter', 'name', 'coordinates'));
 $coordinatesColumn->popup->addAttribute('class', 'large');
 $datagrid->addCol($coordinatesColumn);
 

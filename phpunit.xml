@@ -14,7 +14,7 @@
             <directory>./tests/Exec</directory>
             <directory>./tests/Classification</directory>
             <directory>./tests/Export</directory>
-            <directory>./tests/Techno</directory>
+            <directory>./tests/Parameter</directory>
             <directory>./tests/Algo</directory>
             <directory>./tests/AF</directory>
             <directory>./tests/Social</directory>

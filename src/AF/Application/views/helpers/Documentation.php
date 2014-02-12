@@ -3,7 +3,7 @@
 use AF\Domain\AF;
 use AF\Domain\Component\SubAF\RepeatedSubAF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
-use Techno\Domain\Family\Family;
+use Parameter\Domain\Family\Family;
 
 /**
  * Génère la documentation d'un AF.
@@ -60,7 +60,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
         } else {
             $html .= '<ul>';
             foreach ($families as $family) {
-                $url = $this->view->baseUrl("techno/family/details/id/" . $family->getId());
+                $url = $this->view->baseUrl("parameter/family/details/id/" . $family->getId());
                 $html .= "<li><a href=\"$url\" target=\"_blank\">{$family->getLabel()}</a></li>";
             }
             $html .= '</ul>';
@@ -73,7 +73,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
     }
 
     /**
-     * Permet de récupérer la liste des familles de paramètres de techno
+     * Permet de récupérer la liste des familles de paramètres de parameter
      * @param AF $af
      * @return Family[]
      */

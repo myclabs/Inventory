@@ -141,39 +141,39 @@ if ($connectedUser) {
     }
     if ($isAllowedToEditRepository) {
         $subMenuRepository[] = [
-            'name' => __('Techno', 'name', 'parameters'),
+            'name' => __('Parameter', 'name', 'parameters'),
             'url' => '#',
             'submenu' => [
                 [
-                    'name' => __('Techno', 'familyTree', 'familyTreeEdit'),
-                    'url' => 'techno/family/tree-edit'
+                    'name' => __('Parameter', 'familyTree', 'familyTreeEdit'),
+                    'url' => 'parameter/family/tree-edit'
                 ],
                 [
-                    'name' => __('Techno', 'familyTree', 'familyTreeConsult'),
-                    'url' => 'techno/family/tree'
+                    'name' => __('Parameter', 'familyTree', 'familyTreeConsult'),
+                    'url' => 'parameter/family/tree'
                 ],
                 [
-                    'name' => __('Techno', 'familyList', 'familyListEdit'),
-                    'url' => 'techno/family/list-edit'
+                    'name' => __('Parameter', 'familyList', 'familyListEdit'),
+                    'url' => 'parameter/family/list-edit'
                 ],
                 [
-                    'name' => __('Techno', 'familyList', 'familyListConsult'),
-                    'url' => 'techno/family/list'
+                    'name' => __('Parameter', 'familyList', 'familyListConsult'),
+                    'url' => 'parameter/family/list'
                 ],
             ],
         ];
     } else {
         $subMenuRepository[] = [
-            'name' => __('Techno', 'name', 'parameters'),
+            'name' => __('Parameter', 'name', 'parameters'),
             'url' => '#',
             'submenu' => [
                 [
-                    'name' => __('Techno', 'familyTree', 'familyTree'),
-                    'url' => 'techno/family/tree'
+                    'name' => __('Parameter', 'familyTree', 'familyTree'),
+                    'url' => 'parameter/family/tree'
                 ],
                 [
-                    'name' => __('Techno', 'familyList', 'familyList'),
-                    'url' => 'techno/family/list'
+                    'name' => __('Parameter', 'familyList', 'familyList'),
+                    'url' => 'parameter/family/list'
                 ],
             ]
         ];
@@ -311,20 +311,20 @@ if ($connectedUser) {
             ];
 
             $subMenuTranslation[] = [
-                'name' => __('Techno', 'name', 'parameters'),
+                'name' => __('Parameter', 'name', 'parameters'),
                 'url' => '#',
                 'submenu' => [
                     [
                         'name' => __('UI', 'name', 'categories'),
-                        'url' => 'techno/translate/categories'
+                        'url' => 'parameter/translate/categories'
                     ],
                     [
-                        'name' => __('Techno', 'translate', 'familyLabels'),
-                        'url' => 'techno/translate/families-label'
+                        'name' => __('Parameter', 'translate', 'familyLabels'),
+                        'url' => 'parameter/translate/families-label'
                     ],
                     [
-                        'name' => __('Techno', 'translate', 'familyDocumentations'),
-                        'url' => 'techno/translate/families-documentation'
+                        'name' => __('Parameter', 'translate', 'familyDocumentations'),
+                        'url' => 'parameter/translate/families-documentation'
                     ],
                 ]
             ];

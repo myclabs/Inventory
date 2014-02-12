@@ -49,7 +49,7 @@ use Classification\Domain\IndicatorAxis;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\AxisMember;
 use Core_Exception;
-use Techno\Domain\Family\Family;
+use Parameter\Domain\Family\Family;
 use Unit\UnitAPI;
 use Symfony\Component\Console\Output\OutputInterface;
 

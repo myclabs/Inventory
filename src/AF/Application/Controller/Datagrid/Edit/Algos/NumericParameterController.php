@@ -12,7 +12,7 @@ use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Classification\Domain\ContextIndicator;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use Techno\Application\Service\TechnoService;
+use Parameter\Application\Service\ParameterService;
 
 /**
  * @package AF
@@ -22,9 +22,9 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
 
     /**
      * @Inject
-     * @var TechnoService
+     * @var ParameterService
      */
-    private $technoService;
+    private $parameterService;
 
     /**
      * (non-PHPdoc)
@@ -53,7 +53,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                                                                             'af',
                                                                             ['idAF' => $af->getId(),
                                                                             'idAlgo' => $algo->getId()]),
-                                                        __('Techno', 'name', 'coordinates'),
+                                                        __('Parameter', 'name', 'coordinates'),
                                                         'search');
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
@@ -91,7 +91,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
             $this->setAddElementErrorMessage('family', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         try {
-            $family = $this->technoService->getFamily($familyRef);
+            $family = $this->parameterService->getFamily($familyRef);
         } catch (Core_Exception_NotFound $e) {
             $this->setAddElementErrorMessage('family', __('UI', 'formValidation', 'emptyRequiredField'));
         }
@@ -144,7 +144,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 break;
             case 'family':
                 try {
-                    $family = $this->technoService->getFamily($newValue);
+                    $family = $this->parameterService->getFamily($newValue);
                 } catch (Core_Exception_NotFound $e) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }

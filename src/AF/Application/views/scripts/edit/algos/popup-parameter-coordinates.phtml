@@ -6,7 +6,7 @@
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
-use Techno\Domain\Family\Family;
+use Parameter\Domain\Family\Family;
 
 /** @var $af AF */
 $af = $this->af;
@@ -29,7 +29,7 @@ $datagridFixed->deleteElements = true;
 $datagridFixed->addParam('id', $af->getId());
 $datagridFixed->addParam('idAlgo', $algo->getId());
 // Colonne dimension
-$dimensionColumn = new UI_Datagrid_Col_List('dimension', __('Techno', 'name', 'dimension'));
+$dimensionColumn = new UI_Datagrid_Col_List('dimension', __('Parameter', 'name', 'dimension'));
 $dimensionColumn->list = [];
 foreach ($family->getDimensions() as $dimension) {
     $dimensionColumn->list[$dimension->getId()] = $dimension->getLabel();

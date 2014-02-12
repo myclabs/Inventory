@@ -6,7 +6,7 @@ Feature: Family dimension list edit feature
 
   @javascript
   Scenario: Create family dimension, correct input
-    Given I am on "techno/family/edit/id/4"
+    Given I am on "parameter/family/edit/id/4"
     And I wait for the page to finish loading
     Then I should see "Famille test vide"
   # Affichage popup
@@ -24,7 +24,7 @@ Feature: Family dimension list edit feature
 
   @javascript
   Scenario: Edit family dimension
-    Given I am on "techno/family/edit/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
 
@@ -38,7 +38,7 @@ Feature: Family dimension list edit feature
 
   @javascript
   Scenario: Delete family dimension
-    Given I am on "techno/family/edit/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
   # Pour le contenu voir test précédent

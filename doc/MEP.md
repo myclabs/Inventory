@@ -7,6 +7,8 @@
 
 - Migration des unités des indicateurs (colonne string to unit_api) : TODO
 
+- Renommage des tables de Techno en Parameter : TODO
+
 
 ## 2.11
 

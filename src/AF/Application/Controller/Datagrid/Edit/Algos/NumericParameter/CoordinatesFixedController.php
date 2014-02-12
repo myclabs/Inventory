@@ -7,7 +7,7 @@
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Algorithm\ParameterCoordinate\FixedParameterCoordinate;
 use Core\Annotation\Secure;
-use Techno\Domain\Family\Dimension;
+use Parameter\Domain\Family\Dimension;
 
 /**
  * @package AF

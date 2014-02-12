@@ -19,12 +19,12 @@ Classification - Indicateurs	273	270	173	238	106	225	466	292	250
 Classification - Contextes	270	270	171	235	104	207	413	294	242
 Classification - ContextIndicators	311	308	208	284	126	222	493	348	315
 Classification - Controle	261	258	167	231	103	225	417	298	209
-Techno - Familles (arbre édition)	313	310	222	242	112	216	464	335	252
-Techno - Familles (arbre)	255	264	164	229	97	196	424	286	203
-Techno - Familles (liste édition)	303	303	218	279	115	245	528	278	282
-Techno - Familles (liste)	285	285	195	266	106	207	373	276	240
-Techno - Meanings	696	695	606	693	844	1071	1566	1863
-Techno - Controle	950	914	850	897	743	1214	1873	2013
+Parameter - Familles (arbre édition)	313	310	222	242	112	216	464	335	252
+Parameter - Familles (arbre)	255	264	164	229	97	196	424	286	203
+Parameter - Familles (liste édition)	303	303	218	279	115	245	528	278	282
+Parameter - Familles (liste)	285	285	195	266	106	207	373	276	240
+Parameter - Meanings	696	695	606	693	844	1071	1566	1863
+Parameter - Controle	950	914	850	897	743	1214	1873	2013
 Keyword - Graphe	263	264	176	248	108	183	251	237
 Keyword - Mots-clés	273	273	175	239	107	179	271	255
 Keyword - Associations	1295	1287	1212	1295	1484	1631	2079	2360

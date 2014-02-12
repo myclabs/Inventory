@@ -8,7 +8,7 @@ use Exception;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Techno\Domain\Family\MemberNotFoundException;
+use Parameter\Domain\Family\MemberNotFoundException;
 
 /**
  * Service responsable de la gestion des saisies des AF.
@@ -83,7 +83,7 @@ class InputService
             $inputSet->setCalculationComplete(true);
             $inputSet->getOutputSet()->calculateTotals();
         } catch (MemberNotFoundException $e) {
-            $message = __('AF', 'inputInput', 'completeInputSavedCalculationErrorUnknownTechnoMember', [
+            $message = __('AF', 'inputInput', 'completeInputSavedCalculationErrorUnknownParameterFamilyMember', [
                 'FAMILY'    => $e->getFamily(),
                 'DIMENSION' => $e->getDimension(),
                 'MEMBER'    => $e->getMember(),

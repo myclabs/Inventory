@@ -6,7 +6,7 @@ Feature: Family element tab edit feature
 
   @javascript @readOnly
   Scenario: Family edit, display elements
-    Given I am on "techno/family/edit/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
   # Séparateur décimal en français
   # Arrondi à trois chiffres significatifs
@@ -19,7 +19,7 @@ Feature: Family element tab edit feature
 
   @javascript
   Scenario: Family edit, creation of an element scenario, correct input
-    Given I am on "techno/family/edit/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
   # Ajout d'un élément
     When I click element "#elements-gaz_naturel-combustion a"
@@ -34,7 +34,7 @@ Feature: Family element tab edit feature
 
   @javascript @readOnly
   Scenario: Family edit, creation of an element scenario, incorrect input
-    Given I am on "techno/family/edit/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
   # Ajout d'un élément
     When I click element "#elements-gaz_naturel-combustion a"
@@ -57,7 +57,7 @@ Feature: Family element tab edit feature
 
   @javascript
   Scenario: Family edit, edition of an element scenario, correct input
-    Given I am on "techno/family/edit/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
   # Édition d'un élément
     When I click element "#elements-charbon-combustion a"
@@ -71,7 +71,7 @@ Feature: Family element tab edit feature
 
   @javascript @readOnly
   Scenario: Family edit, edition of an element scenario, incorrect input
-    Given I am on "techno/family/edit/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
   # Édition d'un élément
     When I click element "#elements-charbon-combustion a"

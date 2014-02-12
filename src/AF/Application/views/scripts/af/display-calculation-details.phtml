@@ -171,8 +171,8 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
     if ($algo instanceof NumericParameterAlgo) {
         $family = $algo->getFamily();
         $collapse->body .= '<p>';
-        $collapse->body .= '<strong>' . __('Techno', 'name', 'family') . __('UI', 'other', ':') . '</strong>';
-        $collapse->body .= '<a href="' . $view->baseUrl('techno/family/details/id/' . $family->getId()) . '">'
+        $collapse->body .= '<strong>' . __('Parameter', 'name', 'family') . __('UI', 'other', ':') . '</strong>';
+        $collapse->body .= '<a href="' . $view->baseUrl('parameter/family/details/id/' . $family->getId()) . '">'
             . $family->getLabel() . "</a>";
         $collapse->body .= '</p>';
         $collapse->body .= '<ul>';

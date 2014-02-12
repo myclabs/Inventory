@@ -1,14 +1,14 @@
 <?php
 /**
  * @author     matthieu.napoli
- * @package    Techno
+ * @package    Parameter
  * @subpackage Controller
  */
 
 use Core\Annotation\Secure;
 
 /**
- * @package    Techno
+ * @package    Parameter
  * @subpackage Controller
  */
 class Unit_TranslateController extends Core_Controller

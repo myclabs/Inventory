@@ -10,8 +10,8 @@ use Calc_UnitValue;
 use Core_Exception_NotFound;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Techno\Application\Service\TechnoService;
-use Techno\Domain\Family\Family;
+use Parameter\Application\Service\ParameterService;
+use Parameter\Domain\Family\Family;
 use Unit\UnitAPI;
 
 /**
@@ -49,10 +49,10 @@ class NumericParameterAlgo extends NumericAlgo
             $coordinates[$dimensionRef] = $parameterCoordinate->getMember($inputSet);
         }
 
-        /** @var TechnoService $technoService */
-        $technoService = \Core\ContainerSingleton::getContainer()->get(TechnoService::class);
+        /** @var ParameterService $parameterService */
+        $parameterService = \Core\ContainerSingleton::getContainer()->get(ParameterService::class);
 
-        $value = $technoService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
+        $value = $parameterService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
 
         if (!$value) {
             throw new ExecutionException(sprintf(
@@ -73,12 +73,12 @@ class NumericParameterAlgo extends NumericAlgo
     {
         $errors = parent::checkConfig();
 
-        /** @var TechnoService $technoService */
-        $technoService = \Core\ContainerSingleton::getContainer()->get(TechnoService::class);
+        /** @var ParameterService $parameterService */
+        $parameterService = \Core\ContainerSingleton::getContainer()->get(ParameterService::class);
 
         // Vérifie que la famille liée est bien trouvable
         try {
-            $family = $technoService->getFamily($this->familyRef);
+            $family = $parameterService->getFamily($this->familyRef);
         } catch (Core_Exception_NotFound $e) {
             $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
@@ -140,10 +140,10 @@ class NumericParameterAlgo extends NumericAlgo
      */
     public function getFamily()
     {
-        /** @var TechnoService $technoService */
-        $technoService = \Core\ContainerSingleton::getContainer()->get(TechnoService::class);
+        /** @var ParameterService $parameterService */
+        $parameterService = \Core\ContainerSingleton::getContainer()->get(ParameterService::class);
 
-        return $technoService->getFamily($this->familyRef);
+        return $parameterService->getFamily($this->familyRef);
     }
 
     /**

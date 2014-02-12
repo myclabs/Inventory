@@ -1,0 +1,45 @@
+Parameter\Domain\Family\Cell:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Parameter_Family_Cell
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    membersHashKey:
+      type: string
+      nullable: false
+    value:
+      type: calc_value
+      nullable: true
+
+  manyToOne:
+    family:
+      targetEntity: Parameter\Domain\Family\Family
+      inversedBy: cells
+      joinColumn:
+        name: idFamily
+        referencedColumnName: id
+        nullable: false
+
+  manyToMany:
+    members:
+      targetEntity: Parameter\Domain\Family\Member
+      inversedBy: cells
+      joinTable:
+        name: Parameter_Family_Cell_Members
+        joinColumns:
+          idCell:
+            referencedColumnName: id
+            onDelete: NULL
+        inverseJoinColumns:
+          idMember:
+            referencedColumnName: id
+
+  uniqueConstraints:
+    coordinates:
+      columns: [idFamily, membersHashKey]

@@ -6,7 +6,7 @@ Feature: Family one dimension edit feature
 
   @javascript
   Scenario: Add member to a family dimension, correct input
-    Given I am on "techno/family/edit/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
   # Affichage famille et en-tête
     Then I should see "Famille test non vide"
@@ -28,7 +28,7 @@ Feature: Family one dimension edit feature
 
   @javascript
   Scenario: Add member to a family dimension, incorrect input
-    Given I am on "techno/dimension/details/id/4"
+    Given I am on "parameter/dimension/details/id/4"
     And I wait for the page to finish loading
     And I click "Ajouter"
     Then I should see the popup "Ajout d'une liste de membres"
@@ -38,7 +38,7 @@ Feature: Family one dimension edit feature
 
   @javascript
   Scenario: Delete member
-    Given I am on "techno/dimension/details/id/4"
+    Given I am on "parameter/dimension/details/id/4"
     And I wait for the page to finish loading
   # Pour le contenu du datagrid voir plus haut
     When I click "Supprimer" in the row 1 of the "membersDatagrid" datagrid

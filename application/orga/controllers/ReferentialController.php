@@ -2,7 +2,7 @@
 
 use Classification\Application\Service\ClassificationExportService;
 use Core\Annotation\Secure;
-use Techno\Application\Service\ExportService;
+use Parameter\Application\Service\ExportService;
 use User\Domain\User;
 
 /**
@@ -48,11 +48,11 @@ class Orga_ReferentialController extends Core_Controller
             ]
         ];
 
-        // Techno.
-        $this->view->exports['Techno'] = [
-            'label' => __('Techno', 'name', 'parameters'),
+        // Parameter.
+        $this->view->exports['Parameter'] = [
+            'label' => __('Parameter', 'name', 'parameters'),
             'versions' => [
-                'latest' => __('Techno', 'name', 'parameters')
+                'latest' => __('Parameter', 'name', 'parameters')
             ]
         ];
 
@@ -85,7 +85,7 @@ class Orga_ReferentialController extends Core_Controller
             $streamFunction = 'stream';
             $baseFilename = __('Classification', 'classification', 'classification');
             break;
-            case 'Techno':
+            case 'Parameter':
                 $exportService = new ExportService();
                 $streamFunction = 'stream';
                 $baseFilename = __('UI', 'name', 'parameters');

@@ -6,11 +6,11 @@ use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use Core_Model_Entity;
-use Techno\Domain\Family\Dimension;
+use Parameter\Domain\Family\Dimension;
 
 /**
  * Classe qui permet de récupérer les coordonnées d'un élément d'une famille
- * de techno à l'aide d'une liste de keyword et d'une ref de famille.
+ * de parameter à l'aide d'une liste de keyword et d'une ref de famille.
  *
  * @author matthieu.napoli
  * @author cyril.perraud

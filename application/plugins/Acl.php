@@ -583,12 +583,12 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->editRepository($identity);
     }
 
-    protected function viewTechnoRule(User $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewParameterRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->loggedInRule($identity, $request);
     }
 
-    protected function editTechnoRule(User $identity)
+    protected function editParameterRule(User $identity)
     {
         return $this->editRepository($identity);
     }

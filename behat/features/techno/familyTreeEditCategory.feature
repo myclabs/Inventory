@@ -5,8 +5,8 @@ Feature: Family tree edit of categories feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of a Techno category
-    Given I am on "techno/family/tree-edit"
+  Scenario: Creation of a Parameter category
+    Given I am on "parameter/family/tree-edit"
     And I wait for the page to finish loading
     And I wait 6 seconds
   # Ajout d'une catégorie, libellé vide
@@ -23,8 +23,8 @@ Feature: Family tree edit of categories feature
   # TODO : permettre l'ajout d'une catégorie dans une autre catégorie.
 
   @javascript
-  Scenario: Edition of label of a Techno category
-    Given I am on "techno/family/tree-edit"
+  Scenario: Edition of label of a Parameter category
+    Given I am on "parameter/family/tree-edit"
     And I wait 6 seconds
   # Popup d'édition
     When I click "Catégorie vide"
@@ -41,8 +41,8 @@ Feature: Family tree edit of categories feature
     And I should see "Catégorie vide modifiée"
 
   @javascript
-  Scenario: Edition of parent and position of a Techno category
-    Given I am on "techno/family/tree-edit"
+  Scenario: Edition of parent and position of a Parameter category
+    Given I am on "parameter/family/tree-edit"
     And I wait 6 seconds
   # Déplacement dans une autre catégorie
     When I click "Catégorie vide"
@@ -80,8 +80,8 @@ Feature: Family tree edit of categories feature
 
 
   @javascript
-  Scenario: Deletion of a Techno category
-    Given I am on "techno/family/tree-edit"
+  Scenario: Deletion of a Parameter category
+    Given I am on "parameter/family/tree-edit"
     And I wait 7 seconds
   # Catégorie contenant une sous-catégorie
     When I click "Catégorie contenant une sous-catégorie"
