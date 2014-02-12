@@ -10,6 +10,9 @@ use Techno\Domain\Family\Dimension;
 use Techno\Domain\Family\Member;
 use Unit\UnitAPI;
 
+/**
+ * @covers \Techno\Domain\Family\Family
+ */
 class FamilyTest extends TestCase
 {
     /**
@@ -31,25 +34,6 @@ class FamilyTest extends TestCase
     {
         $o->delete();
         self::getEntityManager()->flush();
-    }
-
-    public static function setUpBeforeClass()
-    {
-        $entityManager = self::getEntityManager();
-        // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Cell::loadList() as $o) {
-            $o->delete();
-        }
-        foreach (Member::loadList() as $o) {
-            $o->delete();
-        }
-        foreach (Dimension::loadList() as $o) {
-            $o->delete();
-        }
-        foreach (Family::loadList() as $o) {
-            $o->delete();
-        }
-        $entityManager->flush();
     }
 
     /**
@@ -95,37 +79,25 @@ class FamilyTest extends TestCase
     public function testCells1Dimension1()
     {
         $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
-        $family->setUnit(new UnitAPI('m'));
-        $family->save();
-        $this->entityManager->flush();
 
         // 1 dimension
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Test', Dimension::ORIENTATION_HORIZONTAL);
-        $dimension1->save();
-        $this->entityManager->flush();
 
         // 1er membre
         $member1 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
-        $family->save();
         $this->assertAttributeCount(1, 'cells', $family);
-        $this->entityManager->flush();
 
         // 2è membre
         $member2 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
-        $family->save();
         $this->assertAttributeCount(2, 'cells', $family);
-        $this->entityManager->flush();
 
         $this->assertCount(1, $family->getDimensions());
 
         // Vérifie la génération des cellules
         $this->assertAttributeCount(2, 'cells', $family);
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member1]));
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member2]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member1]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member2]));
         $this->assertNotSame($family->getCell([$member1]), $family->getCell([$member2]));
-
-        // Delete all
-        self::deleteObject($family);
     }
 
     /**
@@ -133,31 +105,21 @@ class FamilyTest extends TestCase
      */
     public function testCells2Dimensions1()
     {
-        $family = self::generateObject();
+        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Test 1', Dimension::ORIENTATION_HORIZONTAL);
-        $dimension1->save();
-        $this->entityManager->flush();
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
 
         $dimension2 = new Dimension($family, Core_Tools::generateRef(), 'Test 2', Dimension::ORIENTATION_VERTICAL);
-        $dimension2->save();
-        $this->entityManager->flush();
         $member21 = new Member($dimension2, Core_Tools::generateRef(), 'Member');
-
-        $family->save();
-        $this->entityManager->flush();
 
         $this->assertCount(2, $family->getDimensions());
 
         // Vérifie la génération des cellules
         $this->assertAttributeCount(1, 'cells', $family);
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member11, $member21]));
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member21, $member11]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member11, $member21]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member21, $member11]));
         $this->assertSame($family->getCell([$member11, $member21]), $family->getCell([$member21, $member11]));
-
-        // Delete all
-        self::deleteObject($family);
     }
 
     /**
@@ -165,41 +127,31 @@ class FamilyTest extends TestCase
      */
     public function testCells2Dimensions2()
     {
-        $family = self::generateObject();
+        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
-        $dimension1->save();
-        $this->entityManager->flush();
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
         $member12 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
 
         $dimension2 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_VERTICAL);
-        $dimension2->save();
-        $this->entityManager->flush();
         $member21 = new Member($dimension2, Core_Tools::generateRef(), 'Member');
         $member22 = new Member($dimension2, Core_Tools::generateRef(), 'Member');
-
-        $family->save();
-        $this->entityManager->flush();
 
         $this->assertCount(2, $family->getDimensions());
 
         // Vérifie la génération des cellules
         $this->assertAttributeCount(4, 'cells', $family);
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member11, $member21]));
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member21, $member11]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member11, $member21]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member21, $member11]));
         $this->assertSame($family->getCell([$member11, $member21]), $family->getCell([$member21, $member11]));
 
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member12, $member21]));
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member11, $member22]));
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member12, $member22]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member12, $member21]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member11, $member22]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member12, $member22]));
 
         $this->assertNotSame($family->getCell([$member11, $member21]), $family->getCell([$member12, $member21]));
         $this->assertNotSame($family->getCell([$member11, $member21]), $family->getCell([$member11, $member22]));
         $this->assertNotSame($family->getCell([$member11, $member21]), $family->getCell([$member12, $member22]));
-
-        // Delete all
-        self::deleteObject($family);
     }
 
     /**
@@ -207,39 +159,27 @@ class FamilyTest extends TestCase
      */
     public function testCells3Dimensions()
     {
-        $family = self::generateObject();
+        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
-        $dimension1->save();
-        $this->entityManager->flush();
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
 
         $dimension2 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
-        $dimension2->save();
-        $this->entityManager->flush();
         $member21 = new Member($dimension2, Core_Tools::generateRef(), 'Member');
 
         $dimension3 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_VERTICAL);
-        $dimension3->save();
-        $this->entityManager->flush();
         $member31 = new Member($dimension3, Core_Tools::generateRef(), 'Member');
-
-        $family->save();
-        $this->entityManager->flush();
 
         $this->assertCount(3, $family->getDimensions());
 
         // Vérifie la génération des cellules
         $this->assertAttributeCount(1, 'cells', $family);
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member11, $member21, $member31]));
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member31, $member21, $member11]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member11, $member21, $member31]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member31, $member21, $member11]));
         $this->assertSame(
             $family->getCell([$member11, $member21, $member31]),
             $family->getCell([$member31, $member21, $member11])
         );
-
-        // Delete all
-        self::deleteObject($family);
     }
 
     /**
@@ -250,30 +190,20 @@ class FamilyTest extends TestCase
      */
     public function testCells2DimensionsSameRef()
     {
-        $family = self::generateObject();
+        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
-        $dimension1->save();
-        $this->entityManager->flush();
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
 
         $dimension2 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_VERTICAL);
-        $dimension2->save();
-        $this->entityManager->flush();
         $member21 = new Member($dimension2, Core_Tools::generateRef(), 'Member');
-
-        $family->save();
-        $this->entityManager->flush();
 
         $this->assertCount(2, $family->getDimensions());
 
         // Vérifie la génération des cellules
         $this->assertAttributeCount(1, 'cells', $family);
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member11, $member21]));
-        $this->assertInstanceOf('Techno\Domain\Family\Cell', $family->getCell([$member21, $member11]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member11, $member21]));
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member21, $member11]));
         $this->assertSame($family->getCell([$member11, $member21]), $family->getCell([$member21, $member11]));
-
-        // Delete all
-        self::deleteObject($family);
     }
 }

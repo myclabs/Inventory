@@ -12,6 +12,8 @@ use Unit\UnitAPI;
 
 /**
  * Test de la copie d'un AF
+ *
+ * @covers \AF\Domain\AFCopyService
  */
 class AFCopyTest extends TestCase
 {
@@ -53,7 +55,7 @@ class AFCopyTest extends TestCase
         $this->entityManager->flush();
 
         $afCopyService = new AFCopyService();
-        /** @var \AF\Domain\AF $newAF */
+        /** @var AF $newAF */
         $newAF = $afCopyService->copyAF($oldAF, 'new_ref', 'new label');
 
         $this->assertInstanceOf(get_class($oldAF), $newAF);
@@ -101,7 +103,7 @@ class AFCopyTest extends TestCase
 
         // Condition
         $this->assertSameSize($oldAF->getConditions(), $newAF->getConditions());
-        /** @var \AF\Domain\Condition\NumericFieldCondition $condition2 */
+        /** @var NumericFieldCondition $condition2 */
         $condition2 = $newAF->getConditions()[0];
         $this->assertNotSame($condition, $condition2);
         $this->assertNull($condition2->getId());

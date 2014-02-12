@@ -9,6 +9,9 @@ use Techno\Domain\Family\Dimension;
 use Techno\Domain\Family\Family;
 use Techno\Domain\Family\Member;
 
+/**
+ * @covers \Techno\Domain\Family\Member
+ */
 class MemberTest extends TestCase
 {
     /**

@@ -6,9 +6,12 @@ use AF\Domain\Component\SubAF;
 use AF\Domain\Component\SubAF\RepeatedSubAF;
 use Core\Test\TestCase;
 
+/**
+ * @covers \AF\Domain\Component\SubAF\RepeatedSubAF
+ */
 class SubAFRepeatedTest extends TestCase
 {
-    public function testConstruct()
+    public function testDefaultValues()
     {
         $o = new RepeatedSubAF();
 

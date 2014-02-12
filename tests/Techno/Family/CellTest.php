@@ -5,6 +5,9 @@ namespace Tests\Techno\Family;
 use Core\Test\TestCase;
 use Techno\Domain\Family\Cell;
 
+/**
+ * @covers \Techno\Domain\Family\Cell
+ */
 class CellTest extends TestCase
 {
     /**

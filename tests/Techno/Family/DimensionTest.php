@@ -9,6 +9,9 @@ use Techno\Domain\Family\Dimension;
 use Techno\Domain\Family\Family;
 use Tests\Techno\FamilyTest;
 
+/**
+ * @covers \Techno\Domain\Family\Dimension
+ */
 class DimensionTest extends TestCase
 {
     /**
@@ -39,60 +42,6 @@ class DimensionTest extends TestCase
             $o->delete();
         }
         self::getEntityManager()->flush();
-    }
-
-    public function testConstruct()
-    {
-        // Fixtures
-        $family = FamilyTest::generateObject();
-
-        $o = new Dimension($family, Core_Tools::generateRef(), 'Dimension', Dimension::ORIENTATION_HORIZONTAL);
-
-        $this->assertSame($family, $o->getFamily());
-        $this->assertEquals(Dimension::ORIENTATION_HORIZONTAL, $o->getOrientation());
-
-        $o->save();
-        $this->entityManager->flush();
-
-        $this->assertInstanceOf('Techno\Domain\Family\Family', $o->getFamily());
-        $this->assertEquals($family->getRef(), $o->getFamily()->getRef());
-        return $o;
-    }
-
-    /**
-     * @depends testConstruct
-     * @param Dimension $o
-     * @return Dimension
-     */
-    public function testLoad($o)
-    {
-        $this->entityManager->clear();
-        /** @var $oLoaded Dimension */
-        $oLoaded = Dimension::load($o->getKey());
-
-        $this->assertInstanceOf('Techno\Domain\Family\Dimension', $oLoaded);
-        $this->assertNotSame($o, $oLoaded);
-        $this->assertEquals($o->getKey(), $oLoaded->getKey());
-        // getFamily
-        $this->assertInstanceOf('Techno\Domain\Family\Family', $oLoaded->getFamily());
-        $this->assertEquals($o->getFamily()->getRef(), $oLoaded->getFamily()->getRef());
-        return $oLoaded;
-    }
-
-    /**
-     * @depends testLoad
-     * @param Dimension $o
-     */
-    public function testDelete($o)
-    {
-        $o->delete();
-        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
-        // Remove from the family to avoid cascade problems
-        $o->getFamily()->removeDimension($o);
-        // Delete fixtures
-        FamilyTest::deleteObject($o->getFamily());
-        $this->entityManager->flush();
-        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
     }
 
     /**

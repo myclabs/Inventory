@@ -12,6 +12,9 @@ use AF\Domain\InputService;
 use Core\Test\TestCase;
 use Unit\UnitAPI;
 
+/**
+ * @covers \AF\Domain\InputService
+ */
 class InputServiceTest extends TestCase
 {
     /**
