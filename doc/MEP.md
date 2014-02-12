@@ -5,6 +5,8 @@
 
 - Migration des traductions (noms des classes) suite au renommage en namespaces de Classif : TODO
 
+- Renommage des tables de Classif en Classification : TODO
+
 - Migration des unités des indicateurs (colonne string to unit_api) : TODO
 
 - Renommage des tables de Techno en Parameter : TODO
