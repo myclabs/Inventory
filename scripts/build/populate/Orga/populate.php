@@ -22,6 +22,11 @@ class Orga_Populate extends Core_Script_Action
     private $aclService;
 
     /**
+     * @var Orga_Service_OrganizationService
+     */
+    private $organizationService;
+
+    /**
      * {@inheritdoc}
      */
     public function runEnvironment($environment)
@@ -34,6 +39,12 @@ class Orga_Populate extends Core_Script_Action
         // On crée le service, car sinon il n'a pas la bonne instance de l'entity manager
         // car Script_Populate recrée l'EM (donc différent de celui créé dans le bootstrap)
         $this->aclService = new ACLService($entityManager, $container->get(LoggerInterface::class));
+        $this->organizationService = new Orga_Service_OrganizationService(
+            $entityManager,
+            $container->get(Orga_Service_ACLManager::class),
+            $container->get(UserService::class),
+            $this->aclService
+        );
 
 
         // Création d'une organisation.
@@ -99,10 +110,7 @@ class Orga_Populate extends Core_Script_Action
      */
     protected function createOrganization($label)
     {
-        $organization = new Orga_Model_Organization();
-        $organization->setLabel($label);
-        $organization->save();
-        return $organization;
+        return $this->organizationService->createOrganization($label);
     }
 
     /**
@@ -138,37 +146,26 @@ class Orga_Populate extends Core_Script_Action
     /**
      * @param Orga_Model_Organization $organization
      * @param array $axes
-     * @param bool $navigable
-     * @param bool $orgaTab
-     * @param bool $aCL
-     * @param bool $aFTab
+     * @param bool $relevance
      * @param bool $dWCubes
-     * @param bool $genericAction
-     * @param bool $contextAction
-     * @param bool $inputDocs
+     * @param bool $acl
      * @return Orga_Model_Granularity
      */
     protected function createGranularity(
         Orga_Model_Organization $organization,
         array $axes = [],
-        $navigable,
-        $orgaTab = false,
-        $aCL = true,
-        $aFTab = false,
+        $relevance = false,
         $dWCubes = false,
-        $genericAction = false,
-        $contextAction = false,
-        $inputDocs = false
+        $acl = true
     ) {
-        $granularity = new Orga_Model_Granularity($organization, $axes);
-        $granularity->setNavigability($navigable);
-        $granularity->setCellsWithOrgaTab($orgaTab);
-        $granularity->setCellsWithACL($aCL);
-        $granularity->setCellsWithAFConfigTab($aFTab);
+        try {
+            $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
+        } catch (Core_Exception_NotFound $e) {
+            $granularity = new Orga_Model_Granularity($organization, $axes);
+        }
+        $granularity->setCellsControlRelevance($relevance);
         $granularity->setCellsGenerateDWCubes($dWCubes);
-        $granularity->setCellsWithSocialGenericActions($genericAction);
-        $granularity->setCellsWithSocialContextActions($contextAction);
-        $granularity->setCellsWithInputDocuments($inputDocs);
+        $granularity->setCellsWithACL($acl);
         $granularity->save();
         return $granularity;
     }

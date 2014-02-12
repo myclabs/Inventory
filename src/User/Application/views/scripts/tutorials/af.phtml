@@ -1,0 +1,47 @@
+<script>
+    function startIntro(){
+        var intro = introJs();
+        intro.setOptions({
+            steps: [
+                {
+                    element: '.tab-content',
+                    intro: "Ce formulaire vous permet de saisir vos données comptables.",
+                    position: 'top'
+                },
+                {
+                    element: '.form-actions',
+                    intro: "Vous pouvez cliquer à tout moment sur le bouton \"Enregistrer\" pour sauvegarder vos saisies.<br>"
+                           + "Pour revenir à la page des saisies, cliquez sur le bouton \"Quitter\"",
+                    position: 'top'
+                },
+                {
+                    element: '.inputProgress>div:last-child>form>label',
+                    intro: "Quand vous avez saisie toutes les informations qui vous semblent nécessaires, vous pouvez marquer la saisie comme terminée.<br>" +
+                           "Cette saisie ne sera plus visible dans la liste des saisie à faire.",
+                    position: 'left'
+                },
+                {
+                    element: '#tabs',
+                    intro: "Après avoir enregistré votre formulaire vous pouvez voir les résultats des calculs, ajouter un commentaire ou voir le détail des calculs."
+                }
+            ],
+            showBullets: false,
+            nextLabel: "Suivant",
+            prevLabel: "Précédent",
+            doneLabel: "Terminer",
+            skipLabel: "Passer"
+        });
+        var stepCompleted = function () {
+            $.ajax({
+                url: 'user/profile/dismiss-tutorial/tutorial/5/',
+                type: "GET"
+            });
+        };
+        intro.onexit(stepCompleted);
+        intro.oncomplete(stepCompleted);
+        intro.start();
+    }
+    $("#tabs_tabInput").on("tabLoaded", function () {
+        startIntro();
+    });
+</script>

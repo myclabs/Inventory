@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe ListColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
@@ -21,12 +13,9 @@ use UI_Form_Element_HTML;
 use UI_HTML_Button;
 
 /**
- * Description of ListeColumn.
+ * Classe représentant une colonne contenant des listes.
  *
- * Une classe permettant de générer une colonne contenant des listes.
- *
- * @package    UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 class ListColumn extends GenericColumn
 {
@@ -61,7 +50,7 @@ class ListColumn extends GenericColumn
      *
      * @var string
      */
-    public $fieldType = null;
+    public $fieldType;
 
     /**
      * Définition du type de champs utilisé dans le filtre spécifiquement.
@@ -70,42 +59,42 @@ class ListColumn extends GenericColumn
      *
      * @var string
      */
-    public $fieldTypeFilter = null;
+    public $fieldTypeFilter;
 
     /**
      * Définition du mot clef du filtre pour l'égalité.
      *
      * @var string
      */
-    public $keywordFilterEqual = null;
+    public $keywordFilterEqual;
 
     /**
      * Définition du message affiché lors du chargement de la liste.
      *
      * @var string
      */
-    public $loadingText = null;
+    public $loadingText;
 
     /**
      * Définition du message affiché lorsqu'une erreur se produit au chargement de la liste.
      *
      * @var string
      */
-    public $errorText = null;
+    public $errorText;
 
     /**
      * Définition du caractère utilisé pour la séparation des valeures lors d'une liste à choix multiple.
      *
      * @var string
      */
-    public $separatorMultiple = null;
+    public $separatorMultiple;
 
     /**
      * Permet de savoir si la liste sera chargé dynamiquement (methode getList du contrôleur).
      *
      * Par défaut non.
      *
-     * @var   bool
+     * @var bool
      */
     public $dynamicList = false;
 
@@ -115,16 +104,16 @@ class ListColumn extends GenericColumn
      *
      * Par défaut null.
      *
-     * @var   mixed (array|string)
+     * @var array|string
      */
-    public $list = null;
+    public $list;
 
     /**
      * Booléen définissant si la valeur peut être multiple.
      *
      * Par défaut false.
      *
-     * @var   bool
+     * @var bool
      */
     public $multiple = false;
 
@@ -135,14 +124,14 @@ class ListColumn extends GenericColumn
      *
      * @var bool
      */
-    public $multipleFilters = null;
+    public $multipleFilters;
 
     /**
      * Nombre définissant la hauteur du champs select multiple.
      *
      * Par défaut auto.
      *
-     * @var integer
+     * @var string
      */
     public $multipleListSize = 'auto';
 
@@ -157,10 +146,7 @@ class ListColumn extends GenericColumn
     public $withEmptyElement = true;
 
 
-     /**
-      * {@inheritdoc}
-      */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         parent::__construct($id, $label);
         // Définition des pseudo-constantes pouvant être redéfinies.
@@ -546,7 +532,7 @@ class ListColumn extends GenericColumn
     /**
      * {@inheritdoc}
      */
-    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
         if ($this->dynamicList === true) {
             return null;
@@ -600,7 +586,7 @@ class ListColumn extends GenericColumn
         } else {
             if ($this->getFilterFieldType() === self::FIELD_AUTOCOMPLETE) {
                 $resetFieldSuffix = '<i ';
-                $resetFieldSuffix .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+                $resetFieldSuffix .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
                 $resetFieldSuffix .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\').trigger(\'change\');"';
                 $resetFieldSuffix .= '>';
                 $resetFieldSuffix .= '</i>';
@@ -675,7 +661,7 @@ class ListColumn extends GenericColumn
         if ($this->getFilterFieldType() === self::FIELD_BOX) {
             $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).' :checked\')';
             $resetFields .= '.removeAttr(\'checked\');';
-        } else if ($this->getFilterFieldType() === self::FIELD_AUTOCOMPLETE) {
+        } elseif ($this->getFilterFieldType() === self::FIELD_AUTOCOMPLETE) {
             $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\').trigger(\'change\');';
         } else {
             $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\');';
@@ -745,5 +731,4 @@ class ListColumn extends GenericColumn
 
         return $addFormElement;
     }
-
 }

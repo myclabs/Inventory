@@ -16,7 +16,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class AF_Model_Input_SubAF_Repeated extends AF_Model_Input_SubAF
 {
-
     /**
      * Array of SubSet
      * @var AF_Model_InputSet_Sub[]|Collection
@@ -78,6 +77,14 @@ class AF_Model_Input_SubAF_Repeated extends AF_Model_Input_SubAF
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function hasValue()
+    {
+        return false;
+    }
+
+    /**
      * Ajoute une nouvelle répétition d'un sous-formulaire
      * @param string $freeLabel
      */
@@ -89,5 +96,4 @@ class AF_Model_Input_SubAF_Repeated extends AF_Model_Input_SubAF
         $subInputSet->setFreeLabel($freeLabel);
         $this->addSubSet($subInputSet);
     }
-
 }

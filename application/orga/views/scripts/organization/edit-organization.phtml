@@ -1,0 +1,37 @@
+<?php
+$organizationForm = new UI_Form('organizationDetails');
+$organizationForm->setAction('orga/organization/edit-organization-submit/idOrganization/'.$this->idOrganization);
+
+$labelElementForm = new UI_Form_Element_Text('label');
+$labelElementForm->setLabel(___('UI', 'name', 'label'));
+$labelElementForm->setValue($this->organizationLabel);
+$organizationForm->addElement($labelElementForm);
+
+if (!empty($this->granularities)) {
+    $granularityForInventoryStatusElementForm = new UI_Form_Element_Select('granularityForInventoryStatus');
+    $granularityForInventoryStatusElementForm->setLabel(___('Orga', 'configuration', 'granularityForInventoryStatus'));
+    $granularityForInventoryStatusElementForm->setValue($this->granularityRefForInventoryStatus);
+    $organizationForm->addElement($granularityForInventoryStatusElementForm);
+
+    if (empty($this->granularityRefForInventoryStatus)) {
+        $granularityForInventoryStatusElementForm->addNullOption('');
+    }
+    foreach ($this->granularities as $granularity) {
+        $granularityOption = new UI_Form_Element_Option(
+            $granularity->getId(),
+            $granularity->getRef(),
+            $granularity->getLabel()
+        );
+        $granularityForInventoryStatusElementForm->addOption($granularityOption);
+    }
+}
+
+$organizationForm->addSubmitButton();
+?>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=___('UI', 'name', 'general')?></legend>
+    <div>
+        <?php if ($this->display) { $organizationForm->display(); } else { echo $organizationForm->render(); } ?>
+    </div>
+</fieldset>

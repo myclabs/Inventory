@@ -129,16 +129,16 @@ class UI_HTML_Collapse extends UI_Generic
         // Modifie l'image down -> up lors du collapse show.
         $script .= '$(\'#'.$this->id.'_wrapper\').on(\'show\', function(e) {';
         $script .= 'if (e.currentTarget == e.target) {';
-        $script .= '$(\'#'.$this->id.' > legend > i.filterChevron\').removeClass(\'icon-'.$this->iconFold.'\');';
-        $script .= '$(\'#'.$this->id.' > legend > i.filterChevron\').addClass(\'icon-'.$this->iconUnfold.'\');';
+        $script .= '$(\'#'.$this->id.' > legend > i.filterChevron\').removeClass(\'fa-'.$this->iconFold.'\');';
+        $script .= '$(\'#'.$this->id.' > legend > i.filterChevron\').addClass(\'fa-'.$this->iconUnfold.'\');';
         $script .= '}';
         $script .= '});';
 
         // Modifie l'image up -> down lors du collapse hide.
         $script .= '$(\'#'.$this->id.'_wrapper\').on(\'hidden\', function(e) {';
         $script .= 'if (e.currentTarget == e.target) {';
-        $script .= '$(\'#'.$this->id.' > legend > i.filterChevron\').removeClass(\'icon-'.$this->iconUnfold.'\');';
-        $script .= '$(\'#'.$this->id.' > legend > i.filterChevron\').addClass(\'icon-'.$this->iconFold.'\');';
+        $script .= '$(\'#'.$this->id.' > legend > i.filterChevron\').removeClass(\'fa-'.$this->iconUnfold.'\');';
+        $script .= '$(\'#'.$this->id.' > legend > i.filterChevron\').addClass(\'fa-'.$this->iconFold.'\');';
         $script .= '}';
         $script .= '});';
 
@@ -182,7 +182,7 @@ class UI_HTML_Collapse extends UI_Generic
         if ($this->foldedByDefault === true) {
             $chevron = $this->iconFold;
         }
-        $legend .= '<i class="filterChevron icon-'.$chevron.'"></i> ';
+        $legend .= '<i class="filterChevron fa fa-'.$chevron.'"></i> ';
         $legend .= $this->title;
         $legend .= '</legend>';
 

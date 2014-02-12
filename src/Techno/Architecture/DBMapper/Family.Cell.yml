@@ -13,6 +13,9 @@ Techno\Domain\Family\Cell:
     membersHashKey:
       type: string
       nullable: false
+    value:
+      type: calc_value
+      nullable: true
 
   manyToOne:
     family:
@@ -22,13 +25,6 @@ Techno\Domain\Family\Cell:
         name: idFamily
         referencedColumnName: id
         nullable: false
-    chosenElement:
-      targetEntity: Techno\Domain\Element\Element
-      joinColumn:
-        name: idChosenElement
-        referencedColumnName: id
-        nullable: true
-      cascade: [ all ]
 
   manyToMany:
     members:

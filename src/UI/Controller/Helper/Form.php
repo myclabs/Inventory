@@ -65,7 +65,7 @@ trait UI_Controller_Helper_Form
         if (! isset($this->formResponse->errorMessages)) {
             $this->formResponse->errorMessages = [];
         }
-        $this->formResponse->type = UI_Message::TYPE_ALERT;
+        $this->formResponse->type = UI_Message::TYPE_WARNING;
         $this->formResponse->errorMessages[$field] = $message;
     }
 
@@ -83,7 +83,7 @@ trait UI_Controller_Helper_Form
      * @param string $type
      * @see UI_Message::TYPE_SUCCESS
      * @see UI_Message::TYPE_INFO
-     * @see UI_Message::TYPE_ALERT
+     * @see UI_Message::TYPE_WARNING
      * @see UI_Message::TYPE_ERROR
      */
     public function setFormMessage($message, $type = null)

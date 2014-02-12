@@ -191,7 +191,7 @@ class DW_Export_Report_Excel extends Export_Excel
                     foreach ($value['members'] as $member) {
                         $line[] = $member->getLabel();
                     }
-                    $line[] = floatval(
+                    $line[] = (string) floatval(
                         str_replace(
                             ['&Acirc;', '&nbsp;'],
                             '',
@@ -208,7 +208,7 @@ class DW_Export_Report_Excel extends Export_Excel
                 if ($value['value'] != 0) {
                     $line = array();
                     $line[] = array_shift($value['members'])->getLabel();
-                    $line[] = floatval(
+                    $line[] = (string) floatval(
                         str_replace(
                             ['&Acirc;', '&nbsp;'],
                             '',

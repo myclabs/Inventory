@@ -2,17 +2,21 @@
     "autoload": {
         "psr-0": {
             "": "src/"
-        }
+        },
+        "files": [
+            "src/Core/Translation/functions.php"
+        ]
     },
     "require": {
-        "php": ">=5.5.0",
         "zendframework/zendframework1": "1.12.*",
         "doctrine/orm": "dev-master-myclabs as 2.4.99",
         "doctrine/annotations": "~1.0",
         "doctrine/common": "dev-ProxyStaticProperties as 2.4.1",
         "gedmo/doctrine-extensions": "dev-OptimizedTranslatable as 2.99",
-        "symfony/yaml": "~2.3",
         "symfony/event-dispatcher": "~2.3",
+        "symfony/finder": "~2.3",
+        "symfony/translation": "~2.3",
+        "symfony/yaml": "~2.3",
         "pear/console_commandline": "dev-trunk",
         "netcarver/textile": "~3.5",
         "dompdf/dompdf": "dev-master",
@@ -27,7 +31,7 @@
         "monolog/monolog": "~1.6",
         "mnapoli/number-two": "~0.2.0",
         "myclabs/work": "~0.2.0",
-        "videlalvaro/php-amqplib": "2.2.2"
+        "videlalvaro/php-amqplib": "~2.2"
     },
     "require-dev": {
         "behat/behat": "~2.4",
@@ -35,6 +39,9 @@
         "behat/mink-extension": "*",
         "behat/mink-selenium2-driver": "*",
         "mnapoli/metaconsole": "dev-master"
+    },
+    "suggest": {
+        "shvetsgroup/parallelrunner": "Run Behat scenarios in parallel"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

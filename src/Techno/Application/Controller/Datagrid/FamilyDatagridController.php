@@ -3,7 +3,6 @@
 use Core\Annotation\Secure;
 use Techno\Domain\Family\Family;
 use Techno\Domain\Category;
-use Techno\Domain\Family\CoeffFamily;
 use Unit\UnitAPI;
 
 /**
@@ -26,22 +25,14 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             $data['label'] = $family->getLabel();
             $data['ref'] = $family->getRef();
             $data['unit'] = $family->getValueUnit()->getSymbol();
-            $tags = [];
-            foreach ($family->getTags() as $tag) {
-                $tags[] = $tag->getValueLabel();
-            }
-            $data['tags'] = implode(', ', $tags);
-            $tags = [];
-            foreach ($family->getCellsCommonTags() as $tag) {
-                $tags[] = $tag->getValue()->getLabel();
-            }
-            $data['cellsCommonTags'] = implode(', ', $tags);
             if ($this->getParam('mode') == 'edition') {
                 $data['detail'] = $this->cellLink(
-                    $this->_helper->url('edit', 'family', 'techno', ['id' => $family->getId()]));
+                    $this->_helper->url('edit', 'family', 'techno', ['id' => $family->getId()])
+                );
             } else {
                 $data['detail'] = $this->cellLink(
-                    $this->_helper->url('details', 'family', 'techno', ['id' => $family->getId()]));
+                    $this->_helper->url('details', 'family', 'techno', ['id' => $family->getId()])
+                );
             }
             $this->addLine($data);
         }
@@ -85,18 +76,14 @@ class Techno_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             /** @var $category Category */
             $category = Category::load($idCategory);
 
-            $family = new CoeffFamily();
-            // Ref
             try {
-                $family->setRef($ref);
+                $family = new Family($ref, $label);
             } catch (Exception $e) {
                 $this->setAddElementErrorMessage('ref', __('Core', 'exception', 'unauthorizedRef'));
                 $this->send();
                 return;
             }
-            $family->setLabel($label);
             /** @noinspection PhpUndefinedVariableInspection */
-            $family->setBaseUnit($unit->getNormalizedUnit());
             $family->setUnit($unit);
             $family->setCategory($category);
             $family->save();

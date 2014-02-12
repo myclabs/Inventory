@@ -33,7 +33,7 @@
                 <seg>Collecte</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Collection</seg>
+                <seg>Data Collection</seg>
             </tuv>
         </tu>
         <tu tuid="inventoryStatus">

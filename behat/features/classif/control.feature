@@ -4,7 +4,7 @@ Feature: Control of classification data
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Control of classification data scenario
     When I am on "classif/consistency/check"
     Then I should see the "coherence" datagrid

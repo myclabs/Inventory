@@ -17,7 +17,7 @@
  */
 class UI_Message
 {
-    const TYPE_ALERT = 'alert';
+    const TYPE_WARNING = 'warning';
     const TYPE_ERROR = 'error';
     const TYPE_INFO = 'info';
     const TYPE_SUCCESS = 'success';
@@ -63,7 +63,7 @@ class UI_Message
      *
      * @return void
      */
-    public static function addMessageStatic($texte, $type=self::TYPE_ALERT)
+    public static function addMessageStatic($texte, $type=self::TYPE_WARNING)
     {
         self::getInstance()->addMessage($texte, $type);
     }
@@ -76,10 +76,10 @@ class UI_Message
      *
      * @return void
      */
-    public function addMessage($texte, $type=self::TYPE_ALERT)
+    public function addMessage($texte, $type=self::TYPE_WARNING)
     {
         switch ($type) {
-            case self::TYPE_ALERT:
+            case self::TYPE_WARNING:
                 $class = 'alert';
                 $title = __('UI', 'message', 'titleWarning');
                 break;
@@ -167,7 +167,7 @@ class UI_Message
                 return UI_Message::TYPE_ERROR;
                 break;
             case '4':
-                return UI_Message::TYPE_ALERT;
+                return UI_Message::TYPE_WARNING;
                 break;
             case '2':
                 return UI_Message::TYPE_SUCCESS;

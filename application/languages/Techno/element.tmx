@@ -2,23 +2,32 @@
 <tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
-    
+
         <!-- Messages -->
 
         <tu tuid="element">
             <tuv xml:lang="fr">
-                <seg>Élément</seg>
+                <seg>Paramètre</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Element</seg>
+                <seg>Parameter</seg>
             </tuv>
         </tu>
-        <tu tuid="incompatibleUnit">
+        <tu tuid="elements">
             <tuv xml:lang="fr">
-                <seg>Merci de saisir une unité associée à la même grandeur physique que l'unité initiale.</seg>
+                <seg>Paramètres</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Please choose a new unit corresponding to the same physical quantity as previous unit.</seg>
+                <seg>Parameters</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="editManyElements">
+            <tuv xml:lang="fr">
+                <seg>Modifier les paramètres en masse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Edit multiple parameters</seg>
             </tuv>
         </tu>
 

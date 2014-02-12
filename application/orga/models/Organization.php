@@ -213,9 +213,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
      */
     public function getAxes()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
-        $criteria->orderBy(['narrowerTag' => 'ASC']);
-        return $this->axes->matching($criteria);
+        return $this->axes;
     }
 
     /**
@@ -379,11 +377,21 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Renvoie un tableau des Granularity du Organization.
+     * Renvoie un tableau des Granularity de l'Organization.
      *
      * @return Collection|Selectable|Orga_Model_Granularity[]
      */
     public function getGranularities()
+    {
+        return $this->granularities;
+    }
+
+    /**
+     * Renvoie un tableau ordonné des Granularity de l'Organization.
+     *
+     * @return Collection|Selectable|Orga_Model_Granularity[]
+     */
+    public function getOrderedGranularities()
     {
         $criteria = Doctrine\Common\Collections\Criteria::create();
         $criteria->orderBy(['position' => 'ASC']);

@@ -131,7 +131,7 @@ Vous pouvez à nouveau vous connecter à votre compte en vous rendant à l’adr
 			</tuv>
 			<tuv xml:lang="en">
 				<seg>
-Your user account on the application "[APPLICATION_NAME]" has been reactivated by an administrtor of the application.
+Your user account on the application "[APPLICATION_NAME]" has been reactivated by an administrator of the application.
 You can login again at the following address: [URL_APPLICATION].
                 </seg>
 			</tuv>

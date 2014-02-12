@@ -43,7 +43,7 @@ class AF_Edit_ActionsController extends Core_Controller
                     $value = $locale->readNumber($this->getParam('numericValue'));
                     $uncertainty = $locale->readInteger($this->getParam('numericUncertainty'));
                 } catch(Core_Exception_InvalidArgument $e) {
-                    UI_Message::addMessageStatic(__('UI', 'formValidation', 'invalidNumber'), UI_Message::TYPE_ALERT);
+                    UI_Message::addMessageStatic(__('UI', 'formValidation', 'invalidNumber'), UI_Message::TYPE_WARNING);
                     $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/interaction');
                     return;
                 }

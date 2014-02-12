@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <!-- Volet d'ajout d'un membre d'axe -->
+
+        <tu tuid="addMember">
+            <tuv xml:lang="fr">
+                <seg>Ajouter un élément d'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Add an organization element</seg>
+            </tuv>
+        </tu>
+
+        <!-- Désignation des granularités -->
+
+        <tu tuid="separator">
+            <tuv xml:lang="fr">
+                <seg> - </seg> <!-- ou bien &amp; ? -->
+            </tuv>
+            <tuv xml:lang="en">
+                <seg> - </seg>
+            </tuv>
+        </tu>
+        <tu tuid="granularityExplanations">
+            <tuv xml:lang="fr">
+                <seg>Fonctionnalités disponibles à ce niveau</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Features available at this level</seg>
+            </tuv>
+        </tu>
+
+        <!-- Lien d'accès à la saisie -->
+
+        <tu tuid="inputLinkDetail">
+            <tuv xml:lang="fr">
+                <seg>Accéder à la saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Go to Input</seg>
+            </tuv>
+        </tu>
+        <tu tuid="viewInput">
+            <tuv xml:lang="fr">
+                <seg>Saisir les données</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Enter data</seg>
+            </tuv>
+        </tu>
+
+        <!-- Traductions pour les filtres -->
+
+        <tu tuid="allInputStatus">
+            <tuv xml:lang="fr">
+                <seg>Tous statuts de saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All input status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="allInventoryStatus">
+            <tuv xml:lang="fr">
+                <seg>Tous statuts de collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All collection status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunched">
+            <tuv xml:lang="fr">
+                <seg>Collecte non lancée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection not launched</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryOpen">
+            <tuv xml:lang="fr">
+                <seg>Collecte en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection open</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosed">
+            <tuv xml:lang="fr">
+                <seg>Collecte cloturée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection closed</seg>
+            </tuv>
+        </tu>
+        <tu tuid="allMembers">
+            <tuv xml:lang="fr">
+                <seg>Tous éléments ([AXIS])</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All elements ([AXIS])</seg>
+            </tuv>
+        </tu>
+        <tu tuid="filterReverserExplanations">
+            <tuv xml:lang="fr">
+                <seg>Lorsque coché, les résultats correspondront à l'inverse des filtres sélectionnés.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>When checked, results will be the opposite of selected filters.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ratioNumberFilteredCellsOverTotal">
+            <tuv xml:lang="fr">
+                <seg>Nombre d'éléments filtrés / nombre d'éléments au total</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Number of filtered elements / total number of elements</seg>
+            </tuv>
+        </tu>
+        <tu tuid="filterNoResult">
+            <tuv xml:lang="fr">
+                <seg>Aucun élément pour le(s) filtre(s) séléctionné(s).</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No element matching selected filter(s).</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="filterAllReports">
+            <tuv xml:lang="fr">
+                <seg>Tous</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All</seg>
+            </tuv>
+        </tu>
+        <tu tuid="reportTypes">
+            <tuv xml:lang="fr">
+                <seg>Standards</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Standard</seg>
+            </tuv>
+        </tu>
+        <tu tuid="otherUsersReports">
+            <tuv xml:lang="fr">
+                <seg>Autres utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Other users</seg>
+            </tuv>
+        </tu>
+
+        <!-- Tooltips des icônes -->
+
+        <tu tuid="contactAdministrators">
+            <tuv xml:lang="fr">
+                <seg>Contacter un référent</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Contact a referent</seg>
+            </tuv>
+        </tu>
+        <tu tuid="editUsers">
+            <tuv xml:lang="fr">
+                <seg>Administrer les utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Edit users</seg>
+            </tuv>
+        </tu>
+        <tu tuid="analyzeData">
+            <tuv xml:lang="fr">
+                <seg>Analyser les résultats</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analyze results</seg>
+            </tuv>
+        </tu>
+        <tu tuid="exportData">
+            <tuv xml:lang="fr">
+                <seg>Exporter les données</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Export data</seg>
+            </tuv>
+        </tu>
+
+        <!-- Titres des popups -->
+
+        <tu tuid="administratorsFrom">
+            <tuv xml:lang="fr">
+                <seg>Administrateurs — </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Administrators — </seg>
+            </tuv>
+        </tu>
+        <tu tuid="rolesFrom">
+            <tuv xml:lang="fr">
+                <seg>Rôles utilisateur — </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>User roles — </seg>
+            </tuv>
+        </tu>
+        <tu tuid="reportsFrom">
+            <tuv xml:lang="fr">
+                <seg>Analyses — </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analyses — </seg>
+            </tuv>
+        </tu>
+        <tu tuid="exportsFrom">
+            <tuv xml:lang="fr">
+                <seg>Exports — </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Exports — </seg>
+            </tuv>
+        </tu>
+        <tu tuid="viewInventoryUsers">
+            <tuv xml:lang="fr">
+                <seg>Voir les participants</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>See users in charge</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryUsersFrom">
+            <tuv xml:lang="fr">
+                <seg>Participants — </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users in charge — </seg>
+            </tuv>
+        </tu>
+
+        <!-- Contenu popup des administrateurs référents -->
+
+        <tu tuid="administratorExplanations">
+            <tuv xml:lang="fr">
+                <seg>Utilisateurs pouvant administrer cette unité organisationnelle. Liste d'adresses à copier-coller en bloc ou une par une dans un e-mail.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users able having the right to administrate this organizational unit. List of email addresses you can copy-paste in order to send an e-mail to these users.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Contenu popup des exports -->
+
+        <tu tuid="exportsExplanations">
+            <tuv xml:lang="fr">
+                <seg>Sélectionner le type de données à exporter puis cliquer sur « Exporter ».</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Select the kind of data that you want to export and click "Export".</seg>
+            </tuv>
+        </tu>
+
+        <!-- Suivi des collectes -->
+
+        <tu tuid="inventoryStatusExplanations">
+            <tuv xml:lang="fr">
+                <seg>Statut de la collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryPercentExplanations">
+            <tuv xml:lang="fr">
+                <seg>Avancement de la collecte (pourcentage de saisies terminées)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection progress (finished inputs percentage)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunched">
+            <tuv xml:lang="fr">
+                <seg>Collecte non lancée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection not launched</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryOpen">
+            <tuv xml:lang="fr">
+                <seg>Collecte en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection in progress</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosed">
+            <tuv xml:lang="fr">
+                <seg>Collecte clôturée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection closed</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunchedMainAction">
+            <tuv xml:lang="fr">
+                <seg>Démarrer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Start</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryActiveMainAction">
+            <tuv xml:lang="fr">
+                <seg>Clôturer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Close</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosedMainAction">
+            <tuv xml:lang="fr">
+                <seg>Rouvrir</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Re-open</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunchedOtherAction">
+            <tuv xml:lang="fr">
+                <seg>Clôturer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Close</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryActiveOtherAction">
+            <tuv xml:lang="fr">
+                <seg>Revenir à "Non démarrée"</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Revert to "Not launched"</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosedOtherAction">
+            <tuv xml:lang="fr">
+                <seg>Revenir à "Non démarrée"</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Revert to "Not launched"</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryUsersExplanations">
+            <tuv xml:lang="fr">
+                <seg>Utilisateurs pouvant éditer tout ou partie de cette unité organisationnelle. Liste d'adresses à copier-coller en bloc ou une par une dans un e-mail.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users having the right to edit all or part of this organizational unit. List of email addresses you can copy-paste these addresses in order to send an e-mail to these users.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Détails du statut des saisies -->
+
+        <tu tuid="statusAFNotConfigured">
+            <tuv xml:lang="fr">
+                <seg>Formulaire absent</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Missing form</seg>
+            </tuv>
+        </tu>
+        <tu tuid="statusNotStarted">
+            <tuv xml:lang="fr">
+                <seg>Saisie non démarrée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input not started</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputStatusExplanations">
+            <tuv xml:lang="fr">
+                <seg>Statut de la saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input status</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputPercentExplanations">
+            <tuv xml:lang="fr">
+                <seg>Avancement de la saisie (pourcentage de champs obligatoires remplis)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input progress (percentage of filled field among required fields)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryInputsDetails">
+            <tuv xml:lang="fr">
+                <seg>Statuts des saisies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inputs statuts</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsNotStartedSingle">
+            <tuv xml:lang="fr">
+                <seg>non démarrée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>not started</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsNotStartedMany">
+            <tuv xml:lang="fr">
+                <seg>non démarrées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>not started</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsStartedSingle">
+            <tuv xml:lang="fr">
+                <seg>non terminée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>not finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsStartedMany">
+            <tuv xml:lang="fr">
+                <seg>non terminées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>not finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsCompletedSingle">
+            <tuv xml:lang="fr">
+                <seg>terminée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsCompletedMany">
+            <tuv xml:lang="fr">
+                <seg>terminées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>finished</seg>
+            </tuv>
+        </tu>
+
+        <!-- Boutons pour afficher davantage de cellules -->
+
+        <tu tuid="display-more-cells">
+            <tuv xml:lang="fr">
+                <seg>Afficher davantage d'éléments</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Display more elements</seg>
+            </tuv>
+        </tu>
+
+        <!-- Gestion des rôles -->
+
+        <tu tuid="askConfirmDeleteUser">
+            <tuv xml:lang="fr">
+                <seg>Êtes-vous sûr de vouloir priver cet utilisateur de ce rôle ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Are you sure you want to deprive this user from this role ?</seg>
+            </tuv>
+        </tu>
+
+        <!-- Gestion des rapports d'analyse -->
+
+        <tu tuid="askConfirmDeleteReport">
+            <tuv xml:lang="fr">
+                <seg>Êtes-vous sûr de vouloir supprimer ce rapport d'analyse ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Are you sure you want to delete this analysis report ?</seg>
+            </tuv>
+        </tu>
+
+        <!-- Volet d'ajout d'un membre organisationnel -->
+
+        <tu tuid="addMembersAxisExplanations">
+            <tuv xml:lang="fr">
+                <seg>Axe d'organisation auquel l'élément sera ajouté.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational axis to which element will be added.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addMembersMemberExplanations">
+            <tuv xml:lang="fr">
+                <seg>Libellé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Label</seg>
+            </tuv>
+        </tu>
+
+
+    </body>
+</tmx>

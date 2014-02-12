@@ -112,13 +112,29 @@ class User extends Core_Model_Entity implements Resource
      */
     protected $acl;
 
+    /**
+     * Indique les tutoriels restant à faire pour l'utilisateur
+     * Chaque tutoriel est un nombre premier, cette valeur
+     * est égale au produit des nombres premiers des tutoriels.
+     * Vaut null si l'application n'est pas en mode feature.register
+     * @var int|null
+     */
+    protected $tutorials = null;
 
-    public function __construct()
+
+    public function __construct($email = null, $password = null)
     {
         $this->creationDate = new DateTime();
         $this->roles = new ArrayCollection();
         $this->authorizations = new ArrayCollection();
         $this->acl = new ArrayCollection();
+
+        if ($email) {
+            $this->setEmail($email);
+        }
+        if ($password) {
+            $this->setPassword($password);
+        }
 
         // Hérite des droits sur "tous les utilisateurs"
         $allUsers = NamedResource::loadByName(self::class);
@@ -486,5 +502,41 @@ class User extends Core_Model_Entity implements Resource
     public function __toString()
     {
         return "User($this->email)";
+    }
+
+    /**
+     * Initialise les tutoriels
+     */
+    public function initTutorials()
+    {
+        $this->tutorials = 105;
+    }
+
+    /**
+     * Passe un tutorial
+     * Nombres premiers utilisés = 3, 5, 7
+     * @var int $tutorial Nombre premier unique pour chaque tutoriel
+     */
+    public function dismissTutorial($tutorial)
+    {
+        if ($tutorial == 'all'
+            || $this->tutorials == $tutorial
+            || $tutorial == 0
+        ) {
+            $this->tutorials = null;
+        }
+        elseif (is_int($this->tutorials / $tutorial)) {
+            $this->tutorials = $this->tutorials / $tutorial;
+        }
+    }
+
+    /**
+     * Indique si un tutoriel a été fait
+     * @param $tutorial Nombre premier du tutoriel
+     * @return bool
+     */
+    public function isTutorialDone($tutorial)
+    {
+        return null !== $this->tutorials ? !is_int($this->tutorials / $tutorial) : true;
     }
 }

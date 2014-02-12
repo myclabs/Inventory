@@ -66,18 +66,18 @@ if ($connectedUser) {
     $connection = array(
         'name'    => $connectedUser->getName() . ' ',
         'id'      => 'currentUserButton',
-        'icon'    => 'off',
+        'icon'    => 'power-off',
         'url'     => 'user/action/logout?refer='.$refer,
         'submenu' => array(
-            array(
+            [
                 'name' => __('User', 'menu', 'myAccount'),
                 'url'  => 'user/profile/edit/',
-            ),
-            array(
+            ],
+            [
                 'name'  => __('User', 'menu', 'logout'),
                 'id'    => 'logoutButton',
                 'url'   => 'user/action/logout?refer=' . $refer,
-            ),
+            ],
         ),
     );
 
@@ -161,14 +161,6 @@ if ($connectedUser) {
                     'name' => __('Techno', 'familyList', 'familyListConsult'),
                     'url' => 'techno/family/list'
                 ],
-                [
-                    'name' => __('Techno', 'name', 'meanings'),
-                    'url' => 'techno/meaning/list'
-                ],
-                [
-                    'name' => __('UI', 'name', 'control'),
-                    'url' => 'techno/validation/results'
-                ],
             ],
         ];
     } else {
@@ -183,30 +175,6 @@ if ($connectedUser) {
                 [
                     'name' => __('Techno', 'familyList', 'familyList'),
                     'url' => 'techno/family/list'
-                ],
-            ]
-        ];
-    }
-    if ($isAllowedToEditRepository) {
-        $subMenuRepository[] = [
-            'name' => __('Keyword', 'menu', 'semanticResources'),
-            'url' => '#',
-            'submenu' => [
-                [
-                    'name' => __('Keyword', 'menu', 'keywordGraph'),
-                    'url' => 'keyword/graph/root'
-                ],
-                [
-                    'name' => __('Keyword', 'menu', 'keywordList'),
-                    'url' => 'keyword/keyword/manage'
-                ],
-                [
-                    'name' => __('Keyword', 'relation', 'pageTitle'),
-                    'url' => 'keyword/association/manage'
-                ],
-                [
-                    'name' => __('Keyword', 'name', 'predicates'),
-                    'url' => 'keyword/predicate/manage'
                 ],
             ]
         ];
@@ -265,7 +233,7 @@ if ($connectedUser) {
     }
 
     $subMenuRepository[] = [
-        'name' => '<i class="icon-download-alt"></i> '.__('UI', 'name', 'exports'),
+        'name' => '<i class="fa fa-download"></i> '.__('UI', 'name', 'exports'),
         'url' => 'orga/referential/exports',
         'submenu' => null
     ];
@@ -359,29 +327,6 @@ if ($connectedUser) {
                         'name' => __('Techno', 'translate', 'familyDocumentations'),
                         'url' => 'techno/translate/families-documentation'
                     ],
-                    [
-                        'name' => __('Techno', 'translate', 'parameterDocumentations'),
-                        'url' => 'techno/translate/elements-documentation'
-                    ],
-                ]
-            ];
-
-            $subMenuTranslation[] = [
-                'name' => __('Keyword', 'menu', 'semanticResources'),
-                'url' => '#',
-                'submenu' => [
-                    [
-                        'name' => __('Keyword', 'name', 'keywords'),
-                        'url' => 'keyword/translate/keywords'
-                    ],
-                    [
-                        'name' => __('Keyword', 'translate', 'directPredicates'),
-                        'url' => 'keyword/translate/predicates-label'
-                    ],
-                    [
-                        'name' => __('Keyword', 'translate', 'reversePredicates'),
-                        'url' => 'keyword/translate/predicates-reverselabel'
-                    ],
                 ]
             ];
         }
@@ -395,7 +340,7 @@ if ($connectedUser) {
     $connection = array(
         'name'    => __('User', 'login', 'connection'),
         'id'      => 'loginButton',
-        'icon'    => 'off',
+        'icon'    => 'power-off',
         'url'     => 'user/action/login?refer='.$refer,
         'submenu' => null,
     );
@@ -422,7 +367,7 @@ $rightMenu = [ $connection ];
                         }
                         ?>
                         <a id="<?=$linkId?>" class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?><span class="caret"></span>
+                            <i class="fa fa-<?=$node['icon']?>"></i> <?=$node['name']?><span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <?php foreach ($node['submenu'] as $submenu) { ?>
@@ -445,7 +390,8 @@ $rightMenu = [ $connection ];
                             $linkId = $node['id'];
                         }
                         ?>
-                        <a id="<?=$linkId?>" class="btn" href="<?=$node['url']?>"><i class="icon-<?=$node['icon']?>"></i> <?=$node['name']?>
+                        <a id="<?=$linkId?>" class="btn" href="<?=$node['url']?>">
+                            <i class="fa fa-<?=$node['icon']?>"></i> <?=$node['name']?>
                         </a>
                     <?php } ?>
                 <?php } ?>
@@ -498,9 +444,36 @@ $rightMenu = [ $connection ];
                         <?php } else { ?>
                             <li<?=$liClass?>><a<?=$mainLink?>><?=$node['name']?></a></li>
                         <?php } ?>
-                    <?php } ?>
+                    <?php }
+                    if ($this->tutorial) {
+                        echo "<li><a href='#' id='resetTutorials'>".__('User', 'menu', 'resetTutorials')."</a></li>";
+                    }
+                    ?>
                 </ul>
             </div>
         </div>
     </div>
 </div>
+
+<?php if ($this->tutorial): ?>
+<script>
+$("#resetTutorials").on("click", function () {
+    $.ajax({
+        url: 'user/profile/reset-tutorials',
+        type: "GET"
+    })
+    .done(function () {
+        addMessage('<?= __('User', 'action', 'resetTutorialsConfirmation') ?> <a href="#" id="tutorialReloadPage">' +
+                   '<?= __('User', 'action', 'resetTutorialsReloadPage') ?></a>', 'success');
+        $("#tutorialReloadPage").on("click", function () {
+            location.reload();
+            return false;
+        });
+    })
+    .fail(function () {
+        addMessage('<?= __('User', 'action', 'resetTutorialsError') ?>', 'error');
+    });
+    return false;
+});
+</script>
+<?php endif; ?>

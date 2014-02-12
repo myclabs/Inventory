@@ -7,6 +7,7 @@ DW_Model_Axis:
   gedmo:
     translation:
       locale: translationLocale
+      entity: \DW_Model_Translation_AxisTranslation
 
   id:
     id:
@@ -73,4 +74,3 @@ DW_Model_Axis:
       columns:
         - ref
         - idCube
-      

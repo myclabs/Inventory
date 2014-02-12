@@ -4,91 +4,38 @@ Feature: Organization input tab feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Filter on organization members in Input tab
   # Accès à l'onglet "Saisies"
-    Given I am on "orga/cell/details/idCell/1"
-    And I open tab "Saisies"
-    And I open collapse "Année | Site"
-    Then I should see the "aFGranularity1Input7" datagrid
-    And the "aFGranularity1Input7" datagrid should contain 6 row
+    Given I am on "orga/cell/view/idCell/1"
+    And I wait for the page to finish loading
+    Then I should see "4 / 6" in the "#granularity8 span.granularity-info" element
   # Filtre sur le site "Annecy"
-    When I open collapse "Filtres"
-    And I select "Annecy" from "aFGranularity1Input7_site_filterForm"
-    And I click "Filtrer"
-    Then the "aFGranularity1Input7" datagrid should contain 2 row
+    When I select "Annecy" from "granularity8_axissite"
+    Then I should see "2 / 6" in the "#granularity8 span.granularity-info" element
   # Bouton "Réinitialiser"
-    When I open collapse "Filtres"
-    And I click "Réinitialiser"
-    Then the "aFGranularity1Input7" datagrid should contain 6 row
+    When I click element "div[id='granularity8'] button.reset"
+    Then I should see "6 / 6" in the "#granularity8 span.granularity-info" element
 
-  @javascript
-  Scenario: Display of input tab when the inventory granularity has not been defined
-    Given I am on "orga/organization/manage"
-    And I wait for the page to finish loading
-    Then I should see "Axes racine : Année, Site, Catégorie, Axe vide"
-    And I should see "Collectes : Année | Zone | Marque"
-  # Ajout d'une organisation
-    When I click "Ajouter"
-    Then I should see the popup "Ajout d'une organisation"
-    When I fill in "Libellé" with "Test"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-    And I should see "Test"
-  # Lien vers le détail de l'organisation
-    When I click "Test"
-    Then I should see "Vue globale Test"
-    # TODO : ajouter message pour indiquer qu'aucune granularité n'a été associée à des saisies.
-
-  @javascript
-  Scenario: Access to an input which is associated to the current cell
-    Given I am on "orga/cell/details/idCell/1"
-    And I wait for the page to finish loading
-  # Saisie associée à la cellule globale
-    And I open collapse "Niveau organisationnel global"
-    Then I should see the "aFGranularity1Input1" datagrid
-    And the "aFGranularity1Input1" datagrid should contain 1 row
-  # Saisie associée à une cellule non globale (Europe|Marque A)
-    When I click element ".icon-plus"
-    And I click element "#goTo2"
-    And I open collapse "Zone | Marque"
-    Then I should see the "aFGranularity2Input2" datagrid
-    And the "aFGranularity2Input2" datagrid should contain 1 row
-
-  @javascript
+  @javascript @readOnly
   Scenario: Display of the various columns (inventory status, input progress, input status)
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading
-  # Descendre depuis la cellule globale dans une cellule de granularité site
-    When I click element ".icon-plus"
-    And I select "Annecy" from "site"
-    And I click element "#goTo3"
   # Cas inventaire en cours, saisie complète
-    When I open collapse "Année | Site"
-    Then the "aFGranularity5Input7" datagrid should contain a row:
-      | annee | inventoryStatus | advancementInput | stateInput      |
-      | 2012  | Ouvert          | 100%             | Saisie complète |
+    Then I should see "2012 | Annecy" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/']" element
+    And I should see "Collecte en cours" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/'] div.inventory-status" element
+    And I should see "Saisie complète" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/'] div.input-status" element
   # Cas inventaire en cours, saisie incomplète / saisie terminée
-    When I close collapse "Année | Site"
-    When I open collapse "Année | Site | Catégorie"
-    Then the "aFGranularity5Input8" datagrid should contain a row:
-      | annee | categorie | inventoryStatus | advancementInput | stateInput      |
-      | 2012  | Énergie   | Ouvert          | 100%             | Saisie terminée |
-    And the "aFGranularity5Input8" datagrid should contain a row:
-      | annee | categorie      | inventoryStatus | advancementInput | stateInput        |
-      | 2012  | Test affichage | Ouvert          | 14%              | Saisie incomplète |
+    Then I should see "2012 | Annecy | Énergie" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/']" element
+    And I should see "Saisie terminée" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/'] div.input-status" element
+    Then I should see "2012 | Annecy | Test affichage" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/']" element
+    And I should see "Saisie incomplète" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/'] div.input-status" element
   # Cas inventaire non lancé, inventaire clôturé
-    When I click element ".icon-plus"
-    And I click "Vue globale"
-    And I click element ".icon-plus"
-    And I select "Europe" from "zone"
-    And I select "Marque B" from "marque"
-    And I click element "#goTo2"
-    And I open collapse "Année | Site"
-    Then the "aFGranularity3Input7" datagrid should contain a row:
-      | annee | site     | inventoryStatus | advancementInput | stateInput      |
-      | 2012  | Grenoble | Fermé           | 100%             | Saisie terminée |
-    And the "aFGranularity3Input7" datagrid should contain a row:
-      | annee | site     | inventoryStatus | advancementInput | stateInput      |
-      | 2013  | Grenoble | Non lancé       |                  |                 |
+    And I click element "div[id='granularity8'] button.reset"
+    Then I should see "2012 | Grenoble" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/']" element
+    And I should see "Collecte clôturée" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.inventory-status" element
+    And I should see "Saisie terminée" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.input-status" element
+    Then I should see "2013 | Grenoble" in the "div.cell[data-tag='/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/']" element
+    And I should see "Collecte non lancée" in the "div.cell[data-tag='/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.inventory-status" element
+    And I should see "Collecte non lancée" in the "div.cell[data-tag='/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.input-status" element
 

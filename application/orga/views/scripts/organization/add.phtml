@@ -1,0 +1,761 @@
+<style>
+    #organizationSteps { border: none; }
+    #organizationSteps.nav a { border: none; }
+    #organizationSteps.nav a:hover { border: none; }
+    #organizationSteps.nav li.active a { font-weight: bolder; }
+    #organizationSteps .step-separator { color: #999999; line-height: 20px; padding-top: 8px; padding-bottom: 8px; }
+    .navigation-buttons .control-label { padding-top: 0px; }
+    #addOrganization.form .subGroup { margin-left: 0px; }
+</style>
+
+<form class="form form-horizontal" id="addOrganization" action="orga/organization/add-submit">
+    <ul class="nav nav-tabs" id="organizationSteps">
+        <li class="active"><a href="#organization"><?=___('Orga', 'add', 'organization')?></a></li>
+        <li class="step-separator hide">>>></li>
+        <li class="disabled hide"><a href="#axes"><?=___('Orga', 'add', 'axes')?></a></li>
+        <li class="step-separator hide">>>></li>
+        <li class="disabled hide"><a href="#members"><?=___('Orga', 'add', 'members')?></a></li>
+        <li class="step-separator hide">>>></li>
+        <li class="disabled hide"><a href="#granularities"><?=___('Orga', 'add', 'granularities')?></a></li>
+        <li class="step-separator hide">>>></li>
+        <li class="disabled hide"><a href="#dw"><?=___('DW', 'name', 'analyses')?></a></li>
+        <li class="step-separator">>>></li>
+        <li class="disabled"><a href="#validation"><?=___('Orga', 'add', 'validation')?></a></li>
+    </ul>
+
+    <div>
+
+        <div class="control-group navigation-buttons">
+            <div class="control-label">
+                <button class="btn btn-warning navigation-previous hide" type="button">
+                    <i class="fa fa-chevron-left"></i> <?=___('Orga', 'add', 'navigationPrevious')?>
+                </button>
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary navigation-next" type="button">
+                    <?=___('Orga', 'add', 'navigationNext')?> <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary navigation-end hide" type="button">
+                    <?=___('Orga', 'add', 'navigationEnd')?> <i class="fa fa-check"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="tab-content">
+            <div class="tab-pane active subGroup" id="organization">
+                <div>
+                    <div id="organizationLabel-line" class="control-group">
+                        <label class="control-label" for="label"><?=___('Orga', 'add', 'organizationLabel')?></label>
+                        <div class="controls">
+                            <div class="input">
+                                <input type="text" id="organizationLabel" name="organizationLabel" placeholder="organisation">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="organizationTemplate-line" class="control-group">
+                        <label class="control-label" for="organizationTemplate">
+                            <?=___('Orga', 'add', 'organizationTemplate')?>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="<?=___('Orga', 'add', 'organizationTemplateExplanation')?>">
+                                <i class="fa fa-question-circle"></i>
+                            </a>
+                        </label>
+                        <div class="controls">
+                            <div class="input">
+                                <select id="organizationTemplate" name="organizationTemplate">
+                                    <? foreach ($this->templates as $templateRef => $templateName) : ?>
+                                    <option value="<?=$templateRef?>"><?=$templateName?></option>
+                                    <? endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane subGroup" id="axes">
+                <div>
+                    <div class="alert">
+                        <strong><?=___('Orga', 'add', 'warning')?> :</strong>
+                        <?=___('Orga', 'add', 'resetAfterAxesStep')?>
+                    </div>
+                    <fieldset id="mainAxisGroup" class=subGroup>
+                        <legend><?=___('Orga', 'add', 'organizationMainAxisTitle')?></legend>
+                        <div>
+                            <div id="mainAxis-line" class="control-group" data-level="1">
+                                <label class="control-label" for="mainAxis">
+                                    <?=___('Orga', 'add', 'organizationMainAxisLabel')?>
+                                    <a href="#" data-toggle="tooltip" data-placement="top" title="<?=___('Orga', 'add', 'organizationMainAxisHelp')?>">
+                                        <i class="fa fa-question-circle"></i>
+                                    </a>
+                                </label>
+                                <div class="controls">
+                                    <div class="input">
+                                        <input type="text" id="mainAxis" name="mainAxis" placeholder="<?=___('Orga', 'add', 'organizationMainAxisPlaceholder')?>" required>
+                                    </div>
+                                    <div class="input">
+                                        <button class="btn addAggregation"><i class="fa fa-plus"></i> <?=___('Orga', 'add', 'organizationAddMainSubAxis')?></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset id="timeAxisGroup" class="subGroup">
+                        <legend><?=___('Orga', 'add', 'organizationTimeAxisTitle')?></legend>
+                        <div>
+                            <div id="timeAxis-line" class="control-group">
+                                <label class="control-label" for="timeAxis"><?=___('Orga', 'add', 'organizationTimeAxisLabel')?></label>
+                                <div class="controls">
+                                    <div class="input">
+                                        <input type="text" id="timeAxis" name="timeAxis" placeholder="<?=___('Orga', 'add', 'organizationTimeAxisPlaceholder')?>" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset id="subdivisionAxisGroup" class="subGroup">
+                        <legend><?=___('Orga', 'add', 'organizationInputsAxisTitle')?></legend>
+                        <div>
+                            <div id="subdivisionAxis-line" class="control-group">
+                                <label class="control-label" for="subdivisionAxis"><?=___('Orga', 'add', 'organizationInputsAxisLabel')?></label>
+                                <div class="controls">
+                                    <div class="input">
+                                        <input type="text" id="subdivisionAxis" name="subdivisionAxis" placeholder="<?=___('Orga', 'add', 'organizationInputsAxisPlaceholder')?>">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="tab-pane subGroup" id="members">
+                <div></div>
+            </div>
+            <div class="tab-pane subGroup" id="granularities">
+                <div>
+                    <fieldset id="inventoryGranularityGroup" class="subGroup">
+                        <legend><?=___('Orga', 'add', 'inventoryGranularityTitle')?></legend>
+                        <div>
+                            <div id="inventoryGranularity-line" class="control-group">
+                                <div class="controls">
+                                    <div class="input" style="margin-top: 5px;">
+                                        <div id="inventoryGranularity"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset id="inputsGranularitiesGroup" class="subGroup">
+                        <legend><?=___('Orga', 'add', 'inputsGranularitiesTitle')?></legend>
+                        <div>
+                            <div id="inputsGranularities-line" class="control-group">
+                                <div class="controls">
+                                    <div class="input" style="margin-top: 5px;">
+                                        <div id="inputsGranularities"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="tab-pane subGroup" id="dw">
+                <div>
+                    <fieldset id="dwGranularitiesGroup" class="subGroup">
+                        <legend><?=___('Orga', 'add', 'reportsGranularitiesTitle')?></legend>
+                        <div>
+                            <div id="dwGranularities-line" class="control-group">
+                                <div class="controls">
+                                    <div class="input" style="margin-top: 5px;">
+                                        <div id="dwGranularities"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="tab-pane" id="validation">
+                <div class="alert alert-info"><?=___('Orga', 'add', 'addValidationMessage')?></div>
+                <div id="validationOrganization">
+                    <fieldset>
+                        <legend><?=___('Orga', 'add', 'addValidationTitle')?></legend>
+                        <ul>
+                        </ul>
+                    </fieldset>
+                </div>
+                <div id="validationMembers">
+                </div>
+                <div id="validationGranularities">
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group navigation-buttons">
+            <div class="control-label">
+                <button class="btn btn-warning navigation-previous hide" type="button">
+                    <i class="fa fa-chevron-left"></i> <?=___('Orga', 'add', 'navigationPrevious')?>
+                </button>
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary navigation-next" type="button">
+                    <?=___('Orga', 'add', 'navigationNext')?> <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary navigation-end hide" type="button">
+                    <?=___('Orga', 'add', 'navigationEnd')?> <i class="fa fa-check"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<div id="organizationBuilding" class="modal hide fade" data-backdrop="static">
+    <div class="modal-header">
+        <h3><?=___('Orga', 'add', 'organizationBuildingPopupTitle')?></h3>
+    </div>
+    <div class="modal-body">
+        <div class="alert alert-info">
+            <i class="fa fa-spinner fa-spin"></i>
+            <?=___('Orga', 'add', 'organizationBuildingMessage')?>
+        </div>
+    </div>
+</div>
+
+<script>
+    var globalAxisCounter = 0;
+    var globalMemberCounter = 0;
+
+    $('#organizationSteps a').click(function(e) { e.preventDefault(); });
+
+    $('#addOrganization .navigation-previous').on('click', function(e) {
+        e.preventDefault();
+        $('#organizationSteps li.active').addClass('disabled');
+        $('#organizationSteps li.active').prevAll(':not(.hide):not(.step-separator):first').children('a').tab('show');
+        $('#organizationSteps li.active').removeClass('disabled');
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
+    $('#addOrganization .navigation-next').on('click', function(e) {
+        e.preventDefault();
+        if (validateActiveTab()) {
+            $('#organizationSteps li.active').addClass('disabled');
+            $('#organizationSteps li.active').nextAll(':not(.hide):not(.step-separator):first').children('a').tab('show');
+            $('#organizationSteps li.active').removeClass('disabled');
+            window.scrollTo(0, 0);
+        }
+    });
+    $('#addOrganization .navigation-end').on('click', function(e) {
+        e.preventDefault();
+        $('#organizationBuilding').modal('show');
+        $.ajax({
+            url: $('#addOrganization').attr('action'),
+            type: 'POST',
+            data: parseFormData(),
+            success: function(data){
+                $('#addOrganization').parseFormValidation(data);
+                $('#organizationBuilding .modal-body').html(
+                    '<div class="alert alert-' + data.typeMessage + '">' +
+                        data.message +
+                    '</div>' +
+                    '<hr />' +
+                    '<p>' + data.info + '</p>' +
+                    '<a class="btn btn-primary pull-left" href="orga/organization">' +
+                        '<i class="fa fa-home"></i> ' +
+                        '<?=___('Orga', 'add', 'organizationBuildingGoHome')?>' +
+                    '</a> ' +
+                    '<a class="btn pull-right" href="orga/organization/add">' +
+                        '<i class="fa fa-plus"></i> ' +
+                        '<?=___('Orga', 'add', 'organizationBuildingAddMore')?>' +
+                    '</a> '
+                );
+            },
+            error: function(jqXHR) {
+                $('#addOrganization').parseFormErrors(jqXHR);
+                var response = $.parseJSON(jqXHR.responseText);
+
+                var errorType = 'error';
+                if (typeof(response.typeError) == 'string') {
+                    errorType = response.typeError;
+                }
+                var message = '<?=___('Orga', 'add', 'errorWhileCreatingOrganization')?>';
+                if (typeof(response.message) == 'string') {
+                    message = response.message;
+                }
+                var complementaryInfo = '<?=___('Orga', 'add', 'organizationTryAgainOrContactAdministrators')?>';
+                if (typeof(response.info) == 'string') {
+                    complementaryInfo = response.complementary;
+                }
+                $('#organizationBuilding .modal-body').html(
+                    '<div class="alert alert-' + errorType + '">' +
+                        message +
+                    '</div>' +
+                    '<hr />' +
+                    '<p>' + complementaryInfo + '</p>' +
+                    '<a class="btn btn-warning pull-right" href="#organizationBuilding" data-dismiss="modal">' +
+                        '<i class="fa fa-minus"></i> ' +
+                        '<?=___('Orga', 'add', 'organizationBuildingClosePopup')?>' +
+                    '</a>' +
+                    '<a class="btn btn-primary pull-left" href="orga/organization">' +
+                        '<i class="fa fa-home"></i> ' +
+                        '<?=___('Orga', 'add', 'organizationBuildingGoHome')?>' +
+                    '</a>'
+                );
+            }
+        });
+    });
+    $('#organizationBuilding').on('hidden', function() {
+        $('#organizationBuilding .modal-body').html(
+            '<div class="alert alert-info">' +
+                '<i class="fa fa-spinner fa-spin"></i>' +
+                ' <?=___('Orga', 'add', 'organizationBuildingMessage')?>' +
+            '</div>'
+        );
+    });
+
+    $('#organizationSteps a').on('shown', function (e) {
+        var currentTab = $(this);
+        var firstTab = $('#organizationSteps li:first a');
+        var lastTab = $('#organizationSteps li:not(.hide):last a');
+        var previousButton = $('.navigation-previous');
+        var nextButton = $('.navigation-next');
+        var endButton = $('.navigation-end');
+        previousButton.removeClass('hide');
+        nextButton.removeClass('hide');
+        endButton.removeClass('hide');
+        if (currentTab[0] == firstTab[0]) {
+            previousButton.addClass('hide');
+            endButton.addClass('hide');
+        } else if (currentTab[0] == lastTab[0]) {
+            nextButton.addClass('hide');
+        } else {
+            endButton.addClass('hide');
+        }
+    });
+
+    $('#organizationTemplate').on('change', function() {
+        var axesStep = $('#organizationSteps li a[href="#axes"]').parent();
+        var membersStep = $('#organizationSteps li a[href="#members"]').parent();
+        var granularitiesStep = $('#organizationSteps li a[href="#granularities"]').parent();
+        var dwStep = $('#organizationSteps li a[href="#dw"]').parent();
+
+        var organizationTemplate = $('#organizationTemplate').val();
+
+        axesStep.removeClass('hide');
+        axesStep.prev().removeClass('hide');
+        membersStep.removeClass('hide');
+        membersStep.prev().removeClass('hide');
+        granularitiesStep.removeClass('hide');
+        granularitiesStep.prev().removeClass('hide');
+        dwStep.removeClass('hide');
+        dwStep.prev().removeClass('hide');
+
+        if ((organizationTemplate != '<?=Orga_Service_OrganizationService::TEMPLATE_USER_INVENTORY?>')
+            && (organizationTemplate != '<?=Orga_Service_OrganizationService::TEMPLATE_USER_REPORTING?>')) {
+            axesStep.addClass('hide');
+            axesStep.prev().addClass('hide');
+            membersStep.addClass('hide');
+            membersStep.prev().addClass('hide');
+            granularitiesStep.addClass('hide');
+            granularitiesStep.prev().addClass('hide');
+            dwStep.addClass('hide');
+            dwStep.prev().addClass('hide');
+        }
+
+        if (organizationTemplate == '<?=Orga_Service_OrganizationService::TEMPLATE_USER_INVENTORY?>') {
+            dwStep.addClass('hide');
+            dwStep.prev().addClass('hide');
+        }
+    });
+
+    $('#addOrganization').on('click', '.addAggregation', function(e) {
+        e.preventDefault();
+        globalAxisCounter++;
+        var row = $(this).parent().parent().parent();
+        var parentAxisId = $('input[type="text"]', $(this).parent().parent()).attr('id');
+        var level = row.attr('data-level') * 1;
+        var identifier = 'mainAxis' + globalAxisCounter;
+        row.after(
+            '<div id="' + identifier + '-line" class="control-group" style="padding-left: ' + (level * 45) + 'px" data-level="' + (level + 1) + '">' +
+                '<label class="control-label" for="' + identifier + '"><?=___('Orga', 'add', 'organizationMainSubAxisLabel')?></label>' +
+                '<div class="controls">' +
+                    '<div class="input">' +
+                        '<input type="text" id="' + identifier + '" name="' + identifier + '" placeholder="<?=___('Orga', 'add', 'organizationMainSubAxisPlaceholder')?>">' +
+                        '<input type="hidden" id="' + identifier + '-parent" name="' + identifier + '-parent" value="' + parentAxisId + '">' +
+                    '</div>' +
+                    '<div class="input">' +
+                        '<button class="btn addAggregation"><i class="fa fa-plus"></i></button>' +
+                    '</div>' +
+                    '<div class="input">' +
+                        '<button class="btn removeAggregation"><i class="fa fa-minus"></i></button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+        );
+    });
+    $('#addOrganization').on('click', '.removeAggregation', function(e) {
+        e.preventDefault();
+        var row = $(this).parent().parent().parent();
+        row.nextUntil('[data-level="' + row.attr('data-level') + '"]').each(function() {
+            $(this).attr('data-level', ($(this).attr('data-level') * 1 - 1));
+            $(this).attr('style', 'padding-left: ' + (($(this).attr('data-level') - 1) * 45) + 'px');
+        });
+        row.remove();
+    });
+    $('#addOrganization').on('click', '.addMember', function(e) {
+        e.preventDefault();
+        globalMemberCounter++;
+        var row = $(this).parent().parent().parent();
+        var identifier = 'member' + globalMemberCounter;
+        var parentMembers = '';
+        $.each($(this).attr('data-parent-axes').split('|'), function() {
+            if (this != '') {
+                parentMembers +=
+                    '<div id="parentMember' + globalMemberCounter + this + '" class="input">' +
+                        '<select data-axis="' + this + '" name="parentMember' + globalMemberCounter + this + '">' +
+                        '</select>' +
+                    '</div>';
+            }
+        });
+        row.before(
+            '<div id="' + identifier + '-line" class="control-group">' +
+                '<div class="controls">' +
+                    '<div class="input">' +
+                        '<input type="text" name="' + identifier + '">' +
+                    '</div>' +
+                    parentMembers +
+                '</div>' +
+            '</div>'
+        );
+        $.each($(this).attr('data-parent-axes').split('|'), function() {
+            if (this != '') {
+                $('#members fieldset[data-axis="' + this + '"] .controls:first input').trigger('change');
+            }
+        });
+    });
+    $('#members').on('change', 'input', function(e) {
+        var fieldset = $(this).parent().parent().parent().parent().parent();
+        if ($('#members select[data-axis="' + fieldset.attr('data-axis') + '"]').length > 0) {
+            var options = '<option value=""></option>';
+            $('input', fieldset).each(function() {
+                if ($(this).val() != '') {
+                    options += '<option value="' + $(this).attr('name') + '">' + $(this).val() + '</option>';
+                }
+            });
+            $('#members select[data-axis="' + fieldset.attr('data-axis') + '"]').each(function() {
+                var previousVal = $(this).val();
+                $(this).html(options);
+                $(this).val(previousVal);
+            });
+        }
+    });
+
+    var validateActiveTab = function () {
+        $('form span.help-block').remove();
+        $('#addOrganization div.control-group').removeClass('error');
+        $('#addOrganization div.control-group').removeClass('warning');
+
+        var organizationTemplate = $('#organizationTemplate').val();
+
+        var state = true;
+        switch ($('#organizationSteps li.active a').attr('href')) {
+
+            case '#organization':
+                $('#validationMembers').html('');
+                $('#validationGranularities').html('');
+                $('#validationOrganization ul li.organizationLabel').remove();
+                $('#validationOrganization ul li.inventoryGranularity').remove();
+                $('#validationOrganization ul').prepend(
+                    '<li class="organizationLabel">' +
+                        '<strong><?=___('Orga', 'add', 'organizationLabel')?> : </strong>' +
+                        $('#organizationLabel').val() +
+                    '</li>'
+                );
+                if (organizationTemplate == '<?=Orga_Service_OrganizationService::TEMPLATE_DEMO?>') {
+                    alert('Résumé de validation non développé pour les templates');
+                }
+            break;
+
+            case '#axes':
+                var mainAxis = $('#mainAxis');
+                if (mainAxis.val() == '') {
+                    $('#mainAxis-line').addClass('error');
+                    mainAxis.after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    state = false;
+                }
+                $('#mainAxisGroup input').each(function() {
+                    if ($(this).val() == '') {
+                        var input = $(this);
+                        var parentLine = $('#' + $(this).attr('id') + '-line');
+                        parentLine.nextUntil('[data-level="' + parentLine.attr('data-level') + '"]').each(function() {
+                            var childInput = $('input', $(this));
+                            if (childInput.val() != '') {
+                                parentLine.addClass('warning');
+                                input.after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                                state = false;
+                                return false;
+                            }
+                        });
+                        if (!parentLine.hasClass('warning') && (parentLine.attr('data-level') != '1')) {
+                            parentLine.nextUntil('[data-level="' + parentLine.attr('data-level') + '"]').remove();
+                            parentLine.remove();
+                        }
+                    }
+                });
+                var timeAxis = $('#timeAxis');
+                if (timeAxis.val() == '') {
+                    timeAxis.parent().parent().parent().addClass('error');
+                    timeAxis.after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    state = false;
+                }
+
+                if (state == true) {
+                    $('#members > div').html('');
+                    $('#axes input[type="text"]').each(function() {
+                        if ($(this).val() != '') {
+                            var parentAxes = '';
+                            var parentMembersSelect = '';
+                            var parentLine = $('#' + $(this).attr('id') + '-line');
+                            parentLine.nextUntil('[data-level="' + parentLine.attr('data-level') + '"]', '[data-level="' + (parentLine.attr('data-level') * 1 + 1) + '"]').each(function() {
+                                var parentAxis = $(this).attr('id').substr(0, $(this).attr('id').length - 5);
+                                parentAxes += parentAxis + '|';
+                                parentMembersSelect +=
+                                    '<div id="parentMember' + globalMemberCounter + parentAxis + '" class="input">' +
+                                        '<select data-axis="' + parentAxis + '" name="parentMember' + globalMemberCounter + parentAxis + '">' +
+                                        '</select>' +
+                                    '</div>'
+                            });
+                            if (parentAxes.length > 0) {
+                                parentAxes = parentAxes.substr(0, parentAxes.length - 1);
+                            }
+                            $('#members > div').prepend(
+                                '<fieldset id="' + $(this).attr('name') + '-members" class="subGroup" data-axis="' + $(this).attr('id') + '">' +
+                                    '<legend>' + $(this).val() + '</legend>' +
+                                    '<div>' +
+                                        '<div id="member' + globalMemberCounter + '-line" class="control-group">' +
+                                            '<div class="controls">' +
+                                                '<div class="input">' +
+                                                    '<input type="text" name="member' + globalMemberCounter + '">' +
+                                                '</div>' +
+                                                parentMembersSelect +
+                                            '</div>' +
+                                        '</div>' +
+                                        '<div id="addMember' + $(this).attr('name') + '" class="control-group">' +
+                                            '<div class="controls">' +
+                                                '<div class="input">' +
+                                                    '<button class="btn addMember" data-parent-axes="' + parentAxes + '">' +
+                                                        '<i class="fa fa-plus"></i> <?=___('Orga', 'add', 'addMember')?>' +
+                                                    '</button>' +
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</fieldset>'
+                            );
+                            globalMemberCounter++;
+                        }
+                    });
+
+                    var inventoryGranularitiesList = [];
+                    var inputsGranularitiesList = [];
+                    var dwGranularitiesList = [];
+                    inputsGranularitiesList.push({ 'ref': "global", 'label': "<?=___('Orga', 'granularity', 'labelGlobalGranularity')?>"});
+                    dwGranularitiesList.push({ 'ref': "global", 'label': "<?=___('Orga', 'granularity', 'labelGlobalGranularity')?>   "});
+                    var timeAxisRef = 'timeAxis';
+                    var timeAxisLabel = $('#timeAxis').val();
+                    if ($('#subdivisionAxis').val() != '') {
+                        var subdivisionAxisRef = '|subdivisionAxis';
+                        var subdivisionAxisLabel = ' | ' + $('#subdivisionAxis').val();
+                    } else {
+                        var subdivisionAxisRef = '';
+                        var subdivisionAxisLabel = '';
+                    }
+                    var level = 1;
+                    inputsGranularitiesList.push({ 'ref': timeAxisRef + subdivisionAxisRef, 'label': timeAxisLabel + subdivisionAxisLabel});
+                    while ($('#axes div[data-level="' + level + '"]').length > 0) {
+                        var granularityAxes = '';
+                        var granularityLabel = '';
+                        $('#axes div.[data-level="' + level + '"]').each(function() {
+                            granularityAxes += $('input', $(this)).attr('name') + '|';
+                            granularityLabel += $('input', $(this)).val() + ' | ';
+                        });
+                        inventoryGranularitiesList.push({ 'ref': granularityAxes + timeAxisRef, 'label': granularityLabel + timeAxisLabel});
+                        inputsGranularitiesList.push({ 'ref': granularityAxes + timeAxisRef + subdivisionAxisRef, 'label': granularityLabel + timeAxisLabel + subdivisionAxisLabel});
+                        dwGranularitiesList.push({ 'ref': granularityAxes.substr(0, (granularityAxes.length - 1)), 'label': granularityLabel.substr(0, (granularityLabel.length - 3))});
+                        level++;
+                    }
+                    $('#inventoryGranularity-line .controls .input > div').html('');
+                    $(inventoryGranularitiesList).each(function() {
+                        $('#inventoryGranularity-line .controls .input > div').append(
+                            '<label for="inventoryGranularity' + this.ref + '" class="radio">' +
+                                '<input id="inventoryGranularity' + this.ref + '" name="inventoryGranularity" type="radio" value="' + this.ref  + '">' +
+                                ' <span>' + this.label + '</span>' +
+                            '</label>'
+                        );
+                    });
+                    $('#inputsGranularities-line .controls .input > div').html('');
+                    $(inputsGranularitiesList).each(function() {
+                        $('#inputsGranularities-line .controls .input > div').append(
+                            '<label for="inputsGranularity' + this.ref + '" class="checkbox">' +
+                                '<input id="inputsGranularity' + this.ref + '" name="inputsGranularity" type="checkbox" value="' + this.ref  + '">' +
+                                ' <span>' + this.label + '</span>' +
+                            '</label>'
+                        );
+                    });
+                    $('#dwGranularities-line .controls .input > div').html('');
+                    $(dwGranularitiesList).each(function() {
+                        $('#dwGranularities-line .controls .input > div').append(
+                            '<label for="dwGranularity' + this.ref + '" class="checkbox">' +
+                                '<input id="dwGranularity' + this.ref + '" name="dwGranularity" type="checkbox" value="' + this.ref  + '">' +
+                                ' <span>' + this.label + '</span>' +
+                            '</label>'
+                        );
+                    });
+                }
+            break;
+
+            case '#members':
+                $('#members select').each(function() {
+                    var inputVal = $(this).val();
+                    if (($('input', $(this).parent().parent()).val() != '') && ((inputVal == '') || (inputVal == null))) {
+                        $(this).parent().parent().parent().addClass('error');
+                        $(this).after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                        state = false;
+                    } else if ($('input[name="' + $(this).val() + '"]').val() == '') {
+                        $(this).parent().parent().parent().addClass('warning');
+                        $(this).after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                        $('input[name="' + $(this).val() + '"]').parent().parent().parent().addClass('warning');
+                        $('input[name="' + $(this).val() + '"]').after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                        state = false;
+                    }
+                });
+
+                if (state == true) {
+                    $('#validationMembers').html(
+                        '<fieldset>' +
+                            '<legend><?=___('Orga', 'add', 'members')?></legend>' +
+                            '<ul>' +
+                            '</ul>' +
+                        '</fieldset>'
+                    );
+                    $('#axes input[type="text"]').each(function() {
+                        if ($(this).val() != '') {
+                            var members = '';
+                            $('#' + $(this).attr('name') + '-members input').each(function() {
+                                if ($(this).val() != '') {
+                                    members += $(this).val();
+                                    var parentMembers = '';
+                                    $('select', $(this).parent().parent()).each(function () {
+                                        parentMembers += $('input[name="' + $(this).val() + '"]').val() + ', ';
+                                    });
+                                    if (parentMembers.length > 0) {
+                                        members += ' (' + parentMembers.substr(0, (parentMembers.length - 2)) + ')'
+                                    }
+                                    members += ', '
+                                }
+                            });
+                            if (members.length > 0) {
+                                members = members.substr(0, (members.length - 2))
+                            }
+                            $('#validationMembers ul').append(
+                                '<li>' +
+                                    '<strong>' + $(this).val() + ' : </strong>'
+                                    + members +
+                                '</li>'
+                            );
+                        }
+                    });
+                }
+            break;
+
+            case '#granularities':
+                var inventoryGranularity = $('#granularities input[name="inventoryGranularity"]:checked');
+                if (inventoryGranularity.length == 0) {
+                    $('#inventoryGranularity-line').addClass('error');
+                    $('#inventoryGranularity-line .controls').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    state = false;
+                }
+                var inputsGranularity = $('#granularities input[name="inputsGranularity"]:checked');
+                if (inputsGranularity.length == 0) {
+                    $('#inputsGranularities-line').addClass('error');
+                    $('#inputsGranularities-line .controls').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    state = false;
+                }
+
+                if (state == true) {
+                    $('#validationOrganization ul li.inventoryGranularity').remove();
+                    $('#validationOrganization ul').append(
+                        '<li class="inventoryGranularity">' +
+                            '<strong><?=___('Orga', 'add', 'inventoryGranularityLabel')?> : </strong>' +
+                            $('#granularities input[name="inventoryGranularity"]:checked').next().html() +
+                        '</li>'
+                    );
+                    var inputsGranularities = '';
+                    $('#granularities input[name="inputsGranularity"]:checked').each(function() {
+                        inputsGranularities += '<li>' + $(this).next().html() + '</li>';
+                    });
+                    $('#validationGranularities .inputsGranularities').remove();
+                    $('#validationGranularities').html(
+                        '<fieldset class="inputsGranularities">' +
+                            '<legend><?=___('Orga', 'add', 'inputsGranularitiesLabel')?></legend>' +
+                            '<ul>' +
+                                inputsGranularities +
+                            '</ul>' +
+                        '</fieldset>'
+                    );
+                }
+            break;
+
+            case '#dw':
+                var dwGranularity = $('#dw input[name="dwGranularity"]:checked');
+                if (dwGranularity.length == 0) {
+                    $('#dw fieldset:first .control-group').addClass('error');
+                    $('#dw fieldset:first .controls').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    state = false;
+                }
+
+                var dwsGranularities = '';
+                $('#dw fieldset:first input[name="dwGranularity"]:checked').each(function() {
+                    dwsGranularities += '<li>' + $(this).next().html() + '</li>';
+                });
+                $('#validationGranularities .reportsGranularities').remove();
+                $('#validationGranularities').append(
+                    '<fieldset class="reportsGranularities">' +
+                        '<legend><?=___('Orga', 'add', 'reportsGranularitiesLabel')?></legend>' +
+                        '<ul>' +
+                            dwsGranularities +
+                        '</ul>' +
+                    '</fieldset>'
+                );
+            break;
+
+        }
+        return state;
+    };
+
+    var parseFormData = function ()
+    {
+        var data = 'addOrganization={';
+
+        var children = $('#addOrganization div.tab-content').children();
+        for(var key = 0; key < children.length; key++) {
+            var child = $(children[key]);
+            if (child.hasClass('control-group')) {
+                data += '"' + child.attr('id').replace('-line', '') + '": ' + child.parseFormLine() + ', ';
+            } else if (child.hasClass('subGroup')) {
+                data += '"' + child.attr('id') + '": ' + child.parseFormGroup() + ', ';
+            }
+        }
+        if (data.substring(data.length, data.length-1) !== '{') {
+            data = data.slice(0, -2);
+        }
+        data += '}';
+        return data;
+    };
+
+    $().ready(function() {
+        $('#addOrganization a[data-toggle="tooltip"]').tooltip();
+    });
+</script>

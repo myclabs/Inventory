@@ -8,8 +8,8 @@ $columnControl = new UI_Datagrid_Col_Text('control', __('Classif', 'control', 's
 $datagrid->addCol($columnControl);
 
 $columnDiag = new UI_Datagrid_Col_Bool('diag', __('UI', 'name', 'diagnostic'));
-$columnDiag->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'ok');
-$columnDiag->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'nok');
+$columnDiag->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'other', 'ok');
+$columnDiag->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'other', 'nok');
 $datagrid->addCol($columnDiag);
 
 $columnFail = new UI_Datagrid_Col_Text('fail', __('Classif', 'control', 'abnormalItems'));

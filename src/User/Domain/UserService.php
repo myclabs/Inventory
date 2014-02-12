@@ -82,10 +82,11 @@ class UserService
     }
 
     /**
-     * Crée et initialise un nouvel utilisateur
+     * Crée et initialise un nouvel utilisateur.
      *
      * @param string $email
      * @param string $password
+     * @throws Core_Exception_InvalidArgument Email invalide.
      * @return User
      */
     public function createUser($email, $password)
@@ -96,9 +97,7 @@ class UserService
             throw new Core_Exception_InvalidArgument("Email invalide");
         }
 
-        $user = new User();
-        $user->setEmail($email);
-        $user->setPassword($password);
+        $user = new User($email, $password);
         // Ajoute le role utilisateur
         $this->aclService->addRole($user, new UserRole($user));
 

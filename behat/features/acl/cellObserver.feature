@@ -1,7 +1,7 @@
 @dbFull
 Feature: Cell observer feature
 
-  @javascript
+  @javascript @readOnly
   Scenario: Observer of a single cell
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -38,7 +38,7 @@ Feature: Cell observer feature
     And I should not see a "#container a:contains('Rôles')" element
     And I should not see a "#container a:contains('Reconstruction')" element
 
-  @javascript
+  @javascript @readOnly
   Scenario: Observer of several cells
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -46,14 +46,13 @@ Feature: Cell observer feature
     When I fill in "email" with "observateur.site@toto.com"
     And I fill in "password" with "observateur.site@toto.com"
     And I click "connection"
-  # On tombe sur le datagrid des cellules
-    Then I should see the "listCells" datagrid
-    And the row 1 of the "listCells" datagrid should contain:
-      | label  | access      |
-      | Annecy | Observateur |
+  # On tombe sur la liste des cellules
+    Then I should see "Observateur Annecy"
+    And I should see "Observateur Chambéry"
   # Accès à une des cellules
-    When I click "Accéder aux saisies" in the row 1 of the "listCells" datagrid
-    Then I should see "Annecy Workspace avec données"
+    When I click "Observateur Annecy"
+    Then I should see "Workspace avec données"
+    Then I should see "Annecy"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity5Input8" datagrid
   # Accès à l'onglet "Analyses", vérification que l'utilisateur peut bien voir les analyses préconfigurées
@@ -69,5 +68,3 @@ Feature: Cell observer feature
     And the row 2 of the "reportValues" datagrid should contain:
       | valueAxiso_annee | valueDigital | valueUncertainty |
       | 2013                | 10           | 15               |
-
-

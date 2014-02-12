@@ -18,10 +18,14 @@ class Orga_Model_InputComment
      */
     private $comment;
 
-    public function __construct(Orga_Model_Cell $cell, Social_Model_Comment $comment)
+    public function __construct(/*Orga_Model_Cell */$cell, /*Social_Model_Comment */$comment)
     {
-        $this->cell = $cell;
-        $this->comment = $comment;
+//        $this->cell = $cell;
+//        $this->comment = $comment;
+        //@see http://www.doctrine-project.org/jira/browse/DDC-2694
+        //@todo Corriger dans le Orga_Model_Repository_Cell
+        $this->cell = Orga_Model_Cell::load($cell);
+        $this->comment = Social_Model_Comment::load($comment);
     }
 
     /**

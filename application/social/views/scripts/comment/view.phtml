@@ -15,11 +15,11 @@ $canEdit = ($comment->getAuthor() === $this->currentUser);
 
         <?php if ($canEdit) : ?>
             <button type="button" class="editComment btn btn-mini">
-                <i class="icon-edit"></i>
+                <i class="fa fa-pencil-square-o"></i>
                 <?=__('UI', 'verb', 'edit')?>
             </button>
             <button type="button" class="deleteComment btn btn-mini">
-                <i class="icon-trash"></i>
+                <i class="fa fa-trash-o"></i>
                 <?=__('UI', 'verb', 'delete')?>
             </button>
         <?php endif; ?>

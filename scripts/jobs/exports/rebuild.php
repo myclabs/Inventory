@@ -75,7 +75,7 @@ class RebuildExports
                 $this->entityManager->clear();
                 $inputGranularity = Orga_Model_Granularity::load($inputGranularity->getId());
                 echo "\t\t->".$inputGranularity->getLabel().PHP_EOL;
-                foreach ($inputGranularity->getCells() as $inputCell) {
+                foreach ($inputGranularity->getOrderedCells() as $inputCell) {
                     if (!(count(glob($this->directoryInputsExports . $inputCell->getId() . '.*')) >0)) {
                         $inputCell = Orga_Model_Cell::load($inputCell->getId());
                         $this->exportService->saveCellInput($inputCell);

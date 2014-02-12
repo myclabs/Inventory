@@ -8,15 +8,23 @@
 
 		<!-- Statuts d'avancement -->
 
-		<tu tuid="statusInProgress">
-			<tuv xml:lang="fr">
-				<seg>Saisie en cours</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>In progress</seg>
-			</tuv>
-		</tu>
-		<tu tuid="statusInputIncomplete">
+        <tu tuid="statusNotStarted">
+            <tuv xml:lang="fr">
+                <seg>Saisie non démarrée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Not started</seg>
+            </tuv>
+        </tu>
+        <tu tuid="statusInProgress">
+            <tuv xml:lang="fr">
+                <seg>Saisie en cours</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>In progress</seg>
+            </tuv>
+        </tu>
+        <tu tuid="statusInputIncomplete">
 			<tuv xml:lang="fr">
 				<seg>Saisie incomplète</seg>
 			</tuv>
@@ -117,11 +125,26 @@
 				<seg>Enregistrement effectué (saisie complète).</seg>
 			</tuv>
 			<tuv xml:lang="en">
-				<seg>Saving done (complete input).</seg>
+				<seg>Input saved (complete input).</seg>
 			</tuv>
 		</tu>
+        <tu tuid="completeInputSavedCalculationErrorUnknownTechnoMember">
+            <tuv xml:lang="fr">
+                <seg>
+                    Enregistrement effectué.
+                    La saisie est complète, mais un problème est intervenu dans l'exécution des calculs :
+                    le membre « [MEMBER] » pour la coordonnée « [DIMENSION] » de la famille « [FAMILY] » est introuvable.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Input saved. The input is complete, but the calculation failed:
+                    the parameter "[PARAMETER]" of the family "[FAMILY]" doesn't exist.
+                </seg>
+            </tuv>
+        </tu>
 
-		<!-- Contenus des popups de confirmation au clic sur « Réinitialiser » 
+		<!-- Contenus des popups de confirmation au clic sur « Réinitialiser »
 			ou « Quitter » -->
 
 		<tu tuid="confirmReinitializeInput">
@@ -141,7 +164,7 @@
 			</tuv>
 		</tu>
 
-		<!-- Messages à afficher pour l'aperçu des résultats, les résultats, les 
+		<!-- Messages à afficher pour l'aperçu des résultats, les résultats, les
 			détails calculs -->
 
 		<tu tuid="incompleteInput">
@@ -168,6 +191,14 @@
                 <seg>Saved input is complete but has not generated any result.</seg>
             </tuv>
         </tu>
+        <tu tuid="emptyRequiredField">
+            <tuv xml:lang="fr">
+                <seg>Champ obligatoire pour atteindre le statut : complet.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This field is mandatory to reach the status: complete.</seg>
+            </tuv>
+        </tu>
 
         <!-- Message lors de la modification du caractère terminée ou non -->
 
@@ -184,4 +215,3 @@
 
 	</body>
 </tmx>
-        

@@ -32,7 +32,7 @@ class FeatureContext extends MinkContext
      */
     public function setWindowSize()
     {
-        $this->getSession()->resizeWindow(1280, 1024);
+        $this->getSession()->resizeWindow(1500, 1024);
     }
 
     /**
@@ -53,6 +53,7 @@ class FeatureContext extends MinkContext
             new Step\Given('I fill in "email" with "admin@myc-sense.com"'),
             new Step\Given('I fill in "password" with "myc-53n53"'),
             new Step\Given('I press "connection"'),
+//            new Step\Given('I wait for 5 seconds'),
             new Step\Given('I wait for page to finish loading'),
         ];
     }
@@ -169,7 +170,7 @@ class FeatureContext extends MinkContext
     {
         $value = $this->fixStepArgument($value);
 
-        $selector = ".control-group:contains(\"$label\") .input label:contains(\"$value\")>input";
+        $selector = ".control-group:contains(\"$label\") label:contains(\"$value\")>input";
 
         /** @var NodeElement[] $nodes */
         $nodes = $this->getSession()->getPage()->findAll('css', $selector);
@@ -356,5 +357,14 @@ class FeatureContext extends MinkContext
             }
         }
         return true;
+    }
+    /**
+     * @Then /^(?:|I )should see the "(?P<form>[^"]*)" form$/
+     */
+    public function assertFormVisible($form)
+    {
+        $this->waitForPageToFinishLoading();
+
+        $this->assertSession()->elementExists('css', "#{$form}.form");
     }
 }

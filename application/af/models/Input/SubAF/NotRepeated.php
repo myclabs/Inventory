@@ -13,7 +13,6 @@
  */
 class AF_Model_Input_SubAF_NotRepeated extends AF_Model_Input_SubAF
 {
-
     /**
      * Value of the subAF element which is a SubSet
      * @var AF_Model_InputSet_Sub
@@ -62,4 +61,11 @@ class AF_Model_Input_SubAF_NotRepeated extends AF_Model_Input_SubAF
         return 0;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function hasValue()
+    {
+        return false;
+    }
 }

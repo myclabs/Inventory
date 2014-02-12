@@ -2,6 +2,7 @@
 
 namespace Techno\Application\Form;
 
+use UI_Form_Element_Textarea;
 use Zend_View_Helper_Url;
 use Techno\Domain\Family\Family;
 use UI_Form;
@@ -47,6 +48,13 @@ class EditFamilyForm extends UI_Form
         $unit->setLabel(__('Unit', 'name', 'unit'));
         $unit->setValue($family->getUnit()->getRef());
         $this->addElement($unit);
+
+        // Documentation
+        $documentationField = new UI_Form_Element_Textarea('documentation');
+        $documentationField->setLabel(__('UI', 'name', 'documentation'));
+        $documentationField->setWithMarkItUp(true);
+        $documentationField->setValue($family->getDocumentation());
+        $this->addElement($documentationField);
 
         // Id de la famille
         $idFamilyField = new UI_Form_Element_Hidden('id');

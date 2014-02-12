@@ -1,4 +1,0 @@
-Techno\Domain\Family\ProcessFamily:
-  type: entity
-  repositoryClass: \Techno\Architecture\Repository\FamilyRepository
-  table: Techno_Family_Process

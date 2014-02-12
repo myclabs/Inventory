@@ -154,7 +154,7 @@ class Orga_Service_Export
             function (Orga_Model_Cell $cell) {
                 $organization = $cell->getGranularity()->getOrganization();
                 $axes = [];
-                foreach ($organization->getAxes() as $organizationAxis) {
+                foreach ($organization->getFirstOrderedAxes() as $organizationAxis) {
                     foreach ($cell->getMembers() as $member) {
                         if ($organizationAxis->isNarrowerThan($member->getAxis())) {
                             continue;
@@ -285,7 +285,7 @@ class Orga_Service_Export
         );
         $modelBuilder->bind('userColumnFirstName', __('User', 'user', 'firstName'));
         $modelBuilder->bind('userColumnLastName', __('User', 'user', 'lastName'));
-        $modelBuilder->bind('userColumnEmail', __('UI', 'name', 'emailAddress'));
+        $modelBuilder->bind('userColumnEmail',  __('User', 'user', 'emailAddress'));
         $modelBuilder->bind('userColumnRole', __('User', 'role', 'role'));
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
@@ -476,7 +476,7 @@ class Orga_Service_Export
                 }
                 $cellInputsEndData = $cellInputsPHPExcel->getActiveSheet()->getHighestColumn() . $cellInputsEndDataRow;
                 $cellInputsData = $cellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $cellInputsEndData);
-                $granularitySheet->fromArray($cellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1));
+                $granularitySheet->fromArray($cellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1), true);
                 $cellInputsPHPExcel->disconnectWorksheets();
                 unset($cellInputsPHPExcel);
             }
@@ -521,7 +521,7 @@ class Orga_Service_Export
         $queryOrganizationAxes->order->addOrder(Orga_Model_Axis::QUERY_NARROWER);
         $queryOrganizationAxes->order->addOrder(Orga_Model_Axis::QUERY_POSITION);
         $orgaAxes = [];
-        foreach ($cell->getGranularity()->getOrganization()->getAxes() as $organizationAxis) {
+        foreach ($cell->getGranularity()->getOrganization()->getFirstOrderedAxes() as $organizationAxis) {
             foreach ($cell->getGranularity()->getAxes() as $granularityAxis) {
                 if ($organizationAxis->isNarrowerThan($granularityAxis)) {
                     continue;

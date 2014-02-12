@@ -48,7 +48,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                                                                             'edit_algos',
                                                                             'af',
                                                                             ['id' => $algo->getId()]),
-                                                        '<i class="icon-zoom-in"></i> ' . __('Algo',
+                                                        '<i class="fa fa-search-plus"></i> ' . __('Algo',
                                                                                              'name',
                                                                                              'indexation'));
                 $this->addLine($data);

@@ -7,7 +7,6 @@
  */
 
 use Core\Test\TestCase;
-use Keyword\Domain\Keyword;
 use Unit\UnitAPI;
 
 /**
@@ -15,7 +14,6 @@ use Unit\UnitAPI;
  */
 class Numeric_ConstantTest
 {
-
     /**
      * Lance les autre classe de tests.
      */
@@ -107,7 +105,6 @@ class Numeric_ConstantTest
         $entityManagers = Zend_Registry::get('EntityManagers');
         $entityManagers['default']->flush();
     }
-
 }
 
 
@@ -117,7 +114,6 @@ class Numeric_ConstantTest
  */
 class Numeric_ConstantSetUpTest extends TestCase
 {
-
     /**
      * Méthode appelée avant l'appel à la classe de test
      */
@@ -131,13 +127,6 @@ class Numeric_ConstantSetUpTest extends TestCase
         }
         foreach (Algo_Model_Algo::loadList() as $o) {
             $o->delete();
-        }
-        /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
-        if ($keywordRepository->count() > 0) {
-            foreach ($keywordRepository->getAll() as $o) {
-                $keywordRepository->remove($o);
-            }
         }
         foreach (Classif_Model_Context::loadList() as $o) {
             $o->delete();
@@ -154,7 +143,7 @@ class Numeric_ConstantSetUpTest extends TestCase
     /**
      * @return Algo_Model_Numeric_Constant $o
      */
-    function testConstruct()
+    public function testConstruct()
     {
         $set = new Algo_Model_Set();
         $set->save();
@@ -178,7 +167,7 @@ class Numeric_ConstantSetUpTest extends TestCase
      * @param Algo_Model_Numeric_Constant $o
      * @return Algo_Model_Numeric_Constant $o
      */
-    function testLoad(Algo_Model_Numeric_Constant $o)
+    public function testLoad(Algo_Model_Numeric_Constant $o)
     {
         $this->entityManager->clear();
         /** @var $oLoaded Algo_Model_Numeric_Constant */
@@ -192,7 +181,7 @@ class Numeric_ConstantSetUpTest extends TestCase
      * @depends testLoad
      * @param Algo_Model_Numeric_Constant $o
      */
-    function testDelete(Algo_Model_Numeric_Constant $o)
+    public function testDelete(Algo_Model_Numeric_Constant $o)
     {
         $o->delete();
         $o->getSet()->delete();
@@ -202,7 +191,6 @@ class Numeric_ConstantSetUpTest extends TestCase
         $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
                             $this->entityManager->getUnitOfWork()->getEntityState($o));
     }
-
 }
 
 
@@ -212,7 +200,6 @@ class Numeric_ConstantSetUpTest extends TestCase
  */
 class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -232,13 +219,6 @@ class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
         foreach (Algo_Model_Algo::loadList() as $o) {
             $o->delete();
         }
-        /** @var KeywordRepository $keywordRepository */
-        $keywordRepository = $entityManager->getRepository('\Keyword\Domain\Keyword');
-        if ($keywordRepository->count() > 0) {
-            foreach ($keywordRepository->getAll() as $o) {
-                $keywordRepository->remove($o);
-            }
-        }
         foreach (Classif_Model_Context::loadList() as $o) {
             $o->delete();
         }
@@ -248,7 +228,7 @@ class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
     /**
      * Set up
      */
-    function setUp()
+    public function setUp()
     {
         $entityManagers = Zend_Registry::get('EntityManagers');
         $this->entityManager = $entityManagers['default'];
@@ -257,12 +237,11 @@ class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
     /**
      * Test de la méthode execute()
      */
-    function testExecute()
+    public function testExecute()
     {
         $numericConstant = Numeric_ConstantTest::generateObject();
         $inputSet = $this->getMockForAbstractClass('Algo_Model_InputSet');
         $result = $numericConstant->execute($inputSet);
         $this->assertTrue($result instanceof Calc_UnitValue);
     }
-
 }

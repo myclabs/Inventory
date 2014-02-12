@@ -326,4 +326,31 @@ class User_ProfileController extends Core_Controller
         $this->view->user = $user;
     }
 
+    /**
+     * Passe un tutoriel (ou tous si tutorial = all)
+     * @Secure("editUser")
+     */
+    public function dismissTutorialAction()
+    {
+        $tutorial = $this->getParam('tutorial');
+
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->_helper->auth();
+        $loggedInUser->dismissTutorial($tutorial);
+
+        $this->sendJsonResponse([]);
+    }
+
+    /**
+     * Remet à zéro tous les états d'avancements des tutoriels
+     * @Secure("editUser")
+     */
+    public function resetTutorialsAction()
+    {
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->_helper->auth();
+        $loggedInUser->initTutorials();
+
+        $this->sendJsonResponse([]);
+    }
 }

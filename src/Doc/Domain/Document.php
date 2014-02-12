@@ -5,8 +5,6 @@ namespace Doc\Domain;
 use Core_Exception_InvalidArgument;
 use Core_Model_Entity;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Exception;
 
 /**
@@ -17,7 +15,6 @@ use Exception;
  */
 class Document extends Core_Model_Entity
 {
-
     const QUERY_NAME = 'name';
     const QUERY_LIBRARY = 'library';
 
@@ -56,12 +53,6 @@ class Document extends Core_Model_Entity
      */
     protected $library;
 
-    /**
-     * Liste des bibliographies qui référencent ce document
-     * @var Bibliography[]|Collection
-     */
-    protected $referencingBibliographies;
-
 
     /**
      * @param Library $library  Bibliothèque dans laquelle se trouve le document
@@ -72,7 +63,6 @@ class Document extends Core_Model_Entity
     public function __construct(Library $library, $filePath, $name = null)
     {
         $this->setFilePath($filePath);
-        $this->referencingBibliographies = new ArrayCollection();
         $this->library = $library;
         // Nom par défaut : nom du fichier
         if ($name === null) {
@@ -186,41 +176,4 @@ class Document extends Core_Model_Entity
     {
         return $this->library;
     }
-
-    /**
-     * @return Bibliography[] Liste des bibliographies qui utilisent ce document
-     */
-    public function getReferencingBibliographies()
-    {
-        return $this->referencingBibliographies->toArray();
-    }
-
-    /**
-     * @return int Nombre de bibliographies qui utilisent ce document
-     */
-    public function getReferencingBibliographiesCount()
-    {
-        return $this->referencingBibliographies->count();
-    }
-
-    /**
-     * @param Bibliography $bibliography
-     */
-    public function addReferencingBibliography(Bibliography $bibliography)
-    {
-        if (!$this->referencingBibliographies->contains($bibliography)) {
-            $this->referencingBibliographies->add($bibliography);
-        }
-    }
-
-    /**
-     * @param Bibliography $bibliography
-     */
-    public function removeReferencingBibliography(Bibliography $bibliography)
-    {
-        if ($this->referencingBibliographies->contains($bibliography)) {
-            $this->referencingBibliographies->removeElement($bibliography);
-        }
-    }
-
 }

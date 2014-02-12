@@ -17,6 +17,7 @@ class UI_Form_Decorator_Help extends Zend_Form_Decorator_Abstract
     /**
      * @param string $content
      * @see Zend/Form/Decorator/Zend_Form_Decorator_Abstract::render()
+     * @return string
      */
     public function render($content)
     {
@@ -25,8 +26,8 @@ class UI_Form_Decorator_Help extends Zend_Form_Decorator_Abstract
             'tag'          => 'a',
             'id'           => $this->getElement()->getId().'-help',
             'link'         => '#',
-            'onMouseout'   => '$(this).children(\'.icon-question-sign\').css(\'opacity\', 0.3);',
-            'onMouseover'  => '$(this).children(\'.icon-question-sign\').css(\'opacity\', 1);',
+            'onMouseout'   => '$(this).children(\'.fa-question-circle\').css(\'opacity\', 0.3);',
+            'onMouseover'  => '$(this).children(\'.fa-question-circle\').css(\'opacity\', 1);',
             'rel'          => 'popover',
             'data-content' => 'helpWillBeReplace',
             'style'        => 'display: inline-block; margin-left: 5px; padding-top: -5px;',
@@ -34,7 +35,7 @@ class UI_Form_Decorator_Help extends Zend_Form_Decorator_Abstract
 
         $iOptions = array(
             'tag'   => 'i',
-            'class' => 'icon-question-sign',
+            'class' => 'fa fa-question-circle',
             'style' => 'opacity: 0.3;'
         );
 

@@ -2,7 +2,15 @@
 <tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
-    
+
+        <tu tuid="deleteDimension">
+            <tuv xml:lang="fr">
+                <seg>Supprimer cette dimension</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Delete this dimension</seg>
+            </tuv>
+        </tu>
         <tu tuid="pageTitle">
             <tuv xml:lang="fr">
                 <seg>Édition d'une dimension</seg>
@@ -19,23 +27,35 @@
                 <seg>Return to family</seg>
             </tuv>
         </tu>
-        <tu tuid="addPanelTitle">
+        <tu tuid="addMembers">
             <tuv xml:lang="fr">
-                <seg>Ajout d'un élément</seg>
+                <seg>Ajouter des membres</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of an element</seg>
+                <seg>Add members</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addMemberList">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'une liste de membres</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Insertion of a list of members</seg>
             </tuv>
         </tu>
 
-        <!-- Messages -->
-
-        <tu tuid="dimensionHasKeyword">
+        <tu tuid="warningEditingDimensions">
             <tuv xml:lang="fr">
-                <seg>Ce mot clé figure déjà parmi les mots clés de la dimension.</seg>
+                <seg>
+                    Attention! Si vous modifiez les dimensions, il est nécessaire de
+                    réouvrir (rafraichir) cette page si vous voulez ensuite modifier les paramètres.
+                </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>This keyword already exists among dimension keywords.</seg>
+                <seg>
+                    Warning! If you edit the dimensions, you will need to reopen (refresh)
+                    this page if you then want to edit the parameters.
+                </seg>
             </tuv>
         </tu>
 

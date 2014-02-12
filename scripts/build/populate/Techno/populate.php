@@ -1,39 +1,16 @@
 <?php
 
-use Keyword\Application\Service\KeywordService;
-use Keyword\Domain\Keyword;
-use Techno\Domain\Element\CoeffElement;
-use Techno\Domain\Element\ProcessElement;
 use Techno\Domain\Family\Family;
-use Techno\Domain\Family\CoeffFamily;
 use Techno\Domain\Family\Dimension;
 use Techno\Domain\Family\Member;
-use Techno\Domain\Family\ProcessFamily;
-use Techno\Domain\Meaning;
 use Techno\Domain\Category;
+use Unit\UnitAPI;
 
 /**
  * Remplissage de la base de données avec des données de test
- * @package Techno
  */
 class Techno_Populate extends Core_Script_Action
 {
-
-    private $meanings = [];
-
-    /**
-     * @var \Keyword\Application\Service\KeywordService
-     */
-    protected $keywordService;
-
-
-    function __construct()
-    {
-        /** @var DI\Container $container */
-        $container = Zend_Registry::get('container');
-        $this->keywordService = $container->get(KeywordService::class);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -49,7 +26,7 @@ class Techno_Populate extends Core_Script_Action
         // Params : ref
         // OptionalParams : Category parent=null
 
-        // Création des familles (Coef ou Process).
+        // Création des familles.
         //  + createFamily : -
         // Params : Category, ref, label, refUnit, refBaseUnit
         // OptionalParams : documentation=''
@@ -61,11 +38,11 @@ class Techno_Populate extends Core_Script_Action
         // Création des dimensions.
         //  + createVerticalDimension : -
         //  + createHorizontalDimension : -
-        // Params: Family, refKeyword, refKeywordMembers[]
+        // Params: Family, ref, label, refMembers[]
 
         // Création des paramètres.
         //  + createParameter : -
-        // Params : Family, refKeywordMembers[], value
+        // Params : Family, refMembers[], value
         // OptionalParams : uncertainty=0
 
 
@@ -79,7 +56,7 @@ class Techno_Populate extends Core_Script_Action
      * @param Category $parent
      * @return Category
      */
-    protected function createCategory($label, Category $parent=null)
+    protected function createCategory($label, Category $parent = null)
     {
         $category = new Category($label);
         if ($parent !== null) {
@@ -98,47 +75,17 @@ class Techno_Populate extends Core_Script_Action
      * @param $documentation
      * @return Family
      */
-    protected function createFamilyProcess(Category $category, $ref, $label, $refBaseUnit, $refUnit,
-        $documentation='')
-    {
-        $family = new ProcessFamily();
-        return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit, $documentation);
-    }
+    protected function createFamily(
+        Category $category,
+        $ref,
+        $label,
+        $refUnit,
+        $documentation = ''
+    ) {
+        $family = new Family($ref, $label);
 
-    /**
-     * @param Category $category
-     * @param $ref
-     * @param $label
-     * @param $refBaseUnit
-     * @param $refUnit
-     * @param $documentation
-     * @return Family
-     */
-    protected function createFamilyCoef(Category $category, $ref, $label, $refBaseUnit, $refUnit,
-        $documentation='')
-    {
-        $family = new CoeffFamily();
-        return $this->createFamily($family, $category, $ref, $label, $refUnit, $refBaseUnit, $documentation);
-    }
-
-    /**
-     * @param Family $family
-     * @param Category $category
-     * @param $ref
-     * @param $label
-     * @param $refBaseUnit
-     * @param $refUnit
-     * @param $documentation
-     * @return Family
-     */
-    protected function createFamily(Family $family, Category $category, $ref, $label, $refBaseUnit, $refUnit,
-        $documentation='')
-    {
         $family->setCategory($category);
-        $family->setRef($ref);
-        $family->setLabel($label);
-        $family->setBaseUnit(new \Unit\UnitAPI($refBaseUnit));
-        $family->setUnit(new \Unit\UnitAPI($refUnit));
+        $family->setUnit(new UnitAPI($refUnit));
         $family->setDocumentation($documentation);
         $family->save();
         return $family;
@@ -146,78 +93,59 @@ class Techno_Populate extends Core_Script_Action
 
     /**
      * @param Family $family
-     * @param string $refKeyword
-     * @param string[] $keywordMembers
+     * @param string $ref
+     * @param string $label
+     * @param string[] $members
      */
-    protected function createHorizontalDimension(Family $family, $refKeyword, array $keywordMembers)
+    protected function createHorizontalDimension(Family $family, $ref, $label, array $members)
     {
-        $this->createDimension($family, $refKeyword, Dimension::ORIENTATION_HORIZONTAL, $keywordMembers);
+        $this->createDimension($family, $ref, $label, Dimension::ORIENTATION_HORIZONTAL, $members);
     }
 
     /**
      * @param Family $family
-     * @param string $refKeyword
-     * @param string[] $keywordMembers
+     * @param string $ref
+     * @param string $label
+     * @param string[] $members
      */
-    protected function createVerticalDimension(Family $family, $refKeyword, array $keywordMembers)
+    protected function createVerticalDimension(Family $family, $ref, $label, array $members)
     {
-        $this->createDimension($family, $refKeyword, Dimension::ORIENTATION_VERTICAL, $keywordMembers);
+        $this->createDimension($family, $ref, $label, Dimension::ORIENTATION_VERTICAL, $members);
     }
 
     /**
      * @param Family $family
-     * @param string $refKeyword
+     * @param string $ref
+     * @param string $label
      * @param int $orientation
-     * @param string[] $keywordMembers
+     * @param string[] $members
      */
-    protected function createDimension(Family $family, $refKeyword, $orientation, array $keywordMembers)
+    protected function createDimension(Family $family, $ref, $label, $orientation, array $members)
     {
-        if (!isset($this->meanings[$refKeyword])) {
-            $this->meanings[$refKeyword] = new Meaning();
-            $this->meanings[$refKeyword]->setKeyword($this->keywordService->get($refKeyword));
-            $this->meanings[$refKeyword]->save();
-        }
-        $dimension = new Dimension($family, $this->meanings[$refKeyword], $orientation);
-        foreach ($keywordMembers as $refKeyword) {
-            $member = new Member($dimension, $this->keywordService->get($refKeyword));
+        $dimension = new Dimension($family, $ref, $label, $orientation);
+        foreach ($members as $memberRef => $memberLabel) {
+            $member = new Member($dimension, $memberRef, $memberLabel);
             $member->save();
             $dimension->addMember($member);
         }
         $dimension->save();
     }
 
-    protected function createParameter(Family $family, array $refKeywordMembers, $value, $uncertainty=0)
+    protected function setParameter(Family $family, array $refMembers, $value, $uncertainty = 0)
     {
         // Récupère la cellule
         $members = [];
         foreach ($family->getDimensions() as $dimension) {
             foreach ($dimension->getMembers() as $member) {
-                if (in_array($member->getRef(), $refKeywordMembers)) {
+                if (in_array($member->getRef(), $refMembers)) {
                     $members[] = $member;
                 }
             }
         }
         $cell = $family->getCell($members);
-        // Vérifie qu'il n'y a pas déjà d'élément choisi
-        $chosenElement = $cell->getChosenElement();
-        if ($chosenElement !== null) {
-            throw new Core_Exception("Un élément est déjà choisi pour ces coordonnées.");
-        }
-        // Crée un élément vide et l'ajoute à la cellule
-        if ($family instanceof ProcessFamily) {
-            $element = new ProcessElement();
-        } else {
-            $element = new CoeffElement();
-        }
-        $element->setBaseUnit($family->getBaseUnit());
-        $element->setUnit($family->getUnit());
 
-        $calcValue = new Calc_Value($value, $uncertainty);
-        $element->setValue($calcValue);
+        $cell->setValue(new Calc_Value($value, $uncertainty));
 
-        $element->save();
-        $cell->setChosenElement($element);
         $cell->save();
     }
-
 }

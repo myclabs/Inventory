@@ -21,10 +21,6 @@ checkout:
       defined('APPLICATION_ENV') || define('APPLICATION_ENV', 'testsunitaires');
       EOL
 
-dependencies:
-  cache_directories:
-    - "vendor"
-
 database:
   override:
     - php scripts/build/build.php -e testsunitaires update
@@ -33,3 +29,4 @@ database:
 test:
   override:
     - phpunit
+    - php scripts/build/build.php -e testsunitaires create update populate populateTest

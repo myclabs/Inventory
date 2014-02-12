@@ -1,0 +1,81 @@
+<?php
+
+foreach ($this->granularities as $granularity) {
+    /** @var $granularity Orga_Model_Granularity */
+
+    $datagridGranularityRelevance = new UI_Datagrid(
+        'datagridCellRelevance'.$granularity->getId(),
+        'datagrid_organization_relevance',
+        'orga'
+    );
+
+    foreach ($granularity->getAxes() as $axis) {
+        $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $axis->getLabel());
+        $members = [];
+        foreach ($axis->getMembers() as $member) {
+            $members[$member->getTag()] = $member->getLabel();
+        }
+        $columnAxis->list = $members;
+        $columnAxis->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
+        $columnAxis->filterName = Orga_Model_Cell::QUERY_TAG;
+        $datagridGranularityRelevance->addCol($columnAxis);
+    }
+
+    $columnRelevance = new UI_Datagrid_Col_Bool('relevant');
+    $columnRelevance->label = ___('Orga', 'cellRelevance', 'relevance');
+    $columnRelevance->editable = true;
+    $columnRelevance->textTrue = ___('Orga', 'cellRelevance', 'relevantFem');
+    $columnRelevance->textFalse = ___('Orga', 'cellRelevance', 'irrelevantFem');
+    $columnRelevance->valueTrue = '<i class="fa fa-check"></i> '.___('Orga', 'cellRelevance', 'relevantFem');
+    $columnRelevance->valueFalse = '<i class="fa fa-times"></i> '.___('Orga', 'cellRelevance', 'irrelevantFem');
+    $datagridGranularityRelevance->addCol($columnRelevance);
+
+    $datagridGranularityRelevance->addParam('idOrganization', $this->organization->getId());
+    $datagridGranularityRelevance->addParam('idGranularity', $granularity->getId());
+    $datagridGranularityRelevance->initialLoading = false;
+
+    echo $this->collapse(
+        'cellRelevance'.$granularity->getId(),
+        $granularity->getLabel(),
+        $datagridGranularityRelevance->getHTML()
+    )->collapsed();
+
+    $script = '';
+    $script .= '$(\'#cellRelevance'.$granularity->getId().'\').on(\'show\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'cellRelevance'.$granularity->getId().'_wrapper\') {';
+    $script .= 'datagridCellRelevance'.$granularity->getId().'.filter();';
+    $script .= '}';
+    $script .= '});';
+
+    if ($this->display === false) {
+        echo '<script type="text/javascript">'.$datagridGranularityRelevance->getScript().$script.'</script>';
+    } else {
+        UI_Datagrid::addHeader($datagridGranularityRelevance);
+        $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
+    }
+}
+
+if ($this->isUserAllowedToEditOrganization) {
+    if (count($this->granularities) > 0) {
+        echo '<hr>';
+    }
+    echo '<h4>'.__('Orga', 'granularity', 'addGranularityRelevance').'</h4>';
+    echo $this->partial(
+        'granularity/add.phtml',
+        [
+            'organization' => $this->organization,
+            'purpose' => 'relevance',
+            'complementaryFields' => '',
+            'selectAxesPlaceholder' => ___('Orga', 'granularity', 'addGranularitySelectAxesRelevanceLevel')
+        ]
+    );
+    if ($this->display === true) {
+?>
+<script>
+    $('#addGranularity<?=$this->organization->getId()?>_relevance').on('granularityAdded', function(e) {
+        location.reload(true);
+    });
+</script>
+<?php
+    }
+}

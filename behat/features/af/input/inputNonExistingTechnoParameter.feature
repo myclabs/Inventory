@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @readOnly
 Feature: Input with a non existing Techno parameter feature
 
   Background:

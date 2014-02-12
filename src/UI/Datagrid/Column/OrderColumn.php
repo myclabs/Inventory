@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe OrderColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
@@ -21,138 +13,130 @@ use UI_Form_Action_Show;
 use UI_Form_Action_SetOptions;
 
 /**
- * Description of OrderColumn.
- *
- * @package    UI
- * @subpackage Datagrid
- *
  * Une classe permettant de générer une colonne gérant l'ordre des éléments.
+ *
+ * @author valentin.claras
  */
 class OrderColumn extends GenericColumn
 {
     /**
      * Définition du mot clef du filtre pour l'égalité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterEqual = null;
+    public $keywordFilterEqual;
 
     /**
      * Définition du mot clef du filtre pour l'infériorité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterLower = null;
+    public $keywordFilterLower;
 
     /**
      * Définition du mot clef du filtre pour la supériorité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterHigher = null;
+    public $keywordFilterHigher;
 
     /**
      * Définition de la constante utilisé pour le filtre inférieur sur la colonne.
      *
-     * @var   string
+     * @var string
      */
-    public $filterOperatorLower = null;
+    public $filterOperatorLower;
 
     /**
      * Définition de la constante utilisé pour le filtre supérieur sur la colonne.
      *
-     * @var   string
+     * @var string
      */
-    public $filterOperatorHigher = null;
+    public $filterOperatorHigher;
 
     /**
      * Définition du message affiché lors du chargement de la liste.
      *
      * @var string
      */
-    public $loadingText = null;
+    public $loadingText;
 
     /**
      * Label affiché sur le lien du goFirst.
      *
      * @var string
      */
-    public $labelGoFirst = null;
+    public $labelGoFirst;
 
     /**
      * Label affiché sur le lien du goFirst impossible.
      *
      * @var string
      */
-    public $labelForbiddenGoFirst = null;
+    public $labelForbiddenGoFirst;
 
     /**
      * Label affiché sur le lien du goUp.
      *
      * @var string
      */
-    public $labelGoUp = null;
+    public $labelGoUp;
 
     /**
      * Label affiché sur le lien du goUp impossible.
      *
      * @var string
      */
-    public $labelForbiddenGoUp = null;
+    public $labelForbiddenGoUp;
 
     /**
      * Label affiché sur le lien du goDown.
      *
      * @var string
      */
-    public $labelGoDown = null;
+    public $labelGoDown;
 
     /**
      * Label affiché sur le lien du goDown impossible.
      *
      * @var string
      */
-    public $labelForbiddenGoDown = null;
+    public $labelForbiddenGoDown;
 
     /**
      * Label affiché sur le lien du goLast.
      *
      * @var string
      */
-    public $labelGoLast = null;
+    public $labelGoLast;
 
     /**
      * Label affiché sur le lien du goLast impossible.
      *
      * @var string
      */
-    public $labelForbiddenGoLast = null;
+    public $labelForbiddenGoLast;
 
     /**
      * Label affiché dans le popup d'ajout pour mettre en premier.
      *
      * @var string
      */
-    public $labelAddFirst = null;
+    public $labelAddFirst;
 
     /**
      * Label affiché dans le popup d'ajout pour mettre en dernier.
      *
      * @var string
      */
-    public $labelAddLast = null;
+    public $labelAddLast;
 
     /**
      * Label affiché dans le popup d'ajout pour mettre en premier.
      *
      * @var string
      */
-    public $labelAddAfter = null;
-
-
-    /*
-     *  Attributs
-     */
+    public $labelAddAfter;
 
     /**
      * Permet d'ajouter une colonne plaçant l'objet en premier.
@@ -187,17 +171,10 @@ class OrderColumn extends GenericColumn
      *
      * @var string
      */
-    public $listPosition = null;
+    public $listPosition;
 
 
-    /*
-     *  Méthodes
-     */
-
-     /**
-      * {@inheritdoc}
-      */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         if ($label === null) {
             $label = __('UI', 'name', 'order');
@@ -213,14 +190,14 @@ class OrderColumn extends GenericColumn
         $this->filterOperatorHigher = 'gt';
         $this->loadingText = __('UI', 'loading', 'loading');
         $this->errorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error'));
-        $this->labelGoFirst = '<i class="icon-fast-backward"></i>';
-        $this->labelForbiddenGoFirst = '<i class="icon-fast-backward icon-white"></i>';
-        $this->labelGoUp = '<i class="icon-step-backward"></i>';
-        $this->labelForbiddenGoUp = '<i class="icon-step-backward icon-white"></i>';
-        $this->labelGoDown = '<i class="icon-step-forward"></i>';
-        $this->labelForbiddenGoDown = '<i class="icon-step-forward icon-white"></i>';
-        $this->labelGoLast = '<i class="icon-fast-forward"></i>';
-        $this->labelForbiddenGoLast = '<i class="icon-fast-forward icon-white"></i>';
+        $this->labelGoFirst = '<i class="fa fa-angle-double-up"></i>';
+        $this->labelForbiddenGoFirst = '<i class="fa fa-angle-double-up"></i>';
+        $this->labelGoUp = '<i class="fa fa-angle-up"></i>';
+        $this->labelForbiddenGoUp = '<i class="fa fa-angle-up"></i>';
+        $this->labelGoDown = '<i class="fa fa-angle-down"></i>';
+        $this->labelForbiddenGoDown = '<i class="fa fa-angle-down"></i>';
+        $this->labelGoLast = '<i class="fa fa-angle-double-down"></i>';
+        $this->labelForbiddenGoLast = '<i class="fa fa-angle-double-down"></i>';
         $this->labelAddFirst = __('UI', 'other', 'first');
         $this->labelAddLast = __('UI', 'other', 'last');
         $this->labelAddAfter = __('UI', 'other', 'after');
@@ -356,25 +333,23 @@ class OrderColumn extends GenericColumn
      */
     public function getEditorValue(Datagrid $datagrid)
     {
-        $editorValue = '';
-
-        $editorValue .= 'this.onEventShowCellEditor(oArgs);';
-        $editorValue .= 'if ((typeof(sData) == "undefined") || (sData == null)) {';
-        $editorValue .= 'var content = \'\';';
-        $editorValue .= '} else if (typeof(sData) != "object") {';
-        $editorValue .= 'var content = sData.toString();';
-        $editorValue .= '} else {';
-        $editorValue .= 'content = sData.value.toString();';
-        $editorValue .= '}';
-        $editorValue .= 'column.editor.textbox.value = content;';
-
-        return $editorValue;
+        return <<<JS
+this.onEventShowCellEditor(oArgs);
+if ((typeof(sData) == "undefined") || (sData == null)) {
+    var content = '';
+} else if (typeof(sData) != "object") {
+    var content = sData.toString();
+} else {
+    content = sData.value.toString();
+}
+column.editor.textbox.value = content;
+JS;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
         $filterFormElement = new UI_Form_Element_Numeric($this->getFilterFormId($datagrid));
         $filterFormElement->setLabel($this->getFilterFormLabel());
@@ -394,7 +369,7 @@ class OrderColumn extends GenericColumn
             $filterFormElementInferior->setValue($defaultValue[$this->filterOperatorLower]);
         }
         $resetFieldInferior = '<i ';
-        $resetFieldInferior .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+        $resetFieldInferior .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
         $resetFieldInferior .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'_lower\').val(\'\');"';
         $resetFieldInferior .= '>';
         $resetFieldInferior .= '</i>';
@@ -409,7 +384,7 @@ class OrderColumn extends GenericColumn
             $filterFormElementSuperior->setValue($defaultValue[$this->filterOperatorHigher]);
         }
         $resetFieldSuperior = '<i ';
-        $resetFieldSuperior .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+        $resetFieldSuperior .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
         $resetFieldSuperior .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'_higher\').val(\'\');"';
         $resetFieldSuperior .= '>';
         $resetFieldSuperior .= '</i>';
@@ -460,7 +435,7 @@ class OrderColumn extends GenericColumn
     /**
      * {@inheritdoc}
      */
-    function getResettingFilter(Datagrid $datagrid)
+    public function getResettingFilter(Datagrid $datagrid)
     {
         $resetFields = '';
 
@@ -523,5 +498,4 @@ class OrderColumn extends GenericColumn
 
         return $addFormElement;
     }
-
 }

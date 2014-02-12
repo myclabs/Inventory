@@ -67,6 +67,14 @@ class AF_Model_Input_Select_Single extends AF_Model_Input implements Algo_Model_
     /**
      * {@inheritdoc}
      */
+    public function hasValue()
+    {
+        return $this->value != null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function equals(AF_Model_Input $input)
     {
         $equals = parent::equals($input);

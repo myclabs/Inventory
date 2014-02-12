@@ -1,30 +1,13 @@
 <?php
-/**
- * @author valentin.claras
- * @author sidoine.tardieu
- * @package Orga
- */
 
 use Core\Annotation\Secure;
 
 /**
- * Controller de l'abre des axes
- * @package Orga
- * UI_Controller_Datagrid
+ * @author valentin.claras
  */
 class Orga_Tree_AxisController extends UI_Controller_Tree
 {
-
     /**
-     * Fonction renvoyant la liste des nodes pour un node donnée.
-     *
-     * Récupération de l'id du node (null pour la racine).
-     *  $this->idNode
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * @see addNode
      * @Secure("viewOrganization")
      */
     public function getnodesAction()
@@ -52,12 +35,6 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction ajoutant un node.
-     *
-     * Renvoie un message d'information.
-     *
-     * @see getAddElementValue
-     * @see setAddElementErrorMessage
      * @Secure("editOrganization")
      */
     public function addnodeAction()
@@ -111,13 +88,6 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction réupérant la liste des parents possible d'un élément.
-     *
-     * Récupération de l'id du node.
-     *  $this->idNode
-     *
-     * Renvoie un tableau contenant les parents possibles de l'élément au format :
-     *  array('id' => id, 'label' => label).
      * @Secure("viewOrganization")
      */
     public function getlistparentsAction()
@@ -133,13 +103,6 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction réupérant la liste des frères possible d'un élément.
-     *
-     * Récupération de l'id du node.
-     *  $this->idNode
-     *
-     * Renvoie un un tableau contenant la fratrie de l'élément au format :
-     *  array('id' => id, 'label' => label).
      * @Secure("viewOrganization")
      */
     public function getlistsiblingsAction()
@@ -162,18 +125,6 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction modifiant l'ordre d'un élément.
-     *
-     * Récupération de l'id du node.
-     *  $this->idNode
-     *
-     * Récupération de la nouvelle position ('first' | 'last' | 'after').
-     * $this->update['position'].
-     *
-     * Dans le cas d'une position 'after' on récupère aussi l'élément précédent.
-     * $this->update['idElement'].
-     *
-     * Renvoie un message d'information.
      * @Secure("editOrganization")
      */
     public function editnodeAction()
@@ -245,12 +196,6 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction supprimant un node.
-     *
-     * Récupération de l'id du node.
-     *  $this->idNode
-     *
-     * Renvoie une message d'information.
      * @Secure("editOrganization")
      */
     public function deletenodeAction()
@@ -275,7 +220,6 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction récupérant les informations d'édition pour le formulaire.
      * @Secure("editOrganization")
      */
     public function getinfoeditAction()

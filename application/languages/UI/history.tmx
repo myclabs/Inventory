@@ -11,12 +11,20 @@
                 <seg>Change log</seg>
             </tuv>
         </tu>
-        <tu tuid="noHistory">
+        <tu tuid="loadingHistory">
             <tuv xml:lang="fr">
-                <seg>Aucun historique à afficher.</seg>
+                <seg>Chargement de l'historique…</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>No change log to display.</seg>
+                <seg>Loading change log…</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noHistory">
+            <tuv xml:lang="fr">
+                <seg>L'historique est vide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Change log is empty.</seg>
             </tuv>
         </tu>
 

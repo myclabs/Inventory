@@ -595,7 +595,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
             }
         }
         foreach ($this->list as $idElement => $element) {
-            $filterFormElement->addOption(new UI_Form_Element_Option($idElement, $idElement, $element));
+            $filterFormElement->addOption(new UI_Form_Element_Option($idElement, urlencode($idElement), $element));
         }
 
         // Récupération des valeurs par défaut.
@@ -616,7 +616,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
         } else {
             if ($this->getFilterFieldType() === self::FIELD_AUTOCOMPLETE) {
                 $resetFieldSuffix = '<i ';
-                $resetFieldSuffix .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+                $resetFieldSuffix .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
                 $resetFieldSuffix .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\').trigger(\'change\');"';
                 $resetFieldSuffix .= '>';
                 $resetFieldSuffix .= '</i>';

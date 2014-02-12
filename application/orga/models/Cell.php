@@ -1,10 +1,8 @@
 <?php
 
-use Doc\Domain\Bibliography;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use Orga\Model\ACL\CellResourceTrait;
 use User\Domain\ACL\Resource\Resource;
 
@@ -126,7 +124,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @var Library
      */
-    protected $docLibraryForAFInputSetsPrimary = null;
+    protected $docLibraryForAFInputSetPrimary = null;
 
     /**
      * Collection des SocialComment utilisés pour l'AFInputSetPrimary de la cellule.
@@ -134,13 +132,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      * @var Collection|Social_Model_Comment[]
      */
     protected $socialCommentsForAFInputSetPrimary = null;
-
-    /**
-     * Bibliographie utiliséepar l'InputSets de la cellule.
-     *
-     * @var Bibliography
-     */
-    protected $docBibliographyForAFInputSetPrimary = null;
 
     /**
      * Organization de DW généré par et propre à la Cell.
@@ -214,14 +205,8 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         foreach ($this->granularity->getInputGranularities() as $inputGranularity) {
             new Orga_Model_CellsGroup($this, $inputGranularity);
         }
-        // Création de la Bibliography des Input.
-        if ($this->granularity->isInput()) {
-            $this->docBibliographyForAFInputSetPrimary = new Bibliography();
-        }
         // Création de la Library des Input.
-        if ($this->granularity->getCellsWithInputDocuments()) {
-            $this->docLibraryForAFInputSetsPrimary = new Library();
-        }
+        $this->enableDocLibraryForAFInputSetPrimary();
         // Création de la Library des GenericAction.
         if ($this->granularity->getCellsWithSocialGenericActions()) {
             $this->docLibraryForSocialGenericActions = new Library();
@@ -435,9 +420,14 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      * Définit si la Cell est pertinente ou non.
      *
      * @param bool $relevant
+     * @throws Core_Exception
      */
     public function setRelevant($relevant)
     {
+        if (!$this->getGranularity()->getCellsControlRelevance()) {
+            throw new Core_Exception('Relevance can only be defined if the granularity permits it.');
+        }
+
         if ($relevant != $this->relevant) {
             $this->relevant = $relevant;
             // Si les cellules parentes ne sont pas pertinentes,
@@ -551,64 +541,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             }
         }
 
-        // Vérification des bibliothèques.
-        if ($this->getGranularity()->isInput()) {
-            try {
-                $parentDocLibraryForAFInputSetsPrimary = $this->getParentDocLibraryForAFInputSetsPrimary();
-                $docBibliographyForAFInputSetPrimary = $this->getDocBibliographyForAFInputSetPrimary();
-                foreach ($docBibliographyForAFInputSetPrimary->getReferencedDocuments() as $document) {
-                    if (!$parentDocLibraryForAFInputSetsPrimary->hasDocument($document)) {
-                        $docBibliographyForAFInputSetPrimary->unreferenceDocument($document);
-                    }
-                }
-            } catch (Core_Exception_NotFound $e) {
-                $docBibliographyForAFInputSetPrimary = $this->getDocBibliographyForAFInputSetPrimary();
-                foreach ($docBibliographyForAFInputSetPrimary->getReferencedDocuments() as $document) {
-                    $docBibliographyForAFInputSetPrimary->unreferenceDocument($document);
-                }
-            }
-        }
-        if ($this->getGranularity()->getCellsWithSocialGenericActions()) {
-            try {
-                $parentDocLibraryForSocialGenericAction = $this->getParentDocLibraryForSocialGenericAction();
-                foreach ($this->getSocialGenericActions() as $socialGenericAction) {
-                    $docBibliographyForSocialGenericAction = $socialGenericAction->getDocumentBibliography();
-                    foreach ($docBibliographyForSocialGenericAction->getReferencedDocuments() as $document) {
-                        if (!$parentDocLibraryForSocialGenericAction->hasDocument($document)) {
-                            $docBibliographyForSocialGenericAction->unreferenceDocument($document);
-                        }
-                    }
-                }
-            } catch (Core_Exception_NotFound $e) {
-                foreach ($this->getSocialGenericActions() as $socialGenericAction) {
-                    $docBibliographyForSocialGenericAction = $socialGenericAction->getDocumentBibliography();
-                    foreach ($docBibliographyForSocialGenericAction->getReferencedDocuments() as $document) {
-                        $docBibliographyForSocialGenericAction->unreferenceDocument($document);
-                    }
-                }
-            }
-        }
-        if ($this->getGranularity()->isInput()) {
-            try {
-                $parentDocLibraryForSocialContextAction = $this->getParentDocLibraryForSocialContextAction();
-                foreach ($this->getSocialContextActions() as $sociaContextAction) {
-                    $docBibliographyForSocialContextAction = $sociaContextAction->getDocumentBibliography();
-                    foreach ($docBibliographyForSocialContextAction->getReferencedDocuments() as $document) {
-                        if (!$parentDocLibraryForSocialContextAction->hasDocument($document)) {
-                            $docBibliographyForSocialContextAction->unreferenceDocument($document);
-                        }
-                    }
-                }
-            } catch (Core_Exception_NotFound $e) {
-                foreach ($this->getSocialContextActions() as $sociaContextAction) {
-                    $docBibliographyForSocialContextAction = $sociaContextAction->getDocumentBibliography();
-                    foreach ($docBibliographyForSocialContextAction->getReferencedDocuments() as $document) {
-                        $docBibliographyForSocialContextAction->unreferenceDocument($document);
-                    }
-                }
-            }
-        }
-
         // MAJ des ACL
         $this->updateACL();
     }
@@ -670,7 +602,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             foreach ($broaderGranularity->getAxes() as $broaderAxis) {
                 if ($member->getAxis()->isNarrowerThan($broaderAxis)) {
                     $parentMembers[$broaderAxis->getRef()] = $member->getParentForAxis($broaderAxis);
-                } else if ($member->getAxis() === $broaderAxis) {
+                } elseif ($member->getAxis() === $broaderAxis) {
                     $parentMembers[$broaderAxis->getRef()] = $member;
                 }
             }
@@ -682,32 +614,32 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie la liste des Member enfants aux Member de la Cell courante pour une Granularity narrower donnée.
      *
-     * @param Orga_Model_Granularity $narrowerGranularity
+     * @param Orga_Model_Axis[] $axes
      *
      * @return Orga_Model_Member[]
      */
-    public function getChildMembersForGranularity(Orga_Model_Granularity $narrowerGranularity)
+    public function getChildMembersForAxes(array $axes)
     {
         $childMembers = array();
 
-        foreach ($narrowerGranularity->getAxes() as $narrowerAxis) {
-            $refNarrowerAxis = $narrowerAxis->getRef();
-            foreach ($this->getMembers() as $member) {
-                if ($member->getAxis()->isBroaderThan($narrowerAxis)) {
+        foreach ($axes as $axis) {
+            $refNarrowerAxis = $axis->getRef();
+            foreach ($this->getMembers() as $cellMember) {
+                if ($cellMember->getAxis()->isBroaderThan($axis)) {
                     if (!isset($childMembers[$refNarrowerAxis])) {
-                        $childMembers[$refNarrowerAxis] = $member->getChildrenForAxis($narrowerAxis);
+                        $childMembers[$refNarrowerAxis] = $cellMember->getChildrenForAxis($axis);
                     } else {
                         $childMembers[$refNarrowerAxis] = array_intersect(
                             $childMembers[$refNarrowerAxis],
-                            $member->getChildrenForAxis($narrowerAxis)
+                            $cellMember->getChildrenForAxis($axis)
                         );
                     }
-                } else if ($member->getAxis() === $narrowerAxis) {
-                    $childMembers[$refNarrowerAxis] = [$member];
+                } elseif ($cellMember->getAxis() === $axis) {
+                    $childMembers[$refNarrowerAxis] = [$cellMember];
                 }
             }
             if (!isset($childMembers[$refNarrowerAxis])) {
-                $childMembers[$refNarrowerAxis] = $narrowerAxis->getMembers()->toArray();
+                $childMembers[$refNarrowerAxis] = $axis->getOrderedMembers()->toArray();
             }
         }
 
@@ -738,7 +670,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      */
     public function getParentCells()
     {
-        $parentCells = array();
+        $parentCells = [];
 
         foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
             try {
@@ -749,6 +681,18 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         }
 
         return $parentCells;
+    }
+
+    /**
+     * Indique si la cellule donnée est parente de la courante.
+     *
+     * @param Orga_Model_Cell $cell
+     *
+     * @return bool
+     */
+    public function isParentOf(Orga_Model_Cell $cell)
+    {
+        return $cell->isChildOf($this);
     }
 
     /**
@@ -792,6 +736,23 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     }
 
     /**
+     * Indique si la cellule donnée est parente de la courante.
+     *
+     * @param Orga_Model_Cell $cell
+     *
+     * @return bool
+     */
+    public function isChildOf(Orga_Model_Cell $cell)
+    {
+        foreach (explode(Orga_Model_Organization::PATH_JOIN, $cell->getTag()) as $pathTag) {
+            if (strpos($this->getTag(), $pathTag) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Renvoie les Cell enfantes pour une Granularity donnée.
      *
      * @param Orga_Model_Granularity $narrowerGranularity
@@ -810,7 +771,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             $queryParameters->order->addOrder('tag');
         }
 
-        $childMembersForGranularity = $this->getChildMembersForGranularity($narrowerGranularity);
+        $childMembersForGranularity = $this->getChildMembersForAxes($narrowerGranularity->getAxes());
 
         // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
         foreach ($childMembersForGranularity as $childAxisMembersForGranularity) {
@@ -844,10 +805,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         }
         if ($queryParameters === null) {
             $queryParameters = new Core_Model_Query();
-            $queryParameters->order->addOrder(self::QUERY_MEMBERS_HASHKEY);
+            $queryParameters->order->addOrder(self::QUERY_TAG);
         }
 
-        $childMembersForGranularity = $this->getChildMembersForGranularity($narrowerGranularity);
+        $childMembersForGranularity = $this->getChildMembersForAxes($narrowerGranularity->getAxes());
 
         // Si l'un des axes de la granularité ne possède pas d'enfants, alors il n'y a pas de cellules enfantes.
         foreach ($childMembersForGranularity as $childAxisMembersForGranularity) {
@@ -1027,7 +988,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @throws Core_Exception_Duplicate
      */
-    public function setAFInputSetPrimary(AF_Model_InputSet_Primary $aFInputSetPrimary=null)
+    public function setAFInputSetPrimary(AF_Model_InputSet_Primary $aFInputSetPrimary = null)
     {
         if ($this->aFInputSetPrimary !== $aFInputSetPrimary) {
             if (($this->aFInputSetPrimary !== null) && ($aFInputSetPrimary !== null)) {
@@ -1051,19 +1012,45 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Spécifie la DocLibrary pour les AFInputSetPrimary de la cellule.
+     * Renvoie l'AF utilisé par la cellule.
      *
-     * @param Library $docLibrary
-     *
-     * @throws Core_Exception_Duplicate
+     * @return AF_Model_AF
      */
-    public function setDocLibraryForAFInputSetsPrimary(Library $docLibrary=null)
+    public function getInputAFUsed()
     {
-        if ($this->docLibraryForAFInputSetsPrimary !== $docLibrary) {
-            if ($this->docLibraryForAFInputSetsPrimary !== null) {
-                $this->docLibraryForAFInputSetsPrimary->delete();
+        $granularity = $this->getGranularity();
+        try {
+            if ($granularity === $granularity->getInputConfigGranularity()) {
+                return $this->getCellsGroupForInputGranularity($granularity)->getAF();
+            } else {
+                return $this->getParentCellForGranularity(
+                    $granularity->getInputConfigGranularity()
+                )->getCellsGroupForInputGranularity($granularity)->getAF();
             }
-            $this->docLibraryForAFInputSetsPrimary = $docLibrary;
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            // Pas d'AF spécifié.
+        }
+        return null;
+    }
+
+    /**
+     * Active la possibilité d'ajouter des documents dans cette cellule.
+     */
+    public function enableDocLibraryForAFInputSetPrimary()
+    {
+        if (($this->getGranularity()->isInput()) && ($this->docLibraryForAFInputSetPrimary === null)) {
+            $this->docLibraryForAFInputSetPrimary = new Library();
+        }
+    }
+
+    /**
+     * Désactive la possibilité d'ajouter des documents dans cette cellule.
+     */
+    public function disableDocLibraryForAFInputSetPrimary()
+    {
+        if ((!$this->getGranularity()->isInput()) && ($this->docLibraryForAFInputSetPrimary !== null)) {
+            $this->docLibraryForAFInputSetPrimary->delete();
+            $this->docLibraryForAFInputSetPrimary = null;
         }
     }
 
@@ -1074,65 +1061,12 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @return Library
      */
-    public function getDocLibraryForAFInputSetsPrimary()
+    public function getDocLibraryForAFInputSetPrimary()
     {
-        if ($this->docLibraryForAFInputSetsPrimary === null) {
-            throw new Core_Exception_UndefinedAttribute('Doc Library for InputSetPrimary has not be defined.');
+        if ($this->docLibraryForAFInputSetPrimary === null) {
+            throw new Core_Exception_UndefinedAttribute('The Doc library for the cell has not be set');
         }
-        return $this->docLibraryForAFInputSetsPrimary;
-    }
-
-    /**
-     * Renvoi la première Library parente trouvé pour la Bibliography de l'AFInputSetsPrimary.
-     *
-     * @throws Core_Exception_NotFound
-     *
-     * @return Library
-     */
-    public function getParentDocLibraryForAFInputSetsPrimary()
-    {
-        if ($this->getGranularity()->getCellsWithInputDocuments()) {
-            return $this->getDocLibraryForAFInputSetsPrimary();
-        } else {
-            foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
-                if ($broaderGranularity->getCellsWithInputDocuments()) {
-                    return $this->getParentCellForGranularity($broaderGranularity)->getDocLibraryForAFInputSetsPrimary();
-                }
-            }
-        }
-        throw new Core_Exception_NotFound('No broader Granularity provides a Library for the AFInputSetsPrimary.');
-    }
-
-    /**
-     * Spécifie la DocBibliography pour l'AFInputSetPrimary de la cellule.
-     *
-     * @param Bibliography $docBibliography
-     *
-     * @throws Core_Exception_Duplicate
-     */
-    public function setDocBibliographyForAFInputSetPrimary(Bibliography $docBibliography=null)
-    {
-        if ($this->docBibliographyForAFInputSetPrimary !== $docBibliography) {
-            if ($this->docBibliographyForAFInputSetPrimary !== null) {
-                $this->docBibliographyForAFInputSetPrimary->delete();
-            }
-            $this->docBibliographyForAFInputSetPrimary = $docBibliography;
-        }
-    }
-
-    /**
-     * Renvoi la DocBibliography pour l'AFInputSetPrimary de la cellule.
-     *
-     * @throws Core_Exception_UndefinedAttribute
-     *
-     * @return Bibliography
-     */
-    public function getDocBibliographyForAFInputSetPrimary()
-    {
-        if ($this->docBibliographyForAFInputSetPrimary === null) {
-            throw new Core_Exception_UndefinedAttribute('Doc Bibliography for InputSetPrimary has not be defined.');
-        }
-        return $this->docBibliographyForAFInputSetPrimary;
+        return $this->docLibraryForAFInputSetPrimary;
     }
 
     /**
@@ -1189,36 +1123,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function getSocialCommentsForInputSetPrimary()
     {
         return $this->socialCommentsForAFInputSetPrimary->toArray();
-    }
-
-    /**
-     * Renvoi les derniers commentaires pour cette cellule et ses sous-cellules.
-     *
-     * @param int $count
-     * @return Orga_Model_InputComment[]
-     */
-    public function getInputSetLatestComments($count)
-    {
-        // Ce code est un peu lourdingue, mais bon.
-        // Transforme les Social_Model_Comment en Orga_Model_InputComment
-        $comments = $this->socialCommentsForAFInputSetPrimary->map(
-            function (Social_Model_Comment $comment) {
-                return new Orga_Model_InputComment($this, $comment);
-            }
-        );
-        /** @var \Doctrine\Common\Collections\Selectable|Collection $comments */
-        // Ajoute à la collection les commentaires des sous-cellules
-        foreach ($this->getChildCells() as $subCell) {
-            foreach ($subCell->getSocialCommentsForInputSetPrimary() as $comment) {
-                $comments->add(new Orga_Model_InputComment($subCell, $comment));
-            }
-        }
-
-        // Trie par date et garde les X derniers seulement
-        $criteria = Criteria::create();
-        $criteria->orderBy(['creationDate' => Criteria::DESC]);
-        $criteria->setMaxResults($count);
-        return $comments->matching($criteria);
     }
 
     /**
@@ -1309,14 +1213,16 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function getPopulatingCells()
     {
         // Renvoie une exception si la cellule ne possède pas de cube de DW.
-        $this->getDWCube();
+        if ($this->getGranularity()->getCellsGenerateDWCubes()) {
+            $this->getDWCube();
+        }
 
         $populatingCells = [];
 
         foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
             if ($inputGranularity === $this->getGranularity()) {
                 $populatingCells[] = $this;
-            } else if ($inputGranularity->isNarrowerThan($this->getGranularity())) {
+            } elseif ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {
                     $populatingCells[] = $inputChildCell;
                 }
@@ -1341,7 +1247,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @param DW_model_cube $dWCube
      */
-    public function createDWResultsForDWCube(DW_model_cube $dWCube)
+    public function createDWResultsForDWCube(DW_Model_Cube $dWCube)
     {
         if (($this->aFInputSetPrimary === null) || ($this->aFInputSetPrimary->getOutputSet() === null)) {
             return;
@@ -1498,7 +1404,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @param Library $docLibrary
      */
-    public function setDocLibraryForSocialGenericAction(Library $docLibrary=null)
+    public function setDocLibraryForSocialGenericAction(Library $docLibrary = null)
     {
         if ($this->docLibraryForSocialGenericActions !== $docLibrary) {
             if ($this->docLibraryForSocialGenericActions !== null) {
@@ -1606,7 +1512,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @param Library $docLibrary
      */
-    public function setDocLibraryForSocialContextAction(Library $docLibrary=null)
+    public function setDocLibraryForSocialContextAction(Library $docLibrary = null)
     {
         if ($this->docLibraryForSocialContextActions !== $docLibrary) {
             if ($this->docLibraryForSocialContextActions !== null) {

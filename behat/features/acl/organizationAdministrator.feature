@@ -1,7 +1,7 @@
 @dbFull
 Feature: Organization administrator feature
 
-  @javascript
+  @javascript @readOnly
   Scenario: Administrator of a single organization scenario
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -9,13 +9,13 @@ Feature: Organization administrator feature
     When I fill in "email" with "administrateur.workspace@toto.com"
     And I fill in "password" with "administrateur.workspace@toto.com"
     And I click "connection"
-    And I wait 10 seconds
   # On tombe sur la liste des organisations
     Then I should see "Axes racine : Année, Site, Catégorie, Axe vide"
     And I should see "Collectes : Année | Zone | Marque"
   # Accès à l'organisation
     When I click "Workspace avec données"
-    Then I should see "Vue globale Workspace avec données"
+    Then I should see "Workspace avec données"
+    And I should see "Vue globale"
     When I open collapse "Année | Site | Catégorie"
     Then I should see the "aFGranularity1Input8" datagrid
   # Accès à l'onglet "Informations générales"
@@ -28,5 +28,3 @@ Feature: Organization administrator feature
     When I open tab "Rôles"
     And I open collapse "Administrateurs de workspace"
     Then I should see the "organizationACL1" datagrid
-
-

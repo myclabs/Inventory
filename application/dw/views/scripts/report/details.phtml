@@ -9,7 +9,7 @@
 
 <div class="page-header">
     <h1 id="reportLabel"><?=$this->reportLabel?><?=$this->viewConfiguration->getComplementaryPageTitle()?></h1>
-    <small>
+    <div>
         <?php if ($this->isNew) { ?>
         <a id="exportAsPdf" href="javascript: void(0)" class="btn disabled">
             <img src="images/dw/pdf_gris.png" alt="pdf" />
@@ -28,17 +28,17 @@
         <?php }?>
             <?=__('UI', 'verb','exportToExcel')?>
         </a>
-    </small>
-    <small class="pull-right">
-        <?=$this->button(__('UI', 'other', 'backButton'), 'arrow-left')->link($this->viewConfiguration->getOutputUrl())?>
-    </small>
+        <div class="pull-right">
+            <?=$this->button(__('UI', 'other', 'backButton'), 'arrow-left')->link($this->viewConfiguration->getOutputUrl())?>
+        </div>
+    </div>
 </div>
 <div class="row-fluid">
     <div class="span well" id="configurationPanel">
         <div>
             <!-- <h2><?=__('UI', 'name', 'configuration')?></h2>  -->
             <span id="reportState" class="badge badge-<?=($this->isNew)?'warning':'success'?>">
-                <i class="icon-info-sign icon-white"></i>
+                <i class="fa fa-info-circle"></i>
                 <?php
                 if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
                     if ($this->isNew) {
@@ -60,7 +60,7 @@
             <?php
             $saveReportDisplayPopupButton = new UI_HTML_Button(__('UI', 'verb', 'save'));
             $saveReportDisplayPopupButton->id = 'saveReportButton';
-            $saveReportDisplayPopupButton->icon = 'hdd icon-white';
+            $saveReportDisplayPopupButton->icon = 'hdd';
             $saveReportDisplayPopupButton->link = '#';
             $saveReportDisplayPopupButton->addAttribute('data-toggle', 'modal');
             if ($this->isNew) {
@@ -126,7 +126,7 @@
             }
 
             $saveReportButton = new UI_HTML_Button(__('UI', 'verb', 'save'));
-            $saveReportButton->icon = 'ok icon-white';
+            $saveReportButton->icon = 'check';
             $saveReportButton->addAttribute('class', 'btn-primary');
             $saveReportButton->addAttribute('onclick', '$(\'#saveReportAs\').submit();');
 
@@ -153,7 +153,7 @@
         </div>
     </div>
     <div id="configurationClose" class="span">
-        <i class="icon-indent-right"> </i>
+        <i class="fa fa-caret-square-o-right"> </i>
     </div>
     <div id="reportContent" class="span">
         <?php
@@ -186,20 +186,20 @@
         // Fonction d'ouverture et de fermeture du volet de configuration.
         $script .= '$(\'#configurationClose\').click(';
         $script .= 'function() {';
-        $script .= 'if ($(\'#configurationClose i:first-child\').hasClass(\'icon-indent-right\')) {';
-        $script .= '$(\'#configurationClose i:first-child\').removeClass(\'icon-indent-right\');';
-        $script .= '$(\'#configurationClose i:first-child\').addClass(\'icon-indent-left\');';
+        $script .= 'if ($(\'#configurationClose i:first-child\').hasClass(\'fa-caret-square-o-right\')) {';
+        $script .= '$(\'#configurationClose i:first-child\').removeClass(\'fa-caret-square-o-right\');';
+        $script .= '$(\'#configurationClose i:first-child\').addClass(\'fa-caret-square-o-left\');';
         $script .= '$(\'#configurationPanel\').animate({width: "toggle"}, 50);';
         $script .= '} else {';
-        $script .= '$(\'#configurationClose i:first-child\').removeClass(\'icon-indent-left\');';
-        $script .= '$(\'#configurationClose i:first-child\').addClass(\'icon-indent-right\');';
+        $script .= '$(\'#configurationClose i:first-child\').removeClass(\'fa-caret-square-o-left\');';
+        $script .= '$(\'#configurationClose i:first-child\').addClass(\'fa-caret-square-o-right\');';
         $script .= '$(\'#reportContent\').animate({width: "toggle"}, 50);';
         $script .= '}';
         $script .= '});';
         // Détection et notification d'un changement sur le formulaire.
         $script .= '$(\'#'.$this->hashReport.' input, #'.$this->hashReport.' select\').change(function() {';
         $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-important\');';
-        $script .= '$(\'#reportState\').html(\'<i class="icon-exclamation-sign icon-white"></i> '.__('DW', 'config', 'reportChangedApplyRequired').'\');';
+        $script .= '$(\'#reportState\').html(\'<i class="fa fa-exclamation-circle"></i> '.__('DW', 'config', 'reportChangedApplyRequired').'\');';
         if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
             $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-inverse disabled\');';
             $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#\');';
@@ -217,12 +217,12 @@
         if ($this->isNew) {
             $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-warning\');';
             if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
-                $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportNotSaved').'\');';
+                $script .= '$(\'#reportState\').html(\'<i class="fa fa-info-circle"></i> '.__('DW', 'config', 'reportNotSaved').'\');';
                 $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-inverse disabled\');';
                 $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#\');';
                 $script .= '$(\'#saveReportButton\').attr(\'title\', \''.addslashes(__('DW', 'config', 'applyNeededBeforeSaveReportTooltip')).'\');';
             } else {
-                $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportNotLaunched').'\');';
+                $script .= '$(\'#reportState\').html(\'<i class="fa fa-info-circle"></i> '.__('DW', 'config', 'reportNotLaunched').'\');';
                 $script .= '$(\'#container_graph\').empty();';
                 $script .= '$(\'#container_values\').empty();';
                 $script .= '$(\'#container li\').addClass(\'disabled\');';
@@ -242,12 +242,12 @@
             $script .= '$(\'#exportAsExcel img\').attr(\'src\', \'images/dw/xls.png\');';
             $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-success\');';
             if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
-                $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportSavedAndNotChanged').'\');';
+                $script .= '$(\'#reportState\').html(\'<i class="fa fa-info-circle"></i> '.__('DW', 'config', 'reportSavedAndNotChanged').'\');';
                 $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-primary\');';
                 $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#saveReport\');';
                 $script .= '$(\'#saveReportButton\').attr(\'title\', \'\');';
             } else {
-                $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportLaunched').'\');';
+                $script .= '$(\'#reportState\').html(\'<i class="fa fa-info-circle"></i> '.__('DW', 'config', 'reportLaunched').'\');';
                 $script .= 'if (form'.$this->hashReport.'HasChanged == true) {';
                 $script .= '$(\'#'.$this->hashReport.'\').submit();';
                 $script .= '}';
@@ -261,15 +261,15 @@
             if ($this->isNew) {
                 $script .= 'if (form'.$this->hashReport.'HasChanged == true) {';
                 $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-warning\');';
-                $script .= '$(\'#reportState\').html(\'<i class="icon-warning-sign icon-white"></i> '.__('DW', 'config', 'reportChangedSaveRequired').'\');';
+                $script .= '$(\'#reportState\').html(\'<i class="fa fa-exclamation-triangle"></i> '.__('DW', 'config', 'reportChangedSaveRequired').'\');';
                 $script .= '}';
             } else {
                 $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-warning\');';
-                $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportNotSaved').'\');';
+                $script .= '$(\'#reportState\').html(\'<i class="fa fa-info-circle"></i> '.__('DW', 'config', 'reportNotSaved').'\');';
             }
         } else {
             $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-success\');';
-            $script .= '$(\'#reportState\').html(\'<i class="icon-info-sign icon-white"></i> '.__('DW', 'config', 'reportLaunched').'\');';
+            $script .= '$(\'#reportState\').html(\'<i class="fa fa-info-circle"></i> '.__('DW', 'config', 'reportLaunched').'\');';
         }
         if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
             $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-primary\');';
@@ -350,3 +350,5 @@
         ?>
     </div>
 </div>
+
+<?= $this->tutorial('dw'); ?>

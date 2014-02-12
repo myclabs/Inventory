@@ -2,7 +2,6 @@
 
 use Doc\Domain\Library;
 use Orga\Model\ACL\Action\CellAction;
-use Orga\Model\ACL\Action\OrganizationAction;
 use User\Application\ForbiddenException;
 use User\Application\Plugin\ACLPlugin;
 use User\Domain\ACL\Action;
@@ -89,6 +88,82 @@ class Inventory_Plugin_Acl extends ACLPlugin
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
+    public function editOrganizationAndCellsRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $organization = $this->getOrganization($request);
+
+        $isUserAllowedToEditOrganizationAndCells = $this->aclService->isAllowed(
+            $identity,
+            Action::EDIT(),
+            $organization
+        );
+        if (!$isUserAllowedToEditOrganizationAndCells) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
+                $aclCellQuery = new Core_Model_Query();
+                $aclCellQuery->aclFilter->enabled = true;
+                $aclCellQuery->aclFilter->user = $identity;
+                $aclCellQuery->aclFilter->action = Action::EDIT();
+                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+
+                $numberCellsUserCanEdit = Orga_Model_Cell::countTotal($aclCellQuery);
+                if ($numberCellsUserCanEdit > 0) {
+                    return true;
+                }
+            }
+        }
+        return $isUserAllowedToEditOrganizationAndCells;
+    }
+
+    /**
+     * @param User      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function allowOrganizationAndCellsRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $organization = $this->getOrganization($request);
+
+        $isUserAllowedToEditOrganizationAndCells = $this->aclService->isAllowed(
+            $identity,
+            Action::ALLOW(),
+            $organization
+        );
+        if (!$isUserAllowedToEditOrganizationAndCells) {
+            foreach ($organization->getOrderedGranularities() as $granularity) {
+                $aclCellQuery = new Core_Model_Query();
+                $aclCellQuery->aclFilter->enabled = true;
+                $aclCellQuery->aclFilter->user = $identity;
+                $aclCellQuery->aclFilter->action = Action::ALLOW();
+                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+
+                $numberCellsUserCanAllow = Orga_Model_Cell::countTotal($aclCellQuery);
+                if ($numberCellsUserCanAllow > 0) {
+                    return true;
+                }
+            }
+        }
+        return $isUserAllowedToEditOrganizationAndCells;
+    }
+
+    /**
+     * @param User      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    protected function allowOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return $this->aclService->isAllowed(
+            $identity,
+            Action::EDIT(),
+            $this->getOrganization($request)
+        );
+    }
+
+    /**
+     * @param User      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
     protected function editOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->aclService->isAllowed(
@@ -122,6 +197,10 @@ class Inventory_Plugin_Acl extends ACLPlugin
         $idOrganization = $request->getParam('idOrganization');
         if ($idOrganization !== null) {
             return Orga_Model_Organization::load($idOrganization);
+        }
+        $idGranularity = $request->getParam('idGranularity');
+        if ($idGranularity !== null) {
+            return Orga_Model_Granularity::load($idGranularity)->getOrganization();
         }
         $index = $request->getParam('index');
         if ($index !== null) {
@@ -237,6 +316,20 @@ class Inventory_Plugin_Acl extends ACLPlugin
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
+    protected function analyseCellRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return $this->aclService->isAllowed(
+            $identity,
+            CellAction::VIEW_REPORTS(),
+            $this->getCell($request)
+        );
+    }
+
+    /**
+     * @param User      $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
     protected function editCommentRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $comment = Social_Model_Comment::load($request->getParam('id'));
@@ -313,15 +406,11 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $idReport = $request->getParam('idReport');
         if ($idReport !== null) {
-            $isAllowed = $this->aclService->isAllowed($identity, Action::VIEW(), DW_Model_Report::load($idReport));
-            if ($isAllowed) {
-                return $isAllowed;
-            } else {
-                return $this->viewCellRule($identity, $request);
-            }
+            $idCube = DW_Model_Report::load($idReport)->getCube()->getId();
+        } else {
+            $idCube = $request->getParam('idCube');
         }
 
-        $idCube = $request->getParam('idCube');
         if ($idCube !== null) {
             $dWCube = DW_Model_Cube::load($idCube);
             // Si le DWCube est d'un Granularity, vérification que l'utilisateur peut configurer le projet.
@@ -329,7 +418,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
                 $granularity = Orga_Model_Granularity::loadByDWCube($dWCube);
                 $organization = $granularity->getOrganization();
                 $request->setParam('idOrganization', $organization->getKey()['id']);
-                return $this->editOrganizationRule($identity, $request);
+                return $this->editOrganizationAndCellsRule($identity, $request);
             } catch (Core_Exception_NotFound $e) {
                 // Le cube n'appartient pas à un Granularity.
             }
@@ -348,11 +437,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
             } catch (Core_Exception_NotFound $e) {
                 // Le cube n'appartient pas à un SimulationSet.
             }
-        }
-
-        $idCell = $request->getParam('idCube');
-        if ($idCell !== null) {
-
         }
 
         return false;
@@ -375,28 +459,8 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function deleteReportRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $idReport = $request->getParam('index');
+        $idReport = $request->getParam('idReport');
         return $this->aclService->isAllowed($identity, Action::DELETE(), DW_Model_Report::load($idReport));
-    }
-
-    protected function viewGranularityReportsRule(User $identity, Zend_Controller_Request_Abstract $request)
-    {
-        $granularity = Orga_Model_Granularity::load($request->getParam('idGranularity'));
-        return $this->aclService->isAllowed(
-            $identity,
-            OrganizationAction::EDIT_GRANULARITY_REPORTS(),
-            $granularity->getOrganization()
-        );
-    }
-
-    protected function deleteGranularityReportsRule(User $identity, Zend_Controller_Request_Abstract $request)
-    {
-        $granularity = Orga_Model_Granularity::load($request->getParam('idGranularity'));
-        return $this->aclService->isAllowed(
-            $identity,
-            OrganizationAction::EDIT_GRANULARITY_REPORTS(),
-            $granularity->getOrganization()
-        );
     }
 
     /**
@@ -503,21 +567,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
     }
 
     protected function editTechnoRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
-    protected function viewKeywordRule(User $identity)
-    {
-        return $this->viewReferential($identity);
-    }
-
-    protected function editKeywordRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
-    protected function deleteKeywordRule(User $identity)
     {
         return $this->editRepository($identity);
     }

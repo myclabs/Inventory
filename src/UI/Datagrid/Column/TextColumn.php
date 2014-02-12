@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe TextColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
@@ -14,27 +6,21 @@ use UI\Datagrid\Datagrid;
 use UI_Form_Element_Text;
 
 /**
- * Description of TextColumn.
+ * Classe représentant une colonne contenant des textes.
  *
- * Une classe permettant de générer une colonne contenant des textes.
- *
- * @package    UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 class TextColumn extends GenericColumn
 {
     /**
      * Définition du mot clef du filtre pour l'égalité.
      *
-     * @var   string
+     * @var string
      */
-    public $keywordFilterEqual = null;
+    public $keywordFilterEqual;
 
 
-     /**
-      * {@inheritdoc}
-      */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         parent::__construct($id, $label);
         // Définition des pseudo-constantes pouvant être redéfinies.
@@ -48,19 +34,17 @@ class TextColumn extends GenericColumn
      */
     public function getFormatter(Datagrid $datagrid)
     {
-        $format = '';
-
-        $format .= 'if (typeof(sData) != "object") {';
-        $format .= 'content = sData;';
-        $format .= '} else {';
-        $format .= 'if (sData.content != null) {';
-        $format .= 'content = sData.content;';
-        $format .= '} else {';
-        $format .= 'content = sData.value;';
-        $format .= '}';
-        $format .= '}';
-
-        return $format;
+        return <<<JS
+if (typeof(sData) != "object") {
+    content = sData;
+} else {
+    if (sData.content != null) {
+        content = sData.content;
+    } else {
+        content = sData.value;
+    }
+}
+JS;
     }
 
     /**
@@ -68,25 +52,23 @@ class TextColumn extends GenericColumn
      */
     public function getEditorValue(Datagrid $datagrid)
     {
-        $editorValue = '';
-
-        $editorValue .= 'this.onEventShowCellEditor(oArgs);';
-        $editorValue .= 'if ((typeof(sData) == "undefined") || (sData == null)) {';
-        $editorValue .= 'var content = \'\';';
-        $editorValue .= '} else if (typeof(sData) != "object") {';
-        $editorValue .= 'var content = sData.toString();';
-        $editorValue .= '} else {';
-        $editorValue .= 'var content = sData.value.toString();';
-        $editorValue .= '}';
-        $editorValue .= 'column.editor.textbox.value = content;';
-
-        return $editorValue;
+        return <<<JS
+this.onEventShowCellEditor(oArgs);
+if ((typeof(sData) == "undefined") || (sData == null)) {
+    var content = '';
+} else if (typeof(sData) != "object") {
+    var content = sData.toString();
+} else {
+    var content = sData.value.toString();
+}
+column.editor.textbox.value = content;
+JS;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
         $filterFormElement = new UI_Form_Element_Text($this->getFilterFormId($datagrid));
         $filterFormElement->setLabel($this->getFilterFormLabel());
@@ -113,5 +95,4 @@ class TextColumn extends GenericColumn
 
         return $addFormElement;
     }
-
 }

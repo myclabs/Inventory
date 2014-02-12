@@ -54,18 +54,10 @@
         </tu>
         <tu tuid="resetDWOrga">
             <tuv xml:lang="fr">
-                <seg>Régénération des données d’analyse de l’organisation : [LABEL]</seg>
+                <seg>Régénération des données d’analyse [FOR_ORGANIZATIONAL_UNIT]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Analysis data rebuild for organization: [LABEL]</seg>
-            </tuv>
-        </tu>
-        <tu tuid="resetDWCell">
-            <tuv xml:lang="fr">
-                <seg>Régénération des données d’analyse de l’unité organisationnelle : [LABEL]</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Analysis data rebuild for organizational unit: [LABEL]</seg>
+                <seg>Analysis data rebuild [FOR_ORGANIZATIONAL_UNIT]</seg>
             </tuv>
         </tu>
         <tu tuid="resetDWCellAndResults">

@@ -7,6 +7,7 @@
  */
 
 use Core\Annotation\Secure;
+use User\Domain\User;
 
 /**
  * Classe du controler de Data Warehouse
@@ -316,7 +317,7 @@ class DW_ReportController extends Core_Controller
                 )
             );
         } else {
-            if (($savePost['isNew']['value'] != '1')
+            if (($savePost['isNew']['hiddenValues']['isNew'] != '1')
                 && (isset($savePost['saveType']))
                 && ($savePost['saveType']['value'] == 'saveAs')
             ) {

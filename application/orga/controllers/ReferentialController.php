@@ -1,10 +1,4 @@
 <?php
-/**
- * Classe Orga_ReferentialController
- * @author valentin.claras
- * @package Orga
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use Techno\Application\Service\ExportService;
@@ -12,18 +6,10 @@ use User\Domain\User;
 
 /**
  * @author valentin.claras
- * @package Orga
- * @subpackage Controller
  */
 class Orga_ReferentialController extends Core_Controller
 {
     use UI_Controller_Helper_Form;
-
-    /**
-     * @Inject
-     * @var \Keyword\Application\Service\KeywordExport
-     */
-    protected $keywordExportService;
 
     /**
      * Redirection sur la liste.
@@ -35,7 +21,6 @@ class Orga_ReferentialController extends Core_Controller
     }
 
     /**
-     * Liste des exports.
      * @Secure("loggedIn")
      */
     public function exportsAction()
@@ -67,14 +52,6 @@ class Orga_ReferentialController extends Core_Controller
             'label' => __('Techno', 'name', 'parameters'),
             'versions' => [
                 'latest' => __('Techno', 'name', 'parameters')
-            ]
-        ];
-
-        // Keyword.
-        $this->view->exports['Keyword'] = [
-            'label' => __('Keyword', 'menu', 'semanticResources'),
-            'versions' => [
-                'latest' => __('Keyword', 'menu', 'semanticResources')
             ]
         ];
 
@@ -111,11 +88,6 @@ class Orga_ReferentialController extends Core_Controller
                 $exportService = new ExportService();
                 $streamFunction = 'stream';
                 $baseFilename = __('UI', 'name', 'parameters');
-                break;
-            case 'Keyword':
-                $exportService = $this->keywordExportService;
-                $streamFunction = 'stream';
-                $baseFilename = __('Keyword', 'export', 'baseFileName');
                 break;
             case 'Unit':
                 $exportService = new \Unit\Application\Service\UnitExport();

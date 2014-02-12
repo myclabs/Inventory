@@ -670,7 +670,7 @@ class Orga_Model_Member extends Core_Model_Entity
             foreach ($parentMemberPathTags as $pathTag) {
                 $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
             }
-            $member = $axis->getMembers()->matching($criteria)->toArray();
+            $member = $axis->getOrderedMembers()->matching($criteria)->toArray();
         } else {
             $member = [];
         }
@@ -756,6 +756,11 @@ class Orga_Model_Member extends Core_Model_Entity
         $criteria = Doctrine\Common\Collections\Criteria::create();
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getTag()) as $pathTag) {
             $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
+        }
+        if ($axis->isMemberPositioning()) {
+            $criteria->orderBy(['parentMembersHashKey' => 'ASC', 'position' => 'ASC']);
+        } else {
+            $criteria->orderBy(['label' => 'ASC']);
         }
         return $axis->getMembers()->matching($criteria)->toArray();
     }

@@ -56,7 +56,7 @@ class Techno_Test_CategorySetUp extends TestCase
     /**
      * @return Category
      */
-    function testConstruct()
+    public function testConstruct()
     {
         $o = new Category("Test");
         $o->save();
@@ -71,7 +71,7 @@ class Techno_Test_CategorySetUp extends TestCase
      * @param Category $o
      * @return Category
      */
-    function testLoad($o)
+    public function testLoad($o)
     {
         $this->entityManager->clear('Techno\Domain\Category');
         /** @var $oLoaded Category */
@@ -88,7 +88,7 @@ class Techno_Test_CategorySetUp extends TestCase
      * @depends testLoad
      * @param Category $o
      */
-    function testDelete($o)
+    public function testDelete($o)
     {
         $o->delete();
         $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));

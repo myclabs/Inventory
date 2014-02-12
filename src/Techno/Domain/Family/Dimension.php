@@ -7,11 +7,10 @@ use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
 use Core_Strategy_Ordered;
+use Core_Tools;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
-use Keyword\Application\Service\KeywordDTO;
-use Techno\Domain\Meaning;
 
 /**
  * Dimension d'une famille.
@@ -43,10 +42,14 @@ class Dimension extends Core_Model_Entity
     protected $family;
 
     /**
-     * Meaning correspondant à la dimension
-     * @var Meaning
+     * @var string
      */
-    protected $meaning;
+    protected $ref;
+
+    /**
+     * @var string
+     */
+    protected $label;
 
     /**
      * Orientation de la dimension
@@ -61,28 +64,23 @@ class Dimension extends Core_Model_Entity
     protected $members;
 
     /**
-     * Requête
-     * @var string
-     */
-    protected $query;
-
-    /**
      * Construction d'une dimension
      * @param Family  $family
-     * @param Meaning $meaning
+     * @param string  $ref
+     * @param string  $label
      * @param int     $orientation
-     * @param string  $query
      * @throws Core_Exception_InvalidArgument
      */
-    public function __construct(Family $family, Meaning $meaning, $orientation, $query = null)
+    public function __construct(Family $family, $ref, $label, $orientation)
     {
         $this->members = new ArrayCollection();
-        $this->meaning = $meaning;
+        Core_Tools::checkRef($ref);
+        $this->ref = $ref;
+        $this->label = $label;
         if ($orientation != self::ORIENTATION_HORIZONTAL && $orientation != self::ORIENTATION_VERTICAL) {
             throw new Core_Exception_InvalidArgument("Unknown orientation type");
         }
         $this->orientation = $orientation;
-        $this->query = $query;
         $this->family = $family;
         // Ajout réciproque à la famille
         $family->addDimension($this);
@@ -105,19 +103,35 @@ class Dimension extends Core_Model_Entity
     }
 
     /**
-     * @param Meaning $meaning
+     * @return string
      */
-    public function setMeaning(Meaning $meaning)
+    public function getRef()
     {
-        $this->meaning = $meaning;
+        return $this->ref;
     }
 
     /**
-     * @return Meaning
+     * @param string $ref
      */
-    public function getMeaning()
+    public function setRef($ref)
     {
-        return $this->meaning;
+        $this->ref = $ref;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param string $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
     }
 
     /**
@@ -164,22 +178,21 @@ class Dimension extends Core_Model_Entity
 
     /**
      * Retourne un membre de la dimension en le recherchant par son mot-clé
-     * @param KeywordDTO $keyword
+     * @param string $memberId
      * @throws Core_Exception_NotFound
      * @return Member
      */
-    public function getMember(KeywordDTO $keyword)
+    public function getMember($memberId)
     {
-        // Filtre la collection sur le keyword du membre
-        $results = $this->members->filter(
-            function (Member $member) use ($keyword) {
-                return ($member->getKeyword()->getRef() == $keyword->getRef());
-            }
-        );
+        // Filtre la collection sur le ref du membre
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('ref', $memberId));
+        /** @var Collection $results */
+        $results = $this->members->matching($criteria);
         if (count($results) > 0) {
             return $results->first();
         }
-        throw new Core_Exception_NotFound("Le membre $keyword->getRef() est introuvable dans cette dimension");
+        throw MemberNotFoundException::create($this->getFamily()->getRef(), $this->getRef(), $memberId);
     }
 
     /**
@@ -218,30 +231,6 @@ class Dimension extends Core_Model_Entity
         if ($this->hasMember($member)) {
             $this->members->removeElement($member);
         }
-    }
-
-    /**
-     * @param string $query
-     */
-    public function setQuery($query)
-    {
-        $this->query = $query;
-    }
-
-    /**
-     * @return string
-     */
-    public function getQuery()
-    {
-        return $this->query;
-    }
-
-    /**
-     * @return string Label du meaning de la dimension
-     */
-    public function getLabel()
-    {
-        return $this->getMeaning()->getLabel();
     }
 
     /**

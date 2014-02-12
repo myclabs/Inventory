@@ -1,0 +1,22 @@
+<?php
+if ($this->isUserAbleToComment) {
+    echo $this->partial(
+        'comment/list.phtml',
+        'social',
+        [
+            'comments'       => $this->comments,
+            'currentUser'    => $this->currentUser,
+            'endpointAdd'    => 'orga/cell/input-comment-add/idCell/' . $this->idCell,
+            'endpointDelete' => 'orga/cell/input-comment-delete/idCell/' . $this->idCell,
+        ]
+    );
+} else {
+    echo $this->partial(
+        'comment/list.phtml',
+        'social',
+        [
+            'comments'    => $this->comments,
+            'currentUser' => $this->currentUser,
+        ]
+    );
+}

@@ -1,17 +1,11 @@
 <?php
-/**
- * @author valentin.claras
- * @author sidoine.tardieu
- * @package Orga
- */
 
 use Core\Annotation\Secure;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use User\Domain\ACL\Role\Role;
 
 /**
- * Datagrid de granularity
- * @package Orga
+ * @author valentin.claras
  */
 class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 {
@@ -33,29 +27,36 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+
+        try {
+            $granularityForinventoryStatus = $organization->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForinventoryStatus = null;
+        }
+
         $this->request->filter->addCondition(Orga_Model_Granularity::QUERY_ORGANIZATION, $organization);
         $this->request->order->addOrder(Orga_Model_Granularity::QUERY_POSITION);
         /**@var Orga_Model_Granularity $granularity */
         foreach (Orga_Model_Granularity::loadList($this->request) as $granularity) {
-            $data = array();
+            $data = [];
             $data['index'] = $granularity->getId();
-            $listAxes = array();
+            $listAxes = [];
             foreach ($granularity->getAxes() as $axis) {
                 $listAxes[] = $axis->getRef();
             }
             $data['axes'] = $this->cellList($listAxes);
-            $data['navigable'] = $granularity->isNavigable();
-            $data['orgaTab'] = $granularity->getCellsWithOrgaTab();
-            $data['aCL'] = $granularity->getCellsWithACL();
-            $data['aFTab'] = $granularity->getCellsWithAFConfigTab();
-            $data['dW'] = $granularity->getCellsGenerateDWCubes();
-            $data['genericActions'] = $granularity->getCellsWithSocialGenericActions();
-            $data['contextActions'] = $granularity->getCellsWithSocialContextActions();
-            $data['inputDocuments'] = $granularity->getCellsWithInputDocuments();
-            if (!($granularity->hasAxes())) {
-                $this->editableCell($data['navigable'], false);
-                $this->editableCell($data['orgaTab'], false);
+            $data['relevance'] = $granularity->getCellsControlRelevance();
+            $data['input'] = $granularity->isInput();
+            $data['afs'] = $granularity->hasInputGranularities();
+            $data['inventory'] = ($granularity === $granularityForinventoryStatus);
+            $data['reports'] = $granularity->getCellsGenerateDWCubes();
+            $data['acl'] = $granularity->getCellsWithACL();
+            if ((!$granularity->hasAxes()) || $data['relevance'] || $data['input']
+                || $data['afs'] || $data['reports'] || $data['acl'] || $data['inventory']) {
                 $data['delete'] = false;
+            }
+            if (!$data['input']) {
+                $this->editableCell($data['input'], false);
             }
             $this->addLine($data);
         }
@@ -70,7 +71,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         $refAxes = $this->getAddElementValue('axes');
-        $listAxes = array();
+        $axes = array();
         $refGranularity = '';
         if (empty($refAxes)) {
             $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'emptyGranularity'));
@@ -80,11 +81,11 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $refGranularity .= $refAxis . '|';
             $axis = $organization->getAxisByRef($refAxis);
             // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
-            if (!$axis->isTransverse($listAxes)) {
+            if (!$axis->isTransverse($axes)) {
                 $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'hierarchicallyLinkedAxes'));
                 break;
             } else {
-                $listAxes[] = $axis;
+                $axes[] = $axis;
             }
         }
         $refGranularity = substr($refGranularity, 0, -1);
@@ -108,20 +109,20 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             };
 
             // Lance la tache en arrière plan
-            $task = new Orga_Work_Task_AddGranularity(
-                $organization,
-                $listAxes,
-                (bool) $this->getAddElementValue('navigable'),
-                (bool) $this->getAddElementValue('orgaTab'),
-                (bool) $this->getAddElementValue('aCL'),
-                (bool) $this->getAddElementValue('aFTab'),
-                (bool) $this->getAddElementValue('dW'),
-                (bool) $this->getAddElementValue('genericActions'),
-                (bool) $this->getAddElementValue('contextActions'),
-                (bool) $this->getAddElementValue('inputDocuments'),
-                __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $listAxes)])
+            $task = new \Core\Work\ServiceCall\ServiceCallTask(
+                'Orga_Service_OrganizationService',
+                'addGranularity',
+                [
+                    $organization,
+                    $axes,
+                    [
+                        'relevance' => (bool) $this->getAddElementValue('relevance'),
+                        'reports'   => (bool) $this->getAddElementValue('reports'),
+                        'acl'       => (bool) $this->getAddElementValue('acl')
+                    ]
+                ],
+                __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
             );
-            set_time_limit(0);
             $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
         }
 
@@ -134,20 +135,39 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         $granularity = Orga_Model_Granularity::load($this->delete);
-        // TODO logique métier -> pas dans le contrôleur
-        if ($granularity->getCellsWithACL()) {
-            throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
-        }
-
-        $granularity->delete();
-
         try {
-            $this->entityManager->flush();
-        } catch (Core_ORM_ForeignKeyViolationException $e) {
+            $granularityForInventoryStatus =  $granularity->getOrganization()->getGranularityForInventoryStatus();
+            if ($granularityForInventoryStatus === $granularity) {
+                throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
+            }
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            // Pas de granularité des inventares.
+        }
+
+        if ($granularity->getCellsWithACL() || $granularity->isInput() || $granularity->getCellsControlRelevance()
+            || $granularity->hasInputGranularities() || $granularity->getCellsGenerateDWCubes()) {
             throw new Core_Exception_User('Orga', 'granularity', 'granularityCantBeDeleted');
         }
 
-        $this->message = __('UI', 'message', 'deleted', array('GRANULARITY' => $granularity->getLabel()));
+        $success = function () {
+            $this->message = __('UI', 'message', 'deleted');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'deletedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+        // Lance la tache en arrière plan
+        $task = new \Core\Work\ServiceCall\ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'removeGranularity',
+            [
+                $granularity,
+            ],
+            __('Orga', 'backgroundTasks', 'removeGranularity', ['LABEL' => $granularity->getLabel()])
+        );
+        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
@@ -160,42 +180,28 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         $granularity = Orga_Model_Granularity::load($this->update['index']);
 
         switch ($this->update['column']) {
-            case 'navigable':
-                $granularity->setNavigability((bool) $this->update['value']);
-                $this->data = $granularity->isNavigable();
+            case 'relevance':
+                $granularity->setCellsControlRelevance((bool) $this->update['value']);
+                $this->data = $granularity->getCellsControlRelevance();
                 break;
-            case 'orgaTab':
-                $granularity->setCellsWithOrgaTab((bool) $this->update['value']);
-                $this->data = $granularity->getCellsWithOrgaTab();
-                break;
-            case 'aCL':
-                foreach ($granularity->getCells() as $cell) {
-                    if (count($cell->getAllRoles()) > 0) {
-                        throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
+            case 'acl':
+                if (!$this->update['value']) {
+                    foreach ($granularity->getCells() as $cell) {
+                        if (count($cell->getAllRoles()) > 0) {
+                            throw new Core_Exception_User('Orga', 'granularity', 'roleExistsForCellAtThisGranularity');
+                        }
                     }
                 }
                 $granularity->setCellsWithACL((bool) $this->update['value']);
                 $this->data = $granularity->getCellsWithACL();
                 break;
-            case 'aFTab':
-                $granularity->setCellsWithAFConfigTab((bool) $this->update['value']);
-                $this->data = $granularity->getCellsWithAFConfigTab();
+            case 'input':
+                $granularity->setInputConfigGranularity();
+                $this->data = ['value' => $granularity->isInput(), 'editable' => false];
                 break;
-            case 'dW':
+            case 'reports':
                 $granularity->setCellsGenerateDWCubes((bool) $this->update['value']);
                 $this->data = $granularity->getCellsGenerateDWCubes();
-                break;
-            case 'genericActions':
-                $granularity->setCellsWithSocialGenericActions((bool) $this->update['value']);
-                $this->data = $granularity->getCellsWithSocialGenericActions();
-                break;
-            case 'contextActions':
-                $granularity->setCellsWithSocialContextActions((bool) $this->update['value']);
-                $this->data = $granularity->getCellsWithSocialContextActions();
-                break;
-            case 'inputDocuments':
-                $granularity->setCellsWithInputDocuments((bool) $this->update['value']);
-                $this->data = $granularity->getCellsWithInputDocuments();
                 break;
             default:
                 parent::updateelementAction();

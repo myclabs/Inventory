@@ -20,6 +20,30 @@
                 <seg>Password</seg>
             </tuv>
         </tu>
+        <tu tuid="passwordAgain">
+            <tuv xml:lang="fr">
+                <seg>Mot de passe (confirmation)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Password (verification)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="register">
+            <tuv xml:lang="fr">
+                <seg>Inscription</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Sign up</seg>
+            </tuv>
+        </tu>
+        <tu tuid="alreadyRegistered">
+            <tuv xml:lang="fr">
+                <seg>Déjà inscrit ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Already have an account?</seg>
+            </tuv>
+        </tu>
 
         <!-- Formulaire de connection -->
 

@@ -42,6 +42,16 @@ class Core_Locale
      */
     public $significantFigures = null;
 
+    /**
+     * Nombre de chiffres significatifs minimum.
+     *
+     * Si le nombre de chiffres significatifs demandés est inférieur à ce minimum,
+     * cette valeur sera utilisée.
+     *
+     * @var int
+     */
+    public static $minSignificantFigures = null;
+
 
     /**
      * Récupération de la locale demandée
@@ -142,6 +152,11 @@ class Core_Locale
         }
 
         if ($significantFigures !== null) {
+            if (self::$minSignificantFigures !== null &&
+                $significantFigures < self::$minSignificantFigures
+            ) {
+                $significantFigures = self::$minSignificantFigures;
+            }
             // Application du nombre de chiffre signifactif.
             // non géré par Zend.
             $precision = floor($significantFigures - log10(abs($number)));

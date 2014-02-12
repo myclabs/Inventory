@@ -129,7 +129,7 @@ class UI_HTML_Button extends UI_Generic
 
         // Ajoute l'icône si présente.
         if ($this->icon !== null) {
-            $body .= '<i class="icon-'.$this->icon.'"></i> ';
+            $body .= '<i class="fa fa-'.$this->icon.'"></i> ';
         }
         // Ajoute le texte.
         $body .= $this->label;

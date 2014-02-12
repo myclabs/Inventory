@@ -2,6 +2,7 @@
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Techno\Domain\Family\MemberNotFoundException;
 
 /**
  * Service responsable de la gestion des saisies des AF
@@ -20,10 +21,6 @@ class AF_Service_InputService
      */
     private $logger;
 
-    /**
-     * @param EventDispatcher $eventDispatcher
-     * @param LoggerInterface $logger
-     */
     public function __construct(EventDispatcher $eventDispatcher, LoggerInterface $logger)
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -68,23 +65,31 @@ class AF_Service_InputService
         // MAJ le pourcentage de complétion
         $inputSet->updateCompletion();
 
-        // Si la saisie est complète
-        if ($inputSet->isInputComplete()) {
-            // Calcule les résultats
-            try {
-                $af->execute($inputSet);
-                $inputSet->setCalculationComplete(true);
-                $inputSet->getOutputSet()->calculateTotals();
-            } catch (Exception $e) {
-                $ref = $inputSet->getAF()->getRef();
-                $this->logger->warning("Error while calculating AF '$ref' results", ['exception' => $e]);
+        // Si la saisie est incomplète
+        if (! $inputSet->isInputComplete()) {
+            $inputSet->clearOutputSet();
+            return;
+        }
 
-                $inputSet->setCalculationComplete(false);
-                $inputSet->clearOutputSet();
-            }
-        } else {
+        // Calcule les résultats
+        try {
+            $af->execute($inputSet);
+            $inputSet->setCalculationComplete(true);
+            $inputSet->getOutputSet()->calculateTotals();
+        } catch (MemberNotFoundException $e) {
+            $message = __('AF', 'inputInput', 'completeInputSavedCalculationErrorUnknownTechnoMember', [
+                'FAMILY'    => $e->getFamily(),
+                'DIMENSION' => $e->getDimension(),
+                'MEMBER'    => $e->getMember(),
+            ]);
+            $inputSet->setCalculationComplete(false, $message);
+            $inputSet->clearOutputSet();
+        } catch (Exception $e) {
+            $ref = $inputSet->getAF()->getRef();
+            $this->logger->warning("Error while calculating AF '$ref' results", ['exception' => $e]);
+
+            $inputSet->setCalculationComplete(false);
             $inputSet->clearOutputSet();
         }
     }
-
 }

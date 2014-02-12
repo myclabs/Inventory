@@ -16,7 +16,7 @@ $colLastName = new UI_Datagrid_Col_Text('nom', __('User', 'user', 'lastName'));
 $datagrid->addCol($colLastName);
 
 // Email
-$colEmail = new UI_Datagrid_Col_Text('email', __('UI', 'name', 'emailAddress'));
+$colEmail = new UI_Datagrid_Col_Text('email',  __('User', 'user', 'emailAddress'));
 $datagrid->addCol($colEmail);
 
 echo $datagrid->render();

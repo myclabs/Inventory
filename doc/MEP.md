@@ -1,6 +1,41 @@
 # Mise en production
 
 
+## 2.10
+
+- Renomer l'éventuel dossier data/specificExports en data/specificReports
+
+- Déployer normalement l'application **sans build update**
+
+- Exécuter le script de migration SQL
+
+```
+scripts/migration/2.10/migrate.sql
+```
+
+- Faire le build update
+
+```
+php scripts/build/build.php update
+```
+
+- Exécuter le script de migration
+
+```
+php scripts/migration/2.10/migrate.php
+```
+
+- Faire un rebuild de DW (pour regénérer les traductions)
+
+- Lancer le script de rebuild des ACL
+
+```
+php scripts/jobs/acl/rebuild.php acl:rebuild
+```
+
+- Si il reste des traductions de DW dans `ext_translations`, les supprimer
+
+
 ## 2.9
 
 - Installer memcached et le plugin New Relic (cf. projet server)

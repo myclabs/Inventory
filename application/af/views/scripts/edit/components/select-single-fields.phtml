@@ -35,8 +35,8 @@ $isVisible->editable = true;
 $isVisible->defaultAddValue = true;
 $isVisible->textTrue = __('UI', 'property', 'visible');
 $isVisible->textFalse = __('UI', 'property', 'masked');
-$isVisible->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'visible');
-$isVisible->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'masked');
+$isVisible->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'visible');
+$isVisible->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'masked');
 $selectDatagrid->addCol($isVisible);
 // Enable / Disable
 $enabled = new UI_Datagrid_Col_Bool('enabled', __('AF', 'configComponentDatagrid', 'initialActivationHeader'));
@@ -44,8 +44,8 @@ $enabled->editable = true;
 $enabled->defaultAddValue = true;
 $enabled->textTrue = __('UI', 'property', 'enabled');
 $enabled->textFalse = __('UI', 'property', 'disabled');
-$enabled->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'enabled');
-$enabled->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'disabled');
+$enabled->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'enabled');
+$enabled->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'disabled');
 $selectDatagrid->addCol($enabled);
 // Required
 $required = new UI_Datagrid_Col_Bool('required', __('AF', 'configComponentDatagrid', 'requiredHeader'));
@@ -53,8 +53,8 @@ $required->editable = true;
 $required->defaultAddValue = false;
 $required->textTrue = __('UI', 'property', 'required');
 $required->textFalse = __('UI', 'property', 'optional');
-$required->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'property', 'required');
-$required->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'property', 'optional');
+$required->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'required');
+$required->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'optional');
 $selectDatagrid->addCol($required);
 // Default Option
 $defaultValue = new UI_Datagrid_Col_List('defaultValue', __('AF', 'configComponentDatagrid', 'initialValueHeader'));

@@ -7,7 +7,6 @@ $library = $this->library;
 
 $datagrid = new UI_Datagrid('library'.$library->getId(), 'datagrid_library', 'doc');
 $datagrid->addParam('id', $library->getId());
-$datagrid->selectableElement = true;
 $datagrid->deleteElements = true;
 
 // Name
@@ -29,10 +28,6 @@ $datagrid->addCol($descriptionColumn);
 $fileSizeColumn = new UI_Datagrid_Col_Number('fileSize', __('Doc', 'library', 'fileSize'));
 $datagrid->addCol($fileSizeColumn);
 
-// Nombre d'utilisations
-$referenceCountColumn = new UI_Datagrid_Col_Number('referenceCount', __('Doc', 'library', 'quotations'));
-$datagrid->addCol($referenceCountColumn);
-
 // Download file
 $downloadColumn = new UI_Datagrid_Col_Link('download', __('Doc', 'verb', 'download'));
 $datagrid->addCol($downloadColumn);
@@ -53,7 +48,7 @@ $popup->footer = $validateButton->render() . ' ' . $cancelButton->render();
 $popup->display();
 
 // Bouton d'ajout
-$addButton = new UI_HTML_Button('<i class="icon-plus-sign"></i> ' . __('Doc', 'bibliography', 'addNewDocument'));
+$addButton = new UI_HTML_Button('<i class="fa fa-plus"></i> ' . __('Doc', 'library', 'addPanelTitle'));
 $addButton->addAttribute('id', 'addDocumentButton'.$library->getId());
 echo $addButton->render();
 ?>

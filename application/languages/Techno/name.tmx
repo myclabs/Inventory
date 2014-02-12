@@ -52,22 +52,6 @@
                 <seg>Family</seg>
             </tuv>
         </tu>
-        <tu tuid="meaning">
-            <tuv xml:lang="fr">
-                <seg>Signification</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Meaning</seg>
-            </tuv>
-        </tu>
-        <tu tuid="meanings">
-            <tuv xml:lang="fr">
-                <seg>Significations</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Meanings</seg>
-            </tuv>
-        </tu>
         <tu tuid="orientation">
             <tuv xml:lang="fr">
                 <seg>Orientation</seg>
@@ -82,22 +66,6 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Parameters</seg>
-            </tuv>
-        </tu>
-        <tu tuid="tag">
-            <tuv xml:lang="fr">
-                <seg>Tag</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Tag</seg>
-            </tuv>
-        </tu>
-        <tu tuid="tags">
-            <tuv xml:lang="fr">
-                <seg>Tags</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Tags</seg>
             </tuv>
         </tu>
 

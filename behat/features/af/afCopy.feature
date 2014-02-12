@@ -39,14 +39,14 @@ Feature: AF copy feature
     When I open collapse "emissions_amont"
     Then I should see "Type : Expression"
     And I should see "quantite_combustible * fe_amont"
-    When I click element "#combustion_combustible_unite_masse_copy__emissions_amont_wrapper .icon-zoom-in"
+    When I click element "#combustion_combustible_unite_masse_copy__emissions_amont_wrapper .fa-search"
     Then I should see the popup "emissions_amont (Émissions liées aux processus amont de la combustion)"
     And I should see "quantite_combustible * fe_amont"
     And I should see "Produit"
     When I click "×"
     Then I should see "Valeur : 2,54 t équ. CO2 ± 20 %"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Copy of the combustion form, incorrect input
     Given I am on "af/af/list"
     And I wait for the page to finish loading

@@ -35,15 +35,6 @@
                 <seg>Administrator</seg>
             </tuv>
         </tu>
-        <tu tuid="cellAdministrators">
-            <tuv xml:lang="fr">
-                <seg>Administrateur(s)</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Administrator(s)</seg>
-            </tuv>
-        </tu>
-
         <!-- Coordinateur de cellule -->
 
         <tu tuid="cellManager">
@@ -187,6 +178,14 @@
 
         <!-- Suppression -->
 
+        <tu tuid="deleteRole">
+            <tuv xml:lang="fr">
+                <seg>Supprimer ce rôle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Delete this role</seg>
+            </tuv>
+        </tu>
         <tu tuid="userRoleRemovedFromUser">
             <tuv xml:lang="fr">
                 <seg>Suppression du rôle effectuée.</seg>

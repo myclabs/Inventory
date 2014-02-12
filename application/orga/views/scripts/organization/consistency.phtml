@@ -1,34 +1,26 @@
 <?php
-/**
- * @author valentin.claras
- * @author sidoine.tardieu
- * @package Orga
- */
+$columnControl = new UI_Datagrid_Col_Text('control', ___('Orga', 'control', 'seekedIssue'));
 
-$columnControl = new UI_Datagrid_Col_Text('control', __('Orga', 'control', 'seekedIssue'));
-$columnControl->multiple = true;
+$columnDiag = new UI_Datagrid_Col_Bool('diagnostic', ___('UI', 'name', 'diagnostic'));
+$columnDiag->valueTrue = '<i class="fa fa-check"></i> '.___('UI', 'other', 'ok');
+$columnDiag->valueFalse = '<i class="fa fa-times"></i> '.___('UI', 'other', 'nok');
 
-$columnDiag = new UI_Datagrid_Col_Bool('diagnostic', __('UI', 'name', 'diagnostic'));
-$columnDiag->valueTrue = '<i class="icon-ok"></i> '.__('UI', 'other', 'ok');
-$columnDiag->valueFalse = '<i class="icon-remove"></i> '.__('UI', 'other', 'nok');
+$columnEchec = new UI_Datagrid_Col_Text('failure', ___('Orga', 'control', 'abnormalItems'));
 
-$columnEchec = new UI_Datagrid_Col_Text('failure', __('Orga', 'control', 'abnormalItems'));
-$columnEchec->multiple = true;
-
-$datagrid = new UI_Datagrid('consistency', 'datagrid_consistency', 'orga');
+$datagrid = new UI_Datagrid('consistency'.$this->idOrganization, 'datagrid_organization_consistency', 'orga');
 $datagrid->addCol($columnControl);
 $datagrid->addCol($columnDiag);
 $datagrid->addCol($columnEchec);
-
-$datagrid->pagination = false;
 $datagrid->addParam('idOrganization', $this->idOrganization);
+$datagrid->pagination = false;
+
 if ($this->display === false) {
     echo $datagrid->render();
 } else {
     $datagrid->display();
 }
 
-$controlButton = new UI_HTML_Button(__('Orga', 'control', 'renewControl'));
-$controlButton->addAttribute('onclick', 'consistency.filter();');
+$controlButton = new UI_HTML_Button(___('Orga', 'control', 'renewControl'));
+$controlButton->addAttribute('onclick', 'consistency'.$this->idOrganization.'.filter();');
 $controlButton->addAttribute('class', 'btn-primary');
 $controlButton->display();

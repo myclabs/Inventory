@@ -4,7 +4,7 @@ Feature: Subforms input feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Subform input scenario : complete input with zero repetition
   # Formulaire des données générales : un seul champ "Chiffre d'affaires"
     Given I am on "af/af/test/id/3"
@@ -15,8 +15,8 @@ Feature: Subforms input feature
     And I click "Ajouter"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
-    And the field "s_f_r__nature_combustible__1" should have error: "Merci de renseigner ce champ."
-    And the field "s_f_r__quantite_combustible__1" should have error: "Merci de renseigner ce champ."
+    And the field "s_f_r__nature_combustible__1" should have error: "Champ obligatoire pour atteindre le statut : complet."
+    And the field "s_f_r__quantite_combustible__1" should have error: "Champ obligatoire pour atteindre le statut : complet."
     And I should see "33%"
   # Puis on supprime le bloc pour enregistrer une saisie complète
     When I click "Supprimer"
@@ -24,7 +24,7 @@ Feature: Subforms input feature
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
     And I should see "100%"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Subform input scenario : complete input with 1 repetition
   # Formulaire des données générales : un seul champ "Chiffre d'affaires"
     Given I am on "af/af/test/id/3"
@@ -38,7 +38,7 @@ Feature: Subforms input feature
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
     And I should see "100%"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Subform input scenario : complete input with 2 repetitions
   # Formulaire des données générales : un seul champ "Chiffre d'affaires"
     Given I am on "af/af/test/id/3"
@@ -76,7 +76,7 @@ Feature: Subforms input feature
     When I open tab "Détails calculs"
     Then I should see "Blablablabla"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Subform input scenario : choice of units
     Given I am on "af/af/test/id/3"
     And I wait for the page to finish loading
@@ -97,8 +97,7 @@ Feature: Subforms input feature
     When I open collapse "Sous-formulaire répété #1"
     And I open collapse "emissions_combustion"
   # Calcul effectué avec la valeur récupérée dans la bonne unité
-    Then I should see "Valeur : 3,077 t équ. CO2 ± 20 %"
+    Then I should see "Valeur : 3 077 t équ. CO2 ± 20 %"
   # Valeur récupérée dans la bonne unité
     When I open collapse "quantite_combustible"
     Then I should see "Valeur : 1 000 kg ± %"
-

@@ -20,20 +20,10 @@ class OrganizationViewModel
     /**
      * @var boolean
      */
+    public $canBeEdited;
+
+    /**
+     * @var boolean
+     */
     public $canBeDeleted;
-
-    /**
-     * @var string[]
-     */
-    public $rootAxesLabels = [];
-
-    /**
-     * @var string
-     */
-    public $inventory;
-
-    /**
-     * @var string
-     */
-    public $link;
 }

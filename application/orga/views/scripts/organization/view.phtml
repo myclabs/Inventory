@@ -1,0 +1,43 @@
+<?php
+use Orga\ViewModel\CellViewModel;
+use Orga\ViewModel\OrganizationViewModel;
+
+/** @var OrganizationViewModel $organization */
+$organization = $this->organization;
+/** @var CellViewModel[] $cells */
+$cells = $this->cells;
+?>
+<div class="organization page-header">
+    <h1>
+        <?=$organization->label?>
+        <?php if ($organization->canBeEdited) : ?>
+            <div class="pull-right">
+                <small>
+                    <a class="editOrganization btn btn-small btn-primary"
+                       href="orga/organization/edit/idOrganization/<?=$organization->id?>">
+                        <i class="fa fa-wrench"></i>
+                        <?=___('UI', 'name', 'configurationOrga')?>
+                    </a>
+                </small>
+            </div>
+        <?php endif; ?>
+    </h1>
+</div>
+
+<?php foreach ($cells as $cell) : ?>
+<div class="well">
+    <h2>
+        <a href="orga/cell/view/idCell/<?=$cell->id?>">
+            <?=$this->cellsAccess[$cell->id]?>
+            <?=$cell->extendedLabel?>
+            <small>
+                <i class="fa fa-external-link"></i>
+                <?=___('Orga', 'organizationList', 'goToData')?>
+            </small>
+        </a>
+    </h2>
+</div>
+<?php endforeach; ?>
+<?php if (count($this->cells) === 0) : ?>
+<p><?=___('UI', 'message', 'noAccess')?></p>
+<?php endif; ?>

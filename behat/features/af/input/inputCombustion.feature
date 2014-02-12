@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @readOnly
 Feature: Combustion input feature
 
   Background:
@@ -23,7 +23,7 @@ Feature: Combustion input feature
     When I open collapse "emissions_amont"
     Then I should see "Type : Expression"
     And I should see "quantite_combustible * fe_amont"
-    When I click element "#combustion_combustible_unite_masse__emissions_amont_wrapper .icon-zoom-in"
+    When I click element "#combustion_combustible_unite_masse__emissions_amont_wrapper .fa-search"
     Then I should see the popup "emissions_amont (Émissions liées aux processus amont de la combustion)"
     And I should see "quantite_combustible * fe_amont"
     And I should see "Produit"
@@ -32,11 +32,7 @@ Feature: Combustion input feature
   # Vérification contenu pour un algo de type "paramètre"
     When I open collapse "fe_amont"
     Then I should see "Type : Paramètre"
-    And I should see "Processus : amont de la combustion"
+    And I should see "Processus : Amont combustion"
     And I should see "Valeur : 254 kg équ. CO2/t ± 20 %"
     When I click element "#combustion_combustible_unite_masse__emissions_amont__fe_amont a:contains('Combustion de combustible, mesuré en unité de masse')"
-    And I open tab "Documentation"
     Then I should see "Il n'y a aucune documentation pour cette famille."
-
-
-

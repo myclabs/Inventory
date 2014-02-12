@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe GenericColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
@@ -14,12 +6,9 @@ use UI\Datagrid\Datagrid;
 use UI_Form_ZendElement;
 
 /**
- * Description of colonne.
+ * Classe abstraite représentant une colonne de datagrid.
  *
- * Une classe mère (abstraite) permettant de générer une colonne.
- *
- * @package    UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 abstract class GenericColumn
 {
@@ -44,36 +33,30 @@ abstract class GenericColumn
     /**
      * Définition de l'alignement du texte de la colonne.
      *
-     * @var   string
+     * @var string
      */
-    public $valueAlignment = null;
+    public $valueAlignment;
 
     /**
-     * Pseudo constante redéfinissable
-     *
      * Définition du label d'édition affiché dans la cellule.
      *
      * @var string
      */
-    public $editableLabel = null;
+    public $editableLabel;
 
     /**
-     * Pseudo constante redéfinissable
-     *
      * Définition du label du bouton de sauvegarde de l'éditeur.
      *
      * @var string
      */
-    public $editLabelSave = null;
+    public $editLabelSave;
 
     /**
-     * Pseudo constante redéfinissable
-     *
      * Définition du label du bouton d'annulation de l'éditeur.
      *
      * @var string
      */
-    public $editLabelCancel = null;
+    public $editLabelCancel;
 
     /**
      * Identifiant unique de la colonne.
@@ -81,9 +64,9 @@ abstract class GenericColumn
      * Cet identifiant permet d'identifier de manière unique chaque colonne.
      * Il est utilisé pour récupérer les données de la colonne.
      *
-     * @var   string
+     * @var string
      */
-    public $id = null;
+    public $id;
 
     /**
      * Label de la colonne.
@@ -91,50 +74,50 @@ abstract class GenericColumn
      * Ce texte est utilisé comme titre de la colonne.
      *  si il reste nul, la colonne n'aura pas de titre.
      *
-     * @var   string
+     * @var string
      */
-    public $label = null;
+    public $label;
 
     /**
      * Label de la colonne.
      *
      * Ce texte est utilisé en priorité comme titre pour l'ajout, sinon, le label de la colonne est utilisé.
      *
-     * @var   string
+     * @var string
      */
-    public $labelAdd = null;
+    public $labelAdd;
 
     /**
      * Label de la colonne.
      *
      * Ce texte est utilisé en priorité comme titre pour le filtre, sinon, le label de la colonne est utilisé.
      *
-     * @var   string
+     * @var string
      */
-    public $labelFilter = null;
+    public $labelFilter;
 
     /**
      * Permet de savoir si la colonne est présente dans la formulaire d'ajout par défaut.
      *
      * Par défaut oui.
      *
-     * @var   bool
+     * @var bool
      */
     public $addable = true;
 
     /**
      * Valeur par défaut dans le popup d'ajout.
      *
-     * @var   string
+     * @var string
      */
-    public $defaultAddValue = null;
+    public $defaultAddValue;
 
     /**
      * Permet de savoir si la colonne est modifiable dans la ligne.
      *
      * Par défaut non.
      *
-     * @var   bool
+     * @var bool
      */
     public $editable = false;
 
@@ -143,7 +126,7 @@ abstract class GenericColumn
      *
      * Par défaut oui.
      *
-     * @var   bool
+     * @var bool
      */
     public $displayLabelEditable = true;
 
@@ -151,39 +134,37 @@ abstract class GenericColumn
      * Nom du criteria de la colonne pour le filtrage.
      * Par defaut vaut null et empèche le filtrage.
      *
-     * @var   string
+     * @var string
      */
-    public $criteriaFilterAttribute = null;
+    public $criteriaFilterAttribute;
 
     /**
      * Nom de l'opérateur criteria utilisé lors du filtre sur cette colonne.
      * Par defaut vaut null et empèche le filtre.
      *
-     * @var   string
+     * @var string
      */
-    public $criteriaFilterOperator = null;
+    public $criteriaFilterOperator;
 
     /**
      * Nom du criteria de la colonne pour le tri.
      * Par defaut vaut null et empèche le tri.
      *
-     * @var   string
+     * @var string
      */
-    public $criteriaOrderAttribute = null;
+    public $criteriaOrderAttribute;
 
 
     /**
-      * Constructeur de la colonne.
-      *
-      * @param string $id    Identifiant unique de la colonne.
-      * @param string $label Texte afiché en titre de la colone.
+     * @param string $id    Identifiant unique de la colonne.
+     * @param string $label Texte afiché en titre de la colone.
      */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         $this->id = $id;
         $this->label = $label;
         // Définition des pseudo-constantes pouvant être redéfinies.
-        $this->editableLabel = '<i class="icon-pencil"></i>';
+        $this->editableLabel = '<i class="fa fa-pencil-square-o"></i>';
         $this->editLabelSave = __('UI', 'verb', 'save');
         $this->editLabelCancel = __('UI', 'verb', 'cancel');
     }
@@ -386,12 +367,12 @@ abstract class GenericColumn
     /**
      * Méthode renvoyant le champs du filtre de la colonne.
      *
-     * @param Datagrid $datagrid
-     * @param array $defaultValue Valeur par défaut du filtre (=null).
+     * @param Datagrid   $datagrid
+     * @param array|null $defaultValue Valeur par défaut du filtre (=null).
      *
      * @return UI_Form_ZendElement
      */
-    abstract public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null);
+    abstract public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null);
 
     /**
      * Méthode renvoyant l'id du filtre.
@@ -431,7 +412,7 @@ abstract class GenericColumn
         $resetField = '';
 
         $resetField .= '<i ';
-        $resetField .= 'class="icon-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
+        $resetField .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
         $resetField .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\');"';
         $resetField .= '>';
         $resetField .= '</i>';
@@ -451,7 +432,7 @@ abstract class GenericColumn
         $filterValue = '';
 
         // Condition de saisie du filtre.
-        $filterValue .= 'if ($(\'#'.$this->getFilterFormId($datagrid).'\').val() != \'\') {';
+        $filterValue .= "if ($('#".$this->getFilterFormId($datagrid)."').val() != '') {";
 
         // Ajout au filtre.
         $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
@@ -472,11 +453,7 @@ abstract class GenericColumn
      */
     public function getResettingFilter(Datagrid $datagrid)
     {
-        $resetFields = '';
-
-        $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\');';
-
-        return $resetFields;
+        return "$('#".$this->getFilterFormId($datagrid)."').val('');";
     }
 
     /**
@@ -513,5 +490,4 @@ abstract class GenericColumn
             return $this->label;
         }
     }
-
 }

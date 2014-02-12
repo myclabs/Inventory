@@ -1,11 +1,17 @@
 <?php
-/** @var \Orga\ViewModel\OrganizationViewModel[] $organizations */
+use Orga\ViewModel\OrganizationViewModel;
+
+/** @var OrganizationViewModel[] $organizations */
 $organizations = $this->organizations;
 ?>
 
+<style>
+    .deleteOrganization { margin-left: 15px; }
+</style>
+
 <div class="page-header">
     <h1>
-        <?=__('Orga', 'organization', 'organizations')?>
+        <?=___('Orga', 'organization', 'organizations')?>
     </h1>
 </div>
 
@@ -16,33 +22,41 @@ $organizations = $this->organizations;
             <?php if ($organization->canBeDeleted) : ?>
                 <div class="pull-right">
                     <a class="deleteOrganization btn btn-small btn-warning"
-                       href="orga/organization/delete?idOrganization=<?=$organization->id?>">
-                        <i class="icon-trash icon-white"></i>
-                        <?=__('UI', 'verb', 'delete')?>
+                       href="orga/organization/delete/idOrganization/<?=$organization->id?>">
+                        <i class="fa fa-trash-o"></i>
+                        <?=___('UI', 'verb', 'delete')?>
+                    </a>
+                </div>
+            <?php endif; ?>
+            <?php if ($organization->canBeEdited) : ?>
+                <div class="pull-right">
+                    <a class="editOrganization btn btn-small btn-primary"
+                       href="orga/organization/edit/idOrganization/<?=$organization->id?>">
+                        <i class="fa fa-wrench"></i>
+                        <?=___('UI', 'name', 'configurationOrga')?>
                     </a>
                 </div>
             <?php endif; ?>
 
             <h3>
-                <a href="<?=$organization->link?>"><?=$organization->label?></a>
+                <a href="orga/organization/view/idOrganization/<?=$organization->id?>">
+                    <?=$organization->label?>
+                    <small>
+                        <i class="fa fa-external-link"></i>
+                        <?=___('Orga', 'organizationList', 'goToData')?>
+                    </small>
+                </a>
             </h3>
-
-            <p>
-                <strong><?=__('Orga', 'axis', 'rootAxes').__('UI', 'other', ':')?></strong>
-                <?=implode(', ', $organization->rootAxesLabels)?>
-            </p>
-
-            <p>
-                <strong><?=__('Orga', 'inventory', 'inventories').__('UI', 'other', ':')?></strong>
-                <?=$organization->inventory?>
-            </p>
         </div>
 
     <?php endforeach; ?>
 
     <?php if ($this->canCreateOrganization) : ?>
         <p>
-            <?=$this->button(__('UI', 'verb', 'add'), 'plus-sign')->showPopup('addOrgaPopup')?>
+            <a href="orga/organization/add" class="btn">
+                <i class="fa fa-plus"></i>
+                <?=___('UI', 'verb', 'add')?>
+            </a>
         </p>
     <?php endif; ?>
 </div>
@@ -50,29 +64,10 @@ $organizations = $this->organizations;
 <script>
     $(function() {
         $(".deleteOrganization").confirm({
-            text: "<?=__('UI', 'message', 'areYouSure')?>",
-            confirmButton: "<?=__('UI', 'verb', 'confirm')?>",
-            cancelButton: "<?=__('UI', 'verb', 'cancel')?>",
+            text: '<?=___('UI', 'message', 'areYouSure')?>',
+            confirmButton: '<i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?>',
+            cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',
             post: true
         });
     });
 </script>
-
-<?php
-// Popup d'ajout
-$popup = new UI_Popup_Static('addOrgaPopup');
-$popup->title = __('Orga', 'organization', 'addPanelTitle');
-
-$addForm = new UI_Form('addOrgaForm');
-$addForm->setAction('orga/organization/add');
-$addForm->setAjax(false);
-$labelInput = new UI_Form_Element_Text('label');
-$labelInput->setLabel(__('UI', 'name', 'label'));
-$labelInput->setRequired(true);
-$addForm->addElement($labelInput);
-
-$popup->footer = $this->button(__('UI', 'verb', 'validate'), null, ['class' => 'btn-primary'])->submitForm('addOrgaForm')->__toString()
-    . $this->button(__('UI', 'verb', 'cancel'))->closePopup('addOrgaPopup')->__toString();
-
-$popup->body = $addForm->render();
-$popup->display();

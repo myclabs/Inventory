@@ -22,7 +22,9 @@
     $this->headScript()->appendFile('scripts/bootbox.min.js', 'text/javascript');
     $this->headScript()->appendFile('scripts/ui/feedback-form.js', 'text/javascript');
     $this->headLink()->prependStylesheet('css/orga/organizations.css');
+    $this->headLink()->prependStylesheet('css/user/login.css');
     $this->headLink()->prependStylesheet('css/ui/layout.css');
+    $this->headLink()->prependStylesheet('font-awesome/css/font-awesome.min.css');
     $this->headLink()->prependStylesheet('bootstrap/css/bootstrap-responsive.css');
     $this->headLink()->prependStylesheet('bootstrap/css/bootstrap.css');
     // Ajout des link, et des Styles dynamiques. //  Les scripts sont ajoutés à la fin.
@@ -30,7 +32,7 @@
     ?>
 </head>
 <body>
-    <?= $this->partial('elements/menu.phtml', array()) ?>
+    <?= $this->partial('elements/menu.phtml', ['tutorial' => $this->tutorial]) ?>
     <?= $this->partial('elements/breadcrumb.phtml', array()) ?>
 
     <div id="messageZone" class="subnav subnav-fixed"><?= UI_Message::renderStatic(false) ?></div>
@@ -71,7 +73,7 @@
                     title = '<?=__('UI', 'message', 'titleError')?>';
                     divClass = ' alert-error';
                     break;
-                case 'alert':
+                case 'warning':
                 default :
                     title = '<?=__('UI', 'message', 'titleWarning')?>';
                     divClass = '';

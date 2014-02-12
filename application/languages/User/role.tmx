@@ -20,6 +20,14 @@
                 <seg>Roles</seg>
             </tuv>
         </tu>
+        <tu tuid="userRoles">
+            <tuv xml:lang="fr">
+                <seg>Rôles utilisateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>User roles</seg>
+            </tuv>
+        </tu>
 
         <tu tuid="roleUser">
             <tuv xml:lang="fr">

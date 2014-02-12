@@ -2,7 +2,7 @@
 <tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
-    
+
         <!-- Onglet « Général » -->
 
         <!-- Formulaire des données générales -->
@@ -16,39 +16,6 @@
             </tuv>
         </tu>
 
-        <!-- Tags de description -->
-
-        <!-- 
-        <tu tuid="descriptionTagTitle">
-            <tuv xml:lang="fr">
-                <seg>Tags de description</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Description tags</seg>
-            </tuv>
-        </tu>
-        -->
-        <tu tuid="descriptionTagAddPanelTitle">
-            <tuv xml:lang="fr">
-                <seg>Ajout d'un tag</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Creation of a tag</seg>
-            </tuv>
-        </tu>
-
-        <!-- Tags communs des éléments -->
-        <!-- 
-        <tu tuid="commonTagTitle">
-            <tuv xml:lang="fr">
-                <seg>Tags communs des éléments de la famille</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Family elements common tags</seg>
-            </tuv>
-        </tu>
-        -->
-        
         <!-- Dimensions -->
 
         <tu tuid="dimensionAddPanelTitle">
@@ -59,12 +26,12 @@
                 <seg>Creation of a dimension</seg>
             </tuv>
         </tu>
-        <tu tuid="meaningAlreadyUsed">
+        <tu tuid="dimensionEditPanelTitle">
             <tuv xml:lang="fr">
-                <seg>Merci de choisir une autre signification, celle-ci est déjà associée à une autre dimension de cette famille.</seg>
+                <seg>Modification d'une dimension</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Please choose another meaning, this one already corresponds to another dimension of this family.</seg>
+                <seg>Modification of a dimension</seg>
             </tuv>
         </tu>
 
@@ -78,12 +45,12 @@
                 <seg>Delete this family</seg>
             </tuv>
         </tu>
-        <tu tuid="cantDeleteFamily">
+        <tu tuid="deleteConfirm">
             <tuv xml:lang="fr">
-                <seg>Cette famille ne peut pas être supprimmée, car elle possède au moins un élément choisi.</seg>
+                <seg>Attention ! Voulez-vous vraiment supprimer définitivement cette famille ?</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>This family cannot be deleted, since it contains at least one chosen element.</seg>
+                <seg>Warning! Do you really want to delete this family?</seg>
             </tuv>
         </tu>
 

@@ -1,0 +1,51 @@
+<?php
+use Orga\Model\ACL\Role\AbstractCellRole;
+/** @var AbstractCellRole[] $cellUsers */
+$cellUsers = $this->cellUsers;
+?>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <?=___('User', 'user', 'firstName')?>
+            </th>
+            <th>
+                <?=___('User', 'user', 'lastName')?>
+            </th>
+            <th>
+                <?=___('User', 'user', 'emailAddress')?>
+            </th>
+            <th>
+                <?=___('User', 'role', 'role')?>
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($cellUsers as $cellRole): ?>
+        <tr>
+            <td>
+                <?=$cellRole->getUser()->getFirstName()?>
+            </td>
+            <td>
+                <?=$cellRole->getUser()->getLastName()?>
+            </td>
+            <td>
+                <?=$cellRole->getUser()->getEmail()?>
+            </td>
+            <td>
+                <?=$cellRole->getLabel()?>
+            </td>
+            <td>
+                <a href="orga/cell/remove-user/idCell/<?=$this->idCell?>/idRole/<?=$cellRole->getId()?>/" class="delete-user withTooltip" title="<?=___('Orga', 'role', 'deleteRole')?>">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<script>
+    $('#users<?=$this->idCell?> .withTooltip').tooltip({placement: 'left'});
+</script>

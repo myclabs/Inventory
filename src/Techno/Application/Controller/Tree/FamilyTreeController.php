@@ -246,7 +246,7 @@ class Techno_Tree_FamilyTreeController extends UI_Controller_Tree
             $this->data['titlePopup'] = __('Techno', 'familyTree', 'editFamilyPopupTitle');
             $htmlComplement = '';
             $htmlComplement .= '<a href="techno/family/edit/id/' . $node->getId() . '">';
-            $htmlComplement .= '<i class="icon-share-alt"> </i> ';
+            $htmlComplement .= '<i class="fa fa-external-link"> </i> ';
             $htmlComplement .= __('UI', 'name', 'details');
             $htmlComplement .= '</a>';
             $this->data['htmlComplement'] = $htmlComplement;

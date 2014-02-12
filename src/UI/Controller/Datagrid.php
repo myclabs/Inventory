@@ -150,7 +150,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
                     $alias = (empty($alias)) ? null : $alias;
                     foreach ($filterValue as $operator => $value) {
                         if ($value !== null) {
-                            $this->request->filter->addCondition($filterName, $value, $operator, $alias);
+                            $this->request->filter->addCondition($filterName, urldecode($value), $operator, $alias);
                         }
                     }
                 }
@@ -339,7 +339,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
         if (($text !== null) || ($icon !== null)) {
             $content = '';
             if ($icon !== null) {
-                $content .= '<i class="icon-'.$icon.'"></i>';
+                $content .= '<i class="fa fa-'.$icon.'"></i>';
             }
             if (($text !== null) && ($icon !== null)) {
                 $content .= ' ';

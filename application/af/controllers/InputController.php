@@ -105,8 +105,11 @@ class AF_InputController extends Core_Controller
 
         $this->addFormErrors($this->getParam('errorMessages', []));
 
-        if ($inputSet->isInputComplete()) {
+        if ($inputSet->isInputComplete() && $inputSet->isCalculationComplete()) {
             $this->setFormMessage(__('AF', 'inputInput', 'completeInputSaved'), UI_Message::TYPE_SUCCESS);
+        } elseif ($inputSet->isInputComplete()) {
+            $message = $inputSet->getErrorMessage() ?: __('AF', 'inputInput', 'completeInputSaved');
+            $this->setFormMessage($message, UI_Message::TYPE_SUCCESS);
         } else {
             $this->setFormMessage(__('AF', 'inputInput', 'incompleteInputSaved'), UI_Message::TYPE_SUCCESS);
         }

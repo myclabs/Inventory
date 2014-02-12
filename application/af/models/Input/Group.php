@@ -12,7 +12,6 @@
  */
 class AF_Model_Input_Group extends AF_Model_Input implements Algo_Model_Input
 {
-
     /**
      * {@inheritdoc}
      */
@@ -21,4 +20,11 @@ class AF_Model_Input_Group extends AF_Model_Input implements Algo_Model_Input
         return 0;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function hasValue()
+    {
+        return false;
+    }
 }

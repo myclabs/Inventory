@@ -1,63 +1,62 @@
 <?php
-/**
- * Classe Orga_MemberController
- * @author valentin.claras
- * @author sidoine.tardieu
- * @package    Orga
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
+use Orga\Model\ACL\Role\CellAdminRole;
+use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Action;
+use User\Domain\User;
 
 /**
- * Classe controleur de cell.
- * @package    Orga
- * @subpackage Controller
+ * @author valentin.claras
  */
 class Orga_MemberController extends Core_Controller
 {
+    /**
+     * @Inject
+     * @var ACLService
+     */
+    private $aclService;
+
+    /**
+     * @Inject
+     * @var Orga_Service_ACLManager
+     */
+    private $aclManager;
+
     /**
      * Controller de la vue des Member d'un organization.
      * @Secure("viewOrganization")
      */
     public function manageAction()
     {
-        if ($this->hasParam('idCell')) {
-            $idCell = $this->getParam('idCell');
-            $this->view->idCell = $idCell;
-            $cell = Orga_Model_Cell::load($idCell);
-        } else {
-            $this->view->idCell = null;
-            $cell = null;
-        }
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
 
         $idOrganization = $this->getParam('idOrganization');
-        $this->view->idOrganization = $idOrganization;
+        /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
+        $this->view->assign('idOrganization', $organization->getId());
 
-        if (($cell !== null) && ($cell->getGranularity()->hasAxes())) {
-            $axes = array();
-            $idAxes = array();
-            foreach ($cell->getMembers() as $members) {
-                $axis = $members->getAxis()->getDirectNarrower();
-                while ($axis !== null) {
-                    if (!(in_array($axis->getId(), $idAxes))) {
-                        $axes[] = $axis;
-                        $idAxes[] = $axis->getId();
-                    }
-                    $axis = $axis->getDirectNarrower();
-                }
-            }
-            $this->view->axes = $axes;
-        } else {
-            $this->view->axes = $organization->getLastOrderedAxes();
-        }
+        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization
+        );
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
+            $connectedUser,
+            Action::EDIT(),
+            $organization->getGranularityByRef('global')->getCellByMembers([])
+        );
+        $this->view->assign('isUserAllowToEditAllMembers', $isUserAllowToEditAllMembers);
+        $axes = $this->aclManager->getAxesCanEdit($connectedUser, $organization);
+        usort($axes, [Orga_Model_Axis::class, 'lastOrderAxes']);
+        $this->view->assign('axes', $axes);
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
-            $this->view->display = false;
+            $this->view->assign('display', false);
         } else {
-            $this->view->display = true;
+            $this->view->assign('display', true);
         }
     }
 

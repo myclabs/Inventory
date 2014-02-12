@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <!-- Templates -->
+        <tu tuid="templateEmpty">
+            <tuv xml:lang="fr">
+                <seg>Organisation vide</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Empty organization</seg>
+            </tuv>
+        </tu>
+        <tu tuid="templateUserInventory">
+            <tuv xml:lang="fr">
+                <seg>Organisation de collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inventory organization</seg>
+            </tuv>
+        </tu>
+        <tu tuid="templateUserReports">
+            <tuv xml:lang="fr">
+                <seg>Organisation de collecte et d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Reporting organization</seg>
+            </tuv>
+        </tu>
+        <tu tuid="docLibraryForSocialAction">
+            <tuv xml:lang="fr">
+                <seg>Documents des actions</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Documents of actions</seg>
+            </tuv>
+        </tu>
+
+        <!-- Onglets -->
+        <tu tuid="organization">
+            <tuv xml:lang="fr">
+                <seg>Informations générales</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>General info</seg>
+            </tuv>
+        </tu>
+        <tu tuid="axes">
+            <tuv xml:lang="fr">
+                <seg>Axes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Axes</seg>
+            </tuv>
+        </tu>
+        <tu tuid="members">
+            <tuv xml:lang="fr">
+                <seg>Éléments</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Elements</seg>
+            </tuv>
+        </tu>
+        <tu tuid="granularities">
+            <tuv xml:lang="fr">
+                <seg>Niveaux</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Levels</seg>
+            </tuv>
+        </tu>
+        <tu tuid="validation">
+            <tuv xml:lang="fr">
+                <seg>Validation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Validation</seg>
+            </tuv>
+        </tu>
+
+        <!-- Champs -->
+        <tu tuid="organizationLabel">
+            <tuv xml:lang="fr">
+                <seg>Libellé de l'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organization label</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationTemplate">
+            <tuv xml:lang="fr">
+                <seg>Modèle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Template</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationTemplateExplanation">
+            <tuv xml:lang="fr">
+                <seg>Choix du type de l'organization. Ce choix n'est là que pour aider lors de la configuration initiale.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organization type. This is only meant to help the first configuration.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationMainAxisLabel">
+            <tuv xml:lang="fr">
+                <seg>Libellé de l'axe principal</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Main axis label</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationMainAxisHelp">
+            <tuv xml:lang="fr">
+                <seg>Axe principal autour duquel gravite l'organisation.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Main axis of the organization.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationMainAxisPlaceholder">
+            <tuv xml:lang="fr">
+                <seg>Site, Agence, Bâtiment, …</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Site, Agency, Building, …</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationAddMainSubAxis">
+            <tuv xml:lang="fr">
+                <seg>Ajouter un axe d'agrégation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Add an aggregation axis</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationMainSubAxisLabel">
+            <tuv xml:lang="fr">
+                <seg>Libellé de l'axe d'agrégation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Aggregation axis label</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationMainSubAxisPlaceholder">
+            <tuv xml:lang="fr">
+                <seg>Pays, Zone, Marque, …</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Country, Zone, Brand, …</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationTimeAxisLabel">
+            <tuv xml:lang="fr">
+                <seg>Libellé de l'axe temporel</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Time axis label</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationTimeAxisPlaceholder">
+            <tuv xml:lang="fr">
+                <seg>Année, semaine, …</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Year, week, …</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationInputsAxisLabel">
+            <tuv xml:lang="fr">
+            <seg>Libellé de l'axe de catégorisation des saisies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inputs categorization axis label</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationInputsAxisPlaceholder">
+            <tuv xml:lang="fr">
+                <seg>Catégorie, type, …</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Category, Type, …</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addMember">
+            <tuv xml:lang="fr">
+                <seg>Ajouter un élément</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Add element</seg>
+            </tuv>
+        </tu>
+
+        <!-- Legendes -->
+        <tu tuid="organizationMainAxisTitle">
+            <tuv xml:lang="fr">
+                <seg>Choix des axes principaux</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Choice of main axes</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationTimeAxisTitle">
+            <tuv xml:lang="fr">
+                <seg>Choix de l'axe temporel</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Choice of the time axis</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationInputsAxisTitle">
+            <tuv xml:lang="fr">
+                <seg>Choix de l'axe de catégorisation des saisies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Choice of inputs categorization axis</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryGranularityTitle">
+            <tuv xml:lang="fr">
+                <seg>Choix de niveau de contrôle des collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Choice of inventory control level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsGranularitiesTitle">
+            <tuv xml:lang="fr">
+                <seg>Choix des niveaux de saisies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Choice of inputs levels</seg>
+            </tuv>
+        </tu>
+        <tu tuid="reportsGranularitiesTitle">
+            <tuv xml:lang="fr">
+                <seg>Choix des niveaux d'analye</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Choice of analysis levels</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addValidationTitle">
+            <tuv xml:lang="fr">
+                <seg>Résumé de l'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organization summary</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryGranularityLabel">
+            <tuv xml:lang="fr">
+                <seg>Niveau de collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inventory level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputsGranularitiesLabel">
+            <tuv xml:lang="fr">
+                <seg>Niveaux de saisies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inputs levevls</seg>
+            </tuv>
+        </tu>
+        <tu tuid="reportsGranularitiesLabel">
+            <tuv xml:lang="fr">
+                <seg>Niveaux d'analyse</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis levels</seg>
+            </tuv>
+        </tu>
+
+        <!-- Message et bouton -->
+        <tu tuid="navigationNext">
+            <tuv xml:lang="fr">
+                <seg>Aller à l'étape suivante</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Go to next step</seg>
+            </tuv>
+        </tu>
+        <tu tuid="navigationPrevious">
+            <tuv xml:lang="fr">
+                <seg>Revenir à l'étape précédente</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Come back to previous step</seg>
+            </tuv>
+        </tu>
+        <tu tuid="navigationEnd">
+            <tuv xml:lang="fr">
+                <seg>Terminer la configuration</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>End the configuration</seg>
+            </tuv>
+        </tu>
+        <tu tuid="warning">
+            <tuv xml:lang="fr">
+                <seg>Atention</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Warning</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resetAfterAxesStep">
+            <tuv xml:lang="fr">
+                <seg>Revenir à cette étape par la suite, effacera les configuration établies entre temps.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Coming back to this step will erase any configuration made meanwhile.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addValidationMessage">
+            <tuv xml:lang="fr">
+                <seg>Configuration terminée. Cliquer sur "Terminer" constuira l'organisation.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Configuration completed. Clicking on "End" will build the organization.</seg>
+            </tuv>
+        </tu>
+
+        <!-- Popup -->
+        <tu tuid="organizationBuildingPopupTitle">
+            <tuv xml:lang="fr">
+                <seg>Construction de l'organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Building organization</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationBuildingMessage">
+            <tuv xml:lang="fr">
+                <seg>Construction en cours…</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Building in progress…</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationBuildingGoHome">
+            <tuv xml:lang="fr">
+                <seg>Revenir à l'accueil</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Back to home</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationBuildingAddMore">
+            <tuv xml:lang="fr">
+                <seg>Construire une autre organisation</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Build another organization</seg>
+            </tuv>
+        </tu>
+        <tu tuid="errorWhileCreatingOrganization">
+            <tuv xml:lang="fr">
+                <seg>Une erreur est surevenue durant la création et nous en sommes désolé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>An error happened during the process and we are sorry for that.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationTryAgainOrContactAdministrators">
+            <tuv xml:lang="fr">
+                <seg>Essayez à nouveau, si le problème persiste contactez, un administarteur.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Try again, if the problem persists, please contact an administrator.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="organizationBuildingClosePopup">
+            <tuv xml:lang="fr">
+                <seg>Fermer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Close</seg>
+            </tuv>
+        </tu>
+        <tu tuid="complementaryInfo">
+            <tuv xml:lang="fr">
+                <seg>Vous pourrez désormais voir l'organisation sur la page d'accueil.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You can now see the organization on the home page.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

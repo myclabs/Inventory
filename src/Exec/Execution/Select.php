@@ -1,10 +1,4 @@
 <?php
-/**
- * @author     valentin.claras
- * @author     matthieu.napoli
- * @package    Exec
- * @subpackage Execution
- */
 
 namespace Exec\Execution;
 
@@ -15,21 +9,15 @@ use TEC\Component\Composite;
 use TEC\Component\Leaf;
 
 /**
- * classe Select
- * @package    Exec
- * @subpackage Execution
+ * Exécute une expression de sélection.
+ *
+ * @author valentin.claras
+ * @author matthieu.napoli
  */
 class Select extends Execution
 {
     /**
-     * Parcourt l'arbre d'éxécution des opérations de l'arbres et vérifie la valeur.
-     *
-     * Pourquoi surcharger getErrors ?
-     *  Car le premier node d'une expression Select est toujours vide.
-     *
-     * @param \Exec\Provider\ValueInterface $valueProvider
-     *
-     * @return Array
+     * {@inheritdoc}
      */
     public function getErrors(ValueInterface $valueProvider)
     {
@@ -37,16 +25,11 @@ class Select extends Execution
     }
 
     /**
-     * Méthode récursive qui va parcourir l'arbre et vérifier les composants pour son éxécution.
-     *
-     * @param Component $node
-     * @param \Exec\Provider\ValueInterface $valueProvider
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getErrorsFromComponent(Component $node, ValueInterface $valueProvider)
     {
-        $errors = array();
+        $errors = [];
 
         if ($node instanceof Leaf) {
             $errors = array_merge($errors, $valueProvider->checkValueForExecution($node->getName()));
@@ -60,15 +43,11 @@ class Select extends Execution
     }
 
     /**
-     * Selectionne l'algo d'éxécution des opérations de l'arbres en fonction du type d'expression.
-     *
-     * @param \Exec\Provider\ValueInterface $valueProvider
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function executeExpression(ValueInterface $valueProvider)
     {
-        $results = array();
+        $results = [];
 
         foreach ($this->expression->getRootNode()->getChildren() as $rootNode) {
             $results = array_merge($results, $this->executeComponent($rootNode, $valueProvider));
@@ -78,25 +57,18 @@ class Select extends Execution
     }
 
     /**
-     * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
-     *
-     * @param Component $node
-     * @param \Exec\Provider\ValueInterface $valueProvider
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function executeComponent(Component $node, ValueInterface $valueProvider)
     {
-        $results = array();
+        $results = [];
 
         if ($node instanceof  Leaf) {
             $results[$node->getName()] = $valueProvider->getValueForExecution($node->getName());
-        } else {
-            if ($node instanceof Composite) {
-                if ($valueProvider->getValueForExecution($node->getModifier()) === true) {
-                    foreach ($node->getChildren() as $child) {
-                        $results = array_merge($results, $this->executeComponent($child, $valueProvider));
-                    }
+        } elseif ($node instanceof Composite) {
+            if ($valueProvider->getValueForExecution($node->getModifier()) === true) {
+                foreach ($node->getChildren() as $child) {
+                    $results = array_merge($results, $this->executeComponent($child, $valueProvider));
                 }
             }
         }
@@ -107,13 +79,13 @@ class Select extends Execution
     /**
      * Retourne les feuilles qui seront exécutées en interprétant les conditions
      *
-     * @param \Exec\Provider\ValueInterface $valueProvider
+     * @param ValueInterface $valueProvider
      *
      * @return array Tableau des noms des feuilles exécutées
      */
     public function getSelectedLeafs(ValueInterface $valueProvider)
     {
-        $results = array();
+        $results = [];
 
         foreach ($this->expression->getRootNode()->getChildren() as $rootNode) {
             $results = array_merge($results, $this->getSelectedComponentLeafs($rootNode, $valueProvider));
@@ -125,28 +97,25 @@ class Select extends Execution
     /**
      * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
      *
-     * @param Component $node
-     * @param \Exec\Provider\ValueInterface $valueProvider
+     * @param Component      $node
+     * @param ValueInterface $valueProvider
      *
      * @return array Tableau des noms des feuilles exécutées
      */
     protected function getSelectedComponentLeafs(Component $node, ValueInterface $valueProvider)
     {
-        $results = array();
+        $results = [];
 
         if ($node instanceof  Leaf) {
             $results[] = $node->getName();
-        } else {
-            if ($node instanceof Composite) {
-                if ($valueProvider->getValueForExecution($node->getModifier()) === true) {
-                    foreach ($node->getChildren() as $child) {
-                        $results = array_merge($results, $this->getSelectedComponentLeafs($child, $valueProvider));
-                    }
+        } elseif ($node instanceof Composite) {
+            if ($valueProvider->getValueForExecution($node->getModifier()) === true) {
+                foreach ($node->getChildren() as $child) {
+                    $results = array_merge($results, $this->getSelectedComponentLeafs($child, $valueProvider));
                 }
             }
         }
 
         return $results;
     }
-
 }

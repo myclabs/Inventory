@@ -1,12 +1,4 @@
 <?php
-/**
- * Fichier de la classe PopupColumn.
- *
- * @author     valentin.claras
- *
- * @package    UI
- * @subpackage Datagrid
- */
 
 namespace UI\Datagrid\Column;
 
@@ -14,43 +6,34 @@ use UI\Datagrid\Datagrid;
 use UI_Popup_Ajax;
 
 /**
- * Description of PopupColumn.
+ * Classe représentant une colonne affichant des popups.
  *
- * Une classe permettant de générer une colonne contenant des popups.
- *
- * @package    UI
- * @subpackage Datagrid
+ * @author valentin.claras
  */
 class PopupColumn extends GenericColumn
 {
     /**
      * Définition de la valeur par defaut qui sera affiché dans la cellule.
      *
-     * @var   string
+     * @var string
      */
-    public $defaultValue = null;
+    public $defaultValue;
 
     /**
      * Popup Ajax qui sera affiché dans la colonne.
      *
-     * @var   UI_Popup_Ajax
+     * @var UI_Popup_Ajax
      */
-    public $popup = null;
+    public $popup;
 
 
-     /**
-      * Constructeur de la classe ColonnePopup.
-      *
-      * @param string $id    Identifiant unique de la colonne.
-      * @param string $label Texte afiché en titre de la colone.
-      */
-    public function __construct($id=null, $label=null)
+    public function __construct($id = null, $label = null)
     {
         parent::__construct($id, $label);
         $this->popup = new UI_Popup_Ajax('temp');
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_CENTER;
-        $this->defaultValue = '<i class="icon-zoom-in"></i> '.__('UI', 'name', 'details');
+        $this->defaultValue = '<i class="fa fa-search-plus"></i> '.__('UI', 'name', 'details');
     }
 
     /**
@@ -128,7 +111,7 @@ class PopupColumn extends GenericColumn
     /**
      * {@inheritdoc}
      */
-    public function getFilterFormElement(Datagrid $datagrid, $defaultValue=null)
+    public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
         // Pas de filtre possible sur des popups.
         return null;
@@ -160,5 +143,4 @@ class PopupColumn extends GenericColumn
         // Pas d'ajout possible sur des popups.
         return null;
     }
-
 }

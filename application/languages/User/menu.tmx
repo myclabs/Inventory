@@ -28,6 +28,15 @@
                 <seg>Logout</seg>
             </tuv>
         </tu>
+        <tu tuid="resetTutorials">
+            <tuv xml:lang="fr">
+                <seg>Réinitialiser les tutoriels</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Reset tutorials</seg>
+            </tuv>
+        </tu>
+
 
     </body>
 </tmx>    

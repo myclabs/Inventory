@@ -1,0 +1,63 @@
+<?php
+$cellReports = $this->cellReports;
+?>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                <?=___('UI', 'name', 'label')?>
+            </th>
+            <th>
+                <?=___('UI', 'name', 'type')?> :
+                <form class="form-inline filter-reports">
+                    <select name="reportType">
+                        <option value=""><?=___('Orga', 'view', 'filterAllReports')?></option>
+                        <?php if (count($this->otherUsers) > 0) : ?>
+                        <optgroup label="<?=___('Orga', 'view', 'reportTypes')?>">
+                            <? endif; ?>
+                            <option value="specificReport"><?=___('DW', 'reportList', 'cellReport_specificReport')?></option>
+                            <option value="copiedReport"><?=___('DW', 'reportList', 'cellReport_copiedReport')?></option>
+                            <option value="userReport" data-user="<?=$this->idConnectedUser?>"><?=___('DW', 'reportList', 'cellReport_userReport')?></option>
+                            <?php if (count($this->otherUsers) > 0) : ?>
+                        </optgroup>
+                        <optgroup label="<?=___('Orga', 'view', 'otherUsersReports')?>" class="other-users">
+                            <? foreach ($this->otherUsers as $idUser => $userLabel) : ?>
+                                <option value="userReport" data-user="<?=$idUser?>"><?=$userLabel?></option>
+                            <? endforeach; ?>
+                        </optgroup>
+                    <? endif; ?>
+                    </select>
+                </form>
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($cellReports as $cellReport): ?>
+        <tr data-report-type="<?=$cellReport['type']?>"<?=(($cellReport['type'] === 'userReport') ? ' data-report-owner="'.$cellReport['owner']->getId().'"': '')?>>
+            <td>
+                <a href="<?=$cellReport['link']?>" target="_blank" >
+                    <?=$cellReport['label']?>
+                </a>
+            </td>
+            <td>
+                <?=___('DW', 'reportList', 'cellReport_'.$cellReport['type'])?>
+                <?php if ($cellReport['type'] === 'userReport') : ?>
+                    (<?=$cellReport['owner']->getName()?>)
+                <?php endif; ?>
+            </td>
+            <td>
+                <?php if (isset($cellReport['delete']) && $cellReport['delete']): ?>
+                <a href="orga/cell/remove-report/idCell/<?=$this->idCell?>/idReport/<?=$cellReport['delete']?>/" class="deleteReport withTooltip" title="<?=___('UI', 'verb', 'delete')?>">
+                    <i class="fa fa-trash-o"></i>
+                </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<script>
+    $('#reports<?=$this->idCell?> .withTooltip').tooltip({placement: 'left'});
+</script>

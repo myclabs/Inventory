@@ -1,9 +1,4 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    Exec
- * @subpackage Execution
- */
 
 namespace Exec\Execution;
 
@@ -23,13 +18,12 @@ use TEC\Component\Composite;
 use TEC\Component\Leaf;
 
 /**
- * classe Calc
- * @package    Exec
- * @subpackage Execution
+ * Exécute une expression de calcul.
+ *
+ * @author valentin.claras
  */
 class Calc extends Execution
 {
-
     /**
      * Défini l'execution comme étant un calcul de valeurs.
      */
@@ -54,7 +48,7 @@ class Calc extends Execution
      *
      * @var string
      */
-    protected $calcType;
+    protected $calculationType;
 
 
     /**
@@ -64,15 +58,16 @@ class Calc extends Execution
      * @see self::CALC_UNIT
      * @see self::CALC_UNITVALUE
      *
-     * @param string $calculType
+     * @param string $calculationType
      * @throws Core_Exception_InvalidArgument
      */
-    public function setCalculType($calculType)
+    public function setCalculType($calculationType)
     {
-        if (!(in_array($calculType, array(self::CALC_VALUE, self::CALC_UNIT, self::CALC_UNITVALUE)))) {
+        if (!(in_array($calculationType, array(self::CALC_VALUE, self::CALC_UNIT, self::CALC_UNITVALUE)))) {
             throw new Core_Exception_InvalidArgument('The calcul type must be a class constant');
         }
-        $this->calcType = $calculType;
+
+        $this->calculationType = $calculationType;
     }
 
     /**
@@ -84,7 +79,7 @@ class Calc extends Execution
      */
     protected function getCalculation()
     {
-        switch ($this->calcType) {
+        switch ($this->calculationType) {
             case self::CALC_VALUE:
                 return new Calc_Calculation_Value();
                 break;
@@ -95,17 +90,12 @@ class Calc extends Execution
                 return new Calc_Calculation_UnitValue();
                 break;
             default:
-                throw new Core_Exception_UndefinedAttribute('The calcul type must be defined first.');
+                throw new Core_Exception_UndefinedAttribute('The calculus type must be defined');
         }
     }
 
     /**
-     * Méthode récursive qui va parcourir l'arbre et vérifier les composants pour son éxécution.
-     *
-     * @param Component $node
-     * @param ValueInterface $valueProvider
-     *
-     * @return array
+     * {@inheritdoc}
      */
     protected function getErrorsFromComponent(Component $node, ValueInterface $valueProvider)
     {
@@ -123,12 +113,7 @@ class Calc extends Execution
     }
 
     /**
-     * Vérifie la compatibilité des unités de l'expression
-     *
-     * @param UnitInterface $unitProvider
-     *
-     * @return UnitAPI
-     *
+     * {@inheritdoc}
      * @throws IncompatibleUnitsException Unités incompatibles
      */
     public function checkUnitCompatibility(UnitInterface $unitProvider)
@@ -137,17 +122,15 @@ class Calc extends Execution
     }
 
     /**
-     * @param Composite $node
-     * @param \Exec\Provider\UnitInterface $unitProvider
+     * @param Composite     $node
+     * @param UnitInterface $unitProvider
      *
      * @return UnitAPI
      *
      * @throws IncompatibleUnitsException Unités incompatibles
      */
-    public function calculateUnitForComponent(
-        Composite $node,
-        UnitInterface $unitProvider
-    ) {
+    public function calculateUnitForComponent(Composite $node, UnitInterface $unitProvider)
+    {
         $calculation = new Calc_Calculation_Unit();
         $calculation->setOperation($node->getOperator());
 
@@ -168,12 +151,7 @@ class Calc extends Execution
     }
 
     /**
-     * Méthode récursive qui va parcourir l'arbre et renvoyer le résultat de son éxécution.
-     *
-     * @param Component $node
-     * @param ValueInterface $valueProvider
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     protected function executeComponent(Component $node, ValueInterface $valueProvider)
     {
@@ -181,17 +159,16 @@ class Calc extends Execution
             $result = $valueProvider->getValueForExecution($node->getName());
         } else {
             /** @var $node Composite */
-            $calcul = $this->getCalculation();
-            $calcul->setOperation($node->getOperator());
+            $calculation = $this->getCalculation();
+            $calculation->setOperation($node->getOperator());
 
             foreach ($node->getChildren() as $child) {
-                $calcul->addComponents($this->executeComponent($child, $valueProvider), $child->getModifier());
+                $calculation->addComponents($this->executeComponent($child, $valueProvider), $child->getModifier());
             }
 
-            $result = $calcul->calculate();
+            $result = $calculation->calculate();
         }
 
         return $result;
     }
-
 }

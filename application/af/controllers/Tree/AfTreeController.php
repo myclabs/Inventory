@@ -137,12 +137,12 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             $this->data['title'] = __('AF', 'formTree', 'editAFPanelTitle');
             $htmlComplement = '';
             $htmlComplement .= '<a href="af/edit/menu/id/' . $node->getId() . '">';
-            $htmlComplement .= '<i class="icon-share-alt"> </i> ';
+            $htmlComplement .= '<i class="fa fa-external-link"> </i> ';
             $htmlComplement .= __('UI', 'name', 'configuration');
             $htmlComplement .= '</a>';
             $htmlComplement .= '<br />';
             $htmlComplement .= '<a href="af/af/test/id/' . $node->getId() . '">';
-            $htmlComplement .= '<i class="icon-share-alt"> </i> ';
+            $htmlComplement .= '<i class="fa fa-external-link"> </i> ';
             $htmlComplement .= __('UI', 'name', 'test');
             $htmlComplement .= '</a>';
             $this->data['htmlComplement'] = $htmlComplement;

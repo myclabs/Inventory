@@ -17,7 +17,7 @@ Feature: Dw cube label feature
       | Europe |
     When I set "Europe modifiée" for column "label" of row 1 of the "listMemberszone" datagrid with a confirmation message
   # Accès à la cellule "Europe modifiée | Marque A"
-    And I click element ".icon-plus"
+    And I click element ".fa-plus"
     And I click element "#goTo2"
     Then I should see "Europe modifiée | Marque A Workspace avec données"
   # Dans la page d'une nouvelle analyse le libellé "Europe modifié" apparaît déjà
@@ -25,7 +25,7 @@ Feature: Dw cube label feature
     And I click "Nouvelle analyse"
     Then I should see "Nouvelle analyse Europe modifiée | Marque A"
     When I click "Retour"
-    And I click element ".icon-plus"
+    And I click element ".fa-plus"
     And I click "Vue globale"
   # Détection modification
     When I am on "orga/cell/details/idCell/1/tab/organization"

@@ -1,9 +1,4 @@
 <?php
-/**
- * @author valentin.claras
- * @package Orga
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
@@ -11,10 +6,7 @@ use Orga\Model\ACL\Action\CellAction;
 use User\Domain\ACL\ACLService;
 
 /**
- * Controlleur des onglets de la saisie d'une cellule.
  * @author valentin.claras
- * @package Orga
- * @subpackage Controller
  */
 class Orga_Tab_InputController extends Core_Controller
 {
@@ -33,7 +25,6 @@ class Orga_Tab_InputController extends Core_Controller
     private $commentService;
 
     /**
-     * Action fournissant la vue des documents pour l'input.
      * @Secure("viewCell")
      */
     public function commentsAction()
@@ -102,7 +93,6 @@ class Orga_Tab_InputController extends Core_Controller
     }
 
     /**
-     * Action fournissant la vue des documents pour l'input.
      * @Secure("viewCell")
      */
     public function docsAction()
@@ -115,16 +105,15 @@ class Orga_Tab_InputController extends Core_Controller
 
         $this->view->documentLibrary = null;
         if ($cell->getGranularity()->getCellsWithInputDocuments()) {
-            $this->view->documentLibrary = $cell->getDocLibraryForAFInputSetsPrimary();
+            $this->view->documentLibrary = $cell->getDocLibraryForAFInputSetPrimary();
         } else {
             foreach ($cell->getGranularity()->getBroaderGranularities() as $granularity) {
                 if ($granularity->getCellsWithInputDocuments()) {
                     $parentCell = $cell->getParentCellForGranularity($granularity);
-                    $this->view->documentLibrary = $parentCell->getDocLibraryForAFInputSetsPrimary();
+                    $this->view->documentLibrary = $parentCell->getDocLibraryForAFInputSetPrimary();
                     break;
                 }
             }
         }
-        $this->view->documentBibliography = $cell->getDocBibliographyForAFInputSetPrimary();
     }
 }

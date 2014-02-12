@@ -1,10 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  yoann.croizer
- * @package Algo
- */
 
 use Exec\Execution\Select;
 use Exec\Provider\ValueInterface;
@@ -12,13 +6,12 @@ use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
 
 /**
- * @package    Algo
- * @subpackage Keyword
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
-class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextKey
-    implements ValueInterface
+class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextKey implements ValueInterface
 {
-
     /**
      * @var string
      */
@@ -110,5 +103,4 @@ class Algo_Model_Selection_TextKey_Expression extends Algo_Model_Selection_TextK
         // Expression OK
         $this->expression = (string) $expression;
     }
-
 }

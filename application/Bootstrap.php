@@ -1,13 +1,15 @@
 <?php
 
 use Core\Autoloader;
+use Core\Translation\TmxLoader;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
-use Keyword\Application\Service\KeywordService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Keyword\Architecture\TypeMapping\DoctrineKeywordType;
+use Symfony\Component\Translation\Translator;
 use User\Application\Plugin\ACLPlugin;
 use User\Application\ViewHelper\IsAllowedHelper;
+use User\Application\ViewHelper\TutorialHelper;
+use User\Application\Plugin\TutorialPlugin;
 
 /**
  * Application bootstrap
@@ -33,7 +35,6 @@ class Bootstrap extends Core_Bootstrap
             'User',
             'TEC',
             'Classif',
-            'Keyword',
             'Techno',
             'Doc',
             'DW',
@@ -114,8 +115,18 @@ class Bootstrap extends Core_Bootstrap
      */
     protected function _initI18n()
     {
-        Zend_Registry::set(Core_Translate::registryKey, $this->container->get(Core_Translate::class));
-        Zend_Registry::set(Core_Locale::registryKey, Core_Locale::loadDefault());
+        $locale = Core_Locale::loadDefault();
+        $configuration = Zend_Registry::get('configuration');
+        Core_Locale::$minSignificantFigures = $configuration->get('locale.minSignificantFigures', null);
+
+        Zend_Registry::set(Core_Locale::registryKey, $locale);
+
+        $translator = new Translator($locale->getId());
+        $translator->addLoader('tmx', new TmxLoader());
+        $translator->addResource('tmx', APPLICATION_PATH . '/languages', 'fr');
+        $translator->addResource('tmx', APPLICATION_PATH . '/languages', 'en');
+        $translator->setFallbackLocales(['fr']);
+        $this->container->set(Translator::class, $translator);
     }
 
     /**
@@ -124,10 +135,12 @@ class Bootstrap extends Core_Bootstrap
     protected function _initViewHelpers()
     {
         $this->bootstrap('View');
+        /** @var Zend_View $view */
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
         $view->registerHelper($this->container->get(IsAllowedHelper::class, true), 'isAllowed');
+        $view->registerHelper($this->container->get(TutorialHelper::class, true), 'tutorial');
     }
 
     /**
@@ -137,17 +150,6 @@ class Bootstrap extends Core_Bootstrap
     {
         Type::addType(Calc_TypeMapping_Value::TYPE_NAME, Calc_TypeMapping_Value::class);
         Type::addType(Calc_TypeMapping_UnitValue::TYPE_NAME, Calc_TypeMapping_UnitValue::class);
-    }
-
-    /**
-     * Initialise le mapping des types en BDD
-     */
-    protected function _initKeywordTypeMapping()
-    {
-        Type::addType(DoctrineKeywordType::TYPE_NAME, DoctrineKeywordType::class);
-        /** @var DoctrineKeywordType $doctrineKeyword */
-        $doctrineKeyword = Type::getType(DoctrineKeywordType::TYPE_NAME);
-        $doctrineKeyword->setKeywordService($this->container->get(KeywordService::class));
     }
 
     /**
@@ -161,6 +163,15 @@ class Bootstrap extends Core_Bootstrap
             $front->registerPlugin($this->container->get(Inventory_Plugin_Acl::class));
             Zend_Registry::set('pluginAcl', ACLPlugin::class);
         }
+    }
+
+    /**
+     * Enregistrement du plugin pour le tutorial
+     */
+    protected function _initPluginTutorial()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin($this->container->get(TutorialPlugin::class));
     }
 
     /**

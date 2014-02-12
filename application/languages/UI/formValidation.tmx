@@ -12,6 +12,14 @@
                 <seg>Please fill up this field.</seg>
             </tuv>
         </tu>
+        <tu tuid="allFieldsRequired">
+            <tuv xml:lang="fr">
+                <seg>Merci de renseigner tous les champs.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please fill up all the fields.</seg>
+            </tuv>
+        </tu>
         <tu tuid="alreadyUsedIdentifier">
             <tuv xml:lang="fr">
                 <seg>Merci de choisir un autre identifiant, celui-ci est déjà utilisé.</seg>

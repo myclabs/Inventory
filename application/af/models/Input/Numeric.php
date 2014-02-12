@@ -46,6 +46,14 @@ class AF_Model_Input_Numeric extends AF_Model_Input implements Algo_Model_Input_
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function hasValue()
+    {
+        return $this->value->getDigitalValue() !== null;
+    }
+
+    /**
      * @return Calc_UnitValue
      */
     public function getValue()
