@@ -41,7 +41,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                 if ($index) {
                     $data['type'] = $this->cellList(get_class($index));
                     if ($index instanceof FixedIndex) {
-                        $member = $index->getClassifMember();
+                        $member = $index->getClassificationMember();
                         if ($member) {
                             $data['value'] = $this->cellList($member->getRef());
                         }
@@ -116,7 +116,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                     // Modification de la valeur d'un index
                     if ($index instanceof FixedIndex) {
                         $newMember = AxisMember::loadByRefAndAxis($newValue, $axis);
-                        $index->setClassifMember($newMember);
+                        $index->setClassificationMember($newMember);
                     } elseif ($index instanceof AlgoResultIndex) {
                         /** @var $newAlgo TextKeySelectionAlgo */
                         $newAlgo = TextKeySelectionAlgo::loadByRef($algo->getSet(), $newValue);
@@ -133,7 +133,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                     // Définition de la valeur de l'index
                     if ($index instanceof FixedIndex) {
                         $newMember = AxisMember::loadByRefAndAxis($newValue, $axis);
-                        $index->setClassifMember($newMember);
+                        $index->setClassificationMember($newMember);
                     } elseif ($index instanceof AlgoResultIndex) {
                         /** @var $newAlgo TextKeySelectionAlgo */
                         $newAlgo = TextKeySelectionAlgo::loadByRef($algo->getSet(), $newValue);

@@ -30,15 +30,15 @@ class OutputIndex extends Core_Model_Entity
 
     /**
      * Variable nécessaire pour faire la relation inverse et faire marcher le delete cascade
-     * À supprimer quand le bug dans Doctrine aura disparu
+     * TODO À supprimer quand le bug dans Doctrine aura disparu
      * @var OutputElement[]
      */
     protected $outputElements;
 
 
     /**
-     * @param \Classification\Domain\IndicatorAxis   $axis
-     * @param AxisMember $member
+     * @param IndicatorAxis $axis
+     * @param AxisMember    $member
      */
     public function __construct(IndicatorAxis $axis, AxisMember $member)
     {
@@ -47,7 +47,7 @@ class OutputIndex extends Core_Model_Entity
     }
 
     /**
-     * @return \Classification\Domain\IndicatorAxis
+     * @return IndicatorAxis
      */
     public function getAxis()
     {
@@ -55,11 +55,11 @@ class OutputIndex extends Core_Model_Entity
     }
 
     /**
-     * @param IndicatorAxis $classifAxis
+     * @param IndicatorAxis $axis
      */
-    public function setAxis(IndicatorAxis $classifAxis)
+    public function setAxis(IndicatorAxis $axis)
     {
-        $this->refAxis = $classifAxis->getRef();
+        $this->refAxis = $axis->getRef();
     }
 
     /**
@@ -71,11 +71,11 @@ class OutputIndex extends Core_Model_Entity
     }
 
     /**
-     * @param AxisMember $classifMember
+     * @param AxisMember $member
      */
-    public function setMember(AxisMember $classifMember)
+    public function setMember(AxisMember $member)
     {
-        $this->refMember = $classifMember->getRef();
+        $this->refMember = $member->getRef();
     }
 
     /**

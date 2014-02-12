@@ -190,7 +190,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
         $axes = $algo->getContextIndicator()->getAxes();
         // Vérifie que tous les index sont des axes du context indicator
         foreach ($algoIndexes as $algoIndex) {
-            $algoAxis = $algoIndex->getClassifAxis();
+            $algoAxis = $algoIndex->getClassificationAxis();
             if (!in_array($algoAxis, $axes)) {
                 $isIndexationValid = false;
                 break;
@@ -200,7 +200,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
         foreach ($axes as $axis) {
             $match = false;
             foreach ($algoIndexes as $algoIndex) {
-                $algoAxis = $algoIndex->getClassifAxis();
+                $algoAxis = $algoIndex->getClassificationAxis();
                 if ($algoAxis == $axis) {
                     $match = true;
                 }
@@ -219,7 +219,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
 
         // Vérifie que les index ont une valeur
         foreach ($algoIndexes as $algoIndex) {
-            if ($algoIndex instanceof FixedIndex && !$algoIndex->hasClassifMember()) {
+            if ($algoIndex instanceof FixedIndex && !$algoIndex->hasClassificationMember()) {
                 $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'algoIndexationInvalid', [
                     'REF_OPERAND' => $ref
                 ]), true);

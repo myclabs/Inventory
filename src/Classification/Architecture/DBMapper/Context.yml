@@ -1,7 +1,7 @@
 Classification\Domain\Context:
   type: entity
   repositoryClass: \Core_Model_Repository_Ordered
-  table: Classif_Context
+  table: Classification_Context
 
   gedmo:
     translation:

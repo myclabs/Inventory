@@ -19,7 +19,7 @@ class Classification_IndicatorController extends Core_Controller
     /**
      * Action appelé à l'affichage des Indicator.
      *
-     * @Secure("viewClassif")
+     * @Secure("viewClassification")
      */
     public function listAction()
     {
@@ -28,7 +28,7 @@ class Classification_IndicatorController extends Core_Controller
     /**
      * Action appelé à la gestion des Indicator.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function manageAction()
     {

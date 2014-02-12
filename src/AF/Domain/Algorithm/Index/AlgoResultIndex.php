@@ -22,12 +22,12 @@ class AlgoResultIndex extends Index
     /**
      * Return the Classification member associated with the index
      * @param InputSet $inputSet
-     * @return \Classification\Domain\AxisMember
+     * @return AxisMember
      */
-    public function getClassifMember(InputSet $inputSet = null)
+    public function getClassificationMember(InputSet $inputSet = null)
     {
-        $refClassifMember = $this->getAlgo()->execute($inputSet);
-        return AxisMember::loadByRefAndAxis($refClassifMember, $this->getClassifAxis());
+        $refClassificationMember = $this->getAlgo()->execute($inputSet);
+        return AxisMember::loadByRefAndAxis($refClassificationMember, $this->getClassificationAxis());
     }
 
     /**

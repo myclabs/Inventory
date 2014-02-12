@@ -32,7 +32,7 @@ class Classification_Datagrid_Translate_MembersController extends UI_Controller_
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function getelementsAction()
     {
@@ -57,7 +57,7 @@ class Classification_Datagrid_Translate_MembersController extends UI_Controller_
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function updateelementAction()
     {

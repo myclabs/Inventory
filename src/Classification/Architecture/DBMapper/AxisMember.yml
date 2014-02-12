@@ -1,7 +1,7 @@
 Classification\Domain\AxisMember:
   type: entity
   repositoryClass: \Core_Model_Repository_Ordered
-  table: Classif_Member
+  table: Classification_Member
 
   gedmo:
     translation:
@@ -40,7 +40,7 @@ Classification\Domain\AxisMember:
       targetEntity: Classification\Domain\AxisMember
       inversedBy: directParents
       joinTable:
-        name: Classif_Member_Association
+        name: Classification_Member_Association
         joinColumns:
           idParent:
             referencedColumnName: id

@@ -21,7 +21,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
     /**
      * Methode appelee pour remplir le tableau.
      *
-     * @Secure("viewClassif")
+     * @Secure("viewClassification")
      */
     public function getelementsAction()
     {
@@ -57,7 +57,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
     /**
      * Ajoute un nouvel element.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function addelementAction()
     {
@@ -108,7 +108,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
     /**
      * Supprime un element.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function deleteelementAction()
     {
@@ -122,7 +122,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
     /**
      * Modifie les valeurs d'un element.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function updateelementAction()
     {
@@ -197,7 +197,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
     /**
      * Renvoie la liste des parents éligibles pour un membre.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function getparentsAction()
     {

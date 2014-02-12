@@ -17,7 +17,7 @@ class DW_Form_configuration extends UI_Form
     /**
      * Génération du formulaire
      *
-     * @param Classif_Model_Report $report
+     * @param DW_Model_Report $report
      */
     public function __construct(DW_Model_Report $report, $hash)
     {

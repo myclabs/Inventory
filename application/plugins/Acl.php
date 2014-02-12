@@ -573,12 +573,12 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->editRepository($identity);
     }
 
-    protected function viewClassifRule(User $identity)
+    protected function viewClassificationRule(User $identity)
     {
         return $this->viewReferential($identity);
     }
 
-    protected function editClassifRule(User $identity)
+    protected function editClassificationRule(User $identity)
     {
         return $this->editRepository($identity);
     }

@@ -4,7 +4,7 @@ namespace Inventory\Command\PopulateDB;
 
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\TestDataSet\PopulateAF;
-use Inventory\Command\PopulateDB\TestDataSet\PopulateClassif;
+use Inventory\Command\PopulateDB\TestDataSet\PopulateClassification;
 use Inventory\Command\PopulateDB\TestDataSet\PopulateOrga;
 use Inventory\Command\PopulateDB\TestDataSet\PopulateParameter;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,9 +27,9 @@ class TestDataSet
     private $entityManager;
 
     /**
-     * @var PopulateClassif
+     * @var PopulateClassification
      */
-    private $populateClassif;
+    private $populateClassification;
 
     /**
      * @var PopulateParameter
@@ -49,14 +49,14 @@ class TestDataSet
     public function __construct(
         BasicDataSet $basicDataSet,
         EntityManager $entityManager,
-        PopulateClassif $populateClassif,
+        PopulateClassification $populateClassification,
         PopulateParameter $populateParameter,
         PopulateAF $populateAF,
         PopulateOrga $populateOrga
     ) {
         $this->basicDataSet = $basicDataSet;
         $this->entityManager = $entityManager;
-        $this->populateClassif = $populateClassif;
+        $this->populateClassification = $populateClassification;
         $this->populateParameter = $populateParameter;
         $this->populateAF = $populateAF;
         $this->populateOrga = $populateOrga;
@@ -70,7 +70,7 @@ class TestDataSet
 
         $output->writeln('<comment>Populating with the test data set</comment>');
 
-        $this->populateClassif->run($output);
+        $this->populateClassification->run($output);
         $this->populateParameter->run($output);
         $this->populateAF->run($output);
         $this->populateOrga->run($output);

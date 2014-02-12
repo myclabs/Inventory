@@ -22,7 +22,7 @@ class Classification_ContextindicatorController extends Core_Controller
     /**
      * Action appelé à l'affichage des ContextIndicator.
      *
-     * @Secure("viewClassif")
+     * @Secure("viewClassification")
      */
     public function listAction()
     {
@@ -31,7 +31,7 @@ class Classification_ContextindicatorController extends Core_Controller
     /**
      * Action appelé à la gestion des ContextIndicator.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function manageAction()
     {

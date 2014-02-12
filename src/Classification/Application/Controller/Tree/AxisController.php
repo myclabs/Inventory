@@ -39,7 +39,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      *
      * Renvoie la liste d'éléments, le nombre total et un message optionnel.
      *
-     * @Secure("viewClassif")
+     * @Secure("viewClassification")
      */
     public function getnodesAction()
     {
@@ -71,7 +71,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      *
      * Renvoie une message d'information.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function addnodeAction()
     {
@@ -103,7 +103,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      * @see getEditElementValue
      * @see setEditElementErrorMessage
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function editnodeAction()
     {
@@ -183,7 +183,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      * Renvoie un un tableau contenant les parents possibles de l'élément au format :
      *  array('id' => id, 'label' => label).
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function getlistparentsAction()
     {
@@ -217,7 +217,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      * Renvoie un un tableau contenant la fratrie de l'élément au format :
      *  array('id' => id, 'label' => label).
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function getlistsiblingsAction()
     {
@@ -247,7 +247,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     /**
      * Fonction récupérant les informations d'édition pour le formulaire.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function getinfoeditAction()
     {
@@ -265,7 +265,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      *
      * Renvoie une message d'information.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function deletenodeAction()
     {

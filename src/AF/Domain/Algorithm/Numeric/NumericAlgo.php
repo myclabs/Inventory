@@ -76,11 +76,11 @@ abstract class NumericAlgo extends Algo
         }
         $result = $this->execute($inputSet);
         // On récupère les membres de classification
-        $classifMembers = [];
+        $members = [];
         foreach ($this->indexes as $resultIndex) {
-            $classifMembers[] = $resultIndex->getClassifMember($inputSet);
+            $members[] = $resultIndex->getClassificationMember($inputSet);
         }
-        return new Output($result, $this, $classifMembers);
+        return new Output($result, $this, $members);
     }
 
     /**
@@ -146,7 +146,7 @@ abstract class NumericAlgo extends Algo
     public function getIndexForAxis(IndicatorAxis $axis)
     {
         foreach ($this->indexes as $index) {
-            if ($index->getClassifAxis() === $axis) {
+            if ($index->getClassificationAxis() === $axis) {
                 return $index;
             }
         }

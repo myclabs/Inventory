@@ -35,19 +35,19 @@ class Output
 
     /**
      * Members indexing the value
-     * @var \Classification\Domain\AxisMember[]
+     * @var AxisMember[]
      */
-    protected $classifMembers = [];
+    protected $classificationMembers = [];
 
 
     /**
      * Create a new output with an indicator and (possibly) indexing members as an array.
      *
-     * @param Calc_UnitValue         $value
-     * @param NumericAlgo            $algo
-     * @param \Classification\Domain\AxisMember[] $classifMembers
+     * @param Calc_UnitValue $value
+     * @param NumericAlgo    $algo
+     * @param AxisMember[]   $classificationMembers
      */
-    public function __construct(Calc_UnitValue $value, NumericAlgo $algo, array $classifMembers)
+    public function __construct(Calc_UnitValue $value, NumericAlgo $algo, array $classificationMembers)
     {
         $this->sourceValue = clone $value;
         $this->algo = $algo;
@@ -59,8 +59,8 @@ class Output
             $value->getDigitalValue() * $conversionFactor,
             $value->getRelativeUncertainty()
         );
-        foreach ($classifMembers as $member) {
-            $this->classifMembers[] = $member;
+        foreach ($classificationMembers as $member) {
+            $this->classificationMembers[] = $member;
         }
     }
 
@@ -106,16 +106,16 @@ class Output
      */
     public function addMember(AxisMember $member)
     {
-        $this->classifMembers[] = $member;
+        $this->classificationMembers[] = $member;
     }
 
     /**
      * Return the members indexing the value
      * @return AxisMember[]
      */
-    public function getClassifMembers()
+    public function getClassificationMembers()
     {
-        return $this->classifMembers;
+        return $this->classificationMembers;
     }
 
     /**

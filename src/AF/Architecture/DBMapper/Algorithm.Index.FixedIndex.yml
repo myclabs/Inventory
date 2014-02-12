@@ -4,6 +4,6 @@ AF\Domain\Algorithm\Index\FixedIndex:
   table: Algo_Index_Fixed
 
   fields:
-    refClassifMember:
+    refClassificationMember:
       type: string
       nullable: true

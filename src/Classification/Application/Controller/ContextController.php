@@ -19,7 +19,7 @@ class Classification_ContextController extends Core_Controller
     /**
      * Action appelé à l'affichage des Context.
      *
-     * @Secure("viewClassif")
+     * @Secure("viewClassification")
      */
     public function listAction()
     {
@@ -28,7 +28,7 @@ class Classification_ContextController extends Core_Controller
     /**
      * Action appelé à la gestion des Context.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function manageAction()
     {

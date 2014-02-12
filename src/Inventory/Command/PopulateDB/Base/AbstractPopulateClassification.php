@@ -14,7 +14,7 @@ use Unit\UnitAPI;
 /**
  * Remplissage de la base de données avec des données de test
  */
-abstract class AbstractPopulateClassif
+abstract class AbstractPopulateClassification
 {
     // Création des axes.
     //  + createAxis : -

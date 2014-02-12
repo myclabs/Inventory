@@ -1,7 +1,7 @@
 Classification\Domain\ContextIndicator:
   type: entity
   repositoryClass: \Classification\Architecture\Repository\ContextIndicatorRepository
-  table: Classif_ContextIndicator
+  table: Classification_ContextIndicator
 
   id:
     context:
@@ -25,7 +25,7 @@ Classification\Domain\ContextIndicator:
     axes:
       targetEntity: Classification\Domain\IndicatorAxis
       joinTable:
-        name: Classif_ContextIndicator_Axes
+        name: Classification_ContextIndicator_Axes
         joinColumns:
           idContext:
             referencedColumnName: idContext

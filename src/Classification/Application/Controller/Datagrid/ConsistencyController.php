@@ -18,7 +18,7 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
     /**
      * Methode appelee pour remplir le tableau.
      *
-     * @Secure("viewClassif")
+     * @Secure("viewClassification")
      */
     public function getelementsAction()
     {

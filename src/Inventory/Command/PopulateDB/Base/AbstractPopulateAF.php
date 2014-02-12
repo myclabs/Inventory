@@ -626,9 +626,9 @@ abstract class AbstractPopulateAF
     {
         $numeric->setContextIndicator(ContextIndicator::loadByRef($refContext, $refIndicator));
         foreach ($indexes as $refAxis => $refMember) {
-            $classifAxis = IndicatorAxis::loadByRef($refAxis);
+            $classificationAxis = IndicatorAxis::loadByRef($refAxis);
             $index = new FixedIndex(IndicatorAxis::loadByRef($refAxis));
-            $index->setClassifMember(AxisMember::loadByRefAndAxis($refMember, $classifAxis));
+            $index->setClassificationMember(AxisMember::loadByRefAndAxis($refMember, $classificationAxis));
             $index->setAlgoNumeric($numeric);
             $index->save();
         }

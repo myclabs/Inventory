@@ -25,7 +25,7 @@ abstract class Index extends Core_Model_Entity
      * The classification axis
      * @var string|null
      */
-    protected $refClassifAxis;
+    protected $refClassificationAxis;
 
     /**
      * @var NumericAlgo|null
@@ -34,13 +34,13 @@ abstract class Index extends Core_Model_Entity
 
 
     /**
-     * @param \Classification\Domain\IndicatorAxis|null $classifAxis
-     * @param NumericAlgo|null        $algoNumeric
+     * @param IndicatorAxis|null $classificationAxis
+     * @param NumericAlgo|null   $algoNumeric
      */
-    public function __construct(IndicatorAxis $classifAxis = null, NumericAlgo $algoNumeric = null)
+    public function __construct(IndicatorAxis $classificationAxis = null, NumericAlgo $algoNumeric = null)
     {
-        if ($classifAxis) {
-            $this->refClassifAxis = $classifAxis->getRef();
+        if ($classificationAxis) {
+            $this->refClassificationAxis = $classificationAxis->getRef();
         }
         $this->algoNumeric = $algoNumeric;
     }
@@ -50,29 +50,29 @@ abstract class Index extends Core_Model_Entity
      * @param InputSet $inputSet
      * @return AxisMember|null
      */
-    abstract public function getClassifMember(InputSet $inputSet = null);
+    abstract public function getClassificationMember(InputSet $inputSet = null);
 
     /**
-     * @return \Classification\Domain\IndicatorAxis|null The classification axis associated to the value index
+     * @return IndicatorAxis|null The classification axis associated to the value index
      */
-    public function getClassifAxis()
+    public function getClassificationAxis()
     {
-        if ($this->refClassifAxis === null) {
+        if ($this->refClassificationAxis === null) {
             return null;
         }
         try {
-            return IndicatorAxis::loadByRef($this->refClassifAxis);
+            return IndicatorAxis::loadByRef($this->refClassificationAxis);
         } catch (Core_Exception_NotFound $e) {
             return null;
         }
     }
 
     /**
-     * @param IndicatorAxis $classifAxis
+     * @param IndicatorAxis $axis
      */
-    public function setClassifAxis(IndicatorAxis $classifAxis)
+    public function setClassificationAxis(IndicatorAxis $axis)
     {
-        $this->refClassifAxis = $classifAxis->getRef();
+        $this->refClassificationAxis = $axis->getRef();
     }
 
     /**

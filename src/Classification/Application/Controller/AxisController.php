@@ -20,7 +20,7 @@ class Classification_AxisController extends Core_Controller
     /**
      * Action appelé à l'affichage des Axis.
      *
-     * @Secure("viewClassif")
+     * @Secure("viewClassification")
      */
     public function listAction()
     {
@@ -29,7 +29,7 @@ class Classification_AxisController extends Core_Controller
     /**
      * Action appelé à la gestion des Axis.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function manageAction()
     {

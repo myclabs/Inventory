@@ -1,7 +1,7 @@
 Classification\Domain\IndicatorLibrary:
   type: entity
   repositoryClass: \Core_Model_Repository
-  table: Classif_IndicatorLibrary
+  table: Classification_IndicatorLibrary
 
   gedmo:
     translation:

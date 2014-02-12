@@ -18,7 +18,7 @@ class Classification_ConsistencyController extends Core_Controller
     /**
      * Vérifie la cohérence de Classification
      *
-     * @Secure("viewClassif")
+     * @Secure("viewClassification")
      */
     public function checkAction()
     {

@@ -22,7 +22,7 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("viewClassif")
+     * @Secure("viewClassification")
      */
     public function getelementsAction()
     {
@@ -57,7 +57,7 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
     /**
      * Fonction permettant d'ajouter un élément.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function addelementAction()
     {
@@ -107,7 +107,7 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
     /**
      * Fonction supprimant un élément.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function deleteelementAction()
     {
@@ -130,7 +130,7 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function updateelementAction()
     {

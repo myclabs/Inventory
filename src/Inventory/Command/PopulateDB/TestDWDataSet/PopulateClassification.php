@@ -4,13 +4,13 @@ namespace Inventory\Command\PopulateDB\TestDWDataSet;
 
 use Classification\Domain\IndicatorLibrary;
 use Doctrine\ORM\EntityManager;
-use Inventory\Command\PopulateDB\Base\AbstractPopulateClassif;
+use Inventory\Command\PopulateDB\Base\AbstractPopulateClassification;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Remplissage de la base de données avec des données de test
  */
-class PopulateClassif extends AbstractPopulateClassif
+class PopulateClassification extends AbstractPopulateClassification
 {
     /**
      * @var EntityManager

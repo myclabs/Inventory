@@ -82,7 +82,7 @@ class OutputElement extends Core_Model_Entity
             $this->algo = $algoOutput->getAlgo();
             $this->value = $algoOutput->getValue();
 
-            foreach ($algoOutput->getClassifMembers() as $member) {
+            foreach ($algoOutput->getClassificationMembers() as $member) {
                 $index = new OutputIndex($member->getAxis(), $member);
                 $this->indexes->add($index);
             }

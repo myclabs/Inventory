@@ -18,7 +18,7 @@ class Classification_TranslateController extends Core_Controller
     /**
      * Liste des libellés des IndicatorAxis en mode traduction.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function axesAction()
     {
@@ -27,7 +27,7 @@ class Classification_TranslateController extends Core_Controller
     /**
      * Liste des libellés des Classification_Model_Members en mode traduction.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function membersAction()
     {
@@ -36,7 +36,7 @@ class Classification_TranslateController extends Core_Controller
     /**
      * Liste des libellés des Indicator en mode traduction.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function indicatorsAction()
     {
@@ -45,7 +45,7 @@ class Classification_TranslateController extends Core_Controller
     /**
      * Liste des libellés des Context en mode traduction.
      *
-     * @Secure("editClassif")
+     * @Secure("editClassification")
      */
     public function contextsAction()
     {

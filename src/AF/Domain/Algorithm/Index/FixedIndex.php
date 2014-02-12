@@ -17,19 +17,19 @@ class FixedIndex extends Index
      * The classification member associated to the index
      * @var string|null
      */
-    protected $refClassifMember;
+    protected $refClassificationMember;
 
     /**
      * @param InputSet $inputSet
      * @return AxisMember|null
      */
-    public function getClassifMember(InputSet $inputSet = null)
+    public function getClassificationMember(InputSet $inputSet = null)
     {
-        if ($this->refClassifMember === null) {
+        if ($this->refClassificationMember === null) {
             return null;
         }
         try {
-            return AxisMember::loadByRefAndAxis($this->refClassifMember, $this->getClassifAxis());
+            return AxisMember::loadByRefAndAxis($this->refClassificationMember, $this->getClassificationAxis());
         } catch (Core_Exception_NotFound $e) {
             return null;
         }
@@ -38,22 +38,22 @@ class FixedIndex extends Index
     /**
      * @param AxisMember $member
      */
-    public function setClassifMember(AxisMember $member)
+    public function setClassificationMember(AxisMember $member)
     {
-        $this->refClassifMember = $member->getRef();
+        $this->refClassificationMember = $member->getRef();
     }
 
     /**
      * Vérifie si un membre est associé à l'index
      * @return bool
      */
-    public function hasClassifMember()
+    public function hasClassificationMember()
     {
-        if ($this->refClassifMember === null) {
+        if ($this->refClassificationMember === null) {
             return false;
         }
         try {
-            AxisMember::loadByRefAndAxis($this->refClassifMember, $this->getClassifAxis());
+            AxisMember::loadByRefAndAxis($this->refClassificationMember, $this->getClassificationAxis());
             return true;
         } catch (Core_Exception_NotFound $e) {
             return false;

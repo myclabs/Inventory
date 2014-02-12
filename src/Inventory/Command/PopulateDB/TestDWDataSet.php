@@ -3,7 +3,7 @@
 namespace Inventory\Command\PopulateDB;
 
 use Doctrine\ORM\EntityManager;
-use Inventory\Command\PopulateDB\TestDWDataSet\PopulateClassif;
+use Inventory\Command\PopulateDB\TestDWDataSet\PopulateClassification;
 use Inventory\Command\PopulateDB\TestDWDataSet\PopulateOrga;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -25,9 +25,9 @@ class TestDWDataSet
     private $entityManager;
 
     /**
-     * @var PopulateClassif
+     * @var PopulateClassification
      */
-    private $populateClassif;
+    private $populateClassification;
 
     /**
      * @var PopulateOrga
@@ -37,12 +37,12 @@ class TestDWDataSet
     public function __construct(
         BasicDataSet $basicDataSet,
         EntityManager $entityManager,
-        PopulateClassif $populateClassif,
+        PopulateClassification $populateClassification,
         PopulateOrga $populateOrga
     ) {
         $this->basicDataSet = $basicDataSet;
         $this->entityManager = $entityManager;
-        $this->populateClassif = $populateClassif;
+        $this->populateClassification = $populateClassification;
         $this->populateOrga = $populateOrga;
     }
 
@@ -54,7 +54,7 @@ class TestDWDataSet
 
         $output->writeln('<comment>Populating with the testDW data set</comment>');
 
-        $this->populateClassif->run($output);
+        $this->populateClassification->run($output);
         $this->populateOrga->run($output);
     }
 }
