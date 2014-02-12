@@ -25,3 +25,17 @@ UPDATE ext_translations
 UPDATE ext_translations
   SET object_class = 'AF\\Domain\\Algorithm\\Numeric\\NumericParameterAlgo'
   WHERE object_class = 'Algo_Model_Numeric_Parameter';
+
+
+UPDATE ext_log_entries
+  SET object_class = 'AF\\Domain\\Input\\NumericFieldInput'
+  WHERE object_class = 'AF_Model_Input_Numeric';
+UPDATE ext_log_entries
+  SET object_class = 'AF\\Domain\\Input\\CheckboxInput'
+  WHERE object_class = 'AF_Model_Input_Checkbox';
+UPDATE ext_log_entries
+  SET object_class = 'AF\\Domain\\Input\\Select\\SelectMultiInput'
+  WHERE object_class = 'AF_Model_Input_Select_Multi';
+UPDATE ext_log_entries
+  SET object_class = 'AF\\Domain\\Input\\Select\\SelectSingleInput'
+  WHERE object_class = 'AF_Model_Input_Select_Single';
