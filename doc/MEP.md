@@ -5,6 +5,12 @@
 
 - Déployer l'application **sans build update ni redémarrage du worker**
 
+- Exécuter le script de migration SQL
+
+```
+scripts/migration/2.11/migrate.sql
+```
+
 - Copier `application/configs/parameters.php.default` vers `application/configs/parameters.php`
 
 - Configurer `application/configs/parameters.php` en s'inspirant du `application.ini`
