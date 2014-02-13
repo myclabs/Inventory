@@ -29,9 +29,8 @@ AF.InputProgress.prototype = {
         $(".inputProgress .progress").removeClass("progress-striped").removeClass("progress-success");
 
         $(".inputSave").prop("disabled", true).removeClass('btn-primary').show();
-        $(".inputValidate").prop("disabled", true).removeClass('btn-primary').show();
-        $(".inputReopen").hide();
-        $(".alertValidateInput").hide();
+        $(".inputFinish").prop("disabled", true).removeClass('btn-primary').show();
+        $(".alertFinishInput").hide();
     },
 
     /**
@@ -47,9 +46,8 @@ AF.InputProgress.prototype = {
             .removeClass("progress-success");
 
         $(".inputSave").prop("disabled", false).addClass('btn-primary').show();
-        $(".inputValidate").prop("disabled", true).removeClass('btn-primary').show();
-        $(".inputReopen").hide();
-        $(".alertValidateInput").hide();
+        $(".inputFinish").prop("disabled", true).removeClass('btn-primary').show();
+        $(".alertFinishInput").hide();
     },
 
     /**
@@ -65,9 +63,8 @@ AF.InputProgress.prototype = {
         $(".inputProgress .progress").removeClass("progress-striped").removeClass("progress-success");
 
         $(".inputSave").prop("disabled", true).removeClass('btn-primary').show();
-        $(".inputValidate").prop("disabled", false).addClass('btn-primary').show();
-        $(".inputReopen").hide();
-        $(".alertValidateInput").show();
+        $(".inputFinish").prop("disabled", false).addClass('btn-primary').show();
+        $(".alertFinishInput").show();
     },
 
     /**
@@ -83,9 +80,8 @@ AF.InputProgress.prototype = {
         $(".inputProgress .progress").removeClass("progress-striped").removeClass("progress-success");
 
         $(".inputSave").prop("disabled", true).removeClass('btn-primary').show();
-        $(".inputValidate").prop("disabled", false).addClass('btn-primary').show();
-        $(".inputReopen").hide();
-        $(".alertValidateInput").show();
+        $(".inputFinish").prop("disabled", false).addClass('btn-primary').show();
+        $(".alertFinishInput").show();
     },
 
     /**
@@ -102,10 +98,9 @@ AF.InputProgress.prototype = {
             .removeClass("progress-striped")
             .removeClass("progress-success").addClass("progress-success");
 
-        $(".inputSave").prop("disabled", true).removeClass('btn-primary').hide();
-        $(".inputValidate").prop("disabled", true).removeClass('btn-primary').hide();
-        $(".inputReopen").show();
-        $(".alertValidateInput").hide();
+        $(".inputSave").prop("disabled", true).removeClass('btn-primary');
+        $(".inputFinish").prop("disabled", true).removeClass('btn-primary');
+        $(".alertFinishInput").hide();
     },
 
     /**

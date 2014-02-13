@@ -11,17 +11,13 @@ $form = $this->form;
 $inputSet = $this->inputSet;
 if ($inputSet) {
     $inputSetId = $inputSet->getId();
-    $isFinished = $inputSet->isFinished();
-    $isInputComplete = $inputSet->isInputComplete();
 } else {
     $inputSetId = null;
-    $isFinished = false;
-    $isInputComplete = false;
 }
 ?>
 
 <style type="text/css">
-    .alertValidateInput {
+    .alertFinishInput {
         margin-top: -20px;
         margin-bottom: 10px;
     }
@@ -47,10 +43,10 @@ if ($this->mode != AFViewConfiguration::MODE_READ) {
     // Boutons
     $actionGroup = new UI_Form_Element_HTML('formActionGroup');
     $saveButtonLabel = __('UI', 'verb', 'save');
-    $validateButtonLabel = __('AF', 'inputInput', 'validate');
-    $reopenButtonLabel = __('AF', 'inputInput', 'reopen');
+    $finishButtonLabel = __('AF', 'inputInput', 'finish');
     $resultsPreviewButtonLabel = __('AF', 'inputInput', 'resultsPreview');
     $quitButtonLabel = __('UI', 'verb', 'quit');
+    $inputCompleteMessage = __('AF', 'inputInput', 'inputCompleteMessage');
 
     if ($this->withResultsPreview) {
         $resultsPreviewButton = <<<HTML
@@ -63,17 +59,14 @@ HTML;
     }
 
     $actionGroup->content = <<<HTML
-        <div class="alert alert-success alertValidateInput hide">
-            La saisie est complète, vous devez la valider si vous ne comptez plus y apporter de modifications.
+        <div class="alert alert-success alertFinishInput hide">
+            $inputCompleteMessage
         </div>
         <button type="button" class="inputSave btn" data-loading-text="$loadingText">
             $saveButtonLabel
         </button>
-        <button type="button" class="inputValidate btn">
-            $validateButtonLabel
-        </button>
-        <button type="button" class="inputReopen btn">
-            $reopenButtonLabel
+        <button type="button" class="inputFinish btn">
+            $finishButtonLabel
         </button>
         $resultsPreviewButton
         <button type="button" class="inputExit btn">

@@ -194,7 +194,7 @@ class AF_InputController extends Core_Controller
             // Charge la saisie depuis la BDD
             /** @var $inputSet PrimaryInputSet */
             $inputSet = PrimaryInputSet::load($this->getParam('idInputSet'));
-            $inputSet->markAsFinished($this->getParam('value'));
+            $inputSet->markAsFinished(true);
             $inputSet->save();
             $this->entityManager->flush();
         } else {
@@ -203,21 +203,12 @@ class AF_InputController extends Core_Controller
             if ($inputSet === null) {
                 throw new Core_Exception_User("AF", "message", "inputSetDoesntExist");
             }
-            $inputSet->markAsFinished($this->getParam('value'));
+            $inputSet->markAsFinished(true);
             $this->inputSetSessionStorage->saveInputSet($af, $inputSet);
         }
 
-        switch ($inputSet->getStatus()) {
-            case PrimaryInputSet::STATUS_FINISHED:
-                $message = __("AF", "inputInput", "inputValidated");
-                break;
-            default:
-                $message = __("AF", "inputInput", "inputReopened");
-                break;
-        }
-
         $this->sendJsonResponse([
-            'message'    => $message,
+            'message'    => __("AF", "inputInput", "inputFinished"),
             'status'     => $inputSet->getStatus(),
         ]);
     }

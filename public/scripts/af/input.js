@@ -98,11 +98,8 @@ AF.Input = function (id, ref, mode, idInputSet, exitURL, urlParams, resultsPrevi
         $(".inputSave").click(function () {
             that.save();
         });
-        $(".inputValidate").click(function () {
-            that.validateInput();
-        });
-        $(".inputReopen").click(function () {
-            that.reopenInput();
+        $(".inputFinish").click(function () {
+            that.finishInput();
         });
         $(".inputPreview").click(function () {
             that.previewResults();
@@ -285,37 +282,10 @@ AF.Input.prototype = {
     /**
      * Marque la saisie comme terminée
      */
-    validateInput: function () {
+    finishInput: function () {
         var that = this;
         var data = {
-            id: this.id,
-            value: 1
-        };
-        if (this.idInputSet) {
-            data.idInputSet = this.idInputSet;
-        }
-
-        for (var key in this.urlParams) {
-            data[key] = this.urlParams[key];
-        }
-
-        $.ajax("af/input/mark-input-as-finished", {
-            data: data,
-            success: function (data) {
-                addMessage(data.message, 'success');
-                that.inputProgress.setStatus(data.status);
-            }
-        });
-    },
-
-    /**
-     * Réouvre une saisie
-     */
-    reopenInput: function () {
-        var that = this;
-        var data = {
-            id: this.id,
-            value: 0
+            id: this.id
         };
         if (this.idInputSet) {
             data.idInputSet = this.idInputSet;

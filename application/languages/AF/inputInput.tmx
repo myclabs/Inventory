@@ -58,12 +58,12 @@
 		</tu>
 
 		<!-- Marquer la saisie comme terminée -->
-        <tu tuid="validate">
+        <tu tuid="finish">
             <tuv xml:lang="fr">
-                <seg>Valider la saisie</seg>
+                <seg>Terminer la saisie</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Validate the input</seg>
+                <seg>Terminate the input</seg>
             </tuv>
         </tu>
         <tu tuid="reopen">
@@ -189,20 +189,26 @@
 
         <!-- Message lors de la modification du caractère terminée ou non -->
 
-        <tu tuid="inputValidated">
+        <tu tuid="inputFinished">
             <tuv xml:lang="fr">
-                <seg>Saisie validée et fermée.</seg>
+                <seg>Saisie terminée.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Input validated and closed.</seg>
+                <seg>Input finished.</seg>
             </tuv>
         </tu>
-        <tu tuid="inputReopened">
+        <tu tuid="inputCompleteMessage">
             <tuv xml:lang="fr">
-                <seg>Saisie réouverte.</seg>
+                <seg>
+                    La saisie est complète, vous devez cliquer sur "Terminer la saisie" si vous ne comptez
+                    plus y apporter de modifications.
+                </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Input reopened.</seg>
+                <seg>
+                    The input is complete, you must click on "Terminate the input" if you do not plan
+                    on editing it.
+                </seg>
             </tuv>
         </tu>
 
