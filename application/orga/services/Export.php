@@ -389,6 +389,8 @@ class Orga_Service_Export
                 foreach ($cell->getMembers() as $member) {
                     if ($member->getAxis() === $axis) {
                         return $member->getLabel();
+                    } else if ($member->getAxis()->isNarrowerThan($axis)) {
+                        return $member->getParentForAxis($axis)->getLabel();
                     }
                 }
                 return '';
@@ -439,7 +441,13 @@ class Orga_Service_Export
             $granularitySheet->setTitle(mb_substr($granularity->getLabel(), 0, 31));
 
             // Colonnes
-            $columns = array_map(function(Orga_Model_Axis $axis) { return $axis->getLabel(); }, $granularity->getAxes());
+            $columns = [];
+            foreach ($granularity->getAxes() as $axis) {
+                $columns[] = $axis->getLabel();
+                foreach ($axis->getAllBroadersFirstOrdered() as $broaderAxis) {
+                    $columns[] = $broaderAxis->getLabel();
+                }
+            };
             $columns[] = __('Orga', 'export', 'subForm');
             $columns[] = __('Orga', 'export', 'fieldLabel');
             $columns[] = __('Orga', 'export', 'fieldRef');
