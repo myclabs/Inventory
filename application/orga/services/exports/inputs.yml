@@ -10,6 +10,9 @@ sheets:
           - foreach: cell.granularity.axes as axis
             do:
               - label: "{{ axis.label }}"
+              - foreach: axis.allBroadersFirstOrdered as broaderAxis
+                do:
+                  - label: "{{ broaderAxis.label }}"
           - label: "{{ inputAncestor }}"
           - label: "{{ inputLabel }}"
           - label: "{{ inputRef }}"
@@ -27,6 +30,9 @@ sheets:
                   - foreach: cell.granularity.axes as axis
                     do:
                       - "{{ displayCellMemberForAxis(cell, axis) }}"
+                      - foreach: axis.allBroadersFirstOrdered as broaderAxis
+                        do:
+                          - "{{ displayCellMemberForAxis(cell, broaderAxis) }}"
                   - "{{ input['ancestors'] }}"
                   - "{{ input['label'] }}"
                   - "{{ input['ref'] }}"
