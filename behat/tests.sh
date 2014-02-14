@@ -25,7 +25,9 @@ sleep 7
 echo 'flush_all' | netcat localhost 11211
 
 # Composer
+cd ..
 composer install --optimize-autoloader
+cd behat
 
 # Export the databases
 ./generate-db.sh
