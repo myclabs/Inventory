@@ -1,19 +1,18 @@
 <?php
 
-namespace Parameter\Domain;
+namespace AF\Domain;
 
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Parameter\Domain\Family\Family;
 
 /**
- * Bibliothèque de paramètres.
+ * Bibliothèque d'AF.
  *
  * @author matthieu.napoli
  */
-class ParameterLibrary extends Core_Model_Entity
+class AFLibrary extends Core_Model_Entity
 {
     use Core_Model_Entity_Translatable;
 
@@ -33,9 +32,9 @@ class ParameterLibrary extends Core_Model_Entity
     protected $categories;
 
     /**
-     * @var Family[]|Collection
+     * @var AF[]|Collection
      */
-    protected $families;
+    protected $afList;
 
     /**
      * @param string $label
@@ -44,7 +43,7 @@ class ParameterLibrary extends Core_Model_Entity
     {
         $this->label = $label;
         $this->categories = new ArrayCollection();
-        $this->families = new ArrayCollection();
+        $this->afList = new ArrayCollection();
     }
 
     /**
@@ -63,6 +62,24 @@ class ParameterLibrary extends Core_Model_Entity
         return $this->label;
     }
 
+    /**
+     * @return AF[]
+     */
+    public function getAFList()
+    {
+        return $this->afList->toArray();
+    }
+
+    public function addAF(AF $af)
+    {
+        $this->afList->add($af);
+    }
+
+    public function removeAF(AF $af)
+    {
+        $this->afList->removeElement($af);
+    }
+
     public function addCategory(Category $category)
     {
         $this->categories->add($category);
@@ -71,15 +88,5 @@ class ParameterLibrary extends Core_Model_Entity
     public function removeCategory(Category $category)
     {
         $this->categories->removeElement($category);
-    }
-
-    public function addFamily(Family $family)
-    {
-        $this->families->add($family);
-    }
-
-    public function removeFamily(Family $family)
-    {
-        $this->families->removeElement($family);
     }
 }

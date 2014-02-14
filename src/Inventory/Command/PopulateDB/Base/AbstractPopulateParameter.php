@@ -3,6 +3,7 @@
 namespace Inventory\Command\PopulateDB\Base;
 
 use Calc_Value;
+use Parameter\Domain\ParameterLibrary;
 use Symfony\Component\Console\Output\OutputInterface;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Family\Dimension;
@@ -38,41 +39,46 @@ abstract class AbstractPopulateParameter
     abstract public function run(OutputInterface $output);
 
     /**
-     * @param string $label
-     * @param Category $parent
+     * @param ParameterLibrary $library
+     * @param string           $label
+     * @param Category         $parent
      * @return Category
      */
-    protected function createCategory($label, Category $parent = null)
+    protected function createCategory(ParameterLibrary $library, $label, Category $parent = null)
     {
-        $category = new Category($label);
+        $category = new Category($library, $label);
         if ($parent !== null) {
             $category->setParentCategory($parent);
         }
         $category->save();
+        $library->addCategory($category);
         return $category;
     }
 
     /**
-     * @param Category $category
-     * @param $ref
-     * @param $label
-     * @param $refUnit
-     * @param $documentation
+     * @param ParameterLibrary $library
+     * @param Category         $category
+     * @param                  $ref
+     * @param                  $label
+     * @param                  $refUnit
+     * @param string           $documentation
      * @return Family
      */
     protected function createFamily(
+        ParameterLibrary $library,
         Category $category,
         $ref,
         $label,
         $refUnit,
         $documentation = ''
     ) {
-        $family = new Family($ref, $label);
+        $family = new Family($library, $ref, $label);
 
         $family->setCategory($category);
         $family->setUnit(new UnitAPI($refUnit));
         $family->setDocumentation($documentation);
         $family->save();
+        $library->addFamily($family);
         return $family;
     }
 

@@ -3,6 +3,7 @@
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
 use AF\Domain\Action\Action;
+use AF\Domain\AFLibrary;
 use Calc_Value;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateAF;
@@ -27,14 +28,17 @@ class PopulateAF extends AbstractPopulateAF
     {
         $output->writeln('  <info>Populating AF</info>');
 
+        $library = new AFLibrary('Défaut');
+        $library->save();
+
         // Création des catégories.
-        $category_cont_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');
-        $category_sous_categorie = $this->createCategory('Sous-catégorie', $category_cont_sous_categorie);
-        $category_cont_formulaire = $this->createCategory('Catégorie contenant un formulaire');
-        $category_vide = $this->createCategory('Catégorie vide');
+        $category_cont_sous_categorie = $this->createCategory($library, 'Catégorie contenant une sous-catégorie');
+        $category_sous_categorie = $this->createCategory($library, 'Sous-catégorie', $category_cont_sous_categorie);
+        $category_cont_formulaire = $this->createCategory($library, 'Catégorie contenant un formulaire');
+        $category_vide = $this->createCategory($library, 'Catégorie vide');
 
         // Combustion de combustible, mesuré en unité de masse
-        $aF_combustion = $this->createAF($category_cont_formulaire, 'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse');
+        $aF_combustion = $this->createAF($library, $category_cont_formulaire, 'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse');
         // Composants
         $nature_combustible = $this->createSelectInputList($aF_combustion, $aF_combustion->getRootGroup(), 'nature_combustible', 'Nature du combustible', ['charbon' => 'Charbon', 'gaz_naturel' => 'Gaz naturel']);
         $quantite_combustible = $this->createNumericInput($aF_combustion, $aF_combustion->getRootGroup(), 'quantite_combustible', 'Quantité', 't');
@@ -54,7 +58,7 @@ class PopulateAF extends AbstractPopulateAF
         $this->createFixedIndexForAlgoNumeric($aF_combustion->getAlgoByRef('emissions_amont'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
 
         // Données générales
-        $aF_d_g = $this->createAF($category_cont_formulaire, 'donnees_generales', 'Données générales');
+        $aF_d_g = $this->createAF($library, $category_cont_formulaire, 'donnees_generales', 'Données générales');
         // Composants
         $numericInput_chiffre_affaire = $this->createNumericInput($aF_d_g, $aF_d_g->getRootGroup(), 'chiffre_affaire', 'Chiffre d\'affaire', 'kiloeuro');
         // Algos
@@ -62,14 +66,14 @@ class PopulateAF extends AbstractPopulateAF
         $aF_d_g->getMainAlgo()->setExpression(':chiffre_affaire;');
 
         // Formulaire avec sous-formulaires
-        $aF_sous_af = $this->createAF($category_cont_formulaire, 'af_avec_sous_af', 'Formulaire avec sous-formulaires');
+        $aF_sous_af = $this->createAF($library, $category_cont_formulaire, 'af_avec_sous_af', 'Formulaire avec sous-formulaires');
         // Composants
         $s_f_n_r = $this->createSubAF($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_n_r', 'Sous-formulaire non répété', $aF_d_g);
         $s_f_r = $this->createSubAFRepeated($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_r', 'Sous-formulaire répété', $aF_combustion);
 
 
         // Formulaire de test
-        $aF_test = $this->createAF($category_cont_formulaire, 'formulaire_test', 'Formulaire test');
+        $aF_test = $this->createAF($library, $category_cont_formulaire, 'formulaire_test', 'Formulaire test');
 
         // Composants
         $g_test_vide = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'g_vide', 'Groupe vide');
@@ -137,7 +141,7 @@ class PopulateAF extends AbstractPopulateAF
 
 
         // Formulaire avec tous types de champs
-        $aF_tous_types_champs = $this->createAF($category_cont_formulaire, 'formulaire_tous_types_champ', 'Formulaire avec tout type de champ');
+        $aF_tous_types_champs = $this->createAF($library, $category_cont_formulaire, 'formulaire_tous_types_champ', 'Formulaire avec tout type de champ');
 
         // Composants
         $c_n = $this->createNumericInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_n', 'Champ numérique', 'kg_co2e.m3^-1', null, null, true, true, true, null, true);
@@ -150,16 +154,16 @@ class PopulateAF extends AbstractPopulateAF
         $c_t_l = $this->createLongTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_t_l', 'Champ texte long', true, true, null, true);
 
         // Formulaire avec sous-formulaire répété contenant tous types de champs
-        $aF_sous_AF_tous_types_champs = $this->createAF($category_cont_formulaire, 'formulaire_s_f_r_tous_types_champ', 'Formulaire avec sous-formulaire répété contenant tout type de champ');
+        $aF_sous_AF_tous_types_champs = $this->createAF($library, $category_cont_formulaire, 'formulaire_s_f_r_tous_types_champ', 'Formulaire avec sous-formulaire répété contenant tout type de champ');
 
         // Composants
         $s_f_r_t_t_c = $this->createSubAFRepeated($aF_sous_AF_tous_types_champs, $aF_sous_AF_tous_types_champs->getRootGroup(), 's_f_r_t_t_c', 'Sous-formulaire répété tout type de champ', $aF_tous_types_champs);
 
         // Formulaire vide
-        $aF_vide = $this->createAF($category_cont_formulaire, 'formulaire_vide', 'Formulaire vide');
+        $aF_vide = $this->createAF($library, $category_cont_formulaire, 'formulaire_vide', 'Formulaire vide');
 
         // Forfait émissions en fonction de la marque
-        $aF_forfait_marque = $this->createAF($category_cont_formulaire, 'formulaire_forfait_marque', 'Forfait émissions en fonction de la marque');
+        $aF_forfait_marque = $this->createAF($library, $category_cont_formulaire, 'formulaire_forfait_marque', 'Forfait émissions en fonction de la marque');
         // Composants
         $numericInput_sans_effet = $this->createNumericInput($aF_forfait_marque, $aF_forfait_marque->getRootGroup(), 'sans_effet', 'Champ sans effet', 'kiloeuro', null, null, true, false);
         // Algos

@@ -33,6 +33,11 @@ class Category extends Core_Model_Entity
     protected $id;
 
     /**
+     * @var ParameterLibrary
+     */
+    protected $library;
+
+    /**
      * label de la catégorie
      * @var string
      */
@@ -55,10 +60,12 @@ class Category extends Core_Model_Entity
 
 
     /**
-     * @param string|null $label
+     * @param ParameterLibrary $library
+     * @param string|null      $label
      */
-    public function __construct($label = null)
+    public function __construct(ParameterLibrary $library, $label = null)
     {
+        $this->library = $library;
         $this->childCategories = new ArrayCollection();
         $this->families = new ArrayCollection();
         $this->label = $label;

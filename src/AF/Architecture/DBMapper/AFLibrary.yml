@@ -1,7 +1,7 @@
-Parameter\Domain\ParameterLibrary:
+AF\Domain\AFLibrary:
   type: entity
   repositoryClass: \Core_Model_Repository
-  table: Parameter_ParameterLibrary
+  table: AF_Library
 
   gedmo:
     translation:
@@ -16,12 +16,13 @@ Parameter\Domain\ParameterLibrary:
   fields:
     label:
       type: string
+      nullable: false
       gedmo:
         - translatable
 
   oneToMany:
-    families:
-      targetEntity: Parameter\Domain\Family\Family
+    afList:
+      targetEntity: AF
       mappedBy: library
       cascade: [ all ]
       orphanRemoval: true

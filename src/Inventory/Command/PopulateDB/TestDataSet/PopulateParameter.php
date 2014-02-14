@@ -29,42 +29,44 @@ class PopulateParameter extends AbstractPopulateParameter
         $library = new ParameterLibrary('Défaut');
         $library->save();
 
-        $categorie_contenant_sous_categorie = $this->createCategory('Catégorie contenant une sous-catégorie');
-        $library->addRootCategory($categorie_contenant_sous_categorie);
-        $categorie_sous_categorie = $this->createCategory('Sous-catégorie', $categorie_contenant_sous_categorie);
-        $categorie_contenant_famille = $this->createCategory('Catégorie contenant une famille');
-        $library->addRootCategory($categorie_contenant_famille);
-        $sous_categorie_contenant_famille = $this->createCategory('Sous-catégorie contenant une famille', $categorie_contenant_famille);
-        $categorie_vide = $this->createCategory('Catégorie vide');
-        $library->addRootCategory($categorie_vide);
+        $categorie_contenant_sous_categorie = $this->createCategory($library, 'Catégorie contenant une sous-catégorie');
+        $this->createCategory($library, 'Sous-catégorie', $categorie_contenant_sous_categorie);
+        $categorie_contenant_famille = $this->createCategory($library, 'Catégorie contenant une famille');
+        $sous_categorie_contenant_famille = $this->createCategory($library, 'Sous-catégorie contenant une famille', $categorie_contenant_famille);
+        $this->createCategory($library, 'Catégorie vide');
 
         // $family_1 = $this->createFamily($category_contenant_famille, 'ref1', 'Label 1', 'km', 'm', '');
 
         $family_combustion_combustible_masse = $this->createFamily(
+            $library,
             $categorie_contenant_famille,
             'combustion_combustible_unite_masse',
             'Combustion de combustible, mesuré en unité de masse',
             'kg_co2e.t^-1'
         );
         $family_masse_volumique_combustible = $this->createFamily(
+            $library,
             $categorie_contenant_famille,
             'masse_volumique_combustible',
             'Masse volumique de combustible',
             't.m3^-1'
         );
         $family_forfait_emissions_fonction_marque = $this->createFamily(
+            $library,
             $categorie_contenant_famille,
             'forfait_emissions_fonction_marque',
             'Forfait émissions en fonction de la marque',
             't_co2e'
         );
-        $family_vide = $this->createFamily(
+        $this->createFamily(
+            $library,
             $categorie_contenant_famille,
             'famille_test_vide',
             'Famille test vide',
             't'
         );
         $family_test = $this->createFamily(
+            $library,
             $sous_categorie_contenant_famille,
             'famille_test_non_vide',
             'Famille test non vide',

@@ -1,12 +1,10 @@
 <?php
-/**
- * Liste des AF
- * @author  matthieu.napoli
- * @package AF
- */
 use AF\Domain\AF;
+use AF\Domain\AFLibrary;
 use AF\Domain\Category;
 
+/** @var AFLibrary $library */
+$library = $this->library;
 ?>
 
 <div class="page-header">
@@ -15,6 +13,7 @@ use AF\Domain\Category;
 
 <?php
 $datagrid = new UI_Datagrid('listAF', 'Datagrid_Af', 'af');
+$datagrid->addParam('library', $library->getId());
 $datagrid->deleteElements = true;
 $datagrid->addElements = true;
 $datagrid->addPanelTitle = __('AF', 'formList', 'addPanelTitle');

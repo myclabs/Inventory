@@ -56,6 +56,11 @@ class AF extends Core_Model_Entity
     protected $id;
 
     /**
+     * @var AFLibrary
+     */
+    protected $library;
+
+    /**
      * @var string
      */
     protected $ref;
@@ -76,7 +81,7 @@ class AF extends Core_Model_Entity
     protected $category;
 
     /**
-     * @var \AF\Domain\Component\Group
+     * @var Group
      */
     protected $rootGroup;
 
@@ -98,20 +103,22 @@ class AF extends Core_Model_Entity
     protected $components;
 
     /**
-     * @var \AF\Domain\Condition\Condition[]|Collection
+     * @var Condition[]|Collection
      */
     protected $conditions;
 
 
     /**
-     * @param string $ref Identifiant
+     * @param AFLibrary $library
+     * @param string    $ref
      * @throws Core_Exception_User Ref invalide
      */
-    public function __construct($ref)
+    public function __construct(AFLibrary $library, $ref)
     {
         $this->components = new ArrayCollection();
         $this->conditions = new ArrayCollection();
         $this->setRef($ref);
+        $this->library = $library;
 
         // Crée un nouveau set d'algos
         $this->algoSet = new AlgoSet();
@@ -220,7 +227,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @return \AF\Domain\Component\Group
+     * @return Group
      * @todo Diminuer l'utilisation de cette méthode (elle casse l'encapsulation)
      */
     public function getRootGroup()
@@ -453,7 +460,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @return \AF\Domain\Condition\Condition[]
+     * @return Condition[]
      */
     public function getConditions()
     {
@@ -461,7 +468,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\Condition\Condition $condition
+     * @param Condition $condition
      */
     public function addCondition(Condition $condition)
     {
@@ -472,7 +479,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\Condition\Condition $condition
+     * @param Condition $condition
      */
     public function removeCondition(Condition $condition)
     {
