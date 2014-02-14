@@ -52,7 +52,7 @@ Feature: Cell administrator feature
     And I click "connection"
   # On tombe sur le datagrid des cellules
     Then I should see "Administrateur Annecy"
-    Then I should see "Administrateur Chambéry"
+    And I should see "Administrateur Chambéry"
   # Accès à une des cellules
     When I click "Administrateur Annecy"
     Then I should see "Workspace avec données"
