@@ -21,7 +21,7 @@ Feature: Cell observer feature
     Then I should see the popup "Analyses —  Europe | Marque A"
     When I click element "#reports3 .modal-header button"
     When I click element ".current-cell .fa-download"
-    Then I should see "Exports —  Europe | Marque A"
+    Then I should see the popup "Exports —  Europe | Marque A"
     # TODO : accès aux exports
 
   @javascript @readOnly
