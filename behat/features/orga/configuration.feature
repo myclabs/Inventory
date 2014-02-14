@@ -88,7 +88,13 @@ Feature: General info of an organization feature
   # Accès à l'onglet "Informations générales"
     Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
-    And I open tab "Niveaux"
+    And I open tab "Formulaires"
+    Then I should see the "addGranularity1_afs" form
+    When I additionally select "Année" from "axes"
+    And I additionally select "Année" from "inputConfigAxes"
+    And I click "Ajouter"
+    Then the following message is shown and closed: "Ajout effectué."
+    When I open tab "Niveaux"
     Then I should see the "granularity1" datagrid
     And the row 4 of the "granularity1" datagrid should contain:
       | axes  | input  | afs |
