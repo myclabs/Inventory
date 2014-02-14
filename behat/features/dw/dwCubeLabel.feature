@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @skipped
 Feature: Dw cube label feature
 
   Background:
