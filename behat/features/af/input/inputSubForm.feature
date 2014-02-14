@@ -97,7 +97,7 @@ Feature: Subforms input feature
     When I open collapse "Sous-formulaire répété #1"
     And I open collapse "emissions_combustion"
   # Calcul effectué avec la valeur récupérée dans la bonne unité
-    Then I should see "Valeur : 3 077 t équ. CO2 ± 20 %"
+    Then I should see "Valeur : 3,077 t équ. CO2 ± 20 %"
   # Valeur récupérée dans la bonne unité
     When I open collapse "quantite_combustible"
     Then I should see "Valeur : 1 000 kg ± %"
