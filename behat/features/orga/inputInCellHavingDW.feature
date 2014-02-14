@@ -25,7 +25,7 @@ Feature: Input in a cell associated to a DW feature
     When I click "Quitter"
   # Réalisation et lancement d'une analyse pour vérifier que la saisie a bien été prise en compte
     And I click element "a[href='#reports3']"
-    And I click element "i.fa-plus"
+    And I click element "#reports3 .modal-footer i.fa-plus"
     And I click element "#indicatorRatio_indicator"
     And I select "Gaz" from "indicatorAxisOne"
     And I select "Histogramme vertical" from "chartType"
