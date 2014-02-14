@@ -32,7 +32,7 @@ class FeatureContext extends MinkContext
      */
     public function setWindowSize()
     {
-        $this->getSession()->resizeWindow(1500, 1024);
+        $this->getSession()->resizeWindow(1600, 1024);
     }
 
     /**
