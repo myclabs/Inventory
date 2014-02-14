@@ -47,8 +47,8 @@ Feature: General info of an organization feature
     And I open tab "Formulaires"
     Then I should see the "addGranularity1_afs" form
   # Ajout, granularité de saisie non plus fine que ou égale à la granularité de choix des formulaires
-    When I additionally select "Site" from "axes"
-    And I additionally select "Année" from "inputConfigAxes"
+    When I additionally select "Site" from "axes[]"
+    And I additionally select "Année" from "inputConfigAxes[]"
     And I click "Ajouter"
     Then I should see "Merci de sélectionner un niveau organisationnel de saisie plus fin que ou égal au niveau organisationnel de choix des formulaires."
 
@@ -61,8 +61,8 @@ Feature: General info of an organization feature
     Then I should see the "addGranularity1_afs" form
   # Ajout, saisie correcte (granularité de saisie non plus fine que ou égale à la granularité des collectes)
   # Remarque : granularités identiques (sans importance)
-    When I additionally select "Année" from "axes"
-    And I additionally select "Année" from "inputConfigAxes"
+    When I additionally select "Année" from "axes[]"
+    And I additionally select "Année" from "inputConfigAxes[]"
     And I click "Ajouter"
     Then the following message is shown and closed: "Ajout effectué."
     And I open tab "Niveaux"
@@ -90,8 +90,8 @@ Feature: General info of an organization feature
     And I wait for the page to finish loading
     And I open tab "Formulaires"
     Then I should see the "addGranularity1_afs" form
-    When I additionally select "Année" from "axes"
-    And I additionally select "Année" from "inputConfigAxes"
+    When I additionally select "Année" from "axes[]"
+    And I additionally select "Année" from "inputConfigAxes[]"
     And I click "Ajouter"
     Then the following message is shown and closed: "Ajout effectué."
     When I open tab "Niveaux"
