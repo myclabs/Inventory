@@ -8,7 +8,6 @@ Feature: History of user actions on a cell feature
   Scenario: Input history feature, no history scenario
     Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading
-    And I open tab "Historique"
     Then I should see "L'historique est vide."
 
   @javascript
