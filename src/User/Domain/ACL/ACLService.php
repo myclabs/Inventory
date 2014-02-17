@@ -115,7 +115,7 @@ class ACLService
     {
         // Vide les autorisations
         if ($output) {
-            $output->writeln('Clearing all authorizations');
+            $output->writeln('<comment>Clearing all authorizations</comment>');
         }
         foreach (Authorization::loadList() as $authorization) {
             $authorization->delete();
@@ -128,7 +128,7 @@ class ACLService
 
         // Regénère les roles "non optimisés" qui utilisent les objets
         if ($output) {
-            $output->writeln('Rebuilding authorizations for non-optimized roles');
+            $output->writeln('<comment>Rebuilding authorizations for non-optimized roles</comment>');
         }
         foreach (User::loadList() as $user) {
             /** @var User $user */
@@ -146,7 +146,7 @@ class ACLService
 
         // Regénère les "roles optimisés", ceux qui insèrent directement en BDD
         if ($output) {
-            $output->writeln('Rebuilding authorizations for optimized roles');
+            $output->writeln('<comment>Rebuilding authorizations for optimized roles</comment>');
         }
         foreach (User::loadList() as $user) {
             /** @var User $user */
