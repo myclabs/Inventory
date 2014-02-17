@@ -235,19 +235,20 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
         } else {
             $format .= 'if (content == \'\') {';
             if ($this->multiple === true) {
-                $format .= 'if (typeof(valeur) == "string") {';
+                $format .= 'if (typeof(value) == "string") {';
                 $format .= 'value = new Array(value);';
                 $format .= '}';
                 $format .= 'for (var i in value) {';
             }
             foreach ($this->list as $idElem => $element) {
                 if ($this->multiple == true) {
-                    $format .= 'if (value[i]  == "'.$idElem.'") {';
+                    $format .= 'if (value[i]  == '.json_encode($idElem).') {';
                     $format .= 'if (content != \'\') {';
                     $format .= 'content += \''.$this->separatorMultiple.'\';';
                     $format .= '}';
                 } else {
-                    $format .= 'if (value == "'.$idElem.'") {';
+                    Core_Tools::dump($idElem);
+                    $format .= 'if (value == '.json_encode($idElem).') {';
                 }
                 $format .= 'content += \''.addslashes($element).'\';';
                 $format .= '}';
@@ -336,7 +337,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                 }
             }
             foreach ($this->list as $index => $valeur) {
-                $liste .= '{label:"'.addslashes($valeur).'", value:"'.$index.'"},';
+                $liste .= '{label:"'.addslashes($valeur).'", value:'.json_encode($index).'},';
             }
             if (!(empty($this->list))) {
                 $liste = substr($liste, 0, -1);
@@ -595,7 +596,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
             }
         }
         foreach ($this->list as $idElement => $element) {
-            $filterFormElement->addOption(new UI_Form_Element_Option($idElement, urlencode($idElement), $element));
+            $filterFormElement->addOption(new UI_Form_Element_Option(json_encode($idElement), urlencode($idElement), $element));
         }
 
         // Récupération des valeurs par défaut.
@@ -766,7 +767,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                 $addFormElement->addNullOption('');
             }
             foreach ($this->list as $idElement => $element) {
-                $option = new UI_Form_Element_Option($idElement, $idElement, $element);
+                $option = new UI_Form_Element_Option(json_encode($idElement), $idElement, $element);
                 $addFormElement->addOption($option);
             }
         }
