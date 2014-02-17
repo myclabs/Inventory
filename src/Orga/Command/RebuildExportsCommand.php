@@ -9,6 +9,7 @@ use Orga_Model_Granularity;
 use Orga_Model_Cell;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -52,12 +53,15 @@ class RebuildExportsCommand extends Command
     protected function configure()
     {
         $this->setName('export:rebuild')
-            ->setDescription('Regénère les parties cellulaires des exports');
+            ->setDescription('Regénère les parties cellulaires des exports')
+            ->addOption('no-clear', null, InputOption::VALUE_NONE, "Don't clear the existing files");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->clearExistingFiles($output);
+        if (! $input->getOption('no-clear')) {
+            $this->clearExistingFiles($output);
+        }
         $this->generate($output);
         $this->changePermissions($output);
     }
