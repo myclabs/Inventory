@@ -247,7 +247,6 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                     $format .= 'content += \''.$this->separatorMultiple.'\';';
                     $format .= '}';
                 } else {
-                    Core_Tools::dump($idElem);
                     $format .= 'if (value == '.json_encode($idElem).') {';
                 }
                 $format .= 'content += \''.addslashes($element).'\';';
