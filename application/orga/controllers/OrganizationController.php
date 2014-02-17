@@ -776,10 +776,10 @@ class Orga_OrganizationController extends Core_Controller
 
         try {
             $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
-            if ($granularity->getCellsGenerateDWCubes()) {
+            if ($granularity->getCellsWithACL()) {
                 throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
-            $granularity->setCellsGenerateDWCubes(true);
+            $granularity->setCellsWithACL(true);
             $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
         } catch (Core_Exception_NotFound $e) {
             $success = function () {
