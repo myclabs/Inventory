@@ -125,10 +125,10 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
                         $action = new SetNumericFieldValue();
                         break;
                     case Checkbox::class:
-                        $action = new Checkbox();
+                        $action = new SetCheckboxValue();
                         break;
                     case SelectSingle::class:
-                        $action = new SelectSingle();
+                        $action = new SetSelectSingleValue();
                         break;
                     default:
                         throw new Core_Exception("Unhandled component type");
