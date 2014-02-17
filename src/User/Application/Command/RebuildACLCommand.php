@@ -41,8 +41,6 @@ class RebuildACLCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Starting ACL generation');
-
         $this->entityManager->beginTransaction();
 
         try {
@@ -54,7 +52,5 @@ class RebuildACLCommand extends Command
 
         $this->entityManager->flush();
         $this->entityManager->commit();
-
-        $output->writeln('Finished');
     }
 }

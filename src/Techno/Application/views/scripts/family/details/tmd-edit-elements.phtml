@@ -12,16 +12,16 @@ $members = $family->getDimensions()->map(function (Dimension $dimension) {
 })->toArray();
 $product = Core_Tools::arrayCartesianProduct($members);
 
-$helpText = '';
+$inputContent = '';
 foreach ($product as $members) {
     foreach ($members as $member) {
-        $helpText .= $member->getRef() . ', ';
+        $inputContent .= $member->getRef() . '; ';
     }
     $value = $family->getCell($members)->getValue();
     if ($value) {
-        $helpText .= $value->getDigitalValue() . ', ' . $value->getRelativeUncertainty() . PHP_EOL;
+        $inputContent .= $value->getDigitalValue() . '; ' . $value->getRelativeUncertainty() . PHP_EOL;
     } else {
-        $helpText .= ', ' . PHP_EOL;
+        $inputContent .= '; ' . PHP_EOL;
     }
 }
 ?>
@@ -41,7 +41,7 @@ foreach ($product as $members) {
         <div class="modal-body">
             <div class="control-group">
                 <div class="controls">
-                    <textarea id="inputElementList" name="elements" class="pre input-block-level" rows="12"><?=$helpText?></textarea>
+                    <textarea id="inputElementList" name="elements" class="pre input-block-level" rows="12"><?=$inputContent?></textarea>
                     <p class="help-block">
                         <strong><span id="inputElementListValidationOK" class="text-success"></span></strong>
                         <strong><span id="inputElementListValidationNOK" class="text-error"></span></strong>
