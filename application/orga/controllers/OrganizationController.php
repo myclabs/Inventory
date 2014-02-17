@@ -916,7 +916,8 @@ class Orga_OrganizationController extends Core_Controller
             )['cells'];
             $this->view->assign('cells', $cellsCanEdit);
             if (count($cellsCanEdit) === 1) {
-                $cell = array_pop(array_values($cellsCanEdit));
+                $cell = array_values($cellsCanEdit);
+                $cell = array_pop($cell);
                 $this->view->assign('cellData', $cell);
                 $this->view->assign('cellResults', $cell);
             }
