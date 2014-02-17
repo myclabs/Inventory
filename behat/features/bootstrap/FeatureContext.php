@@ -123,9 +123,12 @@ class FeatureContext extends MinkContext
     public function click($name)
     {
         $name = $this->fixStepArgument($name);
-        $node = $this->findLinkOrButton($name);
-        $node->focus();
-        $node->click();
+
+        $this->spin(function () use ($name) {
+            $node = $this->findLinkOrButton($name);
+            $node->focus();
+            $node->click();
+        });
 
         $this->waitForPageToFinishLoading();
     }
@@ -137,9 +140,11 @@ class FeatureContext extends MinkContext
      */
     public function clickElement($selector)
     {
-        $node = $this->findElement($selector);
-        $node->focus();
-        $node->click();
+        $this->spin(function () use ($selector) {
+            $node = $this->findElement($selector);
+            $node->focus();
+            $node->click();
+        });
 
         $this->waitForPageToFinishLoading();
     }
@@ -380,5 +385,34 @@ class FeatureContext extends MinkContext
         $this->waitForPageToFinishLoading();
 
         $this->assertSession()->elementExists('css', "#{$form}.form");
+    }
+
+    /**
+     * Répète une fonction de recherche jusqu'à ce que cette fonction réussisse (pas d'exception levée).
+     *
+     * @param callable $find    Fonction à répéter.
+     * @param int      $timeout Timeout en secondes.
+     * @return mixed
+     */
+    public function spin(callable $find, $timeout = 5)
+    {
+        // Temps d'attente entre chaque boucle, en secondes
+        $sleepTime = 0.1;
+
+        $loops = (int) ((float) $timeout / $sleepTime);
+
+        for ($i = 0; $i < $loops; $i++) {
+            try {
+                $result = $find();
+                return $result;
+            } catch (\Exception $e) {
+                // keep looping
+            }
+
+            usleep($sleepTime * 1000000);
+        }
+
+        // One last try to throw the exception
+        return $find();
     }
 }
