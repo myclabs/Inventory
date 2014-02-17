@@ -30,7 +30,7 @@
         </tu>
         <tu tuid="resetTutorials">
             <tuv xml:lang="fr">
-                <seg>Réinitialiser les tutoriels</seg>
+                <seg>Refaire le tutoriel</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Reset tutorials</seg>
@@ -39,4 +39,4 @@
 
 
     </body>
-</tmx>    
+</tmx>
