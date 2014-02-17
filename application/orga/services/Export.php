@@ -481,6 +481,8 @@ class Orga_Service_Export
             } else {
                 $criteria = new \Doctrine\Common\Collections\Criteria();
                 $criteria->where($criteria->expr()->neq('aFInputSetPrimary', null));
+                $criteria->where($criteria->expr()->eq('relevant', true));
+                $criteria->where($criteria->expr()->eq('allParentsRelevant', true));
                 $criteria->orderBy(['tag' => 'ASC']);
                 $cells = $cell->getChildCellsForGranularity($granularity)->matching($criteria)->toArray();
             }
