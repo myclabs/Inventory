@@ -197,7 +197,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Supprime un element.
-     * @Secure("editMembers")
+     * @Secure("editOrganizationAndCells")
      */
     public function deleteelementAction()
     {
@@ -237,7 +237,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Modifie les valeurs d'un element.
-     * @Secure("editMembers")
+     * @Secure("editOrganizationAndCells")
      */
     public function updateelementAction()
     {
@@ -289,7 +289,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * Renvoie la liste des parents éligibles pour un membre.
-     * @Secure("viewMembers")
+     * @Secure("editOrganizationAndCells")
      */
     public function getParentsAction()
     {

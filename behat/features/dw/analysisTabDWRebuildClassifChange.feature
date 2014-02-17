@@ -1,4 +1,4 @@
-@dbForTestDWUpToDate
+@dbForTestDWUpToDate  @skipped
 Feature: Analysis data rebuild after a change in classification data feature (analysis tab)
 
   Background:

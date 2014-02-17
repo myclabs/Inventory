@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @skipped
 Feature: General info tab analysis edit feature
 
   Background:

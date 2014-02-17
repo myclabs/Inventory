@@ -23,7 +23,7 @@ Feature: Family element tab edit feature
     And I wait for the page to finish loading
   # Ajout d'un élément
     When I click element "#elements-gaz_naturel-combustion a"
-    Then I should see the popup "Élément"
+    Then I should see the popup "Paramètre"
     When I fill in "Valeur" with "1234,56789"
     And I fill in "Incertitude" with "12,34"
     And I click "Enregistrer"
@@ -38,7 +38,7 @@ Feature: Family element tab edit feature
     And I wait for the page to finish loading
   # Ajout d'un élément
     When I click element "#elements-gaz_naturel-combustion a"
-    Then I should see the popup "Élément"
+    Then I should see the popup "Paramètre"
   # Ajout, valeur vide, incertitude vide
     When I click "Enregistrer"
     Then the field "Valeur" should have error: "Merci de renseigner ce champ."
@@ -61,7 +61,7 @@ Feature: Family element tab edit feature
     And I wait for the page to finish loading
   # Édition d'un élément
     When I click element "#elements-charbon-combustion a"
-    Then I should see the popup "Élément"
+    Then I should see the popup "Paramètre"
   # Valeur et incertitude valides
     When I fill in "Valeur" with "1234,56789"
     And I fill in "Incertitude" with "12,89"
@@ -75,7 +75,7 @@ Feature: Family element tab edit feature
     And I wait for the page to finish loading
   # Édition d'un élément
     When I click element "#elements-charbon-combustion a"
-    Then I should see the popup "Élément"
+    Then I should see the popup "Paramètre"
   # Valeur et incertitude vides
     When I fill in "Valeur" with ""
     And I fill in "Incertitude" with ""

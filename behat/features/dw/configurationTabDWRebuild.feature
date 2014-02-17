@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @skipped
 Feature: Rebuild of dataware from the configuration tab feature
 
   Background:
