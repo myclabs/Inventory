@@ -28,21 +28,19 @@ Feature: Family one dimension edit feature
 
   @javascript
   Scenario: Add member to a family dimension, incorrect input
-    Given I am on "techno/dimension/details/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
-    And I click "Ajouter"
+    And I click "combustibleAddMemberButton"
     Then I should see the popup "Ajout d'une liste de membres"
-    When I click "Valider"
-    Then the field "Identifiant" should have error: "Merci de renseigner ce champ."
-    And I click "Annuler"
+    When I click element "#addMemberPopup button:contains('Ajouter')"
+    Then the following message is shown and closed: "Saisie non reconnue, merci de respecter le format précisé."
 
   @javascript
   Scenario: Delete member
-    Given I am on "techno/dimension/details/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
-  # Pour le contenu du datagrid voir plus haut
-    When I click "Supprimer" in the row 1 of the "membersDatagrid" datagrid
+    When I click "Supprimer" in the row 1 of the "combustibleMembersDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "membersDatagrid" datagrid should contain 1 row
+    And the "combustibleMembersDatagrid" datagrid should contain 1 row

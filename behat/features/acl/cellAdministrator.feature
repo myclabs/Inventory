@@ -10,13 +10,16 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.global@toto.com"
     And I click "connection"
   # On tombe sur la page de la cellule globale
-    Then I should see "Vue globale Workspace avec données"
+    Then I should see "Workspace avec données"
+    Then I should see "Vue globale"
     When I wait 5 seconds
   # Vérification onglets visibles et invisibles
-    When I open tab "Paramétrage"
+    When I click element "h1 small a"
+    And I wait for the page to finish loading
   # Vérification que, sous l'onglet "Paramétrage", l'utilisateur voit uniquement "Éléments" et "Pertinence"
-    And I open tab "Éléments"
-    And I open tab "Pertinence"
+    And I should see "Éléments"
+    And I should see "Pertinence"
+    And I should see "Reconstruction"
     Then I should not see "Informations générales"
     And I should not see "Axes"
     And I should not see "Niveaux"
@@ -31,16 +34,10 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
   # On tombe sur la page de la cellule
-    Then I should see "Europe | Marque A Workspace avec données"
-    When I wait 5 seconds
-  # Vérification que le libellé "Vue globale" est présent mais non cliquable dans le volet de navigation
-  # Voir "Organization navigation scenario"
-    And I click element ".fa-plus"
-    Then I should see "Vue globale"
-    And I should not see a "#navigationParent a:contains('Vue globale')" element
+    Then I should see "Workspace avec données"
+    Then I should see "Europe | Marque A"
   # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)
-    When I open collapse "Zone | Marque"
-    And I click "Cliquer pour accéder" in the row 1 of the "aFGranularity2Input2" datagrid
+    When I click element ".current-cell .input-actions a"
     And I click element "#chiffre_affaireHistory .btn"
     Then I should see "Historique des valeurs"
     And I should see a "code:contains('10 k€ ± 15 %')" element
@@ -54,22 +51,18 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.site@toto.com"
     And I click "connection"
   # On tombe sur le datagrid des cellules
-    Then I should see the "listCells" datagrid
-    And the "listCells" datagrid should contain 2 row
-    And the row 1 of the "listCells" datagrid should contain:
-      | label  | access         |
-      | Annecy | Administrateur |
+    Then I should see "Administrateur Annecy"
+    And I should see "Administrateur Chambéry"
   # Accès à une des cellules
-    When I click "Accéder aux saisies" in the row 1 of the "listCells" datagrid
-    Then I should see "Annecy Workspace avec données"
-    When I open collapse "Année | Site | Catégorie"
-    Then I should see the "aFGranularity5Input8" datagrid
+    When I click "Administrateur Annecy"
+    Then I should see "Workspace avec données"
+    Then I should see "Annecy"
   # Accès à l'onglet "Analyses", vérification que l'utilisateur peut bien voir les analyses préconfigurées
-    When I open tab "Analyses"
-    Then the row 1 of the "report" datagrid should contain:
-      | label                        |
-      | Chiffre d'affaire, par année |
-    When I click "Cliquer pour accéder" in the row 1 of the "report" datagrid
+    When I click element ".current-cell i.fa-bar-chart-o"
+    And I wait 5 seconds
+    Then I should see "Chiffre d'affaire, par année"
+    When I click "Chiffre d'affaire, par année"
+    And I wait 8 seconds
     And I open tab "Valeurs"
     Then the row 1 of the "reportValues" datagrid should contain:
       | valueAxiso_annee | valueDigital | valueUncertainty |
@@ -88,9 +81,10 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
     And I wait 5 seconds
-    Then I should see "Europe | Marque A Workspace avec données"
+    Then I should see "Workspace avec données"
+    Then I should see "Europe | Marque A"
   # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
-    When I open tab "Paramétrage"
+    When I click element "h1 small a"
   # On tombe sur l'onglet "Éléments"
     And I open collapse "Site"
     Then I should see the "listMemberssite" datagrid
@@ -121,7 +115,7 @@ Feature: Cell administrator feature
     When I fill in "email" with "administrateur.zone-marque@toto.com"
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
-    And I open tab "Paramétrage"
+    When I click element "h1 small a"
   # Ajout et suppression d'un élément à l'axe "Pays"
     And I open collapse "Pays"
     And I click "Ajouter"
@@ -141,37 +135,3 @@ Feature: Cell administrator feature
     Then the following message is shown and closed: "Suppression effectuée."
     And the "listMemberspays" datagrid should contain 1 row
   # TODO : Suppression d'un élément entraînant la suppression de cellules associées à des DWs (par exemple un site).
-
-
-  @javascript
-  Scenario: Cell administrator subunits and relevance tabs
-    Given I am on the homepage
-    And I wait for the page to finish loading
-  # Login en tant qu'utilisateur connecté
-    When I fill in "email" with "administrateur.zone-marque@toto.com"
-    And I fill in "password" with "administrateur.zone-marque@toto.com"
-    And I click "connection"
-    Then I should see "Europe | Marque A Workspace avec données"
-  # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
-    When I open tab "Paramétrage"
-  # Accès à l'onglet "Sous-unités"
-    # And I open tab "Sous-unités"
-    # And I open collapse "Site"
-    # Then I should see the "child_c2_g3" datagrid
-  # Accès à l'onglet "Pertinence"
-    When I open tab "Pertinence"
-    And I open collapse "Site"
-    Then I should see the "relevant_c2_g3" datagrid
-    And the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site   | relevant   |
-      | Annecy | Pertinente |
-  # Édition de la pertinence : rendre non pertinente une cellule pertinente
-    When I set "Non pertinente" for column "relevant" of row 1 of the "relevant_c2_g3" datagrid with a confirmation message
-    Then the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site   | relevant       |
-      | Annecy | Non pertinente |
-  # Édition de la pertinence : rendre pertinente une cellule non pertinente
-    When I set "Pertinente" for column "relevant" of row 1 of the "relevant_c2_g3" datagrid with a confirmation message
-    Then the row 1 of the "relevant_c2_g3" datagrid should contain:
-      | site    | relevant   |
-      | Annecy  | Pertinente |
