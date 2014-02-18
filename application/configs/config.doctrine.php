@@ -59,6 +59,7 @@ return [
             'Doc',
             'AuditTrail',
             'AF',
+            'Account',
         ];
         foreach ($modules as $module) {
             $yamlDriver = new SimplifiedYamlDriver(

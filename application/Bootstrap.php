@@ -88,6 +88,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Modules
         $builder->addDefinitions(PACKAGE_PATH . '/src/User/Application/config.php');
         $builder->addDefinitions(APPLICATION_PATH . '/orga/config.php');
+        $builder->addDefinitions(PACKAGE_PATH . '/src/Account/Application/config.php');
 
         switch (APPLICATION_ENV) {
             case 'testsunitaires':
@@ -206,6 +207,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'Orga',
             'Simulation',
             'AuditTrail',
+            'Account',
         ];
 
         foreach ($modules as $module) {
