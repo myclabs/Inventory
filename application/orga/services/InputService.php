@@ -1,5 +1,8 @@
 <?php
 
+use AF\Domain\AF;
+use AF\Domain\InputService;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -12,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class Orga_Service_InputService
 {
     /**
-     * @var AF_Service_InputService
+     * @var InputService
      */
     private $afInputService;
 
@@ -27,12 +30,12 @@ class Orga_Service_InputService
     private $workDispatcher;
 
     /**
-     * @param AF_Service_InputService $afInputService
+     * @param InputService $afInputService
      * @param EventDispatcher         $eventDispatcher
      * @param WorkDispatcher          $workDispatcher
      */
     public function __construct(
-        AF_Service_InputService $afInputService,
+        InputService $afInputService,
         EventDispatcher $eventDispatcher,
         WorkDispatcher $workDispatcher
     ) {
@@ -45,10 +48,10 @@ class Orga_Service_InputService
      * Modifie la saisie d'une cellule et recalcule les résultats si la saisie est complète
      *
      * @param Orga_Model_Cell $cell
-     * @param AF_Model_InputSet_Primary $newValues Nouvelles valeurs pour les saisies
+     * @param \AF\Domain\InputSet\PrimaryInputSet $newValues Nouvelles valeurs pour les saisies
      * @throws InvalidArgumentException
      */
-    public function editInput(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $newValues)
+    public function editInput(Orga_Model_Cell $cell, PrimaryInputSet $newValues)
     {
         $inputSet = $cell->getAFInputSetPrimary();
 
@@ -105,10 +108,10 @@ class Orga_Service_InputService
      * Met à jour les résultats d'une saisie
      *
      * @param Orga_Model_Cell           $cell
-     * @param AF_Model_InputSet_Primary $inputSet
-     * @param AF_Model_AF|null          $af Permet d'uiliser un AF différent de celui de la saisie
+     * @param \AF\Domain\InputSet\PrimaryInputSet $inputSet
+     * @param \AF\Domain\AF|null          $af Permet d'uiliser un AF différent de celui de la saisie
      */
-    public function updateResults(Orga_Model_Cell $cell, AF_Model_InputSet_Primary $inputSet, AF_Model_AF $af = null)
+    public function updateResults(Orga_Model_Cell $cell, PrimaryInputSet $inputSet, AF $af = null)
     {
         // Injecte les coordonnées orga à la saisie en tant que ContextValue
         foreach ($cell->getMembers() as $member) {

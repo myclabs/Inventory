@@ -4,10 +4,10 @@ Feature: Family list consult feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Family list consult scenario
   # Affichage du datagrid
-    Given I am on "techno/family/list"
+    Given I am on "parameter/family/list"
     And I wait for the page to finish loading
     Then I should see the "familyDatagrid" datagrid
     And the row 1 of the "familyDatagrid" datagrid should contain:

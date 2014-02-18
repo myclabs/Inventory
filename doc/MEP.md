@@ -1,7 +1,31 @@
 # Mise en production
 
 
+## 3.0
+
+- Migration des traductions (noms des classes) suite au renommage en namespaces de Classif : TODO
+
+- Renommage des tables de Classif en Classification : TODO
+
+- Migration des unités des indicateurs (colonne string to unit_api) : TODO
+
+- Renommage des tables de Techno en Parameter : TODO
+
+
+## 2.11
+
+- Déployer l'application **sans build update ni redémarrage du worker**
+
+- Copier `application/configs/parameters.php.default` vers `application/configs/parameters.php`
+
+- Configurer `application/configs/parameters.php` en s'inspirant du `application.ini`
+
+- Faire un build update et redémarrer le worker.
+
+
 ## 2.10
+
+- Renomer l'éventuel dossier data/specificExports en data/specificReports
 
 - Déployer normalement l'application **sans build update**
 
@@ -24,6 +48,12 @@ php scripts/migration/2.10/migrate.php
 ```
 
 - Faire un rebuild de DW (pour regénérer les traductions)
+
+- Lancer le script de rebuild des ACL
+
+```
+php scripts/jobs/acl/rebuild.php acl:rebuild
+```
 
 - Si il reste des traductions de DW dans `ext_translations`, les supprimer
 

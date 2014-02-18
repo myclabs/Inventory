@@ -48,7 +48,7 @@ class DW_Export_Report_Excel extends Export_Excel
 
         if ($report->getDenominator() === null) {
             $sheetData[] = array(
-                __('Classif', 'indicator', 'indicator'),
+                __('Classification', 'indicator', 'indicator'),
                 $report->getNumerator()->getLabel() . ' (' . $report->getValuesUnitSymbol() . ')'
             );
             if ($numeratorAxis1 !== null) {
@@ -191,9 +191,9 @@ class DW_Export_Report_Excel extends Export_Excel
                     foreach ($value['members'] as $member) {
                         $line[] = $member->getLabel();
                     }
-                    $line[] = floatval(
+                    $line[] = (string) floatval(
                         str_replace(
-                            '&Acirc;&nbsp;',
+                            ['&Acirc;', '&nbsp;'],
                             '',
                             htmlentities(str_replace(',', '.', $locale->formatNumber($value['value'], 3)))
                         )
@@ -208,9 +208,9 @@ class DW_Export_Report_Excel extends Export_Excel
                 if ($value['value'] != 0) {
                     $line = array();
                     $line[] = array_shift($value['members'])->getLabel();
-                    $line[] = floatval(
+                    $line[] = (string) floatval(
                         str_replace(
-                            '&Acirc;&nbsp;',
+                            ['&Acirc;', '&nbsp;'],
                             '',
                             htmlentities(str_replace(',', '.', $locale->formatNumber($value['value'], 3)))
                         )

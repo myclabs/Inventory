@@ -4,7 +4,7 @@ Feature: Subforms input feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Subform input scenario : complete input with zero repetition
   # Formulaire des données générales : un seul champ "Chiffre d'affaires"
     Given I am on "af/af/test/id/3"
@@ -24,7 +24,7 @@ Feature: Subforms input feature
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
     And I should see "100%"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Subform input scenario : complete input with 1 repetition
   # Formulaire des données générales : un seul champ "Chiffre d'affaires"
     Given I am on "af/af/test/id/3"
@@ -38,7 +38,7 @@ Feature: Subforms input feature
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
     And I should see "100%"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Subform input scenario : complete input with 2 repetitions
   # Formulaire des données générales : un seul champ "Chiffre d'affaires"
     Given I am on "af/af/test/id/3"
@@ -76,7 +76,7 @@ Feature: Subforms input feature
     When I open tab "Détails calculs"
     Then I should see "Blablablabla"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Subform input scenario : choice of units
     Given I am on "af/af/test/id/3"
     And I wait for the page to finish loading

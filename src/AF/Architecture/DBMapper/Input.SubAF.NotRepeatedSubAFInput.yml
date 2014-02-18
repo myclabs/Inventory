@@ -1,0 +1,14 @@
+AF\Domain\Input\SubAF\NotRepeatedSubAFInput:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: AF_Input_SubAF_NotRepeated
+
+  manyToOne:
+    value:
+      targetEntity: AF\Domain\InputSet\SubInputSet
+      joinColumn:
+        name: idSub
+        referencedColumnName: id
+        nullable: false
+      cascade: [ all ]
+      orphanRemoval: true

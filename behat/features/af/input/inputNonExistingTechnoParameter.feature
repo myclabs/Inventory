@@ -1,11 +1,11 @@
-@dbFull
-Feature: Input with a non existing Techno parameter feature
+@dbFull @readOnly
+Feature: Input with a non existing Parameter parameter feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: Input with a non existing Techno parameter scenario
+  Scenario: Input with a non existing Parameter parameter scenario
   # Accès au formulaire
     Given I am on "af/af/test/id/1"
     And I wait for the page to finish loading

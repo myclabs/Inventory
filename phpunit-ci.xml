@@ -12,9 +12,9 @@
             <directory>./tests/Calc</directory>
             <directory>./tests/TEC</directory>
             <directory>./tests/Exec</directory>
-            <directory>./tests/Classif</directory>
+            <directory>./tests/Classification</directory>
             <directory>./tests/Export</directory>
-            <directory>./tests/Techno</directory>
+            <directory>./tests/Parameter</directory>
             <directory>./tests/Algo</directory>
             <directory>./tests/AF</directory>
             <directory>./tests/Social</directory>
@@ -44,18 +44,10 @@
                 <directory suffix=".php">application/controllers</directory>
                 <directory suffix=".php">application/models</directory>
                 <directory suffix=".php">application/plugins</directory>
-                <!-- AF -->
-                <directory suffix=".php">application/af/controllers</directory>
-                <directory suffix=".php">application/af/forms</directory>
-                <directory suffix=".php">application/af/views</directory>
                 <!-- AuditTrail -->
                 <directory suffix=".php">src/AuditTrail/Application/Controller</directory>
                 <directory suffix=".php">src/AuditTrail/Application/views</directory>
                 <file>src/AuditTrail/Application/Bootstrap.php</file>
-                <!-- Classif -->
-                <directory suffix=".php">application/classif/controllers</directory>
-                <!-- Doc -->
-                <directory suffix=".php">application/classif/controllers</directory>
                 <!-- DW -->
                 <directory suffix=".php">application/dw/controllers</directory>
                 <directory suffix=".php">application/dw/forms</directory>
@@ -68,17 +60,6 @@
                 <directory suffix=".php">application/social/controllers</directory>
                 <!-- TEC -->
                 <directory suffix=".php">application/tec/controllers</directory>
-                <!-- Techno -->
-                <directory suffix=".php">application/techno/controllers</directory>
-                <directory suffix=".php">application/techno/forms</directory>
-                <!-- Unit -->
-                <directory suffix=".php">application/unit/controllers</directory>
-                <file>application/unit/Bootstrap.php</file>
-                <!-- User -->
-                <directory suffix=".php">application/user/controllers</directory>
-                <directory suffix=".php">application/user/forms</directory>
-                <directory suffix=".php">application/user/plugins</directory>
-                <file>application/user/Bootstrap.php</file>
             </exclude>
         </whitelist>
     </filter>

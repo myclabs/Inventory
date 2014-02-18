@@ -4,7 +4,7 @@ Feature: Input typed in data feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Correct interpretation of the difference between no input, value 0, and empty chain
     Given I am on "af/af/test/id/2"
     And I wait for the page to finish loading

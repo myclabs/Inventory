@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author valentin.claras
+ * @package Parameter
+ * Traduction des Family
+ */
+?>
+
+<div class="page-header">
+    <h1>
+        <?= __('Parameter', 'translate', 'familyDocumentations') ?>
+        <small><?=__('UI', 'name', 'translations')?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(
+    'Parameter\Domain\Family\Family',
+    'label',
+    'datagrid_translate_families_documentation',
+    'parameter'
+)->addIdentifierCol()->addLanguagesLongTextCols();

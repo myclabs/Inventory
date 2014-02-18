@@ -38,10 +38,10 @@
 
         <tu tuid="inputLinkDetail">
             <tuv xml:lang="fr">
-                <seg>Saisie</seg>
+                <seg>Accéder à la saisie</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Input</seg>
+                <seg>Go to Input</seg>
             </tuv>
         </tu>
         <tu tuid="viewInput">
@@ -243,10 +243,10 @@
 
         <tu tuid="administratorExplanations">
             <tuv xml:lang="fr">
-                <seg>Adresses e-mail des utilisateurs disposant d'un droit d'administration sur cette unité d'organisation. Vous pouvez copier-coller une ou plusieurs adresse(s) afin d'envoyer un e-mail pour une annonce ou une demande.</seg>
+                <seg>Utilisateurs pouvant administrer cette unité organisationnelle. Liste d'adresses à copier-coller en bloc ou une par une dans un e-mail.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>E-mail addresses of users having the right to edit all or part of this organizational unit. You can copy-paste one or several address(es) in order to send an e-mail to these users, for a notification or a request.</seg>
+                <seg>Users able having the right to administrate this organizational unit. List of email addresses you can copy-paste in order to send an e-mail to these users.</seg>
             </tuv>
         </tu>
 
@@ -303,12 +303,60 @@
                 <seg>Collection closed</seg>
             </tuv>
         </tu>
-        <tu tuid="inventoryUsersExplanations">
+        <tu tuid="inventoryNotLaunchedMainAction">
             <tuv xml:lang="fr">
-                <seg>Adresses e-mail des utilisateurs disposant d'un droit d'édition sur tout ou partie de cette unité d'organisation. Vous pouvez copier-coller ces adresses pour envoyer un e-mail à ces utilisateurs, pour une annonce ou une relance.</seg>
+                <seg>Démarrer</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>E-mail addresses of users having the right to edit all or part of this organizational unit. You can copy-paste these addresses in order to send an e-mail to these users, for a notification or a recall.</seg>
+                <seg>Start</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryActiveMainAction">
+            <tuv xml:lang="fr">
+                <seg>Clôturer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Close</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosedMainAction">
+            <tuv xml:lang="fr">
+                <seg>Rouvrir</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Re-open</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryNotLaunchedOtherAction">
+            <tuv xml:lang="fr">
+                <seg>Clôturer</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Close</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryActiveOtherAction">
+            <tuv xml:lang="fr">
+                <seg>Revenir à "Non démarrée"</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Revert to "Not launched"</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryClosedOtherAction">
+            <tuv xml:lang="fr">
+                <seg>Revenir à "Non démarrée"</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Revert to "Not launched"</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryUsersExplanations">
+            <tuv xml:lang="fr">
+                <seg>Utilisateurs pouvant éditer tout ou partie de cette unité organisationnelle. Liste d'adresses à copier-coller en bloc ou une par une dans un e-mail.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users having the right to edit all or part of this organizational unit. List of email addresses you can copy-paste these addresses in order to send an e-mail to these users.</seg>
             </tuv>
         </tu>
 

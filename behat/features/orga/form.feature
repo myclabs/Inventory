@@ -31,15 +31,15 @@ Feature: Cell form tab edition feature
     Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
-    And I open collapse "Année | Catégorie"
-    Then I should see the "datagridCellAfs8" datagrid
+    And I click element "#cellAfs9 legend"
+    Then I should see the "datagridCellAfs9" datagrid
   # Sélection d'un formulaire comptable (granularité de saisie plus grossière que la granularité des inventaires
-    When I set "Combustion de combustible, mesuré en unité de masse" for column "af" of row 1 of the "datagridCellAfs8" datagrid with a confirmation message
-    Then the row 1 of the "datagridCellAfs8" datagrid should contain:
+    When I set "Combustion de combustible, mesuré en unité de masse" for column "af" of row 1 of the "datagridCellAfs9" datagrid with a confirmation message
+    Then the row 1 of the "datagridCellAfs9" datagrid should contain:
       | af                                                  |
       | Combustion de combustible, mesuré en unité de masse |
   # Dé-sélection d'un formulaire comptable
-    When I set "" for column "af" of row 1 of the "datagridCellAfs8" datagrid with a confirmation message
-    Then the row 1 of the "datagridCellAfs8" datagrid should contain:
+    When I set "" for column "af" of row 1 of the "datagridCellAfs9" datagrid with a confirmation message
+    Then the row 1 of the "datagridCellAfs9" datagrid should contain:
       | af |
       |    |

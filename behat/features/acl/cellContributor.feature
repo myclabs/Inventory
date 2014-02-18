@@ -1,7 +1,7 @@
 @dbFull
 Feature: Cell contributor feature
 
-  @javascript
+  @javascript @readOnly
   Scenario: Contributor of a single cell
     Given I am on the homepage
     And I wait for the page to finish loading
@@ -43,7 +43,7 @@ Feature: Cell contributor feature
     And I should not see "Exports"
     And I should not see "Reconstruction"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Contributor of several cells
     Given I am on the homepage
     And I wait for the page to finish loading

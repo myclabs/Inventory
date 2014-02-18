@@ -1,0 +1,48 @@
+Classification\Domain\Indicator:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Classification_Indicator
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      unique: true
+      nullable: false
+    label:
+      type: string
+      nullable: false
+      gedmo:
+        - translatable
+    position:
+      type: integer
+      nullable: false
+    unit:
+      type: unit_api
+      nullable: false
+    ratioUnit:
+      type: unit_api
+      nullable: false
+
+  manyToOne:
+    library:
+      targetEntity: IndicatorLibrary
+      inversedBy: indicators
+      joinColumn:
+        nullable: false
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

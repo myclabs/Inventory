@@ -1,7 +1,7 @@
 @dbFull
 Feature: Connected user feature
 
-  @javascript
+  @javascript @readOnly
   Scenario: Connected user scenario
   # TODO : Tester l'affichage et le clic sur les onglets du menu
     Given I am on the homepage
@@ -21,12 +21,12 @@ Feature: Connected user feature
     And I wait for the page to finish loading
     Then I should see the "listSet" datagrid
   # Accès à l'arbre des familles en consultation
-    When I am on "techno/family/tree"
+    When I am on "parameter/family/tree"
     And I wait for the page to finish loading
     And I wait 3 seconds
     Then I should see "Catégorie contenant une sous-catégorie"
   # Accès à la liste des familles en consultation
-    When I am on "techno/family/list"
+    When I am on "parameter/family/list"
     And I wait for the page to finish loading
     Then I should see the "familyDatagrid" datagrid
   # Accès à la page des unités standard

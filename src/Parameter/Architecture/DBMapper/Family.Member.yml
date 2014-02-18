@@ -1,0 +1,48 @@
+Parameter\Domain\Family\Member:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Parameter_Family_Member
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    label:
+      type: string
+      nullable: false
+      gedmo:
+        - translatable
+    position:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    dimension:
+      targetEntity: Parameter\Domain\Family\Dimension
+      inversedBy: members
+      joinColumn:
+        name: idDimension
+        referencedColumnName: id
+        nullable: false
+
+  manyToMany:
+    cells:
+      targetEntity: Parameter\Domain\Family\Cell
+      mappedBy: members
+      cascade: [ all ]
+
+  uniqueConstraints:
+    uniqueMembers:
+      columns: [ idDimension, ref ]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

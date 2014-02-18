@@ -1,9 +1,0 @@
-Algo_Model_ParameterCoordinate_Fixed:
-  type: entity
-  repositoryClass: Core_Model_Repository
-  table: Algo_ParameterCoordinate_Fixed
-
-  fields:
-    idMember:
-      type: string
-      nullable: true

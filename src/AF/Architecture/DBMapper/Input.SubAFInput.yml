@@ -1,0 +1,4 @@
+AF\Domain\Input\SubAFInput:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: AF_Input_SubAF

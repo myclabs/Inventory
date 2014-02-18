@@ -4,7 +4,7 @@ Feature: AF config control feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: AF config control empty form scenario
     Given I am on "af/edit/menu/id/7"
     And I wait for the page to finish loading
@@ -17,7 +17,7 @@ Feature: AF config control feature
     And I should see "Le groupe « root_group » est vide."
     And I should see "L'algorithme d'exécution du formulaire est vide. "
 
-  @javascript
+  @javascript @readOnly
   Scenario: AF config control general data scenario
     Given I am on "af/edit/menu/id/2"
     And I wait for the page to finish loading
@@ -25,7 +25,7 @@ Feature: AF config control feature
     And I click "Contrôler"
     Then I should see "Aucune erreur détectée."
 
-  @javascript
+  @javascript @readOnly
   Scenario: AF config control combustion scenario
     Given I am on "af/edit/menu/id/1"
     And I wait for the page to finish loading

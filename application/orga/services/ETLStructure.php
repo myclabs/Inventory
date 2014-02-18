@@ -1,16 +1,15 @@
 <?php
-/**
- * @package Orga
- * @subpackage Service
- */
 
+use Classification\Domain\AxisMember;
+use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Indicator;
 use Doctrine\ORM\EntityManager;
+use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 
 /**
  * Classe permettant de construire les DW.
+ *
  * @author valentin.claras
- * @package Orga
- * @subpackage Service
  */
 class Orga_Service_ETLStructure
 {
@@ -24,40 +23,67 @@ class Orga_Service_ETLStructure
      */
     private $etlDataService;
 
+    /**
+     * @var Core_EventDispatcher
+     */
+    private $eventDispatcher;
 
     /**
-     * @param EntityManager $entityManager
-     * @param Orga_Service_ETLData $etlDataService
+     * La locale par défaut de l'application.
+     *
+     * @var string
      */
-    public function __construct(EntityManager $entityManager, Orga_Service_ETLData $etlDataService)
-    {
+    private $defaultLocale;
+
+    /**
+     * Les différentes locales de l'application.
+     *
+     * @var array|string[]
+     */
+    private $locales;
+
+
+    /**
+     * @param EntityManager        $entityManager
+     * @param Orga_Service_ETLData $etlDataService
+     * @param Core_EventDispatcher $eventDispatcher
+     * @param string               $defaultLocale
+     * @param string[]             $locales
+     */
+    public function __construct(
+        EntityManager $entityManager,
+        Orga_Service_ETLData $etlDataService,
+        Core_EventDispatcher $eventDispatcher,
+        $defaultLocale,
+        array $locales
+    ) {
         $this->entityManager = $entityManager;
         $this->etlDataService = $etlDataService;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->defaultLocale = $defaultLocale;
+        $this->locales = $locales;
     }
 
     /**
      * Traduit les labels des objets originaux dans DW.
      *
-     * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param Indicator|IndicatorAxis|AxisMember|Orga_Model_Axis|Orga_Model_Member $originalEntity
      * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
      */
     protected function translateEntity($originalEntity, $dWEntity)
     {
-        // TODO utiliser l'injection de dépendances
-        $container = \Core\ContainerSingleton::getContainer();
-        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
-        $defaultLocale = $container->get('translation.defaultLocale');
+        /** @var $translationRepository TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
 
-        if (isset($originalTranslations[$defaultLocale])) {
-            $dWEntity->setLabel($originalTranslations[$defaultLocale]);
+        if (isset($originalTranslations[$this->defaultLocale])) {
+            $dWEntity->setLabel($originalTranslations[$this->defaultLocale]);
         } else {
             $dWEntity->setLabel($originalEntity->getLabel());
         }
         // Traductions.
-        foreach ($container->get('translation.languages') as $localeId) {
+        foreach ($this->locales as $localeId) {
             if (isset($originalTranslations[$localeId]['label'])) {
                 $translationRepository->translate(
                     $dWEntity,
@@ -72,23 +98,21 @@ class Orga_Service_ETLStructure
     /**
      * Vérifie que les traductions sont à jour entre les objets originaux et ceux de DW.
      *
-     * @param Classif_Model_Indicator|Classif_Model_Axis|Classif_Model_Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param Indicator|IndicatorAxis|AxisMember|Orga_Model_Axis|Orga_Model_Member $originalEntity
      * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
      *
      * @return bool
      */
     protected function areTranslationsDifferent($originalEntity, $dWEntity)
     {
-        // TODO utiliser l'injection de dépendances
-        $container = \Core\ContainerSingleton::getContainer();
-        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        /** @var $translationRepository TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
         $dWTranslations = $translationRepository->findTranslations($dWEntity);
 
         // Traductions
-        foreach ($container->get('translation.languages') as $localeId) {
+        foreach ($this->locales as $localeId) {
             if (isset($originalTranslations[$localeId])) {
                 $originalLabel = $originalTranslations[$localeId]['label'];
             } else {
@@ -100,7 +124,7 @@ class Orga_Service_ETLStructure
                 $dWLabel = '';
             }
 
-            if($originalLabel != $dWLabel) {
+            if ($originalLabel != $dWLabel) {
                 return true;
             }
         }
@@ -110,7 +134,7 @@ class Orga_Service_ETLStructure
 
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif et Orga.
+     * Peuple le cube de DW avec les données issues de Classification et Orga.
      *
      * @param Orga_Model_Cell $cell
      */
@@ -125,7 +149,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif et Orga.
+     * Peuple le cube de DW avec les données issues de Classification et Orga.
      *
      * @param Orga_Model_Granularity $granularity
      */
@@ -146,26 +170,23 @@ class Orga_Service_ETLStructure
      */
     protected function updateCellDWCubeLabel(Orga_Model_Cell $cell)
     {
-        // TODO utiliser l'injection de dépendances
-        $container = \Core\ContainerSingleton::getContainer();
-        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
-        $defaultLocale = $container->get('translation.defaultLocale');
+        /** @var $translationRepository TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
 
         $labels = [];
         if (!$cell->hasMembers()) {
-            foreach ($container->get('translation.languages') as $localeId) {
+            foreach ($this->locales as $localeId) {
                 $labels[$localeId] = __('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
             }
         } else {
-            foreach ($container->get('translation.languages') as $localeId) {
+            foreach ($this->locales as $localeId) {
                 $labelParts = [];
                 foreach ($cell->getMembers() as $member) {
                     $originalTranslations = $translationRepository->findTranslations($member);
                     if (isset($originalTranslations[$localeId])) {
                         $labelParts[] = $originalTranslations[$localeId]['label'];
-                    } elseif (isset($originalTranslations[$defaultLocale])) {
-                        $labelParts[] = $originalTranslations[$defaultLocale]['label'];
+                    } elseif (isset($originalTranslations[$this->defaultLocale])) {
+                        $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
                     } else {
                         $labelParts[] = $member->getLabel();
                     }
@@ -184,29 +205,26 @@ class Orga_Service_ETLStructure
      */
     protected function updateGranularityDWCubeLabel(Orga_Model_Granularity $granularity)
     {
-        // TODO utiliser l'injection de dépendances
-        $container = \Core\ContainerSingleton::getContainer();
-        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
-        $defaultLocale = $container->get('translation.defaultLocale');
+        /** @var $translationRepository TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
 
         $labels = [];
         if (!$granularity->hasAxes()) {
-            foreach ($container->get('translation.languages') as $localeId) {
+            foreach ($this->locales as $localeId) {
                 $labels[$localeId] = __('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
             }
         } else {
             $axes = $granularity->getAxes();
             // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
             @uasort($axes, [Orga_Model_Axis::class, 'orderAxes']);
-            foreach ($container->get('translation.languages') as $localeId) {
+            foreach ($this->locales as $localeId) {
                 $labelParts = [];
                 foreach ($axes as $axis) {
                     $originalTranslations = $translationRepository->findTranslations($axis);
                     if (isset($originalTranslations[$localeId])) {
                         $labelParts[] = $originalTranslations[$localeId]['label'];
-                    } elseif (isset($originalTranslations[$defaultLocale])) {
-                        $labelParts[] = $originalTranslations[$defaultLocale]['label'];
+                    } elseif (isset($originalTranslations[$this->defaultLocale])) {
+                        $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
                     } else {
                         $labelParts[] = $axis->getLabel();
                     }
@@ -227,15 +245,15 @@ class Orga_Service_ETLStructure
     protected function updateDWCubeLabel(DW_Model_Cube $dWCube, $labels)
     {
         $dWCube->getLabel();
-        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        /** @var $translationRepository TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
         foreach ($labels as $localeId => $label) {
             $translationRepository->translate($dWCube, 'label', $localeId, $label);
         }
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif et Orga.
+     * Peuple le cube de DW avec les données issues de Classification et Orga.
      *
      * @param DW_Model_Cube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
@@ -255,10 +273,8 @@ class Orga_Service_ETLStructure
      */
     protected function populateDWCubeWithAF(DW_Model_Cube $dWCube)
     {
-        // TODO utiliser l'injection de dépendances
-        $container = \Core\ContainerSingleton::getContainer();
-        /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
+        /** @var $translationRepository TranslationRepository */
+        $translationRepository = $this->entityManager->getRepository(Gedmo\Translatable\Entity\Translation::class);
 
         $inputStatusDWAxis = new DW_Model_Axis($dWCube);
         $inputStatusDWAxis->setRef('inputStatus');
@@ -269,7 +285,7 @@ class Orga_Service_ETLStructure
         $completedDWMember = new DW_Model_Member($inputStatusDWAxis);
         $completedDWMember->setRef('completed');
 
-        foreach ($container->get('translation.languages') as $localeId) {
+        foreach ($this->locales as $localeId) {
             switch ($localeId) {
                 case 'fr':
                     $inputStatusLabel = 'Statut de saisie';
@@ -295,35 +311,35 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif.
+     * Peuple le cube de DW avec les données issues de Classification.
      *
      * @param DW_Model_Cube $dWCube
      */
     protected function populateDWCubeWithClassif(DW_Model_Cube $dWCube)
     {
         $queryOrdered = new Core_Model_Query();
-        $queryOrdered->order->addOrder(Classif_Model_Indicator::QUERY_POSITION);
-        foreach (Classif_Model_Indicator::loadList($queryOrdered) as $classifIndicator) {
-            /** @var Classif_Model_Indicator $classifIndicator */
+        $queryOrdered->order->addOrder(Indicator::QUERY_POSITION);
+        foreach (Indicator::loadList($queryOrdered) as $classifIndicator) {
+            /** @var Indicator $classifIndicator */
             $this->copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube);
         }
 
         $queryRootAxes = new Core_Model_Query();
         $queryRootAxes->filter->addCondition(
-            Classif_Model_Axis::QUERY_NARROWER,
+            IndicatorAxis::QUERY_NARROWER,
             null,
             Core_Model_Filter::OPERATOR_NULL
         );
-        foreach (Classif_Model_Axis::loadList($queryRootAxes) as $classifAxis) {
-            /** @var Classif_Model_Axis $classifAxis */
+        foreach (IndicatorAxis::loadList($queryRootAxes) as $classifAxis) {
+            /** @var IndicatorAxis $classifAxis */
             $this->copyAxisAndMembersFromClassifToDW($classifAxis, $dWCube);
         }
     }
 
     /**
-     * Copie un indicateur de Classif dans un cube de DW.
+     * Copie un indicateur de Classification dans un cube de DW.
      *
-     * @param Classif_Model_Indicator $classifIndicator
+     * @param Indicator $classifIndicator
      * @param DW_Model_Cube $dWCube
      */
     protected function copyIndicatorFromClassifToDWCube($classifIndicator, $dWCube)
@@ -336,13 +352,13 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Copie un axe de Classif dans un cube DW.
+     * Copie un axe de Classification dans un cube DW.
      *
-     * @param Classif_Model_Axis $classifAxis
+     * @param IndicatorAxis $classifAxis
      * @param DW_Model_Cube $dwCube
      * @param array &$associationArray
      */
-    protected function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray=array())
+    protected function copyAxisAndMembersFromClassifToDW($classifAxis, $dwCube, & $associationArray = [])
     {
         $dWAxis = new DW_Model_Axis($dwCube);
         $dWAxis->setRef('c_'.$classifAxis->getRef());
@@ -374,7 +390,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Peuple le cube de DW avec les données issues de Classif.
+     * Peuple le cube de DW avec les données issues de Classification.
      *
      * @param DW_Model_Cube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
@@ -395,7 +411,7 @@ class Orga_Service_ETLStructure
      * @param array $orgaFilters
      * @param array &$associationArray
      */
-    protected function copyAxisAndMembersFromOrgaToDW($orgaAxis, $dwCube, $orgaFilters, & $associationArray=array())
+    protected function copyAxisAndMembersFromOrgaToDW($orgaAxis, $dwCube, $orgaFilters, & $associationArray = [])
     {
         if (in_array($orgaAxis, $orgaFilters['axes'])) {
             return;
@@ -518,7 +534,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Indique si les cubes de DW d'un projt donné est à jour vis à vis de données de Classif et Orga.
+     * Indique si les cubes de DW d'un projt donné est à jour vis à vis de données de Classification et Orga.
      *
      * @param Orga_Model_Organization $organization
      *
@@ -544,7 +560,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Indique si le cube de DW d'un Granularity donné est à jour vis à vis des données de Classif et Orga.
+     * Indique si le cube de DW d'un Granularity donné est à jour vis à vis des données de Classification et Orga.
      *
      * @param Orga_Model_Granularity $granularity
      *
@@ -555,14 +571,14 @@ class Orga_Service_ETLStructure
         return $this->isDWCubeUpToDate(
             $granularity->getDWCube(),
             $granularity->getOrganization(),
-            array(
+            [
                 'axes' => $granularity->getAxes()
-            )
+            ]
         );
     }
 
     /**
-     * Indique si le cube de DW d'un Cell donné est à jour vis à vis des données de Classif et Orga.
+     * Indique si le cube de DW d'un Cell donné est à jour vis à vis des données de Classification et Orga.
      *
      * @param Orga_Model_Cell $cell
      *
@@ -573,15 +589,15 @@ class Orga_Service_ETLStructure
         return $this->isDWCubeUpToDate(
             $cell->getDWCube(),
             $cell->getGranularity()->getOrganization(),
-            array(
+            [
                 'axes' => $cell->getGranularity()->getAxes(),
                 'members' => $cell->getMembers()
-            )
+            ]
         );
     }
 
     /**
-     * Indique les différences entre un cube de DW donné el les données de Classif et Orga.
+     * Indique les différences entre un cube de DW donné el les données de Classification et Orga.
      *
      * @param DW_Model_Cube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
@@ -591,14 +607,12 @@ class Orga_Service_ETLStructure
      */
     protected function isDWCubeUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
-        return (
-            $this->areDWIndicatorsUpToDate($dWCube)
-            && $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
-        );
+        return $this->areDWIndicatorsUpToDate($dWCube)
+            && $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters);
     }
 
     /**
-     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
+     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
      * @param DW_Model_Cube $dWCube
      *
@@ -606,13 +620,13 @@ class Orga_Service_ETLStructure
      */
     protected function areDWIndicatorsUpToDate($dWCube)
     {
-        $classifIndicators = Classif_Model_Indicator::loadList();
+        $classifIndicators = Indicator::loadList();
         $dWIndicators = $dWCube->getIndicators();
 
-        foreach (Classif_Model_Indicator::loadList() as $classifIndex => $classifIndicator) {
-            /** @var Classif_Model_Indicator $classifIndicator */
+        foreach (Indicator::loadList() as $classifIndex => $classifIndicator) {
+            /** @var Indicator $classifIndicator */
             foreach ($dWCube->getIndicators() as $dWIndex => $dWIndicator) {
-                if (!($this->isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator))) {
+                if (! $this->isDWIndicatorDifferentFromClassif($dWIndicator, $classifIndicator)) {
                     unset($classifIndicators[$classifIndex]);
                     unset($dWIndicators[$dWIndex]);
                 }
@@ -626,10 +640,10 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
+     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
      * @param DW_Model_Indicator $dWIndicator
-     * @param Classif_Model_Indicator $classifIndicator
+     * @param Indicator $classifIndicator
      *
      * @return bool
      */
@@ -647,7 +661,7 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classif.
+     * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
      * @param DW_Model_Cube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
@@ -659,16 +673,16 @@ class Orga_Service_ETLStructure
     {
         $queryClassifRootAxes = new Core_Model_Query();
         $queryClassifRootAxes->filter->addCondition(
-            Classif_Model_Axis::QUERY_NARROWER,
+            IndicatorAxis::QUERY_NARROWER,
             null,
             Core_Model_Filter::OPERATOR_NULL
         );
         $dWRootAxes = $dWCube->getRootAxes();
 
-        // Classif.
-        $classifRootAxes = Classif_Model_Axis::loadList($queryClassifRootAxes);
-        foreach (Classif_Model_Axis::loadList($queryClassifRootAxes) as $classifIndex => $classifAxis) {
-            /** @var Classif_Model_Axis $classifAxis */
+        // Classification.
+        $classifRootAxes = IndicatorAxis::loadList($queryClassifRootAxes);
+        foreach (IndicatorAxis::loadList($queryClassifRootAxes) as $classifIndex => $classifAxis) {
+            /** @var IndicatorAxis $classifAxis */
             foreach ($dWCube->getRootAxes() as $dWIndex => $dWAxis) {
                 if (!($this->isDWAxisDifferentFromClassif($dWAxis, $classifAxis))) {
                     unset($classifRootAxes[$classifIndex]);
@@ -696,10 +710,10 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare un axe de DW et un de Classif.
+     * Compare un axe de DW et un de Classification.
      *
      * @param DW_Model_Axis $dWAxis
-     * @param Classif_Model_Axis $classifAxis
+     * @param IndicatorAxis $classifAxis
      *
      * @return bool
      */
@@ -735,10 +749,10 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare un membre de DW et un de Classif.
+     * Compare un membre de DW et un de Classification.
      *
      * @param DW_Model_Axis $dWAxis
-     * @param Classif_Model_Axis $classifAxis
+     * @param IndicatorAxis $classifAxis
      *
      * @return bool
      */
@@ -764,10 +778,10 @@ class Orga_Service_ETLStructure
     }
 
     /**
-     * Compare un membre de DW et un de Classif.
+     * Compare un membre de DW et un de Classification.
      *
      * @param DW_Model_Member $dWMember
-     * @param Classif_Model_Member $classifMember
+     * @param AxisMember $classifMember
      *
      * @return bool
      */
@@ -963,10 +977,7 @@ class Orga_Service_ETLStructure
      */
     public function resetGranularityAndCellsDWCubes(Orga_Model_Granularity $granularity)
     {
-        // TODO utiliser l'injection de dépendances
-        /** @var Core_EventDispatcher $eventDispatcher */
-        $eventDispatcher = \Core\ContainerSingleton::getContainer()->get('Core_EventDispatcher');
-        $eventDispatcher->removeListener('Orga_Service_Report', 'DW_Model_Report');
+        $this->eventDispatcher->removeListener(Orga_Service_Report::class, DW_Model_Report::class);
 
         foreach ($granularity->getCells() as $cell) {
             $cell = Orga_Model_Cell::load($cell->getId());
@@ -981,9 +992,7 @@ class Orga_Service_ETLStructure
         $this->resetDWCube(
             $granularity->getDWCube(),
             $granularity->getOrganization(),
-            array(
-                'axes' => $granularity->getAxes()
-            )
+            [ 'axes' => $granularity->getAxes() ]
         );
     }
 
@@ -1028,35 +1037,36 @@ class Orga_Service_ETLStructure
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
         if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
-            try {
-                // Début de transaction.
-                $this->entityManager->beginTransaction();
+            return;
+        }
 
-                $this->etlDataService->clearDWResultsForCell($cell);
-                $this->entityManager->flush();
+        try {
+            // Début de transaction.
+            $this->entityManager->beginTransaction();
 
-                $this->updateCellDWCubeLabel($cell);
-                $this->resetDWCube(
-                    $cell->getDWCube(),
-                    $cell->getGranularity()->getOrganization(),
-                    array(
-                        'axes' => $cell->getGranularity()->getAxes(),
-                        'members' => $cell->getMembers()
-                    )
-                );
+            $this->etlDataService->clearDWResultsForCell($cell);
+            $this->entityManager->flush();
 
-                $this->etlDataService->populateDWResultsForCell($cell);
-                $this->entityManager->flush();
+            $this->updateCellDWCubeLabel($cell);
+            $this->resetDWCube(
+                $cell->getDWCube(),
+                $cell->getGranularity()->getOrganization(),
+                array(
+                    'axes' => $cell->getGranularity()->getAxes(),
+                    'members' => $cell->getMembers()
+                )
+            );
 
-                // Fin de transaction.
-                $this->entityManager->commit();
-            } catch (ErrorException $e) {
-                // Annulation de la transaction.
-                $this->entityManager->rollback();
+            $this->etlDataService->populateDWResultsForCell($cell);
+            $this->entityManager->flush();
 
-                throw $e;
-            }
+            // Fin de transaction.
+            $this->entityManager->commit();
+        } catch (ErrorException $e) {
+            // Annulation de la transaction.
+            $this->entityManager->rollback();
 
+            throw $e;
         }
     }
 
@@ -1083,6 +1093,7 @@ class Orga_Service_ETLStructure
         foreach (DW_Model_Report::loadList($queryCube) as $dWReport) {
             /** @var DW_Model_Report $dWReport */
             $dWReportsAsString[] = $dWReport->getAsString();
+            // TODO http://42lareponse.fr/wp-content/uploads/2013/05/what-the-fuck-is-this1.jpg
             $emptyDWReportString = '{'.
                 '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWCube->getId().',"label":"",'.
                 '"refNumerator":null,"refNumeratorAxis1":null,"refNumeratorAxis2":null,'.
@@ -1124,5 +1135,4 @@ class Orga_Service_ETLStructure
         // Copie des rapports.
         $this->entityManager->flush();
     }
-
 }

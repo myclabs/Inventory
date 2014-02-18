@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @readOnly
 Feature: General data input feature
 
   Background:

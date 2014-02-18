@@ -109,71 +109,71 @@ if ($connectedUser) {
     }
     if ($isAllowedToEditRepository) {
         $subMenuRepository[] = [
-            'name' => __('Classif', 'classification', 'classification'),
+            'name' => __('Classification', 'classification', 'classification'),
             'url' => '#',
             'submenu' => [
                 [
                     'name' => __('UI', 'name', 'axes'),
-                    'url' => 'classif/axis/manage'
+                    'url' => 'classification/axis/manage'
                 ],
                 [
                     'name' => __('UI', 'name', 'members'),
-                    'url' => 'classif/member/manage'
+                    'url' => 'classification/member/manage'
                 ],
                 [
-                    'name' => __('Classif', 'indicator', 'indicators'),
-                    'url' => 'classif/indicator/manage'
+                    'name' => __('Classification', 'indicator', 'indicators'),
+                    'url' => 'classification/indicator/manage'
                 ],
                 [
-                    'name' => __('Classif', 'context', 'contexts'),
-                    'url' => 'classif/context/manage'
+                    'name' => __('Classification', 'context', 'contexts'),
+                    'url' => 'classification/context/manage'
                 ],
                 [
-                    'name' => __('Classif', 'contextIndicator', 'contextIndicators'),
-                    'url' => 'classif/contextindicator/manage'
+                    'name' => __('Classification', 'contextIndicator', 'contextIndicators'),
+                    'url' => 'classification/contextindicator/manage'
                 ],
                 [
                     'name'    => __('UI', 'name', 'control'),
-                    'url'     => 'classif/consistency/check',
+                    'url'     => 'classification/consistency/check',
                 ],
             ]
         ];
     }
     if ($isAllowedToEditRepository) {
         $subMenuRepository[] = [
-            'name' => __('Techno', 'name', 'parameters'),
+            'name' => __('Parameter', 'name', 'parameters'),
             'url' => '#',
             'submenu' => [
                 [
-                    'name' => __('Techno', 'familyTree', 'familyTreeEdit'),
-                    'url' => 'techno/family/tree-edit'
+                    'name' => __('Parameter', 'familyTree', 'familyTreeEdit'),
+                    'url' => 'parameter/family/tree-edit'
                 ],
                 [
-                    'name' => __('Techno', 'familyTree', 'familyTreeConsult'),
-                    'url' => 'techno/family/tree'
+                    'name' => __('Parameter', 'familyTree', 'familyTreeConsult'),
+                    'url' => 'parameter/family/tree'
                 ],
                 [
-                    'name' => __('Techno', 'familyList', 'familyListEdit'),
-                    'url' => 'techno/family/list-edit'
+                    'name' => __('Parameter', 'familyList', 'familyListEdit'),
+                    'url' => 'parameter/family/list-edit'
                 ],
                 [
-                    'name' => __('Techno', 'familyList', 'familyListConsult'),
-                    'url' => 'techno/family/list'
+                    'name' => __('Parameter', 'familyList', 'familyListConsult'),
+                    'url' => 'parameter/family/list'
                 ],
             ],
         ];
     } else {
         $subMenuRepository[] = [
-            'name' => __('Techno', 'name', 'parameters'),
+            'name' => __('Parameter', 'name', 'parameters'),
             'url' => '#',
             'submenu' => [
                 [
-                    'name' => __('Techno', 'familyTree', 'familyTree'),
-                    'url' => 'techno/family/tree'
+                    'name' => __('Parameter', 'familyTree', 'familyTree'),
+                    'url' => 'parameter/family/tree'
                 ],
                 [
-                    'name' => __('Techno', 'familyList', 'familyList'),
-                    'url' => 'techno/family/list'
+                    'name' => __('Parameter', 'familyList', 'familyList'),
+                    'url' => 'parameter/family/list'
                 ],
             ]
         ];
@@ -268,43 +268,43 @@ if ($connectedUser) {
             ];
 
             $subMenuTranslation[] = [
-                'name' => __('Classif', 'classification', 'classification'),
+                'name' => __('Classification', 'classification', 'classification'),
                 'url' => '#',
                 'submenu' => [
                     [
                         'name' => __('UI', 'name', 'axes'),
-                        'url' => 'classif/translate/axes'
+                        'url' => 'classification/translate/axes'
                     ],
                     [
                         'name' => __('UI', 'name', 'members'),
-                        'url' => 'classif/translate/members'
+                        'url' => 'classification/translate/members'
                     ],
                     [
-                        'name' => __('Classif', 'indicator', 'indicators'),
-                        'url' => 'classif/translate/indicators'
+                        'name' => __('Classification', 'indicator', 'indicators'),
+                        'url' => 'classification/translate/indicators'
                     ],
                     [
-                        'name' => __('Classif', 'context', 'contexts'),
-                        'url' => 'classif/translate/contexts'
+                        'name' => __('Classification', 'context', 'contexts'),
+                        'url' => 'classification/translate/contexts'
                     ],
                 ]
             ];
 
             $subMenuTranslation[] = [
-                'name' => __('Techno', 'name', 'parameters'),
+                'name' => __('Parameter', 'name', 'parameters'),
                 'url' => '#',
                 'submenu' => [
                     [
                         'name' => __('UI', 'name', 'categories'),
-                        'url' => 'techno/translate/categories'
+                        'url' => 'parameter/translate/categories'
                     ],
                     [
-                        'name' => __('Techno', 'translate', 'familyLabels'),
-                        'url' => 'techno/translate/families-label'
+                        'name' => __('Parameter', 'translate', 'familyLabels'),
+                        'url' => 'parameter/translate/families-label'
                     ],
                     [
-                        'name' => __('Techno', 'translate', 'familyDocumentations'),
-                        'url' => 'techno/translate/families-documentation'
+                        'name' => __('Parameter', 'translate', 'familyDocumentations'),
+                        'url' => 'parameter/translate/families-documentation'
                     ],
                 ]
             ];
@@ -423,9 +423,36 @@ $rightMenu = [ $connection ];
                         <?php } else { ?>
                             <li<?=$liClass?>><a<?=$mainLink?>><?=$node['name']?></a></li>
                         <?php } ?>
-                    <?php } ?>
+                    <?php }
+                    if ($this->tutorial) {
+                        echo "<li><a href='#' id='resetTutorials'>".__('User', 'menu', 'resetTutorials')."</a></li>";
+                    }
+                    ?>
                 </ul>
             </div>
         </div>
     </div>
 </div>
+
+<?php if ($this->tutorial): ?>
+<script>
+$("#resetTutorials").on("click", function () {
+    $.ajax({
+        url: 'user/profile/reset-tutorials',
+        type: "GET"
+    })
+    .done(function () {
+        addMessage('<?= __('User', 'action', 'resetTutorialsConfirmation') ?> <a href="#" id="tutorialReloadPage">' +
+                   '<?= __('User', 'action', 'resetTutorialsReloadPage') ?></a>', 'success');
+        $("#tutorialReloadPage").on("click", function () {
+            location.reload();
+            return false;
+        });
+    })
+    .fail(function () {
+        addMessage('<?= __('User', 'action', 'resetTutorialsError') ?>', 'error');
+    });
+    return false;
+});
+</script>
+<?php endif; ?>

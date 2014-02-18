@@ -9,7 +9,7 @@ Feature: AF tree edit category feature
     Given I am on "af/af/tree"
     And I wait for the page to finish loading
   # Attente pour fonctionnement test sur serveur dédié
-    And I wait 5 seconds
+    And I wait 2 seconds
   # Ajout d'une catégorie, libellé vide
     When I click "Ajouter une catégorie"
     Then I should see the popup "Ajout d'une catégorie"
@@ -26,7 +26,7 @@ Feature: AF tree edit category feature
   @javascript
   Scenario: Edition of label of an AF category
     Given I am on "af/af/tree"
-    And I wait 7 seconds
+    And I wait 2 seconds
   # Ouverture popup modification
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
@@ -44,7 +44,7 @@ Feature: AF tree edit category feature
   @javascript
   Scenario: Edition of position an parent of an AF category
     Given I am on "af/af/tree"
-    And I wait 7 seconds
+    And I wait 2 seconds
   # Déplacement dans une autre catégorie
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
@@ -81,7 +81,7 @@ Feature: AF tree edit category feature
   @javascript
   Scenario:  Deletion of an AF category
     Given I am on "af/af/tree"
-    And I wait 7 seconds
+    And I wait 2 seconds
   # Catégorie contenant une sous-catégorie
     And I click "Catégorie contenant une sous-catégorie"
     Then I should see the popup "Édition d'une catégorie"

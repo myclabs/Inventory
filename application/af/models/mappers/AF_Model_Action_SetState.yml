@@ -1,9 +1,0 @@
-AF_Model_Action_SetState:
-  type: entity
-  repositoryClass: Core_Model_Repository
-  table: AF_Action_SetState
-
-  fields:
-    state:
-      type: integer
-      nullable: false

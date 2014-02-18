@@ -4,7 +4,7 @@ Feature: Feedback feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Send a feedback message
     Given I am on the homepage
     And I click "Aidez-nous à améliorer cette page"

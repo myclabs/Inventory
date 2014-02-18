@@ -36,7 +36,7 @@ Orga_Model_Cell:
       nullable: false
 
   oneToOne:
-    documentLibrary:
+    docLibraryForAFInputSetPrimary:
       targetEntity: Doc\Domain\Library
       joinColumn:
         name: idDocLibraryForAFInputSetsPrimary
@@ -46,7 +46,7 @@ Orga_Model_Cell:
       orphanRemoval: true
       cascade: [ persist, remove ]
     aFInputSetPrimary:
-      targetEntity: AF_Model_InputSet_Primary
+      targetEntity: AF\Domain\InputSet\PrimaryInputSet
       joinColumn:
         name: idAFInputSetPrimary
         referencedColumnName: id

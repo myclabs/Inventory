@@ -1,0 +1,13 @@
+<?php
+use AF\Domain\Algorithm\Numeric\NumericAlgo;
+?>
+
+<div class="page-header">
+    <h1>
+        <?=__('AF', 'translate', 'numericAlgorithmLabels')?>
+        <small><?=__('UI', 'name', 'translations')?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(NumericAlgo::class, 'label', 'datagrid_translate_algos', 'af')->simple();

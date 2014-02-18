@@ -1,27 +1,17 @@
 <?php
-/**
- * @author  valentin.claras
- * @package Orga
- * @subpackage Service
- */
 
 use Doctrine\ORM\EntityManager;
 
 /**
- * @package Orga
- * @subpackage Service
+ * @author valentin.claras
  */
 class Orga_Service_CellService
 {
-
     /**
      * @var EntityManager
      */
     private $entityManager;
 
-    /**
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -31,7 +21,7 @@ class Orga_Service_CellService
      * Modifie la pertinence d'une cellule
      *
      * @param Orga_Model_Cell $cell
-     * @param bool $relevance
+     * @param bool            $relevance
      * @throws Exception
      */
     public function setCellRelevance(Orga_Model_Cell $cell, $relevance)
@@ -50,5 +40,4 @@ class Orga_Service_CellService
             throw $e;
         }
     }
-
 }

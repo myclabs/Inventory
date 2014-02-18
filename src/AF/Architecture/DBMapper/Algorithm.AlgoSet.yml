@@ -1,0 +1,17 @@
+AF\Domain\Algorithm\AlgoSet:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Algo_Set
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  oneToMany:
+    algos:
+      targetEntity: AF\Domain\Algorithm\Algo
+      mappedBy: set
+      cascade: [ all ]
+      orphanRemoval: true

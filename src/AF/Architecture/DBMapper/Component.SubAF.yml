@@ -1,0 +1,17 @@
+AF\Domain\Component\SubAF:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: AF_Component_SubAF
+
+  fields:
+    foldaway:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    calledAF:
+      targetEntity: AF\Domain\AF
+      joinColumn:
+        name: idCalledAF
+        referencedColumnName: id
+        nullable: false

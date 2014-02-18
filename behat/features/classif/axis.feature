@@ -6,7 +6,7 @@ Feature: Classification axis feature
 
   @javascript
   Scenario: Creation of a classification axis, correct input
-    Given I am on "classif/axis/manage"
+    Given I am on "classification/axis/manage"
     And I wait for the page to finish loading
     Then I should see "Axes de classification"
   # TODO : affichage d'un axe sous la forme : "Libellé (identifiant)"
@@ -39,9 +39,9 @@ Feature: Classification axis feature
     And I wait 7 seconds
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
 
-  @javascript
+  @javascript @readOnly
   Scenario: Creation of a classification axis, incorrect input
-    Given I am on "classif/axis/manage"
+    Given I am on "classification/axis/manage"
     And I wait for the page to finish loading
   # Popup d'ajout
     When I wait 5 seconds
@@ -61,7 +61,7 @@ Feature: Classification axis feature
 
   @javascript
   Scenario: Edition of label and identifier of a classification axis, correct input
-    Given I am on "classif/axis/manage"
+    Given I am on "classification/axis/manage"
     Then I should see "Axes de classification"
   # Modification "sans effet" d'un axe
     When I wait 4 seconds
@@ -81,7 +81,7 @@ Feature: Classification axis feature
 
   @javascript
   Scenario: Edition of label and identifier of a classification axis, incorrect input
-    Given I am on "classif/axis/manage"
+    Given I am on "classification/axis/manage"
     Then I should see "Axes de classification"
   # Modification "sans effet" d'un axe
     When I wait 4 seconds
@@ -108,7 +108,7 @@ Feature: Classification axis feature
 
   @javascript
   Scenario: Edition of position and parent of a classification axis
-    Given I am on "classif/axis/manage"
+    Given I am on "classification/axis/manage"
     Then I should see "Axes de classification"
   # Déplacement en dernier (axe situé à la racine)
     When I wait 5 seconds
@@ -176,7 +176,7 @@ Feature: Classification axis feature
 
   @javascript
   Scenario:  Deletion of a classification axis
-    Given I am on "classif/axis/manage"
+    Given I am on "classification/axis/manage"
     Then I should see "Axes de classification"
   # Axe contenant un élément
     When I wait 4 seconds

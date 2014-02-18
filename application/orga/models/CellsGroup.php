@@ -1,4 +1,6 @@
 <?php
+use AF\Domain\AF;
+
 /**
  * @package Orga
  * @subpackage Model
@@ -40,7 +42,7 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
     /**
      * AF choisi pour les cellules enfants de la containerCell pour l'inputGranularity.
      *
-     * @var AF_Model_AF
+     * @var AF
      */
     protected $aF = null;
 
@@ -99,9 +101,9 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
     /**
      * Spécifie l'AF utilisé par le groupement de cellule.
      *
-     * @param AF_Model_AF $aF
+     * @param \AF\Domain\AF $aF
      */
-    public function setAF(AF_Model_AF $aF=null)
+    public function setAF(AF $aF=null)
     {
         if ($this->aF !== $aF) {
             $this->aF = $aF;
@@ -113,7 +115,7 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
      *
      * @throws Core_Exception_UndefinedAttribute
      *
-     * @return AF_Model_AF
+     * @return \AF\Domain\AF
      */
     public function getAF()
     {

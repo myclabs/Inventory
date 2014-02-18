@@ -6,7 +6,7 @@ Feature: Family tree edit of families feature
 
   @javascript
   Scenario: Edit family label in family tree edit
-    Given I am on "techno/family/tree-edit"
+    Given I am on "parameter/family/tree-edit"
     And I wait 6 seconds
   # Modification du libellé, libellé vide
     When I click "Combustion de combustible, mesuré en unité de masse"
@@ -22,7 +22,7 @@ Feature: Family tree edit of families feature
 
   @javascript
   Scenario: Edition of position and parent of a family in family tree edit
-    Given I am on "techno/family/tree-edit"
+    Given I am on "parameter/family/tree-edit"
     And I wait 6 seconds
   # Déplacement en dernier
     And I click "Combustion de combustible, mesuré en unité de masse"
@@ -53,7 +53,7 @@ Feature: Family tree edit of families feature
 
   @javascript
   Scenario: Deletion of a family in family tree edit
-    Given I am on "techno/family/tree-edit"
+    Given I am on "parameter/family/tree-edit"
     And I wait 5 seconds
   # Suppression
     When I click "Combustion de combustible, mesuré en unité de masse"

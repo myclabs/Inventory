@@ -1,5 +1,7 @@
 <?php
 
+use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -115,7 +117,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Tableau d'état des saisies de la cellule.
      *
-     * @var AF_Model_InputSet_Primary
+     * @var PrimaryInputSet
      */
     protected $aFInputSetPrimary = null;
 
@@ -124,7 +126,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @var Library
      */
-    protected $documentLibrary = null;
+    protected $docLibraryForAFInputSetPrimary = null;
 
     /**
      * Collection des SocialComment utilisés pour l'AFInputSetPrimary de la cellule.
@@ -206,9 +208,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             new Orga_Model_CellsGroup($this, $inputGranularity);
         }
         // Création de la Library des Input.
-        if ($this->granularity->isInput()) {
-            $this->enableDocumentLibrary();
-        }
+        $this->enableDocLibraryForAFInputSetPrimary();
         // Création de la Library des GenericAction.
         if ($this->granularity->getCellsWithSocialGenericActions()) {
             $this->docLibraryForSocialGenericActions = new Library();
@@ -224,11 +224,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Charge la Cell correspondant à un Primary Set AF.
      *
-     * @param AF_Model_InputSet_Primary $aFInputSetPrimary
+     * @param PrimaryInputSet $aFInputSetPrimary
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByAFInputSetPrimary(AF_Model_InputSet_Primary $aFInputSetPrimary)
+    public static function loadByAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary)
     {
         return self::getEntityRepository()->loadBy(array('aFInputSetPrimary' => $aFInputSetPrimary));
     }
@@ -986,11 +986,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Spécifie l'InputSetPrimary de la cellule.
      *
-     * @param AF_Model_InputSet_Primary $aFInputSetPrimary
+     * @param PrimaryInputSet $aFInputSetPrimary
      *
      * @throws Core_Exception_Duplicate
      */
-    public function setAFInputSetPrimary(AF_Model_InputSet_Primary $aFInputSetPrimary = null)
+    public function setAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary = null)
     {
         if ($this->aFInputSetPrimary !== $aFInputSetPrimary) {
             if (($this->aFInputSetPrimary !== null) && ($aFInputSetPrimary !== null)) {
@@ -1000,14 +1000,13 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                 $this->aFInputSetPrimary->delete();
             }
             $this->aFInputSetPrimary = $aFInputSetPrimary;
-            $this->enableDocumentLibrary();
         }
     }
 
     /**
      * Renvoie l'InputSetPrimary associé à la cellule.
      *
-     * @return AF_Model_InputSet_Primary
+     * @return \AF\Domain\InputSet\PrimaryInputSet
      */
     public function getAFInputSetPrimary()
     {
@@ -1017,7 +1016,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie l'AF utilisé par la cellule.
      *
-     * @return AF_Model_AF
+     * @return AF
      */
     public function getInputAFUsed()
     {
@@ -1039,24 +1038,22 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Active la possibilité d'ajouter des documents dans cette cellule.
      */
-    public function enableDocumentLibrary()
+    public function enableDocLibraryForAFInputSetPrimary()
     {
-        if ($this->documentLibrary) {
-            return;
+        if (($this->getGranularity()->isInput()) && ($this->docLibraryForAFInputSetPrimary === null)) {
+            $this->docLibraryForAFInputSetPrimary = new Library();
         }
-        $this->documentLibrary = new Library();
     }
 
     /**
      * Désactive la possibilité d'ajouter des documents dans cette cellule.
      */
-    public function disableDocumentLibrary()
+    public function disableDocLibraryForAFInputSetPrimary()
     {
-        if ($this->documentLibrary === null) {
-            return;
+        if ((!$this->getGranularity()->isInput()) && ($this->docLibraryForAFInputSetPrimary !== null)) {
+            $this->docLibraryForAFInputSetPrimary->delete();
+            $this->docLibraryForAFInputSetPrimary = null;
         }
-        $this->documentLibrary->delete();
-        $this->documentLibrary = null;
     }
 
     /**
@@ -1066,12 +1063,12 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @return Library
      */
-    public function getDocumentLibrary()
+    public function getDocLibraryForAFInputSetPrimary()
     {
-        if ($this->documentLibrary === null) {
-            throw new Core_Exception_UndefinedAttribute('The document library for the cell has not be set');
+        if ($this->docLibraryForAFInputSetPrimary === null) {
+            throw new Core_Exception_UndefinedAttribute('The Doc library for the cell has not be set');
         }
-        return $this->documentLibrary;
+        return $this->docLibraryForAFInputSetPrimary;
     }
 
     /**
@@ -1215,7 +1212,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function getPopulatingCells()
     {
         // Renvoie une exception si la cellule ne possède pas de cube de DW.
-        $this->getDWCube();
+        if ($this->getGranularity()->getCellsGenerateDWCubes()) {
+            $this->getDWCube();
+        }
 
         $populatingCells = [];
 
@@ -1258,7 +1257,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             try {
                 $dWIndicator = DW_Model_Indicator::loadByRefAndCube($refClassifIndicator, $dWCube);
             } catch (Core_Exception_NotFound $e) {
-                // Indexation selon l'indicateur de classif non trouvée. Impossible de créer le résultat.
+                // Indexation selon l'indicateur de classification non trouvée. Impossible de créer le résultat.
                 continue;
             }
 
@@ -1271,7 +1270,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                     $dWMember = DW_Model_Member::loadByRefAndAxis($outputIndex->getRefMember(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
-                    // Indexation selon classif non trouvée.
+                    // Indexation selon classification non trouvée.
                 }
 
                 foreach ($outputIndex->getMember()->getAllParents() as $classifParentMember) {
@@ -1280,7 +1279,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                         $dWParentMember = DW_Model_Member::loadByRefAndAxis($classifParentMember->getRef(), $dWBroaderAxis);
                         $dWResult->addMember($dWParentMember);
                     } catch (Core_Exception_NotFound $e) {
-                        // Indexation selon classif non trouvée.
+                        // Indexation selon classification non trouvée.
                     }
                 }
             }

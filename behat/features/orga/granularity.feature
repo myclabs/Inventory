@@ -118,29 +118,23 @@ Feature: Organization granularity feature
     And the row 8 of the "granularity1" datagrid should contain:
       | axes                    |
       | Année, Site, Catégorie  |
-    When I click "Supprimer" in the row 8 of the "granularity1" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
-    And the "granularity1" datagrid should contain 8 row
+    Then the row 8 of the "granularity1" datagrid should not contain:
+      | delete    |
+      | Supprimer |
   # Suppression, granularité de choix des formulaires comptables  (suppression interdite)
     And the row 5 of the "granularity1" datagrid should contain:
       | axes              |
       | Année, Catégorie  |
-    When I click "Supprimer" in the row 5 of the "granularity1" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
-    And the "granularity1" datagrid should contain 8 row
+    Then the row 5 of the "granularity1" datagrid should not contain:
+      | delete    |
+      | Supprimer |
   # Suppression, granularité du statut des collectes (suppression interdite)
     And the row 6 of the "granularity1" datagrid should contain:
       | axes                |
       | Année, Zone, Marque |
-    When I click "Supprimer" in the row 6 of the "granularity1" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
-    And the "granularity1" datagrid should contain 8 row
+    Then the row 6 of the "granularity1" datagrid should not contain:
+      | delete    |
+      | Supprimer |
   # Suppression sans obstacle (granularité "Année")
     And the row 4 of the "granularity1" datagrid should contain:
       | axes  |
@@ -154,74 +148,7 @@ Feature: Organization granularity feature
     And the row 3 of the "granularity1" datagrid should contain:
       | axes |
       | Site |
-    When I click "Supprimer" in the row 3 of the "granularity1" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
-    And the "granularity1" datagrid should contain 7 row
-
-  @javascript
-  Scenario: Deletion of a granularity 'inventory status'
-  # Accès à l'onglet "Niveaux"
-    Given I am on "orga/organization/edit/idOrganization/1"
-    And I wait for the page to finish loading
-    And I open tab "Niveaux"
-  # Ajout d'une granularité
-    When I click "Ajouter"
-    Then I should see the popup "Ajout d'un niveau organisationnel"
-    When I additionally select "Axe vide" from "granularity1_axes_addForm"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-    And the row 2 of the "granularity1" datagrid should contain:
-      | axes     |
-      | Axe vide |
-  # On choisit cette nouvelle granularité pour le statut des inventaires
-    When I open tab "Informations générales"
-    And I select "Axe vide" from "Niveau organisationnel des collectes"
-    And I click "Enregistrer"
-    Then the following message is shown and closed: "Modification effectuée."
-  # Tentative de suppression de la granularité
-    When I open tab "Niveaux"
-    And I click "Supprimer" in the row 2 of the "granularity1" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
-
-  @javascript
-  Scenario: Deletion of a granularity 'with roles'
-  # Accès à l'onglet "Niveaux"
-    Given I am on "orga/organization/edit/idOrganization/1"
-    And I wait for the page to finish loading
-    And I open tab "Niveaux"
-  # Ajout d'une granularité
-    When I click "Ajouter"
-    Then I should see the popup "Ajout d'un niveau organisationnel"
-    When I additionally select "Axe vide" from "granularity1_axes_addForm"
-    And I click "Valider"
-    Then the following message is shown and closed: "Ajout effectué."
-    And the row 2 of the "granularity1" datagrid should contain:
-      | axes     |
-      | Axe vide |
-  # On change l'attribut "cellsWithRoles" à "oui"
-    When I set "Oui" for column "acl" of row 2 of the "granularity1" datagrid with a confirmation message
-  # Tentative de suppression de la granularité
-    When I click "Supprimer" in the row 2 of the "granularity1" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé"
-
-  @javascript
-  Scenario: Deletion of a granularity 'with DW'
-    #6300 : La suppression d'une granularité associée à des DWs entraîne une erreur
-  # Suppression des rôles associés à la granularité "Site"
-    Given I am on "orga/organization/edit/idOrganization/1"
-    And I wait for the page to finish loading
-    And I open tab "Niveaux"
-    Then the row 3 of the "granularity1" datagrid should contain:
-      | axes |
-      | site |
-    When I set "Non" for column "acl" of row 3 of the "granularity1" datagrid with a confirmation message
-    And I click "Supprimer" in the row 3 of the "granularity1" datagrid
-    And I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
+    Then the row 3 of the "granularity1" datagrid should not contain:
+      | delete    |
+      | Supprimer |
     And the "granularity1" datagrid should contain 7 row

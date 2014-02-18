@@ -1,0 +1,22 @@
+AF\Domain\Component\Select\SelectMulti:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: AF_Component_Select_Multi
+
+  fields:
+    type:
+      type: integer
+      nullable: false
+
+  manyToMany:
+    defaultValues:
+      targetEntity: AF\Domain\Component\Select\SelectOption
+      joinTable:
+        name: AF_Component_Select_Multi_DefaultValues
+        joinColumns:
+          idSelectMulti:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idSelectOption:
+            referencedColumnName: id
+            onDelete: CASCADE

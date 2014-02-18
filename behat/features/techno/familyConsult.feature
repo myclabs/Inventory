@@ -4,9 +4,9 @@ Feature: Family consult feature
   Background:
     Given I am logged in
 
-  @javascript
+  @javascript @readOnly
   Scenario: Non empty family consult scenario
-    Given I am on "techno/family/details/id/5"
+    Given I am on "parameter/family/details/id/5"
     And I wait for the page to finish loading
     Then I should see "Famille test non vide"
   # Affichage de la catégorie (hiérarchie des catégories en l'occurrence)
@@ -26,9 +26,9 @@ Feature: Family consult feature
   # Affichage cellules vides
     And I should see "-" in the "#elements-gaz_naturel-amont_combustion" element
 
-  @javascript
+  @javascript @readOnly
   Scenario: Empty family consult scenario
-    Given I am on "techno/family/details/id/4"
+    Given I am on "parameter/family/details/id/4"
     And I wait for the page to finish loading
     Then I should see "Famille test vide"
     And I should see "Aucune donnée à afficher."

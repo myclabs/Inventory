@@ -1,0 +1,8 @@
+<?php
+use Classification\Domain\IndicatorAxis;
+?>
+    <div class="page-header">
+        <h1><?=__('Classification', 'axis', 'pageTitle')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
+    </div>
+<?php
+echo $this->translateDatagrid(IndicatorAxis::class, 'label', 'datagrid_translate_axes', 'classification')->simple();

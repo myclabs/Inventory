@@ -1,0 +1,57 @@
+Classification\Domain\IndicatorAxis:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Classification_Axis
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      unique: true
+      nullable: false
+    label:
+      type: string
+      nullable: false
+      gedmo:
+        - translatable
+    position:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    directNarrower:
+      targetEntity: Classification\Domain\IndicatorAxis
+      inversedBy: directBroaders
+      joinColumn:
+        name: idDirectNarrower
+        referencedColumnName: id
+
+  oneToMany:
+    directBroaders:
+      targetEntity: Classification\Domain\IndicatorAxis
+      mappedBy: directNarrower
+      cascade: [ remove ]
+      orderBy:
+        position: ASC
+    members:
+      targetEntity: Classification\Domain\AxisMember
+      mappedBy: axis
+      cascade: [ remove ]
+      orderBy:
+        position: ASC
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

@@ -332,7 +332,7 @@ class UI_Tree extends UI_Generic
         $this->editPanelTitle = __('UI', 'name', 'edition');
         $this->editPanelConfirmIcon = 'check';
         $this->editPanelConfirmLabel = __('UI', 'verb', 'confirm');
-        $this->editPanelCancelIcon = 'minus';
+        $this->editPanelCancelIcon = 'times';
         $this->editPanelCancelLabel = __('UI', 'verb', 'cancel');
         $this->changeParentLoadingOption = __('UI', 'loading', 'loading');
         $this->changeParentLabel = __('UI', 'name', 'parent');
@@ -357,7 +357,9 @@ class UI_Tree extends UI_Generic
         $this->addButtonIcon = 'plus-circle';
         $this->addPanelTitle = __('UI', 'name', 'addition');
         $this->addPanelConfirmLabel = __('UI', 'verb', 'validate');
+        $this->addPanelConfirmIcon = 'check';
         $this->addPanelCancelLabel = __('UI', 'verb', 'cancel');
+        $this->addPanelCancelIcon = 'times';
 
         // Tout déplier / Tout replier
         $this->labelExpandAll = __('UI', 'verb', 'expandAll');

@@ -14,4 +14,7 @@ return [
 
     // RabbitMQ
     'rabbitmq.enabled'  => false,
+
+    // On autorise le login sans mot de passe
+    'debug.login' => true,
 ];

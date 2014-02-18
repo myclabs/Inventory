@@ -25,7 +25,7 @@ Feature: AF list edit feature
       | category                          | label | ref  |
       | Catégorie contenant un formulaire | Test  | test |
 
-  @javascript
+  @javascript @readOnly
   Scenario: Creation of an AF (in AF list), incorrect input
     Given I am on "af/af/list"
     And I wait for the page to finish loading
@@ -64,7 +64,7 @@ Feature: AF list edit feature
       | category       | label           | ref                 |
       | Catégorie vide | Libellé modifié | identifiant_modifie |
 
-  @javascript
+  @javascript @readOnly
   Scenario: Edition of an AF in AF list, incorrect input
     Given I am on "af/af/list"
     And I wait for the page to finish loading
@@ -85,7 +85,7 @@ Feature: AF list edit feature
       | label                                               | ref                                |
       | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse |
 
-  @javascript
+  @javascript @readOnly
   Scenario: Links towards configuration and test views, from AF list
     Given I am on "af/af/list"
     And I wait for the page to finish loading
@@ -105,7 +105,7 @@ Feature: AF list edit feature
   # Vérification qu'on est bien sur la page "Test"
     Then I should see "Nature du combustible"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Filters on AF list
     Given I am on "af/af/list"
     And I wait for the page to finish loading

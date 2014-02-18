@@ -2,46 +2,23 @@
 
 namespace Tests\AF;
 
-use AF_Model_Action;
+use AF\Domain\Action\Action;
 use Core\Test\TestCase;
 
+/**
+ * @covers \AF\Domain\Action\Action
+ */
 class ActionTest extends TestCase
 {
-    public function testConstruct()
-    {
-        /** @var $o AF_Model_Action */
-        $o = $this->getMockForAbstractClass(AF_Model_Action::class);
-        $this->assertTrue($o instanceof AF_Model_Action);
-        return $o;
-    }
-
     /**
-     * @depends testConstruct
-     * @param AF_Model_Action $o
-     * @return AF_Model_Action
+     * L'action n'est associée à aucune condition
      */
-    public function testLoad(AF_Model_Action $o)
+    public function testCheckConfigNoCondition()
     {
-        $this->assertTrue($o instanceof AF_Model_Action);
-        return $o;
-    }
-
-    /**
-     * @depends testLoad
-     * @param AF_Model_Action $o
-     */
-    public function testDelete(AF_Model_Action $o)
-    {
-        $this->assertTrue($o instanceof AF_Model_Action);
-    }
-
-    public function testCheckConfig()
-    {
-        /** @var $o AF_Model_Action */
-        $o = $this->getMockForAbstractClass(AF_Model_Action::class);
+        /** @var $o Action */
+        $o = $this->getMockForAbstractClass(Action::class);
         $errors = $o->checkConfig();
         $this->assertCount(1, $errors);
         $this->assertTrue($errors[0]->getFatal());
-        return $o;
     }
 }

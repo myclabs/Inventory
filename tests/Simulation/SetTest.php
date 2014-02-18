@@ -2,7 +2,7 @@
 
 namespace Tests\Simulation;
 
-use AF_Model_AF;
+use AF\Domain\AF;
 use Core\Test\TestCase;
 use Simulation_Model_Set;
 use User\Domain\User;
@@ -12,14 +12,14 @@ class SetTest extends TestCase
     /**
      * Génere un objet pret à l'emploi pour les tests.
      * @param int $i
-     * @param AF_Model_AF $aF
+     * @param \AF\Domain\AF $aF
      * @param User $user
      * @return Simulation_Model_Set
      */
     public static function generateObject($i = 0, $aF = null, $user = null)
     {
         if ($aF === null) {
-            $aF = new AF_Model_AF('af_set'.$i);
+            $aF = new AF('af_set'.$i);
             $aF->save();
         }
 
@@ -71,7 +71,7 @@ class SetTest extends TestCase
     }
 
     /**
-     * @var AF_Model_AF
+     * @var AF
      */
     protected $af;
 
@@ -94,7 +94,7 @@ class SetTest extends TestCase
 
     public function testConstruct()
     {
-        $aF = new AF_Model_AF('test');
+        $aF = new AF('test');
         $aF->save();
 
         $user = new User();

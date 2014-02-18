@@ -1,0 +1,15 @@
+Account\Domain\Account:
+  type: entity
+  repositoryClass: Account\Architecture\Repository\DoctrineAccountRepository
+  table: Account_Account
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    name:
+      type: string
+      nullable: false

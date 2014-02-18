@@ -1,9 +1,0 @@
-Algo_Model_Condition_Elementary_Select:
-  type: entity
-  repositoryClass: Core_Model_Repository_Ordered
-  table: Algo_Condition_Elementary_Select
-
-  fields:
-    value:
-      type: string
-      nullable: true

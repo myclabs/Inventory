@@ -1,7 +1,8 @@
 <?php
 
+use Classification\Application\Service\ClassificationExportService;
 use Core\Annotation\Secure;
-use Techno\Application\Service\ExportService;
+use Parameter\Application\Service\ExportService;
 use User\Domain\User;
 
 /**
@@ -39,19 +40,19 @@ class Orga_ReferentialController extends Core_Controller
         // Liste des exports.
         $this->view->exports = [];
 
-        // Classif.
-        $this->view->exports['Classif'] = [
-            'label' => __('Classif', 'classification', 'classification'),
+        // Classification.
+        $this->view->exports['Classification'] = [
+            'label' => __('Classification', 'classification', 'classification'),
             'versions' => [
-                'latest' => __('Classif', 'classification', 'classification')
+                'latest' => __('Classification', 'classification', 'classification')
             ]
         ];
 
-        // Techno.
-        $this->view->exports['Techno'] = [
-            'label' => __('Techno', 'name', 'parameters'),
+        // Parameter.
+        $this->view->exports['Parameter'] = [
+            'label' => __('Parameter', 'name', 'parameters'),
             'versions' => [
-                'latest' => __('Techno', 'name', 'parameters')
+                'latest' => __('Parameter', 'name', 'parameters')
             ]
         ];
 
@@ -79,12 +80,12 @@ class Orga_ReferentialController extends Core_Controller
         $version = null;
 
         switch ($export) {
-            case 'Classif':
-            $exportService = new Classif_Service_Export();
+            case 'Classification':
+            $exportService = new ClassificationExportService();
             $streamFunction = 'stream';
-            $baseFilename = __('Classif', 'classification', 'classification');
+            $baseFilename = __('Classification', 'classification', 'classification');
             break;
-            case 'Techno':
+            case 'Parameter':
                 $exportService = new ExportService();
                 $streamFunction = 'stream';
                 $baseFilename = __('UI', 'name', 'parameters');

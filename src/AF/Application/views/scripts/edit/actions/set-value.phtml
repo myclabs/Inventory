@@ -1,0 +1,78 @@
+<?php
+use AF\Domain\AF;
+use AF\Domain\Component\NumericField;
+use AF\Domain\Component\Checkbox;
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Condition\Condition;
+use AF\Domain\Component\Component;
+
+/**
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $af \AF\Domain\AF */
+$af = $this->af;
+
+// Creation du datagrid
+$actionsDatagrid = new UI_Datagrid('actionsSetValue', 'datagrid_edit_actions_set-value', 'af');
+$actionsDatagrid->initialLoading = false;
+$actionsDatagrid->addParam('id', $af->getId());
+$actionsDatagrid->pagination = false;
+$actionsDatagrid->addElements = true;
+$actionsDatagrid->addPanelTitle = __('AF', 'configInteractionDatagrid', 'valueAssignmentActionAddPanelTitle');
+$actionsDatagrid->deleteElements = true;
+
+// Element de formulaire cible de l'action
+$targetComponentColumn = new UI_Datagrid_Col_List('targetComponent',
+                                                  __('AF', 'configInteractionDatagrid', 'targetComponentHeader'));
+$targetComponentColumn->withEmptyElement = false;
+$targetComponentColumn->editable = false;
+$list = [];
+foreach ($this->componentList as $component) {
+    if ($component instanceof NumericField
+        || $component instanceof SelectSingle
+        || $component instanceof Checkbox
+    ) {
+        /** @var $component \AF\Domain\AF\Component\\AF\Domain\Component\Component */
+        $list[$component->getId()] = $component->getLabel();
+    }
+}
+$targetComponentColumn->list = $list;
+$actionsDatagrid->addCol($targetComponentColumn);
+
+// Type de valeur à assigner
+$typeColumn = new UI_Datagrid_Col_List('type', __('AF', 'configInteractionDatagrid', 'methodOfDeterminingHeader'));
+$typeColumn->withEmptyElement = false;
+$typeColumn->editable = false;
+$typeColumn->list = [
+    'setValue'     => __('AF', 'configInteractionDatagrid', 'fixedValueOption'),
+//    'setAlgoValue' => __('Algo', 'name', 'algorithm'),
+    ];
+$actionsDatagrid->addCol($typeColumn);
+
+// Valeur ou algorithme à assigner
+$valueColumn = new UI_Datagrid_Col_Text('value', __('UI', 'name', 'value'));
+$valueColumn->addable = false;
+$valueColumn->editable = false;
+$actionsDatagrid->addCol($valueColumn);
+
+// Condition déclenchant l'action
+$conditionColumn = new UI_Datagrid_Col_List('condition',
+                                            __('UI', 'name', 'condition'));
+$conditionColumn->editable = true;
+$conditionColumn->withEmptyElement = true;
+$list = [];
+foreach ($this->conditionList as $condition) {
+    /** @var $condition \AF\Domain\Condition\Condition */
+    $list[$condition->getId()] = $condition->getRef();
+}
+$conditionColumn->list = $list;
+$actionsDatagrid->addCol($conditionColumn);
+
+$editValueColumn = new UI_Datagrid_Col_Popup('editValue', __('UI', 'name', 'edition'));
+$editValueColumn->popup->title = __('AF', 'configInteractionDatagrid', 'valueAssignmentActionEditPanelTitle');
+$editValueColumn->popup->source = '';
+$editValueColumn->popup->addAttribute('class', 'large');
+$actionsDatagrid->addCol($editValueColumn);
+
+echo $actionsDatagrid->render();

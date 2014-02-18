@@ -1,0 +1,54 @@
+AF\Domain\Component\Select\SelectOption:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: AF_Component_Select_Option
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    label:
+      type: string
+      nullable: true
+      gedmo:
+        - translatable
+    visible:
+      type: boolean
+      nullable: false
+    enabled:
+      type: boolean
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    select:
+      targetEntity: AF\Domain\Component\Select
+      inversedBy: options
+      joinColumn:
+        name: idSelect
+        referencedColumnName: id
+        nullable: true
+        onDelete: SET NULL
+
+  uniqueConstraints:
+    # ref unique dans un select
+    ref:
+      columns: [idSelect, ref]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

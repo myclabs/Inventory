@@ -1,0 +1,64 @@
+Parameter\Domain\Family\Family:
+  type: entity
+  repositoryClass: Parameter\Architecture\Repository\FamilyRepository
+  table: Parameter_Family
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      unique: true
+    label:
+      type: string
+      nullable: true
+      gedmo:
+        - translatable
+    position:
+      type: integer
+      nullable: false
+    documentation:
+      type: text
+      nullable: true
+      gedmo:
+        - translatable
+    refUnit:
+      type: string
+
+  oneToMany:
+    cells:
+      targetEntity: Parameter\Domain\Family\Cell
+      mappedBy: family
+      cascade: [ all ]
+      orphanRemoval: true
+    dimensions:
+      targetEntity: Parameter\Domain\Family\Dimension
+      mappedBy: family
+      cascade: [ all ]
+      orphanRemoval: true
+      orderBy:
+        orientation: DESC
+        position: ASC
+
+  manyToOne:
+    category:
+      targetEntity: Parameter\Domain\Category
+      inversedBy: families
+      joinColumn:
+        name: idCategory
+        referencedColumnName: id
+        nullable: true
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

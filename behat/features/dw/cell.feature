@@ -20,7 +20,7 @@ Feature: Cell dataware analysis feature
     When I click "Retour"
     Then I should see "Vue globale Workspace avec données"
 
-  @javascript
+  @javascript @readOnly
   Scenario: Cell existing preconfigured analysis scenario
     Given I am on "orga/cell/details/idCell/1"
     And I wait for the page to finish loading

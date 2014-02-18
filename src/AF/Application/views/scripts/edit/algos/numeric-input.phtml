@@ -1,0 +1,53 @@
+<?php
+use AF\Domain\AF;
+use AF\Domain\Component\NumericField;
+
+/**
+ * Datagrid des algos numeric input
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $af AF */
+$af = $this->af;
+
+$datagrid = new UI_Datagrid('algoNumericInput', 'datagrid_edit_algos_numeric-input', 'af');
+$datagrid->initialLoading = false;
+$datagrid->addParam('id', $af->getId());
+$datagrid->pagination = false;
+
+// Label
+$labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$labelColumn->editable = true;
+$datagrid->addCol($labelColumn);
+
+// Ref
+$datagrid->addCol(new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier')));
+
+// Input
+$inputColumn = new UI_Datagrid_Col_List('input', __('UI', 'name', 'field'));
+$inputColumn->list = [];
+foreach ($this->numericInputList as $numericInput) {
+    /** @var $numericInput \AF\Domain\Component\NumericField */
+    $inputColumn->list[$numericInput->getRef()] = $numericInput->getLabel();
+}
+$datagrid->addCol($inputColumn);
+
+// Unit
+$datagrid->addCol(new UI_Datagrid_Col_Text('unit', __('Unit', 'name', 'unit')));
+
+// Context indicator
+$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classification', 'indicator', 'indicator'));
+$contextIndicatorColumn->editable = true;
+$contextIndicatorColumn->dynamicList = true;
+$contextIndicatorColumn->list = $this->baseUrl(
+    '/af/datagrid_edit_algos_numeric-expression/get-context-indicator-list/');
+$contextIndicatorColumn->withEmptyElement = true;
+$datagrid->addCol($contextIndicatorColumn);
+
+// Indexation
+$resultIndexColumn = new UI_Datagrid_Col_Popup('resultIndex', __('Algo', 'name', 'indexation'));
+$resultIndexColumn->popup->title = __('Algo', 'name', 'indexation');
+$resultIndexColumn->popup->addAttribute('class', 'large');
+$datagrid->addCol($resultIndexColumn);
+
+echo $datagrid->render();

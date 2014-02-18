@@ -1,9 +1,12 @@
 <?php
 
+use AF\Domain\AF;
 use Doctrine\ORM\EntityManager;
+use Orga\Model\ACL\Action\CellAction;
+use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\Role\CellManagerRole;
-use Orga\Model\ACL\Role\OrganizationAdminRole;
 use User\Domain\ACL\ACLService;
+use User\Domain\ACL\Action;
 use User\Domain\ACL\Role\AdminRole;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -62,17 +65,15 @@ class Orga_Service_OrganizationService
             self::TEMPLATE_EMPTY => __('Orga', 'add', 'templateEmpty'),
             self::TEMPLATE_USER_INVENTORY => __('Orga', 'add', 'templateUserInventory'),
             self::TEMPLATE_USER_REPORTING => __('Orga', 'add', 'templateUserReports'),
-            self::TEMPLATE_DEMO => __('Orga', 'add', 'templateDemo'),
         ];
     }
 
     /**
-     * @param User   $creator
      * @param string $labelOrganization
      * @throws Exception
      * @return Orga_Model_Organization
      */
-    public function createOrganization(User $creator, $labelOrganization = '')
+    public function createOrganization($labelOrganization = '')
     {
         $this->entityManager->beginTransaction();
 
@@ -81,6 +82,9 @@ class Orga_Service_OrganizationService
             $organization = new Orga_Model_Organization();
             $organization->setLabel($labelOrganization);
 
+            $organization->save();
+            $this->entityManager->flush();
+
             // Création d'une granularité globale par défaut.
             $defaultGranularity = new Orga_Model_Granularity($organization);
             $defaultGranularity->setCellsWithACL(true);
@@ -88,15 +92,26 @@ class Orga_Service_OrganizationService
             $organization->save();
             $this->entityManager->flush();
 
-            // Ajout des superadmins en tant qu'administrateur de l'organisation
-            foreach (AdminRole::loadList() as $adminRole) {
-                /** @var AdminRole $adminRole */
-                $admin = $adminRole->getUser();
-                // Ignore l'admin si il est le créateur de l'organisation
-                if ($admin === $creator) {
-                    continue;
+            // Héritage des ACL sur toutes les organizations, sur la cellule globale de la nouvelle.
+            $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
+            /** @var AdminRole $admin */
+            foreach (AdminRole::loadList() as $admin) {
+                // Cellule global
+                $cellAuthorizations = CellAuthorization::createMany($admin, $globalCell, [
+                    Action::VIEW(),
+                    Action::EDIT(),
+                    Action::ALLOW(),
+                    CellAction::COMMENT(),
+                    CellAction::INPUT(),
+                    CellAction::VIEW_REPORTS(),
+                ]);
+
+                // Cellules filles
+                foreach ($globalCell->getChildCells() as $childCell) {
+                    foreach ($cellAuthorizations as $authorization) {
+                        CellAuthorization::createChildAuthorization($authorization, $childCell);
+                    }
                 }
-                $this->aclService->addRole($admin, new OrganizationAdminRole($admin, $organization));
             }
 
             $this->entityManager->flush();
@@ -127,7 +142,7 @@ class Orga_Service_OrganizationService
 
         try {
             $organizationLabel = $formData['organization']['elements']['organizationLabel']['value'];
-            $organization = $this->createOrganization($administrator, $organizationLabel);
+            $organization = $this->createOrganization($organizationLabel);
 
             $template = $formData['organization']['elements']['organizationTemplate']['value'];
             if ($template !== self::TEMPLATE_EMPTY) {
@@ -350,8 +365,8 @@ class Orga_Service_OrganizationService
     protected function initOrganizationUserForm(Orga_Model_Organization $organization, array $formData)
     {
         $defaultGranularity = $organization->getGranularityByRef('global');
-        /** @var Orga_Model_Granularity[] $dWGranularities */
-        $dWGranularities = [$defaultGranularity];
+        /** @var Orga_Model_Granularity[] $reportsGranularities */
+        $reportsGranularities = [$defaultGranularity];
 
         $axesData = $formData['axes']['elements'];
         $axes = [];
@@ -436,9 +451,8 @@ class Orga_Service_OrganizationService
             }
         }
 
-        $granularitiesData = $formData['granularities'];
         // Création de la granularité de collecte.
-        $inventoryGranularityId = $granularitiesData['elements']['inventoryGranularityGroup']['elements']['inventoryGranularity']['value'];
+        $inventoryGranularityId = $formData['inventory']['elements']['inventoryGranularityGroup']['elements']['inventoryGranularity']['value'];
         $inventoryGranularityAxes = [];
         $inventoryNavigableGranularityAxes = [];
         foreach (explode('|', $inventoryGranularityId) as $inventoryGranularityAxisId) {
@@ -450,63 +464,66 @@ class Orga_Service_OrganizationService
         $inventoryGranularity = new Orga_Model_Granularity($organization, $inventoryGranularityAxes);
         $organization->setGranularityForInventoryStatus($inventoryGranularity);
         $navigableInventoryGranularity = new Orga_Model_Granularity($organization, $inventoryNavigableGranularityAxes);
-        $navigableInventoryGranularity->setCellsWithACL(true);
-        // Création des granularités de saisie
-        $inputsGranularitiesData = $granularitiesData['elements']['inputsGranularitiesGroup']['elements']['inputsGranularities'];
-        foreach ($inputsGranularitiesData['value'] as $inputsGranularityId) {
-            $inputsGranularityAxes = [];
-            $inputNavigableGranularityAxes = [];
-            if ($inputsGranularityId === 'global') {
-                $defaultGranularity->setInputConfigGranularity($defaultGranularity);
+        // Création de la granularité de saisie.
+        $inputsGranularityAxes = [$axes['mainAxis'], $axes['timeAxis']];
+        $inputsNavigableGranularityAxes = [$axes['mainAxis']];
+        if (isset($axes['subdivisionAxis'])) {
+            $inputsGranularityAxes[] = $axes['subdivisionAxis'];
+            $inputsNavigableGranularityAxes[] = $axes['subdivisionAxis'];
+        }
+        try {
+            $inputsGranularity = $organization->getGranularityByRef(
+                Orga_Model_Granularity::buildRefFromAxes($inputsGranularityAxes)
+            );
+        } catch (Core_Exception_NotFound $e) {
+            $inputsGranularity = new Orga_Model_Granularity($organization, $inputsGranularityAxes);
+        }
+        try {
+            $navigableInputsGranularity = $organization->getGranularityByRef(
+                Orga_Model_Granularity::buildRefFromAxes($inputsNavigableGranularityAxes)
+            );
+        } catch (Core_Exception_NotFound $e) {
+            $navigableInputsGranularity = new Orga_Model_Granularity($organization, $inputsNavigableGranularityAxes);
+        }
+        $inputsGranularity->setInputConfigGranularity($navigableInputsGranularity);
+        // Création des granularités d'acl.
+        $aclGranularitiesData = $formData['acl']['elements']['aclGranularitiesGroup']['elements']['aclGranularities'];
+        foreach ($aclGranularitiesData['value'] as $aclGranularityId) {
+            $aclGranularityAxes = [];
+            if ($aclGranularityId === 'global') {
                 break;
             }
-            foreach (explode('|', $inputsGranularityId) as $inputsGranularityAxisId) {
-                $inputsGranularityAxes[] = $axes[$inputsGranularityAxisId];
-                if ($inputsGranularityAxisId !== 'timeAxis' && $inputsGranularityAxisId !== 'subdivisionAxis') {
-                    $inputNavigableGranularityAxes[] = $axes[$inputsGranularityAxisId];
-                }
+            foreach (explode('|', $aclGranularityId) as $aclGranularityAxisId) {
+                $aclGranularityAxes[] = $axes[$aclGranularityAxisId];
             }
             try {
-                $inputsGranularity = $organization->getGranularityByRef(
-                    Orga_Model_Granularity::buildRefFromAxes($inputsGranularityAxes)
+                $aclGranularity = $organization->getGranularityByRef(
+                    Orga_Model_Granularity::buildRefFromAxes($aclGranularityAxes)
                 );
             } catch (Core_Exception_NotFound $e) {
-                $inputsGranularity = new Orga_Model_Granularity($organization, $inputsGranularityAxes);
+                $aclGranularity = new Orga_Model_Granularity($organization, $aclGranularityAxes);
             }
-            if ($inputsGranularityAxes !== $inputNavigableGranularityAxes) {
-                try {
-                    $navigableInputsGranularity = $organization->getGranularityByRef(
-                        Orga_Model_Granularity::buildRefFromAxes($inputNavigableGranularityAxes)
-                    );
-                } catch (Core_Exception_NotFound $e) {
-                    $navigableInputsGranularity = new Orga_Model_Granularity($organization, $inputNavigableGranularityAxes);
-                }
-            } else {
-                $navigableInputsGranularity = $inputsGranularity;
-            }
-            $navigableInputsGranularity->setCellsWithACL(true);
-            $inputsGranularity->setInputConfigGranularity($navigableInputsGranularity);
+            $aclGranularity->setCellsWithACL(true);
         }
-
+        // Création des granularités de reports.
         if ($formData['organization']['elements']['organizationTemplate']['value'] === self::TEMPLATE_USER_REPORTING) {
-            $dWGranularitiesData = $formData['dw']['elements']['dwGranularitiesGroup']['elements']['dwGranularities'];
-            foreach ($dWGranularitiesData['value'] as $dWGranularityId) {
-                $dWGranularityAxes = [];
-                if ($dWGranularityId === 'global ') {
+            $reportsGranularitiesData = $formData['reports']['elements']['reportsGranularitiesGroup']['elements']['reportsGranularities'];
+            foreach ($reportsGranularitiesData['value'] as $reportsGranularityId) {
+                $reportsGranularityAxes = [];
+                if ($reportsGranularityId === 'global') {
                     break;
                 }
-                foreach (explode('|', $dWGranularityId) as $dWGranularityAxisId) {
-                    $dWGranularityAxes[] = $axes[$dWGranularityAxisId];
+                foreach (explode('|', $reportsGranularityId) as $reportsGranularityAxisId) {
+                    $reportsGranularityAxes[] = $axes[$reportsGranularityAxisId];
                 }
                 try {
-                    $dWGranularity = $organization->getGranularityByRef(
-                        Orga_Model_Granularity::buildRefFromAxes($dWGranularityAxes)
+                    $reportsGranularity = $organization->getGranularityByRef(
+                        Orga_Model_Granularity::buildRefFromAxes($reportsGranularityAxes)
                     );
                 } catch (Core_Exception_NotFound $e) {
-                    $dWGranularity = new Orga_Model_Granularity($organization, $dWGranularityAxes);
+                    $reportsGranularity = new Orga_Model_Granularity($organization, $reportsGranularityAxes);
                 }
-                $dWGranularity->setCellsWithACL(true);
-                $dWGranularities[] = $dWGranularity;
+                $reportsGranularities[] = $reportsGranularity;
             }
         }
 
@@ -514,7 +531,7 @@ class Orga_Service_OrganizationService
         $this->entityManager->flush();
 
         // Définition de la création des DW après pour éviter un bug d'insertion.
-        foreach ($dWGranularities as $granularityWithDW) {
+        foreach ($reportsGranularities as $granularityWithDW) {
             $granularityWithDW->setCellsGenerateDWCubes(true);
         }
         $organization->save();
@@ -541,6 +558,9 @@ class Orga_Service_OrganizationService
         $timeAxis = new Orga_Model_Axis($organization, 'annee');
         $timeAxis->setLabel('Année');
         $timeAxis->save();
+        $year2013 = new Orga_Model_Member($timeAxis, '2012');
+        $year2013->setLabel('2012');
+        $year2013->save();
         $year2013 = new Orga_Model_Member($timeAxis, '2013');
         $year2013->setLabel('2013');
         $year2013->save();
@@ -562,10 +582,10 @@ class Orga_Service_OrganizationService
         $granularityYearCategory->setInputConfigGranularity($granularityCategory);
         $granularityCategory->getCellByMembers([$categoryEnergy])
             ->getCellsGroupForInputGranularity($granularityYearCategory)
-            ->setAF(AF_Model_AF::loadByRef('energie'));
+            ->setAF(AF::loadByRef('energie'));
         $granularityCategory->getCellByMembers([$categoryTravel])
             ->getCellsGroupForInputGranularity($granularityYearCategory)
-            ->setAF(AF_Model_AF::loadByRef('deplacement'));
+            ->setAF(AF::loadByRef('deplacement'));
 
         // Lance l'inventaire 2013
         $granularityYear->getCellByMembers([$year2013])
@@ -615,7 +635,8 @@ class Orga_Service_OrganizationService
         $user = $this->userService->createUser($email, $password);
         $user->initTutorials();
 
-        $organization = $this->createOrganization($user);
+        $organization = $this->createOrganization();
+        $organization->setLabel(__('Orga', 'navigation', 'demoOrganizationLabel', ['LABEL' => rand(1000, 9999)]));
 
         $this->initOrganizationDemo($organization);
 

@@ -1,0 +1,12 @@
+AF\Domain\Algorithm\Index\AlgoResultIndex:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Algo_Index_Algo
+
+  manyToOne:
+    algo:
+      targetEntity: AF\Domain\Algorithm\Selection\TextKeySelectionAlgo
+      joinColumn:
+        name: idAlgo
+        referencedColumnName: id
+        nullable: false

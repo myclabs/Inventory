@@ -1,0 +1,58 @@
+<?php
+use AF\Domain\AF;
+
+/**
+ * Datagrid des algos expressions numériques
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $af \AF\Domain\AF */
+$af = $this->af;
+
+$datagrid = new UI_Datagrid('algoNumericExpression', 'datagrid_edit_algos_numeric-expression', 'af');
+$datagrid->initialLoading = false;
+$datagrid->addParam('id', $af->getId());
+$datagrid->pagination = false;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('AF', 'configTreatmentDatagrid', 'numericExpressionAddPanelTitle');
+$datagrid->deleteElements = true;
+
+// Label
+$labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$labelColumn->editable = true;
+$datagrid->addCol($labelColumn);
+
+// Ref
+$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$refColumn->editable = true;
+$datagrid->addCol($refColumn);
+
+// Expression
+$expressionColumn = new UI_Datagrid_Col_LongText('expression', __('TEC', 'name', 'expression'));
+$expressionColumn->editable = true;
+$expressionColumn->textileEditor = false;
+$expressionColumn->popup->title = __('TEC', 'name', 'expression');
+$datagrid->addCol($expressionColumn);
+
+// Unité
+$unitColumn = new UI_Datagrid_Col_Text('unit', __('AF', 'configTreatmentDatagrid', 'resultUnitHeader'));
+$unitColumn->editable = true;
+$datagrid->addCol($unitColumn);
+
+// Context indicator
+$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classification', 'indicator', 'indicator'));
+$contextIndicatorColumn->addable = false;
+$contextIndicatorColumn->editable = true;
+$contextIndicatorColumn->dynamicList = true;
+$contextIndicatorColumn->list = $this->baseUrl(
+    '/af/datagrid_edit_algos_numeric-expression/get-context-indicator-list/');
+$contextIndicatorColumn->withEmptyElement = true;
+$datagrid->addCol($contextIndicatorColumn);
+
+// Indexation
+$resultIndexColumn = new UI_Datagrid_Col_Popup('resultIndex', __('Algo', 'name', 'indexation'));
+$resultIndexColumn->popup->title = __('Algo', 'name', 'indexation');
+$resultIndexColumn->popup->addAttribute('class', 'large');
+$datagrid->addCol($resultIndexColumn);
+
+echo $datagrid->render();

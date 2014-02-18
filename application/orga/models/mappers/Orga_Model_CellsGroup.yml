@@ -24,7 +24,7 @@ Orga_Model_CellsGroup:
         name: idInputGranularity
         referencedColumnName: id
     aF:
-      targetEntity: AF_Model_AF
+      targetEntity: AF\Domain\AF
       joinColumn:
         name: idAF
         referencedColumnName: id

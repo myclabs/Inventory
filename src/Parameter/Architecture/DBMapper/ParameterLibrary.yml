@@ -1,0 +1,35 @@
+Parameter\Domain\ParameterLibrary:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Parameter_ParameterLibrary
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    label:
+      type: string
+      gedmo:
+        - translatable
+
+  manyToMany:
+    rootCategories:
+      targetEntity: Category
+      joinTable:
+        name: Parameter_ParameterLibrary_Categories
+        joinColumns:
+          idCategory:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idLibrary:
+            unique: true
+      orderBy:
+        position: ASC
+      cascade: [ persist, remove ]

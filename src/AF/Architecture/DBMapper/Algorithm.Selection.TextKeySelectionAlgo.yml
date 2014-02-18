@@ -1,0 +1,4 @@
+AF\Domain\Algorithm\Selection\TextKeySelectionAlgo:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Algo_Selection_TextKey

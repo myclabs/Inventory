@@ -25,6 +25,12 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
         /** @var Orga_Service_ETLStructure $etlStructureService */
         $etlStructureService = \Core\ContainerSingleton::getContainer()->get('Orga_Service_ETLStructure');
 
+        try {
+            Simulation_Model_Set::loadByDWCube($subject->getCube()->getId());
+            return;
+        } catch (Core_Exception_NotFound $e) {
+            // Le Report n'est pas issue d'une simulation.
+        }
         switch ($event) {
             case DW_Model_Report::EVENT_SAVE:
                 if ($subject->getCube()->getId() == null) {
@@ -42,16 +48,6 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
                 } catch (Core_Exception_NotFound $e) {
                     if (!in_array(spl_object_hash($subject), self::$copiedReports)) {
                         // Le Report n'est pas issue d'un Cube de Granularity.
-                        Orga_Model_Cell::loadByDWCube($subject->getCube());
-                        $auth = Zend_Auth::getInstance();
-                        if (!$auth->hasIdentity()) {
-                            throw new Core_Exception_InvalidArgument(
-                                'Can\'t create a Cell DW Report without an owner.'
-                            );
-                        }
-                        $connectedUser = User::load($auth->getIdentity());
-                        $cellReport = new Orga_Model_CellReport($subject, $connectedUser);
-                        $cellReport->save();
                     }
                 }
                 break;

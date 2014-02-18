@@ -48,14 +48,7 @@ class FeatureContext extends MinkContext
      */
     public function assertLoggedIn()
     {
-        return [
-            new Step\Given('I am on "user/action/login?refer=index%2Faccueil"'),
-            new Step\Given('I fill in "email" with "admin@myc-sense.com"'),
-            new Step\Given('I fill in "password" with "myc-53n53"'),
-            new Step\Given('I press "connection"'),
-//            new Step\Given('I wait for 5 seconds'),
-            new Step\Given('I wait for page to finish loading'),
-        ];
+        $this->visit('user/debug/login?email=admin@myc-sense.com');
     }
 
     /**

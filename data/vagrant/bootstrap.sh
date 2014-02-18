@@ -4,7 +4,7 @@ BASEDIR=/vagrant/data/vagrant
 
 apt-get update
 
-# For PHP 5.4
+# For PHP 5.5
 apt-get install -y python-software-properties
 add-apt-repository -y ppa:ondrej/php5
 
@@ -15,13 +15,7 @@ apt-key add rabbitmq-signing-key-public.asc
 
 apt-get update
 
-apt-get install -y curl git rabbitmq-server
-
-# Shell
-apt-get install -y zsh
-git clone git://github.com/robbyrussell/oh-my-zsh.git /home/vagrant/.oh-my-zsh
-chsh -s $(which zsh) vagrant
-cp ${BASEDIR}/.zshrc /home/vagrant/
+apt-get install -y curl git rabbitmq-server zsh
 
 # Mysql
 export DEBIAN_FRONTEND=noninteractive
@@ -38,7 +32,7 @@ apt-get install -y apache2
 ln -s /vagrant/public /var/www/inventory
 cp ${BASEDIR}/php.ini /etc/php5/apache2/
 cp ${BASEDIR}/php.ini /etc/php5/cli/
-cp ${BASEDIR}/apache-000-default /etc/apache2/sites-enabled/000-default
+cp ${BASEDIR}/apache-000-default /etc/apache2/sites-enabled/000-default.conf
 a2enmod rewrite
 apachectl restart
 

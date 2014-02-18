@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+use Inventory\Command\ClearCacheCommand;
+use Inventory\Command\CreateDBCommand;
+use Inventory\Command\PopulateDBCommand;
+use Inventory\Command\UpdateDBCommand;
+use Orga\Command\RebuildExportsCommand;
+use User\Application\Command\RebuildACLCommand;
+use Symfony\Component\Console\Application;
+
+define('RUN', false);
+require_once __DIR__ . '/../application/init.php';
+
+$container = \Core\ContainerSingleton::getContainer();
+
+$application = new Application('Inventory');
+
+$application->add($container->get(RebuildACLCommand::class));
+$application->add($container->get(CreateDBCommand::class));
+$application->add($container->get(UpdateDBCommand::class));
+$application->add($container->get(PopulateDBCommand::class));
+$application->add($container->get(ClearCacheCommand::class));
+$application->add($container->get(RebuildExportsCommand::class));
+
+$application->run();

@@ -32,7 +32,7 @@
     ?>
 </head>
 <body>
-    <?= $this->partial('elements/menu.phtml', array()) ?>
+    <?= $this->partial('elements/menu.phtml', ['tutorial' => $this->tutorial]) ?>
     <?= $this->partial('elements/breadcrumb.phtml', array()) ?>
 
     <div id="messageZone" class="subnav subnav-fixed"><?= UI_Message::renderStatic(false) ?></div>

@@ -1,0 +1,32 @@
+AF\Domain\Algorithm\Index\Index:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Algo_Index
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_index
+    type: string
+  discriminatorMap:
+    fixed: AF\Domain\Algorithm\Index\FixedIndex
+    algo: AF\Domain\Algorithm\Index\AlgoResultIndex
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    refClassificationAxis:
+      type: string
+      nullable: true
+
+  manyToOne:
+    algoNumeric:
+      targetEntity: AF\Domain\Algorithm\Numeric\NumericAlgo
+      inversedBy: indexes
+      joinColumn:
+        name: idAlgoNumeric
+        referencedColumnName: id
+        nullable: true

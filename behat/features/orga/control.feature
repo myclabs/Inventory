@@ -14,13 +14,13 @@ Feature: Control of organizational data feature
     And the row 1 of the "consistency1" datagrid should contain:
       | control                        | diagnostic | failure  |
       | Axe ne contenant aucun élément  | NOT OK     | Axe vide |
-    And the row 2 of the "consistency" datagrid should contain:
+    And the row 2 of the "consistency1" datagrid should contain:
       | control                                    | diagnostic | failure |
       | Élément pour lequel manque un élément parent | OK         |         |
-    And the row 3 of the "consistency" datagrid should contain:
+    And the row 3 of the "consistency1" datagrid should contain:
       | control                                           | diagnostic | failure                                   |
       | Élément sans enfant d'un axe non situé à la racine | NOT OK     | Axe : Marque ; élément : Marque sans site |
-    And the row 4 of the "consistency" datagrid should contain:
+    And the row 4 of the "consistency1" datagrid should contain:
       | control                                                                  | diagnostic | failure |
       | Niveau organisationnel manquant pour l'affichage de l'onglet "Collectes" | OK         |         |
   # Ajout de la granularité "Pays"
@@ -35,6 +35,6 @@ Feature: Control of organizational data feature
     Then the following message is shown and closed: "Ajout effectué."
     When I open tab "Contrôle"
     And I click "Renouveler le contrôle"
-    Then the row 4 of the "consistency" datagrid should contain:
+    Then the row 4 of the "consistency1" datagrid should contain:
       | control                                                                  | diagnostic | failure                 |
       | Niveau organisationnel manquant pour l'affichage de l'onglet "Collectes" | NOT OK     | Année \| Pays \| Marque |

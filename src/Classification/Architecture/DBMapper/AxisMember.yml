@@ -1,0 +1,66 @@
+Classification\Domain\AxisMember:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Classification_Member
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    label:
+      type: string
+      nullable: false
+      gedmo:
+        - translatable
+    position:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    axis:
+      targetEntity: Classification\Domain\IndicatorAxis
+      inversedBy: members
+      joinColumn:
+        name: idAxis
+        referencedColumnName: id
+
+  manyToMany:
+    directChildren:
+      targetEntity: Classification\Domain\AxisMember
+      inversedBy: directParents
+      joinTable:
+        name: Classification_Member_Association
+        joinColumns:
+          idParent:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idChild:
+            referencedColumnName: id
+    directParents:
+      targetEntity: Classification\Domain\AxisMember
+      mappedBy: directChildren
+      orderBy:
+        position: ASC
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - idAxis
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

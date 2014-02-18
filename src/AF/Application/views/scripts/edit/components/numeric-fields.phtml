@@ -1,0 +1,116 @@
+<?php
+use AF\Domain\AF;
+
+/**
+ * @author  matthieu.napoli
+ * @author  yoann.croizer
+ * @package AF
+ */
+/** @var $af AF */
+$af = $this->af;
+
+// Datagrid
+$numericDatagrid = new UI_Datagrid('numericFieldDatagrid', 'datagrid_edit_components_numeric-fields', 'af');
+$numericDatagrid->initialLoading = false;
+$numericDatagrid->addParam('id', $af->getId());
+$numericDatagrid->pagination = false;
+$numericDatagrid->addElements = true;
+$numericDatagrid->addPanelTitle = __('AF', 'configComponentDatagrid', 'numericAddPanelTitle');
+$numericDatagrid->deleteElements = true;
+
+// Label
+$numericLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$numericLabel->editable = true;
+$numericDatagrid->addCol($numericLabel);
+
+// Ref
+$numericRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$numericRef->editable = true;
+$numericDatagrid->addCol($numericRef);
+
+// Help
+$help = new UI_Datagrid_Col_LongText('help', __('UI', 'name', 'help'));
+$help->editable = true;
+$help->popup->title = __('UI', 'name', 'help');
+$numericDatagrid->addCol($help);
+
+// Hidden / Visible
+$isVisibleColumn = new UI_Datagrid_Col_Bool('isVisible',
+                                            __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));
+$isVisibleColumn->editable = true;
+$isVisibleColumn->defaultAddValue = true;
+$isVisibleColumn->textTrue = __('UI', 'property', 'visible');
+$isVisibleColumn->textFalse = __('UI', 'property', 'masked');
+$isVisibleColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'visible');
+$isVisibleColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'masked');
+$numericDatagrid->addCol($isVisibleColumn);
+
+// Enable / Disable
+$enabledColumn = new UI_Datagrid_Col_Bool('enabled', __('AF', 'configComponentDatagrid', 'initialActivationHeader'));
+$enabledColumn->defaultAddValue = true;
+$enabledColumn->editable = true;
+$enabledColumn->textTrue = __('UI', 'property', 'enabled');
+$enabledColumn->textFalse = __('UI', 'property', 'disabled');
+$enabledColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'enabled');
+$enabledColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'disabled');
+$numericDatagrid->addCol($enabledColumn);
+
+// Required
+$requiredColumn = new UI_Datagrid_Col_Bool('required', __('AF', 'configComponentDatagrid', 'requiredHeader'));
+$requiredColumn->editable = true;
+$requiredColumn->defaultAddValue = false;
+$requiredColumn->textTrue = __('UI', 'property', 'required');
+$requiredColumn->textFalse = __('UI', 'property', 'optional');
+$requiredColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'required');
+$requiredColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'optional');
+$numericDatagrid->addCol($requiredColumn);
+
+// Unit
+$unitColumn = new UI_Datagrid_Col_Text('unit', __('Unit', 'name', 'unit'));
+$unitColumn->editable = true;
+$numericDatagrid->addCol($unitColumn);
+
+// Unit choice
+$unitSelectionColumn = new UI_Datagrid_Col_Bool('unitSelection', __('AF', 'configComponentDatagrid', 'editableUnitHeader'));
+$unitSelectionColumn->editable = true;
+$unitSelectionColumn->defaultAddValue = true;
+$unitSelectionColumn->textTrue = __('UI', 'property', 'editable');
+$unitSelectionColumn->textFalse = __('UI', 'property', 'notEditable');
+$unitSelectionColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'editable');
+$unitSelectionColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'notEditable');
+$numericDatagrid->addCol($unitSelectionColumn);
+
+// Has Uncertainty
+$withUncertaintyColumn = new UI_Datagrid_Col_Bool('withUncertainty',
+                                                  __('AF', 'configComponentDatagrid', 'withUncertaintyHeader'));
+$withUncertaintyColumn->editable = true;
+$withUncertaintyColumn->defaultAddValue = true;
+$withUncertaintyColumn->textTrue = __('UI', 'property', 'displayedFem');
+$withUncertaintyColumn->textFalse = __('UI', 'property', 'maskedFem');
+$withUncertaintyColumn->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'displayedFem');
+$withUncertaintyColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'maskedFem');
+$numericDatagrid->addCol($withUncertaintyColumn);
+
+// Digital Value
+$digitalValue = new UI_Datagrid_Col_Text('digitalValue', __('AF', 'configComponentDatagrid', 'initialValueHeader'));
+$digitalValue->editable = true;
+$numericDatagrid->addCol($digitalValue);
+
+// Uncertainty
+$relativeUncertainty = new UI_Datagrid_Col_Text('relativeUncertainty',
+                                                __('AF', 'configComponentDatagrid', 'initialUncertaintyHeader'));
+$relativeUncertainty->editable = true;
+$numericDatagrid->addCol($relativeUncertainty);
+
+// Default value reminder
+$defaultValueReminder = new UI_Datagrid_Col_Bool('defaultValueReminder',
+                                                 __('AF', 'configComponentDatagrid', 'defaultValueReminderHeader'));
+$defaultValueReminder->editable = true;
+$defaultValueReminder->defaultAddValue = false;
+$defaultValueReminder->textTrue = __('UI', 'property', 'displayed');
+$defaultValueReminder->textFalse = __('UI', 'property', 'masked');
+$defaultValueReminder->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'property', 'displayed');
+$defaultValueReminder->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'property', 'masked');
+$numericDatagrid->addCol($defaultValueReminder);
+
+echo $numericDatagrid->render();

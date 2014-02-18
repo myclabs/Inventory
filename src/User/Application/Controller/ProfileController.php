@@ -1,8 +1,4 @@
 <?php
-/**
- * @package    User
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use User\Application\ForbiddenException;
@@ -14,12 +10,9 @@ use User\Domain\UserService;
 
 /**
  * Contrôleur de gestion des utilisateurs
- * @package    User
- * @subpackage Controller
  */
 class User_ProfileController extends Core_Controller
 {
-
     use UI_Controller_Helper_Form;
 
     /**
@@ -33,6 +26,12 @@ class User_ProfileController extends Core_Controller
      * @var ACLService
      */
     private $aclService;
+
+    /**
+     * @Inject("emails.noreply.name")
+     * @var string
+     */
+    private $emailNoReplyName;
 
     /**
      * Par défaut : redirige vers la liste des utilisateurs
@@ -133,7 +132,6 @@ class User_ProfileController extends Core_Controller
      */
     public function disableAction()
     {
-        $container = \Core\ContainerSingleton::getContainer();
         $connectedUser = $this->_helper->auth();
 
         /** @var $user User */
@@ -146,13 +144,13 @@ class User_ProfileController extends Core_Controller
 
         // Envoi d'un email d'alerte
         $subject = __('User', 'email', 'subjectAccountDeactivated');
-        $content = __('User', 'email', 'bodyAccountDeactivated',
-                      [ 'APPLICATION_NAME' => $container->get('emails.noreply.name') ]
-        );
+        $content = __('User', 'email', 'bodyAccountDeactivated', [ 'APPLICATION_NAME' => $this->emailNoReplyName ]);
         $this->userService->sendEmail($user, $subject, $content);
 
-        UI_Message::addMessageStatic(__('User', 'editProfile', 'accountDeactivated') . ' '
-                                         . __('User', 'editProfile', 'userInformedByEmail'), UI_Message::TYPE_SUCCESS);
+        UI_Message::addMessageStatic(
+            __('User', 'editProfile', 'accountDeactivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail'),
+            UI_Message::TYPE_SUCCESS
+        );
 
         if ($user === $connectedUser) {
             $this->redirect('user/action/logout');
@@ -167,7 +165,6 @@ class User_ProfileController extends Core_Controller
      */
     public function enableAction()
     {
-        $container = \Core\ContainerSingleton::getContainer();
         /** @var $user User */
         $user = User::load($this->getParam('id'));
 
@@ -178,9 +175,7 @@ class User_ProfileController extends Core_Controller
 
         // Envoi d'un email d'alerte
         $subject = __('User', 'email', 'subjectAccountActivated');
-        $content = __('User', 'email', 'bodyAccountActivated',
-                      [ 'APPLICATION_NAME' => $container->get('emails.noreply.name') ]
-        );
+        $content = __('User', 'email', 'bodyAccountActivated', [ 'APPLICATION_NAME' => $this->emailNoReplyName ]);
         $this->userService->sendEmail($user, $subject, $content);
 
         $message = __('User', 'messages', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
@@ -195,7 +190,6 @@ class User_ProfileController extends Core_Controller
      */
     public function editEmailAction()
     {
-        $container = \Core\ContainerSingleton::getContainer();
         $loggedInUser = $this->_helper->auth();
         /** @var $user User */
         $user = User::load($this->getParam('id'));
@@ -233,19 +227,17 @@ class User_ProfileController extends Core_Controller
             if (!$this->hasFormError()) {
                 $subject = __('User', 'email', 'subjectEmailModified');
                 if ($user === $this->_helper->auth()) {
-                    $content = __('User', 'email', 'bodyEmailModifiedByUser',
-                                  array(
-                                       'OLD_EMAIL_ADDRESS' => $oldEmail,
-                                       'NEW_EMAIL_ADDRESS' => $email,
-                                       'APPLICATION_NAME'       => $container->get('emails.noreply.name')
-                                  ));
+                    $content = __('User', 'email', 'bodyEmailModifiedByUser', [
+                        'OLD_EMAIL_ADDRESS' => $oldEmail,
+                        'NEW_EMAIL_ADDRESS' => $email,
+                        'APPLICATION_NAME'  => $this->emailNoReplyName
+                    ]);
                 } else {
-                    $content = __('User', 'email', 'bodyEmailModifiedByAdmin',
-                                  array(
-                                       'OLD_EMAIL_ADDRESS' => $oldEmail,
-                                       'NEW_EMAIL_ADDRESS' => $email,
-                                       'APPLICATION_NAME'  => $container->get('emails.noreply.name')
-                                  ));
+                    $content = __('User', 'email', 'bodyEmailModifiedByAdmin', [
+                        'OLD_EMAIL_ADDRESS' => $oldEmail,
+                        'NEW_EMAIL_ADDRESS' => $email,
+                        'APPLICATION_NAME'  => $this->emailNoReplyName
+                    ]);
                 }
 
                 // Envoi de l'email à l'ancienne adresse
@@ -330,6 +322,19 @@ class User_ProfileController extends Core_Controller
         /** @var User $loggedInUser */
         $loggedInUser = $this->_helper->auth();
         $loggedInUser->dismissTutorial($tutorial);
+
+        $this->sendJsonResponse([]);
+    }
+
+    /**
+     * Remet à zéro tous les états d'avancements des tutoriels
+     * @Secure("editUser")
+     */
+    public function resetTutorialsAction()
+    {
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->_helper->auth();
+        $loggedInUser->initTutorials();
 
         $this->sendJsonResponse([]);
     }
