@@ -24,7 +24,7 @@ checkout:
     - |
       cat > application/configs/env.php <<EOL
       <?php
-      defined('APPLICATION_ENV') || define('APPLICATION_ENV', 'testsunitaires');
+      defined('APPLICATION_ENV') || define('APPLICATION_ENV', 'developpement');
       EOL
 
 dependencies:
