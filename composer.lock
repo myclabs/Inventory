@@ -385,7 +385,7 @@
                     "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -409,7 +409,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -448,7 +448,7 @@
                     "Doctrine\\Common\\Lexer\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -843,12 +843,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "0.2.1"
+                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.2.1",
-                "reference": "0.2.1",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
+                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
                 "shasum": ""
             },
             "type": "library",
@@ -1167,12 +1167,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Units-API.git",
-                "reference": "e1e28394468bea6320267214b42162fadaef626b"
+                "reference": "4dc693034859fe45ed39714c0e7d50583c156b0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/e1e28394468bea6320267214b42162fadaef626b",
-                "reference": "e1e28394468bea6320267214b42162fadaef626b",
+                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/4dc693034859fe45ed39714c0e7d50583c156b0c",
+                "reference": "4dc693034859fe45ed39714c0e7d50583c156b0c",
                 "shasum": ""
             },
             "require": {
@@ -1181,16 +1181,16 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "MyCLabs\\UnitAPI": "src/",
-                    "UnitAPITest": "tests/"
+                "psr-4": {
+                    "MyCLabs\\UnitAPI\\": "src/MyCLabs/UnitAPI",
+                    "UnitAPITest\\UnitTest\\MyCLabs\\UnitAPI\\": "tests/"
                 }
             },
             "support": {
                 "source": "https://github.com/myclabs/Units-API/tree/master",
                 "issues": "https://github.com/myclabs/Units-API/issues"
             },
-            "time": "2014-01-24 08:41:12"
+            "time": "2014-02-19 11:11:11"
         },
         {
             "name": "myclabs/work",
@@ -1420,7 +1420,7 @@
                     "Console_CommandLine": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 ""
             ],
@@ -2267,7 +2267,7 @@
                     "Zend": "library/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "include-path": [
                 "library/"
             ],
