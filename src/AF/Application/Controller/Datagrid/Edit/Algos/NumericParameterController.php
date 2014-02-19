@@ -1,10 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  thibaud.rolland
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
@@ -14,11 +8,12 @@ use DI\Annotation\Inject;
 use Techno\Application\Service\TechnoService;
 
 /**
- * @package AF
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author thibaud.rolland
  */
 class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Datagrid
 {
-
     /**
      * @Inject
      * @var TechnoService
@@ -26,13 +21,11 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     private $technoService;
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         $algos = $af->getAlgos();
         foreach ($algos as $algo) {
@@ -41,31 +34,33 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
                 $data['label'] = $algo->getLabel();
+
                 try {
                     $data['family'] = $algo->getFamily()->getRef();
                 } catch (Core_Exception_NotFound $e) {
                     // Si la famille n'existe plus
                     $data['family'] = $this->cellText(null, __('AF', 'configTreatmentInvalidRef', 'family'));
                 }
-                $data['coordinates'] = $this->cellPopup($this->_helper->url('popup-parameter-coordinates',
-                                                                            'edit_algos',
-                                                                            'af',
-                                                                            ['idAF' => $af->getId(),
-                                                                            'idAlgo' => $algo->getId()]),
-                                                        __('Techno', 'name', 'coordinates'),
-                                                        'search');
+
+                $data['coordinates'] = $this->cellPopup($this->_helper->url(
+                    'popup-parameter-coordinates',
+                    'edit_algos',
+                    'af',
+                    ['idAF'   => $af->getId(), 'idAlgo' => $algo->getId()]
+                ), __('Techno', 'name', 'coordinates'), 'search');
+
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
                     $ref = $contextIndicator->getContext()->getRef()
                         . "#" . $contextIndicator->getIndicator()->getRef();
                     $data['contextIndicator'] = $this->cellList($ref);
                 }
-                $data['resultIndex'] = $this->cellPopup($this->_helper->url('popup-indexation',
-                                                                            'edit_algos',
-                                                                            'af',
-                                                                            ['id' => $algo->getId()]),
-                                                        __('Algo', 'name', 'indexation'),
-                                                        'search');
+                $data['resultIndex'] = $this->cellPopup($this->_helper->url(
+                    'popup-indexation',
+                    'edit_algos',
+                    'af',
+                    ['id' => $algo->getId()]
+                ), __('Algo', 'name', 'indexation'), 'search');
                 $this->addLine($data);
             }
         }
@@ -73,13 +68,11 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
@@ -123,8 +116,6 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
      * @Secure("editAF")
      */
     public function updateelementAction()
@@ -170,8 +161,6 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -194,7 +183,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     {
         /** @var $algo NumericExpressionAlgo */
         $algo = NumericExpressionAlgo::load($this->getParam('id'));
-        $this->data = $algo->getExpression()->getExpression();
+        $this->data = $algo->getExpression();
         $this->send();
     }
 
@@ -245,5 +234,4 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     {
         return $contextIndicator->getIndicator()->getLabel() . ' - ' . $contextIndicator->getContext()->getLabel();
     }
-
 }
