@@ -160,7 +160,8 @@ class UnitAPI
         $operation = new Multiplication();
 
         array_walk($components, function ($component) use ($operation) {
-            $operation->addComponent(new OperationComponent($component['unit'], $component['signExponent']));
+            $unit = $component['unit'] instanceof UnitAPI ? $component['unit']->getRef() : $component['unit'];
+            $operation->addComponent(new OperationComponent($unit, $component['signExponent']));
         });
 
         return $operationService->execute($operation);

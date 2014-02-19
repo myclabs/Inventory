@@ -1167,12 +1167,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Units-API.git",
-                "reference": "4dc693034859fe45ed39714c0e7d50583c156b0c"
+                "reference": "6a2357d72d65d1ab88efe7c42e3bd89ee9166919"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/4dc693034859fe45ed39714c0e7d50583c156b0c",
-                "reference": "4dc693034859fe45ed39714c0e7d50583c156b0c",
+                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/6a2357d72d65d1ab88efe7c42e3bd89ee9166919",
+                "reference": "6a2357d72d65d1ab88efe7c42e3bd89ee9166919",
                 "shasum": ""
             },
             "require": {
@@ -1190,7 +1190,7 @@
                 "source": "https://github.com/myclabs/Units-API/tree/master",
                 "issues": "https://github.com/myclabs/Units-API/issues"
             },
-            "time": "2014-02-19 11:11:11"
+            "time": "2014-02-19 15:53:17"
         },
         {
             "name": "myclabs/work",
