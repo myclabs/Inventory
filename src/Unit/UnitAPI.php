@@ -92,9 +92,13 @@ class UnitAPI
         $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
         $locale = \Core_Locale::loadDefault()->getId();
 
-        $unit = $unitService->getUnit($this->ref, $locale);
+        try {
+            $unit = $unitService->getUnit($this->ref, $locale);
 
-        return $unit->symbol;
+            return $unit->symbol;
+        } catch (UnknownUnitException $e) {
+            return $this->ref;
+        }
     }
 
 
