@@ -14,11 +14,11 @@ Feature: Family one dimension edit feature
     And I should see the "combustibleMembersDatagrid" datagrid
     And the "combustibleMembersDatagrid" datagrid should contain 2 row
     When I click element "#combustibleAddMemberButton"
-    Then I should see the popup "Ajout d'une liste de membres"
-    And I fill in "inputMemberList" with "amont_combustion, Amont de la combustion"
-    Then I should see "1 membre(s) prêts à être ajoutés"
+    Then I should see the popup "Ajout d'une liste d'éléments"
+    And I fill in "inputMemberList" with "amont_combustion; Amont de la combustion"
+    Then I should see "1 élément(s) prêts à être ajoutés"
     When I click element "#addMemberPopup button:contains('Ajouter')"
-    Then the following message is shown and closed: "1 membre(s) ont été ajouté(s)."
+    Then the following message is shown and closed: "1 élément(s) ont été ajouté(s)."
     And I wait 1 seconds
     And the "combustibleMembersDatagrid" datagrid should contain 3 row
   # Le nouvel élément a été ajouté à la fin
@@ -31,7 +31,7 @@ Feature: Family one dimension edit feature
     Given I am on "parameter/dimension/details/id/5"
     And I wait for the page to finish loading
     And I click "combustibleAddMemberButton"
-    Then I should see the popup "Ajout d'une liste de membres"
+    Then I should see the popup "Ajout d'une liste d'éléments"
     When I click element "#addMemberPopup button:contains('Ajouter')"
     Then the following message is shown and closed: "Saisie non reconnue, merci de respecter le format précisé."
 

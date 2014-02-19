@@ -12,7 +12,6 @@ Feature: Cell administrator feature
   # On tombe sur la page de la cellule globale
     Then I should see "Workspace avec données"
     Then I should see "Vue globale"
-    When I wait 5 seconds
   # Vérification onglets visibles et invisibles
     When I click element "h1 small a"
     And I wait for the page to finish loading

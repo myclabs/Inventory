@@ -7,7 +7,7 @@ use AF\Domain\Action\SetValue\Select\SetSelectSingleValue;
 use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 
-/** @var $action \AF\Domain\Action\Action */
+/** @var $action Action */
 $action = $this->action;
 $af = $action->getTargetComponent()->getAf();
 
@@ -45,8 +45,8 @@ if ($action instanceof SetCheckboxValue) {
     $form->addElement($checkboxValue);
 }
 
-if ($action instanceof SelectSingle) {
-    /** @var $action SelectSingle */
+if ($action instanceof SetSelectSingleValue) {
+    /** @var $action SetSelectSingleValue */
     // Liste de selection de l'option à selectionner
     $selectOptionValue = new UI_Form_Element_Select('selectOptionValue');
     $selectOptionValue->setLabel(__('AF', 'configInteractionDatagrid', 'valueToBeAssignedLabel'));

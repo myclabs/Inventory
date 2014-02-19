@@ -13,10 +13,14 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
     protected $datagrid;
 
     /**
-     * @Inject("translation.languages")
      * @var string[]
      */
     private $translationLanguages;
+
+    public function __construct()
+    {
+        $this->translationLanguages = \Core\ContainerSingleton::getContainer()->get('translation.languages');
+    }
 
     /**
      * Retourne le render de l'actuel autocomplete de l'aide de vue.
@@ -83,6 +87,7 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      */
     public function addLanguagesTextCols($editable = true)
     {
+        Core_Tools::dump($this->translationLanguages);
         foreach ($this->translationLanguages as $language) {
             $languageColumn = new UI_Datagrid_Col_Text($language, __('UI', 'translate', 'language' . $language));
             $languageColumn->editable = $editable;

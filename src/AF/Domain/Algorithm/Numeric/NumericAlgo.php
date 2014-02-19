@@ -42,7 +42,7 @@ abstract class NumericAlgo extends Algo
     protected $refIndicator;
 
     /**
-     * @var Collection|\AF\Domain\Algorithm\Index\Index[]
+     * @var Collection|Index[]
      */
     protected $indexes;
 
@@ -131,7 +131,7 @@ abstract class NumericAlgo extends Algo
     }
 
     /**
-     * @return \AF\Domain\Algorithm\Index\Index[]
+     * @return Index[]
      */
     public function getIndexes()
     {
@@ -154,7 +154,7 @@ abstract class NumericAlgo extends Algo
     }
 
     /**
-     * @param \AF\Domain\Algorithm\Index\Index $index
+     * @param Index $index
      * @return bool
      */
     public function hasIndex(Index $index)
@@ -173,7 +173,7 @@ abstract class NumericAlgo extends Algo
     }
 
     /**
-     * @param \AF\Domain\Algorithm\Index\Index $resultIndex
+     * @param Index $resultIndex
      */
     public function removeIndex(Index $resultIndex)
     {

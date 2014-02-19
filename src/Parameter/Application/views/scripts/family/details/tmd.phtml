@@ -72,7 +72,7 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
     }
     $cell = $family->getCell($members);
     $value = $cell->getValue();
-    if ($value !== null) {
+    if ($value !== null && $value->getDigitalValue() !== null) {
         return [
             'url'         => 'parameter/element/details/idFamily/' . $family->getId()
                 . '?coordinates=' . urlencode(json_encode($membersCoordinates)),

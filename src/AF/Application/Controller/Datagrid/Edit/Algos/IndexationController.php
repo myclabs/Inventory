@@ -1,9 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  cyril.perraud
- * @package AF
- */
 
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\Index\AlgoResultIndex;
@@ -15,15 +10,12 @@ use Classification\Domain\IndicatorAxis;
 use Core\Annotation\Secure;
 
 /**
- * Elements Controller
- * @package AF
+ * @author matthieu.napoli
+ * @author cyril.perraud
  */
 class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -38,17 +30,16 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                 $data['index'] = $axis->getId();
                 $data['axis'] = $axis->getLabel();
                 $index = $algo->getIndexForAxis($axis);
-                if ($index) {
-                    $data['type'] = $this->cellList(get_class($index));
-                    if ($index instanceof FixedIndex) {
-                        $member = $index->getClassificationMember();
-                        if ($member) {
-                            $data['value'] = $this->cellList($member->getRef());
-                        }
-                    } elseif ($index instanceof AlgoResultIndex) {
-                        $valueAlgo = $index->getAlgo();
-                        $data['value'] = $this->cellList($valueAlgo->getRef());
+                if ($index instanceof FixedIndex) {
+                    $data['type'] = $this->cellList(FixedIndex::class);
+                    $member = $index->getClassificationMember();
+                    if ($member) {
+                        $data['value'] = $this->cellList($member->getRef());
                     }
+                } elseif ($index instanceof AlgoResultIndex) {
+                    $data['type'] = $this->cellList(AlgoResultIndex::class);
+                    $valueAlgo = $index->getAlgo();
+                    $data['value'] = $this->cellList($valueAlgo->getRef());
                 } else {
                     $type = $this->getChosenIndexType($algo, $axis);
                     if ($type) {
@@ -62,8 +53,6 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
@@ -72,8 +61,6 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     }
 
     /**
-     * Modifie les valeurs d'un élément
-     * cf. documentation
      * @Secure("editAF")
      */
     public function updateelementAction()
@@ -88,7 +75,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                 $index = $algo->getIndexForAxis($axis);
                 if ($index) {
                     // Modification du type d'index
-                    if ($newValue && $newValue != get_class($index)) {
+                    if ($newValue && (! $index instanceof $newValue)) {
                         // Suppression de l'ancien index
                         $algo->removeIndex($index);
                         $algo->save();
@@ -105,7 +92,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
 
                     $newType = $this->getChosenIndexType($algo, $axis);
                     // Modification du type d'index
-                    if ($newType && $newType != get_class($index)) {
+                    if ($newType && (! $index instanceof $newType)) {
                         // Suppression de l'ancien index
                         $algo->removeIndex($index);
                         // Création du nouvel index
@@ -150,8 +137,6 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -226,5 +211,4 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
         }
         return null;
     }
-
 }

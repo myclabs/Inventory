@@ -50,13 +50,13 @@ class TmxLoader implements LoaderInterface
         $xml = new SimpleXMLElement($file->getContents());
 
         foreach ($xml->body->tu as $tu) {
-            $ref = $tu->attributes()->tuid->__toString();
+            $ref = (string) $tu->attributes()->tuid;
 
             // Forme l'ID du message en concaténant avec des "."
             $id = $dirName . '.' . $fileName . '.' . $ref;
 
             foreach ($tu->tuv as $tuv) {
-                if ($tuv->attributes('xml', true)->lang->__toString() === $locale) {
+                if ((string) $tuv->attributes('xml', true)->lang === $locale) {
                     $messages[$id] = (string) $tuv->seg;
                 }
             }

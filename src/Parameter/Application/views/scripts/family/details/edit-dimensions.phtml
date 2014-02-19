@@ -220,10 +220,10 @@ $family = $this->family;
 
         for (var i = 0; i < lines.length; ++i) {
             var line = lines[i];
-            var array = line.split(/,/);
+            var array = line.split(/;/);
 
             if (array.length != 2) {
-                message = <?=json_encode(__('Parameter', 'import', 'errorOneCommaPerLine'))?>;
+                message = <?=json_encode(__('Parameter', 'import', 'errorOneSeparatorPerLine'))?>;
                 valid = false;
                 break;
             }

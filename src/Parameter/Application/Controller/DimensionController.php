@@ -99,7 +99,7 @@ class Parameter_DimensionController extends Core_Controller
         $number = 0;
 
         foreach ($lines as $line) {
-            $array = explode(',', $line);
+            $array = explode(';', $line);
 
             if (count($array) !== 2) {
                 UI_Message::addMessageStatic(__('Parameter', 'import', 'invalidMembersInput'));
