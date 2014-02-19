@@ -39,5 +39,5 @@ test:
   override:
     - phpunit
     # Test des scripts populate
-    - bin/inventory db:populate test
-    - bin/inventory db:populate testDW
+    - bin/inventory -v db:populate test
+    - bin/inventory -v db:populate testDW
