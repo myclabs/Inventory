@@ -471,6 +471,14 @@ class Family extends Core_Model_Entity
     }
 
     /**
+     * @return ParameterLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
+    }
+
+    /**
      * Renvoie les valeurs du contexte pour la position
      * @return array
      */

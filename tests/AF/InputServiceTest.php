@@ -3,6 +3,7 @@
 namespace Tests\AF;
 
 use AF\Domain\AF;
+use AF\Domain\AFLibrary;
 use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Input\CheckboxInput;
