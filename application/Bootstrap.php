@@ -117,7 +117,7 @@ class Bootstrap extends Core_Bootstrap
     {
         $locale = Core_Locale::loadDefault();
         $configuration = Zend_Registry::get('configuration');
-        Core_Locale::$minSignificantFigures = $configuration->get('locale.minSignificantFigures', null);
+        Core_Locale::$minSignificantFigures = $configuration->locale->minSignificantFigures;
 
         Zend_Registry::set(Core_Locale::registryKey, $locale);
 
