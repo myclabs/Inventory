@@ -1219,11 +1219,13 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         $populatingCells = [];
 
         foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
-            if ($inputGranularity === $this->getGranularity()) {
+            if (($inputGranularity === $this->getGranularity()) && ($this->isRelevant())){
                 $populatingCells[] = $this;
             } elseif ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {
-                    $populatingCells[] = $inputChildCell;
+                    if ($inputChildCell->isRelevant()) {
+                        $populatingCells[] = $inputChildCell;
+                    }
                 }
             }
         }

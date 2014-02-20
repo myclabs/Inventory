@@ -679,12 +679,11 @@ class Orga_Service_Export
 
 function getInputsDetails(Input $input, $path = '')
 {
-    if ($input->getComponent() !== null) {
+    if (($input->getComponent() !== null) && (!$input->isHidden())) {
         $componentLabel = $input->getComponent()->getLabel();
         $componentRef = $input->getComponent()->getRef();
     } else {
-        $componentLabel = __('Orga', 'export', 'unknownComponent');
-        $componentRef = __('Orga', 'export', 'unknownComponent');
+        return [];
     }
     if ($input instanceof NotRepeatedSubAFInput) {
         $subInputs = [];
