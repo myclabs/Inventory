@@ -107,9 +107,9 @@ class Techno_DimensionController extends Core_Controller
                 return;
             }
 
-            list($ref, $label) = $array;
-            $ref = trim($ref);
+            list($label, $ref) = $array;
             $label = trim($label);
+            $ref = trim($ref);
 
             try {
                 $member = new Member($dimension, $ref, $label);

@@ -38,14 +38,14 @@ $family = $this->family;
         $datagrid->addParam('id', $dimension->getId());
         $datagrid->deleteElements = true;
         $datagrid->addElements = false;
-        // Colonne ref
-        $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
-        $refColumn->editable = true;
-        $datagrid->addCol($refColumn);
         // Colonne label
         $labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
         $labelColumn->editable = true;
         $datagrid->addCol($labelColumn);
+        // Colonne ref
+        $refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+        $refColumn->editable = true;
+        $datagrid->addCol($refColumn);
         // Colonne Position
         $orderColumn = new UI_Datagrid_Col_Order('position');
         $orderColumn->editable = true;
@@ -83,15 +83,15 @@ $family = $this->family;
             </p>
             <p></p>
             <div class="control-group">
-                <label class="control-label" for="addDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
-                <div class="controls">
-                    <input type="text" id="addDimensionRef" name="ref" required />
-                </div>
-            </div>
-            <div class="control-group">
                 <label class="control-label" for="addDimensionLabel"><?=__('UI', 'name', 'label')?></label>
                 <div class="controls">
                     <input type="text" id="addDimensionLabel" name="label" required />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="addDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
+                <div class="controls">
+                    <input type="text" id="addDimensionRef" name="ref" required />
                 </div>
             </div>
             <div class="control-group">
@@ -228,8 +228,8 @@ $family = $this->family;
                 break;
             }
 
-            var ref = $.trim(array[0]);
-            var label = $.trim(array[1]);
+            var label = $.trim(array[0]);
+            var ref = $.trim(array[1]);
 
             // Validate ref
             if ((ref.length == 0) || (! /^[a-z0-9_]+$/.test(ref))) {

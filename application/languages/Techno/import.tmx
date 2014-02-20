@@ -67,12 +67,12 @@ member3; member4; 0.5; 20</seg>
         </tu>
         <tu tuid="addMemberListExample">
             <tuv xml:lang="fr">
-                <seg>element1; Libellé de l'élément 1
-element2; Libellé de l'élément 2</seg>
+                <seg>Libellé de l'élément 1; element1
+Libellé de l'élément 2; element2</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>element1; Label of element 1
-element2; Label of element 2</seg>
+                <seg>Label of element 1; element1
+Label of element 2; element2</seg>
             </tuv>
         </tu>
         <tu tuid="membersFound">
