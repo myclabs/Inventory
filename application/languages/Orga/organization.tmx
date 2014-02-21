@@ -82,5 +82,46 @@
             </tuv>
         </tu>
 
+        <tu tuid="banner">
+            <tuv xml:lang="fr">
+                <seg>Bannière</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Banner</seg>
+            </tuv>
+        </tu>
+        <tu tuid="bannerExplanations">
+            <tuv xml:lang="fr">
+                <seg>Une image affichée dans l'application à la place du nom de l'organisation.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Image displayed on the application irstead of the organization's name.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="choiceBanner">
+            <tuv xml:lang="fr">
+                <seg>Choisir une bannière</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Choose a banner</seg>
+            </tuv>
+        </tu>
+        <tu tuid="currentBanner">
+            <tuv xml:lang="fr">
+                <seg>Bannière actuelle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Current banner</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noBanner">
+            <tuv xml:lang="fr">
+                <seg>Aucune bannière</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No banner</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

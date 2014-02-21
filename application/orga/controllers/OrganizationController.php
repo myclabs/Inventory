@@ -535,6 +535,84 @@ class Orga_OrganizationController extends Core_Controller
     }
 
     /**
+     * @Secure("editOrganization")
+     */
+    public function editBannerAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+        $this->view->assign('idOrganization', $idOrganization);
+
+        $basePath = APPLICATION_PATH . '/../public/workspaceBanners/';
+
+        $message = [];
+
+        $transferAdapter = new Zend_File_Transfer_Adapter_Http();
+        $mimeType = [
+            'image/bmp',
+            'image/gif',
+            'image/x-png',
+            'image/png',
+            'image/jpeg',
+            'image/pjpeg',
+            'image/tiff',
+            'image/vnd.microsoft.icon',
+            'image/svg+xml'
+        ];
+        $transferAdapter->addValidators(['MimeType' => array_merge(['headerCheck' => true], $mimeType)]);
+
+        if (empty($messages) && ($transferAdapter->hasErrors())) {
+            $messages = $transferAdapter->getErrors();
+        }
+        if (empty($messages) && (!$transferAdapter->isUploaded())) {
+            $messages = [__('Doc', 'library', 'noDocumentGiven')];
+        }
+        if (empty($messages) && (!$transferAdapter->isValid())) {
+            $messages = [__('Doc', 'library', 'invalidMIMEType')];
+            $messages = $transferAdapter->getMessages();
+        }
+        if (empty($messages) && ($transferAdapter->getFileName() == null)) {
+            $messages = [__('Doc', 'messages', 'uploadError')];
+        }
+
+        if (empty($messages)) {
+            foreach (glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $idOrganization . '.*') as $file) {
+                unlink($file);
+            }
+            $transferAdapter->addFilter('Rename', ['target' => $basePath.$idOrganization.'.'.pathinfo($transferAdapter->getFileName(), PATHINFO_EXTENSION)]);
+            if (!$transferAdapter->receive()) {
+                $messages = [__('Core', 'exception', 'applicationError')];
+            }
+        }
+
+        $this->view->assign('success', empty($messages));
+        if (!empty($messages)) {
+            $this->view->assign('message', implode("\n", $messages));
+        } else {
+            $this->view->assign('message', $transferAdapter->getFileName(null, false));
+        }
+
+        $this->_helper->layout->disableLayout();
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
+    public function removeBannerAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        foreach (glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $idOrganization . '.*') as $file) {
+            unlink($file);
+        }
+
+        $this->sendJsonResponse(['message' => __('UI', 'message', 'updated')]);
+    }
+
+    /**
      * @param Orga_Model_Organization $organization
      *
      * @throws Core_Exception_User
