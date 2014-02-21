@@ -372,6 +372,7 @@ class Orga_Service_Export
         $modelBuilder->bind('inputs', $inputs);
 
         $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'subForm'));
+        $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
         $modelBuilder->bind('inputLabel', __('Orga', 'export', 'fieldLabel'));
         $modelBuilder->bind('inputRef', __('Orga', 'export', 'fieldRef'));
         $modelBuilder->bind('inputType', __('Orga', 'export', 'fieldType'));
@@ -392,6 +393,28 @@ class Orga_Service_Export
                     }
                 }
                 return '';
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayInputStatus',
+            function (Orga_Model_Cell $cell) {
+                switch ($cell->getAFInputSetPrimary()->getStatus()) {
+                    case PrimaryInputSet::STATUS_FINISHED:
+                        return __('AF', 'inputInput', 'statusFinished');
+                        break;
+                    case PrimaryInputSet::STATUS_COMPLETE:
+                        return __('AF', 'inputInput', 'statusComplete');
+                        break;
+                    case PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE:
+                        return __('AF', 'inputInput', 'statusCalculationIncomplete');
+                        break;
+                    case PrimaryInputSet::STATUS_INPUT_INCOMPLETE;
+                        return __('AF', 'inputInput', 'statusInputIncomplete');
+                        break;
+                    default:
+                        return '';
+                }
             }
         );
 
@@ -447,6 +470,7 @@ class Orga_Service_Export
                 }
             };
             $columns[] = __('Orga', 'export', 'subForm');
+            $columns[] = __('Orga', 'input', 'inputStatus');
             $columns[] = __('Orga', 'export', 'fieldLabel');
             $columns[] = __('Orga', 'export', 'fieldRef');
             $columns[] = __('Orga', 'export', 'fieldType');
@@ -716,6 +740,7 @@ function getInputsDetails(Input $input, $path = '')
         return [
             [
                 'ancestors' => $path,
+                'status' => '',
                 'label' => $componentLabel,
                 'ref' => $componentRef,
                 'type' => getInputType($input),
