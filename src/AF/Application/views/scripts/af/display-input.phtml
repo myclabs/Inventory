@@ -44,13 +44,15 @@ if ($this->mode != AFViewConfiguration::MODE_READ) {
     $actionGroup = new UI_Form_Element_HTML('formActionGroup');
     $saveButtonLabel = __('UI', 'verb', 'save');
     $finishButtonLabel = __('AF', 'inputInput', 'finish');
+    $resultsPreviewButtonHelp = __('AF', 'inputInput', 'resultsPreviewHelp');
     $resultsPreviewButtonLabel = __('AF', 'inputInput', 'resultsPreview');
     $quitButtonLabel = __('UI', 'verb', 'quit');
     $inputCompleteMessage = __('AF', 'inputInput', 'inputCompleteMessage');
 
     if ($this->withResultsPreview) {
         $resultsPreviewButton = <<<HTML
-            <button type="button" class="inputPreview btn" data-loading-text="$loadingText">
+            <button type="button" class="inputPreview btn" data-loading-text="$loadingText"
+                data-title="$resultsPreviewButtonHelp">
                 $resultsPreviewButtonLabel
             </button>
 HTML;
@@ -62,13 +64,13 @@ HTML;
         <div class="alert alert-success alertFinishInput hide">
             $inputCompleteMessage
         </div>
+        $resultsPreviewButton
         <button type="button" class="inputSave btn" data-loading-text="$loadingText">
             $saveButtonLabel
         </button>
         <button type="button" class="inputFinish btn">
             $finishButtonLabel
         </button>
-        $resultsPreviewButton
         <button type="button" class="inputExit btn">
             <i class="fa fa-sign-out"></i>
             $quitButtonLabel
@@ -140,6 +142,10 @@ echo $form->render();
         ?>
         // Complétion et statut initial
         input.inputProgress.setStatus("<?=$status?>", <?=$completion?>);
+
+        $('.inputPreview').tooltip({
+            placement: 'bottom'
+        });
 
     });
 

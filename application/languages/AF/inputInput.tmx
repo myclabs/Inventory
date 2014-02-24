@@ -66,14 +66,6 @@
                 <seg>Terminate the input</seg>
             </tuv>
         </tu>
-        <tu tuid="reopen">
-            <tuv xml:lang="fr">
-                <seg>Rouvrir la saisie</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Reopen the input</seg>
-            </tuv>
-        </tu>
 
 		<!-- Contenu du formulaire -->
 
@@ -86,16 +78,24 @@
 			</tuv>
 		</tu>
 
-		<!-- Boutons -->
+		<!-- Aperçu des résultats -->
 
-		<tu tuid="resultsPreview">
-			<tuv xml:lang="fr">
-				<seg>Aperçu des résultats</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Results preview</seg>
-			</tuv>
-		</tu>
+        <tu tuid="resultsPreview">
+            <tuv xml:lang="fr">
+                <seg>Aperçu des résultats</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Results preview</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resultsPreviewHelp">
+            <tuv xml:lang="fr">
+                <seg>L'aperçu permet de visualiser les résultats sans enregistrer.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The preview allows to see the results without saving the input.</seg>
+            </tuv>
+        </tu>
 
 		<!-- Messages au clic sur « Enregistrer » -->
 

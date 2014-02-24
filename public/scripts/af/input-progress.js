@@ -28,6 +28,7 @@ AF.InputProgress.prototype = {
 
         $(".inputProgress .progress").removeClass("progress-striped").removeClass("progress-success");
 
+        $(".inputPreview").prop("disabled", true);
         $(".inputSave").prop("disabled", true).removeClass('btn-primary').show();
         $(".inputFinish").prop("disabled", true).removeClass('btn-primary').show();
         $(".alertFinishInput").hide();
@@ -45,6 +46,7 @@ AF.InputProgress.prototype = {
             .removeClass("progress-striped").addClass("progress-striped")
             .removeClass("progress-success");
 
+        $(".inputPreview").prop("disabled", false);
         $(".inputSave").prop("disabled", false).addClass('btn-primary').show();
         $(".inputFinish").prop("disabled", true).removeClass('btn-primary').show();
         $(".alertFinishInput").hide();
@@ -62,6 +64,7 @@ AF.InputProgress.prototype = {
 
         $(".inputProgress .progress").removeClass("progress-striped").removeClass("progress-success");
 
+        $(".inputPreview").prop("disabled", true);
         $(".inputSave").prop("disabled", true).removeClass('btn-primary').show();
         $(".inputFinish").prop("disabled", false).addClass('btn-primary').show();
         $(".alertFinishInput").show();
@@ -79,6 +82,7 @@ AF.InputProgress.prototype = {
 
         $(".inputProgress .progress").removeClass("progress-striped").removeClass("progress-success");
 
+        $(".inputPreview").prop("disabled", true);
         $(".inputSave").prop("disabled", true).removeClass('btn-primary').show();
         $(".inputFinish").prop("disabled", false).addClass('btn-primary').show();
         $(".alertFinishInput").show();
@@ -98,6 +102,7 @@ AF.InputProgress.prototype = {
             .removeClass("progress-striped")
             .removeClass("progress-success").addClass("progress-success");
 
+        $(".inputPreview").prop("disabled", true);
         $(".inputSave").prop("disabled", true).removeClass('btn-primary');
         $(".inputFinish").prop("disabled", true).removeClass('btn-primary');
         $(".alertFinishInput").hide();
