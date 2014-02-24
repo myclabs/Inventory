@@ -1,15 +1,13 @@
 /**
- * @author matthieu.napoli
- * @package AF
- */
-
-/**
  * @namespace AF
  */
 var AF = AF || {};
 
 /**
  * Saisie d'un AF
+ *
+ * @author matthieu.napoli
+ *
  * @param {int} id ID de l'AF
  * @param {string} ref Ref de l'AF
  * @param {string} mode read/write/test
@@ -86,7 +84,7 @@ AF.Input = function (id, ref, mode, idInputSet, exitURL, urlParams, resultsPrevi
      * Complétion de la saisie
      * @type {AF.InputProgress}
      */
-    this.inputProgress = new AF.InputProgress(this.id, this.idInputSet, urlParams);
+    this.inputProgress = new AF.InputProgress();
 
     /**
      * Paramètres d'URL additionnels à utiliser
@@ -100,8 +98,8 @@ AF.Input = function (id, ref, mode, idInputSet, exitURL, urlParams, resultsPrevi
         $(".inputSave").click(function () {
             that.save();
         });
-        $(".inputReset").click(function () {
-            that.reset();
+        $(".inputFinish").click(function () {
+            that.finishInput();
         });
         $(".inputPreview").click(function () {
             that.previewResults();
@@ -112,10 +110,7 @@ AF.Input = function (id, ref, mode, idInputSet, exitURL, urlParams, resultsPrevi
         // Quand le formulaire est modifié
         that.onChange(function () {
             that.hasChanges = true;
-            that.inputProgress.setStatus(AF.InputProgress.Status.IN_PROGRESS);
-            that.form.find(".inputExit").addClass("btn-danger");
-            that.form.find(".inputSave").prop("disabled", false).addClass("btn-primary");
-            that.form.find(".inputReset").prop("disabled", false);
+            that.inputProgress.setStatus('in_progress');
         });
     });
 
@@ -167,26 +162,6 @@ AF.Input.prototype = {
     },
 
     /**
-     * Réinitialise le formulaire
-     */
-    reset: function () {
-        if (this.hasChanges) {
-            bootbox.confirm(
-                __("AF", "inputInput", "confirmReinitializeInput"),
-                __("UI", "verb", "cancel"),
-                __("UI", "verb", "confirm"),
-                function (choice) {
-                    if (choice == true) {
-                        location.reload();
-                    }
-                }
-            );
-        } else {
-            location.reload();
-        }
-    },
-
-    /**
      * Sauvegarde le formulaire
      */
     save: function () {
@@ -228,20 +203,17 @@ AF.Input.prototype = {
 
         // Réinitialise l'aspect des boutons
         this.form.find(".inputExit").removeClass("btn-danger");
-        this.form.find(".inputSave").button("reset").removeClass("btn-primary");
+        this.form.find(".inputSave").button("reset");
         // @see https://github.com/twitter/bootstrap/issues/6242
         setTimeout(function () {
             that.form.find(".inputSave").prop("disabled", true);
         }, 0);
-        this.form.find(".inputReset").prop("disabled", true);
 
         // Cache l'aperçu des résultats
         $(".resultsPreview").hide();
 
         // Met à jour la complétion de la saisie
-        var status = AF.InputProgress.getStatusByRef(response.data.status);
-        this.inputProgress.setStatus(status);
-        this.inputProgress.setCompletion(response.data.completion);
+        this.inputProgress.setStatus(response.data.status, response.data.completion);
 
         // Affiche les messages d'erreur
         if ("errorMessages" in response) {
@@ -305,6 +277,31 @@ AF.Input.prototype = {
         this.form.on("change keyup", ":input", handler);
         this.form.on("click", ".addRow", handler);
         this.form.on("click", ".deleteRow", handler);
+    },
+
+    /**
+     * Marque la saisie comme terminée
+     */
+    finishInput: function () {
+        var that = this;
+        var data = {
+            id: this.id
+        };
+        if (this.idInputSet) {
+            data.idInputSet = this.idInputSet;
+        }
+
+        for (var key in this.urlParams) {
+            data[key] = this.urlParams[key];
+        }
+
+        $.ajax("af/input/mark-input-as-finished", {
+            data: data,
+            success: function (data) {
+                addMessage(data.message, 'success');
+                that.inputProgress.setStatus(data.status);
+            }
+        });
     },
 
     /**
