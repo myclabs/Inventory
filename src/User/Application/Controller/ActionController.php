@@ -41,6 +41,9 @@ class User_ActionController extends UI_Controller_Captcha
      */
     public function loginAction()
     {
+        $this->view->assign('user', $this->_helper->auth());
+        $this->view->assign('enableRegister', $this->enableRegister);
+
         if ($this->getRequest()->isPost()) {
             $email = $this->getParam('email');
             $password = $this->getParam('password');
@@ -73,8 +76,6 @@ class User_ActionController extends UI_Controller_Captcha
                 UI_Message::addMessageStatic(implode(', ', $result->getMessages()));
             }
         }
-        $this->view->assign('user', $this->_helper->auth());
-        $this->view->assign('enableRegister', $this->enableRegister);
     }
 
     /**
