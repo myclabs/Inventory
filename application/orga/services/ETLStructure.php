@@ -1031,7 +1031,7 @@ class Orga_Service_ETLStructure
      */
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
-        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+        if (!$cell->getGranularity()->getCellsGenerateDWCubes()) {
             return;
         }
 
