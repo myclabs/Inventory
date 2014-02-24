@@ -725,9 +725,10 @@ function getInputsDetails(Input $input, $path = '')
         foreach ($input->getValue() as $number => $subInputSet) {
             foreach ($subInputSet->getInputs() as $subInput) {
                 if (!$subInput instanceof GroupInput) {
+                    $label = ($number + 1) . ($input->getComponent()->getWithFreeLabel() ? ' - ' . $subInputSet->getFreeLabel() : '');
                     $subInputs = array_merge(
                         $subInputs,
-                        getInputsDetails($subInput, $path . $componentLabel . '/' . ($number + 1) . ' / ')
+                        getInputsDetails($subInput, $path . $componentLabel . '/' . $label . '/')
                     );
                 }
             }
