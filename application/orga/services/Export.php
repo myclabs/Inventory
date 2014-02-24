@@ -508,7 +508,7 @@ class Orga_Service_Export
                 $criteria->where($criteria->expr()->eq('relevant', true));
                 $criteria->where($criteria->expr()->eq('allParentsRelevant', true));
                 $criteria->orderBy(['tag' => 'ASC']);
-                $cells = $cell->getChildCellsForGranularity($granularity)->matching($criteria)->toArray();
+                $childCells = $cell->getChildCellsForGranularity($granularity)->matching($criteria)->toArray();
             }
             foreach ($childCells as $childCell) {
                 $childCellFile = $inputsExportsDirectory . $childCell->getId() . '.' . $format;
