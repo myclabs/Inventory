@@ -91,6 +91,8 @@ class User_PasswordController extends UI_Controller_Captcha
             }
             $this->sendFormResponse();
         }
+
+        $this->view->assign('code', $this->getParam('code'));
     }
 
     /**
@@ -107,8 +109,8 @@ class User_PasswordController extends UI_Controller_Captcha
         try {
             User::loadByEmailKey($code);
         } catch (Core_Exception_NotFound $e) {
-            UI_Message::addMessageStatic(__('User', 'messages', 'authenticationKeyInvalid'));
-            $this->redirect('user/password/forgotten');
+            UI_Message::addMessageStatic(__('User', 'resetPassword', 'confirmationCodeInvalid'));
+            $this->redirect('user/password/forgotten?code=' . $code);
         }
         $this->view->assign('code', $code);
     }
@@ -121,14 +123,14 @@ class User_PasswordController extends UI_Controller_Captcha
     {
         $code = $this->getParam('code');
         if (!$code) {
-            $this->redirect('user/password/reset');
+            $this->redirect('user/password/forgotten');
             return;
         }
 
         try {
             $user = User::loadByEmailKey($code);
         } catch (Core_Exception_NotFound $e) {
-            $this->redirect('user/password/reset');
+            $this->redirect('user/password/forgotten');
             return;
         }
 
