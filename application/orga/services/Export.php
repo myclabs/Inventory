@@ -498,9 +498,9 @@ class Orga_Service_Export
             // Ajout des exports de chaque cellules.
             if ($cell->getGranularity() === $granularity) {
                 if ($cell->getAFInputSetPrimary() !== null) {
-                    $cells = [$cell];
+                    $childCells = [$cell];
                 } else {
-                    $cells = [];
+                    $childCells = [];
                 }
             } else {
                 $criteria = new \Doctrine\Common\Collections\Criteria();
@@ -510,21 +510,21 @@ class Orga_Service_Export
                 $criteria->orderBy(['tag' => 'ASC']);
                 $cells = $cell->getChildCellsForGranularity($granularity)->matching($criteria)->toArray();
             }
-            foreach ($cells as $cell) {
-                $cellFile = $inputsExportsDirectory . $cell->getId() . '.' . $format;
-                if (!file_exists($cellFile)) {
+            foreach ($childCells as $childCell) {
+                $childCellFile = $inputsExportsDirectory . $childCell->getId() . '.' . $format;
+                if (!file_exists($childCellFile)) {
                     continue;
                 }
-                $cellInputsPHPExcel = PHPExcel_IOFactory::load($cellFile);
-                $cellInputsEndDataRow = $cellInputsPHPExcel->getActiveSheet()->getHighestRow();
-                if ($cellInputsEndDataRow < 2) {
+                $childCellInputsPHPExcel = PHPExcel_IOFactory::load($childCellFile);
+                $childCellInputsEndDataRow = $childCellInputsPHPExcel->getActiveSheet()->getHighestRow();
+                if ($childCellInputsEndDataRow < 2) {
                     continue;
                 }
-                $cellInputsEndData = $cellInputsPHPExcel->getActiveSheet()->getHighestColumn() . $cellInputsEndDataRow;
-                $cellInputsData = $cellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $cellInputsEndData);
-                $granularitySheet->fromArray($cellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1), true);
-                $cellInputsPHPExcel->disconnectWorksheets();
-                unset($cellInputsPHPExcel);
+                $childCellInputsEndData = $childCellInputsPHPExcel->getActiveSheet()->getHighestColumn() . $childCellInputsEndDataRow;
+                $childCellInputsData = $childCellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $childCellInputsEndData);
+                $granularitySheet->fromArray($childCellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1), true);
+                $childCellInputsPHPExcel->disconnectWorksheets();
+                unset($childCellInputsPHPExcel);
             }
 
             foreach (array_values($columns) as $columnIndex => $column) {
