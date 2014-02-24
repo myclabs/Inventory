@@ -1,8 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 
 use AF\Application\InputFormParser;
 use AF\Architecture\Service\InputSetSessionStorage;
@@ -13,16 +9,14 @@ use AF\Domain\Input\Input;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
-use Unit\UnitAPI;
 
 /**
- * Saisie des AF
- * @package AF
+ * Saisie des AF.
+ *
+ * @author matthieu.napoli
  */
 class AF_InputController extends Core_Controller
 {
-
     use UI_Controller_Helper_Form;
 
     /**
@@ -58,7 +52,7 @@ class AF_InputController extends Core_Controller
      */
     public function submitAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         $this->setParam('af', $af);
 
@@ -107,7 +101,7 @@ class AF_InputController extends Core_Controller
     public function submitSendResponseAction()
     {
         $inputSetContainer = $this->getParam('inputSetContainer');
-        /** @var $inputSet \AF\Domain\InputSet\PrimaryInputSet */
+        /** @var $inputSet PrimaryInputSet */
         $inputSet = $inputSetContainer->inputSet;
 
         $this->addFormErrors($this->getParam('errorMessages', []));
@@ -142,7 +136,7 @@ class AF_InputController extends Core_Controller
     public function submitTestAction()
     {
         $inputSetContainer = $this->getParam('inputSetContainer');
-        /** @var $inputSet \AF\Domain\InputSet\PrimaryInputSet */
+        /** @var $inputSet PrimaryInputSet */
         $inputSet = $inputSetContainer->inputSet;
 
         // Met à jour les résultats
@@ -228,7 +222,7 @@ class AF_InputController extends Core_Controller
 
         // Pour gérer le cas où on demande l'historique dans l'interface de test des AF
         if ($idInput !== null) {
-            /** @var $input \AF\Domain\AF\Input\\AF\Domain\Input\Input */
+            /** @var $input Input */
             $input = Input::load($this->getParam('idInput'));
 
             $entries = $this->inputHistoryService->getInputHistory($input);
@@ -241,5 +235,4 @@ class AF_InputController extends Core_Controller
         $this->view->assign('entries', $entries);
         $this->_helper->layout->disableLayout();
     }
-
 }
