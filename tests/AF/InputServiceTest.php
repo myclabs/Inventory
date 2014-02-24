@@ -108,8 +108,10 @@ class InputServiceTest extends TestCase
     {
         parent::tearDown();
 
-        $this->af->delete();
-        $this->entityManager->flush();
+        if ($this->af) {
+            $this->af->delete();
+            $this->entityManager->flush();
+        }
     }
 
     public static function setUpBeforeClass()

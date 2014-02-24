@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+        creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+
+        <tu tuid="register">
+            <tuv xml:lang="fr">
+                <seg>Inscription</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Sign up</seg>
+            </tuv>
+        </tu>
+        <tu tuid="projectName">
+            <tuv xml:lang="fr">
+                <seg>Nom de votre projet</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Password</seg>
+            </tuv>
+        </tu>
+        <tu tuid="password">
+            <tuv xml:lang="fr">
+                <seg>Mot de passe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Password</seg>
+            </tuv>
+        </tu>
+        <tu tuid="passwordAgain">
+            <tuv xml:lang="fr">
+                <seg>Mot de passe (confirmation)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Password (verification)</seg>
+            </tuv>
+        </tu>
+        <tu tuid="alreadyRegistered">
+            <tuv xml:lang="fr">
+                <seg>Déjà inscrit ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Already have an account?</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="captchaFieldLabel">
+            <tuv xml:lang="fr">
+                <seg>Merci de saisir ci-dessous les caractères figurant dans l'image :</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please type the text contained in the picture below:</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

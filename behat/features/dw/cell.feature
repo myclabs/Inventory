@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @skipped
 Feature: Cell dataware analysis feature
 
   Background:

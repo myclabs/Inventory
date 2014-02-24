@@ -138,7 +138,8 @@ class Orga_CellController extends Core_Controller
         // Cellules enfants.
         $narrowerGranularities = [];
         try {
-            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()
+                ->getGranularityForInventoryStatus();
         } catch (Core_Exception_UndefinedAttribute $e) {
             $granularityForInventoryStatus = null;
         }
@@ -188,7 +189,10 @@ class Orga_CellController extends Core_Controller
             $granularityAxes = $granularity->getAxes();
             $narrowerGranularityAxes = $narrowerGranularity->getAxes();
             foreach ($narrowerGranularity->getAxes() as $narrowerAxis) {
-                $narrowerGranularityAxes = array_merge($narrowerGranularityAxes, $narrowerAxis->getAllBroadersFirstOrdered());
+                $narrowerGranularityAxes = array_merge(
+                    $narrowerGranularityAxes,
+                    $narrowerAxis->getAllBroadersFirstOrdered()
+                );
             }
             usort($narrowerGranularityAxes, [Orga_Model_Axis::class, 'lastOrderAxes']);
             foreach ($narrowerGranularityAxes as $narrowerAxis) {
@@ -328,22 +332,26 @@ class Orga_CellController extends Core_Controller
         $showAdministrators = false;
 
         // ACL.
-        $showUsers = $narrowerGranularity->getCellsWithACL() && $this->aclService->isAllowed($connectedUser, Action::ALLOW(), $cell);
+        $showUsers = $narrowerGranularity->getCellsWithACL()
+            && $this->aclService->isAllowed($connectedUser, Action::ALLOW(), $cell);
 
         // Reports.
-        $showReports = $narrowerGranularity->getCellsGenerateDWCubes() && $this->aclService->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell);
+        $showReports = $narrowerGranularity->getCellsGenerateDWCubes()
+            && $this->aclService->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell);
 
         // Exports
         $showExports = $this->aclService->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell);
 
         // Inventory.
         try {
-            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
+            $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()
+                ->getGranularityForInventoryStatus();
         } catch (Core_Exception_UndefinedAttribute $e) {
             $granularityForInventoryStatus = null;
         }
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
-            && $this->aclService->isAllowed($connectedUser, Action::EDIT(), $cell));
+            && $this->aclService->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell)
+            && $this->aclService->isAllowed($connectedUser, CellAction::INPUT(), $cell));
         $isInventory = (($narrowerGranularity === $granularityForInventoryStatus)
                 || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus)));
         $narrowerGranularityHasSubInputGranlarities = false;
@@ -556,7 +564,7 @@ class Orga_CellController extends Core_Controller
         $usersLinked = $cell->getAllRoles();
         usort(
             $usersLinked,
-            function(AbstractCellRole $a, AbstractCellRole $b) {
+            function (AbstractCellRole $a, AbstractCellRole $b) {
                 $aUser = $a->getUser();
                 $bUser = $b->getUser();
                 if (get_class($a) === get_class($b)) {
@@ -568,22 +576,30 @@ class Orga_CellController extends Core_Controller
                     }
                     return strcmp($aUser->getFirstName(), $bUser->getFirstName());
                 }
-                if ($a instanceof CellAdminRole)
+                if ($a instanceof CellAdminRole) {
                     return -1;
-                if ($b instanceof CellAdminRole)
+                }
+                if ($b instanceof CellAdminRole) {
                     return 1;
-                if ($a instanceof CellManagerRole)
+                }
+                if ($a instanceof CellManagerRole) {
                     return -1;
-                if ($b instanceof CellManagerRole)
+                }
+                if ($b instanceof CellManagerRole) {
                     return 1;
-                if ($a instanceof CellContributorRole)
+                }
+                if ($a instanceof CellContributorRole) {
                     return -1;
-                if ($b instanceof CellContributorRole)
+                }
+                if ($b instanceof CellContributorRole) {
                     return 1;
-                if ($a instanceof CellObserverRole)
+                }
+                if ($a instanceof CellObserverRole) {
                     return -1;
-                if ($b instanceof CellObserverRole)
+                }
+                if ($b instanceof CellObserverRole) {
                     return 1;
+                }
                 return 0;
             }
         );
@@ -625,7 +641,6 @@ class Orga_CellController extends Core_Controller
                 break;
             default:
                 throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
-                return;
         }
 
         // Vérifie que l'utilisateur n'a pas déjà le role
@@ -663,10 +678,6 @@ class Orga_CellController extends Core_Controller
      */
     public function removeUserAction()
     {
-        $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
-
         $idRole = $this->getParam('idRole');
         /** @var AbstractCellRole $role */
         $role = Role::load($idRole);
@@ -734,7 +745,9 @@ class Orga_CellController extends Core_Controller
         /** @var Orga_Model_CellReport[] $usersReports */
         $usersReports = [];
         $dWReports = $cell->getDWCube()->getReports();
-        usort($dWReports, function(DW_Model_Report $a, DW_Model_Report $b) { return strcmp($a->getLabel(), $b->getLabel()); });
+        usort($dWReports, function (DW_Model_Report $a, DW_Model_Report $b) {
+            return strcmp($a->getLabel(), $b->getLabel());
+        });
         foreach ($dWReports as $dWReport) {
             try {
                 $usersReports[] = Orga_Model_CellReport::loadByCellDWReport($dWReport);
@@ -812,18 +825,14 @@ class Orga_CellController extends Core_Controller
         $viewConfiguration->setCanBeSavedAs(true);
 
         if ($this->hasParam('idReport')) {
-            $this->forward('details', 'report', 'dw',
-                [
-                    'viewConfiguration' => $viewConfiguration
-                ]
-            );
+            $this->forward('details', 'report', 'dw', [
+                'viewConfiguration' => $viewConfiguration
+            ]);
         } else {
-            $this->forward('details', 'report', 'dw',
-                [
-                    'idCube' => $cell->getDWCube()->getId(),
-                    'viewConfiguration' => $viewConfiguration
-                ]
-            );
+            $this->forward('details', 'report', 'dw', [
+                'idCube' => $cell->getDWCube()->getId(),
+                'viewConfiguration' => $viewConfiguration
+            ]);
         }
     }
 
@@ -886,11 +895,12 @@ class Orga_CellController extends Core_Controller
         // Liste des exports.
         $exports = [];
 
-        $displayOrgaExport = $this->aclService->isAllowed(
-            $connectedUser,
-            Action::EDIT(),
-            $cell
-        );
+        $displayOrgaExport = (count($cell->getGranularity()->getNarrowerGranularities()) > 0)
+            && $this->aclService->isAllowed(
+                $connectedUser,
+                Action::EDIT(),
+                $cell
+            );
         if ($displayOrgaExport) {
             if (!$cell->getGranularity()->hasAxes()) {
                 // Orga Structure.
@@ -912,7 +922,7 @@ class Orga_CellController extends Core_Controller
                 $connectedUser,
                 Action::ALLOW(),
                 $cell
-            );;
+            );
         } else {
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getCellsWithACL()) {
@@ -1032,7 +1042,7 @@ class Orga_CellController extends Core_Controller
         }
 
         $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
-        $filename = $date.'_'.$baseFilename.'.'.$format;
+        $filename = $date . '_' . $baseFilename . '.' . $format;
 
         switch ($format) {
             case 'xlsx':
@@ -1057,28 +1067,25 @@ class Orga_CellController extends Core_Controller
     }
 
     /**
-     * @Secure("editCell")
+     * @Secure("editInventoryStatus")
      */
     public function editInventoryStatusAction()
     {
-        $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $inventoryStatus = $this->getParam('inventoryStatus');
 
         $cell->setInventoryStatus($inventoryStatus);
 
-        $this->sendJsonResponse(
-            [
-                'status' => $inventoryStatus,
-                'label' => $this->cellVMFactory->inventoryStatusList[$inventoryStatus],
-                'mainActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_ACTIVE) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_ACTIVE,
-                'mainActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction')),
-                'otherActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_NOTLAUNCHED,
-                'otherActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction')),
-            ]
-        );
+        $this->sendJsonResponse([
+            'status' => $inventoryStatus,
+            'label' => $this->cellVMFactory->inventoryStatusList[$inventoryStatus],
+            'mainActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_ACTIVE) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_ACTIVE,
+            'mainActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction')),
+            'otherActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_NOTLAUNCHED,
+            'otherActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction')),
+        ]);
     }
 
     /**
@@ -1188,7 +1195,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         /** @var $af AF */
-        $af = AF::load($idCell);
+        $af = AF::load($this->getParam('id'));
 
         // Form data
         $formContent = json_decode($this->getParam($af->getRef()), true);
@@ -1222,7 +1229,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
 
         $inputSetContainer = $this->getParam('inputSetContainer');
-        /** @var $newInputSet \AF\Domain\InputSet\PrimaryInputSet */
+        /** @var $newInputSet PrimaryInputSet */
         $newInputSet = $inputSetContainer->inputSet;
 
         $this->inputService->editInput($cell, $newInputSet);
@@ -1289,12 +1296,10 @@ class Orga_CellController extends Core_Controller
             $this->entityManager->flush();
 
             // Retourne la vue du commentaire
-            $this->forward('comment-added', 'comment', 'social',
-                [
-                    'comment' => $comment,
-                    'currentUser' => $connectedUser
-                ]
-            );
+            $this->forward('comment-added', 'comment', 'social', [
+                'comment' => $comment,
+                'currentUser' => $connectedUser
+            ]);
             return;
         }
 
@@ -1336,5 +1341,4 @@ class Orga_CellController extends Core_Controller
         // Désactivation du layout.
         $this->_helper->layout()->disableLayout();
     }
-
 }

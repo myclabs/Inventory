@@ -2,5 +2,7 @@
 
 return [
     'application.url' => '',
+
     // 'locale.minSignificantFigures' => 12,
+    // 'feature.register' => true,
 ];

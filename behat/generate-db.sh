@@ -5,11 +5,9 @@ SCRIPT_DIR=$(readlink -f ${0%/*})
 cd $SCRIPT_DIR
 
 # Export the databases
-php ../scripts/build/build.php create update
-php ../scripts/build/build.php populate
+php ../bin/inventory db:populate
 mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/emptyOneUser.sql
-php ../scripts/build/build.php populateTest
+php ../bin/inventory db:populate test
 mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/full.sql
-php ../scripts/build/build.php create update
-php ../scripts/build/build.php populate populateTestDWUpToDate
+php ../bin/inventory db:populate testDW
 mysqldump -u root --password='' --single-transaction --opt inventory > fixtures/forTestDWUpToDate.sql

@@ -1,4 +1,4 @@
-@dbFull
+@dbFull @skipped
 Feature: Granularity dataware analysis feature
 
   Background:

@@ -6,14 +6,8 @@ Feature: History of values of a field feature
 
   @javascript
   Scenario: Input history scenario, general data form, creation and modification of an input
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/cell/input/idCell/4/fromIdCell/1/"
     And I wait for the page to finish loading
-  # Pas besoin de modifier le statut de l'inventaire, on se trouve "au-dessus"
-  # Accès à la saisie"
-    When I open tab "Saisies"
-    And I open collapse "Zone | Marque"
-    Then I should see the "aFGranularity1Input2" datagrid
-    When I click "Cliquer pour accéder" in the row 2 of the "aFGranularity1Input2" datagrid
   # Création de la saisie initiale
     When I fill in "chiffre_affaire" with "10"
     And I fill in "percentchiffre_affaire" with "10"
@@ -30,16 +24,15 @@ Feature: History of values of a field feature
   # Fermeture du popup d'historique
     When I click element "#chiffre_affaireHistory .btn"
     And I click "Quitter"
-    And I open tab "Historique"
+    And I wait for the page to finish loading
     Then I should see "La saisie Europe | Marque B a été enregistrée pour la première fois par Administrateur Système."
+    And I should see "La saisie Europe | Marque B a été modifiée par Administrateur Système."
 
   @javascript
   Scenario: Input history scenario, display of history for various kinds of input fiels
-  # Cellule : 2012 | Chambéry | Test affichage
-    Given I am on "orga/cell/input/idCell/32/fromIdCell/1"
+    # Cellule : 2012 | Chambéry | Test affichage
+    Given I am on "orga/cell/input/idCell/33/fromIdCell/1"
     And I wait for the page to finish loading
-  # Attente pour voir si ça aide à passer sur serveur dédié
-    And I wait 5 seconds
   # Champ numérique
     And I click element "#c_nHistory .btn"
     Then I should see a "code:contains('10 kg équ. CO2/m³ ± 15 %')" element
@@ -77,10 +70,8 @@ Feature: History of values of a field feature
   @javascript
   Scenario: Input history scenario, display of history for a repeated subform containing various types of fields, one repetition
   # Cellule : 2013 | Annecy | Test affichage
-    Given I am on "orga/cell/input/idCell/44/fromIdCell/1"
+    Given I am on "orga/cell/input/idCell/42/fromIdCell/1"
     And I wait for the page to finish loading
-  # Ajout attente pour voir si ça aide à faire passer le test sur serveur distant
-    And I wait 5 seconds
   # Ajout 1 blocs de répétition
     And I click "Ajouter"
   # Champ numérique

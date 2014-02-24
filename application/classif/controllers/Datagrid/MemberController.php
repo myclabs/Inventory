@@ -78,7 +78,7 @@ class Classif_Datagrid_MemberController extends UI_Controller_Datagrid
                 try {
                     $broaderMembers[] = Classif_Model_Member::loadByRefAndAxis($refBroaderMember, $directBroader);
                 } catch (Core_Exception_NotFound $e) {
-                    $this->setAddElementErrorMessage($formFieldRef, __('UI', 'exception', 'unknownError'));
+                    $this->setAddElementErrorMessage($formFieldRef, __('Core', 'exception', 'applicationError'));
                 }
             }
         }

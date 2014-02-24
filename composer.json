@@ -28,8 +28,8 @@
         "myclabs/xport": "0.2.*",
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
-        "mnapoli/php-di": "4.0.x-dev as 4.0.0",
-        "mnapoli/php-di-zf1": "dev-master",
+        "mnapoli/php-di": "~4.0",
+        "mnapoli/php-di-zf1": "*",
         "psr/log": "~1.0",
         "monolog/monolog": "~1.6",
         "mnapoli/number-two": "~0.2.0",
@@ -41,8 +41,10 @@
         "behat/mink": "~1.5",
         "behat/mink-extension": "*",
         "behat/mink-selenium2-driver": "*",
-        "shvetsgroup/parallelrunner": "dev-master",
         "mnapoli/metaconsole": "dev-master"
+    },
+    "suggest": {
+        "shvetsgroup/parallelrunner": "Run Behat scenarios in parallel"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

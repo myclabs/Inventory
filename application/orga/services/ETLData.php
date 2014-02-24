@@ -1,13 +1,9 @@
 <?php
+
 /**
- * @package Orga
- * @subpackage Service
- */
-/**
- * Classe permettant de peupler DW
+ * Classe permettant de peupler DW.
+ *
  * @author valentin.claras
- * @package Orga
- * @subpackage Service
  */
 class Orga_Service_ETLData
 {
@@ -17,9 +13,6 @@ class Orga_Service_ETLData
     private $inputService;
 
 
-    /**
-     * @param Orga_Service_InputService $inputService
-     */
     public function __construct(Orga_Service_InputService $inputService)
     {
         $this->inputService = $inputService;
@@ -81,7 +74,7 @@ class Orga_Service_ETLData
         foreach ($cell->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
             if ($inputGranularity === $cell->getGranularity()) {
                 $this->calculateCellResults($cell);
-            } else if ($inputGranularity->isNarrowerThan($granularity)) {
+            } elseif ($inputGranularity->isNarrowerThan($granularity)) {
                 foreach ($cell->getChildCellsForGranularity($inputGranularity) as $childCell) {
                     $this->calculateCellResults($childCell);
                 }
@@ -104,12 +97,10 @@ class Orga_Service_ETLData
         if ($inputGranularity->getRef() === $inputGranularity->getInputConfigGranularity()->getRef()) {
             $af = $cell->getCellsGroupForInputGranularity($inputGranularity)->getAF();
         } else {
-            $af = $cell->getParentCellForGranularity(
-                $inputGranularity->getInputConfigGranularity()
-            )->getCellsGroupForInputGranularity($inputGranularity)->getAF();
+            $af = $cell->getParentCellForGranularity($inputGranularity->getInputConfigGranularity())
+                ->getCellsGroupForInputGranularity($inputGranularity)->getAF();
         }
 
         $this->inputService->updateResults($cell, $inputSet, $af);
     }
-
 }

@@ -99,17 +99,25 @@ class Techno_DimensionController extends Core_Controller
         $number = 0;
 
         foreach ($lines as $line) {
-            $array = explode(',', $line);
+            $array = explode(';', $line);
 
-            if (count($array) !== 2) {
+            if ((count($array) < 1 ) || (count($array) > 2)) {
                 UI_Message::addMessageStatic(__('Techno', 'import', 'invalidMembersInput'));
                 $this->redirect('techno/family/edit/id/' . $family->getId());
                 return;
             }
 
-            list($ref, $label) = $array;
-            $ref = trim($ref);
-            $label = trim($label);
+            if (count($array) === 2) {
+                list($label, $ref) = $array;
+                $label = trim($label);
+                $ref = trim($ref);
+            } else {
+                $label = trim(reset($array));
+                $ref = '';
+            }
+            if (empty($ref)) {
+                $ref = Core_Tools::refactor($label);
+            }
 
             try {
                 $member = new Member($dimension, $ref, $label);

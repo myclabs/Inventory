@@ -23,12 +23,12 @@
         </tu>
         <tu tuid="editElementListExample">
             <tuv xml:lang="fr">
-                <seg>membre1, membre2, 123.45, 10
-membre3, membre4, 0.5, 20</seg>
+                <seg>membre1; membre2; 123.45; 10
+membre3; membre4; 0.5; 20</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>member1, member2, 23.45, 10
-member3, member4, 0.5, 20</seg>
+                <seg>member1; member2; 23.45; 10
+member3; member4; 0.5; 20</seg>
             </tuv>
         </tu>
         <tu tuid="invalidElementsInput">
@@ -54,25 +54,25 @@ member3, member4, 0.5, 20</seg>
         <tu tuid="addMemberListHelp">
             <tuv xml:lang="fr">
                 <seg>
-                    Le format attendu est un élément par ligne : identifiant suivi d'une virgule et du libellé.
+                    Le format attendu est un élément par ligne : identifiant suivi d'un point-virgule et du libellé.
                     Exemple :
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-                    The expected format is one element per line: the identifier followed by a comma and the label.
+                    The expected format is one element per line: the identifier followed by a semi-colon and the label.
                     Example:
                 </seg>
             </tuv>
         </tu>
         <tu tuid="addMemberListExample">
             <tuv xml:lang="fr">
-                <seg>element1, Libellé de l'élément 1
-element2, Libellé de l'élément 2</seg>
+                <seg>Libellé de l'élément 1; element1
+Libellé de l'élément 2; element2</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>element1, Label of element 1
-element2, Label of element 2</seg>
+                <seg>Label of element 1; element1
+Label of element 2; element2</seg>
             </tuv>
         </tu>
         <tu tuid="membersFound">
@@ -91,12 +91,12 @@ element2, Label of element 2</seg>
                 <seg>Unrecognized input, please follow the expected format.</seg>
             </tuv>
         </tu>
-        <tu tuid="errorOneCommaPerLine">
+        <tu tuid="errorOneSeparatorPerLine">
             <tuv xml:lang="fr">
-                <seg>Chaque ligne doit contenir une virgule séparant l'identifiant du libellé.</seg>
+                <seg>Chaque ligne doit contenir un point-virgule séparant l'identifiant du libellé.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Each line should contain a comma separating the identifier from the label.</seg>
+                <seg>Each line should contain a semi-colon separating the identifier from the label.</seg>
             </tuv>
         </tu>
         <tu tuid="errorInvalidRef">

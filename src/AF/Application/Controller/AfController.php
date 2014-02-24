@@ -40,6 +40,7 @@ class AF_AfController extends Core_Controller
      */
     public function listAction()
     {
+        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     }
 
     /**

@@ -33,6 +33,7 @@ class Classif_MemberController extends Core_Controller
     public function manageAction()
     {
         $this->view->listAxes = Classif_Model_Axis::loadListOrderedAsAscendantTree();
+        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     }
 
 }

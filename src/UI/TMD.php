@@ -294,7 +294,7 @@ class UI_TMD extends UI_Generic
         $height = $this->getHeight();
         $width = $this->getWidth();
 
-        $labelWidth = $width['cells'] / $dimension['repetition'];
+        $labelWidth = ($dimension['repetition'] > 0) ? $width['cells'] / $dimension['repetition'] : 0;
         if (count($dimension['indexValues']) > 0) {
             $indexValueWidth = $labelWidth / count($dimension['indexValues']);
         }

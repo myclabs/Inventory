@@ -1,14 +1,13 @@
 <?php
+
 use AF\Domain\InputSet\PrimaryInputSet;
 use Orga\ViewModel\CellViewModel;
-use Orga\ViewModel\CellViewModelFactory;
 use Orga\Model\ACL\Role\CellAdminRole;
 use Orga\Model\ACL\Role\CellManagerRole;
 use Orga\Model\ACL\Role\CellContributorRole;
 use Orga\Model\ACL\Role\CellObserverRole;
+use Orga\ViewModel\OrganizationViewModel;
 
-/** @var CellViewModelFactory $cellVWFactory */
-$cellVWFactory = $this->cellVWFactory;
 $inventoryStatusFilters = [
     null => ___('Orga', 'view', 'allInventoryStatus'),
     Orga_Model_Cell::STATUS_NOTLAUNCHED => ___('Orga', 'view', 'inventoryNotLaunched'),
@@ -21,18 +20,26 @@ $inputStatusFilters = [
     PrimaryInputSet::STATUS_COMPLETE => ___('AF', 'inputInput', 'statusComplete'),
     PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE => ___('AF', 'inputInput', 'statusCalculationIncomplete'),
     PrimaryInputSet::STATUS_INPUT_INCOMPLETE => ___('AF', 'inputInput', 'statusInputIncomplete'),
-    \Orga\ViewModel\CellViewModel::AF_STATUS_NOT_STARTED => ___('Orga', 'view', 'statusNotStarted'),
-    \Orga\ViewModel\CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => ___('Orga', 'view', 'statusAFNotConfigured'),
-    \Orga\ViewModel\CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => ___('Orga', 'view', 'inventoryNotLaunched'),
+    CellViewModel::AF_STATUS_NOT_STARTED => ___('Orga', 'view', 'statusNotStarted'),
+    CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => ___('Orga', 'view', 'statusAFNotConfigured'),
+    CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => ___('Orga', 'view', 'inventoryNotLaunched'),
 ];
 
-/** @var \Orga\ViewModel\OrganizationViewModel $organization */
+/** @var OrganizationViewModel $organization */
 $organization = $this->organization;
-/** @var \Orga\ViewModel\CellViewModel $currentCell */
+/** @var CellViewModel $currentCell */
 $currentCell = $this->currentCell;
+
+$workspaceBanner = null;
+$file = glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $organization->id . '.*');
+if (count($file) > 0) {
+    $workspaceBanner = 'workspaceBanners/' . pathinfo(array_pop($file))['filename'];
+}
 ?>
 
 <style>
+    .organization h1 img { max-height: 125px; }
+
     .users .user-message { font-weight: bold; }
     .users .modal-body { padding: 0; }
     .users .modal-body table { margin: 0; }
@@ -75,9 +82,9 @@ $currentCell = $this->currentCell;
     .cell .input-status .input-actions { display: inline-block; position: relative; float:right; text-align: right; }
     .cell .input-status .input-actions > a { display: inline-block; margin-top: 10px; margin-right: 10px; text-align: left; }
     .cell .input-status .input-title { display: inline-block; margin-top: 15px; margin-bottom: 15px; margin-left: 10px; }
-    .cell[data-input-status="<?=AF_Model_InputSet_Primary::STATUS_FINISHED?>"] .input-status { background-color: #57a957; }
-    .cell[data-input-status="<?=AF_Model_InputSet_Primary::STATUS_COMPLETE?>"] .input-status { background-color: #f0aD4e; }
-    .cell[data-input-status="<?=AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE?>"] .input-status { background-color: #f0aD4e; }
+    .cell[data-input-status="<?=PrimaryInputSet::STATUS_FINISHED?>"] .input-status { background-color: #57a957; }
+    .cell[data-input-status="<?=PrimaryInputSet::STATUS_COMPLETE?>"] .input-status { background-color: #f0aD4e; }
+    .cell[data-input-status="<?=PrimaryInputSet::STATUS_INPUT_INCOMPLETE?>"] .input-status { background-color: #f0aD4e; }
 
     .granularity-wrapper .cells-filter > * { margin-top: 2px; }
     .granularity-wrapper .cells-filter .granularity-info { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
@@ -124,17 +131,21 @@ $currentCell = $this->currentCell;
 
 <div class="organization page-header">
     <h1>
-        <?=$organization->label?>
         <?php if ($organization->canBeEdited) : ?>
-        <div class="pull-right">
-            <small>
-                <a class="editOrganization btn btn-small btn-primary"
-                   href="orga/organization/edit/idOrganization/<?=$organization->id?>/">
-                    <i class="fa fa-wrench"></i>
-                    <?=___('UI', 'name', 'configurationOrga')?>
-                </a>
-            </small>
-        </div>
+            <div class="pull-right">
+                <small>
+                    <a class="editOrganization btn btn-small btn-primary"
+                       href="orga/organization/edit/idOrganization/<?=$organization->id?>/">
+                        <i class="fa fa-wrench"></i>
+                        <?=___('UI', 'name', 'configurationOrga')?>
+                    </a>
+                </small>
+            </div>
+        <?php endif; ?>
+        <?php if ($workspaceBanner === null) : ?>
+            <?=$organization->label?>
+        <?php else : ?>
+            <img src="<?=$workspaceBanner?>">
         <?php endif; ?>
     </h1>
 </div>
@@ -189,7 +200,7 @@ $currentCell = $this->currentCell;
                     <?=$currentCell->inventoryCompletion?>%
                 </div>
             </div>
-            <a href="#" class="withPopover inventory-inputs-details" <i class="fa fa-tasks"></i></a>
+            <a href="#" class="withPopover inventory-inputs-details"><i class="fa fa-tasks"></i></a>
         </div>
         <?php endif; ?>
         <?php // Input ?>
@@ -696,13 +707,13 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
 });
 $('div.collapse[id^="granularity"]').on('resizeCells', function(e) {
     var granularity = $('.granularity', $(this));
-    
+
     var maxHeight = 0;
 
     var maxHeightInventoryActions = 0;
     var maxWidthInventoryActions = 0;
     var maxWidthInventoryInformations = 0;
-    
+
     var maxHeightInputActions = 0;
     var maxWidthInputActions = 0;
     var maxWidthInputTitle = 0;

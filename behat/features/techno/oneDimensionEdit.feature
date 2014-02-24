@@ -14,11 +14,11 @@ Feature: Family one dimension edit feature
     And I should see the "combustibleMembersDatagrid" datagrid
     And the "combustibleMembersDatagrid" datagrid should contain 2 row
     When I click element "#combustibleAddMemberButton"
-    Then I should see the popup "Ajout d'une liste de membres"
-    And I fill in "inputMemberList" with "amont_combustion, Amont de la combustion"
-    Then I should see "1 membre(s) prêts à être ajoutés"
+    Then I should see the popup "Ajout d'une liste d'éléments"
+    And I fill in "inputMemberList" with "amont_combustion; Amont de la combustion"
+    Then I should see "1 élément(s) prêts à être ajoutés"
     When I click element "#addMemberPopup button:contains('Ajouter')"
-    Then the following message is shown and closed: "1 membre(s) ont été ajouté(s)."
+    Then the following message is shown and closed: "1 élément(s) ont été ajouté(s)."
     And I wait 1 seconds
     And the "combustibleMembersDatagrid" datagrid should contain 3 row
   # Le nouvel élément a été ajouté à la fin
@@ -28,21 +28,19 @@ Feature: Family one dimension edit feature
 
   @javascript
   Scenario: Add member to a family dimension, incorrect input
-    Given I am on "techno/dimension/details/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
-    And I click "Ajouter"
-    Then I should see the popup "Ajout d'une liste de membres"
-    When I click "Valider"
-    Then the field "Identifiant" should have error: "Merci de renseigner ce champ."
-    And I click "Annuler"
+    And I click "combustibleAddMemberButton"
+    Then I should see the popup "Ajout d'une liste d'éléments"
+    When I click element "#addMemberPopup button:contains('Ajouter')"
+    Then the following message is shown and closed: "Saisie non reconnue, merci de respecter le format précisé."
 
   @javascript
   Scenario: Delete member
-    Given I am on "techno/dimension/details/id/4"
+    Given I am on "techno/family/edit/id/5"
     And I wait for the page to finish loading
-  # Pour le contenu du datagrid voir plus haut
-    When I click "Supprimer" in the row 1 of the "membersDatagrid" datagrid
+    When I click "Supprimer" in the row 1 of the "combustibleMembersDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "membersDatagrid" datagrid should contain 1 row
+    And the "combustibleMembersDatagrid" datagrid should contain 1 row

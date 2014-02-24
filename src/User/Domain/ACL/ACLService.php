@@ -4,6 +4,7 @@ namespace User\Domain\ACL;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use User\Domain\ACL\Authorization\Authorization;
 use User\Domain\ACL\Resource\Resource;
 use User\Domain\ACL\Role\OptimizedRole;
@@ -107,16 +108,57 @@ class ACLService
 
     /**
      * Regénère la liste des autorisations.
+     *
+     * @param OutputInterface|null $output Si non null, est utilisé pour donner plus d'informations.
      */
-    public function rebuildAuthorizations()
+    public function rebuildAuthorizations(OutputInterface $output = null)
     {
-        /** @var User[] $users */
-        $users = User::loadList();
+        // Vide les autorisations
+        if ($output) {
+            $output->writeln('<comment>Clearing all authorizations</comment>');
+        }
+        foreach (Authorization::loadList() as $authorization) {
+            $authorization->delete();
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+        if ($output) {
+            $output->writeln(sprintf('<info>%d authorizations left in database</info>', Authorization::countTotal()));
+        }
 
-        foreach ($users as $user) {
+        // Regénère les roles "non optimisés" qui utilisent les objets
+        if ($output) {
+            $output->writeln('<comment>Rebuilding authorizations for non-optimized roles</comment>');
+        }
+        foreach (User::loadList() as $user) {
+            /** @var User $user */
             foreach ($user->getRoles() as $role) {
-                // TODO
+                if (! $role instanceof OptimizedRole) {
+                    $role->buildAuthorizations();
+                }
             }
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+        if ($output) {
+            $output->writeln(sprintf('<info>%d authorizations inserted</info>', Authorization::countTotal()));
+        }
+
+        // Regénère les "roles optimisés", ceux qui insèrent directement en BDD
+        if ($output) {
+            $output->writeln('<comment>Rebuilding authorizations for optimized roles</comment>');
+        }
+        foreach (User::loadList() as $user) {
+            /** @var User $user */
+            foreach ($user->getRoles() as $role) {
+                if ($role instanceof OptimizedRole) {
+                    $this->insertAuthorizations($role->optimizedBuildAuthorizations());
+                }
+            }
+        }
+        $this->entityManager->clear();
+        if ($output) {
+            $output->writeln(sprintf('<info>%d authorizations in total</info>', Authorization::countTotal()));
         }
     }
 

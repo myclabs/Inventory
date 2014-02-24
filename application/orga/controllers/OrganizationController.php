@@ -325,12 +325,12 @@ class Orga_OrganizationController extends Core_Controller
         // Tab Relevant.
         $canUserEditRelevance = $isUserAllowedToEditCells;
         if (!$isUserAllowedToEditOrganization) {
-            $relevanceGranularities = [];
+            $canUserEditRelevance = false;
             foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
                 if ($granularity->getCellsControlRelevance()) {
+                    $canUserEditRelevance = true;
                     break;
                 }
-                $canUserEditRelevance = false;
             }
         }
         if ($canUserEditRelevance) {
@@ -391,7 +391,7 @@ class Orga_OrganizationController extends Core_Controller
             $rebuildTab = new UI_Tab('rebuild');
             $rebuildTab->label = __('DW', 'rebuild', 'dataRebuildTab');
             $rebuildTab->dataSource = 'orga/organization/rebuild'.$parameters;
-            $rebuildTab->useCache = true;
+            $rebuildTab->useCache = !$canUserEditMembers;
             $tabView->addTab($rebuildTab);
         }
 
@@ -444,6 +444,7 @@ class Orga_OrganizationController extends Core_Controller
         UI_Tree::addHeader();
         UI_Form::addHeader();
         UI_Popup_Ajax::addHeader();
+        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     }
 
     /**
@@ -534,6 +535,84 @@ class Orga_OrganizationController extends Core_Controller
     }
 
     /**
+     * @Secure("editOrganization")
+     */
+    public function editBannerAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+        $this->view->assign('idOrganization', $idOrganization);
+
+        $basePath = APPLICATION_PATH . '/../public/workspaceBanners/';
+
+        $message = [];
+
+        $transferAdapter = new Zend_File_Transfer_Adapter_Http();
+        $mimeType = [
+            'image/bmp',
+            'image/gif',
+            'image/x-png',
+            'image/png',
+            'image/jpeg',
+            'image/pjpeg',
+            'image/tiff',
+            'image/vnd.microsoft.icon',
+            'image/svg+xml'
+        ];
+        $transferAdapter->addValidators(['MimeType' => array_merge(['headerCheck' => true], $mimeType)]);
+
+        if (empty($messages) && ($transferAdapter->hasErrors())) {
+            $messages = $transferAdapter->getErrors();
+        }
+        if (empty($messages) && (!$transferAdapter->isUploaded())) {
+            $messages = [__('Doc', 'library', 'noDocumentGiven')];
+        }
+        if (empty($messages) && (!$transferAdapter->isValid())) {
+            $messages = [__('Doc', 'library', 'invalidMIMEType')];
+            $messages = $transferAdapter->getMessages();
+        }
+        if (empty($messages) && ($transferAdapter->getFileName() == null)) {
+            $messages = [__('Doc', 'messages', 'uploadError')];
+        }
+
+        if (empty($messages)) {
+            foreach (glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $idOrganization . '.*') as $file) {
+                unlink($file);
+            }
+            $transferAdapter->addFilter('Rename', ['target' => $basePath.$idOrganization.'.'.pathinfo($transferAdapter->getFileName(), PATHINFO_EXTENSION)]);
+            if (!$transferAdapter->receive()) {
+                $messages = [__('Core', 'exception', 'applicationError')];
+            }
+        }
+
+        $this->view->assign('success', empty($messages));
+        if (!empty($messages)) {
+            $this->view->assign('message', implode("\n", $messages));
+        } else {
+            $this->view->assign('message', $transferAdapter->getFileName(null, false));
+        }
+
+        $this->_helper->layout->disableLayout();
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
+    public function removeBannerAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        foreach (glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $idOrganization . '.*') as $file) {
+            unlink($file);
+        }
+
+        $this->sendJsonResponse(['message' => __('UI', 'message', 'updated')]);
+    }
+
+    /**
      * @param Orga_Model_Organization $organization
      *
      * @throws Core_Exception_User
@@ -542,7 +621,7 @@ class Orga_OrganizationController extends Core_Controller
      */
     protected function getAxesAddGranularity(Orga_Model_Organization $organization)
     {
-        $refAxes = explode(',', $this->getParam('axes'));
+        $refAxes = $this->getParam('axes');
 
         /** @var Orga_Model_Axis $axes */
         $axes = [];
@@ -612,7 +691,7 @@ class Orga_OrganizationController extends Core_Controller
         try {
             $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
             if ($granularity->getCellsControlRelevance()) {
-                throw new Core_Exception_User('Orga', 'edit', 'granularityAlreadyConfigured');
+                throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
             $granularity->setCellsControlRelevance(true);
             $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
@@ -680,7 +759,7 @@ class Orga_OrganizationController extends Core_Controller
 
         $inputAxes = $this->getAxesAddGranularity($organization);
 
-        $refConfigAxes = explode(',', $this->getParam('inputConfigAxes'));
+        $refConfigAxes = $this->getParam('inputConfigAxes');
         /** @var Orga_Model_Axis[] $configAxes */
         $configAxes = [];
         if (!empty($this->getParam('inputConfigAxes')))
@@ -775,10 +854,10 @@ class Orga_OrganizationController extends Core_Controller
 
         try {
             $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
-            if ($granularity->getCellsGenerateDWCubes()) {
-                throw new Core_Exception_User('Orga', 'edit', 'granularityAlreadyConfigured');
+            if ($granularity->getCellsWithACL()) {
+                throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
-            $granularity->setCellsGenerateDWCubes(true);
+            $granularity->setCellsWithACL(true);
             $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
         } catch (Core_Exception_NotFound $e) {
             $success = function () {
@@ -858,7 +937,7 @@ class Orga_OrganizationController extends Core_Controller
         try {
             $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
             if ($granularity->getCellsGenerateDWCubes()) {
-                throw new Core_Exception_User('Orga', 'edit', 'granularityAlreadyConfigured');
+                throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
             $granularity->setCellsGenerateDWCubes(true);
             $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
@@ -902,25 +981,44 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign('organization', $organization);
 
+        $cellsData = [];
+
         $userCanEditOrganization = $this->aclService->isAllowed($connectedUser, Action::EDIT(), $organization);
         $this->view->assign('canEditOrganization', $userCanEditOrganization);
         if ($userCanEditOrganization) {
-            $this->view->assign('cellData', $organization);
-            $this->view->assign('cellResults', $organization->getGranularityByRef('global')->getCellByMembers([]));
+            $cellsData[] = $organization;
+            $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
+            $cellsResults = [$globalCell];
+            foreach ($globalCell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+                if ($narrowerGranularity->getCellsGenerateDWCubes()) {
+                    foreach ($narrowerGranularity->getCells() as $childCell) {
+                        $cellsResults[] = $childCell;
+                    }
+                }
+            }
+            $this->view->assign('cellsResults', $cellsResults);
+
+            $topCells = [$globalCell];
         } else {
-            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
+            /** @var Orga_Model_Cell[] $topCells */
+            $topCells = $this->aclManager->getTopCellsWithAccessForOrganization(
                 $connectedUser,
                 $organization,
                 [CellAdminRole::class]
             )['cells'];
-            $this->view->assign('cells', $cellsCanEdit);
-            if (count($cellsCanEdit) === 1) {
-                $cell = array_pop(array_values($cellsCanEdit));
-                $this->view->assign('cellData', $cell);
-                $this->view->assign('cellResults', $cell);
+
+        }
+        foreach ($topCells as $topCell) {
+            $cellsData[$topCell->getId()] = $topCell;
+            foreach ($topCell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+                if ($narrowerGranularity->getCellsGenerateDWCubes()) {
+                    foreach ($topCell->getChildCellsForGranularity($narrowerGranularity) as $childCell) {
+                        $cellsData[$childCell->getId()] = $childCell;
+                    }
+                }
             }
         }
-
+        $this->view->assign('cellsData', $cellsData);
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
@@ -942,24 +1040,14 @@ class Orga_OrganizationController extends Core_Controller
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        $userCanEditOrganization = $this->aclService->isAllowed($connectedUser, Action::EDIT(), $organization);
-        if ($userCanEditOrganization) {
+        $idCell = $this->getParam('cell');
+        if (empty($idCell)) {
             $taskName = 'resetOrganizationDWCubes';
             $taskParameters = [$organization];
             $organizationalUnit = __('Orga', 'organization', 'forWorkspace', ['LABEL' => $organization->getLabel()]);
         } else {
             $taskName = 'resetCellAndChildrenDWCubes';
-
-            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
-                $connectedUser,
-                $organization,
-                [CellAdminRole::class]
-            )['cells'];
-            if (count($cellsCanEdit) > 1) {
-                $cell = Orga_Model_Cell::load($this->getParam('cell'));
-            } else {
-                $cell = array_pop($cellsCanEdit);
-            }
+            $cell = Orga_Model_Cell::load($this->getParam('cell'));
             $taskParameters = [$cell];
             $organizationalUnit = __('Orga', 'organization', 'forOrganizationalUnit', ['LABEL' => $cell->getLabel()]);
         }
@@ -996,17 +1084,7 @@ class Orga_OrganizationController extends Core_Controller
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-
-        $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
-            $connectedUser,
-            $organization,
-            [CellAdminRole::class]
-        )['cells'];
-        if (count($cellsCanEdit) > 1) {
-            $cell = Orga_Model_Cell::load($this->getParam('cell'));
-        } else {
-            $cell = array_pop($cellsCanEdit);
-        }
+        $cell = Orga_Model_Cell::load($this->getParam('cell'));
 
         $success = function () {
             $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage')]);

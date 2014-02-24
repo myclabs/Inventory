@@ -372,6 +372,7 @@ class Orga_Service_Export
         $modelBuilder->bind('inputs', $inputs);
 
         $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'subForm'));
+        $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
         $modelBuilder->bind('inputLabel', __('Orga', 'export', 'fieldLabel'));
         $modelBuilder->bind('inputRef', __('Orga', 'export', 'fieldRef'));
         $modelBuilder->bind('inputType', __('Orga', 'export', 'fieldType'));
@@ -387,9 +388,33 @@ class Orga_Service_Export
                 foreach ($cell->getMembers() as $member) {
                     if ($member->getAxis() === $axis) {
                         return $member->getLabel();
+                    } else if ($member->getAxis()->isNarrowerThan($axis)) {
+                        return $member->getParentForAxis($axis)->getLabel();
                     }
                 }
                 return '';
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayInputStatus',
+            function (Orga_Model_Cell $cell) {
+                switch ($cell->getAFInputSetPrimary()->getStatus()) {
+                    case PrimaryInputSet::STATUS_FINISHED:
+                        return __('AF', 'inputInput', 'statusFinished');
+                        break;
+                    case PrimaryInputSet::STATUS_COMPLETE:
+                        return __('AF', 'inputInput', 'statusComplete');
+                        break;
+                    case PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE:
+                        return __('AF', 'inputInput', 'statusCalculationIncomplete');
+                        break;
+                    case PrimaryInputSet::STATUS_INPUT_INCOMPLETE;
+                        return __('AF', 'inputInput', 'statusInputIncomplete');
+                        break;
+                    default:
+                        return '';
+                }
             }
         );
 
@@ -437,8 +462,15 @@ class Orga_Service_Export
             $granularitySheet->setTitle(mb_substr($granularity->getLabel(), 0, 31));
 
             // Colonnes
-            $columns = array_map(function(Orga_Model_Axis $axis) { return $axis->getLabel(); }, $granularity->getAxes());
+            $columns = [];
+            foreach ($granularity->getAxes() as $axis) {
+                $columns[] = $axis->getLabel();
+                foreach ($axis->getAllBroadersFirstOrdered() as $broaderAxis) {
+                    $columns[] = $broaderAxis->getLabel();
+                }
+            };
             $columns[] = __('Orga', 'export', 'subForm');
+            $columns[] = __('Orga', 'input', 'inputStatus');
             $columns[] = __('Orga', 'export', 'fieldLabel');
             $columns[] = __('Orga', 'export', 'fieldRef');
             $columns[] = __('Orga', 'export', 'fieldType');
@@ -473,6 +505,8 @@ class Orga_Service_Export
             } else {
                 $criteria = new \Doctrine\Common\Collections\Criteria();
                 $criteria->where($criteria->expr()->neq('aFInputSetPrimary', null));
+                $criteria->where($criteria->expr()->eq('relevant', true));
+                $criteria->where($criteria->expr()->eq('allParentsRelevant', true));
                 $criteria->orderBy(['tag' => 'ASC']);
                 $cells = $cell->getChildCellsForGranularity($granularity)->matching($criteria)->toArray();
             }
@@ -669,12 +703,11 @@ class Orga_Service_Export
 
 function getInputsDetails(Input $input, $path = '')
 {
-    if ($input->getComponent() !== null) {
+    if (($input->getComponent() !== null) && (!$input->isHidden())) {
         $componentLabel = $input->getComponent()->getLabel();
         $componentRef = $input->getComponent()->getRef();
     } else {
-        $componentLabel = __('Orga', 'export', 'unknownComponent');
-        $componentRef = __('Orga', 'export', 'unknownComponent');
+        return [];
     }
     if ($input instanceof NotRepeatedSubAFInput) {
         $subInputs = [];
@@ -701,14 +734,19 @@ function getInputsDetails(Input $input, $path = '')
         }
         return $subInputs;
     } else {
-        $a = [
-            'ancestors' => $path,
-            'label' => $componentLabel,
-            'ref' => $componentRef,
-            'type' => getInputType($input),
-            'values' => getInputValues($input)
+        if (!$input->hasValue()) {
+            return [];
+        }
+        return [
+            [
+                'ancestors' => $path,
+                'status' => '',
+                'label' => $componentLabel,
+                'ref' => $componentRef,
+                'type' => getInputType($input),
+                'values' => getInputValues($input)
+            ]
         ];
-        return [$a];
     }
 }
 

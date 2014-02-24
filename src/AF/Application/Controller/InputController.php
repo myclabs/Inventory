@@ -1,8 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 
 use AF\Application\InputFormParser;
 use AF\Architecture\Service\InputSetSessionStorage;
@@ -14,12 +10,12 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 
 /**
- * Saisie des AF
- * @package AF
+ * Saisie des AF.
+ *
+ * @author matthieu.napoli
  */
 class AF_InputController extends Core_Controller
 {
-
     use UI_Controller_Helper_Form;
 
     /**
@@ -237,5 +233,4 @@ class AF_InputController extends Core_Controller
         $this->view->assign('entries', $entries);
         $this->_helper->layout->disableLayout();
     }
-
 }
