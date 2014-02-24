@@ -8,7 +8,6 @@ use AF\Domain\InputService;
 use AF\Domain\Input\Input;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
 
 /**
  * Saisie des AF.
@@ -191,7 +190,7 @@ class AF_InputController extends Core_Controller
             // Charge la saisie depuis la BDD
             /** @var $inputSet PrimaryInputSet */
             $inputSet = PrimaryInputSet::load($this->getParam('idInputSet'));
-            $inputSet->markAsFinished($this->getParam('value'));
+            $inputSet->markAsFinished(true);
             $inputSet->save();
             $this->entityManager->flush();
         } else {
@@ -200,15 +199,14 @@ class AF_InputController extends Core_Controller
             if ($inputSet === null) {
                 throw new Core_Exception_User("AF", "message", "inputSetDoesntExist");
             }
-            $inputSet->markAsFinished($this->getParam('value'));
+            $inputSet->markAsFinished(true);
             $this->inputSetSessionStorage->saveInputSet($af, $inputSet);
         }
 
         $this->sendJsonResponse([
-                                'message'    => __("AF", "inputInput", "progressStatusUpdated"),
-                                'status'     => $inputSet->getStatus(),
-                                'completion' => $inputSet->getCompletion(),
-                                ]);
+            'message'    => __("AF", "inputInput", "inputFinished"),
+            'status'     => $inputSet->getStatus(),
+        ]);
     }
 
     /**

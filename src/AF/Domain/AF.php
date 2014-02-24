@@ -76,7 +76,7 @@ class AF extends Core_Model_Entity
     protected $category;
 
     /**
-     * @var \AF\Domain\Component\Group
+     * @var Group
      */
     protected $rootGroup;
 
@@ -98,7 +98,7 @@ class AF extends Core_Model_Entity
     protected $components;
 
     /**
-     * @var \AF\Domain\Condition\Condition[]|Collection
+     * @var Condition[]|Collection
      */
     protected $conditions;
 
@@ -220,7 +220,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @return \AF\Domain\Component\Group
+     * @return Group
      * @todo Diminuer l'utilisation de cette méthode (elle casse l'encapsulation)
      */
     public function getRootGroup()
@@ -239,6 +239,7 @@ class AF extends Core_Model_Entity
         $mode = AFViewConfiguration::MODE_WRITE
     ) {
         $form = new UI_Form($this->ref);
+        $form->addClass('af');
 
         $generationHelper = new AFGenerationHelper($inputSet, $mode);
 
@@ -387,7 +388,7 @@ class AF extends Core_Model_Entity
 
     /**
      * Récupère la liste des subAF d'un AF.
-     * @return \AF\Domain\Component\SubAF[]
+     * @return SubAF[]
      */
     public function getSubAfList()
     {
@@ -453,7 +454,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @return \AF\Domain\Condition\Condition[]
+     * @return Condition[]
      */
     public function getConditions()
     {
@@ -461,7 +462,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\Condition\Condition $condition
+     * @param Condition $condition
      */
     public function addCondition(Condition $condition)
     {
@@ -472,7 +473,7 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\Condition\Condition $condition
+     * @param Condition $condition
      */
     public function removeCondition(Condition $condition)
     {
