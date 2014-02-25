@@ -15,10 +15,9 @@ Feature: General data input feature
     When I open tab "Détails calculs"
     Then I should see "La saisie enregistrée est incomplète, ses résultats ne peuvent être affichés."
     When I open tab "Saisie"
-  # Aperçu des résultats, champ obligatoire non rempli (on ne peut pas cliquer sur "Enregistrer")
-    And I click "Aperçu des résultats"
-    Then the field "chiffre_affaire" should have error: "Champ obligatoire pour atteindre le statut : complet."
-    And I should see "La saisie enregistrée est incomplète, ses résultats ne peuvent être affichés."
+  # Aperçu des résultats désactivé
+    Then the button "Aperçu des résultats" must be disabled
+    And the button "Enregistrer" must be disabled
   # Bouton "Quitter", en l'absence de saisie
     When I click "Quitter"
     Then I should see the "listAF" datagrid
@@ -118,5 +117,6 @@ Feature: General data input feature
     When I open tab "Saisie"
     And I click "Quitter"
     And I click "Test" in the row 2 of the "listAF" datagrid
+    And I fill in "chiffre_affaire" with "10000"
     And I click "Aperçu des résultats"
-    Then I should see "Total : 1 k€"
+    Then I should see "Total : 10 k€"
