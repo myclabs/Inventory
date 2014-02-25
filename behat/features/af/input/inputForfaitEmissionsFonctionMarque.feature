@@ -9,9 +9,6 @@ Feature: Forfait emissions input feature
   # Accès au formulaire
     Given I am on "af/af/test/id/8"
     And I wait for the page to finish loading
-  # On vérifie l'utilisation de la valeur par défaut (aperçu des résultats, résultats, et détails calculs)
-    And I click "Aperçu des résultats"
-    Then I should see "Total : 1 t équ. CO2"
   # Saisie et enregistrement
     When I fill in "Champ sans effet" with "0"
     And I click "Enregistrer"
