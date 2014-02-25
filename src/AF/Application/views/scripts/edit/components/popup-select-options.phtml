@@ -15,6 +15,7 @@ $optionDatagrid = new UI_Datagrid('optionDatagrid', 'datagrid_edit_components_se
 $optionDatagrid->pagination = false;
 $optionDatagrid->addParam('idSelect', $selectField->getId());
 $optionDatagrid->addElements = true;
+$optionDatagrid->addButtonLabel = __('AF', 'configComponentDatagrid', 'optionSelectAddPanelTitle');
 $optionDatagrid->addPanelTitle = __('AF', 'configComponentDatagrid', 'optionSelectAddPanelTitle');
 $optionDatagrid->deleteElements = true;
 

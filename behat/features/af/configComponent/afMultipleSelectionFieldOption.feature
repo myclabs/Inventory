@@ -16,7 +16,7 @@ Feature: AF multiple selection field option feature
     Then I should see the popup "Options"
     And I should see the "optionDatagrid" datagrid
   # Popup d'ajout
-    When I click element "#selectMultiFieldDatagrid_options_popup .btn:contains('Ajouter')"
+    When I click "Ajout d'une option"
     Then I should see the popup "Ajout d'une option"
   # Ajout, saisie correcte
     When I fill in "optionDatagrid_label_addForm" with "AAA"
