@@ -816,10 +816,10 @@ function getInputValues(Input $input)
             }
         case SelectSingleInput::class:
             /** @var SelectSingleInput $input */
-            if (empty($value)) {
+            if (empty($inputValue)) {
                 return [''];
             } elseif ($input->getComponent() !== null) {
-                return [$input->getComponent()->getOptionByRef($value)->getLabel()];
+                return [$input->getComponent()->getOptionByRef($inputValue)->getLabel()];
             }
             return [$value];
         case CheckboxInput::class:
