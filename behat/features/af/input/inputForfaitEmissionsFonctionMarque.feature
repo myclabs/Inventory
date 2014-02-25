@@ -19,7 +19,3 @@ Feature: Forfait emissions input feature
     And I open collapse "Formulaire maître"
     And I open collapse "algo_numerique_forfait_marque"
     Then I should see "Marque : marque A"
-
-
-
-
