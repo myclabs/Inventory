@@ -56,6 +56,8 @@ class Account_DashboardController extends Core_Controller
         }, $organizations);
         $this->view->assign('organizations', $organizationsViewModel);
 
+        $this->view->assign('libraries', []);
+
         $this->view->assign('canCreateOrganization', $this->aclService->isAllowed(
             $user,
             Action::CREATE(),

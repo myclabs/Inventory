@@ -6,6 +6,8 @@ use Orga\ViewModel\OrganizationViewModel;
 $account = $this->account;
 /** @var OrganizationViewModel[] $organizations */
 $organizations = $this->organizations;
+/** @var OrganizationViewModel[] $libraries */
+$libraries = $this->libraries;
 ?>
 
 <style>
@@ -18,6 +20,8 @@ $organizations = $this->organizations;
         <small>Dashboard</small>
     </h1>
 </div>
+
+<h3>Workspaces</h3>
 
 <div class="organizationList">
     <?php foreach ($organizations as $organization) : ?>
@@ -59,7 +63,7 @@ $organizations = $this->organizations;
         <p>
             <a href="orga/organization/add" class="btn">
                 <i class="fa fa-plus"></i>
-                <?=___('UI', 'verb', 'add')?>
+                Créer un nouveau workspace
             </a>
         </p>
     <?php endif; ?>
@@ -75,3 +79,24 @@ $organizations = $this->organizations;
         });
     });
 </script>
+
+
+<h3>Bibliothèques</h3>
+
+<div class="organizationList">
+    <?php foreach ($libraries as $library) : ?>
+
+        <div class="organization well">
+            <h3>
+                <a href="orga/organization/view/idOrganization/<?=$organization->id?>">
+                    <?=$library->label?>
+                    <small>
+                        <i class="fa fa-external-link"></i>
+                        <?=___('Orga', 'organizationList', 'goToData')?>
+                    </small>
+                </a>
+            </h3>
+        </div>
+
+    <?php endforeach; ?>
+</div>
