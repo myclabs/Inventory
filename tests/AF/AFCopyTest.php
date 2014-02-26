@@ -98,5 +98,8 @@ class AFCopyTest extends TestCase
         $this->assertSame($condition->getRef(), $condition2->getRef());
         $this->assertSame($condition->getValue(), $condition2->getValue());
         $this->assertSame($condition->getRelation(), $condition2->getRelation());
+
+        // Je sais pas ce qu'il se passe dans ce test, mais ça ajoute des objets dans l'entity manager
+        $this->entityManager->clear();
     }
 }
