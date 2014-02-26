@@ -18,34 +18,18 @@ use Unit\UnitAPI;
  */
 class AFCopyTest extends TestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-
-        foreach (Component::loadList() as $o) {
-            $o->delete();
-        }
-        foreach (AF::loadList() as $o) {
-            $o->delete();
-        }
-        $this->entityManager->flush();
-    }
-
     public function testCopyAF()
     {
         $library = new AFLibrary('foo');
-        $library->save();
 
         $oldAF = new AF($library, 'old_ref');
         $oldAF->setLabel('label');
         $oldAF->setDocumentation('documentation');
-        $oldAF->save();
 
         $component = new NumericField();
         $component->setRef('component1');
         $component->setUnit(new UnitAPI('m'));
         $component->setAf($oldAF);
-        $component->save();
         $oldAF->addComponent($component);
 
         $condition = new NumericFieldCondition();
@@ -55,8 +39,6 @@ class AFCopyTest extends TestCase
         $condition->setRelation(NumericFieldCondition::RELATION_EQUAL);
         $condition->setValue(0);
         $oldAF->addCondition($condition);
-
-        $this->entityManager->flush();
 
         $afCopyService = new AFCopyService();
         /** @var AF $newAF */
@@ -117,12 +99,5 @@ class AFCopyTest extends TestCase
         $this->assertSame($condition->getRef(), $condition2->getRef());
         $this->assertSame($condition->getValue(), $condition2->getValue());
         $this->assertSame($condition->getRelation(), $condition2->getRelation());
-
-        $condition->delete();
-        $component->delete();
-        $this->entityManager->flush();
-
-        $oldAF->delete();
-        $this->entityManager->flush();
     }
 }
