@@ -2,6 +2,7 @@
 
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
+use Account\Domain\Account;
 use AF\Domain\Action\Action;
 use AF\Domain\AFLibrary;
 use Calc_Value;
@@ -11,24 +12,30 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Remplissage de la base de données avec des données de test
+ *
+ * Ce service est lazy car on veut injecter "account.myc-sense" après que ça ait été créé.
+ *
+ * @Injectable(lazy=true)
  */
 class PopulateAF extends AbstractPopulateAF
 {
     /**
+     * @Inject
      * @var EntityManager
      */
     private $entityManager;
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    /**
+     * @Inject("account.myc-sense")
+     * @var Account
+     */
+    private $publicAccount;
 
     public function run(OutputInterface $output)
     {
         $output->writeln('  <info>Populating AF</info>');
 
-        $library = new AFLibrary('Défaut');
+        $library = new AFLibrary($this->publicAccount, 'Défaut');
         $library->save();
 
         // Création des catégories.

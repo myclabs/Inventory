@@ -50,4 +50,9 @@ class Account
     {
         $this->name = (string) $name;
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

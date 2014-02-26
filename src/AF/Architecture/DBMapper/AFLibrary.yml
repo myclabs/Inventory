@@ -20,6 +20,10 @@ AF\Domain\AFLibrary:
       gedmo:
         - translatable
 
+  manyToOne:
+    account:
+      targetEntity: Account\Domain\Account
+
   oneToMany:
     afList:
       targetEntity: AF

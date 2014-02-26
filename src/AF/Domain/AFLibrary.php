@@ -2,6 +2,7 @@
 
 namespace AF\Domain;
 
+use Account\Domain\Account;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +23,11 @@ class AFLibrary extends Core_Model_Entity
     protected $id;
 
     /**
+     * @var Account
+     */
+    protected $account;
+
+    /**
      * @var string
      */
     protected $label;
@@ -37,10 +43,12 @@ class AFLibrary extends Core_Model_Entity
     protected $afList;
 
     /**
-     * @param string $label
+     * @param Account $account
+     * @param string  $label
      */
-    public function __construct($label)
+    public function __construct(Account $account, $label)
     {
+        $this->account = $account;
         $this->label = $label;
         $this->categories = new ArrayCollection();
         $this->afList = new ArrayCollection();
@@ -88,5 +96,13 @@ class AFLibrary extends Core_Model_Entity
     public function removeCategory(Category $category)
     {
         $this->categories->removeElement($category);
+    }
+
+    /**
+     * @return Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
     }
 }

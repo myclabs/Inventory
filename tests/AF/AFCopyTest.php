@@ -19,7 +19,7 @@ class AFCopyTest extends TestCase
 {
     public function testCopyAF()
     {
-        $library = new AFLibrary('foo');
+        $library = $this->getMock(AFLibrary::class, [], [], '', false);
 
         $oldAF = new AF($library, 'old_ref');
         $oldAF->setLabel('label');

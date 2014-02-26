@@ -2,6 +2,8 @@
 
 namespace Tests\AF;
 
+use Account\Domain\Account;
+use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use AF\Domain\AFLibrary;
 use AF\Domain\Component\Checkbox;
@@ -19,21 +21,32 @@ use Unit\UnitAPI;
 class InputServiceTest extends TestCase
 {
     /**
+     * @Inject
      * @var InputService
      */
     private $inputService;
+
+    /**
+     * @Inject
+     * @var AccountRepository
+     */
+    private $accountRepository;
+
     /**
      * @var AF
      */
     private $af;
+
     /**
      * @var NumericField
      */
     private $comp1;
+
     /**
      * @var Checkbox
      */
     private $comp2;
+
     /**
      * @var Checkbox
      */
@@ -82,10 +95,10 @@ class InputServiceTest extends TestCase
     {
         parent::setUp();
 
-        /** @var InputService $inputService */
-        $this->inputService = $this->get(InputService::class);
+        $account = new Account('foo');
+        $this->accountRepository->add($account);
 
-        $library = new AFLibrary('foo');
+        $library = new AFLibrary($account, 'foo');
         $library->save();
 
         $this->af = new AF($library, 'test');
@@ -118,6 +131,7 @@ class InputServiceTest extends TestCase
         if ($this->af) {
             $this->af->delete();
             $this->af->getLibrary()->delete();
+            $this->accountRepository->remove($this->af->getLibrary()->getAccount());
             $this->entityManager->flush();
         }
     }
