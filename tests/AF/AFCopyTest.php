@@ -4,7 +4,6 @@ namespace Tests\AF;
 
 use AF\Domain\AF;
 use AF\Domain\AFLibrary;
-use AF\Domain\Component\Component;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Condition\NumericFieldCondition;
 use AF\Domain\AFCopyService;
