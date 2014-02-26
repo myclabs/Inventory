@@ -85,7 +85,10 @@ class InputServiceTest extends TestCase
         /** @var InputService $inputService */
         $this->inputService = $this->get(InputService::class);
 
-        $this->af = new AF('test');
+        $library = new AFLibrary('foo');
+        $library->save();
+
+        $this->af = new AF($library, 'test');
 
         $this->comp1 = new NumericField();
         $this->comp1->setAf($this->af);
@@ -114,6 +117,7 @@ class InputServiceTest extends TestCase
 
         if ($this->af) {
             $this->af->delete();
+            $this->af->getLibrary()->delete();
             $this->entityManager->flush();
         }
     }
