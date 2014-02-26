@@ -566,6 +566,14 @@ class AF extends Core_Model_Entity
     }
 
     /**
+     * @return AFLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
+    }
+
+    /**
      * Fonction appelée avant un persist de l'objet (défini dans le mapper).
      */
     public function preSave()

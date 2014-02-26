@@ -3,6 +3,7 @@
 namespace Tests\AF;
 
 use AF\Domain\AF;
+use AF\Domain\AFLibrary;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Condition\NumericFieldCondition;
@@ -32,7 +33,10 @@ class AFCopyTest extends TestCase
 
     public function testCopyAF()
     {
-        $oldAF = new AF('old_ref');
+        $library = new AFLibrary('foo');
+        $library->save();
+
+        $oldAF = new AF($library, 'old_ref');
         $oldAF->setLabel('label');
         $oldAF->setDocumentation('documentation');
         $oldAF->save();
@@ -66,6 +70,7 @@ class AFCopyTest extends TestCase
         $this->assertEquals('new label', $newAF->getLabel());
         $this->assertEquals($oldAF->getDocumentation(), $newAF->getDocumentation());
         $this->assertNull($newAF->getCategory());
+        $this->assertSame($library, $newAF->getLibrary());
 
         // Root group
         $this->assertNotSame($oldAF->getRootGroup(), $newAF->getRootGroup());
