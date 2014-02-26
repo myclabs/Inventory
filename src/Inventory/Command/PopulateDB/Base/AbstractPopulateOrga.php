@@ -2,6 +2,7 @@
 
 namespace Inventory\Command\PopulateDB\Base;
 
+use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use AF\Domain\InputService;
 use AF\Domain\Component\Component;
@@ -78,6 +79,11 @@ abstract class AbstractPopulateOrga
      */
     protected $userService;
 
+    /**
+     * @var AccountRepository
+     */
+    protected $accountRepository;
+
     // Création d'une organisation.
     //  + createOrganization : -
     // Param : label
@@ -142,7 +148,8 @@ abstract class AbstractPopulateOrga
         ACLService $aclService,
         InputService $inputService,
         Orga_Service_ETLData $etlDataService,
-        UserService $userService
+        UserService $userService,
+        AccountRepository $accountRepository
     ) {
         $this->entityManager = $entityManager;
         $this->organizationService = $organizationService;
@@ -150,6 +157,7 @@ abstract class AbstractPopulateOrga
         $this->inputService = $inputService;
         $this->etlDataService = $etlDataService;
         $this->userService = $userService;
+        $this->accountRepository = $accountRepository;
     }
 
     /**

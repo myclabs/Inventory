@@ -2,6 +2,8 @@
 
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
+use Account\Domain\Account;
+use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use AF\Domain\Component\Select;
 use Calc_UnitValue;
@@ -19,6 +21,10 @@ class PopulateOrga extends AbstractPopulateOrga
     public function run(OutputInterface $output)
     {
         $output->writeln('  <info>Populating Orga</info>');
+
+        // Création d'un compte client
+        $account = new Account('The fantastic pizza factory');
+        $this->accountRepository->add($account);
 
         // Création d'une organisation.
         $organization = $this->createOrganization('Workspace avec données');
