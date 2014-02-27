@@ -1,13 +1,14 @@
 <?php
 use Account\Domain\Account;
+use AF\Domain\AFLibrary;
 use Orga\ViewModel\OrganizationViewModel;
 
 /** @var Account $account */
 $account = $this->account;
 /** @var OrganizationViewModel[] $organizations */
 $organizations = $this->organizations;
-/** @var OrganizationViewModel[] $libraries */
-$libraries = $this->libraries;
+/** @var AFLibrary[] $afLibraries */
+$afLibraries = $this->afLibraries;
 ?>
 
 <style>
@@ -83,13 +84,15 @@ $libraries = $this->libraries;
 
 <h3>Bibliothèques</h3>
 
+<h4>Formulaires</h4>
+
 <div class="organizationList">
-    <?php foreach ($libraries as $library) : ?>
+    <?php foreach ($afLibraries as $library) : ?>
 
         <div class="organization well">
             <h3>
-                <a href="orga/organization/view/idOrganization/<?=$organization->id?>">
-                    <?=$library->label?>
+                <a href="">
+                    <?=$library->getLabel()?>
                     <small>
                         <i class="fa fa-external-link"></i>
                         <?=___('Orga', 'organizationList', 'goToData')?>
