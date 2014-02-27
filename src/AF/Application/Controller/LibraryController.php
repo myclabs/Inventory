@@ -17,5 +17,7 @@ class AF_LibraryController extends Core_Controller
         $library = AFLibrary::load($this->getParam('id'));
 
         $this->view->assign('library', $library);
+
+        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     }
 }
