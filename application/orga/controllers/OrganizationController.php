@@ -6,7 +6,7 @@ use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\Model\ACL\Role\CellAdminRole;
-use Orga\ViewModel\OrganizationViewModelFactory;
+use Account\Application\Service\OrganizationViewFactory;
 use Orga\ViewModel\CellViewModelFactory;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
@@ -34,7 +34,7 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var OrganizationViewModelFactory
+     * @var \Account\Application\Service\OrganizationViewFactory
      */
     private $organizationVMFactory;
 
@@ -129,7 +129,7 @@ class Orga_OrganizationController extends Core_Controller
         // Crée les ViewModel
         $organizationsViewModel = [];
         foreach ($organizations as $organization) {
-            $organizationsViewModel[] = $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
+            $organizationsViewModel[] = $this->organizationVMFactory->createOrganizationView($organization, $connectedUser);
         }
         $this->view->assign('organizations', $organizationsViewModel);
 
@@ -238,7 +238,7 @@ class Orga_OrganizationController extends Core_Controller
             $this->redirect('orga/cell/view/idCell/'.array_pop($cellsWithAccess['cells'])->getId());
         }
 
-        $organizationViewModel = $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser);
+        $organizationViewModel = $this->organizationVMFactory->createOrganizationView($organization, $connectedUser);
         $this->view->assign('organization', $organizationViewModel);
         $cellViewModels = [];
         foreach ($cellsWithAccess['cells'] as $cellWithAccess) {
@@ -262,7 +262,7 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign(
             'organization',
-            $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser)
+            $this->organizationVMFactory->createOrganizationView($organization, $connectedUser)
         );
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,

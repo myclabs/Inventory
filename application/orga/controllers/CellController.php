@@ -7,7 +7,7 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use Orga\ViewModel\OrganizationViewModelFactory;
+use Account\Application\Service\OrganizationViewFactory;
 use Orga\ViewModel\CellViewModelFactory;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
@@ -50,7 +50,7 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var OrganizationViewModelFactory
+     * @var \Account\Application\Service\OrganizationViewFactory
      */
     private $organizationVMFactory;
 
@@ -114,7 +114,7 @@ class Orga_CellController extends Core_Controller
         $organization = $granularity->getOrganization();
 
         $this->view->assign('cellVWFactory', $this->cellVMFactory);
-        $this->view->assign('organization', $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser));
+        $this->view->assign('organization', $this->organizationVMFactory->createOrganizationView($organization, $connectedUser));
         $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser, true));
 
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(

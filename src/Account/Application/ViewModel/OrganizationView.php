@@ -1,11 +1,13 @@
 <?php
 
-namespace Orga\ViewModel;
+namespace Account\Application\ViewModel;
 
 /**
- * Modèle d'une organisation pour les vues.
+ * Représentation simplifiée de la vue d'une organisation pour un utilisateur.
+ *
+ * @author matthieu.napoli
  */
-class OrganizationViewModel
+class OrganizationView
 {
     /**
      * @var int

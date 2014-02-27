@@ -1,17 +1,8 @@
 <?php
-use Account\Domain\Account;
-use AF\Domain\AFLibrary;
-use Orga\ViewModel\OrganizationViewModel;
-use Parameter\Domain\ParameterLibrary;
+use Account\Application\ViewModel\AccountView;
 
-/** @var Account $account */
+/** @var AccountView $account */
 $account = $this->account;
-/** @var OrganizationViewModel[] $organizations */
-$organizations = $this->organizations;
-/** @var AFLibrary[] $afLibraries */
-$afLibraries = $this->afLibraries;
-/** @var ParameterLibrary[] $parameterLibraries */
-$parameterLibraries = $this->parameterLibraries;
 ?>
 
 <style>
@@ -20,7 +11,7 @@ $parameterLibraries = $this->parameterLibraries;
 
 <div class="page-header">
     <h1>
-        <?=$account->getName()?>
+        <?=$account->name?>
         <small>Dashboard</small>
     </h1>
 </div>
@@ -28,7 +19,7 @@ $parameterLibraries = $this->parameterLibraries;
 <h3>Workspaces</h3>
 
 <div class="organizationList">
-    <?php foreach ($organizations as $organization) : ?>
+    <?php foreach ($account->organizations as $organization) : ?>
 
         <div class="organization well">
             <?php if ($organization->canBeDeleted) : ?>
@@ -90,12 +81,12 @@ $parameterLibraries = $this->parameterLibraries;
 <h4>Formulaires</h4>
 
 <div class="organizationList">
-    <?php foreach ($afLibraries as $library) : ?>
+    <?php foreach ($account->afLibraries as $library) : ?>
 
         <div class="organization well">
             <h3>
-                <a href="af/library/view/id/<?=$library->getId()?>">
-                    <?=$library->getLabel()?>
+                <a href="af/library/view/id/<?=$library->id?>">
+                    <?=$library->label?>
                     <small>
                         <i class="fa fa-external-link"></i>
                         <?=___('Orga', 'organizationList', 'goToData')?>
@@ -110,12 +101,12 @@ $parameterLibraries = $this->parameterLibraries;
 <h4>Paramètres</h4>
 
 <div class="organizationList">
-    <?php foreach ($parameterLibraries as $library) : ?>
+    <?php foreach ($account->parameterLibraries as $library) : ?>
 
         <div class="organization well">
             <h3>
                 <a href="">
-                    <?=$library->getLabel()?>
+                    <?=$library->label?>
                     <small>
                         <i class="fa fa-external-link"></i>
                         <?=___('Orga', 'organizationList', 'goToData')?>

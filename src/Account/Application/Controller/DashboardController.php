@@ -1,10 +1,9 @@
 <?php
 
+use Account\Application\Service\AccountViewFactory;
+use Account\Domain\Account;
 use Account\Domain\AccountRepository;
-use AF\Domain\AFLibrary;
 use Core\Annotation\Secure;
-use Orga\ViewModel\OrganizationViewModelFactory;
-use Parameter\Domain\ParameterLibrary;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Resource\NamedResource;
@@ -29,12 +28,11 @@ class Account_DashboardController extends Core_Controller
 
     /**
      * @Inject
-     * @var OrganizationViewModelFactory
+     * @var AccountViewFactory
      */
-    private $organizationVMFactory;
+    private $accountViewFactory;
 
     /**
-     * TODO faire une règle de sécurité appropriée
      * @Secure("loggedIn")
      */
     public function indexAction()
@@ -42,33 +40,15 @@ class Account_DashboardController extends Core_Controller
         /** @var User $user */
         $user = $this->_helper->auth();
 
+        /** @var Account $account */
         $account = $this->accountRepository->get($this->getParam('id'));
-        $this->view->assign('account', $account);
 
-        // Organisations
-        $query = new Core_Model_Query();
-        $query->aclFilter->enabled = true;
-        $query->aclFilter->user = $user;
-        $query->aclFilter->action = Action::VIEW();
-        $organizationsViewModel = array_map(function (Orga_Model_Organization $organization) use ($user) {
-            return $this->organizationVMFactory->createOrganizationViewModel($organization, $user);
-        }, Orga_Model_Organization::loadList($query));
-        $this->view->assign('organizations', $organizationsViewModel);
+        $this->view->assign('account', $this->accountViewFactory->createAccountView($account, $user));
 
         $this->view->assign('canCreateOrganization', $this->aclService->isAllowed(
             $user,
             Action::CREATE(),
             NamedResource::loadByName(Orga_Model_Organization::class)
         ));
-
-        // Bibliothèques d'AF
-        $query = new Core_Model_Query();
-        $query->filter->addCondition('account', $account);
-        $this->view->assign('afLibraries', AFLibrary::loadList($query));
-
-        // Bibliothèques de paramètres
-        $query = new Core_Model_Query();
-        $query->filter->addCondition('account', $account);
-        $this->view->assign('parameterLibraries', ParameterLibrary::loadList($query));
     }
 }

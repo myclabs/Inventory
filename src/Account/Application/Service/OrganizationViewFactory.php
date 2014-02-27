@@ -1,11 +1,9 @@
 <?php
 
-namespace Orga\ViewModel;
+namespace Account\Application\Service;
 
-use Core_Exception_UndefinedAttribute;
-use Orga\Model\ACL\Role\CellAdminRole;
+use Account\Application\ViewModel\OrganizationView;
 use Orga_Model_Organization;
-use Orga_Model_Axis;
 use Orga_Model_Cell;
 use Orga_Service_ACLManager;
 use User\Domain\User;
@@ -14,9 +12,11 @@ use User\Domain\ACL\Action;
 use Core_Model_Query;
 
 /**
- * Factory de OrganizationViewModel.
+ * Crée des représentations simplifiées de la vue d'une organisation pour un utilisateur.
+ *
+ * @author matthieu.napoli
  */
-class OrganizationViewModelFactory
+class OrganizationViewFactory
 {
     /**
      * @var ACLService
@@ -33,9 +33,9 @@ class OrganizationViewModelFactory
         $this->aclManager = $aclManager;
     }
 
-    public function createOrganizationViewModel(Orga_Model_Organization $organization, User $connectedUser)
+    public function createOrganizationView(Orga_Model_Organization $organization, User $connectedUser)
     {
-        $viewModel = new OrganizationViewModel();
+        $viewModel = new OrganizationView();
         $viewModel->id = $organization->getId();
         $viewModel->label = $organization->getLabel();
         if ($viewModel->label == '') {
@@ -68,7 +68,6 @@ class OrganizationViewModelFactory
         }
         if (!$viewModel->canBeEdited) {
             // Edition d'au moins une granularité de pertinence ou de DW ?
-            $relevanceOnRebuildGranularities = [];
             foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
                 if ($granularity->getCellsControlRelevance() || $granularity->getCellsGenerateDWCubes()) {
                     $viewModel->canBeEdited = true;
