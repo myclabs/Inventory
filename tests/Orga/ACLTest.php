@@ -1,5 +1,7 @@
 <?php
 
+use Account\Domain\Account;
+use Account\Domain\AccountRepository;
 use Core\Test\TestCase;
 use Orga\Model\ACL\Action\CellAction;
 use Orga\Model\ACL\Role\CellAdminRole;
@@ -28,6 +30,12 @@ class Orga_Test_ACLTest
  */
 class Orga_Test_ACL extends TestCase
 {
+    /**
+     * @Inject
+     * @var AccountRepository
+     */
+    protected $accountRepository;
+
     /**
      * @Inject
      * @var UserService
@@ -229,8 +237,11 @@ class Orga_Test_ACL extends TestCase
     {
         parent::setUp();
 
+        $account = new Account('Test');
+        $this->accountRepository->add($account);
+
         // Création de l'organization (proche de populateTest au 08/08/2013).
-        $this->organization = new Orga_Model_Organization();
+        $this->organization = new Orga_Model_Organization($account);
         $this->organization->setLabel('ACL Test');
         $this->organization->save();
 

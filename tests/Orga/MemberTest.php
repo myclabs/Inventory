@@ -1,4 +1,5 @@
 <?php
+use Account\Domain\Account;
 use Core\Test\TestCase;
 
 /**
@@ -59,7 +60,7 @@ class Orga_Test_MemberAttributes extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization();
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
         $this->axis1->setLabel('Label 1');
@@ -288,7 +289,7 @@ class Orga_Test_MemberTag extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization();
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis = new Orga_Model_Axis($this->organization, 'ref');
         $this->axis->setLabel('Label');
@@ -464,7 +465,7 @@ class Orga_Test_MemberHierarchy extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization();
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
         $this->axis1->setLabel('Label 1');

@@ -2,6 +2,7 @@
 
 namespace Inventory\Command\PopulateDB\Base;
 
+use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use AF\Domain\InputService;
@@ -161,12 +162,13 @@ abstract class AbstractPopulateOrga
     }
 
     /**
+     * @param Account $account
      * @param string $label
      * @return Orga_Model_Organization
      */
-    protected function createOrganization($label)
+    protected function createOrganization(Account $account, $label)
     {
-        return $this->organizationService->createOrganization($label);
+        return $this->organizationService->createOrganization($account, $label);
     }
 
     /**

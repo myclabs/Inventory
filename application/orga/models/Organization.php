@@ -7,6 +7,7 @@
  * @subpackage Model
  */
 
+use Account\Domain\Account;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Selectable;
@@ -23,6 +24,8 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     use Core_Model_Entity_Translatable;
     use OrganizationResourceTrait;
 
+    // Constantes de tris et de filtres.
+    const QUERY_ACCOUNT = 'account';
     // Constantes de path des Axis, Member, Granularity et Cell.
     const PATH_SEPARATOR = '/';
     const PATH_JOIN = '&';
@@ -33,6 +36,13 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
      * @var string
      */
     protected $id = null;
+
+    /**
+     * Account possédant l'organization.
+     *
+     * @var Account
+     */
+    protected $account = null;
 
     /**
      * Label du Organization.
@@ -66,11 +76,12 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     /**
      * Constructeur de la classe Organization.
      */
-    public function __construct()
+    public function __construct(Account $account)
     {
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
 
+        $this->account = $account;
         $this->constructACL();
     }
 
@@ -82,6 +93,16 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Renvoie l'Account auquel appartient l'Organization.
+     *
+     * @return Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
     }
 
     /**

@@ -27,8 +27,8 @@ class PopulateOrga extends AbstractPopulateOrga
         $this->accountRepository->add($account);
 
         // Création d'une organisation.
-        $organization = $this->createOrganization('Workspace avec données');
-        $organization_vide = $this->createOrganization('Workspace vide');
+        $organization = $this->createOrganization($account, 'Workspace avec données');
+        $organization_vide = $this->createOrganization($account, 'Workspace vide');
 
         // Création des axes.
         $axis_annee = $this->createAxis($organization, 'annee', 'Année');

@@ -1,4 +1,5 @@
 <?php
+use Account\Domain\Account;
 use Core\Test\TestCase;
 
 /**
@@ -293,7 +294,7 @@ class Orga_Test_CellAttributes extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization();
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
         $this->axis1->setLabel('Label 1');
@@ -1284,7 +1285,7 @@ class Orga_Test_CellHierarchy extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization();
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
         $this->axis1->setLabel('Label 1');

@@ -1,5 +1,7 @@
 <?php
 
+use Account\Domain\Account;
+use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use Doctrine\ORM\EntityManager;
 use Orga\Model\ACL\Action\CellAction;
@@ -39,21 +41,29 @@ class Orga_Service_OrganizationService
     private $aclService;
 
     /**
+     * @var AccountRepository
+     */
+    private $accountRepository;
+
+    /**
      * @param EntityManager           $entityManager
      * @param Orga_Service_ACLManager $aclManager
      * @param UserService             $userService
      * @param ACLService              $aclService
+     * @param AccountRepository       $accountRepository
      */
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ACLManager $aclManager,
         UserService $userService,
-        ACLService $aclService
+        ACLService $aclService,
+        AccountRepository $accountRepository
     ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
         $this->userService = $userService;
         $this->aclService = $aclService;
+        $this->accountRepository = $accountRepository;
     }
 
     /**
@@ -69,17 +79,18 @@ class Orga_Service_OrganizationService
     }
 
     /**
+     * @param Account $account
      * @param string $labelOrganization
      * @throws Exception
      * @return Orga_Model_Organization
      */
-    public function createOrganization($labelOrganization = '')
+    public function createOrganization(Account $account, $labelOrganization = '')
     {
         $this->entityManager->beginTransaction();
 
         try {
             // Création de l'organization.
-            $organization = new Orga_Model_Organization();
+            $organization = new Orga_Model_Organization($account);
             $organization->setLabel($labelOrganization);
 
             $organization->save();
@@ -138,11 +149,12 @@ class Orga_Service_OrganizationService
      */
     public function createOrganizationFromTemplatesForm(User $administrator, array $formData)
     {
+        $account = $this->accountRepository->get($this->getParam('idAccount'));
         $this->entityManager->beginTransaction();
 
         try {
             $organizationLabel = $formData['organization']['elements']['organizationLabel']['value'];
-            $organization = $this->createOrganization($organizationLabel);
+            $organization = $this->createOrganization($account, $organizationLabel);
 
             $template = $formData['organization']['elements']['organizationTemplate']['value'];
             if ($template !== self::TEMPLATE_EMPTY) {
@@ -632,20 +644,21 @@ class Orga_Service_OrganizationService
      */
     public function createDemoOrganizationAndUser($email, $password)
     {
-        $user = $this->userService->createUser($email, $password);
-        $user->initTutorials();
-
-        $organization = $this->createOrganization();
-        $organization->setLabel(__('Orga', 'navigation', 'demoOrganizationLabel', ['LABEL' => rand(1000, 9999)]));
-
-        $this->initOrganizationDemo($organization);
-
-        // Ajoute en tant que manager de la cellule globale
-        $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
-        $this->aclService->addRole($user, new CellManagerRole($user, $globalCell));
-
-        $this->entityManager->flush();
-
-        return $organization;
+        //todo Réfléchir à la démo et aux account.
+//        $user = $this->userService->createUser($email, $password);
+//        $user->initTutorials();
+//
+//        $organization = $this->createOrganization();
+//        $organization->setLabel(__('Orga', 'navigation', 'demoOrganizationLabel', ['LABEL' => rand(1000, 9999)]));
+//
+//        $this->initOrganizationDemo($organization);
+//
+//        // Ajoute en tant que manager de la cellule globale
+//        $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
+//        $this->aclService->addRole($user, new CellManagerRole($user, $globalCell));
+//
+//        $this->entityManager->flush();
+//
+//        return $organization;
     }
 }

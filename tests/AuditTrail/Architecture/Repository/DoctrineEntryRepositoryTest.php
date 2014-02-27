@@ -2,6 +2,7 @@
 
 namespace Tests\AuditTrail\Architecture\Repository;
 
+use Account\Domain\Account;
 use AuditTrail\Architecture\Repository\DoctrineEntryRepository;
 use AuditTrail\Domain\Context\GlobalContext;
 use AuditTrail\Domain\Context\OrganizationContext;
@@ -50,7 +51,7 @@ class DoctrineEntryRepositoryTest extends TestCase
 
     public function testFindLatestForOrganization()
     {
-        $organization = new Orga_Model_Organization();
+        $organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
         $organization->save();
 
         $entry1 = new Entry('foo', new OrganizationContext($organization));
@@ -78,7 +79,7 @@ class DoctrineEntryRepositoryTest extends TestCase
 
     public function testFindLatestForCell()
     {
-        $organization = new Orga_Model_Organization();
+        $organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
         $axis = new Orga_Model_Axis($organization, 'axis');
         $axis->setLabel('axis');
         $member = new Orga_Model_Member($axis, 'member');
