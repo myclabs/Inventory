@@ -267,7 +267,10 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             if ($e->isSourceEntityInstanceOf(OutputElement::class)) {
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
             }
-            throw new Core_Exception_User('AF', 'formTree', 'categoryHasChild');
+            if ($node instanceof Category) {
+                throw new Core_Exception_User('AF', 'formTree', 'categoryHasChild');
+            }
+            throw $e;
         }
 
         $this->message = __('UI', 'message', 'deleted');
@@ -304,5 +307,4 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         }
         throw new Core_Exception("Unknown object type");
     }
-
 }
