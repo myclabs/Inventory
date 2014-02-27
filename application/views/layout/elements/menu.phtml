@@ -5,6 +5,8 @@ use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\ACL\ACLService;
 use User\Domain\User;
 
+$container = \Core\ContainerSingleton::getContainer();
+
 if (Zend_Auth::getInstance()->hasIdentity()) {
     try {
         /** @var User $connectedUser */
@@ -18,7 +20,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 
 if ($connectedUser) {
     /** @var ACLService $aclService */
-    $aclService = \Core\ContainerSingleton::getContainer()->get(ACLService::class);
+    $aclService = $container->get(ACLService::class);
 
     $leftMenu = [];
 
