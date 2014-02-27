@@ -19,6 +19,10 @@ Parameter\Domain\ParameterLibrary:
       gedmo:
         - translatable
 
+  manyToOne:
+    account:
+      targetEntity: Account\Domain\Account
+
   oneToMany:
     families:
       targetEntity: Parameter\Domain\Family\Family

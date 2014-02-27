@@ -2,6 +2,7 @@
 
 namespace Tests\Parameter;
 
+use Account\Domain\Account;
 use Core\Test\TestCase;
 use Core_Tools;
 use Parameter\Domain\Family\Family;
@@ -21,7 +22,9 @@ class FamilyTest extends TestCase
      */
     public static function generateObject()
     {
-        $library = new ParameterLibrary('foo');
+        $account = new Account('test');
+        self::getEntityManager()->persist($account);
+        $library = new ParameterLibrary($account, 'foo');
         $library->save();
         $family = new Family($library, Core_Tools::generateRef(), 'Test');
         $family->setUnit(new UnitAPI('m'));
@@ -37,6 +40,7 @@ class FamilyTest extends TestCase
     {
         $o->delete();
         $o->getLibrary()->delete();
+        self::getEntityManager()->remove($o->getLibrary()->getAccount());
         self::getEntityManager()->flush();
     }
 
@@ -45,7 +49,9 @@ class FamilyTest extends TestCase
      */
     public function testDimensions()
     {
-        $family = new Family(new ParameterLibrary('foo'), 'ref', 'label');
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         $this->assertNotNull($family->getDimensions());
         // Add
@@ -64,7 +70,9 @@ class FamilyTest extends TestCase
      */
     public function testCells1()
     {
-        $family = new Family(new ParameterLibrary('foo'), 'ref', 'label');
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
         $family->getCell(['foo', 'bar']);
     }
 
@@ -73,7 +81,9 @@ class FamilyTest extends TestCase
      */
     public function testCells2()
     {
-        $family = new Family(new ParameterLibrary('foo'), 'ref', 'label');
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
         $family->getCell([]);
     }
 
@@ -82,7 +92,9 @@ class FamilyTest extends TestCase
      */
     public function testCells1Dimension1()
     {
-        $family = new Family(new ParameterLibrary('foo'), 'ref', 'label');
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         // 1 dimension
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Test', Dimension::ORIENTATION_HORIZONTAL);
@@ -109,7 +121,9 @@ class FamilyTest extends TestCase
      */
     public function testCells2Dimensions1()
     {
-        $family = new Family(new ParameterLibrary('foo'), 'ref', 'label');
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Test 1', Dimension::ORIENTATION_HORIZONTAL);
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
@@ -131,7 +145,9 @@ class FamilyTest extends TestCase
      */
     public function testCells2Dimensions2()
     {
-        $family = new Family(new ParameterLibrary('foo'), 'ref', 'label');
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
@@ -163,7 +179,9 @@ class FamilyTest extends TestCase
      */
     public function testCells3Dimensions()
     {
-        $family = new Family(new ParameterLibrary('foo'), 'ref', 'label');
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
@@ -194,7 +212,9 @@ class FamilyTest extends TestCase
      */
     public function testCells2DimensionsSameRef()
     {
-        $family = new Family(new ParameterLibrary('foo'), 'ref', 'label');
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');

@@ -2,6 +2,7 @@
 
 namespace Parameter\Domain;
 
+use Account\Domain\Account;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,6 +24,11 @@ class ParameterLibrary extends Core_Model_Entity
     protected $id;
 
     /**
+     * @var Account
+     */
+    protected $account;
+
+    /**
      * @var string
      */
     protected $label;
@@ -38,10 +44,12 @@ class ParameterLibrary extends Core_Model_Entity
     protected $families;
 
     /**
-     * @param string $label
+     * @param Account $account
+     * @param string  $label
      */
-    public function __construct($label)
+    public function __construct(Account $account, $label)
     {
+        $this->account = $account;
         $this->label = $label;
         $this->categories = new ArrayCollection();
         $this->families = new ArrayCollection();
@@ -81,5 +89,13 @@ class ParameterLibrary extends Core_Model_Entity
     public function removeFamily(Family $family)
     {
         $this->families->removeElement($family);
+    }
+
+    /**
+     * @return Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
     }
 }

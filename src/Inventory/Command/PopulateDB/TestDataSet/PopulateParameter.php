@@ -2,6 +2,7 @@
 
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
+use Account\Domain\Account;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateParameter;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -9,24 +10,30 @@ use Parameter\Domain\ParameterLibrary;
 
 /**
  * Remplissage de la base de données avec des données de test
+ *
+ * Ce service est lazy car on veut injecter "account.myc-sense" après que ça ait été créé.
+ *
+ * @Injectable(lazy=true)
  */
 class PopulateParameter extends AbstractPopulateParameter
 {
     /**
+     * @Inject
      * @var EntityManager
      */
     private $entityManager;
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    /**
+     * @Inject("account.myc-sense")
+     * @var Account
+     */
+    private $publicAccount;
 
     public function run(OutputInterface $output)
     {
         $output->writeln('  <info>Populating Parameters</info>');
 
-        $library = new ParameterLibrary('Défaut');
+        $library = new ParameterLibrary($this->publicAccount, 'Référentiel My C-Sense');
         $library->save();
 
         $categorie_contenant_sous_categorie = $this->createCategory($library, 'Catégorie contenant une sous-catégorie');

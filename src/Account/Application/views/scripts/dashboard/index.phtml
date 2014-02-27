@@ -2,6 +2,7 @@
 use Account\Domain\Account;
 use AF\Domain\AFLibrary;
 use Orga\ViewModel\OrganizationViewModel;
+use Parameter\Domain\ParameterLibrary;
 
 /** @var Account $account */
 $account = $this->account;
@@ -9,6 +10,8 @@ $account = $this->account;
 $organizations = $this->organizations;
 /** @var AFLibrary[] $afLibraries */
 $afLibraries = $this->afLibraries;
+/** @var ParameterLibrary[] $parameterLibraries */
+$parameterLibraries = $this->parameterLibraries;
 ?>
 
 <style>
@@ -88,6 +91,26 @@ $afLibraries = $this->afLibraries;
 
 <div class="organizationList">
     <?php foreach ($afLibraries as $library) : ?>
+
+        <div class="organization well">
+            <h3>
+                <a href="">
+                    <?=$library->getLabel()?>
+                    <small>
+                        <i class="fa fa-external-link"></i>
+                        <?=___('Orga', 'organizationList', 'goToData')?>
+                    </small>
+                </a>
+            </h3>
+        </div>
+
+    <?php endforeach; ?>
+</div>
+
+<h4>Paramètres</h4>
+
+<div class="organizationList">
+    <?php foreach ($parameterLibraries as $library) : ?>
 
         <div class="organization well">
             <h3>

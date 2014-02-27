@@ -4,6 +4,7 @@ use Account\Domain\AccountRepository;
 use AF\Domain\AFLibrary;
 use Core\Annotation\Secure;
 use Orga\ViewModel\OrganizationViewModelFactory;
+use Parameter\Domain\ParameterLibrary;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\Resource\NamedResource;
@@ -64,5 +65,10 @@ class Account_DashboardController extends Core_Controller
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
         $this->view->assign('afLibraries', AFLibrary::loadList($query));
+
+        // Bibliothèques de paramètres
+        $query = new Core_Model_Query();
+        $query->filter->addCondition('account', $account);
+        $this->view->assign('parameterLibraries', ParameterLibrary::loadList($query));
     }
 }
