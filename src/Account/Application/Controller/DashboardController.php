@@ -33,12 +33,15 @@ class Account_DashboardController extends Core_Controller
     private $accountViewFactory;
 
     /**
+     * TODO tester si l'utilisateur peut voir le compte demandé
      * @Secure("loggedIn")
      */
     public function indexAction()
     {
         /** @var User $user */
         $user = $this->_helper->auth();
+
+        $this->view->assign('accountList', $this->accountRepository->getAll());
 
         /** @var Account $account */
         $account = $this->accountRepository->get($this->getParam('id'));

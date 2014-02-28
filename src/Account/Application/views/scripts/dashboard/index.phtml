@@ -1,5 +1,9 @@
 <?php
 use Account\Application\ViewModel\AccountView;
+use Account\Domain\Account;
+
+/** @var Account[] $accountList */
+$accountList = $this->accountList;
 
 /** @var AccountView $account */
 $account = $this->account;
@@ -15,6 +19,28 @@ $account = $this->account;
         <small>Dashboard</small>
     </h1>
 </div>
+
+<p>
+    <label>
+        Changer de compte :
+        <select id="accountSwitcher">
+            <?php foreach ($accountList as $alternativeAccount) : ?>
+                <?php
+                $selected = $alternativeAccount->getId() == $account->id ? 'selected' : '';
+                ?>
+                <option value="<?=$alternativeAccount->getId()?>" <?=$selected?>>
+                    <?=$alternativeAccount->getName()?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </label>
+
+    <script>
+        $('#accountSwitcher').change(function () {
+            window.location.href = "account/dashboard/index/id/" + $(this).val();
+        });
+    </script>
+</p>
 
 <h3>Workspaces</h3>
 
