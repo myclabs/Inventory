@@ -35,7 +35,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             $categories = Category::loadRootCategories();
             $currentCategory = null;
         } else {
-            /** @var $currentCategory \AF\Domain\Category */
+            /** @var $currentCategory Category */
             $currentCategory = $this->fromTreeId($this->idNode);
             $categories = $currentCategory->getChildCategories();
         }
@@ -95,7 +95,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             if ($node instanceof Category) {
                 $parentNode = $node->getParentCategory();
             } else {
-                /** @var \AF\Domain\AF $node */
+                /** @var AF $node */
                 $parentNode = $node->getCategory();
             }
         }
@@ -275,7 +275,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     }
 
     /**
-     * @param \AF\Domain\Category|\AF\Domain\AF $object
+     * @param Category|AF $object
      * @throws Core_Exception
      * @return string ID
      */
@@ -292,7 +292,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     /**
      * @param string $id
      * @throws Core_Exception
-     * @return Category|\AF\Domain\AF
+     * @return Category|AF
      */
     private function fromTreeId($id)
     {
