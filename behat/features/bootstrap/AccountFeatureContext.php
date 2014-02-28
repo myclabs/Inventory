@@ -1,5 +1,6 @@
 <?php
 
+use Behat\Mink\Element\NodeElement;
 use Behat\Mink\WebAssert;
 
 /**
@@ -13,6 +14,15 @@ trait AccountFeatureContext
     public function iAmOnTheDashboardForAccount($id)
     {
         $this->visit('account/dashboard/index/id/' . $id);
+    }
+
+    /**
+     * @When /^I switch to account "([^"]*)"$/
+     */
+    public function iSwitchToAccount($account)
+    {
+        $inputNode = $this->findElement('#accountSwitcher');
+        $inputNode->selectOption($account, false);
     }
 
     /**
@@ -40,4 +50,11 @@ trait AccountFeatureContext
      * @param string $page
      */
     public abstract function visit($page);
+    /**
+     * Finds element with specified selector.
+     * @param string $selector
+     * @param string $type
+     * @return NodeElement
+     */
+    protected abstract function findElement($selector, $type = 'css');
 }
