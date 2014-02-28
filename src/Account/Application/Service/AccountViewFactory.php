@@ -42,6 +42,7 @@ class AccountViewFactory
 
         // TODO améliorer : Organisations
         $query = new Core_Model_Query();
+        $query->filter->addCondition('account', $account);
         $query->aclFilter->enabled = true;
         $query->aclFilter->user = $user;
         $query->aclFilter->action = Action::VIEW();

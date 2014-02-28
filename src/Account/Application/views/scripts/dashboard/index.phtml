@@ -54,6 +54,12 @@ $account = $this->account;
 
     <?php endforeach; ?>
 
+    <?php if (empty($account->organizations)) : ?>
+        <p class="muted">
+            Aucun workspace.
+        </p>
+    <?php endif; ?>
+
     <?php if ($this->canCreateOrganization) : ?>
         <p>
             <a href="orga/organization/add" class="btn">
@@ -96,6 +102,12 @@ $account = $this->account;
         </div>
 
     <?php endforeach; ?>
+
+    <?php if (empty($account->afLibraries)) : ?>
+        <p class="muted">
+            Aucune bibliothèque de formulaires.
+        </p>
+    <?php endif; ?>
 </div>
 
 <h4>Paramètres</h4>
@@ -116,4 +128,10 @@ $account = $this->account;
         </div>
 
     <?php endforeach; ?>
+
+    <?php if (empty($account->afLibraries)) : ?>
+        <p class="muted">
+            Aucune bibliothèque de paramètres.
+        </p>
+    <?php endif; ?>
 </div>
