@@ -8,6 +8,14 @@ use Behat\Mink\WebAssert;
 trait AccountFeatureContext
 {
     /**
+     * @Given /^I am on the dashboard for account (\d+)$/
+     */
+    public function iAmOnTheDashboardForAccount($id)
+    {
+        $this->visit('account/dashboard/index/id/' . $id);
+    }
+
+    /**
      * @Then /^I should see the "([^"]*)" AF library$/
      */
     public function iShouldSeeTheAFLibrary($name)
@@ -28,4 +36,8 @@ trait AccountFeatureContext
      * @return WebAssert
      */
     public abstract function assertSession($name = null);
+    /**
+     * @param string $page
+     */
+    public abstract function visit($page);
 }
