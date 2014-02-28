@@ -23,6 +23,7 @@ class FeatureContext extends MinkContext
     use DatabaseFeatureContext;
     use DatagridFeatureContext;
     use PopupFeatureContext;
+    use AccountFeatureContext;
 
     /**
      * @BeforeScenario
