@@ -33,21 +33,43 @@ class Account_DashboardController extends Core_Controller
     private $accountViewFactory;
 
     /**
-     * TODO tester si l'utilisateur peut voir le compte demandé
      * @Secure("loggedIn")
      */
     public function indexAction()
     {
+        $session = new Zend_Session_Namespace(get_class());
+
+        // Un compte spécifique est demandé
+        if ($this->getParam('id') !== null) {
+            $session->accountId = $this->getParam('id');
+            $this->redirect('account/dashboard');
+            return;
+        }
+
         /** @var User $user */
         $user = $this->_helper->auth();
 
-        $this->view->assign('accountList', $this->accountRepository->getAll());
+        // TODO prendre les comptes que l'utilisateur peut voir
+        $accounts = $this->accountRepository->getAll();
 
+        // TODO tester si l'utilisateur peut voir le compte demandé
         /** @var Account $account */
-        $account = $this->accountRepository->get($this->getParam('id'));
+        if (isset($session->accountId)) {
+            $account = $this->accountRepository->get($session->accountId);
+        } else {
+            $account = current($accounts);
+        }
 
-        $this->view->assign('account', $this->accountViewFactory->createAccountView($account, $user));
+        // Account view
+        if (isset($session->account[$account->getId()])) {
+            $accountView = $session->account[$account->getId()];
+        } else {
+            $accountView = $this->accountViewFactory->createAccountView($account, $user);
+            $session->account[$account->getId()] = $accountView;
+        }
 
+        $this->view->assign('accountList', $accounts);
+        $this->view->assign('account', $accountView);
         $this->view->assign('canCreateOrganization', $this->aclService->isAllowed(
             $user,
             Action::CREATE(),

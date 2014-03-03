@@ -13,7 +13,8 @@ trait AccountFeatureContext
      */
     public function iAmOnTheDashboardForAccount($id)
     {
-        $this->visit('account/dashboard/index/id/' . $id);
+        $this->visit('account/dashboard');
+        $this->iSwitchToAccount($id);
     }
 
     /**
