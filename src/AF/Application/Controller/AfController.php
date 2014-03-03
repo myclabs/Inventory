@@ -35,14 +35,6 @@ class AF_AfController extends Core_Controller
     private $afCopyService;
 
     /**
-     * Arbre des AF
-     * @Secure("editAF")
-     */
-    public function treeAction()
-    {
-    }
-
-    /**
      * Affichage d'un AF en mode test
      * @Secure("editAF")
      */

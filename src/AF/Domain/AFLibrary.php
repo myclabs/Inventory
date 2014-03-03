@@ -7,6 +7,7 @@ use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Bibliothèque d'AF.
@@ -96,6 +97,25 @@ class AFLibrary extends Core_Model_Entity
     public function removeCategory(Category $category)
     {
         $this->categories->removeElement($category);
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getRootCategories()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('parentCategory'));
+
+        return $this->categories->matching($criteria);
     }
 
     /**

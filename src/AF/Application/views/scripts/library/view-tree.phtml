@@ -1,6 +1,12 @@
 <?php
+use AF\Domain\AFLibrary;
+
+/** @var AFLibrary $library */
+$library = $this->library;
+
 $tree = new UI_Tree('afTree', 'tree_af-tree', 'af');
 $tree->expandAll = true;
+$tree->addParam('library', $library->getId());
 $tree->addParam('mode', $this->mode);
 
 // Formulaire d'ajout
@@ -29,6 +35,8 @@ $tree->collapseAll = false;
 
 $tree->display();
 
+
+// TODO ça sert à quoi ce caca ?
 $script = <<<JS
 $('#afTree_element').change(function(e) {
     var idNode = $(this).val();

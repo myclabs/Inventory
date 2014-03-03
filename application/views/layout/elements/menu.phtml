@@ -31,7 +31,7 @@ if ($connectedUser) {
 
     $leftMenu[1] = [
         'name' => __('UI', 'name', 'home'),
-        'url' => $this->baseUrl('orga/organization/'),
+        'url' => $this->baseUrl('account/dashboard'),
     ];
     $leftMenu[3] = [
         'name' => __('Inventory', 'menu', 'simulations'),
@@ -94,14 +94,6 @@ if ($connectedUser) {
             'name' => __('AF', 'name', 'accountingForms'),
             'url' => '#',
             'submenu' => [
-                [
-                    'name' => __('UI', 'name', 'tree'),
-                    'url' => 'af/af/tree'
-                ],
-                [
-                    'name' => __('UI', 'name', 'list'),
-                    'url' => 'af/af/list'
-                ],
                 [
                     'name' => __('TEC', 'interpreter', 'pageTitle'),
                     'url' => 'tec/expression/test'

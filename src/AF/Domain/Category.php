@@ -55,9 +55,10 @@ class Category extends Core_Model_Entity
     protected $afs;
 
 
-    public function __construct(AFLibrary $library)
+    public function __construct(AFLibrary $library, $label = null)
     {
         $this->library = $library;
+        $this->label = $label;
         $this->childCategories = new ArrayCollection();
         $this->afs = new ArrayCollection();
     }
