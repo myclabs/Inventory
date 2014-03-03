@@ -45,7 +45,6 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
             $data['targetAF'] = $subAF->getCalledAF()->getId();
             $data['foldaway'] = $subAF->getFoldaway();
             $data['repetition'] = $subAF->getMinInputNumber();
-            $data['hasFreeLabel'] = $subAF->getWithFreeLabel();
             $this->addLine($data);
         }
         $this->send();
@@ -84,7 +83,6 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
             /** @var $calledAF AF */
             $calledAF = AF::load($this->getAddElementValue('targetAF'));
             $subAF->setCalledAF($calledAF);
-            $subAF->setWithFreeLabel($this->getAddElementValue('hasFreeLabel'));
             $af->addComponent($subAF);
 
             $subAF->save();
@@ -143,10 +141,6 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
             case 'repetition':
                 $subAF->setMinInputNumber($newValue);
                 $this->data = $subAF->getMinInputNumber();
-                break;
-            case 'hasFreeLabel':
-                $subAF->setWithFreeLabel($newValue);
-                $this->data = $subAF->getWithFreeLabel();
                 break;
         }
         $subAF->save();

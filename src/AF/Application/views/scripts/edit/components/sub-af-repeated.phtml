@@ -88,14 +88,6 @@ $isRepeated->list = array(
     )
 );
 $datagrid->addCol($isRepeated);
-// Has Free Label
-$hasFreeLabel = new UI_Datagrid_Col_Bool('hasFreeLabel', __('AF', 'configComponentDatagrid', 'freeLabelHeader'));
-$hasFreeLabel->editable = true;
-$hasFreeLabel->textTrue = __('UI', 'other', 'yes');
-$hasFreeLabel->textFalse = __('UI', 'other', 'no');
-$hasFreeLabel->valueTrue = '<i class="fa fa-check"></i> '.__('UI', 'other', 'yes');
-$hasFreeLabel->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'other', 'no');
-$datagrid->addCol($hasFreeLabel);
 
 echo $datagrid->render();
 ?>
