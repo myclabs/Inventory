@@ -92,10 +92,10 @@
         </tu>
         <tu tuid="bannerExplanations">
             <tuv xml:lang="fr">
-                <seg>Personnalisation de la page principale; taille d'image en pixels recommandée h=125 et L<=1100.</seg>
+                <seg>Personnalisation de la page principale; taille d'image en pixels recommandée h=125 et L&lt;=1100.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Customizing the main page, image size recommended in pixels h=125 and L<=1100.</seg>
+                <seg>Customizing the main page, image size recommended in pixels h=125 and L&lt;=1100.</seg>
             </tuv>
         </tu>
         <tu tuid="choiceBanner">
