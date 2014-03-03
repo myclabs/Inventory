@@ -1,17 +1,67 @@
 <?php
+use AF\Domain\AFLibrary;
 use Parameter\Application\Form\AddNodeForm;
+use Parameter\Domain\Category;
+
+/** @var AFLibrary $library */
+$library = $this->library;
 ?>
+
 <div class="page-header">
-    <h1><?=__('Parameter', 'familyTree', 'familyTree')?></h1>
+    <h1>
+        <?=$library->getLabel()?>
+        <small><?=__('Parameter', 'familyList', 'familyList')?></small>
+    </h1>
 </div>
 
 <?php
+$datagrid = new UI_Datagrid('familyDatagrid', 'datagrid_family-datagrid', 'parameter');
+$datagrid->addParam('library', $library->getId());
+
+$columns = [];
+
+$columns['category'] = new UI_Datagrid_Col_List('category', __('UI', 'name', 'category'));
+$list = [];
+/** @var $categories Category[] */
+$categories = Category::loadList();
+foreach ($categories as $category) {
+    $list[$category->getId()] = $category->getLabel();
+}
+$columns['category']->list = $list;
+$columns['category']->fieldType = UI_Datagrid_Col_List::FIELD_LIST;
+$columns['category']->addable = true;
+
+$columns['label'] = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$columns['label']->addable = true;
+
+$columns['ref'] = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$columns['ref']->addable = true;
+
+$columns['unit'] = new UI_Datagrid_Col_Text('unit', __('Unit', 'name', 'unit'));
+$columns['unit']->addable = true;
+
+$columns['detail'] = new UI_Datagrid_Col_Link('detail', __('UI', 'name', 'details'));
+$columns['detail']->addable = false;
+
+foreach ($columns as $column) {
+    $column->editable = false;
+    $datagrid->addCol($column);
+}
+
+if ($this->edit) {
+    $datagrid->addElements = true;
+    $datagrid->addPanelTitle = __('Parameter', 'familyList', 'addPanelTitle');
+}
+
+$datagrid->display();
+
+
 $tree = new UI_Tree('familyTree', 'tree_family-tree', 'parameter');
+$tree->addParam('library', $library->getId());
 $tree->expandAll = false;
 $tree->collapseAll = false;
-$tree->addParam('mode', $this->mode);
 
-if ($this->mode == 'edition') {
+if ($this->edit) {
     // Ajout.
     $tree->addNode = true;
     $addForm = new AddNodeForm('addNode');
@@ -32,7 +82,7 @@ if ($this->mode == 'edition') {
 $tree->display();
 
 
-if ($this->mode == 'edition') {
+if ($this->edit) {
     ?>
     <script>
         $(function() {

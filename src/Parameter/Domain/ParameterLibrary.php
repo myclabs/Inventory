@@ -7,6 +7,7 @@ use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Parameter\Domain\Family\Family;
 
 /**
@@ -97,5 +98,32 @@ class ParameterLibrary extends Core_Model_Entity
     public function getAccount()
     {
         return $this->account;
+    }
+
+    /**
+     * @return Collection|Family[]
+     */
+    public function getFamilies()
+    {
+        return $this->families;
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getRootCategories()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('parentCategory'));
+
+        return $this->categories->matching($criteria);
     }
 }
