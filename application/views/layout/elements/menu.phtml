@@ -133,45 +133,6 @@ if ($connectedUser) {
             ]
         ];
     }
-    if ($isAllowedToEditRepository) {
-        $subMenuRepository[] = [
-            'name' => __('Parameter', 'name', 'parameters'),
-            'url' => '#',
-            'submenu' => [
-                [
-                    'name' => __('Parameter', 'familyTree', 'familyTreeEdit'),
-                    'url' => 'parameter/family/tree-edit'
-                ],
-                [
-                    'name' => __('Parameter', 'familyTree', 'familyTreeConsult'),
-                    'url' => 'parameter/family/tree'
-                ],
-                [
-                    'name' => __('Parameter', 'familyList', 'familyListEdit'),
-                    'url' => 'parameter/family/list-edit'
-                ],
-                [
-                    'name' => __('Parameter', 'familyList', 'familyListConsult'),
-                    'url' => 'parameter/family/list'
-                ],
-            ],
-        ];
-    } else {
-        $subMenuRepository[] = [
-            'name' => __('Parameter', 'name', 'parameters'),
-            'url' => '#',
-            'submenu' => [
-                [
-                    'name' => __('Parameter', 'familyTree', 'familyTree'),
-                    'url' => 'parameter/family/tree'
-                ],
-                [
-                    'name' => __('Parameter', 'familyList', 'familyList'),
-                    'url' => 'parameter/family/list'
-                ],
-            ]
-        ];
-    }
 
     if ($isAllowedToEditRepository) {
         $subMenuRepository[] = [
