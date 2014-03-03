@@ -123,9 +123,6 @@ echo $form->render();
     <?=Core_Translate::exportJS('AF', 'inputInput', 'statusCalculationIncomplete')?>
     <?=Core_Translate::exportJS('AF', 'inputInput', 'statusComplete')?>
     <?=Core_Translate::exportJS('AF', 'inputInput', 'statusFinished')?>
-    // Marquer la saisie comme terminée
-    <?=Core_Translate::exportJS('AF', 'inputInput', 'markInProgressInputAsFinishedTooltip')?>
-    <?=Core_Translate::exportJS('AF', 'inputInput', 'markIncompleteInputAsFinishedTooltip')?>
     // Popups de confirmation au clic sur « Réinitialiser » ou « Quitter »
     <?=Core_Translate::exportJS('AF', 'inputInput', 'confirmReinitializeInput')?>
     <?=Core_Translate::exportJS('AF', 'inputInput', 'confirmExitInput')?>
@@ -137,7 +134,7 @@ echo $form->render();
     $(function() {
 
         <?php
-        $completion = $inputSet ? $inputSet->getCompletion() : 0;
+        $completion = $inputSet ? (int) $inputSet->getCompletion() : 0;
         $status = $inputSet ? $inputSet->getStatus() : 'input_incomplete';
         ?>
         // Complétion et statut initial
