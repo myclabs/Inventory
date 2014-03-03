@@ -1,7 +1,3 @@
-<div class="page-header">
-    <h1><?=__('AF', 'formTree', 'pageTitle')?></h1>
-</div>
-
 <?php
 $tree = new UI_Tree('afTree', 'tree_af-tree', 'af');
 $tree->expandAll = true;
@@ -33,19 +29,20 @@ $tree->collapseAll = false;
 
 $tree->display();
 
-$script = '';
-$script .= '$(\'#afTree_element\').change(function(e) {';
-$script .= 'var idNode = $(this).val();';
-$script .= '$.get(';
-$script .= '\'af/tree_af-tree/getinfoedit?idNode=\' + idNode, ';
-$script .= 'function(o){';
-$script .= '$(\'#afTree_labelEdit\').val(o.label);';
-$script .= '$(\'#afTree_htmlComplement\').html(o.htmlComplement);';
-$script .= '$(\'#afTree_editPanel .modal-header h3\').html(o.title);';
-$script .= '}';
-$script .= ').error(function(o) {';
-$script .= 'errorHandler(o);';
-$script .= '});';
-$script .= '});';
+$script = <<<JS
+$('#afTree_element').change(function(e) {
+    var idNode = $(this).val();
+    $.get(
+        'af/tree_af-tree/getinfoedit?idNode=' + idNode,
+        function(o) {
+            $('#afTree_labelEdit').val(o.label);
+            $('#afTree_htmlComplement').html(o.htmlComplement);
+            $('#afTree_editPanel .modal-header h3').html(o.title);
+        }
+    ).error(function(o) {
+        errorHandler(o);
+    });
+});
+JS;
 
 $this->headScript()->appendScript($script);
