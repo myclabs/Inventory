@@ -348,7 +348,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     {
         $this->updateMembersHashKey();
         $this->updateTag();
-        $this->updateHierarchy();
     }
 
     /**
