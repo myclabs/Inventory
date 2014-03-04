@@ -1,0 +1,70 @@
+<?php
+/**
+ * Liste des AF
+ * @author  matthieu.napoli
+ * @package AF
+ */
+use AF\Domain\AF;
+use AF\Domain\Category;
+
+?>
+
+<div class="page-header">
+    <h1><?=__('AF', 'formList', 'pageTitle')?></h1>
+</div>
+
+<?php
+$datagrid = new UI_Datagrid('listAF', 'Datagrid_Af', 'af');
+$datagrid->deleteElements = true;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('AF', 'formList', 'addPanelTitle');
+
+$categoryColumn = new UI_Datagrid_Col_List('category', __('UI', 'name', 'category'));
+$categoryColumn->editable = true;
+$categoryColumn->addable = true;
+/** @var $categories Category[] */
+$categories = Category::loadList();
+$categoryColumn->list = [];
+foreach ($categories as $category) {
+    $categoryColumn->list[$category->getId()] = $category->getLabel();
+}
+$categoryColumn->withEmptyElement = false;
+$datagrid->addCol($categoryColumn);
+
+$labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$labelColumn->editable = true;
+$labelColumn->addable = true;
+$labelColumn->sortName = AF::QUERY_LABEL;
+$labelColumn->filterName = AF::QUERY_LABEL;
+$datagrid->addCol($labelColumn);
+
+$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$refColumn->editable = true;
+$refColumn->addable = true;
+$refColumn->sortName = AF::QUERY_REF;
+$refColumn->filterName = AF::QUERY_REF;
+$datagrid->addCol($refColumn);
+
+$configurationColumn = new UI_Datagrid_Col_Link('configuration', __('UI', 'name', 'configuration'));
+$datagrid->addCol($configurationColumn);
+
+$testColumn = new UI_Datagrid_Col_Link('test', __('UI', 'name', 'test'));
+$datagrid->addCol($testColumn);
+
+$duplicateColumn = new UI_Datagrid_Col_Popup('duplicate', __('UI', 'verb', 'duplicate'));
+$duplicateColumn->popup->title = __('AF', 'formList', 'duplicatePanelTitle');
+$button = new UI_HTML_Button(__('UI', 'verb', 'duplicate'));
+$button->id = 'submit';
+$button->addAttribute('class', 'btn-primary');
+$duplicateColumn->popup->footer = $button->render();
+$datagrid->addCol($duplicateColumn);
+
+$datagrid->display();
+?>
+
+<script type="text/javascript">
+    $(document).ready(function() { refFromLabel('listAF_label_addForm', 'listAF_ref_addForm') });
+    $("#submit").click(function () {
+        $("#duplicateAF").submit();
+    });
+</script>

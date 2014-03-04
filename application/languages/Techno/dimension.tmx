@@ -29,32 +29,68 @@
         </tu>
         <tu tuid="addMembers">
             <tuv xml:lang="fr">
-                <seg>Ajouter des membres</seg>
+                <seg>Ajouter des éléments</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Add members</seg>
+                <seg>Add elements</seg>
             </tuv>
         </tu>
         <tu tuid="addMemberList">
             <tuv xml:lang="fr">
-                <seg>Ajout d'une liste de membres</seg>
+                <seg>Ajout d'une liste d'éléments</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Insertion of a list of members</seg>
+                <seg>Insertion of a list of elements</seg>
             </tuv>
         </tu>
 
         <tu tuid="warningEditingDimensions">
             <tuv xml:lang="fr">
                 <seg>
-                    Attention! Si vous modifiez les dimensions, il est nécessaire de
-                    réouvrir (rafraichir) cette page si vous voulez ensuite modifier les paramètres.
+                    Attention ! si vous effectuez une modification sur une dimension,
+                    il est nécessaire de réouvrir (rafraichir) cette page pour que la modification
+                    soit visible sur le tableau des paramètres ci-dessus.
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
                     Warning! If you edit the dimensions, you will need to reopen (refresh)
                     this page if you then want to edit the parameters.
+                </seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="warningDeletingDimension">
+            <tuv xml:lang="fr">
+                <seg>
+                    Attention !
+                    La suppression d'une dimension implique la recréation de tous les paramètres de la famille.
+                    Les paramètres déjà saisis seront perdus.
+                    Voulez-vous vraiment supprimer cette dimension ?
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Warning!
+                    Deleting a dimension means recreating every parameters too.
+                    The parameters already defined will be lost.
+                    Do you really want to delete that dimension?
+                </seg>
+            </tuv>
+        </tu>
+        <tu tuid="warningAddingDimension">
+            <tuv xml:lang="fr">
+                <seg>
+                    Attention !
+                    L'ajout d'une dimension implique la recréation de tous les paramètres de la famille.
+                    Les paramètres déjà saisis seront perdus.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Warning!
+                    Adding a dimension means recreating every parameters too.
+                    The parameters already defined will be lost.
                 </seg>
             </tuv>
         </tu>

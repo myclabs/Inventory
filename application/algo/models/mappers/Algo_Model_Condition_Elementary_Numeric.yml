@@ -1,9 +1,0 @@
-Algo_Model_Condition_Elementary_Numeric:
-  type: entity
-  repositoryClass: Core_Model_Repository_Ordered
-  table: Algo_Condition_Elementary_Numeric
-
-  fields:
-    value:
-      type: integer
-      nullable: true

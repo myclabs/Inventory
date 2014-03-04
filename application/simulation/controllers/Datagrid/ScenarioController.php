@@ -5,6 +5,7 @@
  * @subpackage Controller
  */
 
+use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 
 /**
@@ -62,16 +63,16 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
                 $percent = $aFInputSetPrimary->getCompletion();
                 $progressBarColor = null;
                 switch ($aFInputSetPrimary->getStatus()) {
-                    case AF_Model_InputSet_Primary::STATUS_FINISHED:
+                    case PrimaryInputSet::STATUS_FINISHED:
                         $progressBarColor = 'success';
                         break;
-                    case AF_Model_InputSet_Primary::STATUS_COMPLETE:
+                    case PrimaryInputSet::STATUS_COMPLETE:
                         $progressBarColor = 'warning';
                         break;
-                    case AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE:
+                    case PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE:
                         $progressBarColor = 'danger';
                         break;
-                    case AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE:
+                    case PrimaryInputSet::STATUS_INPUT_INCOMPLETE:
                         $progressBarColor = 'danger';
                         break;
                 }
@@ -79,7 +80,7 @@ class Simulation_Datagrid_ScenarioController extends UI_Controller_Datagrid
                 $data['stateInput'] = $aFInputSetPrimary->getStatus();
             } catch (Core_Exception_UndefinedAttribute $e) {
                 $data['advancementInput'] = 0;
-                $data['stateInput'] = AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE;
+                $data['stateInput'] = PrimaryInputSet::STATUS_INPUT_INCOMPLETE;
             }
             $data['link'] = $this->cellLink('simulation/scenario/details?idScenario='.$scenario->getKey()['id'], __('UI', 'datagridContent', 'linkLabel'), 'share-alt');
             $this->addLine($data);

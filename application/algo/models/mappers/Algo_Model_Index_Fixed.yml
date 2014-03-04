@@ -1,9 +1,0 @@
-Algo_Model_Index_Fixed:
-  type: entity
-  repositoryClass: Core_Model_Repository
-  table: Algo_Index_Fixed
-
-  fields:
-    refClassifMember:
-      type: string
-      nullable: true

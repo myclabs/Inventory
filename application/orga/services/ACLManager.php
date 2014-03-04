@@ -267,7 +267,7 @@ class Orga_Service_ACLManager
                         && (!$granularity->hasAxes() || !$axis->isTransverse($granularity->getAxes()))
                     ) {
                         foreach ($granularity->getAxes() as $granularityAxis) {
-                            if ($axis->isBroaderThan($granularityAxis) || ($axis === $granularityAxis)) {
+                            if (!$axis->isNarrowerThan($granularityAxis)) {
                                 continue 2;
                             }
                         }

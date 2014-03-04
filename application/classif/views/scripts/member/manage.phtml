@@ -58,5 +58,6 @@ foreach ($this->listAxes as $axis) {
     $script .= 'members'.$axis->getRef().'.filter();';
     $script .= '}';
     $script .= '});';
+    $script .= 'refFromLabel(\'members'.$axis->getRef().'_label_addForm\', \'members'.$axis->getRef().'_ref_addForm\');';
     $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
 }

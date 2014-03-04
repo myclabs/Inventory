@@ -1,22 +1,26 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    UI
- * @subpackage View
- */
 
 /**
  * Helper de vue pour générer un datagrid de traduction.
- * @package    Core
- * @subpackage View
+ *
+ * @author valentin.claras
  */
 class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
 {
     /**
      * @var UI_Datagrid
      */
-    protected $_datagrid = null;
+    protected $datagrid;
 
+    /**
+     * @var string[]
+     */
+    private $translationLanguages;
+
+    public function __construct()
+    {
+        $this->translationLanguages = \Core\ContainerSingleton::getContainer()->get('translation.languages');
+    }
 
     /**
      * Retourne le render de l'actuel autocomplete de l'aide de vue.
@@ -25,8 +29,8 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      */
     public function __toString()
     {
-        UI_Datagrid::addHeader($this->_datagrid);
-        return $this->_datagrid->getHTML();
+        UI_Datagrid::addHeader($this->datagrid);
+        return $this->datagrid->getHTML();
     }
 
     /**
@@ -36,15 +40,14 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      * @param string $attribute
      * @param string $controller
      * @param string $module
-     * @param bool   $editable
      *
      * @return UI_View_Helper_TranslateDatagrid
      */
     public function translateDatagrid($className, $attribute, $controller, $module = null)
     {
         $id = 'datagridTranslate_' . str_replace('\\', '_', $className) . '_' . $attribute;
-        $this->_datagrid = new UI_Datagrid($id, $controller, $module);
-        $this->_datagrid->automaticFiltering = false;
+        $this->datagrid = new UI_Datagrid($id, $controller, $module);
+        $this->datagrid->automaticFiltering = false;
 
         return $this;
     }
@@ -52,13 +55,13 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
     /**
      * Ajoute un identifier et les colonnes de langues en simple texte.
      *
-     * @param bool $editbale
+     * @param bool $editable
      *
      * @return UI_View_Helper_TranslateDatagrid
      */
-    public function simple($editbale=true)
+    public function simple($editable = true)
     {
-        return $this->addIdentifierCol()->addLanguagesTextCols($editbale);
+        return $this->addIdentifierCol()->addLanguagesTextCols($editable);
     }
 
     /**
@@ -70,7 +73,7 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
     {
         $identifierColumn = new UI_Datagrid_Col_Text('identifier', __('UI', 'name', 'identifier'));
         $identifierColumn->editable = false;
-        $this->_datagrid->addCol($identifierColumn);
+        $this->datagrid->addCol($identifierColumn);
 
         return $this;
     }
@@ -82,12 +85,13 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      *
      * @return UI_View_Helper_TranslateDatagrid
      */
-    public function addLanguagesTextCols($editable=true)
+    public function addLanguagesTextCols($editable = true)
     {
-        foreach (Zend_Registry::get('languages') as $language) {
+        Core_Tools::dump($this->translationLanguages);
+        foreach ($this->translationLanguages as $language) {
             $languageColumn = new UI_Datagrid_Col_Text($language, __('UI', 'translate', 'language' . $language));
             $languageColumn->editable = $editable;
-            $this->_datagrid->addCol($languageColumn);
+            $this->datagrid->addCol($languageColumn);
         }
 
         return $this;
@@ -100,12 +104,12 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      *
      * @return UI_View_Helper_TranslateDatagrid
      */
-    public function addLanguagesLongTextCols($editable=true)
+    public function addLanguagesLongTextCols($editable = true)
     {
-        foreach (Zend_Registry::get('languages') as $language) {
+        foreach ($this->translationLanguages as $language) {
             $languageColumn = new UI_Datagrid_Col_LongText($language, __('UI', 'translate', 'language' . $language));
             $languageColumn->editable = $editable;
-            $this->_datagrid->addCol($languageColumn);
+            $this->datagrid->addCol($languageColumn);
         }
 
         return $this;
@@ -120,7 +124,7 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      */
     public function addCol(UI_Datagrid_Col_Generic $column)
     {
-        $this->_datagrid->addCol($column);
+        $this->datagrid->addCol($column);
 
         return $this;
     }
@@ -135,9 +139,8 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
      */
     public function addParam($parameterName, $parameterValue)
     {
-        $this->_datagrid->addParam($parameterName, $parameterValue);
+        $this->datagrid->addParam($parameterName, $parameterValue);
 
         return $this;
     }
-
 }

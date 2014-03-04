@@ -44,7 +44,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity
 
     /**
      * Charge le GranularityReport correspondant à un Report de DW.
-     * 
+     *
      * @param DW_Model_Report $dWReport
      *
      * @return Orga_Model_GranularityReport

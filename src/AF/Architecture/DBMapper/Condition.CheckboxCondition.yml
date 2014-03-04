@@ -1,0 +1,9 @@
+AF\Domain\Condition\CheckboxCondition:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: AF_Condition_Elementary_Checkbox
+
+  fields:
+    value:
+      type: boolean
+      nullable: false

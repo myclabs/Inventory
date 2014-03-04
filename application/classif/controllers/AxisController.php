@@ -33,6 +33,7 @@ class Classif_AxisController extends Core_Controller
     public function manageAction()
     {
         $this->view->listParents = Classif_Model_Axis::loadList();
+        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     }
 
 }

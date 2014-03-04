@@ -1,83 +1,47 @@
 <?php
-/**
- * @author matthieu.napoli
- * @package AF
- */
 
-/**
- * @package Algo
- */
-class ActionTest
+namespace Tests\AF;
+
+use AF\Domain\Action\Action;
+use Core\Test\TestCase;
+
+class ActionTest extends TestCase
 {
-
-    /**
-     * Lance les autre classe de tests.
-     */
-    public static function suite()
+    public function testConstruct()
     {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('ActionSetUpTest');
-        return $suite;
-    }
-
-}
-
-/**
- * @package Algo
- */
-class ActionSetUpTest extends PHPUnit_Framework_TestCase
-{
-
-    /**
-     * @return AF_Model_Action
-     */
-    function testConstruct()
-    {
-        /** @var $o AF_Model_Action */
-        $o = $this->getMockForAbstractClass('AF_Model_Action');
-        $this->assertTrue($o instanceof AF_Model_Action);
+        /** @var $o Action */
+        $o = $this->getMockForAbstractClass(Action::class);
+        $this->assertTrue($o instanceof Action);
         return $o;
     }
 
     /**
      * @depends testConstruct
-     * @param AF_Model_Action $o
-     * @return AF_Model_Action
+     * @param Action $o
+     * @return Action
      */
-    function testLoad(AF_Model_Action $o)
+    public function testLoad(Action $o)
     {
-        $this->assertTrue($o instanceof AF_Model_Action);
+        $this->assertTrue($o instanceof Action);
         return $o;
     }
 
     /**
      * @depends testLoad
-     * @param AF_Model_Action $o
+     * @param Action $o
      */
-    function testDelete(AF_Model_Action $o)
+    public function testDelete(Action $o)
     {
-        $this->assertTrue($o instanceof AF_Model_Action);
+        $this->assertTrue($o instanceof Action);
     }
 
-}
-
-/**
- * @package Algo
- */
-class ActionOtherTest extends PHPUnit_Framework_TestCase
-{
-
-    /**
-     * Teste checkConfig
-     */
-    function testCheckConfig()
+    public function testCheckConfig()
     {
-        /** @var $o AF_Model_Action */
-        $o = $this->getMockForAbstractClass('AF_Model_Action');
+        /** @var $o Action */
+        $o = $this->getMockForAbstractClass(Action::class);
         $errors = $o->checkConfig();
         $this->assertCount(1, $errors);
         $this->assertTrue($errors[0]->getFatal());
         return $o;
     }
-
 }

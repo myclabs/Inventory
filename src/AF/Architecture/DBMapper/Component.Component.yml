@@ -1,0 +1,89 @@
+AF\Domain\Component\Component:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: AF_Component
+
+  gedmo:
+    translation:
+      locale: translationLocale
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: type_component
+    type: string
+  discriminatorMap:
+    group: AF\Domain\Component\Group
+    subaf: AF\Domain\Component\SubAF
+    subaf_notrepeated: AF\Domain\Component\SubAF\NotRepeatedSubAF
+    subaf_repeated: AF\Domain\Component\SubAF\RepeatedSubAF
+    field: AF\Domain\Component\Field
+    checkbox: AF\Domain\Component\Checkbox
+    numeric: AF\Domain\Component\NumericField
+    text: AF\Domain\Component\TextField
+    select: AF\Domain\Component\Select
+    select_single: AF\Domain\Component\Select\SelectSingle
+    select_multi: AF\Domain\Component\Select\SelectMulti
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    label:
+      type: string
+      nullable: true
+      gedmo:
+        - translatable
+    help:
+      type: text
+      nullable: true
+      gedmo:
+        - translatable
+    visible:
+      type: boolean
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+
+  manyToOne:
+    af:
+      targetEntity: AF\Domain\AF
+      inversedBy: components
+      joinColumn:
+        name: idAF
+        referencedColumnName: id
+        nullable: true
+        onDelete: SET NULL
+    group:
+      targetEntity: AF\Domain\Component\Group
+      inversedBy: subComponents
+      orderBy:
+        position: ASC
+      joinColumn:
+        name: idGroup
+        referencedColumnName: id
+        nullable: true
+
+  oneToMany:
+    actions:
+      targetEntity: AF\Domain\Action\Action
+      mappedBy: targetComponent
+      cascade: [ all ]
+      orphanRemoval: true
+
+  uniqueConstraints:
+    # ref unique dans un AF
+    ref:
+      columns: [idAF, ref]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

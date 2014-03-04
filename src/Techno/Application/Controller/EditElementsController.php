@@ -24,7 +24,7 @@ class Techno_EditElementsController extends Core_Controller
         $number = 0;
 
         foreach ($lines as $line) {
-            $array = explode(',', $line);
+            $array = explode(';', $line);
 
             if (count($array) !== (count($dimensions) + 2)) {
                 UI_Message::addMessageStatic(__('Techno', 'import', 'invalidElementsInput'));

@@ -1,9 +1,0 @@
-AF_Model_Component_Field:
-  type: entity
-  repositoryClass: Core_Model_Repository_Ordered
-  table: AF_Component_Field
-
-  fields:
-    enabled:
-      type: boolean
-      nullable: false

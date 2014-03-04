@@ -31,9 +31,8 @@ abstract class Core_Tools
      */
     public static function dump($var)
     {
-        $container = Zend_Registry::get('container');
         /** @var \Psr\Log\LoggerInterface $logger */
-        $logger = $container->get(LoggerInterface::class);
+        $logger = \Core\ContainerSingleton::getContainer()->get(LoggerInterface::class);
 
         $filters = [new DoctrineCollectionFilter(), new DoctrineProxyFilter()];
 

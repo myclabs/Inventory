@@ -7,10 +7,18 @@
 
 /** @var \Orga\ViewModel\OrganizationViewModel $organization */
 $organization = $this->organization;
+$workspaceBanner = null;
+$file = glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $organization->id . '.*');
+if (count($file) > 0) {
+    $workspaceBanner = 'workspaceBanners/' . pathinfo(array_pop($file))['filename'];
+}
 ?>
+<style>
+    .organization h1 img { max-height: 125px; }
+</style>
+
 <div class="organization page-header">
     <h1>
-        <?=$organization->label?>
         <?php if ($organization->canBeEdited) : ?>
             <div class="pull-right">
                 <small>
@@ -21,6 +29,11 @@ $organization = $this->organization;
                     </a>
                 </small>
             </div>
+        <?php endif; ?>
+        <?php if ($workspaceBanner === null) : ?>
+            <?=$organization->label?>
+        <?php else : ?>
+            <img src="<?=$workspaceBanner?>">
         <?php endif; ?>
     </h1>
 </div>

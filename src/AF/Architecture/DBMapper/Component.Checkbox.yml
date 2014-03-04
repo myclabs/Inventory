@@ -1,0 +1,9 @@
+AF\Domain\Component\Checkbox:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: AF_Component_Checkbox
+
+  fields:
+    defaultValue:
+      type: boolean
+      nullable: false

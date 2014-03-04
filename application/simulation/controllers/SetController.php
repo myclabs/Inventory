@@ -4,6 +4,7 @@
  * @package Simulation
  */
 
+use AF\Domain\Category;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 
@@ -38,8 +39,8 @@ class Simulation_SetController extends Core_Controller
     {
         $this->view->listAF = array();
         // @todo normalement la liste déroulante des AF devrait être fonction de l'utilisateur.
-        foreach (AF_Model_Category::loadList() as $category) {
-            /** @var AF_Model_Category $category */
+        foreach (Category::loadList() as $category) {
+            /** @var Category $category */
             foreach ($category->getAFs() as $af) {
                 $this->view->listAF[$af->getRef()] = $category->getLabel() . ' - ' . $af->getLabel();
             }

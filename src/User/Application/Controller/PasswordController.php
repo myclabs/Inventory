@@ -1,13 +1,13 @@
 <?php
 
 use Core\Annotation\Secure;
-use DI\Annotation\Inject;
 use User\Application\Service\AuthAdapter;
 use User\Domain\User;
 use User\Domain\UserService;
 
 /**
- * Contrôleur de gestion des mots de passe oubliés
+ * Contrôleur de gestion des mots de passe oubliés.
+ *
  * @author matthieu.napoli
  */
 class User_PasswordController extends UI_Controller_Captcha
@@ -26,6 +26,12 @@ class User_PasswordController extends UI_Controller_Captcha
      * @var string
      */
     private $applicationUrl;
+
+    /**
+     * @Inject("emails.noreply.name")
+     * @var string
+     */
+    private $emailNoReplyName;
 
     /**
      * Formulaire de "mot de passe oublié"
@@ -65,30 +71,28 @@ class User_PasswordController extends UI_Controller_Captcha
                 $this->entityManager->flush();
 
                 // On envoie le mail à l'utilisateur
-                $url = sprintf('%s/user/password/reset?code=%s',
+                $url = sprintf(
+                    '%s/user/password/reset?code=%s',
                     $this->applicationUrl,
-                    $user->getEmailKey());
-                $urlApplication = $this->applicationUrl . '/';
+                    $user->getEmailKey()
+                );
                 $subject = __('User', 'email', 'subjectForgottenPassword');
-                $config = Zend_Registry::get('configuration');
-                if (empty($config->emails->contact->adress)) {
-                    throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini !');
-                }
-                $content = __('User',
-                              'email',
-                              'bodyForgottenPassword',
-                              array(
-                                   'PASSWORD_RESET_LINK' => $url,
-                                   'PASSWORD_RESET_CODE' => $user->getEmailKey(),
-                                   'APPLICATION_NAME'    => $config->emails->noreply->name,
-                                   'URL_APPLICATION'     => $urlApplication,
-                              ));
+                $content = __('User', 'email', 'bodyForgottenPassword', [
+                    'PASSWORD_RESET_LINK' => $url,
+                    'PASSWORD_RESET_CODE' => $user->getEmailKey(),
+                    'APPLICATION_NAME'    => $this->emailNoReplyName,
+                    'URL_APPLICATION'     => $this->applicationUrl . '/',
+                ]);
                 $this->userService->sendEmail($user, $subject, $content);
-                $this->setFormMessage(__('User', 'resetPassword', 'emailNewPasswordLinkSent'),
-                                      UI_Message::TYPE_SUCCESS);
+                $this->setFormMessage(
+                    __('User', 'resetPassword', 'emailNewPasswordLinkSent'),
+                    UI_Message::TYPE_SUCCESS
+                );
             }
             $this->sendFormResponse();
         }
+
+        $this->view->assign('code', $this->getParam('code'));
     }
 
     /**
@@ -105,8 +109,8 @@ class User_PasswordController extends UI_Controller_Captcha
         try {
             User::loadByEmailKey($code);
         } catch (Core_Exception_NotFound $e) {
-            UI_Message::addMessageStatic(__('User', 'messages', 'authenticationKeyInvalid'));
-            $this->redirect('user/password/forgotten');
+            UI_Message::addMessageStatic(__('User', 'resetPassword', 'confirmationCodeInvalid'));
+            $this->redirect('user/password/forgotten?code=' . $code);
         }
         $this->view->assign('code', $code);
     }
@@ -119,14 +123,14 @@ class User_PasswordController extends UI_Controller_Captcha
     {
         $code = $this->getParam('code');
         if (!$code) {
-            $this->redirect('user/password/reset');
+            $this->redirect('user/password/forgotten');
             return;
         }
 
         try {
             $user = User::loadByEmailKey($code);
         } catch (Core_Exception_NotFound $e) {
-            $this->redirect('user/password/reset');
+            $this->redirect('user/password/forgotten');
             return;
         }
 
@@ -161,5 +165,4 @@ class User_PasswordController extends UI_Controller_Captcha
 
         $this->sendFormResponse();
     }
-
 }

@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+use Inventory\Command\CreateDBCommand;
+use Inventory\Command\PopulateDBCommand;
+use Inventory\Command\UpdateDBCommand;
+use Symfony\Component\Console\Application;
+
+define('RUN', false);
+define('APPLICATION_ENV', 'testsunitaires');
+require_once __DIR__ . '/../application/init.php';
+
+$container = \Core\ContainerSingleton::getContainer();
+
+$application = new Application('Inventory');
+
+$application->add($container->get(CreateDBCommand::class));
+$application->add($container->get(UpdateDBCommand::class));
+$application->add($container->get(PopulateDBCommand::class));
+
+$application->run();

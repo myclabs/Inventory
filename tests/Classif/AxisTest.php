@@ -1,45 +1,34 @@
 <?php
-/**
- * Classe Classif_Test_AxisTest
- * @author     valentin.claras
- * @author     cyril.perraud
- * @package    Classif
- * @subpackage Test
- */
 
-/**
- * Creation of the Test Suite
- * @package    Classif
- */
-class Classif_Test_AxisTest
+namespace Tests\Classif;
+
+use Classif_Model_Axis;
+use Core\Test\TestCase;
+use PHPUnit_Framework_TestSuite;
+
+class AxisTest
 {
-    /**
-     * Creation of the test suite
-     */
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Classif_Test_AxisSetUp');
-        $suite->addTestSuite('Classif_Test_AxisOther');
+        $suite->addTestSuite(AxisSetUp::class);
+        $suite->addTestSuite(AxisOther::class);
         return $suite;
     }
 
     /**
      * Generation de l'objet de test.
-     *
      * @param string $ref
      * @param string $label
-     *
      * @return Classif_Model_Axis
      */
-    public static function generateObject($ref=null, $label=null)
+    public static function generateObject($ref = null, $label = null)
     {
         $o = new Classif_Model_Axis();
         $o->setRef(($ref ===null) ? 'ref' : $ref);
         $o->setLabel(($label ===null) ? 'label' : $label);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $o;
     }
 
@@ -50,40 +39,24 @@ class Classif_Test_AxisTest
     public static function deleteObject($o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
-
 }
 
-/**
- * Test of the creation/modification/deletion of the entity
- * @package    Classif
- */
-class Classif_Test_AxisSetUp extends PHPUnit_Framework_TestCase
+class AxisSetUp extends TestCase
 {
-
-    /**
-     * Function called once, before all the tests
-     */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Classif_Model_Axis en base, sinon suppression !
         if (Classif_Model_Axis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé avant les tests, suppression en cours !';
             foreach (Classif_Model_Axis::loadList() as $axis) {
                 $axis->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            self::getEntityManager()->flush();
         }
     }
 
-    /**
-     * Test le constructeur
-     * @return Classif_Model_Axis
-     */
-    function testConstruct()
+    public function testConstruct()
     {
         $o = new Classif_Model_Axis();
         $this->assertInstanceOf('Classif_Model_Axis', $o);
@@ -91,8 +64,7 @@ class Classif_Test_AxisSetUp extends PHPUnit_Framework_TestCase
         $o->setLabel('LabelAxisTest');
         $this->assertEquals(array(), $o->getKey());
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertNotEquals(array(), $o->getKey());
         return $o;
     }
@@ -101,7 +73,7 @@ class Classif_Test_AxisSetUp extends PHPUnit_Framework_TestCase
      * @depends testConstruct
      * @param Classif_Model_Axis $o
      */
-    function testLoad(Classif_Model_Axis $o)
+    public function testLoad(Classif_Model_Axis $o)
     {
          $oLoaded = Classif_Model_Axis::load($o->getKey());
          $this->assertInstanceOf('Classif_Model_Axis', $o);
@@ -115,89 +87,65 @@ class Classif_Test_AxisSetUp extends PHPUnit_Framework_TestCase
      * @depends testLoad
      * @param Classif_Model_Axis $o
      */
-    function testDelete(Classif_Model_Axis $o)
+    public function testDelete(Classif_Model_Axis $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertEquals(array(), $o->getKey());
     }
 
-    /**
-     * Function called once, after all the tests
-     */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Classif_Model_Axis en base, sinon suppression !
         if (Classif_Model_Axis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé après les tests, suppression en cours !';
             foreach (Classif_Model_Axis::loadList() as $axis) {
                 $axis->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            self::getEntityManager()->flush();
         }
     }
-
 }
 
-
-/**
- * Tests of User class
- * @package    Classif
- */
-class Classif_Test_AxisOther extends PHPUnit_Framework_TestCase
+class AxisOther extends TestCase
 {
-    // Test objects
+    /**
+     * @var Classif_Model_Axis
+     */
     protected $axis;
 
-
-    /**
-     * Function called once, before all the tests
-     */
     public static function setUpBeforeClass()
     {
-        // Vérification qu'il ne reste aucun Classif_Model_Axis en base, sinon suppression !
         if (Classif_Model_Axis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé avant les tests, suppression en cours !';
             foreach (Classif_Model_Axis::loadList() as $axis) {
                 $axis->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            self::getEntityManager()->flush();
         }
     }
 
-    /**
-     * Function called before each test
-     */
-    protected function setUp()
+    public function setUp()
     {
-        $this->axis = Classif_Test_AxisTest::generateObject();
+        parent::setUp();
+        $this->axis = AxisTest::generateObject();
     }
 
-    /**
-     * Test setNarrower
-     */
-    function testSetGetNarrower()
+    public function testSetGetNarrower()
     {
-        $narrower = Classif_Test_AxisTest::generateObject('narrower');
+        $narrower = AxisTest::generateObject('narrower');
         $this->axis->setDirectNarrower($narrower);
         $this->assertSame($this->axis->getDirectNarrower(), $narrower);
         $this->axis->setDirectNarrower();
         $this->assertNull($this->axis->getDirectNarrower());
-        Classif_Test_AxisTest::deleteObject($narrower);
+        AxisTest::deleteObject($narrower);
     }
 
-    /**
-     * Test d'ajout d'un broader
-     */
     public function testManageBroaders()
     {
-        $broader1 = Classif_Test_AxisTest::generateObject('broader1');
-        $broader11 = Classif_Test_AxisTest::generateObject('broader11');
-        $broader2 = Classif_Test_AxisTest::generateObject('broader2');
-        $broader3 = Classif_Test_AxisTest::generateObject('broader3');
+        $broader1 = AxisTest::generateObject('broader1');
+        $broader11 = AxisTest::generateObject('broader11');
+        $broader2 = AxisTest::generateObject('broader2');
+        $broader3 = AxisTest::generateObject('broader3');
 
         $this->assertFalse($this->axis->hasDirectBroaders());
         $this->assertFalse($this->axis->hasDirectBroader($broader1));
@@ -238,10 +186,10 @@ class Classif_Test_AxisOther extends PHPUnit_Framework_TestCase
         $this->assertEquals(array($broader1), $this->axis->getDirectBroaders());
         $this->assertEquals(array($broader11, $broader1), $this->axis->getAllBroaders());
 
-        Classif_Test_AxisTest::deleteObject($broader3);
-        Classif_Test_AxisTest::deleteObject($broader2);
-        Classif_Test_AxisTest::deleteObject($broader11);
-        Classif_Test_AxisTest::deleteObject($broader1);
+        AxisTest::deleteObject($broader3);
+        AxisTest::deleteObject($broader2);
+        AxisTest::deleteObject($broader11);
+        AxisTest::deleteObject($broader1);
 
         $this->assertFalse($this->axis->hasDirectBroaders());
         $this->assertFalse($this->axis->hasDirectBroader($broader1));
@@ -252,30 +200,21 @@ class Classif_Test_AxisOther extends PHPUnit_Framework_TestCase
         $this->assertEmpty($this->axis->getAllBroaders());
     }
 
-    /**
-     * Function called after each test
-     */
     protected function tearDown()
     {
         if ($this->axis) {
-            Classif_Test_AxisTest::deleteObject($this->axis);
+            AxisTest::deleteObject($this->axis);
         }
     }
 
-    /**
-     * Function called once, after all the tests
-     */
     public static function tearDownAfterClass()
     {
-        // Vérification qu'il ne reste aucun Classif_Model_Axis en base, sinon suppression !
         if (Classif_Model_Axis::countTotal() > 0) {
             echo PHP_EOL . 'Des Classif_Axis restants ont été trouvé après les tests, suppression en cours !';
             foreach (Classif_Model_Axis::loadList() as $axis) {
                 $axis->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            self::getEntityManager()->flush();
         }
     }
-
 }

@@ -1,0 +1,65 @@
+<?php
+use AF\Domain\AF;
+
+/**
+ * Datagrid des algos constantes
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $af AF */
+$af = $this->af;
+
+$datagrid = new UI_Datagrid('algoNumericConstant', 'datagrid_edit_algos_numeric-constant', 'af');
+$datagrid->initialLoading = false;
+$datagrid->addParam('id', $af->getId());
+$datagrid->pagination = false;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('AF', 'configTreatmentDatagrid', 'numericConstantAddPanelTitle');
+$datagrid->deleteElements = true;
+
+// Label
+$labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$labelColumn->editable = true;
+$datagrid->addCol($labelColumn);
+
+// Ref
+$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$refColumn->editable = true;
+$datagrid->addCol($refColumn);
+
+// Unité
+$unitColumn = new UI_Datagrid_Col_Text('unit', __('Unit', 'name', 'unit'));
+$unitColumn->editable = true;
+$datagrid->addCol($unitColumn);
+
+// Valeur
+$valueColumn = new UI_Datagrid_Col_Number('value', __('UI', 'name', 'value'));
+$valueColumn->editable = true;
+$datagrid->addCol($valueColumn);
+
+// Incertitude
+$uncertainty = new UI_Datagrid_Col_Number('uncertainty', __('UI', 'name', 'uncertainty'));
+$uncertainty->editable = true;
+$datagrid->addCol($uncertainty);
+
+// Context indicator
+$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classif', 'indicator', 'indicator'));
+$contextIndicatorColumn->addable = false;
+$contextIndicatorColumn->editable = true;
+$contextIndicatorColumn->dynamicList = true;
+$contextIndicatorColumn->list = $this->baseUrl(
+    '/af/datagrid_edit_algos_numeric-constant/get-context-indicator-list/');
+$contextIndicatorColumn->withEmptyElement = true;
+$datagrid->addCol($contextIndicatorColumn);
+
+// Indexation
+$resultIndexColumn = new UI_Datagrid_Col_Popup('resultIndex', __('Algo', 'name', 'indexation'));
+$resultIndexColumn->popup->title = __('Algo', 'name', 'indexation');
+$resultIndexColumn->popup->addAttribute('class', 'large');
+$datagrid->addCol($resultIndexColumn);
+
+echo $datagrid->render();
+?>
+<script type="text/javascript">
+    $(document).ready(function() { refFromLabel('algoNumericConstant_label_addForm', 'algoNumericConstant_ref_addForm') });
+</script>

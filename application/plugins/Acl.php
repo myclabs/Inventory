@@ -1,5 +1,6 @@
 <?php
 
+use AF\Application\AFViewConfiguration;
 use Doc\Domain\Library;
 use Orga\Model\ACL\Action\CellAction;
 use User\Application\ForbiddenException;
@@ -284,6 +285,27 @@ class Inventory_Plugin_Acl extends ACLPlugin
     }
 
     /**
+     * @param User                             $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    protected function editInventoryStatusRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $canInput = $this->aclService->isAllowed(
+            $identity,
+            CellAction::INPUT(),
+            $this->getCell($request)
+        );
+        $canViewReports = $this->aclService->isAllowed(
+            $identity,
+            CellAction::VIEW_REPORTS(),
+            $this->getCell($request)
+        );
+
+        return $canInput && $canViewReports;
+    }
+
+    /**
      * @param User      $identity
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
@@ -513,9 +535,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
         $idCell = $request->getParam('idCell');
         if ($idCell !== null) {
             $mode = $request->getParam('mode');
-            if ($mode == AF_ViewConfiguration::MODE_READ) {
+            if ($mode == AFViewConfiguration::MODE_READ) {
                 return $this->viewCellRule($identity, $request);
-            } elseif ($mode == AF_ViewConfiguration::MODE_WRITE) {
+            } elseif ($mode == AFViewConfiguration::MODE_WRITE) {
                 return $this->inputCellRule($identity, $request);
             }
 

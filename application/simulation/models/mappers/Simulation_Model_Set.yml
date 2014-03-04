@@ -50,7 +50,7 @@ Simulation_Model_Set:
         referencedColumnName: id
         nullable: false
     aF:
-      targetEntity: AF_Model_AF
+      targetEntity: AF\Domain\AF
       joinColumn:
         name: idAF
         referencedColumnName: id

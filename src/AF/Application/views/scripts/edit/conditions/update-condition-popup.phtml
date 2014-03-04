@@ -1,0 +1,121 @@
+<?php
+use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Condition\ElementaryCondition;
+use AF\Domain\Condition\NumericFieldCondition;
+use AF\Domain\Condition\CheckboxCondition;
+use AF\Domain\Condition\Select\SelectSingleCondition;
+use AF\Domain\Condition\Select\SelectMultiCondition;
+
+/**
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $condition \AF\Domain\Condition\ElementaryCondition */
+$condition = $this->condition;
+
+$form = new UI_Form('updateCondition');
+$form->setAjax(false);
+$form->setAction('af/edit_conditions/update-condition-submit/idCondition/' . $condition->getId());
+
+// Relation
+$relationSelect = new UI_Form_Element_Select('relation');
+$relationSelect->setLabel(__('UI', 'name', 'relation'));
+$relationSelect->setValue($condition->getRelation());
+$form->addElement($relationSelect);
+// Options de la liste
+$optionEqual = new UI_Form_Element_Option('equal', ElementaryCondition::RELATION_EQUAL);
+$optionEqual->label = __('AF', 'configInteractionDatagrid', 'equalOption');
+$optionNotEqual = new UI_Form_Element_Option('nequal', ElementaryCondition::RELATION_NEQUAL);
+$optionNotEqual->label = __('AF', 'configInteractionDatagrid', 'differentOption');
+$optionSuperior = new UI_Form_Element_Option('gt', ElementaryCondition::RELATION_GT);
+$optionSuperior->label = __('AF', 'configInteractionDatagrid', 'greaterOption');
+$optionInferior = new UI_Form_Element_Option('lt', ElementaryCondition::RELATION_LT);
+$optionInferior->label = __('AF', 'configInteractionDatagrid', 'lowerOption');
+$optionSuperiorOrEqual = new UI_Form_Element_Option('ge', ElementaryCondition::RELATION_GE);
+$optionSuperiorOrEqual->label = __('AF', 'configInteractionDatagrid', 'greaterOrEqualOption');
+$optionInferiorOrEqual = new UI_Form_Element_Option('le', ElementaryCondition::RELATION_LE);
+$optionInferiorOrEqual->label = __('AF', 'configInteractionDatagrid', 'lowerOrEqualOption');
+$optionContains = new UI_Form_Element_Option('contains', ElementaryCondition::RELATION_CONTAINS);
+$optionContains->label = __('AF', 'configInteractionDatagrid', 'containsOption');
+$optionNotContains = new UI_Form_Element_Option('ncontains', ElementaryCondition::RELATION_NCONTAINS);
+$optionNotContains->label = __('AF', 'configInteractionDatagrid', 'doesNotContainOption');
+
+if ($condition instanceof NumericFieldCondition) {
+    /** @var $condition \AF\Domain\Condition\NumericFieldCondition */
+    // Relation
+    $relationSelect->addOption($optionEqual);
+    $relationSelect->addOption($optionNotEqual);
+    $relationSelect->addOption($optionSuperior);
+    $relationSelect->addOption($optionInferior);
+    $relationSelect->addOption($optionSuperiorOrEqual);
+    $relationSelect->addOption($optionInferiorOrEqual);
+    // Value
+    $numericValueField = new UI_Form_Element_Text('value');
+    $numericValueField->setLabel(__('UI', 'name', 'referenceValue'));
+    $numericValueField->setValue($condition->getValue());
+    $form->addElement($numericValueField);
+}
+
+if ($condition instanceof CheckboxCondition) {
+    /** @var $condition \AF\Domain\Condition\CheckboxCondition */
+    // Relation
+    $relationSelect->addOption($optionEqual);
+    // Value
+    $checkboxValueField = new UI_Form_Element_Select('value');
+    $checkboxValueField->setLabel(__('UI', 'name', 'referenceValue'));
+    $optionChecked = new UI_Form_Element_Option('checked', 1);
+    $optionChecked->label = __('UI', 'property', 'checked');
+    $checkboxValueField->addOption($optionChecked);
+    $optionUncheked = new UI_Form_Element_Option('unchecked', 0);
+    $optionUncheked->label = __('UI', 'property', 'unchecked');
+    $checkboxValueField->addOption($optionUncheked);
+    $checkboxValueField->setValue((int) $condition->getValue());
+    $form->addElement($checkboxValueField);
+}
+
+if ($condition instanceof SelectSingleCondition) {
+    /** @var $condition \AF\Domain\Condition\Select\SelectSingleCondition */
+    // Relation
+    $relationSelect->addOption($optionEqual);
+    $relationSelect->addOption($optionNotEqual);
+    // Value
+    $selectField = new UI_Form_Element_Select('value');
+    $selectField->setLabel(__('UI', 'name', 'referenceValue'));
+    // Ajout d'une option vide
+    $selectField->addNullOption('', null);
+    /** @var $selectComponent \AF\Domain\Condition\Select\SelectSingleCondition */
+    $selectComponent = $condition->getField();
+    foreach ($selectComponent->getOptions() as $option) {
+        $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getId(), $option->getLabel());
+        $selectField->addOption($uiOption);
+    }
+    if ($condition->getOption()) {
+        $selectField->setValue($condition->getOption()->getId());
+    }
+    $form->addElement($selectField);
+}
+
+if ($condition instanceof SelectMultiCondition) {
+    /** @var $condition \AF\Domain\Condition\Select\SelectMultiCondition */
+    // Relation
+    $relationSelect->addOption($optionContains);
+    $relationSelect->addOption($optionNotContains);
+    // Value
+    $selectField = new UI_Form_Element_Select('value');
+    $selectField->setLabel(__('UI', 'name', 'referenceValue'));
+    // Ajout d'une option vide
+    $selectField->addNullOption('', null);
+    /** @var $selectComponent \AF\Domain\Component\Select\SelectMulti */
+    $selectComponent = $condition->getField();
+    foreach ($selectComponent->getOptions() as $option) {
+        $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getId(), $option->getLabel());
+        $selectField->addOption($uiOption);
+    }
+    if ($condition->getOption()) {
+        $selectField->setValue($condition->getOption()->getId());
+    }
+    $form->addElement($selectField);
+}
+
+echo $form->render();

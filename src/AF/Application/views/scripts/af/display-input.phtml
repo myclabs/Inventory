@@ -1,0 +1,149 @@
+<?php
+use AF\Application\AFViewConfiguration;
+use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
+
+/** @var $af AF */
+$af = $this->af;
+/** @var $form UI_Form */
+$form = $this->form;
+/** @var $inputSet PrimaryInputSet|null */
+$inputSet = $this->inputSet;
+if ($inputSet) {
+    $inputSetId = $inputSet->getId();
+} else {
+    $inputSetId = null;
+}
+?>
+
+<style type="text/css">
+    .alertFinishInput {
+        margin-top: -20px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="inputProgress row-fluid">
+
+    <div class="progress span9">
+        <div class="bar"></div>
+    </div>
+
+    <div class="span3">
+        <img class="completionIcon" src="">
+        <span class="completionMessage"></span>
+    </div>
+
+</div>
+
+<?php
+if ($this->mode != AFViewConfiguration::MODE_READ) {
+
+    $loadingText = __('UI', 'loading', 'loading');
+    // Boutons
+    $actionGroup = new UI_Form_Element_HTML('formActionGroup');
+    $saveButtonLabel = __('UI', 'verb', 'save');
+    $finishButtonLabel = __('AF', 'inputInput', 'finish');
+    $resultsPreviewButtonHelp = __('AF', 'inputInput', 'resultsPreviewHelp');
+    $resultsPreviewButtonLabel = __('AF', 'inputInput', 'resultsPreview');
+    $quitButtonLabel = __('UI', 'verb', 'quit');
+    $inputCompleteMessage = __('AF', 'inputInput', 'inputCompleteMessage');
+
+    if ($this->withResultsPreview) {
+        $resultsPreviewButton = <<<HTML
+            <button type="button" class="inputPreview btn" data-loading-text="$loadingText"
+                data-title="$resultsPreviewButtonHelp">
+                $resultsPreviewButtonLabel
+            </button>
+HTML;
+    } else {
+        $resultsPreviewButton = '';
+    }
+
+    $actionGroup->content = <<<HTML
+        <div class="alert alert-success alertFinishInput hide">
+            $inputCompleteMessage
+        </div>
+        $resultsPreviewButton
+        <button type="button" class="inputSave btn" data-loading-text="$loadingText">
+            $saveButtonLabel
+        </button>
+        <button type="button" class="inputFinish btn">
+            $finishButtonLabel
+        </button>
+        <button type="button" class="inputExit btn">
+            <i class="fa fa-sign-out"></i>
+            $quitButtonLabel
+        </button>
+HTML;
+
+    $form->addActionElement($actionGroup);
+
+} else {
+
+    // Boutons
+    $actionGroup = new UI_Form_Element_HTML('formActionGroup');
+    $quitButtonLabel = __('UI', 'verb', 'quit');
+    $actionGroup->content = <<<HTML
+        <button type="button" class="inputExit btn">
+            $quitButtonLabel
+        </button>
+HTML;
+
+    $form->addActionElement($actionGroup);
+
+}
+
+echo $form->render();
+?>
+
+<div class="resultsPreview hide">
+    <div class="alert alert-info">
+        <?=__('AF', 'inputInput', 'resultsPreview')?>
+    </div>
+    <div class="resultsPreviewContent">
+    </div>
+</div>
+
+
+<script>
+
+    var afId = <?=$af->getId()?>;
+    var inputSetId = <?= $inputSetId ?: "null" ?>;
+    var exitURL = "<?=$this->exitURL?>";
+    var resultsPreviewUrl = "<?=$this->resultsPreviewUrl?>";
+    var urlParams = <?=json_encode($this->urlParams)?>;
+    // Saisie en cours
+    var input = new AF.Input(afId, "<?=$af->getRef()?>", "<?=$this->mode?>", inputSetId, exitURL, urlParams, resultsPreviewUrl);
+
+    // Traductions
+    // Statut avancement saisie
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'statusInProgress')?>
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'statusInputIncomplete')?>
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'statusCalculationIncomplete')?>
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'statusComplete')?>
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'statusFinished')?>
+    // Popups de confirmation au clic sur « Réinitialiser » ou « Quitter »
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'confirmReinitializeInput')?>
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'confirmExitInput')?>
+    <?=Core_Translate::exportJS('UI', 'verb', 'cancel')?>
+    <?=Core_Translate::exportJS('UI', 'verb', 'confirm')?>
+    // Historique de la saisie
+    <?=Core_Translate::exportJS('UI', 'history', 'valueHistory')?>
+
+    $(function() {
+
+        <?php
+        $completion = $inputSet ? (int) $inputSet->getCompletion() : 0;
+        $status = $inputSet ? $inputSet->getStatus() : 'input_incomplete';
+        ?>
+        // Complétion et statut initial
+        input.inputProgress.setStatus("<?=$status?>", <?=$completion?>);
+
+        $('.inputPreview').tooltip({
+            placement: 'bottom'
+        });
+
+    });
+
+</script>

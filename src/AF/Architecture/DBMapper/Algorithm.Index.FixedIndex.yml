@@ -1,0 +1,9 @@
+AF\Domain\Algorithm\Index\FixedIndex:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Algo_Index_Fixed
+
+  fields:
+    refClassifMember:
+      type: string
+      nullable: true

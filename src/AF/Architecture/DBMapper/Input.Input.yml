@@ -1,0 +1,45 @@
+AF\Domain\Input\Input:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: AF_Input
+
+  inheritanceType: joined
+  discriminatorColumn:
+    name: inputType
+    type: string
+  discriminatorMap:
+    group: AF\Domain\Input\GroupInput
+    numeric: AF\Domain\Input\NumericFieldInput
+    text: AF\Domain\Input\TextFieldInput
+    checkbox: AF\Domain\Input\CheckboxInput
+    select_single: AF\Domain\Input\Select\SelectSingleInput
+    select_multi: AF\Domain\Input\Select\SelectMultiInput
+    subaf: AF\Domain\Input\SubAFInput
+    subaf_notrepeated: AF\Domain\Input\SubAF\NotRepeatedSubAFInput
+    subaf_repeated: AF\Domain\Input\SubAF\RepeatedSubAFInput
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    hidden:
+      type: boolean
+      nullable: false
+    disabled:
+      type: boolean
+      nullable: false
+    refComponent:
+      type: string
+      nullable: false
+
+  manyToOne:
+    inputSet:
+      targetEntity: AF\Domain\InputSet\InputSet
+      inversedBy: inputs
+      joinColumn:
+        name: idInputSet
+        referencedColumnName: id
+        nullable: false

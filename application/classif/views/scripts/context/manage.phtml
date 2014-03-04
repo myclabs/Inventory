@@ -31,3 +31,6 @@
     $datagrid->addPanelTitle = __('Classif', 'context', 'addPanelTitle');
     $datagrid->setDefaultSorting($columnPosition->id);
     $datagrid->display();
+
+    $script = 'refFromLabel(\'editContexts_label_addForm\', \'editContexts_ref_addForm\');';
+    $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');

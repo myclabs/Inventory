@@ -1,5 +1,7 @@
 <?php
 // Liste des Simulation d'un Set.
+use AF\Domain\InputSet\PrimaryInputSet;
+
 $datagridListScenarios = new UI_Datagrid('listScenarios', 'datagrid_scenario', 'simulation');
 
 $colLabelScenario = new UI_Datagrid_Col_Text('labelScenario', __('UI', 'name', 'label'));
@@ -19,10 +21,10 @@ $imageComplete = new UI_HTML_Image('images/af/bullet_orange.png', 'complet');
 $imageCalculationIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incompletecomplete');
 $imageInputIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
 $colStateInput->list = array(
-    AF_Model_InputSet_Primary::STATUS_FINISHED => $imageFinished->render() . ' ' . __('AF', 'inputInput', 'statusFinished'),
-    AF_Model_InputSet_Primary::STATUS_COMPLETE => $imageComplete->render() . ' ' . __('AF', 'inputInput', 'statusComplete'),
-    AF_Model_InputSet_Primary::STATUS_CALCULATION_INCOMPLETE => $imageCalculationIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusCalculationIncomplete'),
-    AF_Model_InputSet_Primary::STATUS_INPUT_INCOMPLETE => $imageInputIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusInputIncomplete'),
+    PrimaryInputSet::STATUS_FINISHED => $imageFinished->render() . ' ' . __('AF', 'inputInput', 'statusFinished'),
+    PrimaryInputSet::STATUS_COMPLETE => $imageComplete->render() . ' ' . __('AF', 'inputInput', 'statusComplete'),
+    PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE => $imageCalculationIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusCalculationIncomplete'),
+    PrimaryInputSet::STATUS_INPUT_INCOMPLETE => $imageInputIncomplete->render() . ' ' . __('AF', 'inputInput', 'statusInputIncomplete'),
 );
 $datagridListScenarios->addCol($colStateInput);
 

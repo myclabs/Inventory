@@ -38,8 +38,7 @@ class Unit_Test_UnitSystemTest
         $o->setRef('Ref'.$ref);
         $o->setName('Name'.$ref);
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         return $o;
     }
 
@@ -50,8 +49,7 @@ class Unit_Test_UnitSystemTest
     public static function deleteObject(UnitSystem $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
     }
 }
 
@@ -73,17 +71,8 @@ class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
             foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
-    }
-
-    /**
-     * Méthode appelée avant chaque test
-     */
-    protected function setUp()
-    {
-
     }
 
     /**
@@ -98,8 +87,7 @@ class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
         $o->setName('NamzSystemeUniteTestSave');
         $this->assertEquals(array(), $o->getKey());
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertNotEquals(array(), $o->getKey());
         return $o;
     }
@@ -110,8 +98,7 @@ class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
      */
     function testLoad($o)
     {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->clear($o);
+        \Core\ContainerSingleton::getEntityManager()->clear($o);
         $oLoaded = UnitSystem::load($o->getKey());
         $this->assertInstanceOf('Unit\Domain\UnitSystem', $o);
         $this->assertEquals($oLoaded->getKey(), $o->getKey());
@@ -127,16 +114,8 @@ class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
     function testDelete(UnitSystem $o)
     {
         $o->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        \Core\ContainerSingleton::getEntityManager()->flush();
         $this->assertEquals(array(), $o->getKey());
-    }
-
-    /**
-     * Méthode appelée à la fin des test
-     */
-    protected function tearDown()
-    {
     }
 
     /**
@@ -150,8 +129,7 @@ class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
             foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 }
@@ -176,8 +154,7 @@ class Unit_Test_UnitSystemOthers extends PHPUnit_Framework_TestCase
             foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 
@@ -219,9 +196,7 @@ class Unit_Test_UnitSystemOthers extends PHPUnit_Framework_TestCase
             foreach (UnitSystem::loadList() as $systemunit) {
                 $systemunit->delete();
             }
-            $entityManagers = Zend_Registry::get('EntityManagers');
-            $entityManagers['default']->flush();
+            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
-
 }

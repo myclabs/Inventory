@@ -61,7 +61,8 @@ class Social_Service_MessageService
         $message->save();
 
         // Envoi de l'email de notification
-        $config = Zend_Registry::get('configuration');
+        // TODO utiliser l'injection de dépendances
+        $container = \Core\ContainerSingleton::getContainer();
 
         $url = 'http://' . $_SERVER['SERVER_NAME']
             . Zend_Controller_Front::getInstance()->getBaseUrl()
@@ -69,7 +70,7 @@ class Social_Service_MessageService
 
         $content = __('Social', 'email', 'mailWasSendBy',
                       array(
-                           'APPLICATION_NAME' => $config->emails->noreply->name,
+                           'APPLICATION_NAME' => $container->get('emails.noreply.name'),
                            'SENDER'           => $author->getName(),
                       ))
             . PHP_EOL . '--' . PHP_EOL

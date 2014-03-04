@@ -38,6 +38,7 @@ $resetCodeForm->setAjax(false);
 $code = new UI_Form_Element_Text('code');
 $code->setLabel(__('User', 'resetPassword', 'confirmationCodeLabel'));
 $code->setRequired();
+$code->setValue($this->code);
 $resetCodeForm->addElement($code);
 
 $resetCodeForm->addSubmitButton(__('UI', 'verb', 'validate'));

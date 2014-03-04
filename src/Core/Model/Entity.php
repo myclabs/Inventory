@@ -94,52 +94,16 @@ abstract class Core_Model_Entity
     }
 
     /**
-     * Définit la pool d'objet active.
-     *  Il s'agit de l'entityManager correspondant.
-     *
-     * @param string $poolName
-     *
-     * @throws Core_Exception_Database
-     *
-     * @return void
-     */
-    public static function setActivePoolName($poolName='default')
-    {
-        self::checkEntityManagerExists($poolName);
-        $className = get_called_class();
-        self::$_classManager[$className] = $poolName;
-    }
-
-    /**
      * Renvoie la référence de la pool active.
      *  Il s'agit de l'entityManager correspondant.
      *
      * @return string
+     *
+     * @todo À supprimer
      */
     public static function getActivePoolName()
     {
-        $className = get_called_class();
-        if (!(isset(self::$_classManager[$className]))) {
-            $className::setActivePoolName();
-        }
-        return self::$_classManager[$className];
-    }
-
-    /**
-     * Vérifie qu'il est possible d'utiliser un poolName donné.
-     *
-     * @param string $poolName
-     *
-     * @throws Core_Exception_Database
-     *
-     * @return void
-     */
-    protected static function checkEntityManagerExists($poolName)
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        if (!(isset($entityManagers[$poolName]))) {
-            throw new Core_Exception_Database('Invalid name given, there is no EntityManager matching '.$poolName);
-        }
+        return 'default';
     }
 
     /**
@@ -149,10 +113,7 @@ abstract class Core_Model_Entity
      */
     protected static function getEntityManager()
     {
-        $className = get_called_class();
-        self::checkEntityManagerExists($className::getActivePoolName());
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        return $entityManagers[$className::getActivePoolName()];
+        return \Core\ContainerSingleton::getEntityManager();
     }
 
     /**

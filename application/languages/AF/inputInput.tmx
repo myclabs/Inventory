@@ -58,35 +58,14 @@
 		</tu>
 
 		<!-- Marquer la saisie comme terminée -->
-
-		<tu tuid="markInputAsFinished">
-			<tuv xml:lang="fr">
-				<seg>Marquer la saisie comme terminée</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Mark input as finished</seg>
-			</tuv>
-		</tu>
-		<tu tuid="markInProgressInputAsFinishedTooltip">
-			<tuv xml:lang="fr">
-				<seg>Modifications en cours, merci d'enregistrer pour pouvoir
-					marquer la saisie comme terminée.</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Changes have been made, if you want to mark as finished please
-					save first.</seg>
-			</tuv>
-		</tu>
-		<tu tuid="markIncompleteInputAsFinishedTooltip">
-			<tuv xml:lang="fr">
-				<seg>Saisie incomplète, merci de compléter la saisie pour pouvoir la
-					marquer comme terminée.</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Input is incomplete, if you want to mark as finished please
-					complete first.</seg>
-			</tuv>
-		</tu>
+        <tu tuid="finish">
+            <tuv xml:lang="fr">
+                <seg>Terminer la saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Terminate the input</seg>
+            </tuv>
+        </tu>
 
 		<!-- Contenu du formulaire -->
 
@@ -99,16 +78,24 @@
 			</tuv>
 		</tu>
 
-		<!-- Boutons -->
+		<!-- Aperçu des résultats -->
 
-		<tu tuid="resultsPreview">
-			<tuv xml:lang="fr">
-				<seg>Aperçu des résultats</seg>
-			</tuv>
-			<tuv xml:lang="en">
-				<seg>Results preview</seg>
-			</tuv>
-		</tu>
+        <tu tuid="resultsPreview">
+            <tuv xml:lang="fr">
+                <seg>Aperçu des résultats</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Results preview</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resultsPreviewHelp">
+            <tuv xml:lang="fr">
+                <seg>L'aperçu permet de visualiser les résultats sans enregistrer.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The preview allows to see the results without saving the input.</seg>
+            </tuv>
+        </tu>
 
 		<!-- Messages au clic sur « Enregistrer » -->
 
@@ -202,12 +189,26 @@
 
         <!-- Message lors de la modification du caractère terminée ou non -->
 
-        <tu tuid="progressStatusUpdated">
+        <tu tuid="inputFinished">
             <tuv xml:lang="fr">
-                <seg>Statut d'avancement modifié.</seg>
+                <seg>Saisie terminée.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Progress status updated.</seg>
+                <seg>Input finished.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputCompleteMessage">
+            <tuv xml:lang="fr">
+                <seg>
+                    La saisie est complète, vous devez cliquer sur "Terminer la saisie" si vous ne comptez
+                    plus y apporter de modifications.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    The input is complete, you must click on "Terminate the input" if you do not plan
+                    on editing it.
+                </seg>
             </tuv>
         </tu>
 

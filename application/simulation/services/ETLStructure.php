@@ -43,9 +43,11 @@ class Simulation_Service_ETLStructure
      */
     protected function translateEntity($originalEntity, $dWEntity)
     {
+        // TODO utiliser l'injection de dépendances
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
-        $defaultLocale = Zend_Registry::get('configuration')->translation->defaultLocale;
+        $defaultLocale = $container->get('translation.defaultLocale');
 
         $originalTranslations = $translationRepository->findTranslations($originalEntity);
 
@@ -55,7 +57,7 @@ class Simulation_Service_ETLStructure
             $dWEntity->setLabel($originalEntity->getLabel());
         }
         // Traductions.
-        foreach (Zend_Registry::get('languages') as $localeId) {
+        foreach ($container->get('translation.languages') as $localeId) {
             if (isset($originalTranslations[$localeId]['label'])) {
                 $translationRepository->translate(
                     $dWEntity,
@@ -77,6 +79,8 @@ class Simulation_Service_ETLStructure
      */
     protected function areTranslationsDifferent($originalEntity, $dWEntity)
     {
+        // TODO utiliser l'injection de dépendances
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var $translationRepository \Gedmo\Translatable\Entity\Repository\TranslationRepository */
         $translationRepository = $this->entityManager->getRepository('Gedmo\Translatable\Entity\Translation');
 
@@ -84,7 +88,7 @@ class Simulation_Service_ETLStructure
         $dWTranslations = $translationRepository->findTranslations($dWEntity);
 
         // Traductions
-        foreach (Zend_Registry::get('languages') as $localeId) {
+        foreach ($container->get('translation.languages') as $localeId) {
             if (isset($originalTranslations[$localeId])) {
                 $originalLabel = $originalTranslations[$localeId]['label'];
             } else {

@@ -1,27 +1,20 @@
 <?php
-/**
- * @author matthieu.napoli
- * @author hugo.charbonnier
- * @author thibaud.rolland
- * @package AF
- */
 
-/**
- * @package Algo
- */
-class Form_SubAFRepeatedTest extends PHPUnit_Framework_TestCase
+namespace Tests\AF\Component;
+
+use AF\Domain\Component\SubAF;
+use AF\Domain\Component\SubAF\RepeatedSubAF;
+use Core\Test\TestCase;
+
+class SubAFRepeatedTest extends TestCase
 {
-
-    function testConstruct()
+    public function testConstruct()
     {
-        $o = new AF_Model_Component_SubAF_Repeated();
-        $this->assertInstanceOf('AF_Model_Component_SubAF_Repeated', $o);
+        $o = new RepeatedSubAF();
 
         // Valeurs par défaut
         $this->assertTrue($o->isVisible());
-        $this->assertFalse($o->getWithFreeLabel());
-        $this->assertEquals(AF_Model_Component_SubAF_Repeated::MININPUTNUMBER_0, $o->getMinInputNumber());
-        $this->assertEquals(AF_Model_Component_SubAF::FOLDAWAY, $o->getFoldaway());
+        $this->assertEquals(RepeatedSubAF::MININPUTNUMBER_0, $o->getMinInputNumber());
+        $this->assertEquals(SubAF::FOLDAWAY, $o->getFoldaway());
     }
-
 }

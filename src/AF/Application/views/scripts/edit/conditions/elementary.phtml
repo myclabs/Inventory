@@ -1,0 +1,80 @@
+<?php
+use AF\Domain\AF;
+use AF\Domain\Component\TextField;
+use AF\Domain\Component\Field;
+use AF\Domain\Condition\ElementaryCondition;
+
+/**
+ * @author  matthieu.napoli
+ * @package AF
+ */
+/** @var $af \AF\Domain\AF */
+$af = $this->af;
+
+$datagrid = new UI_Datagrid('conditionsElementary', 'datagrid_edit_conditions_elementary', 'af');
+$datagrid->initialLoading = false;
+$datagrid->addParam('id', $af->getId());
+$datagrid->pagination = false;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('AF', 'configInteractionDatagrid', 'elementaryConditionAddPanelTitle');
+$datagrid->deleteElements = true;
+
+// Identifiant
+$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$refColumn->editable = true;
+$datagrid->addCol($refColumn);
+
+// Field
+$fieldColumn = new UI_Datagrid_Col_List('field', __('UI', 'name', 'field'));
+$fieldColumn->editable = false;
+$fieldColumn->withEmptyElement = true;
+$list = [];
+foreach ($this->componentList as $component) {
+    if ($component instanceof Field
+        && !$component instanceof TextField
+    ) {
+        $list[$component->getId()] = $component->getLabel();
+    }
+}
+$fieldColumn->list = $list;
+$datagrid->addCol($fieldColumn);
+
+// Relation
+$relationColumn = new UI_Datagrid_Col_List('relation', __('UI', 'name', 'relation'));
+$relationColumn->addable = false;
+$relationColumn->list = [
+    ElementaryCondition::RELATION_EQUAL     => __('AF', 'configInteractionDatagrid', 'equalOption'),
+    ElementaryCondition::RELATION_NEQUAL    => __('AF', 'configInteractionDatagrid', 'differentOption'),
+    ElementaryCondition::RELATION_GT        => __('AF', 'configInteractionDatagrid', 'greaterOption'),
+    ElementaryCondition::RELATION_LT        => __('AF', 'configInteractionDatagrid', 'lowerOption'),
+    ElementaryCondition::RELATION_GE        => __('AF', 'configInteractionDatagrid', 'greaterOrEqualOption'),
+    ElementaryCondition::RELATION_LE        => __('AF', 'configInteractionDatagrid', 'lowerOrEqualOption'),
+    ElementaryCondition::RELATION_CONTAINS  => __('AF', 'configInteractionDatagrid', 'containsOption'),
+    ElementaryCondition::RELATION_NCONTAINS => __('AF', 'configInteractionDatagrid', 'doesNotContainOption')
+];
+$datagrid->addCol($relationColumn);
+
+// Valeur de référence
+$valueColumn = new UI_Datagrid_Col_Text('value', __('UI', 'name', 'referenceValue'));
+$valueColumn->addable = false;
+$datagrid->addCol($valueColumn);
+
+// Popup d'udpdate de la valeur de référence de la condition
+$editValueColumn = new UI_Datagrid_Col_Popup('editValue', __('UI', 'name', 'edition'));
+$editValueColumn->popup->title = __('AF', 'configInteractionDatagrid', 'elementaryConditionEditPanelTitle');
+$editValueColumn->popup->addAttribute('class', 'large');
+$editValueColumn->popup->footer = (string) $this->button(
+    __('UI', 'verb', 'save'),
+    'check',
+    [
+         'class'   => 'btn-primary',
+         'onclick' => '$(\'#updateCondition\').submit();',
+    ]
+);
+$closeButton = '<button type="button" class="btn" data-dismiss="modal">' .
+    '<i class="fa fa-times"></i> ' . __('UI', 'verb', 'cancel') .
+    '</button>';
+$editValueColumn->popup->footer .= $closeButton;
+$datagrid->addCol($editValueColumn);
+
+echo $datagrid->render();

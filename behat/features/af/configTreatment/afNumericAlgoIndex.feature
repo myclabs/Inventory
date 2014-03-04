@@ -28,7 +28,6 @@ Feature: AF indexes of a numeric algo feature
   # Édition de la colonne "Valeur" pour une valeur fixée
     When I set "CH4" for column "value" of row 1 of the "algoResultIndexes" datagrid
     And I click element "#algoNumericInput_resultIndex_popup .close:contains('×')"
-    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
     When I click "Indexation" in the row 1 of the "algoNumericInput" datagrid
     Then the row 1 of the "algoResultIndexes" datagrid should contain:
@@ -37,7 +36,6 @@ Feature: AF indexes of a numeric algo feature
   # Édition de la colonne "Valeur" pour un algorithme
     When I set "c_s_s" for column "value" of row 2 of the "algoResultIndexes" datagrid
     And I click element "#algoNumericInput_resultIndex_popup .close:contains('×')"
-    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
     When I click "Indexation" in the row 1 of the "algoNumericInput" datagrid
     Then the row 2 of the "algoResultIndexes" datagrid should contain:
@@ -49,7 +47,6 @@ Feature: AF indexes of a numeric algo feature
       | axis | type       | value |
       | Gaz  | Algorithme |       |
     When I click element "#algoNumericInput_resultIndex_popup .close:contains('×')"
-    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
     And I click "Indexation" in the row 1 of the "algoNumericInput" datagrid
   # Édition de la colonne "Mode de détermination" (modif pour "Valeur fixée")
@@ -58,7 +55,6 @@ Feature: AF indexes of a numeric algo feature
       | axis              | type         | value |
       | Poste article 75  | Valeur fixée |       |
     And I click element "#algoNumericInput_resultIndex_popup .close:contains('×')"
-    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript

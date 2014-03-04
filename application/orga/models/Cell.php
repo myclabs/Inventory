@@ -1,5 +1,7 @@
 <?php
 
+use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -115,7 +117,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Tableau d'état des saisies de la cellule.
      *
-     * @var AF_Model_InputSet_Primary
+     * @var PrimaryInputSet
      */
     protected $aFInputSetPrimary = null;
 
@@ -222,11 +224,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Charge la Cell correspondant à un Primary Set AF.
      *
-     * @param AF_Model_InputSet_Primary $aFInputSetPrimary
+     * @param PrimaryInputSet $aFInputSetPrimary
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByAFInputSetPrimary(AF_Model_InputSet_Primary $aFInputSetPrimary)
+    public static function loadByAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary)
     {
         return self::getEntityRepository()->loadBy(array('aFInputSetPrimary' => $aFInputSetPrimary));
     }
@@ -346,7 +348,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     {
         $this->updateMembersHashKey();
         $this->updateTag();
-        $this->updateHierarchy();
     }
 
     /**
@@ -984,11 +985,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Spécifie l'InputSetPrimary de la cellule.
      *
-     * @param AF_Model_InputSet_Primary $aFInputSetPrimary
+     * @param PrimaryInputSet $aFInputSetPrimary
      *
      * @throws Core_Exception_Duplicate
      */
-    public function setAFInputSetPrimary(AF_Model_InputSet_Primary $aFInputSetPrimary = null)
+    public function setAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary = null)
     {
         if ($this->aFInputSetPrimary !== $aFInputSetPrimary) {
             if (($this->aFInputSetPrimary !== null) && ($aFInputSetPrimary !== null)) {
@@ -1004,7 +1005,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie l'InputSetPrimary associé à la cellule.
      *
-     * @return AF_Model_InputSet_Primary
+     * @return \AF\Domain\InputSet\PrimaryInputSet
      */
     public function getAFInputSetPrimary()
     {
@@ -1014,7 +1015,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie l'AF utilisé par la cellule.
      *
-     * @return AF_Model_AF
+     * @return AF
      */
     public function getInputAFUsed()
     {
@@ -1133,12 +1134,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function createDWCube()
     {
         if (($this->dWCube === null) && ($this->getGranularity()->getCellsGenerateDWCubes())) {
-            /** @var \DI\Container $container */
-            $container = Zend_Registry::get('container');
+            $container = \Core\ContainerSingleton::getContainer();
             /** @var Orga_Service_ETLStructure $etlStructureService */
-            $etlStructureService = $container->get('Orga_Service_ETLStructure');
+            $etlStructureService = $container->get(Orga_Service_ETLStructure::class);
             /** @var Orga_Service_ETLData $etlDataService */
-            $etlDataService = $container->get('Orga_Service_ETLData');
+            $etlDataService = $container->get(Orga_Service_ETLData::class);
 
             $this->dWCube = new DW_model_cube();
             $this->dWCube->setLabel($this->getLabel());
@@ -1157,10 +1157,8 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     public function deleteDWCube()
     {
         if ($this->dWCube !== null) {
-            /** @var \DI\Container $container */
-            $container = Zend_Registry::get('container');
             /** @var Orga_Service_ETLData $etlDataService */
-            $etlDataService = $container->get('Orga_Service_ETLData');
+            $etlDataService = \Core\ContainerSingleton::getContainer()->get(Orga_Service_ETLData::class);
 
             $etlDataService->clearDWResultsForCell($this);
             $this->dWCube->delete();
@@ -1220,11 +1218,13 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         $populatingCells = [];
 
         foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
-            if ($inputGranularity === $this->getGranularity()) {
+            if (($inputGranularity === $this->getGranularity()) && ($this->isRelevant())){
                 $populatingCells[] = $this;
             } elseif ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {
-                    $populatingCells[] = $inputChildCell;
+                    if ($inputChildCell->isRelevant()) {
+                        $populatingCells[] = $inputChildCell;
+                    }
                 }
             }
         }

@@ -1,0 +1,19 @@
+<?php
+use AF\Domain\AF;
+
+/**
+ * @author  matthieu.napoli
+ * @author  hugo.charbonnier
+ * @package AF
+ */
+
+/** @var $af \AF\Domain\AF */
+$af = $this->af;
+
+$tree = new UI_Tree('afTree', 'tree_af-structure', 'af');
+$tree->addParam('id', $af->getId());
+$tree->setEditNode(true, true);
+$tree->editPanelTitle = __('AF', 'configStructure', 'editPanelTitle');
+$tree->expandAll = false;
+$tree->collapseAll = false;
+echo $tree->render();

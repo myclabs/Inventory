@@ -1,35 +1,29 @@
 <?php
-/**
- * @author benjamin.bertin
- * @package Algo
- * @subpackage Test
- */
 
-require_once dirname(__FILE__).'/../Numeric/ConstantTest.php';
+namespace Tests\Algo\Index;
 
-/**
- * Index_AlgoSetUpTest
- * @package Algo
- */
-class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
+use AF\Domain\Algorithm\Algo;
+use AF\Domain\Algorithm\Index\AlgoResultIndex;
+use AF\Domain\Algorithm\AlgoSet;
+use Classif_Model_Axis;
+use Classif_Model_Context;
+use Classif_Model_ContextIndicator;
+use Classif_Model_Indicator;
+use Core\Test\TestCase;
+use Core_Tools;
+use Doctrine\ORM\UnitOfWork;
+use Tests\Algo\Numeric\ConstantTest;
+use Tests\Algo\TextKey\InputTest;
+
+class AlgoIndexTest extends TestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
     public static function setUpBeforeClass()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
         // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Algo_Model_Set::loadList() as $o) {
+        foreach (AlgoSet::loadList() as $o) {
             $o->delete();
         }
-        foreach (Algo_Model_Algo::loadList() as $o) {
+        foreach (Algo::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_Context::loadList() as $o) {
@@ -41,21 +35,9 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
         foreach (Classif_Model_ContextIndicator::loadList() as $o) {
             $o->delete();
         }
-        $entityManager->flush();
+        self::getEntityManager()->flush();
     }
 
-    /**
-     * Set up
-     */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-    /**
-     * @return Algo_Model_Index_Algo $o
-     */
     public function testConstruct()
     {
         // Fixtures
@@ -63,10 +45,10 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
         $classifAxis->setRef(Core_Tools::generateString(20));
         $classifAxis->setLabel('Classif Axis');
         $classifAxis->save();
-        $algoNumeric = Numeric_ConstantTest::generateObject();
-        $selectionAlgo = TextKey_InputTest::generateObject();
+        $algoNumeric = ConstantTest::generateObject();
+        $selectionAlgo = InputTest::generateObject();
 
-        $o = new Algo_Model_Index_Algo($classifAxis, $algoNumeric);
+        $o = new AlgoResultIndex($classifAxis, $algoNumeric);
         $o->setAlgo($selectionAlgo);
         $o->save();
         $this->entityManager->flush();
@@ -80,15 +62,15 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testConstruct
-     * @param Algo_Model_Index_Algo $o
-     * @return Algo_Model_Index_Algo $o
+     * @param \AF\Domain\Algorithm\Index\AlgoResultIndex $o
+     * @return \AF\Domain\Algorithm\Index\AlgoResultIndex $o
      */
-    public function testLoad(Algo_Model_Index_Algo $o)
+    public function testLoad(AlgoResultIndex $o)
     {
         $this->entityManager->clear();
-        /** @var $oLoaded Algo_Model_Index_Algo */
-        $oLoaded = Algo_Model_Index_Algo::load($o->getKey());
-        $this->assertInstanceOf('Algo_Model_Index_Algo', $oLoaded);
+        /** @var $oLoaded \AF\Domain\Algorithm\Index\AlgoResultIndex */
+        $oLoaded = AlgoResultIndex::load($o->getKey());
+        $this->assertInstanceOf(AlgoResultIndex::class, $oLoaded);
         $this->assertEquals($o->getClassifAxis()->getKey(), $oLoaded->getClassifAxis()->getKey());
         $this->assertEquals($o->getAlgoNumeric()->getKey(), $oLoaded->getAlgoNumeric()->getKey());
         $this->assertEquals($o->getAlgo()->getKey(), $oLoaded->getAlgo()->getKey());
@@ -97,18 +79,16 @@ class Index_AlgoSetUpTest extends PHPUnit_Framework_TestCase
 
     /**
      * @depends testLoad
-     * @param Algo_Model_Index_Algo $o
+     * @param \AF\Domain\Algorithm\Index\AlgoResultIndex $o
      */
-    public function testDelete(Algo_Model_Index_Algo $o)
+    public function testDelete(AlgoResultIndex $o)
     {
         $o->delete();
         $o->getClassifAxis()->delete();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
         $this->entityManager->flush();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
-        Numeric_ConstantTest::deleteObject($o->getAlgoNumeric());
-        TextKey_InputTest::deleteObject($o->getAlgo());
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
+        ConstantTest::deleteObject($o->getAlgoNumeric());
+        InputTest::deleteObject($o->getAlgo());
     }
 }

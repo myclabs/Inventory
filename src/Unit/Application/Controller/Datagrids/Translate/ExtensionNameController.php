@@ -16,6 +16,12 @@ class Unit_Datagrids_Translate_ExtensionNameController extends UI_Controller_Dat
 {
 
     /**
+     * @Inject("translation.languages")
+     * @var string[]
+     */
+    private $languages;
+
+    /**
      * @Secure("viewUnit")
      */
     public function getelementsAction()
@@ -26,7 +32,7 @@ class Unit_Datagrids_Translate_ExtensionNameController extends UI_Controller_Dat
 
             $data['identifier'] = $extension->getRef();
 
-            foreach (Zend_Registry::get('languages') as $language) {
+            foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);
                 $extension->reloadWithLocale($locale);
                 $data[$language] = $extension->getName();

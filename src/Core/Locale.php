@@ -1,21 +1,14 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Local
- */
 
 /**
  * Classe permettant la localisation d'une application.
  *
- * @package    Core
- * @subpackage Local
+ * @author matthieu.napoli
  *
  * @uses Zend_Locale
  */
 class Core_Locale
 {
-
     /**
      * Emplacement de la locale dans le registry
      */
@@ -67,7 +60,8 @@ class Core_Locale
         }
 
         $locale = new Zend_Locale($localeId);
-        if (! in_array($locale->getLanguage(), Zend_Registry::get('languages'))) {
+        $container = \Core\ContainerSingleton::getContainer();
+        if (! in_array($locale->getLanguage(), $container->get('translation.languages'))) {
             throw new Core_Exception_InvalidArgument("Locale non supportée : '$localeId'");
         }
 
@@ -81,17 +75,23 @@ class Core_Locale
      */
     public static function loadDefault()
     {
-        foreach (Zend_Locale::getBrowser() as $localeId => $quality) {
-            $locale = new Zend_Locale($localeId);
-            if (in_array($locale->getLanguage(), Zend_Registry::get('languages'))) {
-                return new self($locale);
+        if (self::$default === null) {
+            $container = \Core\ContainerSingleton::getContainer();
+
+            foreach (Zend_Locale::getBrowser() as $localeId => $quality) {
+                $locale = new Zend_Locale($localeId);
+                if (in_array($locale->getLanguage(), $container->get('translation.languages'))) {
+                    self::$default = new self($locale);
+                    break;
+                }
+            }
+
+            if (self::$default === null) {
+                self::$default = new self(new Zend_Locale($container->get('translation.defaultLocale')));
             }
         }
 
-        if (self::$default !== null) {
-            return self::$default;
-        }
-        return new self(new Zend_Locale(Zend_Registry::get('configuration')->translation->defaultLocale));
+        return self::$default;
     }
 
     /**

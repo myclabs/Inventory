@@ -96,8 +96,10 @@ $script .= ').error(function(o) {';
 $script .= 'errorHandler(o);';
 $script .= '});';
 $script .= '});';
+$script .= 'refFromLabel(\'addAxis_label\', \'addAxis_ref\');';
 if ($this->display === false) {
     echo '<script type="text/javascript">'.$script.'</script>';
 } else {
+    $this->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
 }

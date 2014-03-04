@@ -19,15 +19,15 @@ export DISPLAY=:0
 # Start selenium server
 java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 
-sleep 7
-
-# Clear Memcached
-echo 'flush_all' | netcat localhost 11211
+sleep 5
 
 # Composer
 cd ..
 composer install --optimize-autoloader
 cd behat
+
+# Clear caches
+../bin/inventory cache:clear
 
 # Export the databases
 ./generate-db.sh

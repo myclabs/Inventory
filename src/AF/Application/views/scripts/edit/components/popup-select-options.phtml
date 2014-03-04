@@ -1,0 +1,82 @@
+<?php
+use AF\Domain\Component\Select;
+use AF\Domain\Component\Select\SelectMulti;
+
+/**
+ * @author  matthieu.napoli
+ * @author  yoann.croizer
+ * @package AF
+ */
+/** @var $selectField Select */
+$selectField = $this->selectField;
+
+//Datagrid des options de select
+$optionDatagrid = new UI_Datagrid('optionDatagrid', 'datagrid_edit_components_select-options', 'af');
+$optionDatagrid->pagination = false;
+$optionDatagrid->addParam('idSelect', $selectField->getId());
+$optionDatagrid->addElements = true;
+$optionDatagrid->addButtonLabel = __('AF', 'configComponentDatagrid', 'optionSelectAddPanelTitle');
+$optionDatagrid->addPanelTitle = __('AF', 'configComponentDatagrid', 'optionSelectAddPanelTitle');
+$optionDatagrid->deleteElements = true;
+
+$labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$labelColumn->editable = true;
+$optionDatagrid->addCol($labelColumn);
+
+$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$refColumn->editable = true;
+$optionDatagrid->addCol($refColumn);
+
+$isVisibleColumn = new UI_Datagrid_Col_Bool('isVisible', __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));
+$isVisibleColumn->editable = true;
+$isVisibleColumn->defaultAddValue = true;
+$isVisibleColumn->textTrue = __('UI', 'property', 'visible');
+$isVisibleColumn->textFalse = __('UI', 'property', 'maskedFem');
+$isVisibleColumn->valueTrue = __('UI', 'property', 'visible');
+$isVisibleColumn->valueFalse = __('UI', 'property', 'maskedFem');
+$optionDatagrid->addCol($isVisibleColumn);
+
+$enabledColumn = new UI_Datagrid_Col_Bool('enabled', __('AF', 'configComponentDatagrid', 'initialActivationHeader'));
+$enabledColumn->editable = true;
+$enabledColumn->defaultAddValue = true;
+$enabledColumn->textTrue = __('UI', 'property', 'enabledFem');
+$enabledColumn->textFalse = __('UI', 'property', 'disabledFem');
+$enabledColumn->valueTrue = __('UI', 'property', 'enabledFem');
+$enabledColumn->valueFalse = __('UI', 'property', 'disabledFem');
+$optionDatagrid->addCol($enabledColumn);
+
+// Si il s'agit d'une selection multiple on précise si l'option fait partie de la séléction par défaut
+if ($selectField instanceof SelectMulti) {
+    $defaultValueColumn = new UI_Datagrid_Col_Bool('defaultValue', __('AF', 'configComponentDatagrid', 'initialValueHeader'));
+    $defaultValueColumn->editable = true;
+    $defaultValueColumn->textTrue = __('UI', 'property', 'selectedFem');
+    $defaultValueColumn->textFalse = __('UI', 'property', 'notSelectedFem');
+    $defaultValueColumn->valueTrue = __('UI', 'property', 'selectedFem');
+    $defaultValueColumn->valueFalse = __('UI', 'property', 'notSelectedFem');
+    $optionDatagrid->addCol($defaultValueColumn);
+}
+
+$orderColumn = new UI_Datagrid_Col_Order('order');
+$orderColumn->addable = false;
+$orderColumn->editable = true;
+$optionDatagrid->addCol($orderColumn);
+
+echo $optionDatagrid->render();
+
+?>
+
+<hr>
+<p><?=___('AF', 'configComponentDatagrid', 'copyTechnoMembersAsOptions')?></p>
+
+<form class="form-inline" id="copyTechnoMembersAsOptions" action="af/edit_components/copy-techno-members-as-options/idSelect/<?=$selectField->getId()?>">
+    <div class="input-append">
+        <select name="dimension">
+            <?php foreach ($this->families as $family) : ?>
+                <?php foreach ($family->getDimensions() as $dimension) : ?>
+                    <option value="<?=$dimension->getId()?>"><?=$family->getLabel()?> : <?=$dimension->getLabel()?></option>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </select>
+        <button type="submit" class="btn"><i class="fa fa-plus-circle"></i> Ajouter</button>
+    </div>
+</form>

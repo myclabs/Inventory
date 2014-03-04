@@ -1,0 +1,23 @@
+AF\Domain\Output\OutputIndex:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: AF_Output_Index
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    refAxis:
+      type: string
+      nullable: true
+    refMember:
+      type: string
+      nullable: true
+
+  manyToMany:
+    outputElements:
+      targetEntity: AF\Domain\Output\OutputElement
+      mappedBy: indexes

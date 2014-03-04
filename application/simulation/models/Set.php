@@ -1,4 +1,5 @@
 <?php
+use AF\Domain\AF;
 use User\Domain\User;
 
 /**
@@ -38,7 +39,7 @@ class Simulation_Model_Set extends Core_Model_Entity
     /**
      * Formulaire sur lequel porte les Simulations.
      *
-     * @var AF_Model_AF
+     * @var AF
      */
     protected $aF = null;
 
@@ -104,10 +105,9 @@ class Simulation_Model_Set extends Core_Model_Entity
         $this->dWAxis->setRef('set');
         $this->dWAxis->setLabel(__('Simulation', 'name', 'scenario'));
 
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
+        $container = \Core\ContainerSingleton::getContainer();
         /** @var Simulation_Service_ETLStructure $etlStructureService */
-        $etlStructureService = $container->get('Simulation_Service_ETLStructure');
+        $etlStructureService = $container->get(Simulation_Service_ETLStructure::class);
 
         $etlStructureService->populateSetDWCube($this);
     }
@@ -163,9 +163,9 @@ class Simulation_Model_Set extends Core_Model_Entity
     /**
      * Spécifie le PrimarySet du Set.
      *
-     * @param AF_Model_AF $aF
+     * @param AF $aF
      */
-    public function setAF(AF_Model_AF $aF)
+    public function setAF(AF $aF)
     {
         if ($this->aF !== $aF) {
             if ($this->aF !== null) {
@@ -178,7 +178,7 @@ class Simulation_Model_Set extends Core_Model_Entity
     /**
      * Renvoie l'AF concerné par le jeu de simulations.
      *
-     * @return AF_Model_AF
+     * @return AF
      */
     public function getAF()
     {

@@ -1,18 +1,13 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Test
- */
 
-/**
- * Test de la classe Core_Tools
- * @package    Core
- * @subpackage Test
- */
-class Core_Test_ToolTest extends PHPUnit_Framework_TestCase
+namespace Tests\Core;
+
+use Core\Test\TestCase;
+use Core_Exception_User;
+use Core_Tools;
+
+class ToolTest extends TestCase
 {
-
     /**
      * Test de genererChaine.
      */
@@ -26,8 +21,10 @@ class Core_Test_ToolTest extends PHPUnit_Framework_TestCase
             $chaine = Core_Tools::generateString($taille);
             $this->assertEquals($taille, strlen($chaine));
             $this->assertEquals(1, preg_match('/^[a-zA-Z0-9]+$/', $chaine));
-            $this->assertFalse(in_array($chaine, $tabChaines),
-                "Doublon de genererChaine() : $chaine dans ".print_r($tabChaines, true));
+            $this->assertFalse(
+                in_array($chaine, $tabChaines),
+                "Doublon de genererChaine() : $chaine dans ".print_r($tabChaines, true)
+            );
             $tabChaines[] = $chaine;
         }
     }
@@ -144,5 +141,4 @@ class Core_Test_ToolTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($maj, Core_Tools::ucFirst($min));
         }
     }
-
 }

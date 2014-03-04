@@ -2,7 +2,6 @@
 
 namespace User\Application\ViewHelper;
 
-use User\Domain\ACL\Resource\Resource;
 use Zend_Auth;
 use Zend_View_Helper_Abstract;
 use User\Domain\ACL\Action;
@@ -17,7 +16,7 @@ use User\Domain\User;
 class IsAllowedHelper extends Zend_View_Helper_Abstract
 {
     /**
-     * @var \User\Domain\ACL\ACLService
+     * @var ACLService
      */
     private $aclService;
 
@@ -29,7 +28,7 @@ class IsAllowedHelper extends Zend_View_Helper_Abstract
     /**
      * Vérifie une autorisation d'accès à une ressource pour l'utilisateur connecté
      *
-     * @param \User\Domain\ACL\Action                     $action Action demandée
+     * @param Action                                               $action Action demandée
      * @param \User\Domain\ACL\Resource\Resource|Core_Model_Entity $target Ressource ou entité
      *
      * @return boolean
@@ -46,5 +45,4 @@ class IsAllowedHelper extends Zend_View_Helper_Abstract
 
         return $this->aclService->isAllowed($user, $action, $target);
     }
-
 }

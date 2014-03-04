@@ -1,42 +1,22 @@
 <?php
-/**
- * @author valentin.claras
- * @author hugo.charbonnier
- * @author yoann.croizer
- * @package Calc
- */
 
+namespace Tests\Calc;
+
+use Calc_Calculation;
+use Calc_Calculation_Unit;
+use Calc_UnitValue;
+use Core\Test\TestCase;
+use Core_Exception_InvalidArgument;
+use Core_Exception_NotFound;
 use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
-/**
- * @package Calc
- */
-class Calc_Test_UnitTest extends PHPUnit_Framework_TestCase
+class UnitTest extends TestCase
 {
-    /**
-     * Lance les autre classe de tests.
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Calc_Test_Calculation_UnitSetUp');
-        $suite->addTestSuite('Calc_Test_Calculation_UnitOthers');
-        return $suite;
-    }
-
-}
-
-/**
- * @package Calc
- */
-class Calc_Test_Calculation_UnitSetUp extends PHPUnit_Framework_TestCase
-{
-
     /**
      * Test du constructeur d'une Calc_Calculation_Unit.
      */
-    function testConstructCalculation()
+    public function testConstructCalculation()
     {
         $o = new Calc_Calculation_Unit();
         $this->assertEquals(true, $o instanceof Calc_Calculation_Unit);
@@ -45,30 +25,16 @@ class Calc_Test_Calculation_UnitSetUp extends PHPUnit_Framework_TestCase
     /**
      * Test du constructeur d'une Calc_Unit.
      */
-    function testConstructUnitValue()
+    public function testConstructUnitValue()
     {
         $o = new Calc_UnitValue();
         $this->assertInstanceOf('Calc_UnitValue', $o);
     }
 
-}
-
-/**
- * @package Calc
- */
-class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Méthode appelée avant chaque méthode de test.
-     */
-    function setUp()
-    {
-    }
-
     /**
      * Test de la méthode calculate.
      */
-    function testCalculate()
+    public function testCalculate()
     {
         //Test produit d'unité OK.
         $unit1 = new UnitAPI('j.animal');
@@ -119,9 +85,9 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $o2->addComponents($unit1, Calc_Calculation::SUM);
         $o2->addComponents($unit2, Calc_Calculation::SUBSTRACTION);
         try {
-            $result = $o2->calculate();
+            $o2->calculate();
         } catch (IncompatibleUnitsException $e) {
-             $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
+            $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
         }
 
         //Test somme avec unité inéxistante.
@@ -133,7 +99,7 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $o3->addComponents($unit1, Calc_Calculation::SUM);
         $o3->addComponents($unit2, Calc_Calculation::SUBSTRACTION);
         try {
-            $result = $o3->calculate();
+            $o3->calculate();
         } catch (Core_Exception_NotFound $e) {
             $this->assertEquals("No 'Unit\\Domain\\Unit\\Unit' matching (ref == gramme)", $e->getMessage());
         }
@@ -147,10 +113,9 @@ class Calc_Test_Calculation_UnitOthers extends PHPUnit_Framework_TestCase
         $o->addComponents($unit2, -1);
 
         try {
-            $result = $o->calculate();
+            $o->calculate();
         } catch (Core_Exception_InvalidArgument $e) {
             $this->assertEquals('Unknow operation', $e->getMessage());
         }
     }
-
 }

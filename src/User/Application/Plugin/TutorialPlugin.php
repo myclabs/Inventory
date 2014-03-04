@@ -8,7 +8,6 @@ use Zend_Layout;
 
 /**
  * Définition du plugin pour les tutoriaux
- *
  */
 class TutorialPlugin extends Zend_Controller_Plugin_Abstract
 {

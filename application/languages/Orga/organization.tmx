@@ -82,5 +82,46 @@
             </tuv>
         </tu>
 
+        <tu tuid="banner">
+            <tuv xml:lang="fr">
+                <seg>Bannière</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Banner</seg>
+            </tuv>
+        </tu>
+        <tu tuid="bannerExplanations">
+            <tuv xml:lang="fr">
+                <seg>Personnalisation de la page principale; taille d'image en pixels recommandée h=125 et L&lt;=1100.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Customizing the main page, image size recommended in pixels h=125 and L&lt;=1100.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="choiceBanner">
+            <tuv xml:lang="fr">
+                <seg>Choisir une bannière</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Choose a banner</seg>
+            </tuv>
+        </tu>
+        <tu tuid="currentBanner">
+            <tuv xml:lang="fr">
+                <seg>Bannière actuelle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Current banner</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noBanner">
+            <tuv xml:lang="fr">
+                <seg>Aucune bannière</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No banner</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

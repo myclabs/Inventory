@@ -3,6 +3,9 @@
         "psr-0": {
             "": "src/"
         },
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
         "files": [
             "src/Core/Translation/functions.php"
         ]
@@ -25,8 +28,8 @@
         "myclabs/xport": "0.2.*",
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
-        "mnapoli/php-di": "3.5.*",
-        "mnapoli/php-di-zf1": "~1.0",
+        "mnapoli/php-di": "~4.0",
+        "mnapoli/php-di-zf1": "*",
         "psr/log": "~1.0",
         "monolog/monolog": "~1.6",
         "mnapoli/number-two": "~0.2.0",
@@ -45,6 +48,9 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "config": {
+        "bin-dir": "bin"
+    },
     "repositories": [
         {
             "type": "git",

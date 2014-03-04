@@ -1,63 +1,45 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  yoann.croizer
- * @package Algo
- */
 
+namespace Tests\Algo\Numeric;
+
+use AF\Domain\Algorithm\Algo;
+use AF\Domain\Algorithm\InputSet;
+use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
+use AF\Domain\Algorithm\AlgoSet;
+use Calc_UnitValue;
+use Classif_Model_Context;
+use Classif_Model_ContextIndicator;
+use Classif_Model_Indicator;
 use Core\Test\TestCase;
+use Core_Tools;
+use Doctrine\ORM\UnitOfWork;
 use Unit\UnitAPI;
 
-/**
- * @package Algo
- */
-class Numeric_ConstantTest
+class ConstantTest extends TestCase
 {
-    /**
-     * Lance les autre classe de tests.
-     */
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Numeric_ConstantSetUpTest');
-        $suite->addTestSuite('Numeric_ConstantLogiqueMetierTest');
-        return $suite;
-    }
-
-    /**
-     * Permet de générer un objet de base sur lequel on pourra travailler
-     */
     public static function generateObject()
     {
-        $set = new Algo_Model_Set();
+        $set = new AlgoSet();
         $set->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
 
-        $o = new Algo_Model_Numeric_Constant();
+        $o = new NumericConstantAlgo();
         $o->setSet($set);
         $o->setRef(strtolower(Core_Tools::generateString(20)));
         $o->setUnitValue(self::generateUnitValue());
         $o->setContextIndicator(self::generateContextIndicator());
         $o->setLabel('labelNumericConstant');
         $o->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
         return $o;
     }
 
-    /**
-     * Supprime un objet utilisé dans les tests
-     * @param Algo_Model_Numeric_Constant $o
-     */
-    public static function deleteObject(Algo_Model_Numeric_Constant $o)
+    public static function deleteObject(NumericConstantAlgo $o)
     {
         $o->delete();
         $o->getSet()->delete();
         self::deleteContextIndicator($o->getContextIndicator());
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
     }
 
     /**
@@ -83,14 +65,12 @@ class Numeric_ConstantTest
         $indicator->setUnit(new UnitAPI('g'));
         $indicator->setRatioUnit($indicator->getUnit());
         $indicator->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
         $contextIndicator = new Classif_Model_ContextIndicator();
         $contextIndicator->setContext($context);
         $contextIndicator->setIndicator($indicator);
         $contextIndicator->save();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
         return $contextIndicator;
     }
 
@@ -102,30 +82,15 @@ class Numeric_ConstantTest
         $contextIndicator->delete();
         $contextIndicator->getIndicator()->delete();
         $contextIndicator->getContext()->delete();
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $entityManagers['default']->flush();
+        self::getEntityManager()->flush();
     }
-}
 
-
-/**
- * constantSetUpTest
- * @package Algo
- */
-class Numeric_ConstantSetUpTest extends TestCase
-{
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
     public static function setUpBeforeClass()
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
-        // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Algo_Model_Set::loadList() as $o) {
+        foreach (AlgoSet::loadList() as $o) {
             $o->delete();
         }
-        foreach (Algo_Model_Algo::loadList() as $o) {
+        foreach (Algo::loadList() as $o) {
             $o->delete();
         }
         foreach (Classif_Model_Context::loadList() as $o) {
@@ -137,20 +102,17 @@ class Numeric_ConstantSetUpTest extends TestCase
         foreach (Classif_Model_ContextIndicator::loadList() as $o) {
             $o->delete();
         }
-        $entityManager->flush();
+        self::getEntityManager()->flush();
     }
 
-    /**
-     * @return Algo_Model_Numeric_Constant $o
-     */
     public function testConstruct()
     {
-        $set = new Algo_Model_Set();
+        $set = new AlgoSet();
         $set->save();
         $this->entityManager->flush();
-        $unitValue = Numeric_ConstantTest::generateUnitValue();
+        $unitValue = ConstantTest::generateUnitValue();
 
-        $o = new Algo_Model_Numeric_Constant();
+        $o = new NumericConstantAlgo();
         $o->setSet($set);
         $o->setRef(strtolower(Core_Tools::generateString(20)));
         $o->setUnitValue($unitValue);
@@ -164,83 +126,36 @@ class Numeric_ConstantSetUpTest extends TestCase
 
     /**
      * @depends testConstruct
-     * @param Algo_Model_Numeric_Constant $o
-     * @return Algo_Model_Numeric_Constant $o
+     * @param \AF\Domain\Algorithm\Numeric\NumericConstantAlgo $o
+     * @return NumericConstantAlgo $o
      */
-    public function testLoad(Algo_Model_Numeric_Constant $o)
+    public function testLoad(NumericConstantAlgo $o)
     {
         $this->entityManager->clear();
-        /** @var $oLoaded Algo_Model_Numeric_Constant */
-        $oLoaded = Algo_Model_Numeric_Constant::load($o->getKey());
-        $this->assertInstanceOf('Algo_Model_Numeric_Constant', $oLoaded);
+        /** @var $oLoaded \AF\Domain\Algorithm\Numeric\NumericConstantAlgo */
+        $oLoaded = NumericConstantAlgo::load($o->getKey());
+        $this->assertInstanceOf(NumericConstantAlgo::class, $oLoaded);
         $this->assertEquals($o->getUnit()->getRef(), $oLoaded->getUnit()->getRef());
         return $oLoaded;
     }
 
     /**
      * @depends testLoad
-     * @param Algo_Model_Numeric_Constant $o
+     * @param \AF\Domain\Algorithm\Numeric\NumericConstantAlgo $o
      */
-    public function testDelete(Algo_Model_Numeric_Constant $o)
+    public function testDelete(NumericConstantAlgo $o)
     {
         $o->delete();
         $o->getSet()->delete();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_REMOVED,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
+        $this->assertEquals(UnitOfWork::STATE_REMOVED, $this->entityManager->getUnitOfWork()->getEntityState($o));
         $this->entityManager->flush();
-        $this->assertEquals(\Doctrine\ORM\UnitOfWork::STATE_NEW,
-                            $this->entityManager->getUnitOfWork()->getEntityState($o));
-    }
-}
-
-
-/**
- * Numeric_ConstantLogiqueMetierTest
- * @package Algo
- */
-class Numeric_ConstantLogiqueMetierTest extends PHPUnit_Framework_TestCase
-{
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
-    public static function setUpBeforeClass()
-    {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
-        $entityManager = Zend_Registry::get('EntityManagers')['default'];
-        // Vérification qu'il ne reste aucun objet en base, sinon suppression
-        foreach (Algo_Model_Set::loadList() as $o) {
-            $o->delete();
-        }
-        foreach (Algo_Model_Algo::loadList() as $o) {
-            $o->delete();
-        }
-        foreach (Classif_Model_Context::loadList() as $o) {
-            $o->delete();
-        }
-        $entityManager->flush();
+        $this->assertEquals(UnitOfWork::STATE_NEW, $this->entityManager->getUnitOfWork()->getEntityState($o));
     }
 
-    /**
-     * Set up
-     */
-    public function setUp()
-    {
-        $entityManagers = Zend_Registry::get('EntityManagers');
-        $this->entityManager = $entityManagers['default'];
-    }
-
-    /**
-     * Test de la méthode execute()
-     */
     public function testExecute()
     {
-        $numericConstant = Numeric_ConstantTest::generateObject();
-        $inputSet = $this->getMockForAbstractClass('Algo_Model_InputSet');
+        $numericConstant = ConstantTest::generateObject();
+        $inputSet = $this->getMockForAbstractClass(InputSet::class);
         $result = $numericConstant->execute($inputSet);
         $this->assertTrue($result instanceof Calc_UnitValue);
     }

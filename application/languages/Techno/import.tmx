@@ -3,7 +3,7 @@
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
-        <!-- Ajout d'éléments -->
+        <!-- Ajout de paramètres -->
 
         <tu tuid="editElementListHelp">
             <tuv xml:lang="fr">
@@ -23,12 +23,12 @@
         </tu>
         <tu tuid="editElementListExample">
             <tuv xml:lang="fr">
-                <seg>membre1, membre2, 123.45, 10
-membre3, membre4, 0.5, 20</seg>
+                <seg>membre1; membre2; 123.45; 10
+membre3; membre4; 0.5; 20</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>member1, member2, 23.45, 10
-member3, member4, 0.5, 20</seg>
+                <seg>member1; member2; 23.45; 10
+member3; member4; 0.5; 20</seg>
             </tuv>
         </tu>
         <tu tuid="invalidElementsInput">
@@ -41,46 +41,48 @@ member3, member4, 0.5, 20</seg>
         </tu>
         <tu tuid="unknownMember">
             <tuv xml:lang="fr">
-                <seg>Membre [MEMBER] inconnu.</seg>
+                <seg>Élément [MEMBER] inconnu.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Unknown member [MEMBER].</seg>
+                <seg>Unknown element [MEMBER].</seg>
             </tuv>
         </tu>
 
 
-        <!-- Ajout de membres -->
+        <!-- Ajout d'éléments de la dimension -->
 
         <tu tuid="addMemberListHelp">
             <tuv xml:lang="fr">
                 <seg>
-                    Le format attendu est un membre par ligne : identifiant suivi d'une virgule et du libellé.
+                    Le format attendu est un élément par ligne : libellé puis identifiant, séparés par un ";".
+                    L'identifiant peut être omis, il sera alors automatiquement généré.
                     Exemple :
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-                    The expected format is one member per line: the identifier followed by a comma and the label.
+                    The expected format is one element per line: the label followed by the identifier, separated
+                    with a ";". The identifier can be omitted, it will be generated automatically.
                     Example:
                 </seg>
             </tuv>
         </tu>
         <tu tuid="addMemberListExample">
             <tuv xml:lang="fr">
-                <seg>membre1, Libellé du membre 1
-membre2, Libellé du membre 2</seg>
+                <seg>Libellé de l'élément 1; element1
+Libellé de l'élément 2; element2</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>member1, Label of member 1
-member2, Label of member 2</seg>
+                <seg>Label of element 1; element1
+Label of element 2; element2</seg>
             </tuv>
         </tu>
         <tu tuid="membersFound">
             <tuv xml:lang="fr">
-                <seg>membre(s) prêts à être ajoutés</seg>
+                <seg>élément(s) prêts à être ajoutés</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>member(s) ready to be created</seg>
+                <seg>element(s) ready to be created</seg>
             </tuv>
         </tu>
         <tu tuid="invalidMembersInput">
@@ -91,20 +93,20 @@ member2, Label of member 2</seg>
                 <seg>Unrecognized input, please follow the expected format.</seg>
             </tuv>
         </tu>
-        <tu tuid="errorOneCommaPerLine">
+        <tu tuid="errorOneSeparatorPerLine">
             <tuv xml:lang="fr">
-                <seg>Chaque ligne doit contenir une virgule séparant l'identifiant du libellé.</seg>
+                <seg>Chaque ligne doit contenir un point-virgule séparant le libellé de l'identifiant.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Each line should contain a comma separating the identifier from the label.</seg>
+                <seg>Each line should contain a semi-colon separating the label from the identifier.</seg>
             </tuv>
         </tu>
         <tu tuid="errorInvalidRef">
             <tuv xml:lang="fr">
-                <seg>L'identifiant ligne {line} doit être non vide et utiliser uniquement les caractères "a..z" (minuscules), "0..9", et "_".</seg>
+                <seg>L'identifiant ligne {line} doit utiliser uniquement les caractères "a..z" (minuscules), "0..9", et "_".</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>The identifier line {line} must be non-empty and contain only the characters "a..z" (lower case), "0..9", and "_".</seg>
+                <seg>The identifier line {line} must contain only the characters "a..z" (lower case), "0..9", and "_".</seg>
             </tuv>
         </tu>
         <tu tuid="errorInvalidLabel">
@@ -118,19 +120,19 @@ member2, Label of member 2</seg>
 
         <tu tuid="importSuccessful">
             <tuv xml:lang="fr">
-                <seg>[NUMBER] membre(s) ont été ajouté(s).</seg>
+                <seg>[NUMBER] élément(s) ont été ajouté(s).</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>[NUMBER] member(s) have been added.</seg>
+                <seg>[NUMBER] element(s) have been added.</seg>
             </tuv>
         </tu>
 
         <tu tuid="dimensionHasMember">
             <tuv xml:lang="fr">
-                <seg>Le membre [REF] existe déjà dans la dimension.</seg>
+                <seg>L'élément [REF] existe déjà dans la dimension.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>The member [REF] already exists in that dimension.</seg>
+                <seg>The element [REF] already exists in that dimension.</seg>
             </tuv>
         </tu>
 

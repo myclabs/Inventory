@@ -1,8 +1,4 @@
 <?php
-/**
- * @package    User
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
 use User\Application\ForbiddenException;
@@ -14,12 +10,9 @@ use User\Domain\UserService;
 
 /**
  * Contrôleur de gestion des utilisateurs
- * @package    User
- * @subpackage Controller
  */
 class User_ProfileController extends Core_Controller
 {
-
     use UI_Controller_Helper_Form;
 
     /**
@@ -33,6 +26,12 @@ class User_ProfileController extends Core_Controller
      * @var ACLService
      */
     private $aclService;
+
+    /**
+     * @Inject("emails.noreply.name")
+     * @var string
+     */
+    private $emailNoReplyName;
 
     /**
      * Par défaut : redirige vers la liste des utilisateurs
@@ -144,17 +143,14 @@ class User_ProfileController extends Core_Controller
         $this->entityManager->flush();
 
         // Envoi d'un email d'alerte
-        $config = Zend_Registry::get('configuration');
         $subject = __('User', 'email', 'subjectAccountDeactivated');
-        $content = __('User', 'email', 'bodyAccountDeactivated',
-                      array(
-                           'APPLICATION_NAME' => $config->emails->noreply->name
-                      )
-        );
+        $content = __('User', 'email', 'bodyAccountDeactivated', [ 'APPLICATION_NAME' => $this->emailNoReplyName ]);
         $this->userService->sendEmail($user, $subject, $content);
 
-        UI_Message::addMessageStatic(__('User', 'editProfile', 'accountDeactivated') . ' '
-                                         . __('User', 'editProfile', 'userInformedByEmail'), UI_Message::TYPE_SUCCESS);
+        UI_Message::addMessageStatic(
+            __('User', 'editProfile', 'accountDeactivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail'),
+            UI_Message::TYPE_SUCCESS
+        );
 
         if ($user === $connectedUser) {
             $this->redirect('user/action/logout');
@@ -178,13 +174,8 @@ class User_ProfileController extends Core_Controller
         $this->entityManager->flush();
 
         // Envoi d'un email d'alerte
-        $config = Zend_Registry::get('configuration');
         $subject = __('User', 'email', 'subjectAccountActivated');
-        $content = __('User', 'email', 'bodyAccountActivated',
-                      array(
-                           'APPLICATION_NAME' => $config->emails->noreply->name
-                      )
-        );
+        $content = __('User', 'email', 'bodyAccountActivated', [ 'APPLICATION_NAME' => $this->emailNoReplyName ]);
         $this->userService->sendEmail($user, $subject, $content);
 
         $message = __('User', 'messages', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
@@ -235,24 +226,18 @@ class User_ProfileController extends Core_Controller
 
             if (!$this->hasFormError()) {
                 $subject = __('User', 'email', 'subjectEmailModified');
-                $config = Zend_Registry::get('configuration');
-                if (empty($config->emails->contact->adress)) {
-                    throw new Core_Exception_NotFound('Le courriel de "contact" n\'a pas été défini.');
-                }
                 if ($user === $this->_helper->auth()) {
-                    $content = __('User', 'email', 'bodyEmailModifiedByUser',
-                                  array(
-                                       'OLD_EMAIL_ADDRESS' => $oldEmail,
-                                       'NEW_EMAIL_ADDRESS' => $email,
-                                       'APPLICATION_NAME'       => $config->emails->noreply->name
-                                  ));
+                    $content = __('User', 'email', 'bodyEmailModifiedByUser', [
+                        'OLD_EMAIL_ADDRESS' => $oldEmail,
+                        'NEW_EMAIL_ADDRESS' => $email,
+                        'APPLICATION_NAME'  => $this->emailNoReplyName
+                    ]);
                 } else {
-                    $content = __('User', 'email', 'bodyEmailModifiedByAdmin',
-                                  array(
-                                       'OLD_EMAIL_ADDRESS' => $oldEmail,
-                                       'NEW_EMAIL_ADDRESS' => $email,
-                                       'APPLICATION_NAME'  => $config->emails->noreply->name
-                                  ));
+                    $content = __('User', 'email', 'bodyEmailModifiedByAdmin', [
+                        'OLD_EMAIL_ADDRESS' => $oldEmail,
+                        'NEW_EMAIL_ADDRESS' => $email,
+                        'APPLICATION_NAME'  => $this->emailNoReplyName
+                    ]);
                 }
 
                 // Envoi de l'email à l'ancienne adresse

@@ -1,18 +1,11 @@
 <?php
+
 use User\Domain\User;
 
 /**
- * Classe Orga_Service_Report
- * @author valentin.claras
- * @package    Orga
- * @subpackage Service
- */
-
-
-/**
  * Service Orga.
- * @package    Orga
- * @subpackage Service
+ *
+ * @author valentin.claras
  */
 class Orga_Service_Report implements Core_Event_ObserverInterface
 {
@@ -29,10 +22,8 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
      */
     public static function applyEvent($event, $subject, $arguments = [])
     {
-        /** @var \DI\Container $container */
-        $container = Zend_Registry::get('container');
         /** @var Orga_Service_ETLStructure $etlStructureService */
-        $etlStructureService = $container->get('Orga_Service_ETLStructure');
+        $etlStructureService = \Core\ContainerSingleton::getContainer()->get('Orga_Service_ETLStructure');
 
         try {
             Simulation_Model_Set::loadByDWCube($subject->getCube()->getId());

@@ -1,9 +1,0 @@
-AF_Model_Condition_Elementary_Numeric:
-  type: entity
-  repositoryClass: Core_Model_Repository
-  table: AF_Condition_Elementary_Numeric
-
-  fields:
-    value:
-      type: float
-      nullable: true

@@ -1,0 +1,17 @@
+AF\Domain\Component\Group:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: AF_Component_Group
+
+  fields:
+    foldaway:
+      type: integer
+      nullable: false
+
+  oneToMany:
+    subComponents:
+      targetEntity: AF\Domain\Component\Component
+      mappedBy: group
+      orderBy:
+        position: ASC
+      cascade: [ persist, merge ]
