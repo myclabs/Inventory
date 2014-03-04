@@ -26,7 +26,7 @@ Feature: Edit granularity analysis label translations feature
   # Accès au datagrid des analyses préconfigurées au niveau "Site"
     When I close collapse "Niveau organisationnel global"
     And I open collapse "Site"
-    Then I should see the "datagridTranslate_DW_Model_Report_label_3" datagrid
-    And the row 1 of the "datagridTranslate_DW_Model_Report_label_3" datagrid should contain:
+    Then I should see the "datagridTranslate_DW_Model_Report_label_4" datagrid
+    And the row 1 of the "datagridTranslate_DW_Model_Report_label_4" datagrid should contain:
       | fr                           |
       | Chiffre d'affaire, par année |
