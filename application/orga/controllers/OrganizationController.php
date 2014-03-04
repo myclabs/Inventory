@@ -570,7 +570,6 @@ class Orga_OrganizationController extends Core_Controller
         }
         if (empty($messages) && (!$transferAdapter->isValid())) {
             $messages = [__('Doc', 'library', 'invalidMIMEType')];
-            $messages = $transferAdapter->getMessages();
         }
         if (empty($messages) && ($transferAdapter->getFileName() == null)) {
             $messages = [__('Doc', 'messages', 'uploadError')];
