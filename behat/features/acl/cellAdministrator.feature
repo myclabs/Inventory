@@ -124,7 +124,7 @@ Feature: Cell administrator feature
     And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#da39a3ee5e6b4b0d3255bfef95601890afd80709"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the "listMemberssite" datagrid should contain 2 row
+    And the "listMemberssite" datagrid should contain 3 row
     And the row 1 of the "listMemberssite" datagrid should contain:
       | label | ref | broaderpays | broadermarque |
       | AAA   | aaa | France      | Marque A      |
@@ -132,5 +132,5 @@ Feature: Cell administrator feature
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "listMemberssite" datagrid should contain 1 row
+    And the "listMemberssite" datagrid should contain 2 row
   # TODO : Suppression d'un élément entraînant la suppression de cellules associées à des DWs (par exemple un site).
