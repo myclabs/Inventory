@@ -174,7 +174,7 @@ class Orga_OrganizationController extends Core_Controller
                     [
                         'message' => __('UI', 'message', 'addedLater'),
                         'typeMessage' => 'info',
-                        'info' => __('Orga', 'add', 'addOrganizationComplementaryInfo')
+                        'info' => __('Orga', 'add', 'complementaryInfo')
                     ]
                 ]
             );
