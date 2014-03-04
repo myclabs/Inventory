@@ -1,0 +1,11 @@
+Techno\Domain\Family\Cell:
+
+  exclusion_policy: ALL
+
+  properties:
+    membersHashKey:
+      expose: true
+      type: string
+    value:
+      expose: true
+      type: Calc_Value

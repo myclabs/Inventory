@@ -40,11 +40,13 @@ AF\Domain\Category:
       mappedBy: parentCategory
       orderBy:
         position: ASC
+      cascade: [ persist ]
     afs:
       targetEntity: AF
       mappedBy: category
       orderBy:
         position: ASC
+      cascade: [ persist ]
 
   lifecycleCallbacks:
     prePersist: [ preSave ]
