@@ -4,9 +4,9 @@ use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
+use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use User\Application\ViewHelper\IsAllowedHelper;
-use User\Domain\UserService;
 
 return [
     // Nom de l'application installée
@@ -78,5 +78,12 @@ return [
     Orga_Service_ETLStructure::class => DI\object()
             ->constructorParameter('defaultLocale', DI\link('translation.defaultLocale'))
             ->constructorParameter('locales', DI\link('translation.languages')),
+
+    Serializer::class => DI\factory(function () {
+        return SerializerBuilder::create()
+            ->addMetadataDir(PACKAGE_PATH . '/src/Inventory/Serializer')
+            ->addMetadataDir(PACKAGE_PATH . '/src/Techno/Architecture/Serializer', 'Techno\Domain')
+            ->build();
+    }),
 
 ];
