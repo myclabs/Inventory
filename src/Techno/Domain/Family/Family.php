@@ -276,6 +276,18 @@ class Family extends Core_Model_Entity
     }
 
     /**
+     * Reconstruit les hashkey des cellules (ne supprime ou ne crée pas de cellule.
+     *
+     * À appeler lorsque les ref de members/dimensions ont changés.
+     */
+    public function updateCellsHashKey()
+    {
+        foreach ($this->cells as $cell) {
+            $cell->updateMembersHashKey();
+        }
+    }
+
+    /**
      * Crée les cellules découlant de l'ajout d'un membre
      *
      * @param Member $member

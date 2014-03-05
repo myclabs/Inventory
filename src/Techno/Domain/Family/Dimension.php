@@ -59,7 +59,7 @@ class Dimension extends Core_Model_Entity
 
     /**
      * Membres de la dimension
-     * @var Collection
+     * @var Collection|Member[]
      */
     protected $members;
 
@@ -116,6 +116,8 @@ class Dimension extends Core_Model_Entity
     public function setRef($ref)
     {
         $this->ref = $ref;
+
+        $this->family->updateCellsHashKey();
     }
 
     /**
