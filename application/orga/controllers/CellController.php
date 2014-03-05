@@ -1211,7 +1211,7 @@ class Orga_CellController extends Core_Controller
         $this->view->inputSet = $inputSet;
 
         // Moche mais sinon je me petit-suicide
-        $this->view->addScriptPath(APPLICATION_PATH . '/af/views/scripts/');
+        $this->view->addScriptPath(PACKAGE_PATH . '/src/AF/Application/views/scripts/');
         $data = $this->view->render('af/display-results.phtml');
 
         // Force le statut en success (sinon les handlers JS ne sont pas exécutés)
