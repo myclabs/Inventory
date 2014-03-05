@@ -1,0 +1,28 @@
+AF\Domain\AF:
+
+  properties:
+    entities:
+      exclude: true
+    id:
+      exclude: true
+    category:
+      exclude: true
+    algoSet:
+      exclude: true
+    mainAlgo:
+      exclude: true
+    components:
+      exclude: true
+    conditions:
+      exclude: true
+
+    ref:
+      type: string
+    label:
+      type: string
+    position:
+      type: integer
+    documentation:
+      type: string
+    rootGroup:
+      type: AF\Domain\Component\Group

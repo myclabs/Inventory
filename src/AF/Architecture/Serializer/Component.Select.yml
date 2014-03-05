@@ -1,0 +1,7 @@
+AF\Domain\Component\Select:
+
+  properties:
+    options:
+      exclude: true
+    required:
+      type: boolean

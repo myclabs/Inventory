@@ -1,0 +1,7 @@
+AF\Domain\Component\Group:
+
+  properties:
+    foldaway:
+      type: integer
+    subComponents:
+      type: ArrayCollection<AF\Domain\Component\Component>
