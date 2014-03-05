@@ -675,8 +675,21 @@ class Orga_Service_Export
         );
 
         $modelBuilder->bindFunction(
+            'displayValue',
+            function ($value) {
+                if (preg_match('{\.\d+}', $value, $matches)===1) {
+                    return number_format($value, (strlen($matches[0]) - 1));
+                }
+                return $value;
+            }
+        );
+
+        $modelBuilder->bindFunction(
             'displayRoundedValue',
             function ($value) {
+                if (preg_match('{\.\d+}', $value, $matches)===1) {
+                    return number_format($value, (strlen($matches[0]) - 1));
+                }
                 return round($value, floor(3 - log10(abs($value))));
             }
         );
@@ -774,12 +787,16 @@ function getInputValues(Input $input)
     switch (get_class($input)) {
         case NumericFieldInput::class:
             /** @var NumericFieldInput $input */
+            $inputDigitalValue = $inputValue->getDigitalValue();
+            if (preg_match('{\.\d+}', $inputDigitalValue, $matches)===1) {
+                $inputDigitalValue = number_format($inputDigitalValue, (strlen($matches[0]) - 1));
+            }
             if ($input->getComponent() !== null) {
                 try {
                     $conversionFactor = $input->getComponent()->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
                     $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
                     return [
-                        $inputValue->getDigitalValue(),
+                        $inputDigitalValue,
                         $inputValue->getRelativeUncertainty(),
                         $inputValue->getUnit()->getSymbol(),
                         $baseConvertedValue->getDigitalValue(),
@@ -787,14 +804,14 @@ function getInputValues(Input $input)
                     ];
                 } catch (\Unit\IncompatibleUnitsException $e) {
                     return [
-                        $inputValue->getDigitalValue(),
+                        $inputDigitalValue,
                         $inputValue->getRelativeUncertainty(),
                         $inputValue->getUnit()->getSymbol(),
                     ];
                 }
             }
             return [
-                $inputValue->getDigitalValue(),
+                $inputDigitalValue,
                 $inputValue->getRelativeUncertainty(),
                 $inputValue->getUnit()->getSymbol(),
             ];
