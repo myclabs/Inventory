@@ -2,11 +2,12 @@
 
 namespace Inventory\Command;
 
+use AF\Domain\Category as AFCategory;
 use JMS\Serializer\Serializer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Techno\Domain\Category;
+use Techno\Domain\Category as TechnoCategory;
 
 /**
  * Exporte les données.
@@ -35,19 +36,19 @@ class ExportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $data = $this->exportTechno();
+        $data = $this->exportAF();
 
         echo $this->serializer->serialize($data, 'json') . PHP_EOL;
+        echo json_encode(json_decode($this->serializer->serialize($data, 'json')), JSON_PRETTY_PRINT);
     }
 
     private function exportTechno()
     {
-        $data = [];
+        return TechnoCategory::loadRootCategories();
+    }
 
-        foreach (Category::loadRootCategories() as $rootCategory) {
-            $data[] = $rootCategory;
-        }
-
-        return $data;
+    private function exportAF()
+    {
+        return AFCategory::loadRootCategories();
     }
 }
