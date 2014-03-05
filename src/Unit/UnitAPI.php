@@ -148,16 +148,11 @@ class UnitAPI
                     throw new IncompatibleUnitsException("Unit {$this->ref} is incompatible with $refUnit");
                 }
             }
-        } // Dans le cas ou on veut récupérer le facteur de conversion de l'unité de base
-		else {
-			$refUnit = $this->ref;
-			if (!array_key_exists($this->ref, self::$conversionFactors)
-                || !array_key_exists($this->ref, self::$conversionFactors[$this->ref])
-			) {
-				$unit = new ComposedUnit($this->ref);
-				self::$conversionFactors[$this->ref][$this->ref] = $unit->getConversionFactor();
-			}
-		}
+        } else {
+            // Dans le cas ou on veut récupérer le facteur de conversion de l'unité de base
+            $unit = new ComposedUnit($this->ref);
+            return $unit->getConversionFactor();
+        }
         return self::$conversionFactors[$this->ref][(string) $refUnit];
     }
 
