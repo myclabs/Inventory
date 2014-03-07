@@ -800,7 +800,7 @@ function getInputValues(Input $input)
                         $inputValue->getRelativeUncertainty(),
                         $inputValue->getUnit()->getSymbol(),
                         $baseConvertedValue->getDigitalValue(),
-                        $baseConvertedValue->getUnit()->getSymbol(),
+                        $input->getComponent()->getUnit()->getSymbol(),
                     ];
                 } catch (\Unit\IncompatibleUnitsException $e) {
                     return [
