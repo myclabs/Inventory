@@ -786,7 +786,7 @@ function getInputValues(Input $input)
             /** @var NumericFieldInput $input */
             $inputDigitalValue = $inputValue->getDigitalValue();
             if (preg_match('{\.\d+}', $inputDigitalValue, $matches)===1) {
-                $inputDigitalValue = number_format($inputDigitalValue, (strlen($matches[0]) - 1));
+                $inputDigitalValue = number_format($inputDigitalValue, (strlen($matches[0]) - 1), '.', '');
             }
             if ($input->getComponent() !== null) {
                 try {
