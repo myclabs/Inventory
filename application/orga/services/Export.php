@@ -677,8 +677,8 @@ class Orga_Service_Export
         $modelBuilder->bindFunction(
             'displayValue',
             function ($value) {
-                if (preg_match('{\.\d+}', $value, $matches)===1) {
-                    return number_format($value, (strlen($matches[0]) - 1));
+                if (preg_match('#\.\d+#', $value, $matches) === 1) {
+                    return number_format($value, (strlen($matches[0]) - 1), '.', '');
                 }
                 return $value;
             }
@@ -687,8 +687,8 @@ class Orga_Service_Export
         $modelBuilder->bindFunction(
             'displayRoundedValue',
             function ($value) {
-                if (preg_match('{\.\d+}', $value, $matches)===1) {
-                    return number_format($value, (strlen($matches[0]) - 1));
+                if (preg_match('#\.\d+#', $value, $matches) === 1) {
+                    return number_format($value, (strlen($matches[0]) - 1), '.', '');
                 }
                 return round($value, floor(3 - log10(abs($value))));
             }
