@@ -99,7 +99,7 @@ class Techno_DimensionController extends Core_Controller
         $number = 0;
 
         foreach ($lines as $line) {
-            $array = explode(';', $line);
+            $array = explode("\t", $line);
 
             if ((count($array) < 1 ) || (count($array) > 2)) {
                 UI_Message::addMessageStatic(__('Techno', 'import', 'invalidMembersInput'));
