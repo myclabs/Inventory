@@ -207,7 +207,7 @@ if (count($file) > 0) {
         <?php if ($currentCell->showInput) : ?>
         <div class="input-status">
             <div class="input-actions">
-                <a class="btn btn-default withTooltip" href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">
+                <a class="btn btn-default withTooltip" href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>" target="_blank">
                     <?=___('Orga', 'view', 'inputLinkDetail')?>
                 </a>
             </div>
@@ -655,7 +655,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     inputStatusP =
                         '<div class="input-status">' +
                             '<div class="input-actions">' +
-                                '<a class="btn btn-default withTooltip" href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">' +
+                                '<a class="btn btn-default withTooltip" href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>" target="_blank">' +
                                     '<?=___('Orga', 'view', 'inputLinkDetail')?>' +
                                 '</a>' +
                             '</div>' +
