@@ -86,31 +86,10 @@ Orga_Model_Cell:
       targetEntity: Orga_Model_CellsGroup
       mappedBy: containerCell
       cascade: [ persist, remove ]
-    acl:
-      targetEntity: Orga\Model\ACL\CellAuthorization
-      mappedBy: resource
-      cascade: [ all ]
-      orphanRemoval: true
-    adminRoles:
-      targetEntity: Orga\Model\ACL\Role\CellAdminRole
+    roles:
+      targetEntity: Orga\Model\ACL\AbstractCellRole
       mappedBy: cell
       cascade: [ all ]
-      orphanRemoval: true
-    managerRoles:
-      targetEntity: Orga\Model\ACL\Role\CellManagerRole
-      mappedBy: cell
-      cascade: [ all ]
-      orphanRemoval: true
-    contributorRoles:
-      targetEntity: Orga\Model\ACL\Role\CellContributorRole
-      mappedBy: cell
-      cascade: [ all ]
-      orphanRemoval: true
-    observerRoles:
-      targetEntity: Orga\Model\ACL\Role\CellObserverRole
-      mappedBy: cell
-      cascade: [ all ]
-      orphanRemoval: true
 
   manyToOne:
     granularity:

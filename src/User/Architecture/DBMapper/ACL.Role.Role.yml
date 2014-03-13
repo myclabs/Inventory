@@ -8,11 +8,11 @@ User\Domain\ACL\Role\Role:
     name: type
     type: string
   discriminatorMap:
-    organizationAdmin: Orga\Model\ACL\Role\OrganizationAdminRole
-    cellAdmin: Orga\Model\ACL\Role\CellAdminRole
-    cellManager: Orga\Model\ACL\Role\CellManagerRole
-    cellContributor: Orga\Model\ACL\Role\CellContributorRole
-    cellObserver: Orga\Model\ACL\Role\CellObserverRole
+    organizationAdmin: Orga\Model\ACL\OrganizationAdminRole
+    cellAdmin: Orga\Model\ACL\CellAdminRole
+    cellManager: Orga\Model\ACL\CellManagerRole
+    cellContributor: Orga\Model\ACL\CellContributorRole
+    cellObserver: Orga\Model\ACL\CellObserverRole
 
   id:
     id:

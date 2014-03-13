@@ -1,7 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
-use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\CellAdminRole;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Action;
 use User\Domain\User;

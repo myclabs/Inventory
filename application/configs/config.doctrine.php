@@ -1,5 +1,6 @@
 <?php
 
+use Account\Domain\ACL\AccountAdminRole;
 use Core\Log\QueryLogger;
 use DI\Container;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -16,11 +17,16 @@ use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Gedmo\Loggable\LoggableListener;
 use Gedmo\Translatable\TranslatableListener;
+use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\EntityManagerListener;
 use MyCLabs\ACL\MetadataLoader;
 use MyCLabs\ACL\Model\SecurityIdentityInterface;
-use User\Domain\ACL\ACLUserListener;
+use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellObserverRole;
+use Orga\Model\ACL\OrganizationAdminRole;
 use User\Domain\ACL\AdminRole;
-use User\Domain\ACL\UserAuthorization;
 use User\Domain\User;
 
 return [
@@ -136,11 +142,22 @@ return [
 
         // Configuration pour MyCLabs\ACL
         $rtel = new ResolveTargetEntityListener();
+        // TODO simplify
         $rtel->addResolveTargetEntity(SecurityIdentityInterface::class, User::class, []);
         $evm->addEventListener(Events::loadClassMetadata, $rtel);
         $metadataLoader = new MetadataLoader();
         $metadataLoader->registerRoleClass(AdminRole::class, 'superadmin');
+        $metadataLoader->registerRoleClass(AccountAdminRole::class, 'accountAdmin');
+        $metadataLoader->registerRoleClass(OrganizationAdminRole::class, 'organizationAdmin');
+        $metadataLoader->registerRoleClass(CellAdminRole::class, 'cellAdmin');
+        $metadataLoader->registerRoleClass(CellManagerRole::class, 'cellManager');
+        $metadataLoader->registerRoleClass(CellContributorRole::class, 'cellContributor');
+        $metadataLoader->registerRoleClass(CellObserverRole::class, 'cellObserver');
         $evm->addEventListener(Events::loadClassMetadata, $metadataLoader);
+        $aclManagerLocator = function () use ($c) {
+            return $c->get(ACLManager::class);
+        };
+        $evm->addEventSubscriber(new EntityManagerListener($aclManagerLocator));
 
         return $em;
     }),

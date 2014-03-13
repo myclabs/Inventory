@@ -1,0 +1,4 @@
+Orga\Model\ACL\CellContributorRole:
+  type: entity
+  table: Orga_ACL_Role_CellContributor
+  readOnly: true

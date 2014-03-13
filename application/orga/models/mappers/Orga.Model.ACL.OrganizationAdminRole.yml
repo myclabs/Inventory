@@ -1,7 +1,7 @@
-Orga\Model\ACL\Role\OrganizationAdminRole:
+Orga\Model\ACL\OrganizationAdminRole:
   type: entity
-  repositoryClass: \Core_Model_Repository
   table: Orga_ACL_Role_OrganizationAdmin
+  readOnly: true
 
   manyToOne:
     organization:

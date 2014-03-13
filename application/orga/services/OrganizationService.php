@@ -4,12 +4,6 @@ use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use Doctrine\ORM\EntityManager;
-use Orga\Model\ACL\Action\CellAction;
-use Orga\Model\ACL\CellAuthorization;
-use Orga\Model\ACL\Role\CellManagerRole;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Action;
-use User\Domain\ACL\AdminRole;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -36,11 +30,6 @@ class Orga_Service_OrganizationService
     private $userService;
 
     /**
-     * @var ACLService
-     */
-    private $aclService;
-
-    /**
      * @var AccountRepository
      */
     private $accountRepository;
@@ -49,20 +38,17 @@ class Orga_Service_OrganizationService
      * @param EntityManager           $entityManager
      * @param Orga_Service_ACLManager $aclManager
      * @param UserService             $userService
-     * @param ACLService              $aclService
      * @param AccountRepository       $accountRepository
      */
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ACLManager $aclManager,
         UserService $userService,
-        ACLService $aclService,
         AccountRepository $accountRepository
     ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
         $this->userService = $userService;
-        $this->aclService = $aclService;
         $this->accountRepository = $accountRepository;
     }
 
@@ -102,35 +88,7 @@ class Orga_Service_OrganizationService
 
             $organization->save();
             $this->entityManager->flush();
-
-            // Héritage des ACL sur toutes les organizations, sur la cellule globale de la nouvelle.
-            $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
-            /** @var AdminRole $admin */
-            foreach (AdminRole::loadList() as $admin) {
-                // Cellule global
-                $cellAuthorizations = CellAuthorization::createMany($admin, $globalCell, [
-                    Action::VIEW(),
-                    Action::EDIT(),
-                    Action::ALLOW(),
-                    CellAction::COMMENT(),
-                    CellAction::INPUT(),
-                    CellAction::VIEW_REPORTS(),
-                ]);
-
-                // Cellules filles
-                foreach ($globalCell->getChildCells() as $childCell) {
-                    foreach ($cellAuthorizations as $authorization) {
-                        CellAuthorization::createChildAuthorization($authorization, $childCell);
-                    }
-                }
-            }
-
-            $this->entityManager->flush();
             $this->entityManager->commit();
-
-            // Recharge l'organisation pour que les ACL soient rechargées depuis la BDD
-            $this->entityManager->refresh($organization);
-            $this->entityManager->refresh($organization->getGranularityByRef('global')->getCellByMembers([]));
 
             return $organization;
         } catch (Exception $e) {

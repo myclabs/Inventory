@@ -3,7 +3,7 @@
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use Orga\Model\ACL\Role\OrganizationAdminRole;
+use Orga\Model\ACL\OrganizationAdminRole;
 use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 

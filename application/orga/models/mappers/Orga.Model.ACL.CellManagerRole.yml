@@ -1,0 +1,4 @@
+Orga\Model\ACL\CellManagerRole:
+  type: entity
+  table: Orga_ACL_Role_CellManager
+  readOnly: true

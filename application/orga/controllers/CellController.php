@@ -17,11 +17,11 @@ use User\Domain\User;
 use User\Domain\ACL\Action;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Role\Role;
-use Orga\Model\ACL\Role\AbstractCellRole;
-use Orga\Model\ACL\Role\CellAdminRole;
-use Orga\Model\ACL\Role\CellManagerRole;
-use Orga\Model\ACL\Role\CellContributorRole;
-use Orga\Model\ACL\Role\CellObserverRole;
+use Orga\Model\ACL\AbstractCellRole;
+use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellObserverRole;
 
 /**
  * @author valentin.claras

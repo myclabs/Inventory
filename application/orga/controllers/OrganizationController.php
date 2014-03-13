@@ -5,7 +5,7 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use Orga\Model\ACL\Role\CellAdminRole;
+use Orga\Model\ACL\CellAdminRole;
 use Account\Application\Service\OrganizationViewFactory;
 use Orga\ViewModel\CellViewModelFactory;
 use User\Domain\ACL\Action;

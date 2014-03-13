@@ -964,7 +964,7 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:myclabs/ACL.git",
-                "reference": "647d06fe80226e1c00051f38ad6891583948e86e"
+                "reference": "1eda0aeb6e8713dec9aed0522cccc6071aac2063"
             },
             "require": {
                 "doctrine/orm": "2.5.*@dev",
@@ -977,7 +977,7 @@
                     "Tests\\MyCLabs\\ACL\\": "tests/"
                 }
             },
-            "time": "2014-03-12 17:17:42"
+            "time": "2014-03-13 14:16:46"
         },
         {
             "name": "myclabs/array-comparator",
