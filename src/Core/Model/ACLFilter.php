@@ -1,18 +1,9 @@
 <?php
-use User\Domain\ACL\Action;
+
 use User\Domain\User;
 
 /**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Model
- */
-
-/**
  * Filtre par les ACL dans une requête.
- *
- * @package    Core
- * @subpackage Model
  */
 class Core_Model_ACLFilter
 {
@@ -30,14 +21,14 @@ class Core_Model_ACLFilter
      *
      * @var User|null
      */
-    public $user = null;
+    public $user;
 
     /**
      * Action demandée sur la ressource
      *
-     * @var \User\Domain\ACL\Action|null
+     * @var string|null
      */
-    public $action = null;
+    public $action;
 
     /**
      * Valide les attributs de la classe.
