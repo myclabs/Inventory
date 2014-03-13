@@ -6,11 +6,11 @@ use ArrayObject;
 use Core_Exception_NotFound;
 use Core_View_Helper_GetUrl;
 use Exception;
+use MyCLabs\ACL\ACLManager;
 use Psr\Log\LoggerInterface;
 use UI_Message;
 use User\Application\ForbiddenException;
 use User\Domain\User;
-use User\Domain\ACL\ACLService;
 use User\Application\Service\ControllerSecurityService;
 use Zend_Auth;
 use Zend_Controller_Plugin_Abstract;
@@ -30,9 +30,9 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
     protected $controllerSecurityService;
 
     /**
-     * @var ACLService
+     * @var ACLManager
      */
-    protected $aclService;
+    protected $aclManager;
 
     /**
      * @var LoggerInterface
@@ -41,11 +41,11 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
 
     public function __construct(
         ControllerSecurityService $controllerSecurityService,
-        ACLService $aclService,
+        ACLManager $aclManager,
         LoggerInterface $logger
     ) {
         $this->controllerSecurityService = $controllerSecurityService;
-        $this->aclService = $aclService;
+        $this->aclManager = $aclManager;
         $this->logger = $logger;
     }
 

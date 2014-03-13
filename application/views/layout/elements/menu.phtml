@@ -1,8 +1,8 @@
 <?php
 
-use User\Domain\ACL\Action;
-use User\Domain\ACL\Resource\NamedResource;
-use User\Domain\ACL\ACLService;
+use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\Model\Actions;
+use MyCLabs\ACL\Model\Resource;
 use User\Domain\User;
 
 $container = \Core\ContainerSingleton::getContainer();
@@ -19,15 +19,15 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 }
 
 if ($connectedUser) {
-    /** @var ACLService $aclService */
-    $aclService = $container->get(ACLService::class);
+    /** @var ACLManager $aclManager */
+    $aclManager = $container->get(ACLManager::class);
 
     $leftMenu = [];
 
     $aclQuery = new Core_Model_Query();
     $aclQuery->aclFilter->enabled = true;
     $aclQuery->aclFilter->user = $connectedUser;
-    $aclQuery->aclFilter->action = Action::VIEW();
+    $aclQuery->aclFilter->action = Actions::VIEW;
 
     $leftMenu[1] = [
         'name' => __('UI', 'name', 'home'),
@@ -43,10 +43,10 @@ if ($connectedUser) {
         'submenu' => []
     ];
 
-    $isAllowedToViewAllUser = $aclService->isAllowed(
+    $isAllowedToViewAllUser = $aclManager->isAllowed(
         $connectedUser,
-        Action::VIEW(),
-        NamedResource::loadByName(User::class)
+        Actions::VIEW,
+        Resource::fromEntityClass(User::class)
     );
     if ($isAllowedToViewAllUser) {
         $leftMenu[5] = [
@@ -84,11 +84,8 @@ if ($connectedUser) {
 
     $subMenuRepository = &$leftMenu[4]['submenu'];
 
-    $isAllowedToEditRepository = $aclService->isAllowed(
-        $connectedUser,
-        Action::EDIT(),
-        NamedResource::loadByName('repository')
-    );
+    // TODO
+    $isAllowedToEditRepository = true;
     if ($isAllowedToEditRepository) {
         $subMenuRepository[] = [
             'name' => __('AF', 'name', 'accountingForms'),
@@ -195,7 +192,7 @@ if ($connectedUser) {
     $aclQuery = new Core_Model_Query();
     $aclQuery->aclFilter->enabled = true;
     $aclQuery->aclFilter->user = $connectedUser;
-    $aclQuery->aclFilter->action = Action::EDIT();
+    $aclQuery->aclFilter->action = Actions::EDIT;
     $isAllowToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
     if ($isAllowedToEditRepository || $isAllowToEditOrganizations) {
         $leftMenu[6] = [

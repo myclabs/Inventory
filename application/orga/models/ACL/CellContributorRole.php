@@ -7,7 +7,6 @@ use MyCLabs\ACL\Model\Actions;
 use MyCLabs\ACL\Model\Authorization;
 use MyCLabs\ACL\Model\Resource;
 use Orga\Model\ACL\Action\CellAction;
-use User\Domain\ACL\Action;
 
 /**
  * Cell contributor.
@@ -30,10 +29,10 @@ class CellContributorRole extends AbstractCellRole
         $this->authorizations->clear();
 
         // Voir l'organisation
-        OrganizationAuthorization::create($this, Action::VIEW(), $this->cell->getOrganization());
+        OrganizationAuthorization::create($this, Actions::VIEW, $this->cell->getOrganization());
 
         $authorizations = CellAuthorization::createMany($this, $this->cell, [
-            Action::VIEW(),
+            Actions::VIEW,
             CellAction::COMMENT(),
             CellAction::INPUT(),
         ]);

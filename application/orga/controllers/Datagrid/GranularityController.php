@@ -2,7 +2,6 @@
 
 use Core\Annotation\Secure;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use User\Domain\ACL\Role\Role;
 
 /**
  * @author valentin.claras

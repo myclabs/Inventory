@@ -4,7 +4,6 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\Model\ACL\OrganizationAdminRole;
-use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
 /**
@@ -108,7 +107,7 @@ class Orga_Datagrid_Organization_AclController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
-        $role = Role::load($this->delete);
+        $role = $this->entityManager->find(OrganizationAdminRole::class, $this->delete);
 
         $success = function () {
             $this->message = __('UI', 'message', 'deleted');

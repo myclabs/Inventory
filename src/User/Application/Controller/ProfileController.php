@@ -1,10 +1,10 @@
 <?php
 
 use Core\Annotation\Secure;
+use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\Model\Actions;
+use MyCLabs\ACL\Model\Resource;
 use User\Application\ForbiddenException;
-use User\Domain\ACL\Action;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -23,9 +23,9 @@ class User_ProfileController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLService
+     * @var ACLManager
      */
-    private $aclService;
+    private $aclManager;
 
     /**
      * @Inject("emails.noreply.name")
@@ -49,11 +49,10 @@ class User_ProfileController extends Core_Controller
     public function listAction()
     {
         $loggedInUser = $this->_helper->auth();
-        $resourceAllUsers = NamedResource::loadByName(User::class);
-        $this->view->canCreateUsers = $this->aclService->isAllowed(
+        $this->view->canCreateUsers = $this->aclManager->isAllowed(
             $loggedInUser,
-            Action::CREATE(),
-            $resourceAllUsers
+            Actions::CREATE,
+            Resource::fromEntityClass(User::class)
         );
     }
 
@@ -86,14 +85,14 @@ class User_ProfileController extends Core_Controller
         $this->view->canEditPassword = ($user === $loggedInUser);
 
         // Est-ce que l'utilisateur peut désactiver le compte
-        $this->view->canDisable = $this->aclService->isAllowed(
+        $this->view->canDisable = $this->aclManager->isAllowed(
             $loggedInUser,
-            Action::DELETE(),
+            Actions::DELETE,
             $user
         );
-        $this->view->canEnable = $this->aclService->isAllowed(
+        $this->view->canEnable = $this->aclManager->isAllowed(
             $loggedInUser,
-            Action::UNDELETE(),
+            Actions::UNDELETE,
             $user
         );
 

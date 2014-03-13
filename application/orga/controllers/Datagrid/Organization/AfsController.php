@@ -2,8 +2,6 @@
 
 use AF\Domain\AF;
 use Core\Annotation\Secure;
-use User\Domain\ACL\Action;
-use User\Domain\User;
 
 /**
  * @author valentin.claras

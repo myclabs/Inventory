@@ -3,12 +3,12 @@
 namespace Account\Application\Service;
 
 use Account\Application\ViewModel\OrganizationView;
+use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\Model\Actions;
 use Orga_Model_Organization;
 use Orga_Model_Cell;
 use Orga_Service_ACLManager;
 use User\Domain\User;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Action;
 use Core_Model_Query;
 
 /**
@@ -19,18 +19,18 @@ use Core_Model_Query;
 class OrganizationViewFactory
 {
     /**
-     * @var ACLService
+     * @var ACLManager
      */
-    private $aclService;
+    private $aclManager;
     /**
      * @var Orga_Service_ACLManager
      */
-    private $aclManager;
+    private $orgaACLManager;
 
-    public function __construct(ACLService $aclService, Orga_Service_ACLManager $aclManager)
+    public function __construct(ACLManager $aclManager, Orga_Service_ACLManager $orgaACLManager)
     {
-        $this->aclService = $aclService;
         $this->aclManager = $aclManager;
+        $this->orgaACLManager = $orgaACLManager;
     }
 
     public function createOrganizationView(Orga_Model_Organization $organization, User $connectedUser)
@@ -43,9 +43,9 @@ class OrganizationViewFactory
         }
 
         // Vérification d'accèr à l'édition.
-        $viewModel->canBeEdited = $this->aclService->isAllowed(
+        $viewModel->canBeEdited = $this->aclManager->isAllowed(
             $connectedUser,
-            Action::EDIT(),
+            Actions::EDIT,
             $organization
         );
         if (!$viewModel->canBeEdited) {
@@ -54,21 +54,21 @@ class OrganizationViewFactory
             $query->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $organization->getGranularityByRef('global'));
             $query->aclFilter->enabled = true;
             $query->aclFilter->user = $connectedUser;
-            $query->aclFilter->action = Action::EDIT();
+            $query->aclFilter->action = Actions::EDIT;
             if (Orga_Model_Cell::countTotal($query) > 0) {
                 $viewModel->canBeEdited = true;
             }
         }
         if (!$viewModel->canBeEdited) {
             // Edition d'au moins un axe ?
-            $axesCanEdit = $this->aclManager->getAxesCanEdit($connectedUser, $organization);
+            $axesCanEdit = $this->orgaACLManager->getAxesCanEdit($connectedUser, $organization);
             if (count($axesCanEdit) > 0) {
                 $viewModel->canBeEdited = true;
             }
         }
         if (!$viewModel->canBeEdited) {
             // Edition d'au moins une granularité de pertinence ou de DW ?
-            foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
+            foreach ($this->orgaACLManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
                 if ($granularity->getCellsControlRelevance() || $granularity->getCellsGenerateDWCubes()) {
                     $viewModel->canBeEdited = true;
                     break;
@@ -76,9 +76,9 @@ class OrganizationViewFactory
             }
         }
 
-        $viewModel->canBeDeleted = $this->aclService->isAllowed(
+        $viewModel->canBeDeleted = $this->aclManager->isAllowed(
             $connectedUser,
-            Action::DELETE(),
+            Actions::DELETE,
             $organization
         );
 

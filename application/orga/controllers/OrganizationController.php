@@ -4,13 +4,13 @@ use AF\Domain\AF;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
+use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\Model\Actions;
+use MyCLabs\ACL\Model\Resource;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\Model\ACL\CellAdminRole;
 use Account\Application\Service\OrganizationViewFactory;
 use Orga\ViewModel\CellViewModelFactory;
-use User\Domain\ACL\Action;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\User;
 
 /**
@@ -22,19 +22,19 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLService
-     */
-    private $aclService;
-
-    /**
-     * @Inject
-     * @var Orga_Service_ACLManager
+     * @var ACLManager
      */
     private $aclManager;
 
     /**
      * @Inject
-     * @var \Account\Application\Service\OrganizationViewFactory
+     * @var Orga_Service_ACLManager
+     */
+    private $orgaACLManager;
+
+    /**
+     * @Inject
+     * @var OrganizationViewFactory
      */
     private $organizationVMFactory;
 
@@ -76,21 +76,20 @@ class Orga_OrganizationController extends Core_Controller
         /** @var User $connectedUser */
         $connectedUser = $this->_helper->auth();
 
-        $organizationResource = NamedResource::loadByName(Orga_Model_Organization::class);
-        $isConnectedUserAbleToCreateOrganizations = $this->aclService->isAllowed(
+        $isConnectedUserAbleToCreateOrganizations = $this->aclManager->isAllowed(
             $connectedUser,
-            Action::CREATE(),
-            $organizationResource
+            Actions::CREATE,
+            Resource::fromEntityClass(Orga_Model_Organization::class)
         );
 
         if (!$isConnectedUserAbleToCreateOrganizations) {
             $aclQuery = new Core_Model_Query();
             $aclQuery->aclFilter->enabled = true;
             $aclQuery->aclFilter->user = $connectedUser;
-            $aclQuery->aclFilter->action = Action::DELETE();
+            $aclQuery->aclFilter->action = Actions::DELETE;
             $isConnectedUserAbleToDeleteOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
             if (!$isConnectedUserAbleToDeleteOrganizations) {
-                $aclQuery->aclFilter->action = Action::VIEW();
+                $aclQuery->aclFilter->action = Actions::VIEW;
                 $isConnectedUserAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
             }
         }
@@ -123,7 +122,7 @@ class Orga_OrganizationController extends Core_Controller
         $query = new Core_Model_Query();
         $query->aclFilter->enabled = true;
         $query->aclFilter->user = $connectedUser;
-        $query->aclFilter->action = Action::VIEW();
+        $query->aclFilter->action = Actions::VIEW;
         $organizations = Orga_Model_Organization::loadList($query);
 
         // Crée les ViewModel
@@ -133,11 +132,10 @@ class Orga_OrganizationController extends Core_Controller
         }
         $this->view->assign('organizations', $organizationsViewModel);
 
-        $organizationResource = NamedResource::loadByName(Orga_Model_Organization::class);
-        $this->view->assign('canCreateOrganization', $this->aclService->isAllowed(
+        $this->view->assign('canCreateOrganization', $this->aclManager->isAllowed(
             $connectedUser,
-            Action::CREATE(),
-            $organizationResource
+            Actions::CREATE,
+            Resource::fromEntityClass(Orga_Model_Organization::class)
         ));
     }
 
@@ -233,7 +231,7 @@ class Orga_OrganizationController extends Core_Controller
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        $cellsWithAccess = $this->aclManager->getTopCellsWithAccessForOrganization($connectedUser, $organization);
+        $cellsWithAccess = $this->orgaACLManager->getTopCellsWithAccessForOrganization($connectedUser, $organization);
         if (count($cellsWithAccess['cells']) === 1) {
             $this->redirect('orga/cell/view/idCell/'.array_pop($cellsWithAccess['cells'])->getId());
         }
@@ -264,9 +262,9 @@ class Orga_OrganizationController extends Core_Controller
             'organization',
             $this->organizationVMFactory->createOrganizationView($organization, $connectedUser)
         );
-        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
             $connectedUser,
-            Action::EDIT(),
+            Actions::EDIT,
             $organization
         );
         if (!$isUserAllowedToEditOrganization) {
@@ -275,7 +273,7 @@ class Orga_OrganizationController extends Core_Controller
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $connectedUser;
-                $aclCellQuery->aclFilter->action = Action::EDIT();
+                $aclCellQuery->aclFilter->action = Actions::EDIT;
                 $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
 
                 $numberCellsUserCanEdit = Orga_Model_Cell::countTotal($aclCellQuery);
@@ -309,7 +307,7 @@ class Orga_OrganizationController extends Core_Controller
         // Tab Members.
         $canUserEditMembers = $isUserAllowedToEditCells;
         if (!$isUserAllowedToEditOrganization) {
-            $axesCanEdit = $this->aclManager->getAxesCanEdit($connectedUser, $organization);
+            $axesCanEdit = $this->orgaACLManager->getAxesCanEdit($connectedUser, $organization);
             if (count($axesCanEdit) === 0) {
                 $canUserEditMembers = false;
             }
@@ -326,7 +324,7 @@ class Orga_OrganizationController extends Core_Controller
         $canUserEditRelevance = $isUserAllowedToEditCells;
         if (!$isUserAllowedToEditOrganization) {
             $canUserEditRelevance = false;
-            foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
+            foreach ($this->orgaACLManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
                 if ($granularity->getCellsControlRelevance()) {
                     $canUserEditRelevance = true;
                     break;
@@ -577,14 +575,14 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign('organization', $organization);
 
-        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
             $connectedUser,
-            Action::EDIT(),
+            Actions::EDIT,
             $organization
         );
         $this->view->assign('isUserAllowedToEditOrganization', $isUserAllowedToEditOrganization);
         $relevanceGranularities = [];
-        foreach ($this->aclManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
+        foreach ($this->orgaACLManager->getGranularitiesCanEdit($connectedUser, $organization) as $granularity) {
             if ($granularity->getCellsControlRelevance()) {
                 $relevanceGranularities[] = $granularity;
             }
@@ -903,13 +901,13 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign('organization', $organization);
 
-        $userCanEditOrganization = $this->aclService->isAllowed($connectedUser, Action::EDIT(), $organization);
+        $userCanEditOrganization = $this->aclManager->isAllowed($connectedUser, Actions::EDIT, $organization);
         $this->view->assign('canEditOrganization', $userCanEditOrganization);
         if ($userCanEditOrganization) {
             $this->view->assign('cellData', $organization);
             $this->view->assign('cellResults', $organization->getGranularityByRef('global')->getCellByMembers([]));
         } else {
-            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
+            $cellsCanEdit = $this->orgaACLManager->getTopCellsWithAccessForOrganization(
                 $connectedUser,
                 $organization,
                 [CellAdminRole::class]
@@ -944,7 +942,7 @@ class Orga_OrganizationController extends Core_Controller
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        $userCanEditOrganization = $this->aclService->isAllowed($connectedUser, Action::EDIT(), $organization);
+        $userCanEditOrganization = $this->aclManager->isAllowed($connectedUser, Actions::EDIT, $organization);
         if ($userCanEditOrganization) {
             $taskName = 'resetOrganizationDWCubes';
             $taskParameters = [$organization];
@@ -952,7 +950,7 @@ class Orga_OrganizationController extends Core_Controller
         } else {
             $taskName = 'resetCellAndChildrenDWCubes';
 
-            $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
+            $cellsCanEdit = $this->orgaACLManager->getTopCellsWithAccessForOrganization(
                 $connectedUser,
                 $organization,
                 [CellAdminRole::class]
@@ -999,7 +997,7 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($idOrganization);
 
 
-        $cellsCanEdit = $this->aclManager->getTopCellsWithAccessForOrganization(
+        $cellsCanEdit = $this->orgaACLManager->getTopCellsWithAccessForOrganization(
             $connectedUser,
             $organization,
             [CellAdminRole::class]

@@ -4,9 +4,9 @@ use Account\Application\Service\AccountViewFactory;
 use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use Core\Annotation\Secure;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Action;
-use User\Domain\ACL\Resource\NamedResource;
+use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\Model\Actions;
+use MyCLabs\ACL\Model\Resource;
 use User\Domain\User;
 
 /**
@@ -22,9 +22,9 @@ class Account_DashboardController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLService
+     * @var ACLManager
      */
-    private $aclService;
+    private $aclManager;
 
     /**
      * @Inject
@@ -70,10 +70,10 @@ class Account_DashboardController extends Core_Controller
 
         $this->view->assign('accountList', $accounts);
         $this->view->assign('account', $accountView);
-        $this->view->assign('canCreateOrganization', $this->aclService->isAllowed(
+        $this->view->assign('canCreateOrganization', $this->aclManager->isAllowed(
             $user,
-            Action::CREATE(),
-            NamedResource::loadByName(Orga_Model_Organization::class)
+            Actions::CREATE,
+            Resource::fromEntityClass(Orga_Model_Organization::class)
         ));
     }
 }

@@ -8,9 +8,9 @@ use Account\Application\ViewModel\ParameterLibraryView;
 use Account\Domain\Account;
 use AF\Domain\AFLibrary;
 use Core_Model_Query;
+use MyCLabs\ACL\Model\Actions;
 use Orga_Model_Organization;
 use Parameter\Domain\ParameterLibrary;
-use User\Domain\ACL\Action;
 use User\Domain\User;
 
 /**
@@ -45,7 +45,7 @@ class AccountViewFactory
         $query->filter->addCondition('account', $account);
         $query->aclFilter->enabled = true;
         $query->aclFilter->user = $user;
-        $query->aclFilter->action = Action::VIEW();
+        $query->aclFilter->action = Actions::VIEW;
         foreach (Orga_Model_Organization::loadList($query) as $organization) {
             /** @var Orga_Model_Organization $organization */
             $accountView->organizations[] = $this->organizationViewFactory->createOrganizationView(
