@@ -3,15 +3,25 @@
 use Core\Log\QueryLogger;
 use DI\Container;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Mapping\Driver\DriverChain;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
+use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Gedmo\Loggable\LoggableListener;
 use Gedmo\Translatable\TranslatableListener;
+use MyCLabs\ACL\MetadataLoader;
+use MyCLabs\ACL\Model\SecurityIdentityInterface;
+use User\Domain\ACL\ACLUserListener;
+use User\Domain\ACL\AdminRole;
+use User\Domain\ACL\UserAuthorization;
+use User\Domain\User;
 
 return [
 
@@ -49,6 +59,13 @@ return [
             $driverChain, // our metadata driver chain, to hook into
             $annotationReader // our annotation reader
         );
+
+        // Annotations pour MyCLabs\ACL
+        $annotationDriver = new AnnotationDriver(
+            new CachedReader(new AnnotationReader(), $cache),
+            [ PACKAGE_PATH . '/vendor/myclabs/acl/src/Model' ]
+        );
+        $driverChain->addDriver($annotationDriver, 'MyCLabs\ACL\Model');
 
         // Nouveaux packages utilisent le simplified driver
         $modules = [
@@ -110,10 +127,20 @@ return [
         // Création de l'EntityManager depuis la configuration de doctrine.
         $em = Core_ORM_EntityManager::create($connectionArray, $doctrineConfig);
 
+        $evm = $em->getEventManager();
+
         // Extension de traduction de champs
-        $em->getEventManager()->addEventSubscriber($c->get(TranslatableListener::class));
+        $evm->addEventSubscriber($c->get(TranslatableListener::class));
         // Extension de versionnement de champs
-        $em->getEventManager()->addEventSubscriber($c->get(LoggableListener::class));
+        $evm->addEventSubscriber($c->get(LoggableListener::class));
+
+        // Configuration pour MyCLabs\ACL
+        $rtel = new ResolveTargetEntityListener();
+        $rtel->addResolveTargetEntity(SecurityIdentityInterface::class, User::class, []);
+        $evm->addEventListener(Events::loadClassMetadata, $rtel);
+        $metadataLoader = new MetadataLoader();
+        $metadataLoader->registerRoleClass(AdminRole::class, 'superadmin');
+        $evm->addEventListener(Events::loadClassMetadata, $metadataLoader);
 
         return $em;
     }),

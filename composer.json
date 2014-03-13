@@ -12,9 +12,8 @@
     },
     "require": {
         "zendframework/zendframework1": "1.12.*",
-        "doctrine/orm": "dev-master-myclabs as 2.4.99",
+        "doctrine/orm": "2.5.*@dev",
         "doctrine/annotations": "~1.0",
-        "doctrine/common": "dev-ProxyStaticProperties as 2.4.1",
         "gedmo/doctrine-extensions": "dev-OptimizedTranslatable as 2.99",
         "symfony/event-dispatcher": "~2.3",
         "symfony/finder": "~2.3",
@@ -28,6 +27,7 @@
         "myclabs/xport": "0.2.*",
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
+        "myclabs/acl": "dev-simplified-model",
         "mnapoli/php-di": "~4.0",
         "mnapoli/php-di-zf1": "*",
         "psr/log": "~1.0",
@@ -58,15 +58,11 @@
         },
         {
             "type": "git",
-            "url": "git://github.com/myclabs/common.git"
-        },
-        {
-            "type": "git",
-            "url": "git://github.com/myclabs/doctrine2.git"
-        },
-        {
-            "type": "git",
             "url": "git://github.com/myclabs/DoctrineExtensions.git"
+        },
+        {
+            "type": "git",
+            "url": "git@github.com:myclabs/ACL.git"
         }
     ]
 }

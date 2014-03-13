@@ -1,89 +1,51 @@
 <?php
 
-namespace User\Domain\ACL\Role;
+namespace User\Domain\ACL;
 
+use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\Model\Actions;
+use MyCLabs\ACL\Model\Authorization;
+use MyCLabs\ACL\Model\Resource;
+use MyCLabs\ACL\Model\Role;
 use Orga\Model\ACL\Action\CellAction;
 use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\OrganizationAuthorization;
 use Orga_Model_Organization;
-use User\Domain\ACL\Action;
-use User\Domain\ACL\Authorization\NamedResourceAuthorization;
-use User\Domain\ACL\Authorization\UserAuthorization;
-use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\User;
 
 /**
  * Application administrator.
  */
-class AdminRole extends Role implements OptimizedRole
+class AdminRole extends Role
 {
-    public function buildAuthorizations()
+    /**
+     * @param EntityManager $entityManager
+     * @return Authorization[]
+     */
+    public function createAuthorizations(EntityManager $entityManager)
     {
-        $this->authorizations->clear();
+        $rootAuthorization = Authorization::create($this, new Actions([
+            Actions::CREATE,
+            Actions::VIEW,
+            Actions::EDIT,
+            Actions::DELETE,
+            Actions::UNDELETE,
+            Actions::ALLOW,
+        ]), Resource::fromEntityClass(User::class));
 
-        // Admin can edit the repository
-        $repository = NamedResource::loadByName('repository');
-        NamedResourceAuthorization::create($this, Action::EDIT(), $repository);
-
-        // Admin can create, view, edit, delete, undelete, allow everyone
-        $allUsersResource = NamedResource::loadByName(User::class);
-        NamedResourceAuthorization::create($this, Action::CREATE(), $allUsersResource);
-        $userAuthorizations = NamedResourceAuthorization::createMany($this, $allUsersResource, [
-            Action::VIEW(),
-            Action::EDIT(),
-            Action::DELETE(),
-            Action::UNDELETE(),
-            Action::ALLOW(),
-        ]);
-
-        // Inheritance
-        $allUsers = User::loadList();
-        foreach ($allUsers as $user) {
-            /** @var User $user */
-            foreach ($userAuthorizations as $userAuthorization) {
-                UserAuthorization::createChildAuthorization($userAuthorization, $user);
-            }
+        // Cascade authorizations
+        $usersRepository = $entityManager->getRepository(User::class);
+        $authorizations = [$rootAuthorization];
+        foreach ($usersRepository->findAll() as $user) {
+            $authorizations[] = $rootAuthorization->createChildAuthorization(Resource::fromEntity($user));
         }
 
-        // Admin can create, view, edit, delete, undelete, allow all organizations
-        $allOrganizationsResource = NamedResource::loadByName(Orga_Model_Organization::class);
-        NamedResourceAuthorization::create($this, Action::CREATE(), $allOrganizationsResource);
-        $organizationAuthorizations = NamedResourceAuthorization::createMany($this, $allOrganizationsResource, [
-            Action::VIEW(),
-            Action::EDIT(),
-            Action::DELETE(),
-            Action::UNDELETE(),
-            Action::ALLOW(),
-        ]);
-
-        // Inheritance
-        $allOrganizations = Orga_Model_Organization::loadList();
-        foreach ($allOrganizations as $organization) {
-            /** @var Orga_Model_Organization $organization */
-            foreach ($organizationAuthorizations as $organizationAuthorization) {
-                OrganizationAuthorization::createChildAuthorization($organizationAuthorization, $organization);
-            }
-
-            // Cellule global
-            $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
-            $cellAuthorizations = CellAuthorization::createMany($this, $globalCell, [
-                Action::VIEW(),
-                Action::EDIT(),
-                Action::ALLOW(),
-                CellAction::COMMENT(),
-                CellAction::INPUT(),
-                CellAction::VIEW_REPORTS(),
-            ]);
-
-            // Cellules filles
-            foreach ($globalCell->getChildCells() as $childCell) {
-                foreach ($cellAuthorizations as $authorization) {
-                    CellAuthorization::createChildAuthorization($authorization, $childCell);
-                }
-            }
-        }
+        return $authorizations;
     }
 
+    /**
+     * @todo Delete
+     */
     public function optimizedBuildAuthorizations()
     {
         // Admin can edit the repository

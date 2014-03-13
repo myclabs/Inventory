@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "7262913b932f92f69d75477c676df0ae",
+    "hash": "7bce32262bd1bfc74bf59059a55158ff",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -37,7 +37,7 @@
                     "Doctrine\\Common\\Annotations\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -63,7 +63,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -117,10 +117,9 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/",
-                    "role": "Creator"
+                    "homepage": "http://www.jwage.com/"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -136,7 +135,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -220,22 +219,17 @@
         },
         {
             "name": "doctrine/common",
-            "version": "dev-ProxyStaticProperties",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
-                "url": "git://github.com/myclabs/common.git",
-                "reference": "0d908b594e12bf4600ffb50b931c7ad9fabce396"
+                "url": "https://github.com/doctrine/common.git",
+                "reference": "ceb18cf9b0230f3ea208b6238130fd415abda0a7"
             },
-            "archive": {
-                "exclude": [
-                    "!vendor",
-                    "tests",
-                    "*phpunit.xml",
-                    ".travis.yml",
-                    "build.xml",
-                    "build.properties",
-                    "composer.phar"
-                ]
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/ceb18cf9b0230f3ea208b6238130fd415abda0a7",
+                "reference": "ceb18cf9b0230f3ea208b6238130fd415abda0a7",
+                "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "1.*",
@@ -248,7 +242,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5.x-dev"
+                    "dev-master": "2.4.x-dev"
                 }
             },
             "autoload": {
@@ -256,13 +250,21 @@
                     "Doctrine\\Common\\": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
+                },
+                {
                     "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
                 },
                 {
                     "name": "Roman Borschel",
@@ -273,12 +275,10 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
                     "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "http://jmsyst.com",
+                    "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
             "description": "Common Library for Doctrine projects",
@@ -290,20 +290,20 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2013-09-11 09:17:46"
+            "time": "2013-09-07 10:20:34"
         },
         {
             "name": "doctrine/dbal",
-            "version": "v2.5.0-BETA2",
+            "version": "v2.5.0-BETA3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "ba9aa63e3bf8be398d02db34394b3db8302ae124"
+                "reference": "812dd9dab5412f63d28da8b24868059f6dc45b56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/ba9aa63e3bf8be398d02db34394b3db8302ae124",
-                "reference": "ba9aa63e3bf8be398d02db34394b3db8302ae124",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/812dd9dab5412f63d28da8b24868059f6dc45b56",
+                "reference": "812dd9dab5412f63d28da8b24868059f6dc45b56",
                 "shasum": ""
             },
             "require": {
@@ -361,7 +361,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2014-01-01 16:39:15"
+            "time": "2014-02-16 21:34:25"
         },
         {
             "name": "doctrine/inflector",
@@ -386,7 +386,7 @@
                     "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -410,9 +410,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -449,7 +449,7 @@
                     "Doctrine\\Common\\Lexer\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -466,7 +466,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -480,26 +480,17 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "dev-master-myclabs",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git://github.com/myclabs/doctrine2.git",
-                "reference": "1899bcf00012712ba1326e740e6b1746845c9f1b"
+                "url": "https://github.com/doctrine/doctrine2.git",
+                "reference": "f197a9c9f140a06f399fc05d7149220d04eb3a56"
             },
-            "archive": {
-                "exclude": [
-                    "!vendor",
-                    "tests",
-                    "*phpunit.xml",
-                    ".travis.yml",
-                    "build.xml",
-                    "build.properties",
-                    "composer.phar",
-                    "vendor/satooshi",
-                    "lib/vendor",
-                    "*.swp",
-                    "*coveralls.yml"
-                ]
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/f197a9c9f140a06f399fc05d7149220d04eb3a56",
+                "reference": "f197a9c9f140a06f399fc05d7149220d04eb3a56",
+                "shasum": ""
             },
             "require": {
                 "doctrine/collections": "~1.1",
@@ -509,8 +500,9 @@
                 "symfony/console": "2.*"
             },
             "require-dev": {
+                "phpunit/phpunit": "~3.7",
                 "satooshi/php-coveralls": "dev-master",
-                "symfony/yaml": "2.1"
+                "symfony/yaml": "~2.1"
             },
             "suggest": {
                 "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
@@ -530,13 +522,21 @@
                     "Doctrine\\ORM\\": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
+                },
+                {
                     "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
                 },
                 {
                     "name": "Roman Borschel",
@@ -545,10 +545,6 @@
                 {
                     "name": "Benjamin Eberlei",
                     "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
                 }
             ],
             "description": "Object-Relational-Mapper for PHP",
@@ -557,7 +553,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2013-11-04 15:01:05"
+            "time": "2014-03-07 03:38:26"
         },
         {
             "name": "dompdf/dompdf",
@@ -752,12 +748,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "0.2.1"
+                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.2.1",
-                "reference": "0.2.1",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
+                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
                 "shasum": ""
             },
             "type": "library",
@@ -963,6 +959,27 @@
             "time": "2013-11-14 19:48:31"
         },
         {
+            "name": "myclabs/acl",
+            "version": "dev-simplified-model",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:myclabs/ACL.git",
+                "reference": "647d06fe80226e1c00051f38ad6891583948e86e"
+            },
+            "require": {
+                "doctrine/orm": "2.5.*@dev",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyCLabs\\ACL\\": "src/",
+                    "Tests\\MyCLabs\\ACL\\": "tests/"
+                }
+            },
+            "time": "2014-03-12 17:17:42"
+        },
+        {
             "name": "myclabs/array-comparator",
             "version": "1.0.0",
             "source": {
@@ -999,16 +1016,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "2c8df9f6a975b8cb2d619a9722ded6f23a104294"
+                "reference": "1ee53258c4076953dc512e78db00adbd7e5b21cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/2c8df9f6a975b8cb2d619a9722ded6f23a104294",
-                "reference": "2c8df9f6a975b8cb2d619a9722ded6f23a104294",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/1ee53258c4076953dc512e78db00adbd7e5b21cd",
+                "reference": "1ee53258c4076953dc512e78db00adbd7e5b21cd",
                 "shasum": ""
             },
             "require": {
@@ -1037,7 +1054,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2013-10-01 10:30:23"
+            "time": "2014-02-14 08:59:38"
         },
         {
             "name": "myclabs/php-enum",
@@ -1280,22 +1297,25 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/Console_CommandLine.git",
-                "reference": "210b2532d3921bfca7720dfb1aba98150434f8be"
+                "reference": "ee5bc2791980332c097c8050aa7fe4f4efbe700d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/Console_CommandLine/zipball/210b2532d3921bfca7720dfb1aba98150434f8be",
-                "reference": "210b2532d3921bfca7720dfb1aba98150434f8be",
+                "url": "https://api.github.com/repos/pear/Console_CommandLine/zipball/ee5bc2791980332c097c8050aa7fe4f4efbe700d",
+                "reference": "ee5bc2791980332c097c8050aa7fe4f4efbe700d",
                 "shasum": ""
             },
             "require": {
-                "pear/pear_exception": "dev-master",
+                "pear/pear_exception": "*",
                 "php": ">=5.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "Console_CommandLine": ""
+                    "Console": "./"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1320,24 +1340,27 @@
             "keywords": [
                 "console"
             ],
-            "time": "2013-02-02 21:07:53"
+            "time": "2014-02-21 08:54:05"
         },
         {
             "name": "pear/pear_exception",
-            "version": "dev-master",
+            "version": "1.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/PEAR_Exception.git",
-                "reference": "00f800010bf9c77788ac31b7e90ed361a78fa5b5"
+                "reference": "f053615c7cbdfaba5a3b7021ee58a48523b8576c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/00f800010bf9c77788ac31b7e90ed361a78fa5b5",
-                "reference": "00f800010bf9c77788ac31b7e90ed361a78fa5b5",
+                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/f053615c7cbdfaba5a3b7021ee58a48523b8576c",
+                "reference": "f053615c7cbdfaba5a3b7021ee58a48523b8576c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=4.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
             },
             "type": "class",
             "extra": {
@@ -1373,7 +1396,7 @@
             "keywords": [
                 "exception"
             ],
-            "time": "2014-02-05 02:08:09"
+            "time": "2014-02-21 17:29:07"
         },
         {
             "name": "phenx/php-font-lib",
@@ -1492,7 +1515,7 @@
             ],
             "authors": [
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -1873,16 +1896,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.15.0",
+            "version": "v1.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "85e4ff98000157ff753d934b9f13659a953f5666"
+                "reference": "1fb5784662f438d7d96a541e305e28b812e2eeed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/85e4ff98000157ff753d934b9f13659a953f5666",
-                "reference": "85e4ff98000157ff753d934b9f13659a953f5666",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/1fb5784662f438d7d96a541e305e28b812e2eeed",
+                "reference": "1fb5784662f438d7d96a541e305e28b812e2eeed",
                 "shasum": ""
             },
             "require": {
@@ -1906,11 +1929,19 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Armin Ronacher",
-                    "email": "armin.ronacher@active-4.com"
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
+                },
+                {
+                    "name": "Twig Team",
+                    "homepage": "https://github.com/fabpot/Twig/graphs/contributors",
+                    "role": "Contributors"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -1918,7 +1949,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-12-06 07:47:10"
+            "time": "2014-02-13 10:19:29"
         },
         {
             "name": "videlalvaro/php-amqplib",
@@ -1967,17 +1998,17 @@
         },
         {
             "name": "zendframework/zend-code",
-            "version": "2.2.5",
+            "version": "2.2.6",
             "target-dir": "Zend/Code",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendCode.git",
-                "reference": "93aa1d45effaef200f1e413e131dd672222905cf"
+                "reference": "aaf820f205881563cc3c6708149e17364d1bb823"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/93aa1d45effaef200f1e413e131dd672222905cf",
-                "reference": "93aa1d45effaef200f1e413e131dd672222905cf",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/aaf820f205881563cc3c6708149e17364d1bb823",
+                "reference": "aaf820f205881563cc3c6708149e17364d1bb823",
                 "shasum": ""
             },
             "require": {
@@ -2011,21 +2042,21 @@
                 "code",
                 "zf2"
             ],
-            "time": "2013-10-23 17:00:16"
+            "time": "2014-02-15 15:00:07"
         },
         {
             "name": "zendframework/zend-eventmanager",
-            "version": "2.2.5",
+            "version": "2.2.6",
             "target-dir": "Zend/EventManager",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendEventManager.git",
-                "reference": "f325feef4e1a19b873936e5b116980fbe88dd176"
+                "reference": "89368704bb37303fba64c3ddd6bce0506aa7187c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/f325feef4e1a19b873936e5b116980fbe88dd176",
-                "reference": "f325feef4e1a19b873936e5b116980fbe88dd176",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/89368704bb37303fba64c3ddd6bce0506aa7187c",
+                "reference": "89368704bb37303fba64c3ddd6bce0506aa7187c",
                 "shasum": ""
             },
             "require": {
@@ -2052,21 +2083,21 @@
                 "eventmanager",
                 "zf2"
             ],
-            "time": "2013-06-12 19:45:10"
+            "time": "2014-01-04 13:00:14"
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.2.5",
+            "version": "2.2.6",
             "target-dir": "Zend/Stdlib",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "f440ecfc828d61d620662a03987c8287e1e4801e"
+                "reference": "e646729f2274f4552b6a92e38d8e458efe08ebc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/f440ecfc828d61d620662a03987c8287e1e4801e",
-                "reference": "f440ecfc828d61d620662a03987c8287e1e4801e",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/e646729f2274f4552b6a92e38d8e458efe08ebc5",
+                "reference": "e646729f2274f4552b6a92e38d8e458efe08ebc5",
                 "shasum": ""
             },
             "require": {
@@ -2096,42 +2127,38 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2013-10-20 06:00:20"
+            "time": "2014-01-04 13:00:28"
         },
         {
             "name": "zendframework/zendframework1",
-            "version": "1.12.3",
+            "version": "1.12.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf1.git",
-                "reference": "release-1.12.3"
+                "reference": "828191781995123e2a5888a386ed827a4cd7695a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf1/zipball/release-1.12.3",
-                "reference": "release-1.12.3",
+                "url": "https://api.github.com/repos/zendframework/zf1/zipball/828191781995123e2a5888a386ed827a4cd7695a",
+                "reference": "828191781995123e2a5888a386ed827a4cd7695a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.11"
             },
+            "require-dev": {
+                "phpunit/dbunit": "1.3.*",
+                "phpunit/phpunit": "3.7.*"
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-trunk": "1.12.x-dev",
-                    "dev-release-1.0": "1.0.x-dev",
-                    "dev-release-1.5": "1.5.x-dev",
-                    "dev-release-1.6": "1.6.x-dev",
-                    "dev-release-1.7": "1.7.x-dev",
-                    "dev-release-1.8": "1.8.x-dev",
-                    "dev-release-1.9": "1.9.x-dev",
-                    "dev-release-1.10": "1.10.x-dev",
-                    "dev-release-1.11": "1.11.x-dev"
+                    "dev-master": "1.12.x-dev"
                 }
             },
             "autoload": {
                 "psr-0": {
-                    "Zend": "library/"
+                    "Zend_": "library/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2147,7 +2174,7 @@
                 "ZF1",
                 "framework"
             ],
-            "time": "2013-03-13 16:53:12"
+            "time": "2014-03-07 16:13:40"
         }
     ],
     "packages-dev": [
@@ -2744,18 +2771,6 @@
     ],
     "aliases": [
         {
-            "alias": "2.4.99",
-            "alias_normalized": "2.4.99.0",
-            "version": "dev-master-myclabs",
-            "package": "doctrine/orm"
-        },
-        {
-            "alias": "2.4.1",
-            "alias_normalized": "2.4.1.0",
-            "version": "dev-ProxyStaticProperties",
-            "package": "doctrine/common"
-        },
-        {
             "alias": "2.99",
             "alias_normalized": "2.99.0.0",
             "version": "dev-OptimizedTranslatable",
@@ -2771,11 +2786,11 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "doctrine/orm": 20,
-        "doctrine/common": 20,
         "gedmo/doctrine-extensions": 20,
         "pear/console_commandline": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
+        "myclabs/acl": 20,
         "mnapoli/metaconsole": 20
     },
     "platform": [

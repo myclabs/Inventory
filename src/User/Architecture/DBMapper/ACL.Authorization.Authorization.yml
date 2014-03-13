@@ -9,7 +9,6 @@ User\Domain\ACL\Authorization\Authorization:
     name: type
     type: string
   discriminatorMap:
-    user: User\Domain\ACL\Authorization\UserAuthorization
     namedResource: User\Domain\ACL\Authorization\NamedResourceAuthorization
     organization: Orga\Model\ACL\OrganizationAuthorization
     cell: Orga\Model\ACL\CellAuthorization

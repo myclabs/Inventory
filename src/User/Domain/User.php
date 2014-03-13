@@ -12,12 +12,10 @@ use Core_Tools;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use User\Domain\ACL\Authorization\UserAuthorization;
-use User\Domain\ACL\Resource\NamedResource;
-use User\Domain\ACL\Resource\Resource;
-use User\Domain\ACL\Resource\ResourceTrait;
-use User\Domain\ACL\Role\Role;
-use User\Domain\ACL\Authorization\Authorization;
+use MyCLabs\ACL\Model\EntityResourceInterface;
+use MyCLabs\ACL\Model\Role;
+use MyCLabs\ACL\Model\SecurityIdentityInterface;
+use MyCLabs\ACL\Model\SecurityIdentityTrait;
 
 /**
  * User domain class.
@@ -25,9 +23,9 @@ use User\Domain\ACL\Authorization\Authorization;
  * @author matthieu.napoli
  * @author valentin.claras
  */
-class User extends Core_Model_Entity implements Resource
+class User extends Core_Model_Entity implements EntityResourceInterface, SecurityIdentityInterface
 {
-    use ResourceTrait;
+    use SecurityIdentityTrait;
 
     const QUERY_ID = 'id';
     const QUERY_PASSWORD = 'password';
@@ -101,18 +99,6 @@ class User extends Core_Model_Entity implements Resource
     protected $roles;
 
     /**
-     * Autorisations d'accès à des ressources.
-     * @var Authorization[]|Collection
-     */
-    protected $authorizations;
-
-    /**
-     * Autorisations s'appliquant à cette ressource.
-     * @var UserAuthorization[]|Collection
-     */
-    protected $acl;
-
-    /**
      * Indique les tutoriels restant à faire pour l'utilisateur
      * Chaque tutoriel est un nombre premier, cette valeur
      * est égale au produit des nombres premiers des tutoriels.
@@ -126,21 +112,12 @@ class User extends Core_Model_Entity implements Resource
     {
         $this->creationDate = new DateTime();
         $this->roles = new ArrayCollection();
-        $this->authorizations = new ArrayCollection();
-        $this->acl = new ArrayCollection();
 
         if ($email) {
             $this->setEmail($email);
         }
         if ($password) {
             $this->setPassword($password);
-        }
-
-        // Hérite des droits sur "tous les utilisateurs"
-        $allUsers = NamedResource::loadByName(self::class);
-        foreach ($allUsers->getACL() as $parentAuthorization) {
-            // L'autorisation sera automatiquement ajoutée à $this->acl
-            UserAuthorization::createChildAuthorization($parentAuthorization, $this);
         }
     }
 
@@ -243,42 +220,6 @@ class User extends Core_Model_Entity implements Resource
             }
         }
         return false;
-    }
-
-    public function addRole(Role $role)
-    {
-        $this->roles->add($role);
-    }
-
-    public function removeRole(Role $role)
-    {
-        $this->roles->removeElement($role);
-    }
-
-    /**
-     * Retourne les autorisations de cet utilisateur.
-     *
-     * @return Authorization[]
-     */
-    public function getAuthorizations()
-    {
-        return $this->authorizations;
-    }
-
-    /**
-     * Ne pas utiliser directement. Uniquement utilisé par Authorization::create().
-     */
-    public function addAuthorization(Authorization $authorization)
-    {
-        $this->authorizations->add($authorization);
-    }
-
-    /**
-     * Ne pas utiliser directement. Uniquement utilisé par Authorization et Role.
-     */
-    public function removeAuthorizations(Authorization $authorization)
-    {
-        $this->authorizations->removeElement($authorization);
     }
 
     /**

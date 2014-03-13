@@ -8,8 +8,6 @@ User\Domain\ACL\Role\Role:
     name: type
     type: string
   discriminatorMap:
-    user: User\Domain\ACL\Role\UserRole
-    admin: User\Domain\ACL\Role\AdminRole
     organizationAdmin: Orga\Model\ACL\Role\OrganizationAdminRole
     cellAdmin: Orga\Model\ACL\Role\CellAdminRole
     cellManager: Orga\Model\ACL\Role\CellManagerRole

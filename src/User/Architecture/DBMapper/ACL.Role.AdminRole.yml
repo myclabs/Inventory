@@ -1,4 +1,0 @@
-User\Domain\ACL\Role\AdminRole:
-  type: entity
-  repositoryClass: \Core_Model_Repository
-  table: ACL_Role_Admin

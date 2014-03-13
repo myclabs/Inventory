@@ -2,12 +2,14 @@
 
 namespace Account\Domain;
 
+use MyCLabs\ACL\Model\EntityResourceInterface;
+
 /**
  * Compte client/d'entreprise.
  *
  * @author matthieu.napoli
  */
-class Account
+class Account implements EntityResourceInterface
 {
     /**
      * @var int

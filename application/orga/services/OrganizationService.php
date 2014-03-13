@@ -9,7 +9,7 @@ use Orga\Model\ACL\CellAuthorization;
 use Orga\Model\ACL\Role\CellManagerRole;
 use User\Domain\ACL\ACLService;
 use User\Domain\ACL\Action;
-use User\Domain\ACL\Role\AdminRole;
+use User\Domain\ACL\AdminRole;
 use User\Domain\User;
 use User\Domain\UserService;
 
