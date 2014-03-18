@@ -71,6 +71,9 @@ class InputService
         // MAJ le pourcentage de complétion
         $inputSet->updateCompletion();
 
+        // La saisie vient d'être modifiée, donc on la force à "non terminée"
+        $inputSet->markAsFinished(false);
+
         // Si la saisie est incomplète
         if (!$inputSet->isInputComplete()) {
             $inputSet->clearOutputSet();
