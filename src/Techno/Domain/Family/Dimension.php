@@ -186,6 +186,9 @@ class Dimension extends Core_Model_Entity
      */
     public function getMember($memberId)
     {
+        // On caste en string parce que le criteria compare avec "==="
+        $memberId = (string) $memberId;
+
         // Filtre la collection sur le ref du membre
         $criteria = Criteria::create();
         $criteria->where(Criteria::expr()->eq('ref', $memberId));
