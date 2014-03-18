@@ -2,10 +2,8 @@
 
 namespace Orga\Model\ACL;
 
-use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\ACLManager;
 use MyCLabs\ACL\Model\Actions;
-use MyCLabs\ACL\Model\Authorization;
-use MyCLabs\ACL\Model\Resource;
 use Orga\Model\ACL\Action\CellAction;
 
 /**
@@ -13,15 +11,16 @@ use Orga\Model\ACL\Action\CellAction;
  */
 class CellObserverRole extends AbstractCellRole
 {
-    public function createAuthorizations(EntityManager $entityManager)
+    public function createAuthorizations(ACLManager $aclManager)
     {
-        $actions = new Actions([
-            Actions::VIEW,
-        ]);
+        // Voir la cellule
+        $aclManager->allow(
+            $this,
+            new Actions([ Actions::VIEW ]),
+            $this->cell
+        );
 
-        return [
-            Authorization::create($this, $actions, Resource::fromEntity($this->cell)),
-        ];
+        // TODO Voir la saisie
     }
 
     public function buildAuthorizations()

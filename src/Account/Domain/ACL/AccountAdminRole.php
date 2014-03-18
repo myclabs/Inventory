@@ -3,10 +3,8 @@
 namespace Account\Domain\ACL;
 
 use Account\Domain\Account;
-use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\ACLManager;
 use MyCLabs\ACL\Model\Actions;
-use MyCLabs\ACL\Model\Authorization;
-use MyCLabs\ACL\Model\Resource;
 use MyCLabs\ACL\Model\Role;
 use User\Domain\User;
 
@@ -37,14 +35,14 @@ class AccountAdminRole extends Role
         return $this->account;
     }
 
-    /**
-     * @param EntityManager $entityManager
-     * @return Authorization[]
-     */
-    public function createAuthorizations(EntityManager $entityManager)
+    public function createAuthorizations(ACLManager $aclManager)
     {
-        return [
-            Authorization::create($this, Actions::all(), Resource::fromEntity($this->account)),
-        ];
+        $aclManager->allow(
+            $this,
+            Actions::all(),
+            $this->account
+        );
+
+        // TODO cascade manuelle sur les cellules globales
     }
 }

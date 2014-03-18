@@ -6,6 +6,7 @@ use Account\Domain\AccountRepository;
 use Core\Annotation\Secure;
 use MyCLabs\ACL\ACLManager;
 use MyCLabs\ACL\Model\Actions;
+use MyCLabs\ACL\Model\ClassResource;
 use MyCLabs\ACL\Model\Resource;
 use User\Domain\User;
 
@@ -73,7 +74,7 @@ class Account_DashboardController extends Core_Controller
         $this->view->assign('canCreateOrganization', $this->aclManager->isAllowed(
             $user,
             Actions::CREATE,
-            Resource::fromEntityClass(Orga_Model_Organization::class)
+            new ClassResource(Orga_Model_Organization::class)
         ));
     }
 }

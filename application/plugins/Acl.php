@@ -3,7 +3,7 @@
 use AF\Application\AFViewConfiguration;
 use Doc\Domain\Library;
 use MyCLabs\ACL\Model\Actions;
-use MyCLabs\ACL\Model\Resource;
+use MyCLabs\ACL\Model\ClassResource;
 use Orga\Model\ACL\Action\CellAction;
 use User\Application\ForbiddenException;
 use User\Application\Plugin\ACLPlugin;
@@ -41,7 +41,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         $isIdentityAbleToCreateOrganizations = $this->aclManager->isAllowed(
             $identity,
             Actions::CREATE,
-            Resource::fromEntityClass(Orga_Model_Organization::class)
+            new ClassResource(Orga_Model_Organization::class)
         );
         if ($isIdentityAbleToCreateOrganizations) {
             return true;
@@ -64,7 +64,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->aclManager->isAllowed(
             $identity,
             Actions::CREATE,
-            Resource::fromEntityClass(Orga_Model_Organization::class)
+            new ClassResource(Orga_Model_Organization::class)
         );
     }
 

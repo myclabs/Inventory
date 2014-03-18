@@ -1,12 +1,22 @@
 <?php
 
+use Account\Domain\ACL\AccountAdminRole;
 use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
+use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\CascadeStrategy\SimpleCascadeStrategy;
+use MyCLabs\ACL\MetadataLoader;
+use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellObserverRole;
+use Orga\Model\ACL\CellResourceGraphTraverser;
+use Orga\Model\ACL\OrganizationAdminRole;
+use Orga\Model\ACL\OrganizationResourceGraphTraverser;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use User\Application\ViewHelper\IsAllowedHelper;
-use User\Domain\UserService;
+use User\Domain\ACL\AdminRole;
 
 return [
     // Nom de l'application installée
@@ -78,5 +88,33 @@ return [
     Orga_Service_ETLStructure::class => DI\object()
             ->constructorParameter('defaultLocale', DI\link('translation.defaultLocale'))
             ->constructorParameter('locales', DI\link('translation.languages')),
+
+    // ACL
+    ACLManager::class => DI\factory(function (Container $c) {
+        $em = $c->get(EntityManager::class);
+
+        $cascadeStrategy = new SimpleCascadeStrategy($em);
+        $cascadeStrategy->setResourceGraphTraverser(
+            Orga_Model_Organization::class,
+            new OrganizationResourceGraphTraverser()
+        );
+        $cascadeStrategy->setResourceGraphTraverser(
+            Orga_Model_Cell::class,
+            new CellResourceGraphTraverser()
+        );
+
+        return new ACLManager($em, $cascadeStrategy);
+    }),
+    MetadataLoader::class => DI\factory(function () {
+        $loader = new MetadataLoader();
+        $loader->registerRoleClass(AdminRole::class, 'superadmin');
+        $loader->registerRoleClass(AccountAdminRole::class, 'accountAdmin');
+        $loader->registerRoleClass(OrganizationAdminRole::class, 'organizationAdmin');
+        $loader->registerRoleClass(CellAdminRole::class, 'cellAdmin');
+        $loader->registerRoleClass(CellManagerRole::class, 'cellManager');
+        $loader->registerRoleClass(CellContributorRole::class, 'cellContributor');
+        $loader->registerRoleClass(CellObserverRole::class, 'cellObserver');
+        return $loader;
+    }),
 
 ];

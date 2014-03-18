@@ -1,6 +1,5 @@
 <?php
 
-use Account\Domain\ACL\AccountAdminRole;
 use Core\Log\QueryLogger;
 use DI\Container;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -21,12 +20,6 @@ use MyCLabs\ACL\ACLManager;
 use MyCLabs\ACL\EntityManagerListener;
 use MyCLabs\ACL\MetadataLoader;
 use MyCLabs\ACL\Model\SecurityIdentityInterface;
-use Orga\Model\ACL\CellAdminRole;
-use Orga\Model\ACL\CellContributorRole;
-use Orga\Model\ACL\CellManagerRole;
-use Orga\Model\ACL\CellObserverRole;
-use Orga\Model\ACL\OrganizationAdminRole;
-use User\Domain\ACL\AdminRole;
 use User\Domain\User;
 
 return [
@@ -145,14 +138,7 @@ return [
         // TODO simplify
         $rtel->addResolveTargetEntity(SecurityIdentityInterface::class, User::class, []);
         $evm->addEventListener(Events::loadClassMetadata, $rtel);
-        $metadataLoader = new MetadataLoader();
-        $metadataLoader->registerRoleClass(AdminRole::class, 'superadmin');
-        $metadataLoader->registerRoleClass(AccountAdminRole::class, 'accountAdmin');
-        $metadataLoader->registerRoleClass(OrganizationAdminRole::class, 'organizationAdmin');
-        $metadataLoader->registerRoleClass(CellAdminRole::class, 'cellAdmin');
-        $metadataLoader->registerRoleClass(CellManagerRole::class, 'cellManager');
-        $metadataLoader->registerRoleClass(CellContributorRole::class, 'cellContributor');
-        $metadataLoader->registerRoleClass(CellObserverRole::class, 'cellObserver');
+        $metadataLoader = $c->get(MetadataLoader::class);
         $evm->addEventListener(Events::loadClassMetadata, $metadataLoader);
         $aclManagerLocator = function () use ($c) {
             return $c->get(ACLManager::class);

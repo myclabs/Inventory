@@ -5,7 +5,7 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use MyCLabs\ACL\Model\EntityResourceInterface;
+use MyCLabs\ACL\Model\EntityResource;
 use Orga\Model\ACL\AbstractCellRole;
 use Orga\Model\ACL\CellAdminRole;
 use Orga\Model\ACL\CellContributorRole;
@@ -18,7 +18,7 @@ use Orga\Model\ACL\CellObserverRole;
  * @author valentin.claras
  * @author simon.rieu
  */
-class Orga_Model_Cell extends Core_Model_Entity implements EntityResourceInterface
+class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 {
     // Constantes de tris et de filtres.
     const QUERY_GRANULARITY = 'granularity';
@@ -1607,7 +1607,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResourceInterfa
     }
 
     /**
-     * @return \Orga\Model\ACL\CellObserverRole[]
+     * @return CellObserverRole[]
      */
     public function getObserverRoles()
     {

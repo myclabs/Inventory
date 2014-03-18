@@ -6,7 +6,7 @@ use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
 use MyCLabs\ACL\ACLManager;
 use MyCLabs\ACL\Model\Actions;
-use MyCLabs\ACL\Model\Resource;
+use MyCLabs\ACL\Model\ClassResource;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\Model\ACL\CellAdminRole;
 use Account\Application\Service\OrganizationViewFactory;
@@ -79,7 +79,7 @@ class Orga_OrganizationController extends Core_Controller
         $isConnectedUserAbleToCreateOrganizations = $this->aclManager->isAllowed(
             $connectedUser,
             Actions::CREATE,
-            Resource::fromEntityClass(Orga_Model_Organization::class)
+            new ClassResource(Orga_Model_Organization::class)
         );
 
         if (!$isConnectedUserAbleToCreateOrganizations) {
@@ -135,7 +135,7 @@ class Orga_OrganizationController extends Core_Controller
         $this->view->assign('canCreateOrganization', $this->aclManager->isAllowed(
             $connectedUser,
             Actions::CREATE,
-            Resource::fromEntityClass(Orga_Model_Organization::class)
+            new ClassResource(Orga_Model_Organization::class)
         ));
     }
 

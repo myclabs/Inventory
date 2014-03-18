@@ -3,7 +3,7 @@
 use Core\Annotation\Secure;
 use MyCLabs\ACL\ACLManager;
 use MyCLabs\ACL\Model\Actions;
-use MyCLabs\ACL\Model\Resource;
+use MyCLabs\ACL\Model\ClassResource;
 use User\Application\ForbiddenException;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -52,7 +52,7 @@ class User_ProfileController extends Core_Controller
         $this->view->canCreateUsers = $this->aclManager->isAllowed(
             $loggedInUser,
             Actions::CREATE,
-            Resource::fromEntityClass(User::class)
+            new ClassResource(User::class)
         );
     }
 

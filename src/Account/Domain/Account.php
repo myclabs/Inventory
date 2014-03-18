@@ -2,14 +2,17 @@
 
 namespace Account\Domain;
 
-use MyCLabs\ACL\Model\EntityResourceInterface;
+use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\Model\CascadingResource;
+use MyCLabs\ACL\Model\ClassResource;
+use MyCLabs\ACL\Model\EntityResource;
 
 /**
  * Compte client/d'entreprise.
  *
  * @author matthieu.napoli
  */
-class Account implements EntityResourceInterface
+class Account implements EntityResource, CascadingResource
 {
     /**
      * @var int
@@ -56,5 +59,24 @@ class Account implements EntityResourceInterface
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParentResources(EntityManager $entityManager)
+    {
+        return [
+            new ClassResource(get_class()),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSubResources(EntityManager $entityManager)
+    {
+        // TODO retourner les organisations
+        return [];
     }
 }

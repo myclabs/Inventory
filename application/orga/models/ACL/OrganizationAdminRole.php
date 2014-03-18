@@ -2,10 +2,8 @@
 
 namespace Orga\Model\ACL;
 
-use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\ACLManager;
 use MyCLabs\ACL\Model\Actions;
-use MyCLabs\ACL\Model\Authorization;
-use MyCLabs\ACL\Model\Resource;
 use MyCLabs\ACL\Model\Role;
 use Orga\Model\ACL\Action\CellAction;
 use Orga_Model_Organization;
@@ -29,15 +27,9 @@ class OrganizationAdminRole extends Role
         parent::__construct($user);
     }
 
-    /**
-     * @param EntityManager $entityManager
-     * @return Authorization[]
-     */
-    public function createAuthorizations(EntityManager $entityManager)
+    public function createAuthorizations(ACLManager $aclManager)
     {
-        return [
-            Authorization::create($this, Actions::all(), Resource::fromEntity($this->organization)),
-        ];
+        $aclManager->allow($this, Actions::all(), $this->organization);
     }
 
     public function buildAuthorizations()

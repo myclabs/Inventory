@@ -2,27 +2,27 @@
 
 namespace Orga\Model\ACL;
 
-use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\ACLManager;
 use MyCLabs\ACL\Model\Actions;
-use MyCLabs\ACL\Model\Authorization;
-use MyCLabs\ACL\Model\Resource;
 
 /**
  * Cell administrator.
  */
 class CellAdminRole extends AbstractCellRole
 {
-    public function createAuthorizations(EntityManager $entityManager)
+    public function createAuthorizations(ACLManager $aclManager)
     {
-        $actions = new Actions([
-            Actions::VIEW,
-            Actions::EDIT,
-            Actions::ALLOW,
-        ]);
+        $aclManager->allow(
+            $this,
+            new Actions([
+                Actions::VIEW,
+                Actions::EDIT,
+                Actions::ALLOW,
+            ]),
+            $this->cell
+        );
 
-        return [
-            Authorization::create($this, $actions, Resource::fromEntity($this->cell)),
-        ];
+        // TODO Modifier la saisie
     }
 
     public function buildAuthorizations()

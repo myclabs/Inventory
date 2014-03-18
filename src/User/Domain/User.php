@@ -12,7 +12,10 @@ use Core_Tools;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use MyCLabs\ACL\Model\EntityResourceInterface;
+use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\Model\CascadingResource;
+use MyCLabs\ACL\Model\ClassResource;
+use MyCLabs\ACL\Model\EntityResource;
 use MyCLabs\ACL\Model\Role;
 use MyCLabs\ACL\Model\SecurityIdentityInterface;
 use MyCLabs\ACL\Model\SecurityIdentityTrait;
@@ -23,7 +26,7 @@ use MyCLabs\ACL\Model\SecurityIdentityTrait;
  * @author matthieu.napoli
  * @author valentin.claras
  */
-class User extends Core_Model_Entity implements EntityResourceInterface, SecurityIdentityInterface
+class User extends Core_Model_Entity implements EntityResource, CascadingResource, SecurityIdentityInterface
 {
     use SecurityIdentityTrait;
 
@@ -479,5 +482,21 @@ class User extends Core_Model_Entity implements EntityResourceInterface, Securit
     public function isTutorialDone($tutorial)
     {
         return null !== $this->tutorials ? !is_int($this->tutorials / $tutorial) : true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParentResources(EntityManager $entityManager)
+    {
+        return [ new ClassResource(get_class()) ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSubResources(EntityManager $entityManager)
+    {
+        return [];
     }
 }

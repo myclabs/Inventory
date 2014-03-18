@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "7bce32262bd1bfc74bf59059a55158ff",
+    "hash": "991adab280629b6d2085322dc1eef468",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -484,12 +484,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "f197a9c9f140a06f399fc05d7149220d04eb3a56"
+                "reference": "b30b1a59991c15043f14053acbe7d93c6233465c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/f197a9c9f140a06f399fc05d7149220d04eb3a56",
-                "reference": "f197a9c9f140a06f399fc05d7149220d04eb3a56",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/b30b1a59991c15043f14053acbe7d93c6233465c",
+                "reference": "b30b1a59991c15043f14053acbe7d93c6233465c",
                 "shasum": ""
             },
             "require": {
@@ -553,7 +553,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-03-07 03:38:26"
+            "time": "2014-03-11 13:52:49"
         },
         {
             "name": "dompdf/dompdf",
@@ -561,12 +561,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "fbb288daad0096350cdead591dd8d450e490fbd0"
+                "reference": "cf7d8a0a27270418850cc7d7ea532159e5eeb3eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/fbb288daad0096350cdead591dd8d450e490fbd0",
-                "reference": "fbb288daad0096350cdead591dd8d450e490fbd0",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/cf7d8a0a27270418850cc7d7ea532159e5eeb3eb",
+                "reference": "cf7d8a0a27270418850cc7d7ea532159e5eeb3eb",
                 "shasum": ""
             },
             "require": {
@@ -594,7 +594,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2014-02-07 02:58:53"
+            "time": "2014-03-11 01:59:52"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -960,11 +960,11 @@
         },
         {
             "name": "myclabs/acl",
-            "version": "dev-simplified-model",
+            "version": "dev-simplified-model-v2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:myclabs/ACL.git",
-                "reference": "1eda0aeb6e8713dec9aed0522cccc6071aac2063"
+                "reference": "b47139fd9252c8063402124ec5401f72199bb53f"
             },
             "require": {
                 "doctrine/orm": "2.5.*@dev",
@@ -977,7 +977,7 @@
                     "Tests\\MyCLabs\\ACL\\": "tests/"
                 }
             },
-            "time": "2014-03-13 14:16:46"
+            "time": "2014-03-17 15:23:04"
         },
         {
             "name": "myclabs/array-comparator",
@@ -1228,27 +1228,26 @@
         },
         {
             "name": "ocramius/proxy-manager",
-            "version": "0.5.0",
+            "version": "0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ocramius/ProxyManager.git",
-                "reference": "3b3b7101b1eea62afe039db50faee0d3a9e3e330"
+                "reference": "eaaf10f9a24ffd79a3e388809f6d61f229e261bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/3b3b7101b1eea62afe039db50faee0d3a9e3e330",
-                "reference": "3b3b7101b1eea62afe039db50faee0d3a9e3e330",
+                "url": "https://api.github.com/repos/Ocramius/ProxyManager/zipball/eaaf10f9a24ffd79a3e388809f6d61f229e261bd",
+                "reference": "eaaf10f9a24ffd79a3e388809f6d61f229e261bd",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
-                "zendframework/zend-code": "2.*"
+                "zendframework/zend-code": ">2.2.5,<3.0"
             },
             "require-dev": {
-                "phpmd/phpmd": "1.4.*",
-                "phpunit/phpunit": ">=3.7",
-                "satooshi/php-coveralls": "~0.6",
-                "squizlabs/php_codesniffer": "1.4.*"
+                "ext-phar": "*",
+                "phpunit/phpunit": "~3.7",
+                "squizlabs/php_codesniffer": "1.5.*"
             },
             "suggest": {
                 "ocramius/generated-hydrator": "To have very fast object to array to object conversion for ghost objects",
@@ -1260,7 +1259,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.5.x-dev"
+                    "dev-master": "0.6.x-dev"
                 }
             },
             "autoload": {
@@ -1289,7 +1288,7 @@
                 "proxy pattern",
                 "service proxies"
             ],
-            "time": "2013-11-30 15:00:46"
+            "time": "2014-03-12 14:00:19"
         },
         {
             "name": "pear/console_commandline",
@@ -1998,7 +1997,7 @@
         },
         {
             "name": "zendframework/zend-code",
-            "version": "2.2.6",
+            "version": "2.3.0",
             "target-dir": "Zend/Code",
             "source": {
                 "type": "git",
@@ -2046,7 +2045,7 @@
         },
         {
             "name": "zendframework/zend-eventmanager",
-            "version": "2.2.6",
+            "version": "2.3.0",
             "target-dir": "Zend/EventManager",
             "source": {
                 "type": "git",
@@ -2087,24 +2086,30 @@
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.2.6",
+            "version": "2.3.0",
             "target-dir": "Zend/Stdlib",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "e646729f2274f4552b6a92e38d8e458efe08ebc5"
+                "reference": "b6913eb223fa0ba646905522d4dbe1b84cddcb1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/e646729f2274f4552b6a92e38d8e458efe08ebc5",
-                "reference": "e646729f2274f4552b6a92e38d8e458efe08ebc5",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/b6913eb223fa0ba646905522d4dbe1b84cddcb1c",
+                "reference": "b6913eb223fa0ba646905522d4dbe1b84cddcb1c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=5.3.23"
+            },
+            "require-dev": {
+                "zendframework/zend-eventmanager": "self.version",
+                "zendframework/zend-serializer": "self.version",
+                "zendframework/zend-servicemanager": "self.version"
             },
             "suggest": {
                 "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
+                "zendframework/zend-serializer": "Zend\\Serializer component",
                 "zendframework/zend-servicemanager": "To support hydrator plugin manager usage"
             },
             "type": "library",
@@ -2127,7 +2132,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2014-01-04 13:00:28"
+            "time": "2014-03-13 16:18:45"
         },
         {
             "name": "zendframework/zendframework1",

@@ -2,7 +2,7 @@
 
 use MyCLabs\ACL\ACLManager;
 use MyCLabs\ACL\Model\Actions;
-use MyCLabs\ACL\Model\Resource;
+use MyCLabs\ACL\Model\ClassResource;
 use User\Domain\User;
 
 $container = \Core\ContainerSingleton::getContainer();
@@ -46,7 +46,7 @@ if ($connectedUser) {
     $isAllowedToViewAllUser = $aclManager->isAllowed(
         $connectedUser,
         Actions::VIEW,
-        Resource::fromEntityClass(User::class)
+        new ClassResource(User::class)
     );
     if ($isAllowedToViewAllUser) {
         $leftMenu[5] = [

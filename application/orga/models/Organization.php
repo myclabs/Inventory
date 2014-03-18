@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
-use MyCLabs\ACL\Model\EntityResourceInterface;
+use MyCLabs\ACL\Model\EntityResource;
 use Orga\Model\ACL\OrganizationAdminRole;
 
 /**
@@ -20,7 +20,7 @@ use Orga\Model\ACL\OrganizationAdminRole;
  * @package    Orga
  * @subpackage Model
  */
-class Orga_Model_Organization extends Core_Model_Entity implements EntityResourceInterface
+class Orga_Model_Organization extends Core_Model_Entity implements EntityResource
 {
     use Core_Model_Entity_Translatable;
 
@@ -471,6 +471,16 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
         $criteria->where(Criteria::expr()->neq('inputConfigGranularity', null));
         $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria)->toArray();
+    }
+
+    /**
+     * Retourne la cellule globale de la structure organisationelle.
+     *
+     * @return Orga_Model_Cell
+     */
+    public function getGlobalCell()
+    {
+        return $this->getGranularityByRef('global')->getCellByMembers([]);
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace User\Application\Plugin;
 
 use MyCLabs\ACL\Model\Actions;
-use MyCLabs\ACL\Model\Resource;
+use MyCLabs\ACL\Model\ClassResource;
 use User\Domain\User;
 use Zend_Controller_Request_Abstract;
 
@@ -24,7 +24,7 @@ class ACLPlugin extends AbstractACLPlugin
         return $this->aclManager->isAllowed(
             $identity,
             Actions::CREATE,
-            Resource::fromEntityClass(User::class)
+            new ClassResource(User::class)
         );
     }
 
@@ -73,6 +73,6 @@ class ACLPlugin extends AbstractACLPlugin
      */
     public function viewAllUsersRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed($identity, Actions::VIEW, Resource::fromEntityClass(User::class));
+        return $this->aclManager->isAllowed($identity, Actions::VIEW, new ClassResource(User::class));
     }
 }
