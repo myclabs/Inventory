@@ -168,13 +168,13 @@ class Orga_Service_Export
                 $axes = [];
                 foreach ($organization->getFirstOrderedAxes() as $organizationAxis) {
                     foreach ($cell->getMembers() as $member) {
-                        if ($organizationAxis->isNarrowerThan($member->getAxis())) {
-                            continue;
-                        } elseif (!($organizationAxis->isTransverse([$member->getAxis()]))) {
+                        if ($organizationAxis->isBroaderThan($member->getAxis())) {
                             continue 2;
                         }
                     }
-                    $axes[] = $organizationAxis;
+                    if (!$organizationAxis->isTransverse($cell->getGranularity()->getAxes())) {
+                        $axes[] = $organizationAxis;
+                    }
                 }
                 return $axes;
             }
@@ -185,9 +185,10 @@ class Orga_Service_Export
                 $members = [];
                 foreach ($axis->getMembers() as $axisMember) {
                     foreach ($cell->getMembers() as $member) {
-                        if (($axis->isNarrowerThan($member->getAxis())) && in_array($member, $axisMember->getAllParents())) {
-                            continue;
-                        } elseif (!($axis->isTransverse([$member->getAxis()]))) {
+                        if (!$cell->hasMember($axisMember)
+                            && ((!$axis->isNarrowerThan($member->getAxis()))
+                                || !in_array($member, $axisMember->getAllParents()))
+                            && !$axis->isTransverse([$member->getAxis()])) {
                             continue 2;
                         }
                     }
