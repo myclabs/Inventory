@@ -119,7 +119,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     /**
      * Tableau d'état des saisies de la cellule.
      *
-     * @var PrimaryInputSet
+     * @var PrimaryInputSet|null
      */
     protected $aFInputSetPrimary = null;
 
@@ -235,6 +235,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      *
      * @param PrimaryInputSet $aFInputSetPrimary
      *
+     * @throws Core_Exception_NotFound
      * @return Orga_Model_Cell
      */
     public static function loadByAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary)
@@ -1012,7 +1013,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     /**
      * Renvoie l'InputSetPrimary associé à la cellule.
      *
-     * @return \AF\Domain\InputSet\PrimaryInputSet
+     * @return PrimaryInputSet|null
      */
     public function getAFInputSetPrimary()
     {

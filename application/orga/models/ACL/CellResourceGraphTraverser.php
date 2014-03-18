@@ -16,7 +16,14 @@ class CellResourceGraphTraverser implements ResourceGraphTraverser
             throw new \RuntimeException;
         }
 
-        return $resource->getChildCells();
+        $subResources = $resource->getChildCells();
+
+        $input = $resource->getAFInputSetPrimary();
+        if ($input) {
+            $subResources[] = $input;
+        }
+
+        return $subResources;
     }
 
     public function getAllParentResources(ResourceInterface $resource)

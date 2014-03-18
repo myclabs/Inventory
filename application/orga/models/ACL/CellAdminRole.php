@@ -22,7 +22,7 @@ class CellAdminRole extends AbstractCellRole
             $this->cell
         );
 
-        // TODO Modifier la saisie
+        // Le droit de voir/éditer la saisie est cascadé
     }
 
     public function buildAuthorizations()

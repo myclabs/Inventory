@@ -13,14 +13,19 @@ class CellContributorRole extends AbstractCellRole
 {
     public function createAuthorizations(ACLManager $aclManager)
     {
-        // Voir la cellule
+        // Voir la cellule et la saisie
         $aclManager->allow(
             $this,
             new Actions([ Actions::VIEW ]),
             $this->cell
         );
 
-        // TODO Modifier la saisie
+        // Modifier la saisie
+        $aclManager->allow(
+            $this,
+            new Actions([ Actions::VIEW ]),
+            $this->cell->getAFInputSetPrimary()
+        );
     }
 
     public function buildAuthorizations()

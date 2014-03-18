@@ -2,13 +2,13 @@
 
 namespace Orga\Model\ACL;
 
-use Account\Domain\Account;
-use MyCLabs\ACL\Model\ClassResource;
+use AF\Domain\InputSet\PrimaryInputSet;
+use Core_Exception_NotFound;
 use MyCLabs\ACL\Model\ResourceInterface;
 use MyCLabs\ACL\ResourceGraph\ResourceGraphTraverser;
-use Orga_Model_Organization;
+use Orga_Model_Cell;
 
-class OrganizationResourceGraphTraverser implements ResourceGraphTraverser
+class InputSetResourceGraphTraverser implements ResourceGraphTraverser
 {
     /**
      * @var CellResourceGraphTraverser
@@ -22,29 +22,30 @@ class OrganizationResourceGraphTraverser implements ResourceGraphTraverser
 
     public function getAllSubResources(ResourceInterface $resource)
     {
-        if (! $resource instanceof Orga_Model_Organization) {
+        if (! $resource instanceof PrimaryInputSet) {
             throw new \RuntimeException;
         }
 
-        $globalCell = $resource->getGlobalCell();
-
-        $resources = $this->cellResourceGraphTraverser->getAllSubResources($globalCell);
-        $resources[] = $globalCell;
-
-        return $resources;
+        return [];
     }
 
     public function getAllParentResources(ResourceInterface $resource)
     {
-        if (! $resource instanceof Orga_Model_Organization) {
+        if (! $resource instanceof PrimaryInputSet) {
             throw new \RuntimeException;
         }
 
-        // Compte
-        $parents[] = $resource->getAccount();
+        try {
+            // Cellule
+            $cell = Orga_Model_Cell::loadByAFInputSetPrimary($resource);
+        } catch (Core_Exception_NotFound $e) {
+            return [];
+        }
 
-        // Tous les comptes
-        $parents[] = new ClassResource(Account::class);
+        // Récupère toutes les resources parentes de la cellule
+        $parents = $this->cellResourceGraphTraverser->getAllParentResources($cell);
+
+        $parents[] = $cell;
 
         return $parents;
     }

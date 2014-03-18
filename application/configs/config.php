@@ -1,6 +1,7 @@
 <?php
 
 use Account\Domain\ACL\AccountAdminRole;
+use AF\Domain\InputSet\PrimaryInputSet;
 use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\CreateDBCommand;
@@ -13,6 +14,7 @@ use Orga\Model\ACL\CellContributorRole;
 use Orga\Model\ACL\CellManagerRole;
 use Orga\Model\ACL\CellObserverRole;
 use Orga\Model\ACL\CellResourceGraphTraverser;
+use Orga\Model\ACL\InputSetResourceGraphTraverser;
 use Orga\Model\ACL\OrganizationAdminRole;
 use Orga\Model\ACL\OrganizationResourceGraphTraverser;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -96,11 +98,15 @@ return [
         $cascadeStrategy = new SimpleCascadeStrategy($em);
         $cascadeStrategy->setResourceGraphTraverser(
             Orga_Model_Organization::class,
-            new OrganizationResourceGraphTraverser()
+            $c->get(OrganizationResourceGraphTraverser::class)
         );
         $cascadeStrategy->setResourceGraphTraverser(
             Orga_Model_Cell::class,
-            new CellResourceGraphTraverser()
+            $c->get(CellResourceGraphTraverser::class)
+        );
+        $cascadeStrategy->setResourceGraphTraverser(
+            PrimaryInputSet::class,
+            $c->get(InputSetResourceGraphTraverser::class)
         );
 
         return new ACLManager($em, $cascadeStrategy);

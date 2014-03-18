@@ -3,13 +3,14 @@
 namespace AF\Domain\InputSet;
 
 use AF\Domain\Output\OutputSet;
+use MyCLabs\ACL\Model\EntityResource;
 
 /**
  * @author matthieu.napoli
  * @author thibaud.rolland
  * @author hugo.charbonnier
  */
-class PrimaryInputSet extends InputSet
+class PrimaryInputSet extends InputSet implements EntityResource
 {
     const QUERY_AF = 'af';
 

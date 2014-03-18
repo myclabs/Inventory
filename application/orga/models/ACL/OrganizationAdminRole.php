@@ -29,7 +29,9 @@ class OrganizationAdminRole extends Role
 
     public function createAuthorizations(ACLManager $aclManager)
     {
-        $aclManager->allow($this, Actions::all(), $this->organization);
+        $actions = new Actions([Actions::VIEW, Actions::EDIT, Actions::DELETE, Actions::ALLOW]);
+
+        $aclManager->allow($this, $actions, $this->organization);
     }
 
     public function buildAuthorizations()
