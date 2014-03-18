@@ -123,10 +123,10 @@
         </tu>
         <tu tuid="organizationTemplateExplanation">
             <tuv xml:lang="fr">
-                <seg>Choix du type de l'organization. Ce choix est là pour aider lors de la configuration initiale.</seg>
+                <seg>Le modèle prédéfinit un certain nombre de paramètres du workspace.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organization type. This is only meant to help the first configuration.</seg>
+                <seg>The organization type predefined some parameters.</seg>
             </tuv>
         </tu>
         <tu tuid="organizationMainAxisLabel">
@@ -213,7 +213,7 @@
         <!-- Legendes -->
         <tu tuid="organizationMainAxisTitle">
             <tuv xml:lang="fr">
-                <seg>Choix de l'axe géographique et de ses agrégation</seg>
+                <seg>Choix de l'axe géographique et de ses agrégations</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Choice of the geographic axis and his aggregations</seg>
@@ -237,7 +237,7 @@
         </tu>
         <tu tuid="inventoryGranularityTitle">
             <tuv xml:lang="fr">
-                <seg>Choix de niveau de gestion des collecte</seg>
+                <seg>Choix de niveau de gestion des collectes</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Choice of inventory management level</seg>
@@ -245,7 +245,7 @@
         </tu>
         <tu tuid="aclGranularitiesTitle">
             <tuv xml:lang="fr">
-                <seg>Choix des niveaux d'affectacion des utilisateurs</seg>
+                <seg>Choix des niveaux d'affectation des utilisateurs</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Choice of users assignment levels</seg>
@@ -335,7 +335,7 @@
         </tu>
         <tu tuid="addValidationMessage">
             <tuv xml:lang="fr">
-                <seg>Cliquer sur "Initialiser" constuira votre workspace. Vous pourrez compléter la configuration en allant dans "Paramétrage".</seg>
+                <seg>Cliquer sur "Initialiser" construira votre workspace. Vous pourrez compléter la configuration en allant dans "Paramétrage".</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Clicking on "Initialize" will build your workspace. You can complete the configuration by going in "Configuration"</seg>

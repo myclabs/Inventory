@@ -584,6 +584,7 @@
                     reportsGranularitiesList.push({ 'ref': "global", 'label': "<?=___('Orga', 'granularity', 'labelGlobalGranularity')?>   "});
                     var timeAxisRef = 'timeAxis';
                     var timeAxisLabel = $('#timeAxis').val();
+                    inventoryGranularitiesList.push({ 'ref': timeAxisRef, 'label': timeAxisLabel, 'checked': ' checked="checked"'});
                     if ($('#subdivisionAxis').val() != '') {
                         var subdivisionAxisRef = '|subdivisionAxis';
                         var subdivisionAxisLabel = ' | ' + $('#subdivisionAxis').val();
@@ -596,7 +597,7 @@
                         var granularityAxes = '';
                         var granularityLabel = '';
                         $('#axes div.[data-level="' + level + '"]').each(function() {
-                            inventoryGranularitiesList.push({ 'ref': $('input', $(this)).attr('name') + '|' + timeAxisRef, 'label': $('input', $(this)).val() + ' | ' + timeAxisLabel});
+                            inventoryGranularitiesList.push({ 'ref': $('input', $(this)).attr('name') + '|' + timeAxisRef, 'label': $('input', $(this)).val() + ' | ' + timeAxisLabel, 'checked': ''});
                             granularityAxes += $('input', $(this)).attr('name') + '|';
                             granularityLabel += $('input', $(this)).val() + ' | ';
                         });
@@ -608,16 +609,11 @@
                     $(inventoryGranularitiesList).each(function() {
                         $('#inventoryGranularity-line .controls .input > div').append(
                             '<label for="inventoryGranularity' + this.ref + '" class="radio">' +
-                                '<input id="inventoryGranularity' + this.ref + '" name="inventoryGranularity" type="radio" value="' + this.ref  + '">' +
+                                '<input id="inventoryGranularity' + this.ref + '" name="inventoryGranularity" type="radio" value="' + this.ref  + '"' + this.checked + '>' +
                                 ' <span>' + this.label + '</span>' +
                             '</label>'
                         );
                     });
-                    if (inventoryGranularitiesList.length == 1) {
-                        $(inventoryGranularitiesList).each(function() {
-                            $('#inventoryGranularity-line .controls .input > div input[name="inventoryGranularity"]').val([this.ref]);
-                        });
-                    }
                     $('#aclGranularities-line .controls .input > div').html('');
                     $(aclGranularitiesList).each(function(index) {
                         $('#aclGranularities-line .controls .input > div').append(

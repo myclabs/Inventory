@@ -463,10 +463,16 @@ class Orga_Service_OrganizationService
         }
         $inventoryGranularity = new Orga_Model_Granularity($organization, $inventoryGranularityAxes);
         $organization->setGranularityForInventoryStatus($inventoryGranularity);
-        $navigableInventoryGranularity = new Orga_Model_Granularity($organization, $inventoryNavigableGranularityAxes);
+        try {
+            $navigableInventoryGranularity = $organization->getGranularityByRef(
+                Orga_Model_Granularity::buildRefFromAxes($inventoryNavigableGranularityAxes)
+            );
+        } catch (Core_Exception_NotFound $e) {
+            $navigableInventoryGranularity = new Orga_Model_Granularity($organization, $inventoryNavigableGranularityAxes);
+        }
         // Création de la granularité de saisie.
         $inputsGranularityAxes = [$axes['mainAxis'], $axes['timeAxis']];
-        $inputsNavigableGranularityAxes = [$axes['mainAxis']];
+        $inputsNavigableGranularityAxes = [$axes['timeAxis']];
         if (isset($axes['subdivisionAxis'])) {
             $inputsGranularityAxes[] = $axes['subdivisionAxis'];
             $inputsNavigableGranularityAxes[] = $axes['subdivisionAxis'];
