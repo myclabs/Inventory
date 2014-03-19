@@ -7,7 +7,6 @@ use MyCLabs\ACL\ACLManager;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use MyCLabs\ACL\Model\ResourceInterface;
-use Orga\Model\ACL\Action\CellAction;
 use Orga\Model\ACL\CellAdminRole;
 use Orga\Model\ACL\CellContributorRole;
 use Orga\Model\ACL\CellManagerRole;
@@ -16,22 +15,12 @@ use Orga\Model\ACL\OrganizationAdminRole;
 use User\Domain\User;
 use User\Domain\UserService;
 
-class Orga_Test_ACLTest
-{
-    public static function suite()
-    {
-        $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Orga_Test_ACL');
-        return $suite;
-    }
-}
-
 /**
  * Test des ACL dans Orga.
  *
  * @author valentin.claras
  */
-class Orga_Test_ACL extends TestCase
+class Orga_Test_ACLTest extends TestCase
 {
     /**
      * @Inject
@@ -244,6 +233,8 @@ class Orga_Test_ACL extends TestCase
     public function setUp()
     {
         parent::setUp();
+
+        $this->entityManager->beginTransaction();
 
         $account = new Account('Test');
         $this->accountRepository->add($account);
@@ -689,7 +680,7 @@ class Orga_Test_ACL extends TestCase
         $queryInput = new Core_Model_Query();
         $queryInput->aclFilter->enabled = true;
         $queryInput->aclFilter->user = $user;
-        $queryInput->aclFilter->action = CellAction::INPUT();
+        $queryInput->aclFilter->action = Actions::INPUT;
         $queryAllow = new Core_Model_Query();
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
@@ -705,8 +696,7 @@ class Orga_Test_ACL extends TestCase
         $this->assertCount(1, $organisationsEdit);
         $this->assertContains($this->organization, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
-        $this->assertCount(1, $organisationsDelete);
-        $this->assertContains($this->organization, $organisationsDelete);
+        $this->assertCount(0, $organisationsDelete);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(47, $cellsView);
@@ -992,7 +982,7 @@ class Orga_Test_ACL extends TestCase
         $queryInput = new Core_Model_Query();
         $queryInput->aclFilter->enabled = true;
         $queryInput->aclFilter->user = $user;
-        $queryInput->aclFilter->action = CellAction::INPUT();
+        $queryInput->aclFilter->action = Actions::INPUT;
         $queryAllow = new Core_Model_Query();
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
@@ -1002,14 +992,11 @@ class Orga_Test_ACL extends TestCase
 
         // Organisation.
         $organisationsView = Orga_Model_Organization::loadList($queryView);
-        $this->assertCount(1, $organisationsView);
-        $this->assertContains($this->organization, $organisationsView);
+        $this->assertCount(0, $organisationsView);
         $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $this->assertNotContains($this->organization, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $this->assertNotContains($this->organization, $organisationsDelete);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(47, $cellsView);
@@ -1295,7 +1282,7 @@ class Orga_Test_ACL extends TestCase
         $queryInput = new Core_Model_Query();
         $queryInput->aclFilter->enabled = true;
         $queryInput->aclFilter->user = $user;
-        $queryInput->aclFilter->action = CellAction::INPUT();
+        $queryInput->aclFilter->action = Actions::INPUT;
         $queryAllow = new Core_Model_Query();
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
@@ -1305,14 +1292,11 @@ class Orga_Test_ACL extends TestCase
 
         // Organisation.
         $organisationsView = Orga_Model_Organization::loadList($queryView);
-        $this->assertCount(1, $organisationsView);
-        $this->assertContains($this->organization, $organisationsView);
+        $this->assertCount(0, $organisationsView);
         $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $this->assertNotContains($this->organization, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $this->assertNotContains($this->organization, $organisationsDelete);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(17, $cellsView);
@@ -1598,7 +1582,7 @@ class Orga_Test_ACL extends TestCase
         $queryInput = new Core_Model_Query();
         $queryInput->aclFilter->enabled = true;
         $queryInput->aclFilter->user = $user;
-        $queryInput->aclFilter->action = CellAction::INPUT();
+        $queryInput->aclFilter->action = Actions::INPUT;
         $queryAllow = new Core_Model_Query();
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
@@ -1608,14 +1592,11 @@ class Orga_Test_ACL extends TestCase
 
         // Organisation.
         $organisationsView = Orga_Model_Organization::loadList($queryView);
-        $this->assertCount(1, $organisationsView);
-        $this->assertContains($this->organization, $organisationsView);
+        $this->assertCount(0, $organisationsView);
         $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $this->assertNotContains($this->organization, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $this->assertNotContains($this->organization, $organisationsDelete);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(10, $cellsView);
@@ -1901,7 +1882,7 @@ class Orga_Test_ACL extends TestCase
         $queryInput = new Core_Model_Query();
         $queryInput->aclFilter->enabled = true;
         $queryInput->aclFilter->user = $user;
-        $queryInput->aclFilter->action = CellAction::INPUT();
+        $queryInput->aclFilter->action = Actions::INPUT;
         $queryAllow = new Core_Model_Query();
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
@@ -1911,14 +1892,11 @@ class Orga_Test_ACL extends TestCase
 
         // Organisation.
         $organisationsView = Orga_Model_Organization::loadList($queryView);
-        $this->assertCount(1, $organisationsView);
-        $this->assertContains($this->organization, $organisationsView);
+        $this->assertCount(0, $organisationsView);
         $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $this->assertNotContains($this->organization, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $this->assertNotContains($this->organization, $organisationsDelete);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(7, $cellsView);
@@ -2204,7 +2182,7 @@ class Orga_Test_ACL extends TestCase
         $queryInput = new Core_Model_Query();
         $queryInput->aclFilter->enabled = true;
         $queryInput->aclFilter->user = $user;
-        $queryInput->aclFilter->action = CellAction::INPUT();
+        $queryInput->aclFilter->action = Actions::INPUT;
         $queryAllow = new Core_Model_Query();
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
@@ -2214,14 +2192,11 @@ class Orga_Test_ACL extends TestCase
 
         // Organisation.
         $organisationsView = Orga_Model_Organization::loadList($queryView);
-        $this->assertCount(1, $organisationsView);
-        $this->assertContains($this->organization, $organisationsView);
+        $this->assertCount(0, $organisationsView);
         $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $this->assertNotContains($this->organization, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $this->assertNotContains($this->organization, $organisationsDelete);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(7, $cellsView);
@@ -2507,7 +2482,7 @@ class Orga_Test_ACL extends TestCase
         $queryInput = new Core_Model_Query();
         $queryInput->aclFilter->enabled = true;
         $queryInput->aclFilter->user = $user;
-        $queryInput->aclFilter->action = CellAction::INPUT();
+        $queryInput->aclFilter->action = Actions::INPUT;
         $queryAllow = new Core_Model_Query();
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
@@ -2517,14 +2492,11 @@ class Orga_Test_ACL extends TestCase
 
         // Organisation.
         $organisationsView = Orga_Model_Organization::loadList($queryView);
-        $this->assertCount(1, $organisationsView);
-        $this->assertContains($this->organization, $organisationsView);
+        $this->assertCount(0, $organisationsView);
         $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $this->assertNotContains($this->organization, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $this->assertNotContains($this->organization, $organisationsDelete);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(7, $cellsView);
@@ -2787,12 +2759,13 @@ class Orga_Test_ACL extends TestCase
         $this->assertNotContains($cell2013LimaTransport, $cellsAllow);
     }
 
-    /**
-     *
-     */
     protected function tearDown()
     {
         parent::tearDown();
+
+        $this->entityManager->rollback();
+        $this->entityManager->clear();
+        return;
 
         if (! $this->organizationAdministrator) {
             // Erreur dans le set up ?
