@@ -182,19 +182,7 @@ class Orga_Service_Export
         $modelBuilder->bindFunction(
             'getCellNarrowerMembers',
             function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
-                $members = [];
-                foreach ($axis->getMembers() as $axisMember) {
-                    foreach ($cell->getMembers() as $member) {
-                        if (!$cell->hasMember($axisMember)
-                            && ((!$axis->isNarrowerThan($member->getAxis()))
-                                || !in_array($member, $axisMember->getAllParents()))
-                            && !$axis->isTransverse([$member->getAxis()])) {
-                            continue 2;
-                        }
-                    }
-                    $members[] = $axisMember;
-                }
-                return $members;
+                return $cell->getChildMembersForAxes([$axis]);
             }
         );
         $modelBuilder->bindFunction(
