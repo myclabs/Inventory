@@ -181,14 +181,19 @@ class Orga_Service_OrganizationService
     {
         $this->entityManager->beginTransaction();
 
+        $idOrganization = $organization->getId();
         try {
-            $organization = Orga_Model_Organization::load($organization->getId());
+            foreach (glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $idOrganization . '.*') as $file) {
+                unlink($file);
+            }
+
+            $organization = Orga_Model_Organization::load($idOrganization);
             $organization->setGranularityForInventoryStatus();
 
             $this->entityManager->flush();
             $this->entityManager->clear();
 
-            $organization = Orga_Model_Organization::load($organization->getId());
+            $organization = Orga_Model_Organization::load($idOrganization);
             $granularities = $organization->getOrderedGranularities()->toArray();
             foreach (array_reverse($granularities) as $granularity) {
                 $granularity = Orga_Model_Granularity::load($granularity->getId());
@@ -199,7 +204,7 @@ class Orga_Service_OrganizationService
             $this->entityManager->flush();
             $this->entityManager->clear();
 
-            $organization = Orga_Model_Organization::load($organization->getId());
+            $organization = Orga_Model_Organization::load($idOrganization);
             $organization->delete();
 
             $this->entityManager->flush();
