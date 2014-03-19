@@ -10,6 +10,7 @@ use MyCLabs\ACL\Model\ResourceInterface;
 use Orga\Model\ACL\Action\CellAction;
 use Orga\Model\ACL\CellAdminRole;
 use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellManagerRole;
 use Orga\Model\ACL\CellObserverRole;
 use Orga\Model\ACL\OrganizationAdminRole;
 use User\Domain\User;
@@ -213,6 +214,11 @@ class Orga_Test_ACL extends TestCase
     /**
      * @var User
      */
+    protected $europeaCellManager;
+
+    /**
+     * @var User
+     */
     protected $europeaCellContributor;
 
     /**
@@ -373,6 +379,15 @@ class Orga_Test_ACL extends TestCase
             new CellAdminRole($this->globaleCellAdministrator, $this->granularityGlobale->getCellByMembers([]))
         );
 
+        // Ajout d'un manager de cellule zone marque.
+        $this->europeaCellManager = $this->userService->createUser('europeaManager@example.com', 'europeaManager');
+        $this->aclManager->grant(
+            $this->europeaCellManager,
+            new CellManagerRole($this->europeaCellManager, $this->granularityZoneMarque->getCellByMembers(
+                [$this->memberZoneEurope, $this->memberMarqueA]
+            ))
+        );
+
         // Ajout d'un contributeur de cellule zone marque.
         $this->europeaCellContributor = $this->userService->createUser('europeaContributor@example.com', 'europeaContributor');
         $this->aclManager->grant(
@@ -430,11 +445,12 @@ class Orga_Test_ACL extends TestCase
         $this->isAllowedGlobalCellAdmin();
         $this->isAllowedAnnecyCellAdmin();
 
-        $this->tIsAllowEuropeACellManager();
-        $this->tIsAllowEuropeACellContributor();
-        $this->tIsAllowSudameriqueBCellObserver();
-        $this->tIsAllowBerlinCellObserver();
-        $this->tIsAllowLimaCellContributor();
+        $this->isAllowedEuropeACellManager();
+
+        $this->isAllowedEuropeACellContributor();
+        $this->isAllowedLimaCellContributor();
+
+        $this->isAllowedSudAmeriqueBCellObserver();
     }
 
     /**
@@ -479,7 +495,7 @@ class Orga_Test_ACL extends TestCase
 
         // Ne peut pas créer d'organisation
         $this->assertNotAllowed(
-            $this->organizationAdministrator,
+            $user,
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
         );
@@ -491,8 +507,8 @@ class Orga_Test_ACL extends TestCase
     public function isAllowedAnnecyCellAdmin()
     {
         $user = $this->annecyCellAdministrator;
-
         $cellAnnecy = $this->granularitySite->getCellByMembers([$this->memberSiteAnnecy]);
+
         $this->assertAdminCell($user, $cellAnnecy);
 
         // Pas de droits sur la cellule globale
@@ -512,1388 +528,135 @@ class Orga_Test_ACL extends TestCase
 
         // Ne peut pas créer d'organisation
         $this->assertNotAllowed(
-            $this->organizationAdministrator,
+            $user,
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
         );
     }
 
     /**
-     * Test le point du vue (formel) du manager de la cellule europe a.
+     * Manager de la cellule Europe A.
      */
-    public function tIsAllowEuropeACellManager()
+    public function isAllowedEuropeACellManager()
     {
-        return; // désactivé pour le moment, role non créé (les droits sont normalement bons)
-        $user = $this->europeaCellContributor;
-
-        // Test toutes les ressources.
-
-        // Organisation.
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $this->organization));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $this->organization));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::DELETE, $this->organization));
-
-        // Cellules de la granularité global.
-        $cell0 = $this->granularityGlobale->getCellByMembers([]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell0));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell0));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell0));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell0));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell0));
-
-        // Cellules de la granularité zonne marque.
+        $user = $this->europeaCellManager;
         $cellEuropeA = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cellEuropeA));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cellEuropeA));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cellEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cellEuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cellEuropeA));
-        $cellEuropeB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cellEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cellEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cellEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cellEuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cellEuropeB));
-        $cellSudameriqueA = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cellSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cellSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cellSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cellSudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cellSudameriqueA));
-        $cellSudameriqueB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cellSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cellSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cellSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cellSudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cellSudameriqueB));
 
-        // Cellules de la granularité site.
-        $cellAnnecy = $this->granularitySite->getCellByMembers([$this->memberSiteAnnecy]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cellAnnecy));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cellAnnecy));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cellAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cellAnnecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cellAnnecy));
-        $cellChambery = $this->granularitySite->getCellByMembers([$this->memberSiteChambery]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cellChambery));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cellChambery));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cellChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cellChambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cellChambery));
-        $cellBerlin = $this->granularitySite->getCellByMembers([$this->memberSiteBerlin]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cellBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cellBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cellBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cellBerlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cellBerlin));
-        $cellLima = $this->granularitySite->getCellByMembers([$this->memberSiteLima]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cellLima));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cellLima));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cellLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cellLima));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cellLima));
+        $this->assertManageCell($user, $cellEuropeA);
 
-        // Cellules de la granularité année.
-        $cell2012 = $this->granularityAnnee->getCellByMembers([$this->memberAnnee2012]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012));
-        $cell2013 = $this->granularityAnnee->getCellByMembers([$this->memberAnnee2013]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013));
+        // Pas de droit sur l'organisation
+        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
 
-        // Cellules de la granularité année categorie.
-        $cell2012Energie = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012Energie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012Energie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012Energie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012Energie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012Energie));
-        $cell2012Transport = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012Transport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012Transport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012Transport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012Transport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012Transport));
-        $cell2013Energie = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013Energie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013Energie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013Energie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013Energie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013Energie));
-        $cell2013Transport = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013Transport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013Transport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013Transport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013Transport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013Transport));
-
-        // Cellules de la granularité année zonne marque.
-        $cell2012EuropeA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2012EuropeA));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012EuropeA));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012EuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012EuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012EuropeA));
-        $cell2012EuropeB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012EuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012EuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012EuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012EuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012EuropeB));
-        $cell2012SudameriqueA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012SudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012SudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012SudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012SudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012SudameriqueA));
-        $cell2012SudameriqueB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012SudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012SudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012SudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012SudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012SudameriqueB));
-        $cell2013EuropeA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2013EuropeA));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013EuropeA));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013EuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013EuropeA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013EuropeA));
-        $cell2013EuropeB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013EuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013EuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013EuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013EuropeB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013EuropeB));
-        $cell2013SudameriqueA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013SudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013SudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013SudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013SudameriqueA));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013SudameriqueA));
-        $cell2013SudameriqueB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013SudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013SudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013SudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013SudameriqueB));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013SudameriqueB));
-
-        // Cellules de la granularité année site.
-        $cell2012Annecy = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2012Annecy));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012Annecy));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012Annecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012Annecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012Annecy));
-        $cell2012Chambery = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2012Chambery));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012Chambery));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012Chambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012Chambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012Chambery));
-        $cell2012Berlin = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012Berlin));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012Berlin));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012Berlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012Berlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012Berlin));
-        $cell2012Lima = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012Lima));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012Lima));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012Lima));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012Lima));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012Lima));
-        $cell2013Annecy = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2013Annecy));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013Annecy));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013Annecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013Annecy));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013Annecy));
-        $cell2013Chambery = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2013Chambery));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013Chambery));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013Chambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013Chambery));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013Chambery));
-        $cell2013Berlin = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013Berlin));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013Berlin));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013Berlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013Berlin));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013Berlin));
-        $cell2013Lima = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013Lima));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013Lima));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013Lima));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013Lima));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013Lima));
-
-        // Cellules de la granularité année site categorie.
-        $cell2012AnnecyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2012AnnecyEnergie));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012AnnecyEnergie));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012AnnecyEnergie));
-        $cell2012ChamberyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2012ChamberyEnergie));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012ChamberyEnergie));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012ChamberyEnergie));
-        $cell2012BerlinEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012BerlinEnergie));
-        $cell2012LimaEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012LimaEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012LimaEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012LimaEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012LimaEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012LimaEnergie));
-        $cell2013AnnecyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2013AnnecyEnergie));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013AnnecyEnergie));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013AnnecyEnergie));
-        $cell2013ChamberyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2013ChamberyEnergie));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013ChamberyEnergie));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013ChamberyEnergie));
-        $cell2013BerlinEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013BerlinEnergie));
-        $cell2013LimaEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013LimaEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013LimaEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013LimaEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013LimaEnergie));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013LimaEnergie));
-        $cell2012AnnecyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2012AnnecyTransport));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012AnnecyTransport));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012AnnecyTransport));
-        $cell2012ChamberyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2012ChamberyTransport));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012ChamberyTransport));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012ChamberyTransport));
-        $cell2012BerlinTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012BerlinTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012BerlinTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012BerlinTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012BerlinTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012BerlinTransport));
-        $cell2012LimaTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2012LimaTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2012LimaTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2012LimaTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2012LimaTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2012LimaTransport));
-        $cell2013AnnecyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2013AnnecyTransport));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013AnnecyTransport));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013AnnecyTransport));
-        $cell2013ChamberyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclService->isAllowed($user, Actions::VIEW, $cell2013ChamberyTransport));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013ChamberyTransport));
-        $this->assertTrue($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013ChamberyTransport));
-        $cell2013BerlinTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013BerlinTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013BerlinTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013BerlinTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013BerlinTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013BerlinTransport));
-        $cell2013LimaTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::VIEW, $cell2013LimaTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::COMMENT(), $cell2013LimaTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::EDIT, $cell2013LimaTransport));
-        $this->assertFalse($this->aclService->isAllowed($user, Actions::ALLOW, $cell2013LimaTransport));
+        // Ne peut pas créer d'organisation
+        $this->assertNotAllowed(
+            $user,
+            Actions::CREATE,
+            new ClassResource(Orga_Model_Organization::class)
+        );
     }
 
     /**
-     * Test le point du vue (formel) du contributeur de la cellule europe a.
+     * Contributeur de la cellule Europe A.
      */
-    public function tIsAllowEuropeACellContributor()
+    public function isAllowedEuropeACellContributor()
     {
         $user = $this->europeaCellContributor;
-
-        // Test toutes les ressources.
-
-        // Organisation.
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $this->organization));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $this->organization));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::DELETE, $this->organization));
-
-        // Cellules de la granularité global.
-        $cell0 = $this->granularityGlobale->getCellByMembers([]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell0));
-
-        // Cellules de la granularité zonne marque.
         $cellEuropeA = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cellEuropeA));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellEuropeA));
-        $cellEuropeB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellEuropeB));
-        $cellSudameriqueA = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellSudameriqueA));
-        $cellSudameriqueB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellSudameriqueB));
 
-        // Cellules de la granularité site.
-        $cellAnnecy = $this->granularitySite->getCellByMembers([$this->memberSiteAnnecy]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cellAnnecy));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellAnnecy));
-        $cellChambery = $this->granularitySite->getCellByMembers([$this->memberSiteChambery]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cellChambery));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellChambery));
-        $cellBerlin = $this->granularitySite->getCellByMembers([$this->memberSiteBerlin]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellBerlin));
-        $cellLima = $this->granularitySite->getCellByMembers([$this->memberSiteLima]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellLima));
+        $this->assertContributeCell($user, $cellEuropeA);
 
-        // Cellules de la granularité année.
-        $cell2012 = $this->granularityAnnee->getCellByMembers([$this->memberAnnee2012]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012));
-        $cell2013 = $this->granularityAnnee->getCellByMembers([$this->memberAnnee2013]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013));
+        // Pas de droit sur l'organisation
+        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
 
-        // Cellules de la granularité année categorie.
-        $cell2012Energie = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Energie));
-        $cell2012Transport = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Transport));
-        $cell2013Energie = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Energie));
-        $cell2013Transport = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Transport));
-
-        // Cellules de la granularité année zonne marque.
-        $cell2012EuropeA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012EuropeA));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012EuropeA));
-        $cell2012EuropeB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012EuropeB));
-        $cell2012SudameriqueA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012SudameriqueA));
-        $cell2012SudameriqueB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012SudameriqueB));
-        $cell2013EuropeA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013EuropeA));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013EuropeA));
-        $cell2013EuropeB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013EuropeB));
-        $cell2013SudameriqueA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013SudameriqueA));
-        $cell2013SudameriqueB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013SudameriqueB));
-
-        // Cellules de la granularité année site.
-        $cell2012Annecy = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Annecy));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Annecy));
-        $cell2012Chambery = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Chambery));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Chambery));
-        $cell2012Berlin = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Berlin));
-        $cell2012Lima = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Lima));
-        $cell2013Annecy = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Annecy));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Annecy));
-        $cell2013Chambery = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Chambery));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Chambery));
-        $cell2013Berlin = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Berlin));
-        $cell2013Lima = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Lima));
-
-        // Cellules de la granularité année site categorie.
-        $cell2012AnnecyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012AnnecyEnergie));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012AnnecyEnergie));
-        $cell2012ChamberyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012ChamberyEnergie));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012ChamberyEnergie));
-        $cell2012BerlinEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012BerlinEnergie));
-        $cell2012LimaEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012LimaEnergie));
-        $cell2013AnnecyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013AnnecyEnergie));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013AnnecyEnergie));
-        $cell2013ChamberyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013ChamberyEnergie));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013ChamberyEnergie));
-        $cell2013BerlinEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013BerlinEnergie));
-        $cell2013LimaEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013LimaEnergie));
-        $cell2012AnnecyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012AnnecyTransport));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012AnnecyTransport));
-        $cell2012ChamberyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012ChamberyTransport));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012ChamberyTransport));
-        $cell2012BerlinTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012BerlinTransport));
-        $cell2012LimaTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012LimaTransport));
-        $cell2013AnnecyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013AnnecyTransport));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013AnnecyTransport));
-        $cell2013ChamberyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013ChamberyTransport));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013ChamberyTransport));
-        $cell2013BerlinTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013BerlinTransport));
-        $cell2013LimaTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013LimaTransport));
+        // Ne peut pas créer d'organisation
+        $this->assertNotAllowed(
+            $user,
+            Actions::CREATE,
+            new ClassResource(Orga_Model_Organization::class)
+        );
     }
 
     /**
-     * Test le point du vue (formel) de l'observateur de la cellule sudamerique b.
+     * Contributeur de la cellule Lima.
      */
-    public function tIsAllowSudameriqueBCellObserver()
-    {
-        $user = $this->sudameriquebCellObserver;
-
-        // Test toutes les ressources.
-
-        // Organisation.
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $this->organization));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $this->organization));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::DELETE, $this->organization));
-
-        // Cellules de la granularité global.
-        $cell0 = $this->granularityGlobale->getCellByMembers([]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell0));
-
-        // Cellules de la granularité zonne marque.
-        $cellEuropeA = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellEuropeA));
-        $cellEuropeB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellEuropeB));
-        $cellSudameriqueA = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellSudameriqueA));
-        $cellSudameriqueB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellSudameriqueB));
-
-        // Cellules de la granularité site.
-        $cellAnnecy = $this->granularitySite->getCellByMembers([$this->memberSiteAnnecy]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellAnnecy));
-        $cellChambery = $this->granularitySite->getCellByMembers([$this->memberSiteChambery]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellChambery));
-        $cellBerlin = $this->granularitySite->getCellByMembers([$this->memberSiteBerlin]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellBerlin));
-        $cellLima = $this->granularitySite->getCellByMembers([$this->memberSiteLima]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellLima));
-
-        // Cellules de la granularité année.
-        $cell2012 = $this->granularityAnnee->getCellByMembers([$this->memberAnnee2012]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012));
-        $cell2013 = $this->granularityAnnee->getCellByMembers([$this->memberAnnee2013]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013));
-
-        // Cellules de la granularité année categorie.
-        $cell2012Energie = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Energie));
-        $cell2012Transport = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Transport));
-        $cell2013Energie = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Energie));
-        $cell2013Transport = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Transport));
-
-        // Cellules de la granularité année zonne marque.
-        $cell2012EuropeA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012EuropeA));
-        $cell2012EuropeB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012EuropeB));
-        $cell2012SudameriqueA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012SudameriqueA));
-        $cell2012SudameriqueB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012SudameriqueB));
-        $cell2013EuropeA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013EuropeA));
-        $cell2013EuropeB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013EuropeB));
-        $cell2013SudameriqueA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013SudameriqueA));
-        $cell2013SudameriqueB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013SudameriqueB));
-
-        // Cellules de la granularité année site.
-        $cell2012Annecy = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Annecy));
-        $cell2012Chambery = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Chambery));
-        $cell2012Berlin = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Berlin));
-        $cell2012Lima = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Lima));
-        $cell2013Annecy = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Annecy));
-        $cell2013Chambery = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Chambery));
-        $cell2013Berlin = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Berlin));
-        $cell2013Lima = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Lima));
-
-        // Cellules de la granularité année site categorie.
-        $cell2012AnnecyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012AnnecyEnergie));
-        $cell2012ChamberyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012ChamberyEnergie));
-        $cell2012BerlinEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012BerlinEnergie));
-        $cell2012LimaEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012LimaEnergie));
-        $cell2013AnnecyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013AnnecyEnergie));
-        $cell2013ChamberyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013ChamberyEnergie));
-        $cell2013BerlinEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013BerlinEnergie));
-        $cell2013LimaEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013LimaEnergie));
-        $cell2012AnnecyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012AnnecyTransport));
-        $cell2012ChamberyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012ChamberyTransport));
-        $cell2012BerlinTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012BerlinTransport));
-        $cell2012LimaTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012LimaTransport));
-        $cell2013AnnecyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013AnnecyTransport));
-        $cell2013ChamberyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013ChamberyTransport));
-        $cell2013BerlinTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013BerlinTransport));
-        $cell2013LimaTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013LimaTransport));
-    }
-
-    /**
-     * Test le point du vue (formel) de l'observateur de la cellule berlin.
-     */
-    public function tIsAllowBerlinCellObserver()
-    {
-        $user = $this->berlinCellObserver;
-
-        // Test toutes les ressources.
-
-        // Organisation.
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $this->organization));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $this->organization));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::DELETE, $this->organization));
-
-        // Cellules de la granularité global.
-        $cell0 = $this->granularityGlobale->getCellByMembers([]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell0));
-
-        // Cellules de la granularité zonne marque.
-        $cellEuropeA = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellEuropeA));
-        $cellEuropeB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellEuropeB));
-        $cellSudameriqueA = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellSudameriqueA));
-        $cellSudameriqueB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellSudameriqueB));
-
-        // Cellules de la granularité site.
-        $cellAnnecy = $this->granularitySite->getCellByMembers([$this->memberSiteAnnecy]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellAnnecy));
-        $cellChambery = $this->granularitySite->getCellByMembers([$this->memberSiteChambery]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellChambery));
-        $cellBerlin = $this->granularitySite->getCellByMembers([$this->memberSiteBerlin]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellBerlin));
-        $cellLima = $this->granularitySite->getCellByMembers([$this->memberSiteLima]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellLima));
-
-        // Cellules de la granularité année.
-        $cell2012 = $this->granularityAnnee->getCellByMembers([$this->memberAnnee2012]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012));
-        $cell2013 = $this->granularityAnnee->getCellByMembers([$this->memberAnnee2013]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013));
-
-        // Cellules de la granularité année categorie.
-        $cell2012Energie = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Energie));
-        $cell2012Transport = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Transport));
-        $cell2013Energie = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Energie));
-        $cell2013Transport = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Transport));
-
-        // Cellules de la granularité année zonne marque.
-        $cell2012EuropeA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012EuropeA));
-        $cell2012EuropeB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012EuropeB));
-        $cell2012SudameriqueA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012SudameriqueA));
-        $cell2012SudameriqueB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012SudameriqueB));
-        $cell2013EuropeA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013EuropeA));
-        $cell2013EuropeB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013EuropeB));
-        $cell2013SudameriqueA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013SudameriqueA));
-        $cell2013SudameriqueB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013SudameriqueB));
-
-        // Cellules de la granularité année site.
-        $cell2012Annecy = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Annecy));
-        $cell2012Chambery = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Chambery));
-        $cell2012Berlin = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Berlin));
-        $cell2012Lima = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Lima));
-        $cell2013Annecy = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Annecy));
-        $cell2013Chambery = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Chambery));
-        $cell2013Berlin = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Berlin));
-        $cell2013Lima = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Lima));
-
-        // Cellules de la granularité année site categorie.
-        $cell2012AnnecyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012AnnecyEnergie));
-        $cell2012ChamberyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012ChamberyEnergie));
-        $cell2012BerlinEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012BerlinEnergie));
-        $cell2012LimaEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012LimaEnergie));
-        $cell2013AnnecyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013AnnecyEnergie));
-        $cell2013ChamberyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013ChamberyEnergie));
-        $cell2013BerlinEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013BerlinEnergie));
-        $cell2013LimaEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013LimaEnergie));
-        $cell2012AnnecyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012AnnecyTransport));
-        $cell2012ChamberyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012ChamberyTransport));
-        $cell2012BerlinTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012BerlinTransport));
-        $cell2012LimaTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012LimaTransport));
-        $cell2013AnnecyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013AnnecyTransport));
-        $cell2013ChamberyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013ChamberyTransport));
-        $cell2013BerlinTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013BerlinTransport));
-        $cell2013LimaTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013LimaTransport));
-    }
-
-    /**
-     * Test le point du vue (formel) du contributeur de la cellule lima.
-     */
-    public function tIsAllowLimaCellContributor()
+    public function isAllowedLimaCellContributor()
     {
         $user = $this->limaCellContributor;
-
-        // Test toutes les ressources.
-
-        // Organisation.
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $this->organization));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $this->organization));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::DELETE, $this->organization));
-
-        // Cellules de la granularité global.
-        $cell0 = $this->granularityGlobale->getCellByMembers([]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell0));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell0));
-
-        // Cellules de la granularité zonne marque.
-        $cellEuropeA = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellEuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellEuropeA));
-        $cellEuropeB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellEuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellEuropeB));
-        $cellSudameriqueA = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellSudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellSudameriqueA));
-        $cellSudameriqueB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellSudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellSudameriqueB));
-
-        // Cellules de la granularité site.
-        $cellAnnecy = $this->granularitySite->getCellByMembers([$this->memberSiteAnnecy]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellAnnecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellAnnecy));
-        $cellChambery = $this->granularitySite->getCellByMembers([$this->memberSiteChambery]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellChambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellChambery));
-        $cellBerlin = $this->granularitySite->getCellByMembers([$this->memberSiteBerlin]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellBerlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellBerlin));
         $cellLima = $this->granularitySite->getCellByMembers([$this->memberSiteLima]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cellLima));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cellLima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cellLima));
 
-        // Cellules de la granularité année.
-        $cell2012 = $this->granularityAnnee->getCellByMembers([$this->memberAnnee2012]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012));
-        $cell2013 = $this->granularityAnnee->getCellByMembers([$this->memberAnnee2013]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013));
+        $this->assertContributeCell($user, $cellLima);
 
-        // Cellules de la granularité année categorie.
-        $cell2012Energie = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Energie));
-        $cell2012Transport = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Transport));
-        $cell2013Energie = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Energie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Energie));
-        $cell2013Transport = $this->granularityAnneeCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Transport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Transport));
+        // Pas de droit sur l'organisation
+        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
 
-        // Cellules de la granularité année zonne marque.
-        $cell2012EuropeA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012EuropeA));
-        $cell2012EuropeB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012EuropeB));
-        $cell2012SudameriqueA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012SudameriqueA));
-        $cell2012SudameriqueB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2012, $this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012SudameriqueB));
-        $cell2013EuropeA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneEurope, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013EuropeA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013EuropeA));
-        $cell2013EuropeB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneEurope, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013EuropeB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013EuropeB));
-        $cell2013SudameriqueA = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneSudamerique, $this->memberMarqueA]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013SudameriqueA));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013SudameriqueA));
-        $cell2013SudameriqueB = $this->granularityAnneeZoneMarque->getCellByMembers([$this->memberAnnee2013, $this->memberZoneSudamerique, $this->memberMarqueB]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013SudameriqueB));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013SudameriqueB));
+        // Ne peut pas créer d'organisation
+        $this->assertNotAllowed(
+            $user,
+            Actions::CREATE,
+            new ClassResource(Orga_Model_Organization::class)
+        );
+    }
 
-        // Cellules de la granularité année site.
-        $cell2012Annecy = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Annecy));
-        $cell2012Chambery = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Chambery));
-        $cell2012Berlin = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Berlin));
-        $cell2012Lima = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012Lima));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012Lima));
-        $cell2013Annecy = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Annecy));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Annecy));
-        $cell2013Chambery = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Chambery));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Chambery));
-        $cell2013Berlin = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Berlin));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Berlin));
-        $cell2013Lima = $this->granularityAnneeSite->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013Lima));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013Lima));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013Lima));
+    /**
+     * Observateur de la cellule Sub-Amérique B.
+     */
+    public function isAllowedSudAmeriqueBCellObserver()
+    {
+        $user = $this->sudameriquebCellObserver;
+        $cellSudameriqueB = $this->granularityZoneMarque->getCellByMembers([$this->memberZoneSudamerique, $this->memberMarqueB]);
 
-        // Cellules de la granularité année site categorie.
-        $cell2012AnnecyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012AnnecyEnergie));
-        $cell2012ChamberyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012ChamberyEnergie));
-        $cell2012BerlinEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012BerlinEnergie));
-        $cell2012LimaEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012LimaEnergie));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012LimaEnergie));
-        $cell2013AnnecyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013AnnecyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013AnnecyEnergie));
-        $cell2013ChamberyEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013ChamberyEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013ChamberyEnergie));
-        $cell2013BerlinEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin, $this->memberCategorieEnergie]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013BerlinEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013BerlinEnergie));
-        $cell2013LimaEnergie = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima, $this->memberCategorieEnergie]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013LimaEnergie));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013LimaEnergie));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013LimaEnergie));
-        $cell2012AnnecyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteAnnecy, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012AnnecyTransport));
-        $cell2012ChamberyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteChambery, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012ChamberyTransport));
-        $cell2012BerlinTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteBerlin, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012BerlinTransport));
-        $cell2012LimaTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2012, $this->memberSiteLima, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2012LimaTransport));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2012LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2012LimaTransport));
-        $cell2013AnnecyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteAnnecy, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013AnnecyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013AnnecyTransport));
-        $cell2013ChamberyTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteChambery, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013ChamberyTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013ChamberyTransport));
-        $cell2013BerlinTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteBerlin, $this->memberCategorieTransport]);
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013BerlinTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013BerlinTransport));
-        $cell2013LimaTransport = $this->granularityAnneeSiteCategorie->getCellByMembers([$this->memberAnnee2013, $this->memberSiteLima, $this->memberCategorieTransport]);
-        $this->assertTrue($this->aclManager->isAllowed($user, Actions::VIEW, $cell2013LimaTransport));
-        $this->assertTrue($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::EDIT, $cell2013LimaTransport));
-        $this->assertFalse($this->aclManager->isAllowed($user, Actions::ALLOW, $cell2013LimaTransport));
+        $this->assertObserveCell($user, $cellSudameriqueB);
+
+        // Pas de droit sur l'organisation
+        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
+
+        // Ne peut pas créer d'organisation
+        $this->assertNotAllowed(
+            $user,
+            Actions::CREATE,
+            new ClassResource(Orga_Model_Organization::class)
+        );
+    }
+
+    /**
+     * Observateur de la cellule Berlin.
+     */
+    public function isAllowedBerlinCellObserver()
+    {
+        $user = $this->berlinCellObserver;
+        $cellBerlin = $this->granularitySite->getCellByMembers([$this->memberSiteBerlin]);
+
+        $this->assertObserveCell($user, $cellBerlin);
+
+        // Pas de droit sur l'organisation
+        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
+
+        // Ne peut pas créer d'organisation
+        $this->assertNotAllowed(
+            $user,
+            Actions::CREATE,
+            new ClassResource(Orga_Model_Organization::class)
+        );
     }
 
     /**
@@ -4045,6 +2808,7 @@ class Orga_Test_ACL extends TestCase
 
         $this->userService->deleteUser(User::load($this->organizationAdministrator->getId()));
         $this->userService->deleteUser(User::load($this->globaleCellAdministrator->getId()));
+        $this->userService->deleteUser(User::load($this->europeaCellManager->getId()));
         $this->userService->deleteUser(User::load($this->europeaCellContributor->getId()));
         $this->userService->deleteUser(User::load($this->sudameriquebCellObserver->getId()));
         $this->userService->deleteUser(User::load($this->annecyCellAdministrator->getId()));
@@ -4067,14 +2831,14 @@ class Orga_Test_ACL extends TestCase
         $this->entityManager->clear();
     }
 
-    public function assertAllowed(User $user, $action, ResourceInterface $resource)
+    public function assertAllowed(User $user, $action, ResourceInterface $resource, $message = '')
     {
-        $this->assertTrue($this->aclManager->isAllowed($user, $action, $resource));
+        $this->assertTrue($this->aclManager->isAllowed($user, $action, $resource), $message);
     }
 
-    public function assertNotAllowed(User $user, $action, ResourceInterface $resource)
+    public function assertNotAllowed(User $user, $action, ResourceInterface $resource, $message = '')
     {
-        $this->assertFalse($this->aclManager->isAllowed($user, $action, $resource));
+        $this->assertFalse($this->aclManager->isAllowed($user, $action, $resource), $message);
     }
 
     public function assertAdminOrganization(User $user, Orga_Model_Organization $organization)
@@ -4099,16 +2863,101 @@ class Orga_Test_ACL extends TestCase
         }
     }
 
+    public function assertManageCell(User $user, Orga_Model_Cell $cell)
+    {
+        $globalCell = $this->granularityGlobale->getCellByMembers([]);
+        $allCells = $globalCell->getChildCells();
+        $allCells[] = $globalCell;
+
+        foreach ($allCells as $testedCell) {
+            /** @var Orga_Model_Cell $testedCell */
+
+            // Droit de manager sur la cellule et ses sous-cellules
+            if ($testedCell === $cell || $testedCell->isChildOf($cell)) {
+                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
+                $this->assertAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel());
+                $input = $testedCell->getAFInputSetPrimary();
+                if ($input) {
+                    $this->assertAllowed($user, Actions::VIEW, $input, $testedCell->getLabel());
+                    $this->assertAllowed($user, Actions::EDIT, $input, $testedCell->getLabel());
+                }
+            } else {
+                // Aucun droit sur les autres cellules
+                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
+                $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel());
+                $input = $testedCell->getAFInputSetPrimary();
+                if ($input) {
+                    $this->assertNotAllowed($user, Actions::VIEW, $input, $testedCell->getLabel());
+                    $this->assertNotAllowed($user, Actions::EDIT, $input, $testedCell->getLabel());
+                }
+            }
+
+            // Dans tous les cas il n'a pas ces droits
+            $this->assertNotAllowed($user, Actions::DELETE, $testedCell, $testedCell->getLabel());
+            $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel());
+        }
+    }
+
     public function assertContributeCell(User $user, Orga_Model_Cell $cell)
     {
-        $this->assertAllowed($user, Actions::VIEW, $cell);
-        $this->assertNotAllowed($user, Actions::EDIT, $cell);
-        $this->assertNotAllowed($user, Actions::ALLOW, $cell);
+        $globalCell = $this->granularityGlobale->getCellByMembers([]);
+        $allCells = $globalCell->getChildCells();
+        $allCells[] = $globalCell;
 
-        $input = $cell->getAFInputSetPrimary();
-        if ($input) {
-            $this->assertAllowed($user, Actions::VIEW, $input);
-            $this->assertAllowed($user, Actions::EDIT, $input);
+        foreach ($allCells as $testedCell) {
+            /** @var Orga_Model_Cell $testedCell */
+
+            // Droit de contributeur sur la cellule et ses sous-cellules
+            if ($testedCell === $cell || $testedCell->isChildOf($cell)) {
+                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
+                $input = $testedCell->getAFInputSetPrimary();
+                if ($input) {
+                    $this->assertAllowed($user, Actions::VIEW, $input, $testedCell->getLabel());
+                    $this->assertAllowed($user, Actions::EDIT, $input, $testedCell->getLabel());
+                }
+            } else {
+                // Aucun droit sur les autres cellules
+                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
+                $input = $testedCell->getAFInputSetPrimary();
+                if ($input) {
+                    $this->assertNotAllowed($user, Actions::VIEW, $input, $testedCell->getLabel());
+                    $this->assertNotAllowed($user, Actions::EDIT, $input, $testedCell->getLabel());
+                }
+            }
+
+            // Dans tous les cas il n'a pas ces droits
+            $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel());
+            $this->assertNotAllowed($user, Actions::DELETE, $testedCell, $testedCell->getLabel());
+            $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel());
+        }
+    }
+
+    public function assertObserveCell(User $user, Orga_Model_Cell $cell)
+    {
+        $globalCell = $this->granularityGlobale->getCellByMembers([]);
+        $allCells = $globalCell->getChildCells();
+        $allCells[] = $globalCell;
+
+        foreach ($allCells as $testedCell) {
+            /** @var Orga_Model_Cell $testedCell */
+
+            // Droit d'observateur sur la cellule et ses sous-cellules
+            if ($testedCell === $cell || $testedCell->isChildOf($cell)) {
+                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
+            } else {
+                // Aucun droit sur les autres cellules
+                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
+            }
+
+            // Dans tous les cas il n'a pas ces droits
+            $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel());
+            $this->assertNotAllowed($user, Actions::DELETE, $testedCell, $testedCell->getLabel());
+            $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel());
+            $input = $testedCell->getAFInputSetPrimary();
+            if ($input) {
+                $this->assertNotAllowed($user, Actions::VIEW, $input, $testedCell->getLabel());
+                $this->assertNotAllowed($user, Actions::EDIT, $input, $testedCell->getLabel());
+            }
         }
     }
 }

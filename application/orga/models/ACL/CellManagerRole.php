@@ -16,11 +16,11 @@ class CellManagerRole extends AbstractCellRole
         // Voir la cellule
         $aclManager->allow(
             $this,
-            new Actions([ Actions::VIEW ]),
+            new Actions([ Actions::VIEW, Actions::EDIT ]),
             $this->cell
         );
 
-        // TODO Modifier la saisie
+        // Voir et modifier la saisie en cascade
     }
 
     public function buildAuthorizations()

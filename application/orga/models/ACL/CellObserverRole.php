@@ -20,7 +20,7 @@ class CellObserverRole extends AbstractCellRole
             $this->cell
         );
 
-        // TODO Voir la saisie
+        // Il peut voir la saisie en cascade
     }
 
     public function buildAuthorizations()
