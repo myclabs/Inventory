@@ -4,7 +4,6 @@ use AF\Application\AFViewConfiguration;
 use Doc\Domain\Library;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
-use Orga\Model\ACL\Action\CellAction;
 use User\Application\ForbiddenException;
 use User\Application\Plugin\ACLPlugin;
 use User\Domain\User;
@@ -291,12 +290,12 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $canInput = $this->aclManager->isAllowed(
             $identity,
-            CellAction::INPUT(),
+            Actions::INPUT,
             $this->getCell($request)
         );
         $canViewReports = $this->aclManager->isAllowed(
             $identity,
-            CellAction::VIEW_REPORTS(),
+            Actions::ANALYZE,
             $this->getCell($request)
         );
 
@@ -312,7 +311,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclManager->isAllowed(
             $identity,
-            CellAction::INPUT(),
+            Actions::INPUT,
             $this->getCell($request)
         );
     }
@@ -326,7 +325,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclManager->isAllowed(
             $identity,
-            CellAction::COMMENT(),
+            Actions::VIEW,
             $this->getCell($request)
         );
     }
@@ -340,7 +339,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return $this->aclManager->isAllowed(
             $identity,
-            CellAction::VIEW_REPORTS(),
+            Actions::ANALYZE,
             $this->getCell($request)
         );
     }

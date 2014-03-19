@@ -8,7 +8,6 @@ use MyCLabs\ACL\ACLManager;
 use User\Domain\ACL\Actions;
 use Orga_Model_Cell;
 use User\Domain\User;
-use Orga\Model\ACL\Action\CellAction;
 use AF\Domain\InputSet\PrimaryInputSet;
 
 /**
@@ -93,6 +92,7 @@ class CellViewModelFactory
                 array_unshift($cellViewModel->administrators, $administrator->getSecurityIdentity()->getEmail());
             }
             foreach (array_reverse($cell->getParentCells()) as $parentCell) {
+                /** @var Orga_Model_Cell $parentCell */
                 foreach ($parentCell->getAdminRoles() as $parentAdministrator) {
                     array_unshift($cellViewModel->administrators, $parentAdministrator->getSecurityIdentity()->getEmail());
                 }
@@ -117,7 +117,7 @@ class CellViewModelFactory
         if (($withReports === true)
             || (($withReports !== false)
                 && ($cell->getGranularity()->getCellsGenerateDWCubes())
-                && ($this->aclManager->isAllowed($user, CellAction::VIEW_REPORTS(), $cell)))
+                && ($this->aclManager->isAllowed($user, Actions::ANALYZE, $cell)))
         ) {
             $cellViewModel->showReports = true;
         }
@@ -125,7 +125,7 @@ class CellViewModelFactory
         // Exports.
         if (($withExports === true)
             || (($withExports !== false)
-                && ($this->aclManager->isAllowed($user, CellAction::VIEW_REPORTS(), $cell)))
+                && ($this->aclManager->isAllowed($user, Actions::ANALYZE, $cell)))
         ) {
             $cellViewModel->showExports = true;
         }
@@ -134,14 +134,14 @@ class CellViewModelFactory
         $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
         if (($withInventory === true)
             || (($withInventory !== false)
-                && (($this->aclManager->isAllowed($user, CellAction::VIEW_REPORTS(), $cell))))
+                && (($this->aclManager->isAllowed($user, Actions::ANALYZE, $cell))))
         ) {
             try {
                 $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
 
                 if (($editInventory)
                     || (($cell->getGranularity() === $granularityForInventoryStatus)
-                        && ($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell)))) {
+                        && ($this->aclManager->isAllowed($user, Actions::INPUT, $cell)))) {
                     $cellViewModel->canEditInventory = true;
                 }
 
@@ -212,7 +212,7 @@ class CellViewModelFactory
         if (($withInput === true)
             || (($withInput !== false)
                 && ($cell->getGranularity()->getInputConfigGranularity() !== null)
-                && (($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell))))
+                && (($this->aclManager->isAllowed($user, Actions::INPUT, $cell))))
         ) {
             $cellViewModel->showInput = true;
             $cellViewModel->showInputLink = (($withInputLink !== true) && ($withInputLink !== false)) ? true : $withInputLink;

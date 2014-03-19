@@ -13,7 +13,6 @@ use Orga\ViewModel\CellViewModelFactory;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Doctrine\Common\Collections\Criteria;
-use Orga\Model\ACL\Action\CellAction;
 use User\Domain\User;
 use Orga\Model\ACL\AbstractCellRole;
 use Orga\Model\ACL\CellAdminRole;
@@ -335,10 +334,10 @@ class Orga_CellController extends Core_Controller
 
         // Reports.
         $showReports = $narrowerGranularity->getCellsGenerateDWCubes()
-            && $this->aclManager->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell);
+            && $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell);
 
         // Exports
-        $showExports = $this->aclManager->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell);
+        $showExports = $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell);
 
         // Inventory.
         try {
@@ -348,8 +347,8 @@ class Orga_CellController extends Core_Controller
             $granularityForInventoryStatus = null;
         }
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
-            && $this->aclManager->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell)
-            && $this->aclManager->isAllowed($connectedUser, CellAction::INPUT(), $cell));
+            && $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell)
+            && $this->aclManager->isAllowed($connectedUser, Actions::INPUT, $cell));
         $isInventory = (($narrowerGranularity === $granularityForInventoryStatus)
                 || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus)));
         $narrowerGranularityHasSubInputGranlarities = false;
@@ -935,7 +934,7 @@ class Orga_CellController extends Core_Controller
         if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
             $displayInputsExport = $this->aclManager->isAllowed(
                 $connectedUser,
-                CellAction::VIEW_REPORTS(),
+                Actions::ANALYZE,
                 $cell
             );
         } else {
@@ -943,7 +942,7 @@ class Orga_CellController extends Core_Controller
                 if ($narrowerGranularity->getInputConfigGranularity() !== null) {
                     $displayInputsExport = $this->aclManager->isAllowed(
                         $connectedUser,
-                        CellAction::VIEW_REPORTS(),
+                        Actions::ANALYZE,
                         $cell
                     );
                     break;
@@ -961,7 +960,7 @@ class Orga_CellController extends Core_Controller
         if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
             $displayOutputsExport = $this->aclManager->isAllowed(
                 $connectedUser,
-                CellAction::VIEW_REPORTS(),
+                Actions::ANALYZE,
                 $cell
             );
         } else {
@@ -969,7 +968,7 @@ class Orga_CellController extends Core_Controller
                 if ($narrowerGranularity->getInputConfigGranularity() !== null) {
                     $displayOutputsExport = $this->aclManager->isAllowed(
                         $connectedUser,
-                        CellAction::VIEW_REPORTS(),
+                        Actions::ANALYZE,
                         $cell
                     );
                     break;
@@ -1123,7 +1122,7 @@ class Orga_CellController extends Core_Controller
 
         $isUserAllowedToInputCell = $this->aclManager->isAllowed(
             $this->_helper->auth(),
-            CellAction::INPUT(),
+            Actions::INPUT,
             $cell
         );
 
@@ -1158,7 +1157,7 @@ class Orga_CellController extends Core_Controller
 
         $isUserAllowedToViewCellReports = $this->aclManager->isAllowed(
             $this->_helper->auth(),
-            CellAction::VIEW_REPORTS(),
+            Actions::ANALYZE,
             $cell
         );
         if ($isUserAllowedToViewCellReports) {
@@ -1250,7 +1249,7 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('currentUser', $connectedUser);
         $this->view->assign(
             'isUserAbleToComment',
-            $this->aclManager->isAllowed($connectedUser, CellAction::INPUT(), $cell)
+            $this->aclManager->isAllowed($connectedUser, Actions::INPUT, $cell)
         );
 
         // Désactivation du layout.
