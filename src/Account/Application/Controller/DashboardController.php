@@ -5,7 +5,7 @@ use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use Core\Annotation\Secure;
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use MyCLabs\ACL\Model\Resource;
 use User\Domain\User;

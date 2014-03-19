@@ -4,6 +4,7 @@ use Account\Domain\ACL\AccountAdminRole;
 use AF\Domain\InputSet\PrimaryInputSet;
 use DI\Container;
 use Doctrine\ORM\EntityManager;
+use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
 use MyCLabs\ACL\ACLManager;
@@ -104,15 +105,12 @@ return [
             Orga_Model_Cell::class,
             $c->get(CellResourceGraphTraverser::class)
         );
-        $cascadeStrategy->setResourceGraphTraverser(
-            PrimaryInputSet::class,
-            $c->get(InputSetResourceGraphTraverser::class)
-        );
 
         return new ACLManager($em, $cascadeStrategy);
     }),
     MetadataLoader::class => DI\factory(function () {
         $loader = new MetadataLoader();
+        $loader->registerActionsClass(Actions::class);
         $loader->registerRoleClass(AdminRole::class, 'superadmin');
         $loader->registerRoleClass(AccountAdminRole::class, 'accountAdmin');
         $loader->registerRoleClass(OrganizationAdminRole::class, 'organizationAdmin');

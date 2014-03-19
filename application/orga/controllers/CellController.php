@@ -7,7 +7,7 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\ViewModel\CellViewModelFactory;
 use AuditTrail\Domain\Context\OrganizationContext;

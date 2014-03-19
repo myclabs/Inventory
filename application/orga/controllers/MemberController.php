@@ -2,7 +2,7 @@
 
 use Core\Annotation\Secure;
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use User\Domain\User;
 
 /**

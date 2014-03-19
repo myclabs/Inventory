@@ -27,7 +27,7 @@
         "myclabs/xport": "0.2.*",
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
-        "myclabs/acl": "dev-simplified-model-v2",
+        "myclabs/acl": "dev-master",
         "mnapoli/php-di": "~4.0",
         "mnapoli/php-di-zf1": "*",
         "psr/log": "~1.0",
@@ -59,10 +59,6 @@
         {
             "type": "git",
             "url": "git://github.com/myclabs/DoctrineExtensions.git"
-        },
-        {
-            "type": "git",
-            "url": "git@github.com:myclabs/ACL.git"
         }
     ]
 }

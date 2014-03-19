@@ -2,7 +2,7 @@
 
 use Doctrine\ORM\EntityManager;
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\Role;
 use Orga\Model\ACL\OrganizationAdminRole;
 use Orga\Model\ACL\AbstractCellRole;

@@ -4,7 +4,7 @@ namespace Account\Domain\ACL;
 
 use Account\Domain\Account;
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\Role;
 use User\Domain\User;
 

@@ -16,15 +16,7 @@ class CellResourceGraphTraverser implements ResourceGraphTraverser
             throw new \RuntimeException;
         }
 
-        $subResources = $resource->getChildCells();
-
-        // TODO renvoyer aussi les saisies pour chacune des sous-cellules
-        $input = $resource->getAFInputSetPrimary();
-        if ($input) {
-            $subResources[] = $input;
-        }
-
-        return $subResources;
+        return $resource->getChildCells();
     }
 
     public function getAllParentResources(ResourceInterface $resource)

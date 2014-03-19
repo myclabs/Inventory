@@ -3,8 +3,7 @@
 namespace Orga\Model\ACL;
 
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
-use Orga\Model\ACL\Action\CellAction;
+use User\Domain\ACL\Actions;
 
 /**
  * Cell manager.
@@ -13,36 +12,17 @@ class CellManagerRole extends AbstractCellRole
 {
     public function createAuthorizations(ACLManager $aclManager)
     {
-        // Voir la cellule
         $aclManager->allow(
             $this,
-            new Actions([ Actions::VIEW, Actions::EDIT ]),
+            new Actions([
+                Actions::VIEW, // voir la cellule
+                Actions::ALLOW, // donner des droits d'accès
+                Actions::INPUT, // saisir
+                Actions::ANALYZE, // analyser les données
+                Actions::MANAGE_INVENTORY, // gérer les inventaires
+            ]),
             $this->cell
         );
-
-        // Voir et modifier la saisie en cascade
-    }
-
-    public function buildAuthorizations()
-    {
-        $this->authorizations->clear();
-
-        // Voir l'organisation
-        OrganizationAuthorization::create($this, Actions::VIEW, $this->cell->getOrganization());
-
-        $authorizations = CellAuthorization::createMany($this, $this->cell, [
-            Actions::VIEW,
-            CellAction::COMMENT(),
-            CellAction::INPUT(),
-            CellAction::VIEW_REPORTS(),
-        ]);
-
-        // Cellules filles
-        foreach ($this->cell->getChildCells() as $childCell) {
-            foreach ($authorizations as $authorization) {
-                CellAuthorization::createChildAuthorization($authorization, $childCell);
-            }
-        }
     }
 
     public static function getLabel()

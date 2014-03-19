@@ -2,7 +2,7 @@
 
 use AF\Application\AFViewConfiguration;
 use Doc\Domain\Library;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use Orga\Model\ACL\Action\CellAction;
 use User\Application\ForbiddenException;

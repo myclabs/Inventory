@@ -4,7 +4,7 @@ namespace Account\Application\Service;
 
 use Account\Application\ViewModel\OrganizationView;
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use Orga_Model_Organization;
 use Orga_Model_Cell;
 use Orga_Service_ACLManager;

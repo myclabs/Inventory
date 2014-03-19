@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "991adab280629b6d2085322dc1eef468",
+    "hash": "8f4b1801552ffecb53e9f0c1b5b31961",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -484,12 +484,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "b30b1a59991c15043f14053acbe7d93c6233465c"
+                "reference": "9b4ae6d55688c1974f4e6f9250e3b562a2e78ba1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/b30b1a59991c15043f14053acbe7d93c6233465c",
-                "reference": "b30b1a59991c15043f14053acbe7d93c6233465c",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/9b4ae6d55688c1974f4e6f9250e3b562a2e78ba1",
+                "reference": "9b4ae6d55688c1974f4e6f9250e3b562a2e78ba1",
                 "shasum": ""
             },
             "require": {
@@ -553,7 +553,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-03-11 13:52:49"
+            "time": "2014-03-16 16:41:19"
         },
         {
             "name": "dompdf/dompdf",
@@ -561,12 +561,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "cf7d8a0a27270418850cc7d7ea532159e5eeb3eb"
+                "reference": "9e47d8c83ca6afe163f062bda787114595df2613"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/cf7d8a0a27270418850cc7d7ea532159e5eeb3eb",
-                "reference": "cf7d8a0a27270418850cc7d7ea532159e5eeb3eb",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/9e47d8c83ca6afe163f062bda787114595df2613",
+                "reference": "9e47d8c83ca6afe163f062bda787114595df2613",
                 "shasum": ""
             },
             "require": {
@@ -594,7 +594,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2014-03-11 01:59:52"
+            "time": "2014-03-15 10:33:14"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -960,11 +960,17 @@
         },
         {
             "name": "myclabs/acl",
-            "version": "dev-simplified-model-v2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:myclabs/ACL.git",
-                "reference": "b47139fd9252c8063402124ec5401f72199bb53f"
+                "url": "https://github.com/myclabs/ACL.git",
+                "reference": "2e059df18448bcf16f29bc5c6485775d2656ecd8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/ACL/zipball/2e059df18448bcf16f29bc5c6485775d2656ecd8",
+                "reference": "2e059df18448bcf16f29bc5c6485775d2656ecd8",
+                "shasum": ""
             },
             "require": {
                 "doctrine/orm": "2.5.*@dev",
@@ -977,7 +983,18 @@
                     "Tests\\MyCLabs\\ACL\\": "tests/"
                 }
             },
-            "time": "2014-03-17 15:23:04"
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "ACL library for Doctrine",
+            "homepage": "https://github.com/myclabs/ACL",
+            "keywords": [
+                "acl",
+                "doctrine",
+                "permission"
+            ],
+            "time": "2014-03-19 14:08:53"
         },
         {
             "name": "myclabs/array-comparator",

@@ -3,9 +3,8 @@
 namespace Orga\Model\ACL;
 
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\Role;
-use Orga\Model\ACL\Action\CellAction;
 use Orga_Model_Organization;
 use User\Domain\User;
 
@@ -29,40 +28,18 @@ class OrganizationAdminRole extends Role
 
     public function createAuthorizations(ACLManager $aclManager)
     {
-        $actions = new Actions([Actions::VIEW, Actions::EDIT, Actions::DELETE, Actions::ALLOW]);
-
-        $aclManager->allow($this, $actions, $this->organization);
-    }
-
-    public function buildAuthorizations()
-    {
-        $this->authorizations->clear();
-
-        OrganizationAuthorization::createMany($this, $this->organization, [
-            Action::VIEW(),
-            Action::EDIT(),
-            Action::DELETE(),
-            Action::ALLOW(),
-        ]);
-
-        // Admin sur la cellule globale
-        $globalCell = $this->organization->getGranularityByRef('global')->getCellByMembers([]);
-
-        $authorizations = CellAuthorization::createMany($this, $globalCell, [
-            Action::VIEW(),
-            Action::EDIT(),
-            Action::ALLOW(),
-            CellAction::COMMENT(),
-            CellAction::INPUT(),
-            CellAction::VIEW_REPORTS(),
-        ]);
-
-        // Cellules filles
-        foreach ($globalCell->getChildCells() as $childCell) {
-            foreach ($authorizations as $authorization) {
-                CellAuthorization::createChildAuthorization($authorization, $childCell);
-            }
-        }
+        $aclManager->allow(
+            $this,
+            new Actions([
+                Actions::VIEW, // voir l'organisation, et par extension les cellules
+                Actions::EDIT, // modifier l'organisation et les cellules
+                Actions::ALLOW, // donner des droits d'accès
+                Actions::INPUT, // saisir dans les cellules de l'organisation
+                Actions::ANALYZE, // analyser les données dans les cellules de l'organisation
+                Actions::MANAGE_INVENTORY, // gérer les inventaires dans les cellules de l'organisation
+            ]),
+            $this->organization
+        );
     }
 
     /**

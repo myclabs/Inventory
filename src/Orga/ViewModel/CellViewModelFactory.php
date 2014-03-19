@@ -5,7 +5,7 @@ namespace Orga\ViewModel;
 use Core_Exception_UndefinedAttribute;
 use Doctrine\Common\Collections\Criteria;
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use Orga_Model_Cell;
 use User\Domain\User;
 use Orga\Model\ACL\Action\CellAction;

@@ -8,7 +8,7 @@
 
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 
 /**
  * Classe du controller du datagrid des traductions des organizations.

@@ -8,7 +8,7 @@ use Account\Application\ViewModel\ParameterLibraryView;
 use Account\Domain\Account;
 use AF\Domain\AFLibrary;
 use Core_Model_Query;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use Orga_Model_Organization;
 use Parameter\Domain\ParameterLibrary;
 use User\Domain\User;

@@ -4,7 +4,7 @@ namespace Tests\User\ACL;
 
 use Core\Test\TestCase;
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use User\Domain\ACL\AdminRole;
 use User\Domain\User;
 use User\Domain\UserService;

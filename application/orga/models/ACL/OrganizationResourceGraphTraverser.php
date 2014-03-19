@@ -10,16 +10,6 @@ use Orga_Model_Organization;
 
 class OrganizationResourceGraphTraverser implements ResourceGraphTraverser
 {
-    /**
-     * @var CellResourceGraphTraverser
-     */
-    private $cellResourceGraphTraverser;
-
-    public function __construct(CellResourceGraphTraverser $cellResourceGraphTraverser)
-    {
-        $this->cellResourceGraphTraverser = $cellResourceGraphTraverser;
-    }
-
     public function getAllSubResources(ResourceInterface $resource)
     {
         if (! $resource instanceof Orga_Model_Organization) {
@@ -28,7 +18,7 @@ class OrganizationResourceGraphTraverser implements ResourceGraphTraverser
 
         $globalCell = $resource->getGlobalCell();
 
-        $resources = $this->cellResourceGraphTraverser->getAllSubResources($globalCell);
+        $resources = $globalCell->getChildCells();
         $resources[] = $globalCell;
 
         return $resources;

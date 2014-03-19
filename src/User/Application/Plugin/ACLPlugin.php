@@ -2,7 +2,7 @@
 
 namespace User\Application\Plugin;
 
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use User\Domain\User;
 use Zend_Controller_Request_Abstract;

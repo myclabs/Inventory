@@ -3,8 +3,7 @@
 namespace Orga\Model\ACL;
 
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
-use Orga\Model\ACL\Action\CellAction;
+use User\Domain\ACL\Actions;
 
 /**
  * Cell observer.
@@ -16,32 +15,14 @@ class CellObserverRole extends AbstractCellRole
         // Voir la cellule
         $aclManager->allow(
             $this,
-            new Actions([ Actions::VIEW ]),
+            new Actions([
+                Actions::VIEW, // voir la cellule
+                Actions::ANALYZE, // analyser les données
+            ]),
             $this->cell
         );
 
         // Il peut voir la saisie en cascade
-    }
-
-    public function buildAuthorizations()
-    {
-        $this->authorizations->clear();
-
-        // Voir l'organisation
-        OrganizationAuthorization::create($this, Actions::VIEW, $this->cell->getOrganization());
-
-        $authorizations = CellAuthorization::createMany($this, $this->cell, [
-            Actions::VIEW,
-            CellAction::COMMENT(),
-            CellAction::VIEW_REPORTS(),
-        ]);
-
-        // Cellules filles
-        foreach ($this->cell->getChildCells() as $childCell) {
-            foreach ($authorizations as $authorization) {
-                CellAuthorization::createChildAuthorization($authorization, $childCell);
-            }
-        }
     }
 
     public static function getLabel()

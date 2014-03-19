@@ -3,7 +3,7 @@
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\Actions;
+use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Orga\Model\ACL\CellAdminRole;
