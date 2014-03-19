@@ -35,13 +35,18 @@ class ACLPlugin extends AbstractACLPlugin
      */
     public function editUserRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        if ($request->getParam('id') !== null) {
-            /** @var $user User */
-            $user = User::load($request->getParam('id'));
-        } else {
-            $user = $identity;
+        if ($request->getParam('id') === null) {
+            // Éditer son propre compte
+            return true;
         }
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, $user);
+
+        // Si on peut modifier tous les utilisateurs
+        // Pas d'ACL directe entre utilisateurs, c'est overkill
+        return $this->aclManager->isAllowed(
+            $identity,
+            Actions::EDIT,
+            new ClassResource(User::class)
+        );
     }
 
     /**
@@ -51,8 +56,13 @@ class ACLPlugin extends AbstractACLPlugin
      */
     public function disableUserRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $user = User::load($request->getParam('id'));
-        return $this->aclManager->isAllowed($identity, Actions::DELETE, $user);
+        // Si on peut supprimer tous les utilisateurs
+        // Pas d'ACL directe entre utilisateurs, c'est overkill
+        return $this->aclManager->isAllowed(
+            $identity,
+            Actions::DELETE,
+            new ClassResource(User::class)
+        );
     }
 
     /**
@@ -62,8 +72,13 @@ class ACLPlugin extends AbstractACLPlugin
      */
     public function enableUserRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $user = User::load($request->getParam('id'));
-        return $this->aclManager->isAllowed($identity, Actions::UNDELETE, $user);
+        // Si on peut réactiver tous les utilisateurs
+        // Pas d'ACL directe entre utilisateurs, c'est overkill
+        return $this->aclManager->isAllowed(
+            $identity,
+            Actions::UNDELETE,
+            new ClassResource(User::class)
+        );
     }
 
     /**
