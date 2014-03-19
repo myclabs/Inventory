@@ -157,7 +157,8 @@ class Orga_CellController extends Core_Controller
             // Inventory purpose.
             $isNarrowerGranularityInventory = (($granularityForInventoryStatus !== null)
                 && (($narrowerGranularity === $granularityForInventoryStatus)
-                    || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
+                    || (($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))
+                        && ($narrowerGranularity->getCellsWithACL()))));
             $narrowerGranularityHasSubInputGranlarities = false;
             foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
                 if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
@@ -353,7 +354,8 @@ class Orga_CellController extends Core_Controller
             && $this->aclService->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell)
             && $this->aclService->isAllowed($connectedUser, CellAction::INPUT(), $cell));
         $isInventory = (($narrowerGranularity === $granularityForInventoryStatus)
-                || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus)));
+            || (($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))
+                && ($narrowerGranularity->getCellsWithACL())));
         $narrowerGranularityHasSubInputGranlarities = false;
         foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
             if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
