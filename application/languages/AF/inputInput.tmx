@@ -63,7 +63,7 @@
                 <seg>Terminer la saisie</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Terminate the input</seg>
+                <seg>Finish the input</seg>
             </tuv>
         </tu>
 
@@ -206,7 +206,7 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-                    The input is complete, you must click on "Terminate the input" if you do not plan
+                    The input is complete, you must click on "Finish the input" if you do not plan
                     on editing it.
                 </seg>
             </tuv>
