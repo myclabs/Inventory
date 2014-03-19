@@ -2,14 +2,14 @@
 
 namespace Orga\Model\ACL\Action;
 
-use User\Domain\ACL\Action;
+use MyCLabs\Enum\Enum;
 
 /**
  * Actions pouvant être réalisées sur les ressources Cell.
  *
  * @author valentin.claras
  */
-class CellAction extends Action
+class CellAction extends Enum
 {
     /**
      * Commenter une ressource.
@@ -62,6 +62,5 @@ class CellAction extends Action
             case self::INPUT:
                 return __('UI', 'verb', 'input');
         }
-        return parent::getLabel();
     }
 }

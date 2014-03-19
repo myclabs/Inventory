@@ -20,7 +20,7 @@ use AF\Domain\InputSet\SubInputSet;
 use AF\Domain\Output\OutputElement;
 use Classification\Domain\IndicatorAxis;
 use Classification\Domain\Indicator;
-use User\Domain\ACL\Role\Role;
+use Orga\Model\ACL\AbstractCellRole;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
@@ -292,14 +292,14 @@ class Orga_Service_Export
             function (Orga_Model_Cell $cell) {
                 $users = [];
                 foreach ($cell->getAllRoles() as $role) {
-                    $users[] = ['user' => $role->getUser(), 'role' => $role];
+                    $users[] = ['user' => $role->getSecurityIdentity(), 'role' => $role];
                 }
                 return $users;
             }
         );
         $modelBuilder->bind('userColumnFirstName', __('User', 'user', 'firstName'));
         $modelBuilder->bind('userColumnLastName', __('User', 'user', 'lastName'));
-        $modelBuilder->bind('userColumnEmail',  __('User', 'user', 'emailAddress'));
+        $modelBuilder->bind('userColumnEmail', __('User', 'user', 'emailAddress'));
         $modelBuilder->bind('userColumnRole', __('User', 'role', 'role'));
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
@@ -314,7 +314,7 @@ class Orga_Service_Export
         );
         $modelBuilder->bindFunction(
             'displayRoleName',
-            function (Role $role) {
+            function (AbstractCellRole $role) {
                 return $role->getLabel();
             }
         );

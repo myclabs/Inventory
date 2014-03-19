@@ -1,0 +1,11 @@
+Orga\Model\ACL\AbstractCellRole:
+  type: entity
+  table: Orga_ACL_Role_AbstractCellRole
+  readOnly: true
+
+  manyToOne:
+    cell:
+      targetEntity: \Orga_Model_Cell
+      inversedBy: roles
+      joinColumn:
+        nullable: false

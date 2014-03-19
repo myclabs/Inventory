@@ -1,15 +1,15 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
-use Orga\Model\ACL\Role\OrganizationAdminRole;
-use Orga\Model\ACL\Role\AbstractCellRole;
-use Orga\Model\ACL\Role\CellAdminRole;
-use Orga\Model\ACL\Role\CellManagerRole;
-use Orga\Model\ACL\Role\CellContributorRole;
-use Orga\Model\ACL\Role\CellObserverRole;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Action;
-use User\Domain\ACL\Role\Role;
+use MyCLabs\ACL\ACLManager;
+use User\Domain\ACL\Actions;
+use MyCLabs\ACL\Model\Role;
+use Orga\Model\ACL\OrganizationAdminRole;
+use Orga\Model\ACL\AbstractCellRole;
+use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellObserverRole;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -26,9 +26,9 @@ class Orga_Service_ACLManager
     private $userService;
 
     /**
-     * @var ACLService
+     * @var ACLManager
      */
-    private $aclService;
+    private $aclManager;
 
     /**
      * @var EntityManager
@@ -37,13 +37,13 @@ class Orga_Service_ACLManager
 
     /**
      * @param UserService   $userService
-     * @param ACLService    $aclService
+     * @param ACLManager    $aclManager
      * @param EntityManager $entityManager
      */
-    public function __construct(UserService $userService, ACLService $aclService, EntityManager $entityManager)
+    public function __construct(UserService $userService, ACLManager $aclManager, EntityManager $entityManager)
     {
         $this->userService = $userService;
-        $this->aclService = $aclService;
+        $this->aclManager = $aclManager;
         $this->entityManager = $entityManager;
     }
 
@@ -61,10 +61,10 @@ class Orga_Service_ACLManager
             $user = User::loadByEmail($email);
         } else {
             $user = $this->userService->inviteUser($email);
+            $this->entityManager->flush();
         }
 
-        $this->aclService->addRole($user, new OrganizationAdminRole($user, $organization));
-        $this->entityManager->flush();
+        $this->aclManager->grant($user, new OrganizationAdminRole($user, $organization));
 
         if ($sendMail) {
             $this->userService->sendEmail(
@@ -86,9 +86,9 @@ class Orga_Service_ACLManager
      */
     public function removeOrganizationAdministrator(Orga_Model_Organization $organization, Role $role, $sendMail = true)
     {
-        $user = $role->getUser();
-        $this->aclService->removeRole($user, $role);
-        $this->entityManager->flush();
+        /** @var User $user */
+        $user = $role->getSecurityIdentity();
+        $this->aclManager->unGrant($user, $role);
 
         if ($sendMail) {
             $this->userService->sendEmail(
@@ -123,8 +123,7 @@ class Orga_Service_ACLManager
 
         /** @var AbstractCellRole $role */
         $role = new $roleClass($user, $cell);
-        $this->aclService->addRole($user, $role);
-        $this->entityManager->flush();
+        $this->aclManager->grant($user, $role);
 
         if ($sendMail) {
             $this->userService->sendEmail(
@@ -145,8 +144,7 @@ class Orga_Service_ACLManager
      */
     public function removeCellRole(User $user, AbstractCellRole $role, $sendMail = true)
     {
-        $this->aclService->removeRole($user, $role);
-        $this->entityManager->flush();
+        $this->aclManager->unGrant($user, $role);
 
         if ($sendMail) {
             $this->userService->sendEmail(
@@ -161,6 +159,8 @@ class Orga_Service_ACLManager
     }
 
     /**
+     * TODO refactoriser
+     *
      * @param User $user
      * @param Orga_Model_Organization $organization
      * @param array $askedRoles
@@ -168,15 +168,23 @@ class Orga_Service_ACLManager
      * @throws Core_Exception_InvalidArgument
      * @return array ['cells' => Orga_Model_Cell[], 'access' => string]
      */
-    public function getTopCellsWithAccessForOrganization(User $user, Orga_Model_Organization $organization, $askedRoles=[])
-    {
-        if ($this->aclService->isAllowed($user, Action::EDIT(), $organization)) {
+    public function getTopCellsWithAccessForOrganization(
+        User $user,
+        Orga_Model_Organization $organization,
+        $askedRoles = []
+    ) {
+        if ($this->aclManager->isAllowed($user, Actions::EDIT, $organization)) {
             return [
                 'cells' => [$organization->getGranularityByRef('global')->getCellByMembers([])],
             ];
         }
 
-        $cellRoles = [CellAdminRole::class, CellManagerRole::class, CellContributorRole::class, CellObserverRole::class];
+        $cellRoles = [
+            CellAdminRole::class,
+            CellManagerRole::class,
+            CellContributorRole::class,
+            CellObserverRole::class,
+        ];
         if (empty($askedRoles)) {
             $askedRoles = $cellRoles;
         }
@@ -210,7 +218,9 @@ class Orga_Service_ACLManager
 
         usort(
             $cellsWithAccess,
-            function (Orga_Model_Cell $a, Orga_Model_Cell $b) { return strcmp($a->getTag(), $b->getTag()); }
+            function (Orga_Model_Cell $a, Orga_Model_Cell $b) {
+                return strcmp($a->getTag(), $b->getTag());
+            }
         );
         return ['cells' => $cellsWithAccess, 'accesses' => $cellsAccess];
     }
@@ -257,7 +267,7 @@ class Orga_Service_ACLManager
             $aclCellQuery = new Core_Model_Query();
             $aclCellQuery->aclFilter->enabled = true;
             $aclCellQuery->aclFilter->user = $user;
-            $aclCellQuery->aclFilter->action = Action::EDIT();
+            $aclCellQuery->aclFilter->action = Actions::EDIT;
             $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
 
             $numberCellsUserCanEdit = Orga_Model_Cell::countTotal($aclCellQuery);
@@ -284,5 +294,4 @@ class Orga_Service_ACLManager
 
         return array_unique($axesCanEdit);
     }
-
 }

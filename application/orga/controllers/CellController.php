@@ -6,22 +6,20 @@ use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
+use MyCLabs\ACL\ACLManager;
+use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use Account\Application\Service\OrganizationViewFactory;
 use Orga\ViewModel\CellViewModelFactory;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
 use Doctrine\Common\Collections\Criteria;
 use Orga\Model\ACL\Action\CellAction;
 use User\Domain\User;
-use User\Domain\ACL\Action;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Role\Role;
-use Orga\Model\ACL\Role\AbstractCellRole;
-use Orga\Model\ACL\Role\CellAdminRole;
-use Orga\Model\ACL\Role\CellManagerRole;
-use Orga\Model\ACL\Role\CellContributorRole;
-use Orga\Model\ACL\Role\CellObserverRole;
+use Orga\Model\ACL\AbstractCellRole;
+use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellObserverRole;
 
 /**
  * @author valentin.claras
@@ -32,15 +30,15 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLService
+     * @var ACLManager
      */
-    private $aclService;
+    private $aclManager;
 
     /**
      * @Inject
      * @var Orga_Service_ACLManager
      */
-    private $aclManager;
+    private $orgaACLManager;
 
     /**
      * @Inject
@@ -117,18 +115,18 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('organization', $this->organizationVMFactory->createOrganizationView($organization, $connectedUser));
         $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser, true));
 
-        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
             $connectedUser,
-            Action::EDIT(),
+            Actions::EDIT,
             $organization
         );
-        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclManager->isAllowed(
             $connectedUser,
-            Action::EDIT(),
+            Actions::EDIT,
             $organization->getGranularityByRef('global')->getCellByMembers([])
         );
         if (!$isUserAllowToEditAllMembers) {
-            $topCellsWithEditAccess = $this->aclManager->getTopCellsWithAccessForOrganization(
+            $topCellsWithEditAccess = $this->orgaACLManager->getTopCellsWithAccessForOrganization(
                 $connectedUser,
                 $organization,
                 [CellAdminRole::class]
@@ -223,7 +221,7 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('narrowerGranularities', $narrowerGranularities);
 
         // Formulaire d'ajout des membres enfants.
-        $axesCanEdit = $this->aclManager->getAxesCanEdit($connectedUser, $organization);
+        $axesCanEdit = $this->orgaACLManager->getAxesCanEdit($connectedUser, $organization);
         $this->view->assign('canAddMembers', (count($axesCanEdit) > 0));
         if (count($axesCanEdit) > 0) {
             $addMembersForm = new UI_Form('addMember');
@@ -333,14 +331,14 @@ class Orga_CellController extends Core_Controller
 
         // ACL.
         $showUsers = $narrowerGranularity->getCellsWithACL()
-            && $this->aclService->isAllowed($connectedUser, Action::ALLOW(), $cell);
+            && $this->aclManager->isAllowed($connectedUser, Actions::ALLOW, $cell);
 
         // Reports.
         $showReports = $narrowerGranularity->getCellsGenerateDWCubes()
-            && $this->aclService->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell);
+            && $this->aclManager->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell);
 
         // Exports
-        $showExports = $this->aclService->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell);
+        $showExports = $this->aclManager->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell);
 
         // Inventory.
         try {
@@ -350,8 +348,8 @@ class Orga_CellController extends Core_Controller
             $granularityForInventoryStatus = null;
         }
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
-            && $this->aclService->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell)
-            && $this->aclService->isAllowed($connectedUser, CellAction::INPUT(), $cell));
+            && $this->aclManager->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell)
+            && $this->aclManager->isAllowed($connectedUser, CellAction::INPUT(), $cell));
         $isInventory = (($narrowerGranularity === $granularityForInventoryStatus)
                 || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus)));
         $narrowerGranularityHasSubInputGranlarities = false;
@@ -565,8 +563,8 @@ class Orga_CellController extends Core_Controller
         usort(
             $usersLinked,
             function (AbstractCellRole $a, AbstractCellRole $b) {
-                $aUser = $a->getUser();
-                $bUser = $b->getUser();
+                $aUser = $a->getSecurityIdentity();
+                $bUser = $b->getSecurityIdentity();
                 if (get_class($a) === get_class($b)) {
                     if ($aUser->getFirstName() === $bUser->getFirstName()) {
                         if ($aUser->getLastName() === $bUser->getLastName()) {
@@ -678,10 +676,9 @@ class Orga_CellController extends Core_Controller
      */
     public function removeUserAction()
     {
-        $idRole = $this->getParam('idRole');
         /** @var AbstractCellRole $role */
-        $role = Role::load($idRole);
-        $user = $role->getUser();
+        $role = $this->entityManager->find(AbstractCellRole::class, $this->getParam('idRole'));
+        $user = $role->getSecurityIdentity();
 
         $success = function () {
             $this->sendJsonResponse(__('UI', 'message', 'deleted'));
@@ -896,11 +893,7 @@ class Orga_CellController extends Core_Controller
         $exports = [];
 
         $displayOrgaExport = (count($cell->getGranularity()->getNarrowerGranularities()) > 0)
-            && $this->aclService->isAllowed(
-                $connectedUser,
-                Action::EDIT(),
-                $cell
-            );
+            && $this->aclManager->isAllowed($connectedUser, Actions::EDIT, $cell);
         if ($displayOrgaExport) {
             if (!$cell->getGranularity()->hasAxes()) {
                 // Orga Structure.
@@ -918,17 +911,13 @@ class Orga_CellController extends Core_Controller
         // Orga ACL.
         $displayACLExport = false;
         if ($cell->getGranularity()->getCellsWithACL()) {
-            $displayACLExport = $this->aclService->isAllowed(
-                $connectedUser,
-                Action::ALLOW(),
-                $cell
-            );
+            $displayACLExport = $this->aclManager->isAllowed($connectedUser, Actions::ALLOW, $cell);
         } else {
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getCellsWithACL()) {
-                    $displayACLExport = $this->aclService->isAllowed(
+                    $displayACLExport = $this->aclManager->isAllowed(
                         $connectedUser,
-                        Action::ALLOW(),
+                        Actions::ALLOW,
                         $cell
                     );
                     break;
@@ -944,7 +933,7 @@ class Orga_CellController extends Core_Controller
         // Orga Inputs (droit d'analyser nécessaire).
         $displayInputsExport = false;
         if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
-            $displayInputsExport = $this->aclService->isAllowed(
+            $displayInputsExport = $this->aclManager->isAllowed(
                 $connectedUser,
                 CellAction::VIEW_REPORTS(),
                 $cell
@@ -952,7 +941,7 @@ class Orga_CellController extends Core_Controller
         } else {
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getInputConfigGranularity() !== null) {
-                    $displayInputsExport = $this->aclService->isAllowed(
+                    $displayInputsExport = $this->aclManager->isAllowed(
                         $connectedUser,
                         CellAction::VIEW_REPORTS(),
                         $cell
@@ -970,7 +959,7 @@ class Orga_CellController extends Core_Controller
         // Orga Outputs.
         $displayOutputsExport = false;
         if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
-            $displayOutputsExport = $this->aclService->isAllowed(
+            $displayOutputsExport = $this->aclManager->isAllowed(
                 $connectedUser,
                 CellAction::VIEW_REPORTS(),
                 $cell
@@ -978,7 +967,7 @@ class Orga_CellController extends Core_Controller
         } else {
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getInputConfigGranularity() !== null) {
-                    $displayOutputsExport = $this->aclService->isAllowed(
+                    $displayOutputsExport = $this->aclManager->isAllowed(
                         $connectedUser,
                         CellAction::VIEW_REPORTS(),
                         $cell
@@ -1103,13 +1092,13 @@ class Orga_CellController extends Core_Controller
         $inventoryCells = array_merge([$cell], $cell->getParentCells(), $cell->getChildCells());
         foreach ($inventoryCells as $inventoryCell) {
             foreach ($inventoryCell->getAdminRoles() as $adminRole) {
-                $users[] = $adminRole->getUser()->getEmail();
+                $users[] = $adminRole->getSecurityIdentity()->getEmail();
             }
             foreach ($inventoryCell->getManagerRoles() as $managerRole) {
-                $users[] = $managerRole->getUser()->getEmail();
+                $users[] = $managerRole->getSecurityIdentity()->getEmail();
             }
             foreach ($inventoryCell->getContributorRoles() as $contributorRole) {
-                $users[] = $contributorRole->getUser()->getEmail();
+                $users[] = $contributorRole->getSecurityIdentity()->getEmail();
             }
         }
 
@@ -1132,7 +1121,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
         $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
-        $isUserAllowedToInputCell = $this->aclService->isAllowed(
+        $isUserAllowedToInputCell = $this->aclManager->isAllowed(
             $this->_helper->auth(),
             CellAction::INPUT(),
             $cell
@@ -1167,7 +1156,7 @@ class Orga_CellController extends Core_Controller
         $tabDocs->useCache = true;
         $aFViewConfiguration->addTab($tabDocs);
 
-        $isUserAllowedToViewCellReports = $this->aclService->isAllowed(
+        $isUserAllowedToViewCellReports = $this->aclManager->isAllowed(
             $this->_helper->auth(),
             CellAction::VIEW_REPORTS(),
             $cell
@@ -1261,7 +1250,7 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('currentUser', $connectedUser);
         $this->view->assign(
             'isUserAbleToComment',
-            $this->aclService->isAllowed($connectedUser, CellAction::INPUT(), $cell)
+            $this->aclManager->isAllowed($connectedUser, CellAction::INPUT(), $cell)
         );
 
         // Désactivation du layout.

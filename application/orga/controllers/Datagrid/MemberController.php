@@ -2,11 +2,11 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use MyCLabs\ACL\ACLManager;
+use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Core\Work\ServiceCall\ServiceCallTask;
-use Orga\Model\ACL\Role\CellAdminRole;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Action;
+use Orga\Model\ACL\CellAdminRole;
 use User\Domain\User;
 
 /**
@@ -16,15 +16,15 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var ACLService
+     * @var ACLManager
      */
-    private $aclService;
+    private $aclManager;
 
     /**
      * @Inject
      * @var Orga_Service_ACLManager
      */
-    private $aclManager;
+    private $orgaACLManager;
 
     /**
      * @Inject
@@ -61,21 +61,21 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($idOrganization);
         $axis = $organization->getAxisByRef($this->getParam('refAxis'));
 
-        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
             $connectedUser,
-            Action::EDIT(),
+            Actions::EDIT,
             $organization
         );
-        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclManager->isAllowed(
             $connectedUser,
-            Action::EDIT(),
+            Actions::EDIT,
             $organization->getGranularityByRef('global')->getCellByMembers([])
         );
 
         if (!$isUserAllowToEditAllMembers) {
             $members = [];
             /** @var Orga_Model_Cell[] $topCellsWithEditAccess */
-            $topCellsWithEditAccess = $this->aclManager->getTopCellsWithAccessForOrganization(
+            $topCellsWithEditAccess = $this->orgaACLManager->getTopCellsWithAccessForOrganization(
                 $connectedUser,
                 $organization,
                 [CellAdminRole::class]
@@ -301,14 +301,14 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($idOrganization);
         $broaderAxis = $organization->getAxisByRef($this->getParam('refParentAxis'));
 
-        $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
+        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
             $connectedUser,
-            Action::EDIT(),
+            Actions::EDIT,
             $organization
         );
-        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
+        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization || $this->aclManager->isAllowed(
                 $connectedUser,
-                Action::EDIT(),
+                Actions::EDIT,
                 $organization->getGranularityByRef('global')->getCellByMembers([])
             );
         $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $isUserAllowedToEditGlobalCell;
@@ -317,7 +317,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             /** @var Orga_Model_Member[] $members */
             $members = [];
             /** @var Orga_Model_Cell[] $topCellsWithEditAccess */
-            $topCellsWithEditAccess = $this->aclManager->getTopCellsWithAccessForOrganization(
+            $topCellsWithEditAccess = $this->orgaACLManager->getTopCellsWithAccessForOrganization(
                 $connectedUser,
                 $organization,
                 [CellAdminRole::class]
@@ -359,5 +359,4 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
         $this->send();
     }
-
 }

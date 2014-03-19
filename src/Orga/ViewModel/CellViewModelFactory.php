@@ -4,10 +4,10 @@ namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
 use Doctrine\Common\Collections\Criteria;
+use MyCLabs\ACL\ACLManager;
+use User\Domain\ACL\Actions;
 use Orga_Model_Cell;
-use User\Domain\ACL\Action;
 use User\Domain\User;
-use User\Domain\ACL\ACLService;
 use Orga\Model\ACL\Action\CellAction;
 use AF\Domain\InputSet\PrimaryInputSet;
 
@@ -17,9 +17,9 @@ use AF\Domain\InputSet\PrimaryInputSet;
 class CellViewModelFactory
 {
     /**
-     * @var ACLService
+     * @var ACLManager
      */
-    private $aclService;
+    private $aclManager;
 
     /**
      * @var array
@@ -33,11 +33,11 @@ class CellViewModelFactory
 
 
     /**
-     * @param ACLService $aclService
+     * @param ACLManager $aclManager
      */
-    public function __construct(ACLService $aclService)
+    public function __construct(ACLManager $aclManager)
     {
-        $this->aclService = $aclService;
+        $this->aclManager = $aclManager;
 
         $this->inventoryStatusList = [
             Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'view', 'inventoryNotLaunched'),
@@ -68,10 +68,18 @@ class CellViewModelFactory
      * @param bool $withInputLink
      * @return CellViewModel
      */
-    public function createCellViewModel(Orga_Model_Cell $cell, User $user,
-        $withAdministrators=null, $withACL=null, $withReports=null, $withExports=null,
-        $withInventory=null, $editInventory=null, $withInput=null, $withInputLink=null)
-    {
+    public function createCellViewModel(
+        Orga_Model_Cell $cell,
+        User $user,
+        $withAdministrators = null,
+        $withACL = null,
+        $withReports = null,
+        $withExports = null,
+        $withInventory = null,
+        $editInventory = null,
+        $withInput = null,
+        $withInputLink = null
+    ) {
         $cellViewModel = new CellViewModel();
         $cellViewModel->id = $cell->getId();
         $cellViewModel->shortLabel = $cell->getLabel();
@@ -82,15 +90,15 @@ class CellViewModelFactory
         // Administrateurs.
         if ($withAdministrators === true) {
             foreach ($cell->getAdminRoles() as $administrator) {
-                array_unshift($cellViewModel->administrators, $administrator->getUser()->getEmail());
+                array_unshift($cellViewModel->administrators, $administrator->getSecurityIdentity()->getEmail());
             }
             foreach (array_reverse($cell->getParentCells()) as $parentCell) {
                 foreach ($parentCell->getAdminRoles() as $parentAdministrator) {
-                    array_unshift($cellViewModel->administrators, $parentAdministrator->getUser()->getEmail());
+                    array_unshift($cellViewModel->administrators, $parentAdministrator->getSecurityIdentity()->getEmail());
                 }
             }
             foreach ($cell->getOrganization()->getAdminRoles() as $organizationAdministrator) {
-                array_unshift($cellViewModel->administrators, $organizationAdministrator->getUser()->getEmail());
+                array_unshift($cellViewModel->administrators, $organizationAdministrator->getSecurityIdentity()->getEmail());
             }
         }
 
@@ -98,7 +106,7 @@ class CellViewModelFactory
         if (($withACL === true)
             || (($withACL !== false)
                 && ($cell->getGranularity()->getCellsWithACL())
-                && ($this->aclService->isAllowed($user, Action::ALLOW(), $cell)))
+                && ($this->aclManager->isAllowed($user, Actions::ALLOW, $cell)))
         ) {
             $cellViewModel->showUsers = true;
             $cellViewModel->numberUsers = $cell->getAdminRoles()->count() + $cell->getManagerRoles()->count()
@@ -109,7 +117,7 @@ class CellViewModelFactory
         if (($withReports === true)
             || (($withReports !== false)
                 && ($cell->getGranularity()->getCellsGenerateDWCubes())
-                && ($this->aclService->isAllowed($user, CellAction::VIEW_REPORTS(), $cell)))
+                && ($this->aclManager->isAllowed($user, CellAction::VIEW_REPORTS(), $cell)))
         ) {
             $cellViewModel->showReports = true;
         }
@@ -117,7 +125,7 @@ class CellViewModelFactory
         // Exports.
         if (($withExports === true)
             || (($withExports !== false)
-                && ($this->aclService->isAllowed($user, CellAction::VIEW_REPORTS(), $cell)))
+                && ($this->aclManager->isAllowed($user, CellAction::VIEW_REPORTS(), $cell)))
         ) {
             $cellViewModel->showExports = true;
         }
@@ -126,14 +134,14 @@ class CellViewModelFactory
         $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
         if (($withInventory === true)
             || (($withInventory !== false)
-                && (($this->aclService->isAllowed($user, CellAction::VIEW_REPORTS(), $cell))))
+                && (($this->aclManager->isAllowed($user, CellAction::VIEW_REPORTS(), $cell))))
         ) {
             try {
                 $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
 
                 if (($editInventory)
                     || (($cell->getGranularity() === $granularityForInventoryStatus)
-                        && ($this->aclService->isAllowed($user, CellAction::INPUT(), $cell)))) {
+                        && ($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell)))) {
                     $cellViewModel->canEditInventory = true;
                 }
 
@@ -204,7 +212,7 @@ class CellViewModelFactory
         if (($withInput === true)
             || (($withInput !== false)
                 && ($cell->getGranularity()->getInputConfigGranularity() !== null)
-                && (($this->aclService->isAllowed($user, CellAction::INPUT(), $cell))))
+                && (($this->aclManager->isAllowed($user, CellAction::INPUT(), $cell))))
         ) {
             $cellViewModel->showInput = true;
             $cellViewModel->showInputLink = (($withInputLink !== true) && ($withInputLink !== false)) ? true : $withInputLink;

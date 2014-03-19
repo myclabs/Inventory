@@ -1,4 +1,0 @@
-User\Domain\ACL\Role\UserRole:
-  type: entity
-  repositoryClass: \Core_Model_Repository
-  table: ACL_Role_User

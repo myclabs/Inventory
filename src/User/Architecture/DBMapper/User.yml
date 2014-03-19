@@ -44,18 +44,7 @@ User\Domain\User:
 
   oneToMany:
     roles:
-      targetEntity: User\Domain\ACL\Role\Role
-      mappedBy: user
-      cascade: [ all ]
-      orphanRemoval: true
-    authorizations:
-      targetEntity: User\Domain\ACL\Authorization\Authorization
-      mappedBy: user
-      cascade: [ all ]
-      orphanRemoval: true
-      fetch: EXTRA_LAZY
-    acl:
-      targetEntity: User\Domain\ACL\Authorization\UserAuthorization
-      mappedBy: resource
-      cascade: [ all ]
+      targetEntity: MyCLabs\ACL\Model\Role
+      mappedBy: securityIdentity
+      cascade: [ persist, remove ]
       orphanRemoval: true

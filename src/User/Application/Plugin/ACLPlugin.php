@@ -2,8 +2,8 @@
 
 namespace User\Application\Plugin;
 
-use User\Domain\ACL\Action;
-use User\Domain\ACL\Resource\NamedResource;
+use User\Domain\ACL\Actions;
+use MyCLabs\ACL\Model\ClassResource;
 use User\Domain\User;
 use Zend_Controller_Request_Abstract;
 
@@ -21,10 +21,10 @@ class ACLPlugin extends AbstractACLPlugin
      */
     public function createUserRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            Action::CREATE(),
-            NamedResource::loadByName(User::class)
+            Actions::CREATE,
+            new ClassResource(User::class)
         );
     }
 
@@ -41,7 +41,7 @@ class ACLPlugin extends AbstractACLPlugin
         } else {
             $user = $identity;
         }
-        return $this->aclService->isAllowed($identity, Action::EDIT(), $user);
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, $user);
     }
 
     /**
@@ -52,7 +52,7 @@ class ACLPlugin extends AbstractACLPlugin
     public function disableUserRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $user = User::load($request->getParam('id'));
-        return $this->aclService->isAllowed($identity, Action::DELETE(), $user);
+        return $this->aclManager->isAllowed($identity, Actions::DELETE, $user);
     }
 
     /**
@@ -63,7 +63,7 @@ class ACLPlugin extends AbstractACLPlugin
     public function enableUserRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $user = User::load($request->getParam('id'));
-        return $this->aclService->isAllowed($identity, Action::UNDELETE(), $user);
+        return $this->aclManager->isAllowed($identity, Actions::UNDELETE, $user);
     }
 
     /**
@@ -73,7 +73,6 @@ class ACLPlugin extends AbstractACLPlugin
      */
     public function viewAllUsersRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $resource = NamedResource::loadByName(User::class);
-        return $this->aclService->isAllowed($identity, Action::VIEW(), $resource);
+        return $this->aclManager->isAllowed($identity, Actions::VIEW, new ClassResource(User::class));
     }
 }

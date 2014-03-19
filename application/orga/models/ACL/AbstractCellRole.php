@@ -1,9 +1,9 @@
 <?php
 
-namespace Orga\Model\ACL\Role;
+namespace Orga\Model\ACL;
 
+use MyCLabs\ACL\Model\Role;
 use Orga_Model_Cell;
-use User\Domain\ACL\Role\Role;
 use User\Domain\User;
 
 /**
@@ -20,6 +20,8 @@ abstract class AbstractCellRole extends Role
     {
         $this->cell = $cell;
 
+        $cell->addRole($this);
+
         parent::__construct($user);
     }
 
@@ -29,5 +31,10 @@ abstract class AbstractCellRole extends Role
     public function getCell()
     {
         return $this->cell;
+    }
+
+    public static function getLabel()
+    {
+        return '';
     }
 }
