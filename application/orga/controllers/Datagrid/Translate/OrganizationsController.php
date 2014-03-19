@@ -8,7 +8,7 @@
 
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
-use User\Domain\ACL\Action;
+use User\Domain\ACL\Actions;
 
 /**
  * Classe du controller du datagrid des traductions des organizations.
@@ -39,7 +39,7 @@ class Orga_Datagrid_Translate_OrganizationsController extends UI_Controller_Data
         $this->translatableListener->setTranslationFallback(false);
         $this->request->aclFilter->enabled = true;
         $this->request->aclFilter->user = $this->_helper->auth();
-        $this->request->aclFilter->action = Action::VIEW();
+        $this->request->aclFilter->action = Actions::VIEW;
 
         foreach (Orga_Model_Organization::loadList($this->request) as $organization) {
             $data = array();

@@ -1,9 +1,11 @@
 <?php
 
-use User\Domain\ACL\Action;
-use User\Domain\ACL\Resource\NamedResource;
-use User\Domain\ACL\ACLService;
+use MyCLabs\ACL\ACLManager;
+use User\Domain\ACL\Actions;
+use MyCLabs\ACL\Model\ClassResource;
 use User\Domain\User;
+
+$container = \Core\ContainerSingleton::getContainer();
 
 if (Zend_Auth::getInstance()->hasIdentity()) {
     try {
@@ -17,19 +19,19 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 }
 
 if ($connectedUser) {
-    /** @var ACLService $aclService */
-    $aclService = \Core\ContainerSingleton::getContainer()->get(ACLService::class);
+    /** @var ACLManager $aclManager */
+    $aclManager = $container->get(ACLManager::class);
 
     $leftMenu = [];
 
     $aclQuery = new Core_Model_Query();
     $aclQuery->aclFilter->enabled = true;
     $aclQuery->aclFilter->user = $connectedUser;
-    $aclQuery->aclFilter->action = Action::VIEW();
+    $aclQuery->aclFilter->action = Actions::VIEW;
 
     $leftMenu[1] = [
         'name' => __('UI', 'name', 'home'),
-        'url' => $this->baseUrl('orga/organization/'),
+        'url' => $this->baseUrl('account/dashboard'),
     ];
     $leftMenu[3] = [
         'name' => __('Inventory', 'menu', 'simulations'),
@@ -41,10 +43,10 @@ if ($connectedUser) {
         'submenu' => []
     ];
 
-    $isAllowedToViewAllUser = $aclService->isAllowed(
+    $isAllowedToViewAllUser = $aclManager->isAllowed(
         $connectedUser,
-        Action::VIEW(),
-        NamedResource::loadByName(User::class)
+        Actions::VIEW,
+        new ClassResource(User::class)
     );
     if ($isAllowedToViewAllUser) {
         $leftMenu[5] = [
@@ -82,24 +84,13 @@ if ($connectedUser) {
 
     $subMenuRepository = &$leftMenu[4]['submenu'];
 
-    $isAllowedToEditRepository = $aclService->isAllowed(
-        $connectedUser,
-        Action::EDIT(),
-        NamedResource::loadByName('repository')
-    );
+    // TODO
+    $isAllowedToEditRepository = true;
     if ($isAllowedToEditRepository) {
         $subMenuRepository[] = [
             'name' => __('AF', 'name', 'accountingForms'),
             'url' => '#',
             'submenu' => [
-                [
-                    'name' => __('UI', 'name', 'tree'),
-                    'url' => 'af/af/tree'
-                ],
-                [
-                    'name' => __('UI', 'name', 'list'),
-                    'url' => 'af/af/list'
-                ],
                 [
                     'name' => __('TEC', 'interpreter', 'pageTitle'),
                     'url' => 'tec/expression/test'
@@ -135,45 +126,6 @@ if ($connectedUser) {
                 [
                     'name'    => __('UI', 'name', 'control'),
                     'url'     => 'classification/consistency/check',
-                ],
-            ]
-        ];
-    }
-    if ($isAllowedToEditRepository) {
-        $subMenuRepository[] = [
-            'name' => __('Parameter', 'name', 'parameters'),
-            'url' => '#',
-            'submenu' => [
-                [
-                    'name' => __('Parameter', 'familyTree', 'familyTreeEdit'),
-                    'url' => 'parameter/family/tree-edit'
-                ],
-                [
-                    'name' => __('Parameter', 'familyTree', 'familyTreeConsult'),
-                    'url' => 'parameter/family/tree'
-                ],
-                [
-                    'name' => __('Parameter', 'familyList', 'familyListEdit'),
-                    'url' => 'parameter/family/list-edit'
-                ],
-                [
-                    'name' => __('Parameter', 'familyList', 'familyListConsult'),
-                    'url' => 'parameter/family/list'
-                ],
-            ],
-        ];
-    } else {
-        $subMenuRepository[] = [
-            'name' => __('Parameter', 'name', 'parameters'),
-            'url' => '#',
-            'submenu' => [
-                [
-                    'name' => __('Parameter', 'familyTree', 'familyTree'),
-                    'url' => 'parameter/family/tree'
-                ],
-                [
-                    'name' => __('Parameter', 'familyList', 'familyList'),
-                    'url' => 'parameter/family/list'
                 ],
             ]
         ];
@@ -220,7 +172,7 @@ if ($connectedUser) {
     $aclQuery = new Core_Model_Query();
     $aclQuery->aclFilter->enabled = true;
     $aclQuery->aclFilter->user = $connectedUser;
-    $aclQuery->aclFilter->action = Action::EDIT();
+    $aclQuery->aclFilter->action = Actions::EDIT;
     $isAllowToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
     if ($isAllowedToEditRepository || $isAllowToEditOrganizations) {
         $leftMenu[6] = [

@@ -1,0 +1,56 @@
+<?php
+use AF\Domain\AFLibrary;
+
+/** @var AFLibrary $library */
+$library = $this->library;
+
+$tree = new UI_Tree('afTree', 'tree_af-tree', 'af');
+$tree->expandAll = true;
+$tree->addParam('library', $library->getId());
+$tree->addParam('mode', $this->mode);
+
+// Formulaire d'ajout
+$addForm = new UI_Form('addNode');
+$addForm->setAction('af/tree_af-tree/addnode');
+$addForm->setAjax(true);
+$label = new UI_Form_Element_Text('label');
+$label->setLabel(__('UI', 'name', 'label'));
+$addForm->addElement($label);
+
+// Ajout
+$tree->addNode = true;
+$tree->addPanelForm = $addForm;
+$tree->addPanelTitle = __('AF', 'formTree', 'addPanelTitle');
+$tree->addButtonLabel = __('AF', 'formTree', 'addButton');
+// Édition
+$editLabel = new UI_Form_Element_Text('afTree_labelEdit');
+$editLabel->setLabel(__('UI', 'name', 'label'));
+$htmlComplement = new UI_Form_Element_HTML('afTree_htmlComplement');
+$htmlComplement->setLabel('');
+$tree->setEditNode(true, true, [$editLabel, $htmlComplement]);
+// Suppression
+$tree->deleteNode = true;
+$tree->expandAll = false;
+$tree->collapseAll = false;
+
+$tree->display();
+
+
+// TODO ça sert à quoi ce caca ?
+$script = <<<JS
+$('#afTree_element').change(function(e) {
+    var idNode = $(this).val();
+    $.get(
+        'af/tree_af-tree/getinfoedit?idNode=' + idNode,
+        function(o) {
+            $('#afTree_labelEdit').val(o.label);
+            $('#afTree_htmlComplement').html(o.htmlComplement);
+            $('#afTree_editPanel .modal-header h3').html(o.title);
+        }
+    ).error(function(o) {
+        errorHandler(o);
+    });
+});
+JS;
+
+$this->headScript()->appendScript($script);

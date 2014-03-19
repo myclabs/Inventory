@@ -7,22 +7,25 @@
  * @subpackage Model
  */
 
+use Account\Domain\Account;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
-use Orga\Model\ACL\OrganizationResourceTrait;
-use User\Domain\ACL\Resource\Resource;
+use MyCLabs\ACL\Model\EntityResource;
+use Orga\Model\ACL\OrganizationAdminRole;
 
 /**
  * Organization.
  * @package    Orga
  * @subpackage Model
  */
-class Orga_Model_Organization extends Core_Model_Entity implements Resource
+class Orga_Model_Organization extends Core_Model_Entity implements EntityResource
 {
     use Core_Model_Entity_Translatable;
-    use OrganizationResourceTrait;
 
+    // Constantes de tris et de filtres.
+    const QUERY_ACCOUNT = 'account';
     // Constantes de path des Axis, Member, Granularity et Cell.
     const PATH_SEPARATOR = '/';
     const PATH_JOIN = '&';
@@ -33,6 +36,13 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
      * @var string
      */
     protected $id = null;
+
+    /**
+     * Account possédant l'organization.
+     *
+     * @var Account
+     */
+    protected $account = null;
 
     /**
      * Label du Organization.
@@ -62,16 +72,24 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
      */
     protected $granularityForInventoryStatus = null;
 
+    /**
+     * Liste des roles administrateurs sur cette organisation.
+     *
+     * @var OrganizationAdminRole[]|Collection
+     */
+    protected $adminRoles;
+
 
     /**
      * Constructeur de la classe Organization.
      */
-    public function __construct()
+    public function __construct(Account $account)
     {
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
+        $this->adminRoles = new ArrayCollection();
 
-        $this->constructACL();
+        $this->account = $account;
     }
 
     /**
@@ -82,6 +100,16 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Renvoie l'Account auquel appartient l'Organization.
+     *
+     * @return Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
     }
 
     /**
@@ -154,7 +182,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
 
         if (count($axis) === 0) {
             throw new Core_Exception_NotFound('No Axis in Organization matching ref "'.$ref.'".');
-        } else if (count($axis) > 1) {
+        } elseif (count($axis) > 1) {
             throw new Core_Exception_TooMany('Too many Axis in Organization matching "'.$ref.'".');
         }
 
@@ -335,7 +363,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
 
         if (empty($granularity)) {
             throw new Core_Exception_NotFound('No Granularity in Organization matching ref "'.$ref.'".');
-        } else if (count($granularity) > 1) {
+        } elseif (count($granularity) > 1) {
             throw new Core_Exception_TooMany('Too many Granularity in Organization matching ref "'.$ref.'".');
         }
 
@@ -439,9 +467,47 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
      */
     public function getInputGranularities()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
-        $criteria->where(Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null));
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->neq('inputConfigGranularity', null));
         $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria)->toArray();
+    }
+
+    /**
+     * Retourne la cellule globale de la structure organisationelle.
+     *
+     * @return Orga_Model_Cell
+     */
+    public function getGlobalCell()
+    {
+        return $this->getGranularityByRef('global')->getCellByMembers([]);
+    }
+
+    /**
+     * @return OrganizationAdminRole[]
+     */
+    public function getAdminRoles()
+    {
+        return $this->adminRoles;
+    }
+
+    /**
+     * API utilisée uniquement par OrganizationAdminRole
+     *
+     * @param OrganizationAdminRole $adminRole
+     */
+    public function addAdminRole(OrganizationAdminRole $adminRole)
+    {
+        $this->adminRoles->add($adminRole);
+    }
+
+    /**
+     * API utilisée uniquement par OrganizationAdminRole
+     *
+     * @param OrganizationAdminRole $adminRole
+     */
+    public function removeAdminRole(OrganizationAdminRole $adminRole)
+    {
+        $this->adminRoles->removeElement($adminRole);
     }
 }

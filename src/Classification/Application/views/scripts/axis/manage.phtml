@@ -76,5 +76,6 @@
     $script .= 'errorHandler(o);';
     $script .= '});';
     $script .= '});';
+    $script .= 'refFromLabel(\'label\', \'ref\');';
     $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
 ?>

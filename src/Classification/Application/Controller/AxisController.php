@@ -34,6 +34,7 @@ class Classification_AxisController extends Core_Controller
     public function manageAction()
     {
         $this->view->listParents = IndicatorAxis::loadList();
+        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     }
 
 }

@@ -33,6 +33,8 @@ class AFCopyService
         $deepCopy->addFilter(new SetNullFilter(), new PropertyNameMatcher('id'));
         // Position
         $deepCopy->addFilter(new SetNullFilter(), new PropertyNameMatcher('position'));
+        // Keep AF library
+        $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher(AF::class, 'library'));
         // Keep AF category
         $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher(AF::class, 'category'));
         // Doctrine collections

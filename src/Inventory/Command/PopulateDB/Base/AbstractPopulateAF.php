@@ -9,6 +9,7 @@ use AF\Domain\Action\SetValue\SetCheckboxValue;
 use AF\Domain\Action\SetValue\SetNumericFieldValue;
 use AF\Domain\AF;
 use AF\Domain\Action\Action;
+use AF\Domain\AFLibrary;
 use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\Group;
 use AF\Domain\Component\Select\SelectMulti;
@@ -121,34 +122,38 @@ abstract class AbstractPopulateAF
     abstract public function run(OutputInterface $output);
 
     /**
-     * @param string   $label
-     * @param Category $parent
+     * @param AFLibrary $library
+     * @param string    $label
+     * @param Category  $parent
      * @return Category
      */
-    protected function createCategory($label, Category $parent = null)
+    protected function createCategory(AFLibrary $library, $label, Category $parent = null)
     {
-        $category = new Category();
+        $category = new Category($library);
         $category->setLabel($label);
         if ($parent !== null) {
             $category->setParentCategory($parent);
         }
         $category->save();
+        $library->addCategory($category);
         return $category;
     }
 
     /**
-     * @param Category $category
-     * @param          $ref
-     * @param          $label
+     * @param AFLibrary $library
+     * @param Category  $category
+     * @param string    $ref
+     * @param string    $label
      * @return AF
      */
-    protected function createAF(Category $category, $ref, $label)
+    protected function createAF(AFLibrary $library, Category $category, $ref, $label)
     {
-        $aF = new AF($ref);
-        $aF->setLabel($label);
-        $aF->save();
-        $category->addAF($aF);
-        return $aF;
+        $af = new AF($library, $ref);
+        $af->setLabel($label);
+        $af->save();
+        $category->addAF($af);
+        $library->addAF($af);
+        return $af;
     }
 
     /**

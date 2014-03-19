@@ -19,50 +19,40 @@ use Symfony\Component\Console\Output\OutputInterface;
 class TestDataSet
 {
     /**
+     * @Inject
      * @var BasicDataSet
      */
     private $basicDataSet;
 
     /**
+     * @Inject
      * @var EntityManager
      */
     private $entityManager;
 
     /**
+     * @Inject
      * @var PopulateClassification
      */
     private $populateClassification;
 
     /**
+     * @Inject
      * @var PopulateParameter
      */
     private $populateParameter;
 
     /**
+     * @Inject
      * @var PopulateAF
      */
     private $populateAF;
 
     /**
+     * @Inject
      * @var PopulateOrga
      */
     private $populateOrga;
-
-    public function __construct(
-        BasicDataSet $basicDataSet,
-        EntityManager $entityManager,
-        PopulateClassification $populateClassification,
-        PopulateParameter $populateParameter,
-        PopulateAF $populateAF,
-        PopulateOrga $populateOrga
-    ) {
-        $this->basicDataSet = $basicDataSet;
-        $this->entityManager = $entityManager;
-        $this->populateClassification = $populateClassification;
-        $this->populateParameter = $populateParameter;
-        $this->populateAF = $populateAF;
-        $this->populateOrga = $populateOrga;
-    }
 
     public function run(OutputInterface $output)
     {

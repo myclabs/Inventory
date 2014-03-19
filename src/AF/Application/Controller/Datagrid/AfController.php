@@ -1,13 +1,8 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  thibaud.rolland
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\AFDeletionService;
+use AF\Domain\AFLibrary;
 use AF\Domain\Category;
 use AF\Domain\Component\SubAF;
 use AF\Domain\Output\OutputElement;
@@ -15,9 +10,9 @@ use DI\Annotation\Inject;
 use Core\Annotation\Secure;
 
 /**
- * Conditions Controller
- * @package AF
- * @property $view
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author thibaud.rolland
  */
 class AF_Datagrid_AfController extends UI_Controller_Datagrid
 {
@@ -28,44 +23,37 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     private $afDeletionService;
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
     {
-        $afList = AF::loadList($this->request);
-        foreach ($afList as $af) {
-            /** @var $af AF */
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
+
+        foreach ($library->getAFList() as $af) {
             $data = [];
             $data['index'] = $af->getId();
             $data['category'] = $this->cellList($af->getCategory()->getId());
             $data['ref'] = $af->getRef();
             $data['label'] = $af->getLabel();
-            $data['configuration'] = $this->cellLink($this->view->url(array(
-                                                                           'module'     => 'af',
-                                                                           'controller' => 'edit',
-                                                                           'action'     => 'menu',
-                                                                           'id'         => $af->getId(),
-                                                                      )),
-                __('UI', 'name', 'configuration'), 'share-alt'
-            );
-            $data['test'] = $this->cellLink($this->view->url(array(
-                                                                  'module'     => 'af',
-                                                                  'controller' => 'af',
-                                                                  'action'     => 'test',
-                                                                  'id'         => $af->getId(),
-                                                             )),
-                __('UI', 'name', 'test'), 'share-alt'
-            );
-            $data['duplicate'] = $this->cellPopup($this->view->url(array(
-                                                                  'module'     => 'af',
-                                                                  'controller' => 'af',
-                                                                  'action'     => 'duplicate-popup',
-                                                                  'id'         => $af->getId(),
-                                                             )),
-                __('UI', 'verb', 'duplicate'), 'plus-circle'
-            );
+            $data['configuration'] = $this->cellLink($this->view->url([
+                'module'     => 'af',
+                'controller' => 'edit',
+                'action'     => 'menu',
+                'id'         => $af->getId(),
+            ]), __('UI', 'name', 'configuration'));
+            $data['test'] = $this->cellLink($this->view->url([
+                'module'     => 'af',
+                'controller' => 'af',
+                'action'     => 'test',
+                'id'         => $af->getId(),
+            ]), __('UI', 'name', 'test'));
+            $data['duplicate'] = $this->cellPopup($this->view->url([
+                'module'     => 'af',
+                'controller' => 'af',
+                'action'     => 'duplicate-popup',
+                'id'         => $af->getId(),
+            ]), __('UI', 'verb', 'duplicate'), 'plus-circle');
             $this->addLine($data);
         }
         $this->totalElements = AF::countTotal($this->request);
@@ -74,12 +62,13 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
 
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
     {
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
+
         // Validation du formulaire
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
@@ -100,7 +89,8 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             $category = Category::load($idCategory);
 
             try {
-                $af = new AF($ref);
+                $af = new AF($library, $ref);
+                $library->addAF($af);
             } catch (Core_Exception_User $e) {
                 $this->setAddElementErrorMessage('ref', $e->getMessage());
                 $this->send();
@@ -188,5 +178,4 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
-
 }

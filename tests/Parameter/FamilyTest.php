@@ -2,12 +2,14 @@
 
 namespace Tests\Parameter;
 
+use Account\Domain\Account;
 use Core\Test\TestCase;
 use Core_Tools;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Family\Cell;
 use Parameter\Domain\Family\Dimension;
 use Parameter\Domain\Family\Member;
+use Parameter\Domain\ParameterLibrary;
 use Unit\UnitAPI;
 
 /**
@@ -20,7 +22,11 @@ class FamilyTest extends TestCase
      */
     public static function generateObject()
     {
-        $family = new Family(Core_Tools::generateRef(), 'Test');
+        $account = new Account('test');
+        self::getEntityManager()->persist($account);
+        $library = new ParameterLibrary($account, 'foo');
+        $library->save();
+        $family = new Family($library, Core_Tools::generateRef(), 'Test');
         $family->setUnit(new UnitAPI('m'));
         $family->save();
         self::getEntityManager()->flush();
@@ -33,6 +39,8 @@ class FamilyTest extends TestCase
     public static function deleteObject(Family $o)
     {
         $o->delete();
+        $o->getLibrary()->delete();
+        self::getEntityManager()->remove($o->getLibrary()->getAccount());
         self::getEntityManager()->flush();
     }
 
@@ -41,12 +49,14 @@ class FamilyTest extends TestCase
      */
     public function testDimensions()
     {
-        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         $this->assertNotNull($family->getDimensions());
         // Add
-        $dimension1 = new Dimension($family, Core_Tools::generateRef(), Core_Tools::generateRef(), Dimension::ORIENTATION_HORIZONTAL);
-        $dimension2 = new Dimension($family, Core_Tools::generateRef(), Core_Tools::generateRef(), Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, 'ref1', 'label 1', Dimension::ORIENTATION_HORIZONTAL);
+        $dimension2 = new Dimension($family, 'ref2', 'label 2', Dimension::ORIENTATION_HORIZONTAL);
         $family->addDimension($dimension1);
         $family->addDimension($dimension2);
         $this->assertCount(2, $family->getDimensions());
@@ -60,7 +70,9 @@ class FamilyTest extends TestCase
      */
     public function testCells1()
     {
-        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
         $family->getCell(['foo', 'bar']);
     }
 
@@ -69,7 +81,9 @@ class FamilyTest extends TestCase
      */
     public function testCells2()
     {
-        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
         $family->getCell([]);
     }
 
@@ -78,7 +92,9 @@ class FamilyTest extends TestCase
      */
     public function testCells1Dimension1()
     {
-        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         // 1 dimension
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Test', Dimension::ORIENTATION_HORIZONTAL);
@@ -105,7 +121,9 @@ class FamilyTest extends TestCase
      */
     public function testCells2Dimensions1()
     {
-        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Test 1', Dimension::ORIENTATION_HORIZONTAL);
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
@@ -127,7 +145,9 @@ class FamilyTest extends TestCase
      */
     public function testCells2Dimensions2()
     {
-        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
@@ -159,7 +179,9 @@ class FamilyTest extends TestCase
      */
     public function testCells3Dimensions()
     {
-        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
@@ -190,7 +212,9 @@ class FamilyTest extends TestCase
      */
     public function testCells2DimensionsSameRef()
     {
-        $family = new Family(Core_Tools::generateRef(), Core_Tools::generateRef());
+        $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
+
+        $family = new Family($library, 'ref', 'label');
 
         $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
         $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');

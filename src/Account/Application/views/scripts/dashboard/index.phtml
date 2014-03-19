@@ -1,0 +1,163 @@
+<?php
+use Account\Application\ViewModel\AccountView;
+use Account\Domain\Account;
+
+/** @var Account[] $accountList */
+$accountList = $this->accountList;
+
+/** @var AccountView $account */
+$account = $this->account;
+?>
+
+<style>
+    .deleteOrganization { margin-left: 15px; }
+</style>
+
+<div class="page-header">
+    <h1>
+        <?=$account->name?>
+        <small>Dashboard</small>
+    </h1>
+</div>
+
+<p>
+    <label>
+        Changer de compte :
+        <select id="accountSwitcher">
+            <?php foreach ($accountList as $alternativeAccount) : ?>
+                <?php
+                $selected = $alternativeAccount->getId() == $account->id ? 'selected' : '';
+                ?>
+                <option value="<?=$alternativeAccount->getId()?>" <?=$selected?>>
+                    <?=$alternativeAccount->getName()?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </label>
+
+    <script>
+        $('#accountSwitcher').change(function () {
+            window.location.href = "account/dashboard?id=" + $(this).val();
+        });
+    </script>
+</p>
+
+<h3>Workspaces</h3>
+
+<div class="organizationList">
+    <?php foreach ($account->organizations as $organization) : ?>
+
+        <div class="organization well well-small">
+            <?php if ($organization->canBeDeleted) : ?>
+                <div class="pull-right">
+                    <a class="deleteOrganization btn btn-small btn-warning"
+                       href="orga/organization/delete/idOrganization/<?=$organization->id?>">
+                        <i class="fa fa-trash-o"></i>
+                        <?=___('UI', 'verb', 'delete')?>
+                    </a>
+                </div>
+            <?php endif; ?>
+            <?php if ($organization->canBeEdited) : ?>
+                <div class="pull-right">
+                    <a class="editOrganization btn btn-small btn-primary"
+                       href="orga/organization/edit/idOrganization/<?=$organization->id?>">
+                        <i class="fa fa-wrench"></i>
+                        <?=___('UI', 'name', 'configurationOrga')?>
+                    </a>
+                </div>
+            <?php endif; ?>
+
+            <h3>
+                <a href="orga/organization/view/idOrganization/<?=$organization->id?>">
+                    <?=$organization->label?>
+                    <small>
+                        <i class="fa fa-external-link"></i>
+                        <?=___('Orga', 'organizationList', 'goToData')?>
+                    </small>
+                </a>
+            </h3>
+        </div>
+
+    <?php endforeach; ?>
+
+    <?php if (empty($account->organizations)) : ?>
+        <p class="muted">
+            Aucun workspace.
+        </p>
+    <?php endif; ?>
+
+    <?php if ($this->canCreateOrganization) : ?>
+        <p>
+            <a href="orga/organization/add" class="btn">
+                <i class="fa fa-plus"></i>
+                Créer un nouveau workspace
+            </a>
+        </p>
+    <?php endif; ?>
+</div>
+
+<script>
+    $(function() {
+        $(".deleteOrganization").confirm({
+            text: '<?=___('UI', 'message', 'areYouSure')?>',
+            confirmButton: '<i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?>',
+            cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',
+            post: true
+        });
+    });
+</script>
+
+
+<h3>Bibliothèques</h3>
+
+<h4>Formulaires</h4>
+
+<div>
+    <?php foreach ($account->afLibraries as $library) : ?>
+
+        <div class="afLibrary well well-small">
+            <h3>
+                <a href="af/library/view/id/<?=$library->id?>">
+                    <?=$library->label?>
+                    <small>
+                        <i class="fa fa-external-link"></i>
+                        <?=___('Orga', 'organizationList', 'goToData')?>
+                    </small>
+                </a>
+            </h3>
+        </div>
+
+    <?php endforeach; ?>
+
+    <?php if (empty($account->afLibraries)) : ?>
+        <p class="muted">
+            Aucune bibliothèque de formulaires.
+        </p>
+    <?php endif; ?>
+</div>
+
+<h4>Paramètres</h4>
+
+<div>
+    <?php foreach ($account->parameterLibraries as $library) : ?>
+
+        <div class="parameterLibrary well well-small">
+            <h3>
+                <a href="parameter/library/view/id/<?=$library->id?>">
+                    <?=$library->label?>
+                    <small>
+                        <i class="fa fa-external-link"></i>
+                        <?=___('Orga', 'organizationList', 'goToData')?>
+                    </small>
+                </a>
+            </h3>
+        </div>
+
+    <?php endforeach; ?>
+
+    <?php if (empty($account->afLibraries)) : ?>
+        <p class="muted">
+            Aucune bibliothèque de paramètres.
+        </p>
+    <?php endif; ?>
+</div>

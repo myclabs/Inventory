@@ -2,6 +2,7 @@
 
 namespace Inventory\Command\PopulateDB;
 
+use Inventory\Command\PopulateDB\BasicDataSet\PopulateAccount;
 use Inventory\Command\PopulateDB\BasicDataSet\PopulateUser;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -15,19 +16,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 class BasicDataSet
 {
     /**
+     * @Inject
      * @var PopulateUser
      */
     private $populateUser;
 
-    public function __construct(PopulateUser $populateUser)
-    {
-        $this->populateUser = $populateUser;
-    }
+    /**
+     * @Inject
+     * @var PopulateAccount
+     */
+    private $populateAccount;
 
     public function run(OutputInterface $output)
     {
         $output->writeln('<comment>Populating with the basic data set</comment>');
 
         $this->populateUser->run($output);
+        $this->populateAccount->run($output);
     }
 }

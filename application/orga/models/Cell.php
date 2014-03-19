@@ -5,8 +5,12 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Orga\Model\ACL\CellResourceTrait;
-use User\Domain\ACL\Resource\Resource;
+use MyCLabs\ACL\Model\EntityResource;
+use Orga\Model\ACL\AbstractCellRole;
+use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellObserverRole;
 
 /**
  * Definit une cellule organisationnelle.
@@ -14,10 +18,8 @@ use User\Domain\ACL\Resource\Resource;
  * @author valentin.claras
  * @author simon.rieu
  */
-class Orga_Model_Cell extends Core_Model_Entity implements Resource
+class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 {
-    use CellResourceTrait;
-
     // Constantes de tris et de filtres.
     const QUERY_GRANULARITY = 'granularity';
     const QUERY_TAG = 'tag';
@@ -117,7 +119,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Tableau d'état des saisies de la cellule.
      *
-     * @var PrimaryInputSet
+     * @var PrimaryInputSet|null
      */
     protected $aFInputSetPrimary = null;
 
@@ -177,6 +179,13 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      */
     protected $docLibraryForSocialContextActions = null;
 
+    /**
+     * Liste des roles sur cette cellule.
+     *
+     * @var AbstractCellRole[]|Collection
+     */
+    protected $roles;
+
 
     /**
      * Constructeur de la classe Cell.
@@ -191,7 +200,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         $this->dWResults = new ArrayCollection();
         $this->socialGenericActions = new ArrayCollection();
         $this->socialContextActions = new ArrayCollection();
-        $this->constructACL();
+        $this->roles = new ArrayCollection();
 
         $this->granularity = $granularity;
         foreach ($members as $member) {
@@ -226,6 +235,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @param PrimaryInputSet $aFInputSetPrimary
      *
+     * @throws Core_Exception_NotFound
      * @return Orga_Model_Cell
      */
     public static function loadByAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary)
@@ -542,9 +552,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                 $this->updateInventoryStatus(self::STATUS_NOTLAUNCHED);
             }
         }
-
-        // MAJ des ACL
-        $this->updateACL();
     }
 
     /**
@@ -1006,7 +1013,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie l'InputSetPrimary associé à la cellule.
      *
-     * @return \AF\Domain\InputSet\PrimaryInputSet
+     * @return PrimaryInputSet|null
      */
     public function getAFInputSetPrimary()
     {
@@ -1555,6 +1562,59 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             }
         }
         throw new Core_Exception_NotFound('No broader Granularity provides a Library for the SocialContextAction.');
+    }
+
+    /**
+     * @return AbstractCellRole[]
+     */
+    public function getAllRoles()
+    {
+        return $this->roles;
+    }
+
+    public function addRole(AbstractCellRole $role)
+    {
+        $this->roles[] = $role;
+    }
+
+    /**
+     * @return CellAdminRole[]
+     */
+    public function getAdminRoles()
+    {
+        return $this->roles->filter(function (AbstractCellRole $role) {
+            return $role instanceof CellAdminRole;
+        });
+    }
+
+    /**
+     * @return CellManagerRole[]
+     */
+    public function getManagerRoles()
+    {
+        return $this->roles->filter(function (AbstractCellRole $role) {
+            return $role instanceof CellManagerRole;
+        });
+    }
+
+    /**
+     * @return CellContributorRole[]
+     */
+    public function getContributorRoles()
+    {
+        return $this->roles->filter(function (AbstractCellRole $role) {
+            return $role instanceof CellContributorRole;
+        });
+    }
+
+    /**
+     * @return CellObserverRole[]
+     */
+    public function getObserverRoles()
+    {
+        return $this->roles->filter(function (AbstractCellRole $role) {
+            return $role instanceof CellObserverRole;
+        });
     }
 
     /**

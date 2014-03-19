@@ -21,13 +21,13 @@ java -jar selenium-server-standalone.jar > selenium.log 2>&1 &
 
 sleep 5
 
-# Clear caches
-../bin/inventory cache:clear
-
 # Composer
 cd ..
 composer install --optimize-autoloader
 cd behat
+
+# Clear caches
+../bin/inventory cache:clear
 
 # Export the databases
 ./generate-db.sh

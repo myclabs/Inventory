@@ -18,7 +18,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Category extends Core_Model_Entity
 {
-
     use Core_Strategy_Ordered;
     use Core_Model_Entity_Translatable;
 
@@ -29,6 +28,11 @@ class Category extends Core_Model_Entity
      * @var int
      */
     protected $id;
+
+    /**
+     * @var AFLibrary
+     */
+    protected $library;
 
     /**
      * @var string
@@ -51,8 +55,10 @@ class Category extends Core_Model_Entity
     protected $afs;
 
 
-    public function __construct()
+    public function __construct(AFLibrary $library, $label = null)
     {
+        $this->library = $library;
+        $this->label = $label;
         $this->childCategories = new ArrayCollection();
         $this->afs = new ArrayCollection();
     }

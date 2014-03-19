@@ -2,8 +2,8 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use Orga\Model\ACL\Action\CellAction;
-use User\Domain\ACL\ACLService;
+use MyCLabs\ACL\ACLManager;
+use User\Domain\ACL\Actions;
 
 /**
  * @author valentin.claras
@@ -14,9 +14,9 @@ class Orga_Tab_InputController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLService
+     * @var ACLManager
      */
-    private $aclService;
+    private $aclManager;
 
     /**
      * @Inject
@@ -38,9 +38,9 @@ class Orga_Tab_InputController extends Core_Controller
         $this->view->idCell = $idCell;
         $this->view->comments = $cell->getSocialCommentsForInputSetPrimary();
         $this->view->currentUser = $this->_helper->auth();
-        $this->view->isUserAbleToComment = $this->aclService->isAllowed(
+        $this->view->isUserAbleToComment = $this->aclManager->isAllowed(
             $this->_helper->auth(),
-            CellAction::INPUT(),
+            Actions::INPUT,
             $cell
         );
     }

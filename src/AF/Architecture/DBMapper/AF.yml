@@ -31,6 +31,9 @@ AF\Domain\AF:
       nullable: false
 
   manyToOne:
+    library:
+      targetEntity: AF\Domain\AFLibrary
+      inversedBy: afList
     category:
       targetEntity: AF\Domain\Category
       inversedBy: afs

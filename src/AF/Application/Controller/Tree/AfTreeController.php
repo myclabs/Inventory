@@ -1,11 +1,8 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\AFDeletionService;
+use AF\Domain\AFLibrary;
 use AF\Domain\Category;
 use AF\Domain\Component\SubAF;
 use AF\Domain\Output\OutputElement;
@@ -13,7 +10,6 @@ use Core\Annotation\Secure;
 
 /**
  * Controller de l'arbre des AF
- * @package AF
  */
 class AF_Tree_AfTreeController extends UI_Controller_Tree
 {
@@ -24,18 +20,19 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     private $afDeletionService;
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Tree::getnodesAction()
      * @Secure("editAF")
      */
     public function getnodesAction()
     {
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
+
         // Chargement des catégories racines
         if ($this->idNode === null) {
-            $categories = Category::loadRootCategories();
+            $categories = $library->getRootCategories();
             $currentCategory = null;
         } else {
-            /** @var $currentCategory \AF\Domain\Category */
+            /** @var $currentCategory Category */
             $currentCategory = $this->fromTreeId($this->idNode);
             $categories = $currentCategory->getChildCategories();
         }
@@ -54,32 +51,32 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Tree::getlistparentsAction()
      * @Secure("editAF")
      */
     public function getlistparentsAction()
     {
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
+
         $this->addElementList('', '');
 
         // Ajoute l'élément "Racine"
         $this->addElementList("root", __('AF', 'formTree', 'rootCategoryLabel'));
 
-        /** @var Category[] $categories */
-        $categories = Category::loadList();
-        foreach ($categories as $category) {
+        foreach ($library->getCategories() as $category) {
             $this->addElementList($this->getTreeId($category), $category->getLabel());
         }
         $this->send();
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Tree::getlistsiblingsAction()
      * @Secure("editAF")
      */
     public function getlistsiblingsAction()
     {
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
+
         $node = $this->fromTreeId($this->idNode);
 
         // Détermine le parent
@@ -95,14 +92,14 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             if ($node instanceof Category) {
                 $parentNode = $node->getParentCategory();
             } else {
-                /** @var \AF\Domain\AF $node */
+                /** @var AF $node */
                 $parentNode = $node->getCategory();
             }
         }
 
         // Charge les siblings
         if ($parentNode == null) {
-            $siblings = Category::loadRootCategories();
+            $siblings = $library->getRootCategories();
         } else {
             if ($node instanceof Category) {
                 $siblings = $parentNode->getChildCategories();
@@ -157,12 +154,13 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Tree::addnodeAction()
      * @Secure("editAF")
      */
     public function addnodeAction()
     {
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
+
         // Validate the form
         $label = $this->getAddElementValue('label');
         if ($label == '') {
@@ -171,9 +169,9 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             return;
         }
 
-        $category = new Category();
-        $category->setLabel($label);
+        $category = new Category($library, $label);
         $category->save();
+        $library->addCategory($category);
 
         $this->entityManager->flush();
 
@@ -182,8 +180,6 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Tree::editnodeAction()
      * @Secure("editAF")
      */
     public function editnodeAction()
@@ -275,7 +271,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     }
 
     /**
-     * @param \AF\Domain\Category|\AF\Domain\AF $object
+     * @param Category|AF $object
      * @throws Core_Exception
      * @return string ID
      */
@@ -292,7 +288,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     /**
      * @param string $id
      * @throws Core_Exception
-     * @return Category|\AF\Domain\AF
+     * @return Category|AF
      */
     private function fromTreeId($id)
     {
@@ -304,5 +300,4 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         }
         throw new Core_Exception("Unknown object type");
     }
-
 }

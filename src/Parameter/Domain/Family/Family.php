@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Parameter\Domain\Category;
+use Parameter\Domain\ParameterLibrary;
 use Unit\UnitAPI;
 
 /**
@@ -37,6 +38,11 @@ class Family extends Core_Model_Entity
      * @var int
      */
     protected $id;
+
+    /**
+     * @var ParameterLibrary
+     */
+    private $library;
 
     /**
      * Identifiant textuel
@@ -85,8 +91,9 @@ class Family extends Core_Model_Entity
      */
     protected $documentation;
 
-    public function __construct($ref, $label)
+    public function __construct(ParameterLibrary $library, $ref, $label)
     {
+        $this->library = $library;
         $this->setRef($ref);
         $this->label = $label;
 
@@ -461,6 +468,14 @@ class Family extends Core_Model_Entity
     public function postLoad()
     {
         $this->updateCachePosition();
+    }
+
+    /**
+     * @return ParameterLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
     }
 
     /**

@@ -16,11 +16,23 @@
 
 - Déployer l'application **sans build update ni redémarrage du worker**
 
+- Exécuter le script de migration SQL
+
+```
+scripts/migration/2.11/migrate.sql
+```
+
 - Copier `application/configs/parameters.php.default` vers `application/configs/parameters.php`
 
 - Configurer `application/configs/parameters.php` en s'inspirant du `application.ini`
 
 - Faire un build update et redémarrer le worker.
+
+- Lancer le script de rebuild des ACL
+
+```
+bin/inventory export:rebuild
+```
 
 
 ## 2.10

@@ -18,38 +18,28 @@ use Symfony\Component\Console\Output\OutputInterface;
 class PopulateDBCommand extends Command
 {
     /**
+     * @Inject
      * @var CreateDBCommand
      */
     private $createCommand;
 
     /**
+     * @Inject
      * @var BasicDataSet
      */
     private $basicDataSet;
 
     /**
+     * @Inject
      * @var TestDataSet
      */
     private $testDataSet;
 
     /**
+     * @Inject
      * @var TestDWDataSet
      */
     private $testDWDataSet;
-
-    public function __construct(
-        CreateDBCommand $createCommand,
-        BasicDataSet $basicDataSet,
-        TestDataSet $testDataSet,
-        TestDWDataSet $testDWDataSet
-    ) {
-        $this->createCommand = $createCommand;
-        $this->basicDataSet = $basicDataSet;
-        $this->testDataSet = $testDataSet;
-        $this->testDWDataSet = $testDWDataSet;
-
-        parent::__construct();
-    }
 
     protected function configure()
     {

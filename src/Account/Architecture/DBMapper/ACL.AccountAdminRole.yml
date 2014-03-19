@@ -1,0 +1,4 @@
+Account\Domain\ACL\AccountAdminRole:
+  type: entity
+  table: Account_ACL_AccountAdminRole
+  readOnly: true

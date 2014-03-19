@@ -1,9 +1,9 @@
 <?php
 
 use Core\Annotation\Secure;
+use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Core\Work\ServiceCall\ServiceCallTask;
-use User\Domain\ACL\Action;
 use User\Domain\User;
 
 /**
@@ -39,7 +39,7 @@ class Orga_Datagrid_Organization_RelevanceController extends UI_Controller_Datag
         $this->request->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
         $this->request->aclFilter->enabled = true;
         $this->request->aclFilter->user = $connectedUser;
-        $this->request->aclFilter->action = Action::EDIT();
+        $this->request->aclFilter->action = Actions::EDIT;
 
         $this->request->order->addOrder(Orga_Model_Cell::QUERY_TAG);
         /** @var Orga_Model_Cell $cell */

@@ -1,7 +1,4 @@
 <?php
-/**
- * @author matthieu.napoli
- */
 
 use Behat\Behat\Context\Step;
 use Behat\Mink\Element\NodeElement;
@@ -19,20 +16,21 @@ require_once 'DatagridFeatureContext.php';
 require_once 'PopupFeatureContext.php';
 
 /**
- * Features context.
+ * @author matthieu.napoli
  */
 class FeatureContext extends MinkContext
 {
     use DatabaseFeatureContext;
     use DatagridFeatureContext;
     use PopupFeatureContext;
+    use AccountFeatureContext;
 
     /**
      * @BeforeScenario
      */
     public function setWindowSize()
     {
-        $this->getSession()->resizeWindow(1280, 1024);
+        $this->getSession()->resizeWindow(1600, 1024);
     }
 
     /**
@@ -108,9 +106,13 @@ class FeatureContext extends MinkContext
         $errorMessage = $this->getSession()->evaluateScript("return $expression;");
 
         if (strpos($errorMessage, $error) === false) {
-            throw new ExpectationException("No error message '$error' for field '$field'.\n"
-                . "Error message found: '$errorMessage'.\n"
-                . "Javascript expression: '$expression'.", $this->getSession());
+            throw new ExpectationException(sprintf(
+                "No error message '%s' for field '%s'.\nError message found: '%s'.\nJavascript expression: '%s'.",
+                $error,
+                $field,
+                $errorMessage,
+                $expression
+            ), $this->getSession());
         }
     }
 
@@ -122,9 +124,12 @@ class FeatureContext extends MinkContext
     public function click($name)
     {
         $name = $this->fixStepArgument($name);
-        $node = $this->findLinkOrButton($name);
-        $node->focus();
-        $node->click();
+
+        $this->spin(function () use ($name) {
+            $node = $this->findLinkOrButton($name);
+            $node->focus();
+            $node->click();
+        });
 
         $this->waitForPageToFinishLoading();
     }
@@ -136,9 +141,11 @@ class FeatureContext extends MinkContext
      */
     public function clickElement($selector)
     {
-        $node = $this->findElement($selector);
-        $node->focus();
-        $node->click();
+        $this->spin(function () use ($selector) {
+            $node = $this->findElement($selector);
+            $node->focus();
+            $node->click();
+        });
 
         $this->waitForPageToFinishLoading();
     }
@@ -169,23 +176,29 @@ class FeatureContext extends MinkContext
         $nodes = $this->getSession()->getPage()->findAll('css', $selector);
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No radio with label '$label' and value '$value' found.",
-                $this->getSession());
+            throw new ExpectationException(
+                "No radio with label '$label' and value '$value' found.",
+                $this->getSession()
+            );
         }
 
-        $nodes = array_filter($nodes, function(NodeElement $node) {
-                return $this->isElementVisible($node);
-            });
+        $nodes = array_filter($nodes, function (NodeElement $node) {
+            return $this->isElementVisible($node);
+        });
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No radio with label '$label' and value '$value' is visible.",
-                $this->getSession());
+            throw new ExpectationException(
+                "No radio with label '$label' and value '$value' is visible.",
+                $this->getSession()
+            );
         }
 
         if (count($nodes) > 1) {
             $nb = count($nodes);
-            throw new ExpectationException("Too many ($nb) radio with label '$label' and value '$value' are visible.",
-                $this->getSession());
+            throw new ExpectationException(
+                "Too many ($nb) radio with label '$label' and value '$value' are visible.",
+                $this->getSession()
+            );
         }
 
         /** @var NodeElement $node */
@@ -225,8 +238,10 @@ class FeatureContext extends MinkContext
         );
 
         if ($node === null) {
-            throw new ExpectationException("No tab with label '$label' was found.",
-                $this->getSession());
+            throw new ExpectationException(
+                "No tab with label '$label' was found.",
+                $this->getSession()
+            );
         }
 
         $node->focus();
@@ -255,23 +270,29 @@ class FeatureContext extends MinkContext
         );
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No link or button with text, id or title '$locator' found.",
-                $this->getSession());
+            throw new ExpectationException(
+                "No link or button with text, id or title '$locator' found.",
+                $this->getSession()
+            );
         }
 
-        $nodes = array_filter($nodes, function(NodeElement $node) {
-                return $this->isElementVisible($node);
-            });
+        $nodes = array_filter($nodes, function (NodeElement $node) {
+            return $this->isElementVisible($node);
+        });
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No link or button with text, id or title '$locator' is visible.",
-                $this->getSession());
+            throw new ExpectationException(
+                "No link or button with text, id or title '$locator' is visible.",
+                $this->getSession()
+            );
         }
 
         if (count($nodes) > 1) {
             $nb = count($nodes);
-            throw new ExpectationException("Too many ($nb) links or buttons with text, id or title '$locator' are visible.",
-                $this->getSession());
+            throw new ExpectationException(
+                "Too many ($nb) links or buttons with text, id or title '$locator' are visible.",
+                $this->getSession()
+            );
         }
 
         return current($nodes);
@@ -283,7 +304,7 @@ class FeatureContext extends MinkContext
      * @param string $selector
      * @param string $type
      *
-     * @throws Behat\Mink\Exception\ExpectationException
+     * @throws ExpectationException
      * @return NodeElement
      */
     protected function findElement($selector, $type = 'css')
@@ -292,23 +313,29 @@ class FeatureContext extends MinkContext
         $nodes = $this->getSession()->getPage()->findAll($type, $selector);
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No element matches selector '$selector'.",
-                $this->getSession());
+            throw new ExpectationException(
+                "No element matches selector '$selector'.",
+                $this->getSession()
+            );
         }
 
-        $nodes = array_filter($nodes, function(NodeElement $node) {
-                return $this->isElementVisible($node);
-            });
+        $nodes = array_filter($nodes, function (NodeElement $node) {
+            return $this->isElementVisible($node);
+        });
 
         if (count($nodes) === 0) {
-            throw new ExpectationException("No element matching '$selector' is visible.",
-                $this->getSession());
+            throw new ExpectationException(
+                "No element matching '$selector' is visible.",
+                $this->getSession()
+            );
         }
 
         if (count($nodes) > 1) {
             $nb = count($nodes);
-            throw new ExpectationException("Too many ($nb) elements matching '$selector' are visible.",
-                $this->getSession());
+            throw new ExpectationException(
+                "Too many ($nb) elements matching '$selector' are visible.",
+                $this->getSession()
+            );
         }
 
         return current($nodes);
@@ -326,9 +353,9 @@ class FeatureContext extends MinkContext
         /** @var NodeElement[] $nodes */
         $nodes = $this->getSession()->getPage()->findAll('css', $cssSelector);
 
-        $nodes = array_filter($nodes, function(NodeElement $node) {
-                return $this->isElementVisible($node);
-            });
+        $nodes = array_filter($nodes, function (NodeElement $node) {
+            return $this->isElementVisible($node);
+        });
 
         return $nodes;
     }
@@ -359,5 +386,34 @@ class FeatureContext extends MinkContext
         $this->waitForPageToFinishLoading();
 
         $this->assertSession()->elementExists('css', "#{$form}.form");
+    }
+
+    /**
+     * Répète une fonction de recherche jusqu'à ce que cette fonction réussisse (pas d'exception levée).
+     *
+     * @param callable $find    Fonction à répéter.
+     * @param int      $timeout Timeout en secondes.
+     * @return mixed
+     */
+    public function spin(callable $find, $timeout = 5)
+    {
+        // Temps d'attente entre chaque boucle, en secondes
+        $sleepTime = 0.1;
+
+        $loops = (int) ((float) $timeout / $sleepTime);
+
+        for ($i = 0; $i < $loops; $i++) {
+            try {
+                $result = $find();
+                return $result;
+            } catch (\Exception $e) {
+                // keep looping
+            }
+
+            usleep($sleepTime * 1000000);
+        }
+
+        // One last try to throw the exception
+        return $find();
     }
 }

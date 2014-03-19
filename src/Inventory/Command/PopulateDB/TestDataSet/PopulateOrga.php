@@ -2,6 +2,8 @@
 
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
+use Account\Domain\Account;
+use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use AF\Domain\Component\Select;
 use Calc_UnitValue;
@@ -20,9 +22,13 @@ class PopulateOrga extends AbstractPopulateOrga
     {
         $output->writeln('  <info>Populating Orga</info>');
 
+        // Création d'un compte client
+        $account = new Account('The fantastic pizza factory');
+        $this->accountRepository->add($account);
+
         // Création d'une organisation.
-        $organization = $this->createOrganization('Workspace avec données');
-        $organization_vide = $this->createOrganization('Workspace vide');
+        $organization = $this->createOrganization($account, 'Workspace avec données');
+        $organization_vide = $this->createOrganization($account, 'Workspace vide');
 
         // Création des axes.
         $axis_annee = $this->createAxis($organization, 'annee', 'Année');
@@ -50,7 +56,7 @@ class PopulateOrga extends AbstractPopulateOrga
 
         // Création des granularités.
         $granularityGlobal = $this->createGranularity($organization, [],                                                        false, true,  true);
-        $granularity_zone_marque = $this->createGranularity($organization, [$axis_zone, $axis_marque],                          true,  true,  false);
+        $granularity_zone_marque = $this->createGranularity($organization, [$axis_zone, $axis_marque],                          true,  true,  true);
         $granularity_site = $this->createGranularity($organization, [$axis_site],                                               false, true,  true);
         $granularity_annee = $this->createGranularity($organization, [$axis_annee],                                             false, false, false);
         $granularity_annee_categorie = $this->createGranularity($organization, [$axis_annee, $axis_categorie],                  false, false, false);

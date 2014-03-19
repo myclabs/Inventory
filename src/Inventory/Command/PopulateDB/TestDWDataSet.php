@@ -17,36 +17,28 @@ use Symfony\Component\Console\Output\OutputInterface;
 class TestDWDataSet
 {
     /**
+     * @Inject
      * @var BasicDataSet
      */
     private $basicDataSet;
 
     /**
+     * @Inject
      * @var EntityManager
      */
     private $entityManager;
 
     /**
+     * @Inject
      * @var PopulateClassification
      */
     private $populateClassification;
 
     /**
+     * @Inject
      * @var PopulateOrga
      */
     private $populateOrga;
-
-    public function __construct(
-        BasicDataSet $basicDataSet,
-        EntityManager $entityManager,
-        PopulateClassification $populateClassification,
-        PopulateOrga $populateOrga
-    ) {
-        $this->basicDataSet = $basicDataSet;
-        $this->entityManager = $entityManager;
-        $this->populateClassification = $populateClassification;
-        $this->populateOrga = $populateOrga;
-    }
 
     public function run(OutputInterface $output)
     {

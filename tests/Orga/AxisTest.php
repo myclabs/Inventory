@@ -1,4 +1,5 @@
 <?php
+use Account\Domain\Account;
 use Core\Test\TestCase;
 
 /**
@@ -48,7 +49,7 @@ class Orga_Test_AxisAttributes extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization();
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis = new Orga_Model_Axis($this->organization, 'ref');
         $this->axis->setLabel ('Label');
@@ -100,7 +101,7 @@ class Orga_Test_AxisTag extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization();
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis = new Orga_Model_Axis($this->organization, 'ref');
         $this->axis->setLabel ('Label');
@@ -238,7 +239,7 @@ class Orga_Test_AxisHierarchy extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization();
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis = new Orga_Model_Axis($this->organization, 'ref');
         $this->axis->setLabel ('Label');
@@ -1015,7 +1016,7 @@ class Orga_Test_AxisMembers extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization();
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis = new Orga_Model_Axis($this->organization, 'ref');
         $this->axis->setLabel ('Label');

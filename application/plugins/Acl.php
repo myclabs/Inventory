@@ -2,11 +2,10 @@
 
 use AF\Application\AFViewConfiguration;
 use Doc\Domain\Library;
-use Orga\Model\ACL\Action\CellAction;
+use User\Domain\ACL\Actions;
+use MyCLabs\ACL\Model\ClassResource;
 use User\Application\ForbiddenException;
 use User\Application\Plugin\ACLPlugin;
-use User\Domain\ACL\Action;
-use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\User;
 
 /**
@@ -27,7 +26,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
-        $aclQuery->aclFilter->action = Action::VIEW();
+        $aclQuery->aclFilter->action = Actions::VIEW;
         $isIdentityAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
         if ($isIdentityAbleToSeeManyOrganizations) {
             return true;
@@ -38,12 +37,10 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
     public function editOrganizationsRule(User $identity)
     {
-        $organizationResource = NamedResource::loadByName(Orga_Model_Organization::class);
-
-        $isIdentityAbleToCreateOrganizations = $this->aclService->isAllowed(
+        $isIdentityAbleToCreateOrganizations = $this->aclManager->isAllowed(
             $identity,
-            Action::CREATE(),
-            $organizationResource
+            Actions::CREATE,
+            new ClassResource(Orga_Model_Organization::class)
         );
         if ($isIdentityAbleToCreateOrganizations) {
             return true;
@@ -52,7 +49,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
-        $aclQuery->aclFilter->action = Action::EDIT();
+        $aclQuery->aclFilter->action = Actions::EDIT;
         $isIdentityAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
         if ($isIdentityAbleToEditOrganizations) {
             return true;
@@ -63,10 +60,10 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
     public function createOrganizationRule(User $identity)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            Action::CREATE(),
-            NamedResource::loadByName(Orga_Model_Organization::class)
+            Actions::CREATE,
+            new ClassResource(Orga_Model_Organization::class)
         );
     }
 
@@ -77,9 +74,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function viewOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            Action::VIEW(),
+            Actions::VIEW,
             $this->getOrganization($request)
         );
     }
@@ -93,9 +90,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $organization = $this->getOrganization($request);
 
-        $isUserAllowedToEditOrganizationAndCells = $this->aclService->isAllowed(
+        $isUserAllowedToEditOrganizationAndCells = $this->aclManager->isAllowed(
             $identity,
-            Action::EDIT(),
+            Actions::EDIT,
             $organization
         );
         if (!$isUserAllowedToEditOrganizationAndCells) {
@@ -103,7 +100,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $identity;
-                $aclCellQuery->aclFilter->action = Action::EDIT();
+                $aclCellQuery->aclFilter->action = Actions::EDIT;
                 $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
 
                 $numberCellsUserCanEdit = Orga_Model_Cell::countTotal($aclCellQuery);
@@ -124,9 +121,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $organization = $this->getOrganization($request);
 
-        $isUserAllowedToEditOrganizationAndCells = $this->aclService->isAllowed(
+        $isUserAllowedToEditOrganizationAndCells = $this->aclManager->isAllowed(
             $identity,
-            Action::ALLOW(),
+            Actions::ALLOW,
             $organization
         );
         if (!$isUserAllowedToEditOrganizationAndCells) {
@@ -134,7 +131,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $identity;
-                $aclCellQuery->aclFilter->action = Action::ALLOW();
+                $aclCellQuery->aclFilter->action = Actions::ALLOW;
                 $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
 
                 $numberCellsUserCanAllow = Orga_Model_Cell::countTotal($aclCellQuery);
@@ -153,9 +150,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function allowOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            Action::EDIT(),
+            Actions::EDIT,
             $this->getOrganization($request)
         );
     }
@@ -167,9 +164,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            Action::EDIT(),
+            Actions::EDIT,
             $this->getOrganization($request)
         );
     }
@@ -181,9 +178,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     public function deleteOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            Action::DELETE(),
+            Actions::DELETE,
             $this->getOrganization($request)
         );
     }
@@ -234,9 +231,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return (
             $this->editOrganizationRule($identity, $request)
-            || $this->aclService->isAllowed(
+            || $this->aclManager->isAllowed(
                 $identity,
-                Action::EDIT(),
+                Actions::EDIT,
                 Orga_Model_Cell::load($request->getParam('idCell'))
             )
         );
@@ -249,9 +246,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function viewCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            Action::VIEW(),
+            Actions::VIEW,
             $this->getCell($request)
         );
     }
@@ -263,9 +260,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            Action::EDIT(),
+            Actions::EDIT,
             $this->getCell($request)
         );
     }
@@ -277,9 +274,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function allowCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            Action::ALLOW(),
+            Actions::ALLOW,
             Orga_Model_Cell::load($request->getParam('idCell'))
         );
     }
@@ -291,14 +288,14 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editInventoryStatusRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $canInput = $this->aclService->isAllowed(
+        $canInput = $this->aclManager->isAllowed(
             $identity,
-            CellAction::INPUT(),
+            Actions::INPUT,
             $this->getCell($request)
         );
-        $canViewReports = $this->aclService->isAllowed(
+        $canViewReports = $this->aclManager->isAllowed(
             $identity,
-            CellAction::VIEW_REPORTS(),
+            Actions::ANALYZE,
             $this->getCell($request)
         );
 
@@ -312,9 +309,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function inputCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            CellAction::INPUT(),
+            Actions::INPUT,
             $this->getCell($request)
         );
     }
@@ -326,9 +323,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function commentCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            CellAction::COMMENT(),
+            Actions::VIEW,
             $this->getCell($request)
         );
     }
@@ -340,9 +337,9 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function analyseCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclService->isAllowed(
+        return $this->aclManager->isAllowed(
             $identity,
-            CellAction::VIEW_REPORTS(),
+            Actions::ANALYZE,
             $this->getCell($request)
         );
     }
@@ -482,7 +479,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     protected function deleteReportRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $idReport = $request->getParam('idReport');
-        return $this->aclService->isAllowed($identity, Action::DELETE(), DW_Model_Report::load($idReport));
+        return $this->aclManager->isAllowed($identity, Actions::DELETE, DW_Model_Report::load($idReport));
     }
 
     /**
@@ -600,20 +597,14 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
     protected function viewReferential(User $identity)
     {
-        return $this->aclService->isAllowed(
-            $identity,
-            Action::VIEW(),
-            NamedResource::loadByName('repository')
-        );
+        // TODO
+        throw new Exception('TODO');
     }
 
     protected function editRepository(User $identity)
     {
-        return $this->aclService->isAllowed(
-            $identity,
-            Action::EDIT(),
-            NamedResource::loadByName('repository')
-        );
+        // TODO
+        throw new Exception('TODO');
     }
 
     protected function viewLibraryRule()

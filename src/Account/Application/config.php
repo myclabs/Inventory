@@ -11,4 +11,11 @@ return [
         return $c->get(EntityManager::class)->getRepository(Account::class);
     }),
 
+    // Compte My C-Sense, référencé en dur
+    'account.myc-sense' => DI\factory(function (Container $c) {
+        /** @var AccountRepository $accountRepository */
+        $accountRepository = $c->get(AccountRepository::class);
+        return $accountRepository->get(1);
+    }),
+
 ];

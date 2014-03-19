@@ -3,7 +3,7 @@
 use Core\Annotation\Secure;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Category;
-use Parameter\Domain\Family\ProcessFamily;
+use Parameter\Domain\ParameterLibrary;
 
 /**
  * Controller de l'arbre des familles
@@ -16,11 +16,15 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
      */
     public function getnodesAction()
     {
-        $isEditable = ($this->getParam('mode') == 'edition');
+        /** @var $library ParameterLibrary */
+        $library = ParameterLibrary::load($this->getParam('library'));
+
+        // TODO tester les droits (consultation/édition)
+        $isEditable = true;
 
         // Chargement des catégories racine
         if ($this->idNode === null) {
-            $categories = Category::loadRootCategories();
+            $categories = $library->getRootCategories();
             $currentCategory = null;
         } else {
             /** @var $currentCategory Category */
@@ -35,20 +39,8 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         if ($currentCategory) {
             foreach ($currentCategory->getFamilies() as $family) {
                 // Place un symbole indiquant le type de la famille
-                if ($family instanceof ProcessFamily) {
-                    $label = $family->getLabel();
-                } else {
-                    $label = $family->getLabel();
-                }
-                if ($isEditable) {
-                    $action = 'edit';
-                } else {
-                    $action = 'details';
-                }
-                $url = $this->_helper->url($action,
-                                           'family',
-                                           'parameter',
-                                           ['id' => $family->getId()]);
+                $label = $family->getLabel();
+                $url = $this->_helper->url('edit', 'family', 'parameter', ['id' => $family->getId()]);
                 $this->addNode($this->getTreeId($family), $label, true, $url, true, false, $isEditable);
             }
         }
@@ -61,14 +53,15 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
      */
     public function getlistparentsAction()
     {
+        /** @var $library ParameterLibrary */
+        $library = ParameterLibrary::load($this->getParam('library'));
+
         $this->addElementList('', '');
 
         // Ajoute l'élément "Racine"
         $this->addElementList("root", __('UI', 'name', 'root'));
 
-        /** @var Category[] $categories */
-        $categories = Category::loadList();
-        foreach ($categories as $category) {
+        foreach ($library->getRootCategories() as $category) {
             $this->addElementList($this->getTreeId($category), $category->getLabel());
         }
         $this->send();
@@ -79,6 +72,9 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
      */
     public function getlistsiblingsAction()
     {
+        /** @var $library ParameterLibrary */
+        $library = ParameterLibrary::load($this->getParam('library'));
+
         $node = $this->fromTreeId($this->idNode);
 
         // Détermine le parent
@@ -101,7 +97,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
 
         // Charge les siblings
         if ($parentNode == null) {
-            $siblings = Category::loadRootCategories();
+            $siblings = $library->getRootCategories();
         } else {
             if ($node instanceof Category) {
                 $siblings = $parentNode->getChildCategories();
@@ -285,5 +281,4 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         }
         throw new Core_Exception("Unknown object type");
     }
-
 }

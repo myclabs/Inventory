@@ -23,6 +23,9 @@ AF\Domain\Category:
       nullable: false
 
   manyToOne:
+    library:
+      targetEntity: AF\Domain\AFLibrary
+      inversedBy: categories
     parentCategory:
       targetEntity: AF\Domain\Category
       inversedBy: childCategories

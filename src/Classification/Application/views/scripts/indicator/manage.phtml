@@ -41,3 +41,6 @@ use Classification\Domain\Indicator;
     $datagrid->addPanelTitle = __('Classification', 'indicator', 'addPanelTitle');
     $datagrid->setDefaultSorting($columnPosition->id);
     $datagrid->display();
+
+    $script = 'refFromLabel(\'editIndicators_label_addForm\', \'editIndicators_ref_addForm\');';
+    $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');

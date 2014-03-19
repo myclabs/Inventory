@@ -2,10 +2,13 @@
 
 namespace Parameter\Domain;
 
+use Account\Domain\Account;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Parameter\Domain\Family\Family;
 
 /**
  * Bibliothèque de paramètres.
@@ -22,24 +25,35 @@ class ParameterLibrary extends Core_Model_Entity
     protected $id;
 
     /**
+     * @var Account
+     */
+    protected $account;
+
+    /**
      * @var string
      */
     protected $label;
 
     /**
-     * Les catégories sont sous forme d'arbre, ceci contient uniquement les catégories racines.
-     *
      * @var Category[]|Collection
      */
-    protected $rootCategories;
+    protected $categories;
 
     /**
-     * @param string $label
+     * @var Family[]|Collection
      */
-    public function __construct($label)
+    protected $families;
+
+    /**
+     * @param Account $account
+     * @param string  $label
+     */
+    public function __construct(Account $account, $label)
     {
+        $this->account = $account;
         $this->label = $label;
-        $this->rootCategories = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->families = new ArrayCollection();
     }
 
     /**
@@ -58,21 +72,58 @@ class ParameterLibrary extends Core_Model_Entity
         return $this->label;
     }
 
+    public function addCategory(Category $category)
+    {
+        $this->categories->add($category);
+    }
+
+    public function removeCategory(Category $category)
+    {
+        $this->categories->removeElement($category);
+    }
+
+    public function addFamily(Family $family)
+    {
+        $this->families->add($family);
+    }
+
+    public function removeFamily(Family $family)
+    {
+        $this->families->removeElement($family);
+    }
+
+    /**
+     * @return Account
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * @return Collection|Family[]
+     */
+    public function getFamilies()
+    {
+        return $this->families;
+    }
+
+    /**
+     * @return Category[]
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
     /**
      * @return Category[]
      */
     public function getRootCategories()
     {
-        return $this->rootCategories->toArray();
-    }
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('parentCategory'));
 
-    public function addRootCategory(Category $category)
-    {
-        $this->rootCategories->add($category);
-    }
-
-    public function removeRootCategory(Category $category)
-    {
-        $this->rootCategories->removeElement($category);
+        return $this->categories->matching($criteria);
     }
 }

@@ -3,6 +3,7 @@
 use Core\Annotation\Secure;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Category;
+use Parameter\Domain\ParameterLibrary;
 use Unit\UnitAPI;
 
 /**
@@ -15,17 +16,18 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        // Récupération des familles
-        $families = Family::loadList($this->request);
+        /** @var $library ParameterLibrary */
+        $library = ParameterLibrary::load($this->getParam('library'));
 
-        foreach ($families as $family) {
+        foreach ($library->getFamilies() as $family) {
             /** @var $family Family */
             $data = [];
             $data['category'] = $family->getCategory()->getId();
             $data['label'] = $family->getLabel();
             $data['ref'] = $family->getRef();
             $data['unit'] = $family->getValueUnit()->getSymbol();
-            if ($this->getParam('mode') == 'edition') {
+            // TODO tester les droits (consultation/édition)
+            if (true) {
                 $data['detail'] = $this->cellLink(
                     $this->_helper->url('edit', 'family', 'parameter', ['id' => $family->getId()])
                 );
@@ -46,6 +48,9 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
+        /** @var $library ParameterLibrary */
+        $library = ParameterLibrary::load($this->getParam('library'));
+
         // Validation du formulaire
         $idCategory = $this->getAddElementValue('category');
         if (empty($idCategory)) {
@@ -75,7 +80,7 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             $category = Category::load($idCategory);
 
             try {
-                $family = new Family($ref, $label);
+                $family = new Family($library, $ref, $label);
             } catch (Exception $e) {
                 $this->setAddElementErrorMessage('ref', __('Core', 'exception', 'unauthorizedRef'));
                 $this->send();

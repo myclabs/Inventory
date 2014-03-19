@@ -5,9 +5,7 @@ namespace User\Application;
 use Core\TypeMapping\LocaleMapping;
 use Core_Package_Bootstrap;
 use Doctrine\DBAL\Types\Type;
-use User\Architecture\TypeMapping\ActionType;
 use User\Application\Controller\Helper\AuthHelper;
-use User\Domain\ACL\Role\Role;
 use Zend_Controller_Action_HelperBroker;
 
 /**

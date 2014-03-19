@@ -19,17 +19,18 @@ Parameter\Domain\ParameterLibrary:
       gedmo:
         - translatable
 
-  manyToMany:
-    rootCategories:
+  manyToOne:
+    account:
+      targetEntity: Account\Domain\Account
+
+  oneToMany:
+    families:
+      targetEntity: Parameter\Domain\Family\Family
+      mappedBy: library
+      cascade: [ all ]
+      orphanRemoval: true
+    categories:
       targetEntity: Category
-      joinTable:
-        name: Parameter_ParameterLibrary_Categories
-        joinColumns:
-          idCategory:
-            referencedColumnName: id
-        inverseJoinColumns:
-          idLibrary:
-            unique: true
-      orderBy:
-        position: ASC
-      cascade: [ persist, remove ]
+      mappedBy: library
+      cascade: [ all ]
+      orphanRemoval: true
