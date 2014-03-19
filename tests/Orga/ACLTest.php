@@ -26,209 +26,209 @@ class Orga_Test_ACLTest extends TestCase
      * @Inject
      * @var AccountRepository
      */
-    protected $accountRepository;
+    private $accountRepository;
 
     /**
      * @Inject
      * @var UserService
      */
-    protected $userService;
+    private $userService;
 
     /**
      * @Inject
      * @var ACLManager
      */
-    protected $aclManager;
+    private $aclManager;
 
     /**
      * @var Orga_Model_Organization
      */
-    protected $organization;
+    private $organization;
 
     /**
      * @var Orga_Model_Axis
      */
-    protected $axisAnnee;
+    private $axisAnnee;
 
     /**
      * @var Orga_Model_Axis
      */
-    protected $axisSite;
+    private $axisSite;
 
     /**
      * @var Orga_Model_Axis
      */
-    protected $axisPays;
+    private $axisPays;
 
     /**
      * @var Orga_Model_Axis
      */
-    protected $axisZone;
+    private $axisZone;
 
     /**
      * @var Orga_Model_Axis
      */
-    protected $axisMarque;
+    private $axisMarque;
 
     /**
      * @var Orga_Model_Axis
      */
-    protected $axisCategorie;
+    private $axisCategorie;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberAnnee2012;
+    private $memberAnnee2012;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberAnnee2013;
+    private $memberAnnee2013;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberZoneEurope;
+    private $memberZoneEurope;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberZoneSudamerique;
+    private $memberZoneSudamerique;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberPaysFrance;
+    private $memberPaysFrance;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberPaysAllemagne;
+    private $memberPaysAllemagne;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberPaysPerou;
+    private $memberPaysPerou;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberMarqueA;
+    private $memberMarqueA;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberMarqueB;
+    private $memberMarqueB;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberSiteAnnecy;
+    private $memberSiteAnnecy;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberSiteChambery;
+    private $memberSiteChambery;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberSiteBerlin;
+    private $memberSiteBerlin;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberSiteLima;
+    private $memberSiteLima;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberCategorieEnergie;
+    private $memberCategorieEnergie;
 
     /**
      * @var Orga_Model_Member
      */
-    protected $memberCategorieTransport;
+    private $memberCategorieTransport;
 
     /**
      * @var Orga_Model_Granularity
      */
-    protected $granularityGlobale;
+    private $granularityGlobale;
 
     /**
      * @var Orga_Model_Granularity
      */
-    protected $granularityZoneMarque;
+    private $granularityZoneMarque;
 
     /**
      * @var Orga_Model_Granularity
      */
-    protected $granularitySite;
+    private $granularitySite;
 
     /**
      * @var Orga_Model_Granularity
      */
-    protected $granularityAnnee;
+    private $granularityAnnee;
 
     /**
      * @var Orga_Model_Granularity
      */
-    protected $granularityAnneeCategorie;
+    private $granularityAnneeCategorie;
 
     /**
      * @var Orga_Model_Granularity
      */
-    protected $granularityAnneeZoneMarque;
+    private $granularityAnneeZoneMarque;
 
     /**
      * @var Orga_Model_Granularity
      */
-    protected $granularityAnneeSite;
+    private $granularityAnneeSite;
 
     /**
      * @var Orga_Model_Granularity
      */
-    protected $granularityAnneeSiteCategorie;
+    private $granularityAnneeSiteCategorie;
 
     /**
      * @var User
      */
-    protected $organizationAdministrator;
+    private $organizationAdministrator;
 
     /**
      * @var User
      */
-    protected $globaleCellAdministrator;
+    private $globaleCellAdministrator;
 
     /**
      * @var User
      */
-    protected $europeaCellManager;
+    private $europeaCellManager;
 
     /**
      * @var User
      */
-    protected $europeaCellContributor;
+    private $europeaCellContributor;
 
     /**
      * @var User
      */
-    protected $sudameriquebCellObserver;
+    private $sudameriquebCellObserver;
 
     /**
      * @var User
      */
-    protected $annecyCellAdministrator;
+    private $annecyCellAdministrator;
 
     /**
      * @var User
      */
-    protected $limaCellContributor;
+    private $limaCellContributor;
 
     /**
      * @var User
      */
-    protected $berlinCellObserver;
+    private $berlinCellObserver;
 
     public function setUp()
     {
@@ -2764,36 +2764,6 @@ class Orga_Test_ACLTest extends TestCase
         parent::tearDown();
 
         $this->entityManager->rollback();
-        $this->entityManager->clear();
-        return;
-
-        if (! $this->organizationAdministrator) {
-            // Erreur dans le set up ?
-            return;
-        }
-
-        $this->userService->deleteUser(User::load($this->organizationAdministrator->getId()));
-        $this->userService->deleteUser(User::load($this->globaleCellAdministrator->getId()));
-        $this->userService->deleteUser(User::load($this->europeaCellManager->getId()));
-        $this->userService->deleteUser(User::load($this->europeaCellContributor->getId()));
-        $this->userService->deleteUser(User::load($this->sudameriquebCellObserver->getId()));
-        $this->userService->deleteUser(User::load($this->annecyCellAdministrator->getId()));
-        $this->userService->deleteUser(User::load($this->berlinCellObserver->getId()));
-        $this->userService->deleteUser(User::load($this->limaCellContributor->getId()));
-
-        $this->entityManager->flush();
-        $this->entityManager->clear();
-
-        foreach (Orga_Model_Organization::load($this->organization->getId())->getOrderedGranularities() as $granularity) {
-            $granularity->delete();
-        }
-
-        $this->entityManager->flush();
-        $this->entityManager->clear();
-
-        Orga_Model_Organization::load($this->organization->getId())->delete();
-
-        $this->entityManager->flush();
         $this->entityManager->clear();
     }
 
