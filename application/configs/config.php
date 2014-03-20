@@ -128,6 +128,7 @@ return [
             ->addMetadataDir(PACKAGE_PATH . '/src/Inventory/Serializer')
             ->addMetadataDir(PACKAGE_PATH . '/src/Techno/Architecture/Serializer', 'Techno\Domain')
             ->addMetadataDir(PACKAGE_PATH . '/src/AF/Architecture/Serializer', 'AF\Domain')
+            ->addMetadataDir(PACKAGE_PATH . '/src/User/Architecture/Serializer', 'User\Domain')
             ->build();
     }),
 

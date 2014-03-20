@@ -8,6 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Techno\Domain\Category as TechnoCategory;
+use User\Domain\User;
 
 /**
  * Exporte les données.
@@ -36,7 +37,8 @@ class ExportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $data = $this->exportAF();
+//        $data = $this->exportAF();
+        $data = $this->exportUsers();
 
         echo $this->serializer->serialize($data, 'json') . PHP_EOL;
         echo json_encode(json_decode($this->serializer->serialize($data, 'json')), JSON_PRETTY_PRINT);
@@ -50,5 +52,10 @@ class ExportCommand extends Command
     private function exportAF()
     {
         return AFCategory::loadRootCategories();
+    }
+
+    private function exportUsers()
+    {
+        return User::loadList();
     }
 }
