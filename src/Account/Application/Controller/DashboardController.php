@@ -7,7 +7,6 @@ use Core\Annotation\Secure;
 use MyCLabs\ACL\ACLManager;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
-use MyCLabs\ACL\Model\Resource;
 use User\Domain\User;
 
 /**
@@ -62,12 +61,7 @@ class Account_DashboardController extends Core_Controller
         }
 
         // Account view
-        if (isset($session->account[$account->getId()])) {
-            $accountView = $session->account[$account->getId()];
-        } else {
-            $accountView = $this->accountViewFactory->createAccountView($account, $user);
-            $session->account[$account->getId()] = $accountView;
-        }
+        $accountView = $this->accountViewFactory->createAccountView($account, $user);
 
         $this->view->assign('accountList', $accounts);
         $this->view->assign('account', $accountView);
