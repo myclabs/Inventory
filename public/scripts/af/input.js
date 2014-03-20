@@ -191,7 +191,7 @@ AF.Input.prototype = {
             }
             // URL d'aperçu des résultats
             currentUrl = $("#tabs_tabResult").attr("data-remote");
-            if ((currentUrl !== null)
+            if ((typeof currentUrl !== "undefined")
                 && (currentUrl.indexOf("/idInputSet/") === -1)
                 && (currentUrl.indexOf("?idInputSet=") === -1)
             ) {
@@ -199,7 +199,7 @@ AF.Input.prototype = {
             }
             // URL du détails des calculs
             currentUrl = $("#tabs_tabCalculationDetails").attr("data-remote");
-            if ((currentUrl !== null)
+            if ((typeof currentUrl !== "undefined")
                 && (currentUrl.indexOf("/idInputSet/") === -1)
                 && (currentUrl.indexOf("?idInputSet=") === -1)
             ) {
