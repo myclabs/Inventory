@@ -191,12 +191,18 @@ AF.Input.prototype = {
             }
             // URL d'aperçu des résultats
             currentUrl = $("#tabs_tabResult").attr("data-remote");
-            if ((currentUrl.indexOf("/idInputSet/") === -1) && (currentUrl.indexOf("?idInputSet=") === -1)) {
+            if ((currentUrl !== null)
+                && (currentUrl.indexOf("/idInputSet/") === -1)
+                && (currentUrl.indexOf("?idInputSet=") === -1)
+            ) {
                 $("#tabs_tabResult").attr("data-remote", currentUrl + "?idInputSet=" + this.idInputSet);
             }
             // URL du détails des calculs
             currentUrl = $("#tabs_tabCalculationDetails").attr("data-remote");
-            if ((currentUrl.indexOf("/idInputSet/") === -1) && (currentUrl.indexOf("?idInputSet=") === -1)) {
+            if ((currentUrl !== null)
+                && (currentUrl.indexOf("/idInputSet/") === -1)
+                && (currentUrl.indexOf("?idInputSet=") === -1)
+            ) {
                 $("#tabs_tabCalculationDetails").attr("data-remote", currentUrl + "?idInputSet=" + this.idInputSet);
             }
         }
