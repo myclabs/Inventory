@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title><?= __('Inventory', 'layout', 'title') ?></title>
+
+        <?php
+        $server = $_SERVER["SERVER_NAME"];
+        if ($_SERVER["SERVER_PORT"] && $_SERVER["SERVER_PORT"] != 80) {
+            $server .= ':' . $_SERVER["SERVER_PORT"];
+        }
+        ?>
+        <base href="http://<?= $server ?><?= $this->baseUrl() ?>/"/>
+
+        <!-- Basic Styles -->
+        <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/font-awesome.min.css">
+
+        <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
+        <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/smartadmin-production.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/smartadmin-skins.css">
+
+        <!-- FAVICONS -->
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+
+        <!-- GOOGLE FONT -->
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+
+        <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
+        <meta content="yes" name="apple-mobile-web-app-capable">
+        <meta content="black" name="apple-mobile-web-app-status-bar-style">
+
+        <script src="vendor/js/libs/jquery-2.0.2.min.js"></script>
+
+    </head>
+    <body class="fixed-navigation fixed-header fixed-ribbon">
+
+        <header id="header">
+            <div id="logo-group">
+                <span id="logo">My C-Tool</span>
+            </div>
+
+            <div class="pull-right">
+                <div class="btn-header pull-right" id="hide-menu">
+                    <span><a href="javascript:void(0);" title=Collapse Menu"></a></span>
+                </div><!-- end collapse menu -->
+
+                <!-- logout button -->
+
+                <div class="btn-header transparent pull-right" id="logout">
+                    <span><a data-logout-msg="You can improve your security further after logging out by closing this opened browser" href="login.html" title="Sign Out"></a></span>
+                </div><!-- end logout button -->
+
+                <!-- search mobile button (this is hidden till mobile view port) -->
+                <div class="btn-header transparent pull-right" id="search-mobile">
+                    <span><a href="javascript:void(0)" title="Search"></a></span>
+                </div><!-- end search mobile button -->
+
+                <!-- input: search field -->
+                <form action="#ajax/search.html" class="header-search pull-right">
+                    <input id="search-fld" name="param" placeholder="Find reports and more" type="text"> <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"></a>
+
+                </form><!-- end input: search field -->
+
+                <!-- fullscreen button -->
+                <div class="btn-header transparent pull-right" id="fullscreen">
+                    <span><a href="javascript:void(0);" onclick="launchFullscreen(document.documentElement);" title="Full Screen"></a></span>
+                </div><!-- end fullscreen button -->
+
+                <!-- multiple lang dropdown : find all flags in the image folder -->
+                <ul class="header-dropdown-list hidden-xs">
+                    <li>...</li>
+                </ul><!-- end multiple lang -->
+
+            </div>
+        </header>
+
+        <aside id="left-panel">
+            [USER_INFO]
+            <nav>
+                <ul>
+                    <li class="">[NAV_LINKS]</li>
+                    <li class="">[NAV_LINKS]</li>
+                </ul>
+            </nav>
+        </aside>
+
+
+        <!-- MAIN PANEL -->
+        <div id="main">
+            <!-- RIBBON -->
+            <div id="ribbon">
+                [BREAD_CRUMB]
+            </div>
+            <div id="content">
+                <?= $this->layout()->content ?>
+            </div>
+        </div>
+
+        <div id="shortcut">
+            [METRO_SHORTCUT]
+        </div>
+
+        <script src="vendor/js/libs/jquery-ui-1.10.3.min.js"></script>
+        <script src="vendor/js/bootstrap/bootstrap.min.js"></script>
+        <script src="vendor/js/app.js"></script>
+
+        <!--[if IE 7]>
+        <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
+        <![endif]-->
+
+    </body>
+</html>

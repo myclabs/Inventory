@@ -32,6 +32,11 @@ class Account_DashboardController extends Core_Controller
      */
     private $accountViewFactory;
 
+    public function init()
+    {
+        $this->_helper->layout->setLayout('layout2');
+    }
+
     /**
      * @Secure("loggedIn")
      */
