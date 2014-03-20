@@ -964,12 +964,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/ACL.git",
-                "reference": "2e059df18448bcf16f29bc5c6485775d2656ecd8"
+                "reference": "bde3418009852c9f6691bc7a0f901ea316bc6906"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/ACL/zipball/2e059df18448bcf16f29bc5c6485775d2656ecd8",
-                "reference": "2e059df18448bcf16f29bc5c6485775d2656ecd8",
+                "url": "https://api.github.com/repos/myclabs/ACL/zipball/bde3418009852c9f6691bc7a0f901ea316bc6906",
+                "reference": "bde3418009852c9f6691bc7a0f901ea316bc6906",
                 "shasum": ""
             },
             "require": {
@@ -994,7 +994,7 @@
                 "doctrine",
                 "permission"
             ],
-            "time": "2014-03-19 14:08:53"
+            "time": "2014-03-19 17:28:19"
         },
         {
             "name": "myclabs/array-comparator",
