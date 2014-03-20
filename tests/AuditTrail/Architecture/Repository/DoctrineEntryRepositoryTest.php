@@ -2,6 +2,7 @@
 
 namespace Tests\AuditTrail\Architecture\Repository;
 
+use Account\Architecture\Repository\DoctrineAccountRepository;
 use Account\Domain\Account;
 use AuditTrail\Architecture\Repository\DoctrineEntryRepository;
 use AuditTrail\Domain\Context\GlobalContext;
@@ -21,6 +22,11 @@ class DoctrineEntryRepositoryTest extends TestCase
      * @var DoctrineEntryRepository
      */
     private $entryRepository;
+
+    /**
+     * @var DoctrineAccountRepository
+     */
+    private $accountRepository;
 
     /**
      * @Inject
@@ -51,7 +57,10 @@ class DoctrineEntryRepositoryTest extends TestCase
 
     public function testFindLatestForOrganization()
     {
-        $organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+        $account = new Account('test');
+        $this->accountRepository->add($account);
+        $this->entityManager->flush();
+        $organization = new Orga_Model_Organization($account);
         $organization->save();
 
         $entry1 = new Entry('foo', new OrganizationContext($organization));
@@ -79,7 +88,10 @@ class DoctrineEntryRepositoryTest extends TestCase
 
     public function testFindLatestForCell()
     {
-        $organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+        $account = new Account('test');
+        $this->accountRepository->add($account);
+        $this->entityManager->flush();
+        $organization = new Orga_Model_Organization($account);
         $axis = new Orga_Model_Axis($organization, 'axis');
         $axis->setLabel('axis');
         $member = new Orga_Model_Member($axis, 'member');
@@ -134,6 +146,17 @@ class DoctrineEntryRepositoryTest extends TestCase
         // Vide la table si elle contient d'anciennes entrées
         foreach ($this->entryRepository->findAll() as $entry) {
             $this->entryRepository->remove($entry);
+        }
+        $this->entityManager->flush();
+
+        $this->accountRepository = $this->entityManager->getRepository(Account::class);
+    }
+
+
+    public function tearDown()
+    {
+        foreach ($this->accountRepository->findAll() as $account) {
+            $this->accountRepository->remove($account);
         }
         $this->entityManager->flush();
     }

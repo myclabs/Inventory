@@ -20,17 +20,17 @@ Classification\Domain\ContextIndicator:
       joinColumn:
         name: idIndicator
         referencedColumnName: id
-
-  manyToMany:
-    axes:
-      targetEntity: Classification\Domain\IndicatorAxis
-      joinTable:
-        name: Classification_ContextIndicator_Axes
-        joinColumns:
-          idContext:
-            referencedColumnName: idContext
-          idIndicator:
-            referencedColumnName: idIndicator
-        inverseJoinColumns:
-          idAxis:
-            referencedColumnName: id
+#
+#  manyToMany:
+#    axes:
+#      targetEntity: Classification\Domain\IndicatorAxis
+#      joinTable:
+#        name: Classification_ContextIndicator_Axes
+#        joinColumns:
+#          idContext:
+#            referencedColumnName: idContext
+#          idIndicator:
+#            referencedColumnName: idIndicator
+#        inverseJoinColumns:
+#          idAxis:
+#            referencedColumnName: id
