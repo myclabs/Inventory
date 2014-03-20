@@ -49,13 +49,16 @@ class Account_DashboardController extends Core_Controller
         /** @var User $user */
         $user = $this->_helper->auth();
 
-        // TODO prendre les comptes que l'utilisateur peut voir
-        $accounts = $this->accountRepository->getAll();
+        // Tous les comptes que l'utilisateur peut voir
+        $accounts = $this->accountRepository->getTraversableAccounts($user);
 
-        // TODO tester si l'utilisateur peut voir le compte demandé
         /** @var Account $account */
         if (isset($session->accountId)) {
             $account = $this->accountRepository->get($session->accountId);
+            // Teste si l'utilisateur peut voir le compte demandé
+            if (! $this->aclManager->isAllowed($user, Actions::TRAVERSE, $account)) {
+                $account = current($accounts);
+            }
         } else {
             $account = current($accounts);
         }

@@ -10,6 +10,12 @@ use MyCLabs\ACL\Model\Actions as BaseActions;
 class Actions extends BaseActions
 {
     /**
+     * Traverser une entité ne donne pas le droit de la voir, mais permet d'accéder
+     * aux sous-objets auquels ont pourrait avoir accès.
+     */
+    const TRAVERSE = 'traverse';
+
+    /**
      * Modifier une saisie.
      */
     const INPUT = 'input';
@@ -24,6 +30,7 @@ class Actions extends BaseActions
      */
     const MANAGE_INVENTORY = 'manageInventory';
 
+    public $traverse = false;
     public $input = false;
     public $analyze = false;
     public $manageInventory = false;
@@ -40,6 +47,7 @@ class Actions extends BaseActions
             static::DELETE,
             static::UNDELETE,
             static::ALLOW,
+            static::TRAVERSE,
             static::INPUT,
             static::ANALYZE,
             static::MANAGE_INVENTORY,
