@@ -1,0 +1,111 @@
+<?php
+use Account\Application\ViewModel\AccountView;
+
+/** @var AccountView $account */
+$account = $this->account;
+?>
+
+<aside id="left-panel">
+
+    <!-- Account switcher -->
+    <div class="login-info">
+        <span>
+            <!-- User image size is adjusted inside CSS, it should stay as it -->
+            <a href="#" id="show-shortcut">
+                <img alt="me" class="online" src="images/account-default.png">
+                <span><?=$account->name?></span>
+                <i class="fa fa-angle-down"></i>
+            </a>
+        </span>
+    </div>
+
+    <nav>
+        <ul>
+            <li class="active">
+                <a href="account/dashboard" title="Dashboard">
+                    <i class="fa fa-lg fa-fw fa-home"></i>
+                    <span class="menu-item-parent">Dashboard</span>
+                </a>
+            </li>
+
+
+            <!-- Organizations -->
+            <li>
+                <a href="#">
+                    <i class="fa fa-lg fa-fw fa-inbox"></i>
+                    <span class="menu-item-parent">Workspaces</span>
+                </a>
+                <ul>
+                    <?php foreach ($account->organizations as $organization) : ?>
+                        <li>
+                            <a href="orga/organization/view/idOrganization/<?=$organization->id?>"
+                                title="<?=$organization->label?>">
+                                <?=$organization->label?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-fw fa-plus-circle"></i>
+                            <em><?=__('UI', 'verb', 'add')?></em>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+            <!-- Parameter libraries -->
+            <li>
+                <a href="#">
+                    <i class="fa fa-lg fa-fw fa-list-alt"></i>
+                    <span class="menu-item-parent">Formulaires</span>
+                </a>
+                <ul>
+                    <?php foreach ($account->afLibraries as $library) : ?>
+                        <li>
+                            <a href="af/library/view/id/<?=$library->id?>"
+                               title="<?=$library->label?>">
+                                <?=$library->label?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-fw fa-plus-circle"></i>
+                            <em><?=__('UI', 'verb', 'add')?></em>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+            <!-- AF libraries -->
+            <li>
+                <a href="#">
+                    <i class="fa fa-lg fa-fw fa-table"></i>
+                    <span class="menu-item-parent">Paramètres</span>
+                </a>
+                <ul>
+                    <?php foreach ($account->parameterLibraries as $library) : ?>
+                        <li>
+                            <a href="parameter/library/view/id/<?=$library->id?>"
+                               title="<?=$library->label?>">
+                                <?=$library->label?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-fw fa-plus-circle"></i>
+                            <em><?=__('UI', 'verb', 'add')?></em>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+        </ul>
+    </nav>
+
+    <span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
+</aside>

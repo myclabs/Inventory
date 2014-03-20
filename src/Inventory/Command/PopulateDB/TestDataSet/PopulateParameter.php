@@ -33,7 +33,7 @@ class PopulateParameter extends AbstractPopulateParameter
     {
         $output->writeln('  <info>Populating Parameters</info>');
 
-        $library = new ParameterLibrary($this->publicAccount, 'Référentiel My C-Sense');
+        $library = new ParameterLibrary($this->publicAccount, 'Paramètres My C-Sense');
         $library->save();
 
         $categorie_contenant_sous_categorie = $this->createCategory($library, 'Catégorie contenant une sous-catégorie');
