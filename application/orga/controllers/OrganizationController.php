@@ -1098,7 +1098,7 @@ class Orga_OrganizationController extends Core_Controller
         // Lance la tache en arrière plan
         $task = new ServiceCallTask(
             'Orga_Service_ETLStructure',
-            'resetCellAndChildrenDWCubes',
+            'resetCellAndChildrenCalculationsAndDWCubes',
             [$cell],
             __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
         );
