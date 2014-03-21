@@ -226,6 +226,11 @@ class Orga_CellController extends Core_Controller
                 }
             }
             if ($purpose !== '') {
+                $relevantQuery = new Core_Model_Query();
+                $relevantQuery->filter->addCondition(Orga_Model_Cell::QUERY_RELEVANT, true);
+                $relevantQuery->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
+                $totalChildCells = $cell->countTotalChildCellsForGranularity($narrowerGranularity, $relevantQuery);
+
                 $narrowerGranularities[] = [
                     'granularity' => $narrowerGranularity,
                     'purpose' => $purpose,
@@ -235,6 +240,7 @@ class Orga_CellController extends Core_Controller
                     'isGranularityForInventoryStatus' => ($narrowerGranularity === $granularityForInventoryStatus),
                     'isInput' => $isNarrowerGranularityInput,
                     'isAnalyses' => $isNarrowerGranularityAnalyses,
+                    'totalCells' => $totalChildCells
                 ];
             }
         }
@@ -410,16 +416,29 @@ class Orga_CellController extends Core_Controller
         $showInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
 
         // Uniquement les sous-cellules pertinentes.
-        $relevantCriteria = new Criteria();
-        $relevantCriteria->where($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_RELEVANT, true));
-        $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true));
+        $childCellsCriteria = new Criteria();
+        $childCellsCriteria->where($childCellsCriteria->expr()->eq(Orga_Model_Cell::QUERY_RELEVANT, true));
+        $childCellsCriteria->andWhere($childCellsCriteria->expr()->eq(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true));
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $cell->getTag()) as $pathTag) {
-            $relevantCriteria->andWhere($relevantCriteria->expr()->contains('tag', $pathTag));
+            $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $pathTag));
+        }
+        $childCellsCriteria->setFirstResult($this->getParam('firstCell'));
+        $childCellsCriteria->setMaxResults($this->getParam('showCells'));
+        $filters = $this->getParam('filters');
+        $filterPrefix = 'granularity' . $idNarrowerGranularity . '_';
+        foreach ($filters as $filter) {
+            if (!empty($filter['value'])) {
+                if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
+                    $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
+                } else {
+                    $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
+                }
+            }
         }
 
         $childCells = [];
         /** @var Orga_Model_Cell $childCell */
-        foreach ($narrowerGranularity->getCells()->matching($relevantCriteria) as $childCell) {
+        foreach ($narrowerGranularity->getCells()->matching($childCellsCriteria) as $childCell) {
             $childCells[] = $this->cellVMFactory->createCellViewModel(
                 $childCell,
                 $connectedUser,
@@ -433,10 +452,19 @@ class Orga_CellController extends Core_Controller
             );
         }
 
-        $relevantQuery = new Core_Model_Query();
-        $relevantQuery->filter->addCondition(Orga_Model_Cell::QUERY_RELEVANT, true);
-        $relevantQuery->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
-        $totalChildCells = $cell->countTotalChildCellsForGranularity($narrowerGranularity, $relevantQuery);
+        $childCellsQuery = new Core_Model_Query();
+        $childCellsQuery->filter->addCondition(Orga_Model_Cell::QUERY_RELEVANT, true);
+        $childCellsQuery->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
+        foreach ($filters as $filter) {
+            if (!empty($filter['value'])) {
+                if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
+                    $childCellsQuery->filter->addCondition('inventoryStatus', $filter['value']);
+                } else {
+                    $childCellsQuery->filter->addCondition('tag', $filter['value'], Core_Model_Filter::OPERATOR_CONTAINS);
+                }
+            }
+        }
+        $totalChildCells = $cell->countTotalChildCellsForGranularity($narrowerGranularity, $childCellsQuery);
 
         $this->sendJsonResponse(['childCells' => $childCells, 'totalCells' => $totalChildCells]);
     }

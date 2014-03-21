@@ -315,6 +315,9 @@ if (count($file) > 0) {
              <?=$narrowerGranularityArray['isInventory'] ? ' data-inventory' : ''?>
              <?=$narrowerGranularityArray['isInput'] ? ' data-input' : ''?>
              <?=$narrowerGranularityArray['isAnalyses'] ? ' data-analyses' : ''?>
+             data-total-cells="<?=$narrowerGranularityArray['totalCells']?>"
+             data-first-cell="0"
+             data-show-cells="6"
              class="collapse<?=(count($this->narrowerGranularities) === 1) ? ' in': $narrowerGranularityArray['isInput'] ? ' in' : ''?>">
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
             <form class="form-inline cells-filter">
@@ -350,8 +353,7 @@ if (count($file) > 0) {
             </form>
             <?php endif; ?>
 
-            <div class="granularity row-fluid" data-initialized="false" data-total-cells="">
-            </div>
+            <div class="granularity row-fluid" data-total-cells="0"></div>
         </div>
     </fieldset>
     <?php endforeach; ?>
@@ -501,11 +503,11 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
     var granularityId = $(this).attr('id').substr(11, $(this).attr('id').length);
     $.ajax({
         url: 'orga/cell/view-children/idCell/<?=$currentCell->id?>/idGranularity/' + granularityId + '/',
-        type: "GET",
+        type: "POST",
+        data: { firstCell: $(this).attr('data-first-cell'), showCells: $(this).attr('data-show-cells'), filters: $('.cells-filter', $(this)).serializeArray() },
         success: function(data) {
-            granularity.trigger('cellsLoaded');
-            granularity.html('');
             granularity.attr('data-total-cells', data.totalCells);
+            granularityInfo.html(granularity.attr('data-total-cells') + ' / ' + granularity.parents('.collapse').attr('data-total-cells'));
             $(data.childCells).each(function() {
                 var cellTitle = this.extendedLabel;
                 var usersP = '';
@@ -663,7 +665,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                         '</div>';
                 }
                 granularity.append(
-                    '<div class="span4 well cell hide" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
+                    '<div class="span4 well cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
                         '<h4>'+
                             '<small class="btn-group cell-actions">' +
                                 usersP +
@@ -683,8 +685,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
             });
             $('.withTooltip', granularity).tooltip();
             $('.withPopover', granularity).popover();
-            granularity.attr('data-initialized', true);
-            $('.cells-filter', granularity.parent()).trigger('filterCells');
+            $(granularity.parents('.collapse')).trigger('showCells');
         },
         error: function(jqXHR) {
             granularityInfo[0].className = granularityInfo[0].className.replace(/\bbadge-.*?\b/g, '');
@@ -715,7 +716,7 @@ $('div.collapse[id^="granularity"]').on('resizeCells', function(e) {
     var maxWidthInputActions = 0;
     var maxWidthInputTitle = 0;
 
-    $('.cell:not(.hide)', granularity).each(function() {
+    $('.cell', granularity).each(function() {
         var cellTitle = $('h4', $(this));
         cellTitle.css('height', 'auto');
         if (cellTitle.height() > maxHeight) {
@@ -752,15 +753,15 @@ $('div.collapse[id^="granularity"]').on('resizeCells', function(e) {
             maxWidthInputTitle = inputTitle.width();
         }
     });
-    $('.cell:not(.hide) h4', granularity).css('height', maxHeight);
+    $('.cell h4', granularity).css('height', maxHeight);
 
-    $('.cell:not(.hide) .inventory-actions', granularity).css('height', maxHeightInventoryActions);
-    $('.cell:not(.hide) .inventory-actions', granularity).css('width', maxWidthInventoryActions);
-    $('.cell:not(.hide) .inventory-informations', granularity).css('width', maxWidthInventoryInformations);
+    $('.cell .inventory-actions', granularity).css('height', maxHeightInventoryActions);
+    $('.cell .inventory-actions', granularity).css('width', maxWidthInventoryActions);
+    $('.cell .inventory-informations', granularity).css('width', maxWidthInventoryInformations);
 
-    $('.cell:not(.hide) .input-actions', granularity).css('height', maxHeightInputActions);
-    $('.cell:not(.hide) .input-actions', granularity).css('width', maxWidthInputActions);
-    $('.cell:not(.hide) .input-title', granularity).css('width', maxWidthInputTitle);
+    $('.cell .input-actions', granularity).css('height', maxHeightInputActions);
+    $('.cell .input-actions', granularity).css('width', maxWidthInputActions);
+    $('.cell .input-title', granularity).css('width', maxWidthInputTitle);
 });
 
 $('.cells-filter button.reset').on('click', function(e) {
@@ -769,65 +770,43 @@ $('.cells-filter button.reset').on('click', function(e) {
     form.trigger('resetCellsFilter');
 });
 $('.cells-filter select').on('keyup change', function(e) {
-    var form = $(this).parent();
-    form.trigger('filterCells');
+    var collapse = $(this).parents('.collapse');
+    collapse.attr('data-first-cell', 0);
+    collapse.attr('data-show-cells', 6);
+    $('.granularity', collapse).html('');
+    collapse.trigger('loadCells');
 });
 $('.cells-filter').on('resetCellsFilter', function(e) {
     e.preventDefault();
-    var form = $(this);
-    $('select', form).val('');
-    form.trigger('filterCells');
-});
-$('.cells-filter').on('filterCells', function(e) {
-    e.preventDefault();
-    var form = $(this);
-    var granularity = $('.granularity', form.parent());
-    if (granularity.attr('data-initialized') == 'true') {
-        $('.no-cell', granularity).remove();
-
-        $('.cell', granularity).addClass('hide').removeClass('firstRowCell').removeAttr('data-filtered');
-
-        var test = '';
-        $('select', form).each(function() {
-            var filter = $(this).attr('data-filter');
-            var filterOperator = (filter == 'tag') ? '*=' : '=';
-            var value = $(this).val();
-            if (value != '') {
-                test += '[data-' + filter + filterOperator +'\'' + value + '\']';
-            }
-        });
-
-        $('.cell' + test, granularity).attr('data-filtered', '');
-        var granularityInfo = $('.granularity-info', form);
-        granularityInfo.html($('.cell' + test, granularity).length + ' / ' + granularity.attr('data-total-cells'));
-        if ($('.cell' + test, granularity).length == 0) {
-            granularity.append('<div class="no-cell span"><?=___('Orga', 'view', 'filterNoResult')?></div>');
-        }
-
-        granularity.trigger('showCells');
-    }
+    $('select', $(this)).val('');
+    var collapse = $(this).parents('.collapse');
+    collapse.attr('data-first-cell', 0);
+    collapse.attr('data-show-cells', 6);
+    $('.granularity', collapse).html('');
+    collapse.trigger('loadCells');
 });
 $('div.collapse[id^="granularity"]').on('showCells', function(e) {
     var granularity = $('.granularity', $(this));
     $('.display-more-cells', granularity).remove();
+    $('.cell', granularity).removeClass('firstRowCell');
 
     var numberElement = 0;
-    $('.cell[data-filtered]', granularity).each(function() {
+    $('.cell', granularity).each(function() {
         var cell = $(this);
-        cell.removeClass('hide');
-        cell.removeAttr('data-filtered');
         if ((numberElement % 3) == 0) {
             cell.addClass('firstRowCell');
         }
 
         numberElement++;
-        if (numberElement > 5) {
-            return false;
-        }
     });
     $(this).trigger('resizeCells');
 
-    if ($('.cell[data-filtered]', granularity).length > 0) {
+    if ($('.cell', granularity).length == 0) {
+        granularity.append('<div class="no-cell span"><?=___('Orga', 'view', 'filterNoResult')?></div>');
+    }
+    if ($('.cell', granularity).length < granularity.attr('data-total-cells')) {
+        $(this).attr('data-show-cells', $('.cell', granularity).length);
+        $(this).attr('data-first-cell', $(this).attr('data-show-cells'));
         granularity.append(
             '<div class="btn display-more-cells span">' +
                 '<?=___('Orga', 'view', 'display-more-cells')?>' +
@@ -836,7 +815,9 @@ $('div.collapse[id^="granularity"]').on('showCells', function(e) {
     }
 });
 $('body').on('click', '.display-more-cells', function (e) {
-    $(this).parent().trigger('showCells');
+    $(this).parent().parent().attr('data-show-cells', 6);
+    $(this).parent().parent().trigger('loadCells');
+    $(this).remove();
 });
 
 $('body').on('show', '.users', function(e) {
@@ -1099,8 +1080,9 @@ $('body').on('click', '.inventory-status .inventory-actions a.change-inventory-s
             otherButton.html(data.otherActionLabel);
             otherButton.attr('href', otherButton.attr('href').replace(/inventoryStatus\/[a-zA-Z]+/, 'inventoryStatus/' + data.otherActionStatus));
             var collapse = buttonGroup.parents('.collapse[data-inventory]');
-            $('.cells-filter', collapse).trigger('filterCells');
-            $('.collapse[data-inventory][id!="' + collapse.attr('id') + '"]').trigger('loadCells');
+            $('.collapse[data-inventory]').attr('data-first-cell', 0);
+            $('.collapse[data-inventory] .granularity').html('');
+            $('.collapse[data-inventory]').trigger('loadCells');
             $('button.dropdown-toggle', buttonGroup).removeClass('hide');
             loadingButton.remove();
         },
@@ -1166,14 +1148,6 @@ $('.collapse').on({
 $(document).ready(function() {
     $('.withTooltip').tooltip();
     $('.withPopover').popover();
-    $('div.collapse[id^="granularity"]').trigger('loadCells');
-    $('.history > h3 a').trigger('click');
-    $('.comments > h3 a').trigger('click');
-    var resizeTimer;
-    $(window).resize(function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() { $('div.collapse[id^="granularity"]').trigger('resizeCells'); }, 500);
-    });
     <?php if ($currentCell->showInventory) : ?>
     $('.current-cell .inventory-status').on('mouseenter', function() {
         $('.current-cell .inventory-status .inventory-informations').popover('show');
@@ -1182,6 +1156,24 @@ $(document).ready(function() {
         $('.current-cell .inventory-status .inventory-informations').popover('hide');
     });
     <?php endif; ?>
+    var resizeTimer;
+    $(window).resize(function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() { $('div.collapse[id^="granularity"]').trigger('resizeCells'); }, 500);
+    });
+    $('.history > h3 a').trigger('click');
+    $('.comments > h3 a').trigger('click');
+    $('div.collapse[id^="granularity"]').on('show',
+        function(e) {
+            if ((e.target != this) || ($('.granularity', $(this)).html() != '')) {
+                return;
+            }
+            $(this).attr('data-first-cell', 0);
+            $(this).trigger('loadCells');
+            $('.granularity', $(this)).html('');
+        }
+    );
+    $('div.collapse[id^="granularity"].in').trigger('loadCells');
 });
 </script>
 
