@@ -19,13 +19,13 @@ $family = $this->family;
         <h5>
             <?=$dimension->getLabel() . __('UI', 'other', ':')?> <code><?=$dimension->getRef()?></code>
 
-            <a class="btn btn-mini btn-warning pull-right deleteDimensionButton"
+            <a class="btn btn-xs btn-warning pull-right deleteDimensionButton"
                     href="<?=$this->baseUrl('parameter/dimension/delete/id/' . $dimension->getId())?>"
                     title="<?=__('Parameter', 'dimension', 'deleteDimension')?>">
                 <?=__('UI', 'verb', 'delete')?>
             </a>
 
-            <a class="btn btn-mini pull-right editDimensionButton" data-dimension-ref="<?=$dimension->getRef()?>"
+            <a class="btn btn-xs pull-right editDimensionButton" data-dimension-ref="<?=$dimension->getRef()?>"
                data-dimension-label="<?=$dimension->getLabel()?>" style="margin-right: 5px">
                 <?=__('UI', 'verb', 'edit')?>
             </a>

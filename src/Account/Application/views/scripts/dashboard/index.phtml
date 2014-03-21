@@ -22,7 +22,7 @@ $account = $this->account;
         <div class="organization well well-small">
             <?php if ($organization->canBeDeleted) : ?>
                 <div class="pull-right">
-                    <a class="deleteOrganization btn btn-small btn-warning"
+                    <a class="deleteOrganization btn btn-sm btn-warning"
                        href="orga/organization/delete/idOrganization/<?=$organization->id?>">
                         <i class="fa fa-trash-o"></i>
                         <?=___('UI', 'verb', 'delete')?>
@@ -31,7 +31,7 @@ $account = $this->account;
             <?php endif; ?>
             <?php if ($organization->canBeEdited) : ?>
                 <div class="pull-right">
-                    <a class="editOrganization btn btn-small btn-primary"
+                    <a class="editOrganization btn btn-sm btn-primary"
                        href="orga/organization/edit/idOrganization/<?=$organization->id?>">
                         <i class="fa fa-wrench"></i>
                         <?=___('UI', 'name', 'configurationOrga')?>

@@ -210,7 +210,7 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
         $popup->addAttribute('class', 'large');
         $collapse->body .= $popup->render();
         $helper = new UI_View_Helper_Button();
-        $buttonHTML = $helper->button("", 'search', ['class' => 'btn-mini'])
+        $buttonHTML = $helper->button("", 'search', ['class' => 'btn-xs'])
             ->showPopup('graph_' . $algo->getId());
         $expression = $algo->getExpression();
         $collapse->body .= "<p><strong>" . __('TEC', 'name', 'expression') . __('UI', 'other', ':')
