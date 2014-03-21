@@ -410,6 +410,9 @@ abstract class UI_Controller_Datagrid extends Core_Controller
         if ($percent < 0) {
             $percent = abs($percent);
         }
+        if ($color != null) {
+            $color = 'progress-'.$color;
+        }
         return $this->baseCell($percent, $color);
     }
 

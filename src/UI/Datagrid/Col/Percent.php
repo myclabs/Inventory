@@ -77,7 +77,7 @@ class UI_Datagrid_Col_Percent extends UI_Datagrid_Col_Number
         $format .= 'width = sData.value;';
         $format .= '}';
         $format .= 'content = \'<div class="progress progress-\' + color + \'">\';';
-        $format .= 'content += \'<div class="bar" style="width: \' + width + \'%;">\';';
+        $format .= 'content += \'<div class="progress-bar" style="width: \' + width + \'%;">\';';
         if (($this->patternDisplayPreValue !== null) || ($this->patternDisplayPostValue !== null)) {
             $format .= 'content += ';
             if ($this->patternDisplayPreValue !== null) {
