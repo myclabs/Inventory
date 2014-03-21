@@ -110,11 +110,11 @@ if (count($file) > 0) {
     .history h4 span,
     .comments h4 span
     { position: relative; top: 10px; background-color: #ffffff; padding-right: 5px; color: #999999; }
-    .history div.row-fluid div.span2,
-    .comments div.row-fluid div.span2
+    .history div.row div.col-md-2,
+    .comments div.row div.col-md-2
     { color: #999999; font-size: small; font-weight: normal; text-align: right; }
-    .history div.row-fluid + div.row-fluid,
-    .comments div.row-fluid + div.row-fluid
+    .history div.row + div.row,
+    .comments div.row + div.row
     { border-top: solid 1px #eeeeee; margin-top: 8px; padding-top: 8px; }
     .history > div > div + div,
     .comments >div > div + div
@@ -150,9 +150,9 @@ if (count($file) > 0) {
     </h1>
 </div>
 
-<div class="row-fluid">
+<div class="row">
 
-<div class="span9" id="cellsView">
+<div class="col-md-9" id="cellsView">
 
     <div class="cell current-cell well" data-inventory-status="<?=$currentCell->inventoryStatus?>" data-input-status="<?=$currentCell->inputStatus?>">
         <h2>
@@ -275,7 +275,7 @@ if (count($file) > 0) {
                 <h4><?=___('Orga', 'view', 'exportsFrom')?> <?=$currentCell->shortLabel?></h4>
             </div>
             <div class="modal-body">
-                <div class="granularityCells row-fluid">
+                <div class="granularityCells row">
                     <i class="fa fa-spinner fa-spin fa-3x"></i>
                     <?=___('UI', 'loading', 'loading')?>
                 </div>
@@ -346,14 +346,14 @@ if (count($file) > 0) {
             </form>
             <?php endif; ?>
 
-            <div class="granularity row-fluid" data-total-cells="0"></div>
+            <div class="granularity row" data-total-cells="0"></div>
         </div>
     </fieldset>
     <?php endforeach; ?>
 
 </div>
 
-<div class="span3">
+<div class="col-md-3">
     <div class="comments">
         <h3>
             <?=___('Social', 'comment', 'comments')?>
@@ -419,9 +419,9 @@ $('.comments a.refresh').on('click', function(e) {
                     var divDate = $('.comments > div > div[data-date="' + date + '"]');
                     $.each(this.comments, function() {
                         divDate.append(
-                            '<div class="row-fluid">' +
-                                '<div class="span2">' + this.time + '</div>' +
-                                '<div class="span10">' + this.comment + '</div>' +
+                            '<div class="row">' +
+                                '<div class="col-md-2">' + this.time + '</div>' +
+                                '<div class="col-md-10">' + this.comment + '</div>' +
                             '</div>'
                         );
                     });
@@ -453,9 +453,9 @@ $('.history a.refresh').on('click', function(e) {
                     var divDate = $('.history > div > div[data-date="' + date + '"]');
                     $.each(this.events, function() {
                         divDate.append(
-                            '<div class="row-fluid">' +
-                                '<div class="span2">' + this.time + '</div>' +
-                                '<div class="span10">' + this.event + '</div>' +
+                            '<div class="row">' +
+                                '<div class="col-md-2">' + this.time + '</div>' +
+                                '<div class="col-md-10">' + this.event + '</div>' +
                             '</div>'
                         );
                     });
@@ -658,7 +658,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                         '</div>';
                 }
                 granularity.append(
-                    '<div class="span4 well cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
+                    '<div class="col-md-4 well cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
                         '<h4>'+
                             '<small class="btn-group cell-actions">' +
                                 usersP +
