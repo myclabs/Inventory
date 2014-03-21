@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8f4b1801552ffecb53e9f0c1b5b31961",
+    "hash": "4b413c6a99c14c835a4b82e6187fd699",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -37,7 +37,7 @@
                     "Doctrine\\Common\\Annotations\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -63,7 +63,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -117,9 +117,10 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -135,7 +136,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -386,7 +387,7 @@
                     "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -410,9 +411,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -449,7 +450,7 @@
                     "Doctrine\\Common\\Lexer\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -466,7 +467,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -484,12 +485,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "9b4ae6d55688c1974f4e6f9250e3b562a2e78ba1"
+                "reference": "fdb9f908481edc5969aa7f6a90544a83f47c1c6e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/9b4ae6d55688c1974f4e6f9250e3b562a2e78ba1",
-                "reference": "9b4ae6d55688c1974f4e6f9250e3b562a2e78ba1",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/fdb9f908481edc5969aa7f6a90544a83f47c1c6e",
+                "reference": "fdb9f908481edc5969aa7f6a90544a83f47c1c6e",
                 "shasum": ""
             },
             "require": {
@@ -553,7 +554,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-03-16 16:41:19"
+            "time": "2014-03-20 13:28:32"
         },
         {
             "name": "dompdf/dompdf",
@@ -748,12 +749,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6"
+                "reference": "0.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
-                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.2.1",
+                "reference": "0.2.1",
                 "shasum": ""
             },
             "type": "library",
@@ -1072,6 +1073,39 @@
                 "object graph"
             ],
             "time": "2014-02-14 08:59:38"
+        },
+        {
+            "name": "myclabs/muih",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/MUIH.git",
+                "reference": "bcec2be7af1a5aac664f0baa0db1af3760393c4c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/MUIH/zipball/bcec2be7af1a5aac664f0baa0db1af3760393c4c",
+                "reference": "bcec2be7af1a5aac664f0baa0db1af3760393c4c",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MyCLabs": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP and Javascrcipt helpers for creation of Bootstrap 3 UI elements",
+            "homepage": "http://github.com/myclabs/muih",
+            "keywords": [
+                "bootstrap3",
+                "helper",
+                "ui"
+            ],
+            "time": "2014-03-21 12:02:29"
         },
         {
             "name": "myclabs/php-enum",
@@ -1531,7 +1565,7 @@
             ],
             "authors": [
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
