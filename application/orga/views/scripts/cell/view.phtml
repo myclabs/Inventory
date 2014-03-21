@@ -86,10 +86,12 @@ if (count($file) > 0) {
     .cell[data-input-status="<?=PrimaryInputSet::STATUS_COMPLETE?>"] .input-status { background-color: #f0aD4e; }
     .cell[data-input-status="<?=PrimaryInputSet::STATUS_INPUT_INCOMPLETE?>"] .input-status { background-color: #f0aD4e; }
 
-    .granularity-wrapper .cells-filter > * { margin-top: 2px; }
     .granularity-wrapper .cells-filter .granularity-info { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
-    .granularity-wrapper .granularity > .cell.firstRowCell { margin-left: 0; }
-    .granularity-wrapper .display-more-cells { margin-left: 0; }
+    .granularity-wrapper .granularity { margin-left: -2.5px; margin-right: -2.5px; }
+    .granularity-wrapper .granularity .col-md-4 { padding-left: 2.5px; padding-right: 2.5px; }
+    .granularity-wrapper .granularity .cell { margin-top: 5px; margin-bottom: 0; }
+    .granularity-wrapper .display-more-cells { padding-left: 2.5px; padding-right: 2.5px; }
+    .granularity-wrapper .display-more-cells button { display: block; width: 100%; margin-top: 5px; margin-bottom: 0; }
     .granularity-wrapper .no-cell { margin-left: 0; text-align: center; vertical-align: middle; padding: 8px 12px; font-size: 14px; font-weight: normal; }
 
     .history,
@@ -658,21 +660,23 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                         '</div>';
                 }
                 granularity.append(
-                    '<div class="col-md-4 well cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
-                        '<h4>'+
-                            '<small class="btn-group cell-actions">' +
-                                usersP +
-                                reportsP +
-                                exportsP +
-                            '</small>' +
-                            cellTitle +
-                        '</h4>' +
-                        inventoryP +
-                        inputStatusP +
-                        usersPopup +
-                        reportsPopup +
-                        exportsPopup +
-                        inventoryPopup +
+                    '<div class="col-md-4">' +
+                        '<div class="well cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
+                            '<h4>'+
+                                '<small class="btn-group cell-actions">' +
+                                    usersP +
+                                    reportsP +
+                                    exportsP +
+                                '</small>' +
+                                cellTitle +
+                            '</h4>' +
+                            inventoryP +
+                            inputStatusP +
+                            usersPopup +
+                            reportsPopup +
+                            exportsPopup +
+                            inventoryPopup +
+                        '</div>' +
                     '</div>'
                 );
             });
@@ -781,17 +785,7 @@ $('.cells-filter').on('resetCellsFilter', function(e) {
 $('div.collapse[id^="granularity"]').on('showCells', function(e) {
     var granularity = $('.granularity', $(this));
     $('.display-more-cells', granularity).remove();
-    $('.cell', granularity).removeClass('firstRowCell');
 
-    var numberElement = 0;
-    $('.cell', granularity).each(function() {
-        var cell = $(this);
-        if ((numberElement % 3) == 0) {
-            cell.addClass('firstRowCell');
-        }
-
-        numberElement++;
-    });
     $(this).trigger('resizeCells');
 
     if ($('.cell', granularity).length == 0) {
@@ -801,8 +795,10 @@ $('div.collapse[id^="granularity"]').on('showCells', function(e) {
         $(this).attr('data-show-cells', $('.cell', granularity).length);
         $(this).attr('data-first-cell', $(this).attr('data-show-cells'));
         granularity.append(
-            '<div class="btn btn-default display-more-cells span">' +
-                '<?=___('Orga', 'view', 'display-more-cells')?>' +
+            '<div class="display-more-cells col-md-12">' +
+                '<button class="btn btn-default">' +
+                    '<?=___('Orga', 'view', 'display-more-cells')?>' +
+                '</button>' +
             '</div>'
         );
     }
