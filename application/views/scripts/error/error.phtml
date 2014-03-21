@@ -24,7 +24,10 @@
 
     <h2>Information complémentaire pour l'environnement : <?= APPLICATION_ENV ?></h2>
 
-    <h3>Trace d'exécution:</h3>
+    <p>
+        <code><?= $this->exception->getMessage() ?></code>
+    </p>
+
     <pre><?= $this->exception->getTraceAsString() ?></pre>
 
     <hr/>
