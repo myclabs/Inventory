@@ -115,10 +115,12 @@ foreach ($viewConfiguration->getTabs() as $tab) {
 ?>
 
 <?php if ($viewConfiguration->getDisplayConfigurationLink()) : ?>
-    <div class="navbar">
-        <div class="navbar-inner">
+    <div class="navbar navbar-default">
+        <div class="container">
 
-            <a class="brand" href="#"><?=$viewConfiguration->getPageTitle()?></a>
+            <div class="navbar-header">
+                <a class="brand" href="#"><?=$viewConfiguration->getPageTitle()?></a>
+            </div>
 
             <?php if ($viewConfiguration->getDisplayConfigurationLink()) : ?>
 

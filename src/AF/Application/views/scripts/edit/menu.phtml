@@ -8,10 +8,12 @@ $this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules
 $af = $this->af;
 ?>
 
-<div class="navbar">
-    <div class="navbar-inner">
+<div class="navbar navbar-default">
+    <div class="container">
 
-        <a class="brand" href="#"><?=$af->getLabel()?></a>
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#"><?=$af->getLabel()?></a>
+        </div>
 
         <ul class="nav">
             <li class="active">
