@@ -145,7 +145,7 @@ class Orga_CellController extends Core_Controller
             $purpose = '';
             // ACL purpose.
             $isNarrowerGranularityACL = ($narrowerGranularity->getCellsWithACL())
-                && ($this->aclService->isAllowed($connectedUser, Action::ALLOW(), $cell));
+                && ($this->aclManager->isAllowed($connectedUser, Actions::ALLOW, $cell));
             if ($isNarrowerGranularityACL) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
@@ -198,7 +198,7 @@ class Orga_CellController extends Core_Controller
             }
             // Reports purpose.
             $isNarrowerGranularityAnalyses = ($narrowerGranularity->getCellsGenerateDWCubes())
-                && ($this->aclService->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell));
+                && ($this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell));
             if ($isNarrowerGranularityAnalyses) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
