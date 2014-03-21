@@ -39,6 +39,9 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/smartadmin-skins.css">
         <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-additions.css">
 
+        <?= $this->headLink()->toString(8) ?>
+        <?= $this->headStyle()->toString(8) ?>
+
         <!-- FAVICONS -->
         <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
         <link rel="icon" href="images/favicon.ico" type="image/x-icon">
@@ -110,6 +113,79 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         <script src="vendor/js/bootstrap/bootstrap.min.js"></script>
         <script src="vendor/js/libs/jquery.confirm.min.js"></script>
         <script src="vendor/js/app.js"></script>
+
+        <script src="scripts/ui/translate.js"></script>
+
+        <script>
+            eraseFirstMessage = function (loop) {
+                loop = typeof loop !== 'undefined' ? loop - 1 : 0;
+                $('#messageZone').children('div:first').alert('close');
+                if (loop > 0) {
+                    setTimeout(eraseFirstMessage, 300, (loop - 1));
+                }
+            };
+            addMessage = function (text, type) {
+                var title, divClass;
+                type = typeof type !== 'undefined' ? type : 'alert';
+                switch (type) {
+                    case 'info':
+                        title = '<?=__('UI', 'message', 'titleInfo')?>';
+                        divClass = ' alert-info';
+                        break;
+                    case 'success':
+                        title = '<?=__('UI', 'message', 'titleSuccess')?>';
+                        divClass = ' alert-success';
+                        break;
+                    case 'error':
+                        title = '<?=__('UI', 'message', 'titleError')?>';
+                        divClass = ' alert-error';
+                        break;
+                    case 'warning':
+                    default :
+                        title = '<?=__('UI', 'message', 'titleWarning')?>';
+                        divClass = '';
+                        break;
+                }
+                var messageZone = $('#messageZone');
+                messageZone.append('<div class="alert' + divClass + ' fade in" style="display:none;"></div>');
+                messageZone.children('div:last').append('<button class="close" data-dismiss="alert">×</button>');
+                messageZone.children('div:last').append('<strong>' + title + '</strong> ' + text);
+                messageZone.children('div:last').slideDown(100);
+
+                if (messageZone.children('div').size() > 2) {
+                    setTimeout(eraseFirstMessage, 500, 2);
+                }
+            };
+            errorHandler = function (jqXHR) {
+                // Ignore aborted requests
+                if (jqXHR.readyState == 0 || jqXHR.status == 0 || jqXHR.statusText == "abort") {
+                    return;
+                }
+                var response = (typeof(jqXHR.responseText) == 'string') ? $.parseJSON(jqXHR.responseText) : jqXHR;
+                addMessage(response.message, response.typeError);
+            };
+            setMask = function (display) {
+                if (typeof(indexStackMask) == "undefined") {
+                    indexStackMask = 0;
+                }
+                if (display) {
+                    indexStackMask++;
+                    if ($('#loadingMask').is(':not(:visible)')) {
+                        $('#loadingMask').slideDown(100);
+                    }
+                } else {
+                    indexStackMask--;
+                    if (indexStackMask <= 0) {
+                        if ($('#loadingMask').is(':visible')) {
+                            $('#loadingMask').slideUp(100);
+                        }
+                        indexStackMask = 0;
+                    }
+                }
+            };
+        </script>
+
+        <?= $this->headScript()->toString() ?>
 
         <!--[if IE 7]>
         <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>
