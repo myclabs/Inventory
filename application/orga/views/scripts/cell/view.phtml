@@ -330,13 +330,6 @@ if (count($file) > 0) {
                 </select>
                 <?php endif; ?>
                 <?php endforeach; ?>
-                <?php if ($narrowerGranularityArray['isInput']) : ?>
-                <select name="granularity<?=$narrowerGranularity->getId()?>_inputStatus" data-filter="input-status">
-                    <?php foreach ($inputStatusFilters as $statusValue => $statusLabel) : ?>
-                    <option value="<?=$statusValue?>"><?=$statusLabel?></option>
-                    <?php endforeach; ?>
-                </select>
-                <?php endif; ?>
                 <?php if ($narrowerGranularityArray['isInventory']) : ?>
                 <select name="granularity<?=$narrowerGranularity->getId()?>_inventoryStatus" data-filter="inventory-status">
                     <?php foreach ($inventoryStatusFilters as $statusValue => $statusLabel) : ?>
