@@ -327,4 +327,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             throw new RuntimeException("Il est nécessaire de définir 'application.url' dans parameters.php");
         }
     }
+
+    /**
+     * Plugin qui gère le menu
+     */
+    protected function _initMenuPlugin()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin($this->container->get(Inventory_Plugin_MenuPlugin::class));
+    }
 }

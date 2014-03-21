@@ -3,59 +3,43 @@
 use Account\Application\Service\AccountViewFactory;
 use Account\Domain\Account;
 use Account\Domain\AccountRepository;
-use Core\Annotation\Secure;
-use MyCLabs\ACL\ACLManager;
-use User\Domain\ACL\Actions;
-use MyCLabs\ACL\Model\ClassResource;
 use User\Domain\User;
 
 /**
+ * Configure le menu de l'application.
+ *
  * @author matthieu.napoli
  */
-class Account_DashboardController extends Core_Controller
+class Inventory_Plugin_MenuPlugin extends Zend_Controller_Plugin_Abstract
 {
     /**
-     * @Inject
      * @var AccountRepository
      */
     private $accountRepository;
 
     /**
-     * @Inject
-     * @var ACLManager
-     */
-    private $aclManager;
-
-    /**
-     * @Inject
      * @var AccountViewFactory
      */
     private $accountViewFactory;
 
-    public function init()
+    public function __construct(AccountRepository $accountRepository, AccountViewFactory $accountViewFactory)
     {
-        $this->_helper->layout->setLayout('layout2');
+        $this->accountRepository = $accountRepository;
+        $this->accountViewFactory = $accountViewFactory;
     }
 
-    /**
-     * @Secure("loggedIn")
-     */
-    public function indexAction()
+    public function postDispatch(Zend_Controller_Request_Abstract $request)
     {
-        $session = new Zend_Session_Namespace(get_class());
-
-        // Un compte spécifique est demandé
-        if ($this->getParam('id') !== null) {
-            $session->accountId = $this->getParam('id');
-            $this->redirect('account/dashboard');
+        $user = $this->getLoggedInUser();
+        if (! $user) {
             return;
         }
 
-        /** @var User $user */
-        $user = $this->_helper->auth();
-
         // Tous les comptes que l'utilisateur peut voir
         $accounts = $this->accountRepository->getTraversableAccounts($user);
+        if (empty($accounts)) {
+            return;
+        }
 
         $session = new Zend_Session_Namespace('account-switcher');
 
@@ -75,12 +59,22 @@ class Account_DashboardController extends Core_Controller
         // Account view
         $accountView = $this->accountViewFactory->createAccountView($account, $user);
 
-        $this->view->assign('accountList', $accounts);
-        $this->view->assign('account', $accountView);
-        $this->view->assign('canCreateOrganization', $this->aclManager->isAllowed(
-            $user,
-            Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
-        ));
+        /** @var Zend_View_Abstract $view */
+        $view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
+
+        $view->assign('accountList', $accounts);
+        $view->assign('account', $accountView);
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getLoggedInUser()
+    {
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            return User::load($auth->getIdentity());
+        }
+        return null;
     }
 }
