@@ -68,7 +68,7 @@ class UI_HTML_Button extends UI_Generic
     public function  __construct($label=null)
     {
         $this->label = $label;
-        $this->_attributes['class'] = 'btn';
+        $this->_attributes['class'] = 'btn btn-default';
     }
 
     /**

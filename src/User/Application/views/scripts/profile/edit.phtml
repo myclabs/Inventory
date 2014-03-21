@@ -28,7 +28,7 @@ $form->setAction('user/profile/edit-submit/id/' . $user->getId());
 $html = <<<HTML
     <div class="input-append">
         <input type="text" id="inputEmail" value="{$user->getEmail()}" disabled>
-        <a href="{$this->baseUrl()}/user/profile/edit-email/id/{$user->getId()}" class="btn">
+        <a href="{$this->baseUrl()}/user/profile/edit-email/id/{$user->getId()}" class="btn btn-default">
             $editLabel</a>
     </div>
 HTML;
@@ -39,7 +39,7 @@ $form->addElement($editEmail);
 // Password
 if ($this->canEditPassword) {
     $html = <<<HTML
-        <a href="{$this->baseUrl()}/user/profile/edit-password/id/{$user->getId()}" class="btn">
+        <a href="{$this->baseUrl()}/user/profile/edit-password/id/{$user->getId()}" class="btn btn-default">
             $editLabel</a>
 HTML;
     $editPassword = new UI_Form_Element_HTML('password', $html);

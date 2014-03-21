@@ -22,7 +22,7 @@ if ($this->edit) {
     $editPopup->addAttribute('class', 'large');
     $editPopup->footer .= '<button class="btn btn-primary" onclick="$(\'#element_editForm\').submit();">'
         .'<i class="fa fa-check"></i> '.__('UI', 'verb', 'save').'</button>';
-    $editPopup->footer .= '<button class="btn" data-dismiss="modal">'
+    $editPopup->footer .= '<button class="btn btn-default" data-dismiss="modal">'
         .'<i class="fa fa-times"></i> '.__('UI', 'verb', 'close').'</button>';
     echo $editPopup->render();
 } else {

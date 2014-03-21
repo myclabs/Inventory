@@ -19,13 +19,13 @@ $family = $this->family;
         <h5>
             <?=$dimension->getLabel() . __('UI', 'other', ':')?> <code><?=$dimension->getRef()?></code>
 
-            <a class="btn btn-xs btn-warning pull-right deleteDimensionButton"
+            <a class="btn btn-warning btn-xs pull-right deleteDimensionButton"
                     href="<?=$this->baseUrl('parameter/dimension/delete/id/' . $dimension->getId())?>"
                     title="<?=__('Parameter', 'dimension', 'deleteDimension')?>">
                 <?=__('UI', 'verb', 'delete')?>
             </a>
 
-            <a class="btn btn-xs pull-right editDimensionButton" data-dimension-ref="<?=$dimension->getRef()?>"
+            <a class="btn btn-default btn-xs pull-right editDimensionButton" data-dimension-ref="<?=$dimension->getRef()?>"
                data-dimension-label="<?=$dimension->getLabel()?>" style="margin-right: 5px">
                 <?=__('UI', 'verb', 'edit')?>
             </a>
@@ -54,7 +54,7 @@ $family = $this->family;
         ?>
 
         <p>
-            <button type="button" id="<?=$dimension->getRef()?>AddMemberButton" class="btn addMemberButton"
+            <button type="button" id="<?=$dimension->getRef()?>AddMemberButton" class="btn btn-default addMemberButton"
                     data-dimension="<?=$dimension->getRef()?>">
                 <?=__('Parameter', 'dimension', 'addMembers')?>
             </button>
@@ -65,7 +65,7 @@ $family = $this->family;
 <?php endforeach; ?>
 
 <p>
-    <button type="button" class="btn addDimensionButton">
+    <button type="button" class="btn btn-default addDimensionButton">
         <?=__('Parameter', 'familyDetail', 'dimensionAddPanelTitle')?>
     </button>
 </p>
@@ -111,7 +111,7 @@ $family = $this->family;
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
-            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
         </div>
     </form>
 </div>
@@ -141,7 +141,7 @@ $family = $this->family;
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
-            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
         </div>
     </form>
 </div>
@@ -170,7 +170,7 @@ $family = $this->family;
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
-            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
         </div>
     </form>
 </div>

@@ -844,7 +844,7 @@ JS;
 
         $buttonCancelDeletePanel = new UI_HTML_Button($this->deletePanelCancelLabel);
         $buttonCancelDeletePanel->icon = $this->deletePanelCancelIcon;
-        $buttonCancelDeletePanel->addAttribute('class', 'btn');
+        $buttonCancelDeletePanel->addAttribute('class', 'btn btn-default');
         $buttonCancelDeletePanel->link = '#';
         $buttonCancelDeletePanel->addAttribute('data-dismiss', 'modal');
         $buttonCancelDeletePanel->addAttribute('data-target', '#'.$this->id.'_deletePanel');

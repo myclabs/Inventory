@@ -51,7 +51,7 @@ if ($this->mode != AFViewConfiguration::MODE_READ) {
 
     if ($this->withResultsPreview) {
         $resultsPreviewButton = <<<HTML
-            <button type="button" class="inputPreview btn" data-loading-text="$loadingText"
+            <button type="button" class="inputPreview btn btn-default" data-loading-text="$loadingText"
                 data-title="$resultsPreviewButtonHelp">
                 $resultsPreviewButtonLabel
             </button>
@@ -65,13 +65,13 @@ HTML;
             $inputCompleteMessage
         </div>
         $resultsPreviewButton
-        <button type="button" class="inputSave btn" data-loading-text="$loadingText">
+        <button type="button" class="inputSave btn btn-default" data-loading-text="$loadingText">
             $saveButtonLabel
         </button>
-        <button type="button" class="inputFinish btn">
+        <button type="button" class="inputFinish btn btn-default">
             $finishButtonLabel
         </button>
-        <button type="button" class="inputExit btn">
+        <button type="button" class="inputExit btn btn-default">
             <i class="fa fa-sign-out"></i>
             $quitButtonLabel
         </button>
@@ -85,7 +85,7 @@ HTML;
     $actionGroup = new UI_Form_Element_HTML('formActionGroup');
     $quitButtonLabel = __('UI', 'verb', 'quit');
     $actionGroup->content = <<<HTML
-        <button type="button" class="inputExit btn">
+        <button type="button" class="inputExit btn btn-default">
             $quitButtonLabel
         </button>
 HTML;

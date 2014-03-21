@@ -11,19 +11,19 @@
     <h1 id="reportLabel"><?=$this->reportLabel?><?=$this->viewConfiguration->getComplementaryPageTitle()?></h1>
     <div>
         <?php if ($this->isNew) { ?>
-        <a id="exportAsPdf" href="javascript: void(0)" class="btn disabled">
+        <a id="exportAsPdf" href="javascript: void(0)" class="btn btn-default disabled">
             <img src="images/dw/pdf_gris.png" alt="pdf" />
         <?php } else { ?>
-        <a id="exportAsPdf" href="dw/report/pdf/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn">
+        <a id="exportAsPdf" href="dw/report/pdf/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn btn-default">
             <img src="images/dw/pdf.png" alt="pdf" />
         <?php }?>
             <?=__('UI', 'verb','exportToPDF')?>
         </a>
         <?php if ($this->isNew) { ?>
-        <a id="exportAsExcel" href="javascript: void(0)" class="btn disabled">
+        <a id="exportAsExcel" href="javascript: void(0)" class="btn btn-default disabled">
             <img src="images/dw/xls_gris.png" alt="xls" />
         <?php } else { ?>
-        <a id="exportAsExcel" href="dw/report/excel/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn">
+        <a id="exportAsExcel" href="dw/report/excel/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn btn-default">
             <img src="images/dw/xls.png" alt="xls" />
         <?php }?>
             <?=__('UI', 'verb','exportToExcel')?>
@@ -205,10 +205,10 @@
             $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#\');';
             $script .= '$(\'#saveReportButton\').attr(\'title\', \''.addslashes(__('DW', 'config', 'applyNeededBeforeSaveReportTooltip')).'\');';
         }
-        $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn disabled\');';
+        $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn btn-default disabled\');';
         $script .= '$(\'#exportAsPdf\').attr(\'href\', \'javascript: void(0)\');';
         $script .= '$(\'#exportAsPdf img\').attr(\'src\', \'images/dw/pdf_gris.png\');';
-        $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn disabled\');';
+        $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn btn-default disabled\');';
         $script .= '$(\'#exportAsExcel\').attr(\'href\', \'javascript: void(0)\');';
         $script .= '$(\'#exportAsExcel img\').attr(\'src\', \'images/dw/xls_gris.png\');';
         $script .= '});';
@@ -218,7 +218,7 @@
             $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-warning\');';
             if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
                 $script .= '$(\'#reportState\').html(\'<i class="fa fa-info-circle"></i> '.__('DW', 'config', 'reportNotSaved').'\');';
-                $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-inverse disabled\');';
+                $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-default disabled\');';
                 $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#\');';
                 $script .= '$(\'#saveReportButton\').attr(\'title\', \''.addslashes(__('DW', 'config', 'applyNeededBeforeSaveReportTooltip')).'\');';
             } else {
@@ -237,7 +237,7 @@
             $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn\');';
             $script .= '$(\'#exportAsPdf\').attr(\'href\', \'dw/report/pdf/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
             $script .= '$(\'#exportAsPdf img\').attr(\'src\', \'images/dw/pdf.png\');';
-            $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn\');';
+            $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn btn-default\');';
             $script .= '$(\'#exportAsExcel\').attr(\'href\', \'dw/report/excel/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
             $script .= '$(\'#exportAsExcel img\').attr(\'src\', \'images/dw/xls.png\');';
             $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-success\');';
@@ -276,10 +276,10 @@
             $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#saveReport\');';
             $script .= '$(\'#saveReportButton\').attr(\'title\', \'\');';
         }
-        $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn\');';
+        $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn btn-default\');';
         $script .= '$(\'#exportAsPdf\').attr(\'href\', \'dw/report/pdf/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
         $script .= '$(\'#exportAsPdf img\').attr(\'src\', \'images/dw/pdf.png\');';
-        $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn\');';
+        $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn btn-default\');';
         $script .= '$(\'#exportAsExcel\').attr(\'href\', \'dw/report/excel/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
         $script .= '$(\'#exportAsExcel img\').attr(\'src\', \'images/dw/xls.png\');';
         if ($this->isNew) {
