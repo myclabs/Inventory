@@ -87,7 +87,6 @@ class Orga_Service_OrganizationService
 
             // Création d'une granularité globale par défaut.
             $defaultGranularity = new Orga_Model_Granularity($organization);
-            $defaultGranularity->setCellsWithACL(true);
 
             $organization->save();
             $this->entityManager->flush();
@@ -371,7 +370,7 @@ class Orga_Service_OrganizationService
     {
         $defaultGranularity = $organization->getGranularityByRef('global');
         /** @var Orga_Model_Granularity[] $reportsGranularities */
-        $reportsGranularities = [$defaultGranularity];
+        $reportsGranularities = [];
 
         $axesData = $formData['axes']['elements'];
         $axes = [];
@@ -500,19 +499,20 @@ class Orga_Service_OrganizationService
         // Création des granularités d'acl.
         $aclGranularitiesData = $formData['acl']['elements']['aclGranularitiesGroup']['elements']['aclGranularities'];
         foreach ($aclGranularitiesData['value'] as $aclGranularityId) {
-            $aclGranularityAxes = [];
             if ($aclGranularityId === 'global') {
-                break;
-            }
-            foreach (explode('|', $aclGranularityId) as $aclGranularityAxisId) {
-                $aclGranularityAxes[] = $axes[$aclGranularityAxisId];
-            }
-            try {
-                $aclGranularity = $organization->getGranularityByRef(
-                    Orga_Model_Granularity::buildRefFromAxes($aclGranularityAxes)
-                );
-            } catch (Core_Exception_NotFound $e) {
-                $aclGranularity = new Orga_Model_Granularity($organization, $aclGranularityAxes);
+                $aclGranularity = $defaultGranularity;
+            } else {
+                $aclGranularityAxes = [];
+                foreach (explode('|', $aclGranularityId) as $aclGranularityAxisId) {
+                    $aclGranularityAxes[] = $axes[$aclGranularityAxisId];
+                }
+                try {
+                    $aclGranularity = $organization->getGranularityByRef(
+                        Orga_Model_Granularity::buildRefFromAxes($aclGranularityAxes)
+                    );
+                } catch (Core_Exception_NotFound $e) {
+                    $aclGranularity = new Orga_Model_Granularity($organization, $aclGranularityAxes);
+                }
             }
             $aclGranularity->setCellsWithACL(true);
         }
@@ -520,19 +520,20 @@ class Orga_Service_OrganizationService
         if ($formData['organization']['elements']['organizationTemplate']['value'] === self::TEMPLATE_USER_REPORTING) {
             $reportsGranularitiesData = $formData['reports']['elements']['reportsGranularitiesGroup']['elements']['reportsGranularities'];
             foreach ($reportsGranularitiesData['value'] as $reportsGranularityId) {
-                $reportsGranularityAxes = [];
                 if ($reportsGranularityId === 'global') {
-                    break;
-                }
-                foreach (explode('|', $reportsGranularityId) as $reportsGranularityAxisId) {
-                    $reportsGranularityAxes[] = $axes[$reportsGranularityAxisId];
-                }
-                try {
-                    $reportsGranularity = $organization->getGranularityByRef(
-                        Orga_Model_Granularity::buildRefFromAxes($reportsGranularityAxes)
-                    );
-                } catch (Core_Exception_NotFound $e) {
-                    $reportsGranularity = new Orga_Model_Granularity($organization, $reportsGranularityAxes);
+                    $reportsGranularity = $defaultGranularity;
+                } else {
+                    $reportsGranularityAxes = [];
+                    foreach (explode('|', $reportsGranularityId) as $reportsGranularityAxisId) {
+                        $reportsGranularityAxes[] = $axes[$reportsGranularityAxisId];
+                    }
+                    try {
+                        $reportsGranularity = $organization->getGranularityByRef(
+                            Orga_Model_Granularity::buildRefFromAxes($reportsGranularityAxes)
+                        );
+                    } catch (Core_Exception_NotFound $e) {
+                        $reportsGranularity = new Orga_Model_Granularity($organization, $reportsGranularityAxes);
+                    }
                 }
                 $reportsGranularities[] = $reportsGranularity;
             }
@@ -544,8 +545,8 @@ class Orga_Service_OrganizationService
         // Définition de la création des DW après pour éviter un bug d'insertion.
         foreach ($reportsGranularities as $granularityWithDW) {
             $granularityWithDW->setCellsGenerateDWCubes(true);
+            $granularityWithDW->save();
         }
-        $organization->save();
         $this->entityManager->flush();
     }
 
@@ -589,6 +590,7 @@ class Orga_Service_OrganizationService
         $granularityYearCategory->save();
 
         // Configuration
+        $organization->getGranularityByRef('global')->setCellsWithACL(true);
         $organization->setGranularityForInventoryStatus($granularityYear);
         $granularityYearCategory->setInputConfigGranularity($granularityCategory);
         $granularityCategory->getCellByMembers([$categoryEnergy])
