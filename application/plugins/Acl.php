@@ -4,6 +4,7 @@ use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
 use AF\Domain\AFLibrary;
 use Doc\Domain\Library;
+use Parameter\Domain\ParameterLibrary;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use User\Application\ForbiddenException;
@@ -577,16 +578,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->editRepository($identity);
     }
 
-    protected function viewParameterRule(User $identity, Zend_Controller_Request_Abstract $request)
-    {
-        return $this->loggedInRule($identity, $request);
-    }
-
-    protected function editParameterRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
     protected function viewUnitRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->loggedInRule($identity, $request);
@@ -626,6 +617,22 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $af = AF::load($request->getParam('id'));
         return $this->aclManager->isAllowed($identity, Actions::EDIT, $af->getLibrary());
+    }
+
+    protected function viewParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('id') ?: $request->getParam('library');
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, ParameterLibrary::load($libraryId));
+    }
+
+    protected function viewParameterRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return $this->loggedInRule($identity, $request);
+    }
+
+    protected function editParameterRule(User $identity)
+    {
+        return $this->editRepository($identity);
     }
 
     /**

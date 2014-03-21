@@ -1,7 +1,9 @@
 <?php
 
 use Core\Annotation\Secure;
+use MyCLabs\ACL\ACLManager;
 use Parameter\Domain\ParameterLibrary;
+use User\Domain\ACL\Actions;
 
 /**
  * @author matthieu.napoli
@@ -9,7 +11,13 @@ use Parameter\Domain\ParameterLibrary;
 class Parameter_LibraryController extends Core_Controller
 {
     /**
-     * @Secure("viewParameter")
+     * @Inject
+     * @var ACLManager
+     */
+    private $aclManager;
+
+    /**
+     * @Secure("viewParameterLibrary")
      */
     public function viewAction()
     {
@@ -17,8 +25,7 @@ class Parameter_LibraryController extends Core_Controller
         $library = ParameterLibrary::load($this->getParam('id'));
 
         $this->view->assign('library', $library);
-        // TODO droit d'édition
-        $this->view->assign('edit', true);
-        $this->addBreadcrumb($library->getLabel());
+        $canEdit = $this->aclManager->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
+        $this->view->assign('edit', $canEdit);
     }
 }
