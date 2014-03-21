@@ -1,6 +1,8 @@
 <?php
 
 use AF\Application\AFViewConfiguration;
+use AF\Domain\AF;
+use AF\Domain\AFLibrary;
 use Doc\Domain\Library;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
@@ -560,11 +562,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->editAFRule($identity, $request);
     }
 
-    protected function editAFRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
     protected function viewTECRule(User $identity)
     {
         return $this->editRepository($identity);
@@ -609,12 +606,26 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
     protected function viewLibraryRule()
     {
-        return true;
+        // TODO
+        throw new Exception('TODO');
     }
 
     protected function editLibraryRule()
     {
-        return true;
+        // TODO
+        throw new Exception('TODO');
+    }
+
+    protected function editAFLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('id') ?: $request->getParam('library');
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, AFLibrary::load($libraryId));
+    }
+
+    protected function editAFRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $af = AF::load($request->getParam('id'));
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, $af->getLibrary());
     }
 
     /**

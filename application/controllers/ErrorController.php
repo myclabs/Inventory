@@ -1,6 +1,7 @@
 <?php
 
 use User\Application\ForbiddenException;
+use User\Application\HttpNotFoundException;
 
 /**
  * Controleur de gestion des erreurs
@@ -31,6 +32,11 @@ class ErrorController extends Core_Controller
                     $this->logger->info('403 Access denied to ' . $_SERVER['REQUEST_URI']
                         . ' from ' . $_SERVER['REMOTE_ADDR']);
                     $httpStatus = 403;
+                    $errorMessage = $exception->getMessage();
+                } elseif ($exception instanceof HttpNotFoundException) {
+                    // 404
+                    $this->logger->info('404 for ' . $_SERVER['REQUEST_URI']);
+                    $httpStatus = 404;
                     $errorMessage = $exception->getMessage();
                 } elseif ($exception instanceof Core_Exception_User) {
                     // 400 Bad request
