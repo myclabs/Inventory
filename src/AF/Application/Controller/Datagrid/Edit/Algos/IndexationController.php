@@ -37,12 +37,13 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                         $data['value'] = $this->cellList($member->getRef());
                     }
                 } elseif ($index instanceof AlgoResultIndex) {
-                    $data['type'] = $this->cellList(AlgoResultIndex::class);
+                    $data['type'] = $this->cellList('AlgoResultIndex');
                     $valueAlgo = $index->getAlgo();
                     $data['value'] = $this->cellList($valueAlgo->getRef());
                 } else {
                     $type = $this->getChosenIndexType($algo, $axis);
                     if ($type) {
+                        $type = substr($type, strrpos($type, '\\') + 1);
                         $data['type'] = $this->cellList($type);
                     }
                 }
@@ -72,18 +73,19 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'type':
+                $class = 'AF\Domain\Algorithm\Index\\' . $newValue;
                 $index = $algo->getIndexForAxis($axis);
                 if ($index) {
                     // Modification du type d'index
-                    if ($newValue && (! $index instanceof $newValue)) {
+                    if ($newValue && (! $index instanceof $class)) {
                         // Suppression de l'ancien index
                         $algo->removeIndex($index);
                         $algo->save();
                         $this->entityManager->flush();
                     }
                 }
-                $this->setChosenIndexType($algo, $axis, $newValue);
-                $this->data = $this->cellList($newValue);
+                $this->setChosenIndexType($algo, $axis, $class);
+                $this->data = $this->cellList($class);
                 break;
             case 'value':
                 $index = $algo->getIndexForAxis($axis);

@@ -2,7 +2,6 @@
 
 namespace Parameter\Domain\Family;
 
-use Calc_UnitValue;
 use Calc_Value;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\Collection;

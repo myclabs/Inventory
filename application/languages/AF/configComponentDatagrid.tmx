@@ -214,6 +214,15 @@
             </tuv>
         </tu>
 
+        <tu tuid="copyTechnoMembersAsOptions">
+            <tuv xml:lang="fr">
+                <seg>Définir comme options, les membres de la famille suivante :</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Use as options, members from the following family:</seg>
+            </tuv>
+        </tu>
+
         <!-- Champs de sélection multiple -->
 
         <tu tuid="multiCheckboxOption">

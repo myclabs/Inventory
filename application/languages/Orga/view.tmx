@@ -19,18 +19,18 @@
 
         <tu tuid="separator">
             <tuv xml:lang="fr">
-                <seg> - </seg> <!-- ou bien &amp; ? -->
+                <seg>, </seg> <!-- ou bien &amp; ? -->
             </tuv>
             <tuv xml:lang="en">
-                <seg> - </seg>
+                <seg>, </seg>
             </tuv>
         </tu>
         <tu tuid="granularityExplanations">
             <tuv xml:lang="fr">
-                <seg>Fonctionnalités disponibles à ce niveau</seg>
+                <seg>Fonctionnalités disponibles à ce niveau : </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Features available at this level</seg>
+                <seg>Features available at this level: </seg>
             </tuv>
         </tu>
 

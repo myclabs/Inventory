@@ -28,6 +28,7 @@
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
         "myclabs/acl": "dev-master",
+        "myclabs/muih": "0.1.*",
         "mnapoli/php-di": "~4.0",
         "mnapoli/php-di-zf1": "*",
         "psr/log": "~1.0",

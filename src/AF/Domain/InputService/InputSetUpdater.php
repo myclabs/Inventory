@@ -180,6 +180,11 @@ class InputSetUpdater extends ArrayComparator
         );
         $comparator->whenDifferent(
             function (SubInputSet $inputSet1, SubInputSet $inputSet2) {
+                // Un traitement particulier pour les libellés libres des saisies répétées
+                if ($inputSet1->getFreeLabel() !== $inputSet2->getFreeLabel()) {
+                    $inputSet1->setFreeLabel($inputSet2->getFreeLabel());
+                }
+
                 // Met à jour l'inputSet sauvegardé en prenant en compte les valeurs de la nouvelle saisie
                 $subUpdater = new InputSetUpdater($inputSet1, $inputSet2);
                 $subUpdater->run();

@@ -625,6 +625,9 @@ class Orga_Model_Axis extends Core_Model_Entity
             foreach ($this->getGranularities() as $granularity) {
                 $granularity->generateCellsFromNewMember($member);
             }
+            foreach ($member->getCells() as $cell) {
+                $cell->enable();
+            }
         }
     }
 

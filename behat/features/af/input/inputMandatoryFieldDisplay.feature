@@ -10,6 +10,8 @@ Feature: Input mandatory field display feature
     Given I am on "af/af/test/id/5"
     And I wait for the page to finish loading
   # Affichage des messages des champs au clic sur "Aperçu des résultats"
+    And I check "c_b"
+    And I uncheck "c_b"
     And I click "Aperçu des résultats"
     Then the field "c_n" should have error: "Champ obligatoire pour atteindre le statut : complet."
     And the field "c_s_s_liste" should have error: "Champ obligatoire pour atteindre le statut : complet."
@@ -21,7 +23,6 @@ Feature: Input mandatory field display feature
   # Affichage des messages des champs au clic sur "Enregistrer"
     When I reload the page
     And I wait for the page to finish loading
-  # Affichage des messages des champs au clic sur "Aperçu des résultats"
     And I check "c_b"
     And I uncheck "c_b"
     And I click "Enregistrer"

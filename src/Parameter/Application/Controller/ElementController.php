@@ -63,6 +63,10 @@ class Parameter_ElementController extends Core_Controller
 
         if (! $this->hasFormError()) {
             /** @noinspection PhpUndefinedVariableInspection */
+            if ($digitalValue !== null && $uncertainty === null) {
+                $uncertainty = 0;
+            }
+            /** @noinspection PhpUndefinedVariableInspection */
             $value = new Calc_Value($digitalValue, $uncertainty);
             $cell->setValue($value);
             $cell->save();

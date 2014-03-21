@@ -16,7 +16,7 @@ Feature: AF single selection field option feature
     Then I should see the popup "Options"
     And I should see the "optionDatagrid" datagrid
   # Popup d'ajout
-    When I click element "#selectSingleFieldDatagrid_options_popup .btn:contains('Ajouter')"
+    When I click "Ajout d'une option"
     Then I should see the popup "Ajout d'une option"
   # Ajout, saisie correcte
     When I fill in "optionDatagrid_label_addForm" with "AAA"
@@ -42,7 +42,7 @@ Feature: AF single selection field option feature
     Then I should see the popup "Options"
     And I should see the "optionDatagrid" datagrid
   # Popup d'ajout
-    When I click element "#selectSingleFieldDatagrid_options_popup .btn:contains('Ajouter')"
+    When I click "Ajout d'une option"
     Then I should see the popup "Ajout d'une option"
   # Ajout, identifiant vide
     When I click "Valider"

@@ -246,6 +246,7 @@ class AF extends Core_Model_Entity
         $mode = AFViewConfiguration::MODE_WRITE
     ) {
         $form = new UI_Form($this->ref);
+        $form->addClass('af');
 
         $generationHelper = new AFGenerationHelper($inputSet, $mode);
 
@@ -394,7 +395,7 @@ class AF extends Core_Model_Entity
 
     /**
      * Récupère la liste des subAF d'un AF.
-     * @return \AF\Domain\Component\SubAF[]
+     * @return SubAF[]
      */
     public function getSubAfList()
     {

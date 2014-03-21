@@ -117,7 +117,7 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $addScript = '';
         $addScript .= 'var '.$this->getElement()->getId().'_nextRowId = '.$occurrence.';';
         $addScript .= '$(\'#'.$this->getElement()->getId().'_add'.'\').on(\'click\', function(e) {';
-        $addScript .= '$(\'#'.$this->getElement()->getId().' tbody\').append(\''.$baseElementsRow.'\'.replace('.
+        $addScript .= '$(\'#'.$this->getElement()->getId().' tbody\').append(\''.str_replace('\'', '\\\'', $baseElementsRow).'\'.replace('.
             '/'.self::OCCURRENCE_SEPARATOR.'0/g, \''.self::OCCURRENCE_SEPARATOR.'\'+'.$this->getElement()->getId().'_nextRowId));';
         $addScript .= ''.$this->getElement()->getId().'_nextRowId++;';
         $addScript .= '});';

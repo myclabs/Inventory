@@ -15,7 +15,7 @@ Feature: Organization datagrid feature
     When I fill in "organizationLabel" with "Test Behat"
     And I click element "form[id='addOrganization'] > div > div:nth-child(1) button.navigation-next"
     And I click element "form[id='addOrganization'] > div > div:nth-child(1) button.navigation-end"
-    Then I should see the popup "Construction de l'organisation"
+    Then I should see the popup "Initialisation du workspace"
     And I wait for 5 seconds
     And I should see "Ajout effectué"
     When I click "Revenir à l'accueil"
@@ -47,7 +47,7 @@ Feature: Organization datagrid feature
     When I fill in "organizationLabel" with "Test Behat"
     And I click element "form[id='addOrganization'] > div > div:nth-child(1) button.navigation-next"
     And I click element "form[id='addOrganization'] > div > div:nth-child(1) button.navigation-end"
-    Then I should see the popup "Construction de l'organisation"
+    Then I should see the popup "Initialisation du workspace"
     And I wait for 5 seconds
     And I should see "Ajout effectué"
     When I click "Revenir à l'accueil"

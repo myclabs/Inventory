@@ -18,7 +18,7 @@ class AFConfigurationValidator
     /**
      * Méthode qui gère le controle de la configuration des AFs.
      * @param AF $af
-     * @return AlgoConfigurationError[]
+     * @return AFConfigurationError[]
      */
     public function validateAF(AF $af)
     {
@@ -32,7 +32,7 @@ class AFConfigurationValidator
     /**
      * Méthode qui gère le control de la configuration des champs d'un Af.
      * @param AF $af
-     * @return AlgoConfigurationError[]
+     * @return AFConfigurationError[]
      */
     protected function validateFormElements(AF $af)
     {
@@ -42,7 +42,7 @@ class AFConfigurationValidator
     /**
      * Méthode qui gère le control de la configuration des algos associés à un Af.
      * @param AF $af
-     * @return AlgoConfigurationError[]
+     * @return AFConfigurationError[]
      */
     protected function validateAlgos(AF $af)
     {
@@ -62,7 +62,7 @@ class AFConfigurationValidator
     /**
      * Méthode qui gère le control de la configuration des conditions associées à un Af.
      * @param AF $af
-     * @return AlgoConfigurationError[]
+     * @return AFConfigurationError[]
      */
     protected function validateConditions(AF $af)
     {
@@ -86,7 +86,7 @@ class AFConfigurationValidator
     /**
      * @param AlgoConfigurationError[] $errors
      * @param AF                       $af
-     * @return AlgoConfigurationError[]
+     * @return AFConfigurationError[]
      */
     protected function toAFConfigErrors(array $errors, AF $af)
     {
@@ -100,10 +100,10 @@ class AFConfigurationValidator
     /**
      * @param AlgoConfigurationError $error
      * @param AF                     $af
-     * @return AlgoConfigurationError
+     * @return AFConfigurationError
      */
     protected function toAFConfigError(AlgoConfigurationError $error, AF $af)
     {
-        return new AlgoConfigurationError($error->getMessage(), $error->getFatal(), $af);
+        return new AFConfigurationError($error->getMessage(), $error->getFatal(), $af);
     }
 }
