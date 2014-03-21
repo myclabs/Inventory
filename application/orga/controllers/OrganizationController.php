@@ -497,7 +497,7 @@ class Orga_OrganizationController extends Core_Controller
                 'label',
                 __('UI', 'formValidation', 'emptyRequiredField')
             );
-        } else if ($organization->getLabel() !== $label) {
+        } elseif ($organization->getLabel() !== $label) {
             $organization->setLabel($label);
             $updated = true;
         }
@@ -759,33 +759,46 @@ class Orga_OrganizationController extends Core_Controller
         $refConfigAxes = $this->getParam('inputConfigAxes');
         /** @var Orga_Model_Axis[] $configAxes */
         $configAxes = [];
-        if (!empty($this->getParam('inputConfigAxes')))
+        if (!empty($this->getParam('inputConfigAxes'))) {
             foreach ($refConfigAxes as $refConfigAxis) {
-            $configAxis = $organization->getAxisByRef($refConfigAxis);
-            // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
-            if (!$configAxis->isTransverse($configAxes)) {
-                throw new Core_Exception_User('Orga', 'granularity', 'hierarchicallyLinkedAxes');
-                break;
-            } else {
-                $configAxes[] = $configAxis;
+                $configAxis = $organization->getAxisByRef($refConfigAxis);
+                // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
+                if (!$configAxis->isTransverse($configAxes)) {
+                    throw new Core_Exception_User('Orga', 'granularity', 'hierarchicallyLinkedAxes');
+                    break;
+                } else {
+                    $configAxes[] = $configAxis;
+                }
             }
         }
 
         foreach ($configAxes as $configAxis) {
             foreach ($inputAxes as $inputAxis) {
                 if ($inputAxis->isBroaderThan($configAxis)) {
-                    throw new Core_Exception_User('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanFormChoiceGranularity');
+                    throw new Core_Exception_User(
+                        'Orga',
+                        'configuration',
+                        'inputGranularityNeedsToBeNarrowerThanFormChoiceGranularity'
+                    );
                 }
             }
             if ($configAxis->isTransverse($inputAxes)) {
-                throw new Core_Exception_User('Orga', 'configuration', 'inputGranularityNeedsToBeNarrowerThanFormChoiceGranularity');
+                throw new Core_Exception_User(
+                    'Orga',
+                    'configuration',
+                    'inputGranularityNeedsToBeNarrowerThanFormChoiceGranularity'
+                );
             }
         }
 
         try {
-            $inputGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($inputAxes));
+            $inputGranularity = $organization->getGranularityByRef(
+                Orga_Model_Granularity::buildRefFromAxes($inputAxes)
+            );
 
-            $configGranularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($configAxes));
+            $configGranularity = $organization->getGranularityByRef(
+                Orga_Model_Granularity::buildRefFromAxes($configAxes)
+            );
             $inputGranularity->setInputConfigGranularity($configGranularity);
             $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
         } catch (Core_Exception_NotFound $e) {
