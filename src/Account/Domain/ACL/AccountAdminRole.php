@@ -42,7 +42,5 @@ class AccountAdminRole extends Role
             Actions::all(),
             $this->account
         );
-
-        // TODO cascade manuelle sur les cellules globales
     }
 }
