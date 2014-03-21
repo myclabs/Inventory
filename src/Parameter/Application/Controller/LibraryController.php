@@ -8,12 +8,6 @@ use Parameter\Domain\ParameterLibrary;
  */
 class Parameter_LibraryController extends Core_Controller
 {
-    public function init()
-    {
-        parent::init();
-        $this->_helper->layout->setLayout('layout2');
-    }
-
     /**
      * @Secure("viewParameter")
      */

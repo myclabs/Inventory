@@ -32,17 +32,12 @@ class Account_DashboardController extends Core_Controller
      */
     private $accountViewFactory;
 
-    public function init()
-    {
-        $this->_helper->layout->setLayout('layout2');
-    }
-
     /**
      * @Secure("loggedIn")
      */
     public function indexAction()
     {
-        $session = new Zend_Session_Namespace(get_class());
+        $session = new Zend_Session_Namespace('account-switcher');
 
         // Un compte spécifique est demandé
         if ($this->getParam('id') !== null) {
