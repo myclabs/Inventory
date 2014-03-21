@@ -2,6 +2,7 @@
 
 use Behat\Behat\Context\Step;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 use WebDriver\Exception;
@@ -248,6 +249,25 @@ class FeatureContext extends MinkContext
         $node->click();
 
         $this->waitForPageToFinishLoading();
+    }
+
+    /**
+     * Clicks a button or link with specified id|title|alt|text.
+     *
+     * @Then /^the button "(?P<button>(?:[^"]|\\")*)" must be disabled$/
+     */
+    public function assertButtonDisabled($button)
+    {
+        $page = $this->getSession()->getPage();
+        $element = $page->findButton($button);
+
+        if ($element === null) {
+            throw new ElementNotFoundException($this->getSession(), 'element', 'css', $button);
+        }
+
+        if (! $element->hasAttribute('disabled')) {
+            throw new ExpectationException("Button \"$button\" is not disabled", $this->getSession());
+        }
     }
 
     /**

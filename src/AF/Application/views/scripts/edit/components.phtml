@@ -143,6 +143,33 @@ $('#textFields').on('show', function(e) {
     }
 });
 JS;
+$script .= <<<JS
+$('body').on('submit', '#copyTechnoMembersAsOptions', function(e) {
+    e.preventDefault();
+    var form = $(this);
+    var submit = $('button[type="submit"]', form);
+    if (submit.hasClass('disabled')) {
+        return;
+    }
+    submit.addClass('disabled');
+    $.ajax({
+        url: form.attr('action'),
+        type: "POST",
+        data: form.serializeArray(),
+        success: function(data) {
+            addMessage(data.message, 'success');
+            optionDatagrid.filter();
+        },
+        error: function(jqXHR) {
+            var data = $.parseJSON(jqXHR.responseText);
+            addMessage(data.message, data.typeError);
+        },
+        complete: function(jqXHR) {
+            submit.removeClass('disabled');
+        }
+    });
+});
+JS;
 
 
 echo '<script type="text/javascript">/*<![CDATA[*/'.$script.'/*]]>*/</script>';

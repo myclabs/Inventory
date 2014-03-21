@@ -28,7 +28,7 @@ scripts/migration/2.11/migrate.sql
 
 - Faire un build update et redémarrer le worker.
 
-- Lancer le script de rebuild des ACL
+- Lancer le script de rebuild des Exports
 
 ```
 bin/inventory export:rebuild
@@ -68,6 +68,10 @@ php scripts/jobs/acl/rebuild.php acl:rebuild
 ```
 
 - Si il reste des traductions de DW dans `ext_translations`, les supprimer
+
+```
+DELETE FROM `ext_translations` WHERE object_class="DW_Model_Axis" OR object_class="DW_Model_Axis" OR object_class="DW_Model_Member" OR object_class="DW_Model_Indicator" OR object_class="DW_Model_Report" OR object_class="DW_Model_Cube"
+```
 
 
 ## 2.9

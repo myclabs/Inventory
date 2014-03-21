@@ -12,7 +12,7 @@ Feature: General info of an organization feature
     And I open tab "Informations générales"
   # Modification du libellé
     When I fill in "Libellé" with "Workspace avec données modifiée"
-    And I click "Enregistrer"
+    And I click element "#organizationDetails #Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Vérification modification prise en compte
     When I reload the page
@@ -27,7 +27,7 @@ Feature: General info of an organization feature
     And I open tab "Informations générales"
   # Modification du niveau organisationnel des collectes
     And I select "Année" from "Niveau organisationnel des collectes"
-    And I click "Enregistrer"
+    And I click element "#organizationDetails #Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Vérification modification prise en compte
     And I click "Données"

@@ -8,9 +8,6 @@ Feature: Input typed in data feature
   Scenario: Correct interpretation of the difference between no input, value 0, and empty chain
     Given I am on "af/af/test/id/2"
     And I wait for the page to finish loading
-  # Aucune saisie
-    When I click "Aperçu des résultats"
-    Then the field "chiffre_affaire" should have error: "Champ obligatoire pour atteindre le statut : complet."
   # Saisie " " dans champ obligatoire
     When I fill in "chiffre_affaire" with " "
     And I click "Enregistrer"

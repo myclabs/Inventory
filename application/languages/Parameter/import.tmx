@@ -54,30 +54,32 @@ member3; member4; 0.5; 20</seg>
         <tu tuid="addMemberListHelp">
             <tuv xml:lang="fr">
                 <seg>
-                    Le format attendu est un élément par ligne : identifiant suivi d'un point-virgule et du libellé.
+                    Le format attendu est un élément par ligne : libellé puis identifiant, séparés par un ";".
+                    L'identifiant peut être omis, il sera alors automatiquement généré.
                     Exemple :
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-                    The expected format is one element per line: the identifier followed by a semi-colon and the label.
+                    The expected format is one element per line: the label followed by the identifier, separated
+                    with a ";". The identifier can be omitted, it will be generated automatically.
                     Example:
                 </seg>
             </tuv>
         </tu>
         <tu tuid="addMemberListExample">
             <tuv xml:lang="fr">
-                <seg>element1; Libellé de l'élément 1
-element2; Libellé de l'élément 2</seg>
+                <seg>Libellé de l'élément 1; element1
+Libellé de l'élément 2; element2</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>element1; Label of element 1
-element2; Label of element 2</seg>
+                <seg>Label of element 1; element1
+Label of element 2; element2</seg>
             </tuv>
         </tu>
         <tu tuid="membersFound">
             <tuv xml:lang="fr">
-                <seg>éléments(s) prêts à être ajoutés</seg>
+                <seg>élément(s) prêts à être ajoutés</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>element(s) ready to be created</seg>
@@ -93,18 +95,18 @@ element2; Label of element 2</seg>
         </tu>
         <tu tuid="errorOneSeparatorPerLine">
             <tuv xml:lang="fr">
-                <seg>Chaque ligne doit contenir un point-virgule séparant l'identifiant du libellé.</seg>
+                <seg>Chaque ligne doit contenir un point-virgule séparant le libellé de l'identifiant.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Each line should contain a semi-colon separating the identifier from the label.</seg>
+                <seg>Each line should contain a semi-colon separating the label from the identifier.</seg>
             </tuv>
         </tu>
         <tu tuid="errorInvalidRef">
             <tuv xml:lang="fr">
-                <seg>L'identifiant ligne {line} doit être non vide et utiliser uniquement les caractères "a..z" (minuscules), "0..9", et "_".</seg>
+                <seg>L'identifiant ligne {line} doit utiliser uniquement les caractères "a..z" (minuscules), "0..9", et "_".</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>The identifier line {line} must be non-empty and contain only the characters "a..z" (lower case), "0..9", and "_".</seg>
+                <seg>The identifier line {line} must contain only the characters "a..z" (lower case), "0..9", and "_".</seg>
             </tuv>
         </tu>
         <tu tuid="errorInvalidLabel">

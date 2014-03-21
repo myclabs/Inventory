@@ -20,12 +20,20 @@
                 <seg>% finished inputs</seg>
             </tuv>
         </tu>
-        <tu tuid="inventories">
+        <tu tuid="editInventories">
             <tuv xml:lang="fr">
-                <seg>Collectes</seg>
+                <seg>Gestion des collectes</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Collection</seg>
+                <seg>Edit collection</seg>
+            </tuv>
+        </tu>
+        <tu tuid="viewInventories">
+            <tuv xml:lang="fr">
+                <seg>Suivi des collectes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>View collection</seg>
             </tuv>
         </tu>
         <tu tuid="inventory">

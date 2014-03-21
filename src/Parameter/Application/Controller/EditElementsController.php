@@ -14,6 +14,8 @@ class Parameter_EditElementsController extends Core_Controller
      */
     public function editElementsAction()
     {
+        $locale = Core_Locale::loadDefault();
+
         $family = Family::load($this->getParam('idFamily'));
         $dimensions = $family->getDimensions();
 
@@ -24,7 +26,7 @@ class Parameter_EditElementsController extends Core_Controller
         $number = 0;
 
         foreach ($lines as $line) {
-            $array = explode(';', $line);
+            $array = explode("\t", $line);
 
             if (count($array) !== (count($dimensions) + 2)) {
                 UI_Message::addMessageStatic(__('Parameter', 'import', 'invalidElementsInput'));
@@ -33,8 +35,8 @@ class Parameter_EditElementsController extends Core_Controller
             }
 
             $membersRef = array_slice($array, 0, count($array) - 2);
-            $digitalValue = trim($array[count($array) - 2]);
-            $uncertainty = trim($array[count($array) - 1]);
+            $digitalValue = $locale->readNumber(trim($array[count($array) - 2]));
+            $uncertainty = $locale->readInteger(trim($array[count($array) - 1]));
 
             $newValue = new Calc_Value($digitalValue, $uncertainty);
 

@@ -24,8 +24,8 @@ Feature: AF repeated subAF feature
     Then the following message is shown and closed: "Ajout effectué."
   # Sous-formulaires non répétés ordonnés suivant l'ordre de création
     And the row 2 of the "subAfRepeatedDatagrid" datagrid should contain:
-      | label | ref | targetAF                                            | isVisible | repetition | hasFreeLabel |
-      | AAA   | aaa | Combustion de combustible, mesuré en unité de masse | Visible   | Zéro       | Non          |
+      | label | ref | targetAF                                            | isVisible | repetition |
+      | AAA   | aaa | Combustion de combustible, mesuré en unité de masse | Visible   | Zéro       |
     When I click "Aide" in the row 2 of the "subAfRepeatedDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#subAfRepeatedDatagrid_help_popup .modal-body h1:contains('Blabla')" element
@@ -74,7 +74,7 @@ Feature: AF repeated subAF feature
     When I set "Masqué" for column "isVisible" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
   # Vérification que les modifications on bien été prises en compte au niveau du datagrid
     Then the row 1 of the "subAfRepeatedDatagrid" datagrid should contain:
-      | label                          | ref                            | targetAF          | isVisible |
+      | label                          | ref           | targetAF          | isVisible |
       | Sous-formulaire répété modifié | s_f_r_modifie | Données générales | Masqué    |
     When I click "Aide" in the row 1 of the "subAfRepeatedDatagrid" datagrid
     Then I should see the popup "Aide"

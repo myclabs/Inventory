@@ -35,3 +35,101 @@ $organizationForm->addSubmitButton();
         <?php if ($this->display) { $organizationForm->display(); } else { echo $organizationForm->render(); } ?>
     </div>
 </fieldset>
+
+
+<?php
+$bannerForm = new UI_Form('editBanner'. $this->idOrganization);
+
+$bannerForm->setAjax(false);
+$bannerForm->setAttrib('target', 'upload_iframe' . $this->idOrganization);
+$bannerForm->setEnctype('multipart/form-data');
+$bannerForm->setAction('orga/organization/edit-banner/idOrganization/' . $this->idOrganization);
+
+$fileField = new UI_Form_Element_File('file');
+$fileField->setLabel(__('Orga', 'organization', 'choiceBanner'));
+$bannerForm->addElement($fileField);
+
+$file = glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $this->idOrganization . '.*');
+$file = reset($file);
+$currentBannerElementForm = new UI_Form_Element_HTML('currentBanner', '<img src="' .
+    (($file !== false) ? 'workspaceBanners/'.pathinfo($file)['filename'] : '') .
+   '" alt="' . ___('Orga', 'organization', 'noBanner') . '">');
+$currentBannerElementForm->setLabel(___('Orga', 'organization', 'currentBanner'));
+$bannerForm->addElement($currentBannerElementForm);
+
+$uploadingBannerDiv = '<div class="uploading-banner hide alert alert-info">' .
+    $this->image('images/ui/ajax-loader.gif', '') . ' ' . __('Doc', 'library', 'uploading') . '</div>';
+$uploadingBannerElementForm = new UI_Form_Element_HTML('currentBanner', $uploadingBannerDiv, true);
+$bannerForm->addElement($uploadingBannerElementForm);
+
+$errorBannerDiv = '<div class="uploading-banner-errors hide alert alert-error"></div>';
+$errorBannerElementForm = new UI_Form_Element_HTML('currentBanner', $errorBannerDiv, true);
+$bannerForm->addElement($errorBannerElementForm);
+
+$deleteBannerDiv = '<button id="removeBanner' . $this->idOrganization .
+    '" class="btn btn-warning'.(($file !== false) ? '': ' hide').'" type="button">'
+    . __('UI', 'verb', 'delete') . '</button>';
+$deleteBannerElementForm = new UI_Form_Element_HTML('currentBanner', $deleteBannerDiv, true);
+
+$bannerForm->addSubmitButton();
+$bannerForm->addActionElement($deleteBannerElementForm)
+?>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default">
+        <?=___('Orga', 'organization', 'banner')?>
+        <small><?=___('Orga', 'organization', 'bannerExplanations')?></small>
+    </legend>
+    <div>
+        <?php if ($this->display) { $bannerForm->display(); } else { echo $bannerForm->render(); } ?>
+
+        <iframe id="upload_iframe<?=$this->idOrganization?>" name="upload_iframe<?=$this->idOrganization?>" src="#" class="hidden">
+        </iframe>
+
+        <script>
+            // Début de l'upload
+            $("#editBanner<?=$this->idOrganization?>").on('submit', function() {
+                $('#orga_organization .uploading-banner').show();
+                $('#orga_organization .uploading-banner-errors').hide();
+            });
+
+            // Callback appelée lorsque le téléchargement a réussi
+            fileUploadResult<?=$this->idOrganization?> = function(success, message) {
+                if (success) {
+                    $('#currentBanner img').attr('src', 'workspaceBanners/' + message + '?' + new Date().getTime());
+                    $("#removeBanner<?=$this->idOrganization?>").show();
+                } else {
+                    $('#orga_organization .uploading-banner-errors').html(message);
+                    $('#orga_organization .uploading-banner-errors').show();
+                }
+                $('#orga_organization .uploading-banner').hide();
+            }
+
+            // Suppression de la bannière
+            $("#removeBanner<?=$this->idOrganization?>").on('click', function(e) {
+                var button = $(this);
+                if (button.hasClass('disabled')) {
+                    return;
+                }
+                e.preventDefault();
+                button.addClass('disabled');
+                $.ajax({
+                    url: 'orga/organization/remove-banner/idOrganization/<?=$this->idOrganization?>',
+                    type: "POST",
+                    success: function(data) {
+                        addMessage(data.message, 'success');
+                        $('#currentBanner img').attr('src', '');
+                        $("#removeBanner<?=$this->idOrganization?>").hide();
+                    },
+                    error: function(jqXHR) {
+                        var data = $.parseJSON(jqXHR.responseText);
+                        addMessage(data.message, data.typeError);
+                    },
+                    complete: function(jqXHR) {
+                        button.removeClass('disabled');
+                    }
+                });
+            });
+        </script>
+    </div>
+</fieldset>

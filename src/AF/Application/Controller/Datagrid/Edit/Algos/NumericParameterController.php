@@ -1,4 +1,10 @@
 <?php
+/**
+ * @author  matthieu.napoli
+ * @author  hugo.charbonnier
+ * @author  thibaud.rolland
+ * @package AF
+ */
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;

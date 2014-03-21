@@ -230,4 +230,41 @@ class FamilyTest extends TestCase
         $this->assertInstanceOf(Cell::class, $family->getCell([$member21, $member11]));
         $this->assertSame($family->getCell([$member11, $member21]), $family->getCell([$member21, $member11]));
     }
+
+    /**
+     * Test des cellules dans le cas ou un renommage de ref de dimension impacte la membersHashKey (#6981)
+     *
+     * @link http://tasks.myc-sense.com/issues/6981
+     */
+    public function testCellsRenamingDimensionRef()
+    {
+        $family = self::generateObject();
+
+        $dimension1 = new Dimension($family, 'a', 'Test 1', Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1->save();
+        $this->entityManager->flush();
+        $member11 = new Member($dimension1, 'aa', 'Member');
+
+        $dimension2 = new Dimension($family, 'b', 'Test 2', Dimension::ORIENTATION_VERTICAL);
+        $dimension2->save();
+        $this->entityManager->flush();
+        $member21 = new Member($dimension2, 'bb', 'Member');
+
+        $cell = $family->getCell([$member11, $member21]);
+
+        $family->save();
+        $this->entityManager->flush();
+
+        // On renomme "a" en "c" pour que alphabétiquement l'ordre change
+        // impact sur la membersHashKey qui devrait être reconstruite
+        $dimension1->setRef('c');
+
+        // La cellule devrait être trouvable
+        $this->assertInstanceOf(Cell::class, $family->getCell([$member11, $member21]));
+        // Vérifie que la cellule n'a pas été supprimée/recrée
+        $this->assertSame($cell, $family->getCell([$member11, $member21]));
+
+        // Delete all
+        self::deleteObject($family);
+    }
 }

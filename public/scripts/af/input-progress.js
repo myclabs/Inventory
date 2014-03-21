@@ -8,168 +8,129 @@ var AF = AF || {};
  *
  * @author matthieu.napoli
  *
- * @param {int} id ID de l'AF
- * @param {int|null} idInputSet ID de l'inputSet, ou null si inputSet en session
- * @param {object} urlParams
  * @constructor
  */
-AF.InputProgress = function (id, idInputSet, urlParams) {
-    var that = this;
-
-    /**
-     * id de l'AF
-     * @type {int}
-     */
-    this.id = id;
-
-    /**
-     * ID de l'inputSet, ou null si inputSet en session
-     * @type {int|null}
-     */
-    this.idInputSet = idInputSet;
-
-    /**
-     * Paramètres d'URL additionnels à utiliser
-     * @type {object}
-     */
-    this.urlParams = urlParams;
-
-    $(function () {
-        // Marquer la saisie comme terminée
-        $("#markInputAsFinished").change(function () {
-            that.markInputAsFinished();
-        });
-    });
+AF.InputProgress = function () {
 };
 
 AF.InputProgress.prototype = {
 
     /**
-     * Change le pourcentage de complétion
-     * @param {int} completion Pourcentage
+     * Saisie incomplète
+     * @param {int} completion Pourcentage d'avancement
      */
-    setCompletion: function (completion) {
-        $(".inputProgress .progress .bar").width(completion + "%")
-            .text(completion + "%");
+    inputIncomplete: function (completion) {
+        $('.inputProgress .progress .bar')
+            .width(completion + '%')
+            .text(completion + '%');
+        $('.inputProgress .completionIcon').prop('src', 'images/af/bullet_red.png');
+        $('.inputProgress .completionMessage').text(__('AF', 'inputInput', 'statusInputIncomplete'));
+
+        $(".inputProgress .progress").removeClass("progress-striped").removeClass("progress-success");
+
+        $(".inputPreview").prop("disabled", true);
+        $(".inputSave").prop("disabled", true).removeClass('btn-primary').show();
+        $(".inputFinish").prop("disabled", true).removeClass('btn-primary').show();
+        $(".alertFinishInput").hide();
+    },
+
+    /**
+     * En cours de saisie / Saisie modifiée
+     */
+    inputInProgress: function () {
+        $('.inputProgress .completionIcon').prop('src', 'images/af/bullet_black.png');
+        $('.inputProgress .completionMessage').text(__('AF', 'inputInput', 'statusInProgress'));
+
+        // Progress bar rayée
+        $(".inputProgress .progress")
+            .removeClass("progress-striped").addClass("progress-striped")
+            .removeClass("progress-success");
+
+        $(".inputPreview").prop("disabled", false);
+        $(".inputSave").prop("disabled", false).addClass('btn-primary').show();
+        $(".inputFinish").prop("disabled", true).removeClass('btn-primary').show();
+        $(".alertFinishInput").hide();
+    },
+
+    /**
+     * Saisie complète mais erreur dans les calculs
+     */
+    inputCompleteCalculationIncomplete: function () {
+        $('.inputProgress .progress .bar')
+            .width('100%')
+            .text('100%');
+        $('.inputProgress .completionIcon').prop('src', 'images/af/bullet_orange.png');
+        $('.inputProgress .completionMessage').text(__('AF', 'inputInput', 'statusCalculationIncomplete'));
+
+        $(".inputProgress .progress").removeClass("progress-striped").removeClass("progress-success");
+
+        $(".inputPreview").prop("disabled", true);
+        $(".inputSave").prop("disabled", true).removeClass('btn-primary').show();
+        $(".inputFinish").prop("disabled", false).addClass('btn-primary').show();
+        $(".alertFinishInput").show();
+    },
+
+    /**
+     * Saisie complète
+     */
+    inputComplete: function () {
+        $('.inputProgress .progress .bar')
+            .width('100%')
+            .text('100%');
+        $('.inputProgress .completionIcon').prop('src', 'images/af/bullet_yellow.png');
+        $('.inputProgress .completionMessage').text(__('AF', 'inputInput', 'statusComplete'));
+
+        $(".inputProgress .progress").removeClass("progress-striped").removeClass("progress-success");
+
+        $(".inputPreview").prop("disabled", true);
+        $(".inputSave").prop("disabled", true).removeClass('btn-primary').show();
+        $(".inputFinish").prop("disabled", false).addClass('btn-primary').show();
+        $(".alertFinishInput").show();
+    },
+
+    /**
+     * Saisie terminée
+     */
+    inputFinished: function () {
+        $('.inputProgress .progress .bar')
+            .width('100%')
+            .text('100%');
+        $('.inputProgress .completionIcon').prop('src', 'images/af/bullet_green.png');
+        $('.inputProgress .completionMessage').text(__('AF', 'inputInput', 'statusFinished'));
+
+        $(".inputProgress .progress")
+            .removeClass("progress-striped")
+            .removeClass("progress-success").addClass("progress-success");
+
+        $(".inputPreview").prop("disabled", true);
+        $(".inputSave").prop("disabled", true).removeClass('btn-primary');
+        $(".inputFinish").prop("disabled", true).removeClass('btn-primary');
+        $(".alertFinishInput").hide();
     },
 
     /**
      * Change le statut
-     * @param {AF.InputProgress.Status} status
+     * @param {string}   ref
+     * @param {int|null} completion
      */
-    setStatus: function (status) {
-
-        $(".inputProgress .completionIcon").prop("src", status.icon);
-        $(".inputProgress .completionMessage").text(status.getMessage());
-
-        // Cas particulier : saisie en cours = progressbar grisée
-        if (status == AF.InputProgress.Status.IN_PROGRESS) {
-            $(".inputProgress .progress").addClass("progress-striped");
-        } else {
-            $(".inputProgress .progress").removeClass("progress-striped");
-        }
-
-        // Marquer la saisie comme terminée
-        var markInputAsFinished = $("#markInputAsFinished");
-        markInputAsFinished.attr("checked", (status == AF.InputProgress.Status.FINISHED));
-        markInputAsFinished.attr("disabled", (status != AF.InputProgress.Status.COMPLETE) && (status != AF.InputProgress.Status.FINISHED));
-        markInputAsFinished.parent("label").tooltip("destroy");
-        if (status == AF.InputProgress.Status.IN_PROGRESS) {
-            markInputAsFinished.parent("label").tooltip({
-                title: __('AF', 'inputInput', 'markInProgressInputAsFinishedTooltip')
-            });
-        } else if (status == AF.InputProgress.Status.INPUT_INCOMPLETE) {
-            markInputAsFinished.parent("label").tooltip({
-                title: __('AF', 'inputInput', 'markIncompleteInputAsFinishedTooltip')
-            });
-        }
-    },
-
-    /**
-     * Marque la saisie comme terminée
-     */
-    markInputAsFinished: function () {
-        var that = this;
-        var data = {
-            id: that.id,
-            value: $("#markInputAsFinished").is(':checked') ? 1 : 0
-        };
-        if (that.idInputSet) {
-            data.idInputSet = that.idInputSet;
-        }
-
-        for (var key in this.urlParams) {
-            data[key] = this.urlParams[key];
-        }
-
-        $.ajax("af/input/mark-input-as-finished", {
-            data: data,
-            success: function (data) {
-                addMessage(data.message, 'success');
-                // Met à jour la complétion de la saisie
-                var status = AF.InputProgress.getStatusByRef(data.status);
-                that.setStatus(status);
-                that.setCompletion(data.completion);
-            }
-        });
-    }
-
-};
-
-/**
- * Statut de la saisie
- * @enum
- */
-AF.InputProgress.Status = {
-    IN_PROGRESS: {
-        ref: "in_progress",
-        icon: "images/af/bullet_black.png",
-        getMessage: function () {
-            return __('AF', 'inputInput', 'statusInProgress');
-        }
-    },
-    INPUT_INCOMPLETE: {
-        ref: "input_incomplete",
-        icon: "images/af/bullet_red.png",
-        getMessage: function () {
-            return __('AF', 'inputInput', 'statusInputIncomplete');
-        }
-    },
-    CALCULATION_INCOMPLETE: {
-        ref: "calculation_incomplete",
-        icon: "images/af/bullet_orange.png",
-        getMessage: function () {
-            return __('AF', 'inputInput', 'statusCalculationIncomplete');
-        }
-    },
-    COMPLETE: {
-        ref: "complete",
-        icon: "images/af/bullet_yellow.png",
-        getMessage: function () {
-            return __('AF', 'inputInput', 'statusComplete');
-        }
-    },
-    FINISHED: {
-        ref: "finished",
-        icon: "images/af/bullet_green.png",
-        getMessage: function () {
-            return __('AF', 'inputInput', 'statusFinished');
+    setStatus: function (ref, completion) {
+        switch (ref) {
+            case 'input_incomplete':
+                this.inputIncomplete(completion);
+                break;
+            case 'in_progress':
+                this.inputInProgress();
+                break;
+            case 'calculation_incomplete':
+                this.inputCompleteCalculationIncomplete();
+                break;
+            case 'complete':
+                this.inputComplete();
+                break;
+            case 'finished':
+                this.inputFinished();
+                break;
         }
     }
-};
 
-/**
- * Retourne le statut qui correspond au ref donné
- * @param {string} ref
- * @return {AF.InputProgress.Status}
- */
-AF.InputProgress.getStatusByRef = function (ref) {
-    for (var key in AF.InputProgress.Status) {
-        var status = AF.InputProgress.Status[key];
-        if (status.ref == ref) {
-            return status;
-        }
-    }
-    console.log("Statut " + ref + " non trouvé");
-    return null;
 };

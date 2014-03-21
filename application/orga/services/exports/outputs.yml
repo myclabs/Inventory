@@ -36,6 +36,6 @@ sheets:
                           - "{{ displayInputStatus(populatingCell) }}"
                           - "{{ output.label }}"
                           - "{{ displayFreeLabel(output) }}"
-                          - "{{ output.value.digitalValue }}"
+                          - "{{ displayValue(output.value.digitalValue) }}"
                           - "{{ displayRoundedValue(output.value.digitalValue) }}"
                           - "{{ output.value.relativeUncertainty }}"
