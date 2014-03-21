@@ -333,11 +333,11 @@ if (count($file) > 0) {
                 <?php if ($narrowerGranularityArray['isInventory']) : ?>
                 <select name="granularity<?=$narrowerGranularity->getId()?>_inventoryStatus" data-filter="inventory-status">
                     <?php foreach ($inventoryStatusFilters as $statusValue => $statusLabel) : ?>
-                    <? if (($statusValue === Orga_Model_Cell::STATUS_ACTIVE) && (!$narrowerGranularityArray['isGranularityForInventoryStatus'])) : ?>
-                    <option value="<?=$statusValue?>" selected><?=$statusLabel?></option>
-                    <?php else: ?>
-                    <option value="<?=$statusValue?>"><?=$statusLabel?></option>
-                    <?php endif ?>
+                        <? if (($statusValue === Orga_Model_Cell::STATUS_ACTIVE) && (!$narrowerGranularityArray['isGranularityForInventoryStatus'])) : ?>
+                            <option value="<?=$statusValue?>" selected><?=$statusLabel?></option>
+                        <?php else: ?>
+                            <option value="<?=$statusValue?>"><?=$statusLabel?></option>
+                        <?php endif ?>
                     <?php endforeach ?>
                 </select>
                 <?php endif; ?>
