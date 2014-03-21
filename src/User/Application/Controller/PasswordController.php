@@ -39,16 +39,21 @@ class User_PasswordController extends UI_Controller_Captcha
      */
     public function forgottenAction()
     {
+        $this->_helper->_layout->setLayout('layout-public');
+        $this->view->assign('code', $this->getParam('code'));
+
         if ($this->getRequest()->isPost()) {
 
             // Valide le formulaire
             $email = $this->getParam('email');
             if (!$email) {
                 UI_Message::addMessageStatic(__('User', 'login', 'unknownEmail'));
+                return;
             } else {
                 $emailUsed = User::isEmailUsed($email);
                 if (!$emailUsed) {
                     UI_Message::addMessageStatic(__('User', 'login', 'unknownEmail'));
+                    return;
                 }
             }
 
@@ -57,38 +62,34 @@ class User_PasswordController extends UI_Controller_Captcha
             $captchaField = new UI_Form_Element_Captcha('captcha', $this->view->baseUrl('/user/captcha/newimage'));
             if (! $captchaField->isValid($captchaInput, $captchaInput)) {
                 UI_Message::addMessageStatic(__('User', 'resetPassword', 'invalidCaptchaInput'));
+                return;
             }
 
-            if (! $this->hasFormError()) {
-                $user = User::loadByEmail($email);
-                $user->generateKeyEmail();
-                $user->save();
-                $this->entityManager->flush();
+            $user = User::loadByEmail($email);
+            $user->generateKeyEmail();
+            $user->save();
+            $this->entityManager->flush();
 
-                // On envoie le mail à l'utilisateur
-                $url = sprintf(
-                    '%s/user/password/reset?code=%s',
-                    $this->applicationUrl,
-                    $user->getEmailKey()
-                );
-                $subject = __('User', 'email', 'subjectForgottenPassword');
-                $content = __('User', 'email', 'bodyForgottenPassword', [
-                    'PASSWORD_RESET_LINK' => $url,
-                    'PASSWORD_RESET_CODE' => $user->getEmailKey(),
-                    'APPLICATION_NAME'    => $this->emailNoReplyName,
-                    'URL_APPLICATION'     => $this->applicationUrl . '/',
-                ]);
-                $this->userService->sendEmail($user, $subject, $content);
+            // On envoie le mail à l'utilisateur
+            $url = sprintf(
+                '%s/user/password/reset?code=%s',
+                $this->applicationUrl,
+                $user->getEmailKey()
+            );
+            $subject = __('User', 'email', 'subjectForgottenPassword');
+            $content = __('User', 'email', 'bodyForgottenPassword', [
+                'PASSWORD_RESET_LINK' => $url,
+                'PASSWORD_RESET_CODE' => $user->getEmailKey(),
+                'APPLICATION_NAME'    => $this->emailNoReplyName,
+                'URL_APPLICATION'     => $this->applicationUrl . '/',
+            ]);
+            $this->userService->sendEmail($user, $subject, $content);
 
-                UI_Message::addMessageStatic(
-                    __('User', 'resetPassword', 'emailNewPasswordLinkSent'),
-                    UI_Message::TYPE_SUCCESS
-                );
-            }
+            UI_Message::addMessageStatic(
+                __('User', 'resetPassword', 'emailNewPasswordLinkSent'),
+                UI_Message::TYPE_SUCCESS
+            );
         }
-
-        $this->_helper->_layout->setLayout('layout-public');
-        $this->view->assign('code', $this->getParam('code'));
     }
 
     /**
