@@ -1,6 +1,16 @@
-<div class="hero-unit">
-    <h1><?= $this->httpStatus ?></h1>
-    <p><?= $this->errorMessage ?></p>
+<div class="text-center error-box">
+    <h2 class="font-xl">
+        <strong>
+            <i class="fa fa-fw fa-warning fa-lg text-warning"></i>
+            <?=__('UI', 'name', 'error')?>
+            <?= $this->httpStatus ?>
+        </strong>
+    </h2>
+    <p>
+        <strong>
+            <?= $this->errorMessage ?>
+        </strong>
+    </p>
     <?php
     echo $this->button(
         __('UI', 'button', 'previousPage'),
@@ -12,16 +22,7 @@
 
 <?php if ((APPLICATION_ENV == 'testsunitaires') || (APPLICATION_ENV == 'developpement') || (APPLICATION_ENV == 'test')) : ?>
 
-    <div class="page-header">
-        <h2>Information complémentaire pour l'environnement : <?= APPLICATION_ENV ?></h2>
-    </div>
-
-    <h3>Informations sur l'erreur:</h3>
-    <p>
-        <b>Message :</b> <?= $this->exception->getMessage() ?>
-    </p>
-
-    <hr/>
+    <h2>Information complémentaire pour l'environnement : <?= APPLICATION_ENV ?></h2>
 
     <h3>Trace d'exécution:</h3>
     <pre><?= $this->exception->getTraceAsString() ?></pre>
