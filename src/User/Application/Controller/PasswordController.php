@@ -41,27 +41,22 @@ class User_PasswordController extends UI_Controller_Captcha
     {
         if ($this->getRequest()->isPost()) {
 
-            $formData = $this->getFormData('passwordForgotten');
-
             // Valide le formulaire
-            $email = $formData->getValue('email');
+            $email = $this->getParam('email');
             if (!$email) {
-                $this->addFormError('email', __('UI', 'formValidation', 'emptyRequiredField'));
+                UI_Message::addMessageStatic(__('User', 'login', 'unknownEmail'));
             } else {
                 $emailUsed = User::isEmailUsed($email);
                 if (!$emailUsed) {
-                    $this->addFormError('email', __('User', 'login', 'unknownEmail'));
+                    UI_Message::addMessageStatic(__('User', 'login', 'unknownEmail'));
                 }
             }
 
             // Captcha de merde.
-            $captchaInput = [
-                'id' => $formData->getHiddenValue('captcha', 'captcha-id'),
-                'input' => $formData->getValue('captcha'),
-            ];
+            $captchaInput = $this->getParam('captcha');
             $captchaField = new UI_Form_Element_Captcha('captcha', $this->view->baseUrl('/user/captcha/newimage'));
             if (! $captchaField->isValid($captchaInput, $captchaInput)) {
-                $this->addFormError('captcha', __('User', 'resetPassword', 'invalidCaptchaInput'));
+                UI_Message::addMessageStatic(__('User', 'resetPassword', 'invalidCaptchaInput'));
             }
 
             if (! $this->hasFormError()) {
@@ -84,14 +79,15 @@ class User_PasswordController extends UI_Controller_Captcha
                     'URL_APPLICATION'     => $this->applicationUrl . '/',
                 ]);
                 $this->userService->sendEmail($user, $subject, $content);
-                $this->setFormMessage(
+
+                UI_Message::addMessageStatic(
                     __('User', 'resetPassword', 'emailNewPasswordLinkSent'),
                     UI_Message::TYPE_SUCCESS
                 );
             }
-            $this->sendFormResponse();
         }
 
+        $this->_helper->_layout->setLayout('layout-public');
         $this->view->assign('code', $this->getParam('code'));
     }
 
@@ -113,6 +109,7 @@ class User_PasswordController extends UI_Controller_Captcha
             $this->redirect('user/password/forgotten?code=' . $code);
         }
         $this->view->assign('code', $code);
+        $this->_helper->_layout->setLayout('layout-public');
     }
 
     /**
@@ -134,35 +131,35 @@ class User_PasswordController extends UI_Controller_Captcha
             return;
         }
 
-        $formData = $this->getFormData('editPassword');
-        $password1 = $formData->getValue('password1');
-        $password2 = $formData->getValue('password2');
+        $password1 = $this->getParam('password1');
+        $password2 = $this->getParam('password2');
 
         // Validation
         if (empty($password1)) {
-            $this->addFormError('password1', __('UI', 'formValidation', 'emptyRequiredField'));
+            UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'));
+            $this->redirect('user/password/reset?code=' . $code);
         }
         if (empty($password2)) {
-            $this->addFormError('password2', __('UI', 'formValidation', 'emptyRequiredField'));
+            UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'));
+            $this->redirect('user/password/reset?code=' . $code);
         }
-        if ($password1 && ($password1 != $password2)) {
-            $this->addFormError('password2', __('User', 'editPassword', 'passwordsAreNotIdentical'));
-        }
-
-        if (! $this->hasFormError()) {
-            // Modifie le mot de passe
-            $user->setPassword($password1);
-            $user->eraseEmailKey();
-            $this->entityManager->flush();
-
-            // Log in automatiquement l'utilisateur
-            $auth = Zend_Auth::getInstance();
-            $authAdapter = new AuthAdapter($this->userService, $user->getEmail(), $password1);
-            $auth->authenticate($authAdapter);
-
-            UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
+        if ($password1 != $password2) {
+            UI_Message::addMessageStatic(__('User', 'editPassword', 'passwordsAreNotIdentical'));
+            $this->redirect('user/password/reset?code=' . $code);
         }
 
-        $this->sendFormResponse();
+        // Modifie le mot de passe
+        $user->setPassword($password1);
+        $user->eraseEmailKey();
+        $this->entityManager->flush();
+
+        // Log in automatiquement l'utilisateur
+        $auth = Zend_Auth::getInstance();
+        $authAdapter = new AuthAdapter($this->userService, $user->getEmail(), $password1);
+        $auth->authenticate($authAdapter);
+
+        UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
+
+        $this->redirect('/');
     }
 }

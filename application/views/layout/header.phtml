@@ -6,18 +6,18 @@
         </span>
     </div>
 
-    <div class="pull-right">
+    <?php if ($this->user) : ?>
+        <div class="pull-right">
 
-        <!-- collapse menu -->
-        <div class="btn-header pull-right" id="hide-menu">
-            <span>
-                <a href="#" title="Collapse Menu">
-                    <i class="fa fa-reorder"></i>
-                </a>
-            </span>
-        </div>
+            <!-- collapse menu -->
+            <div class="btn-header pull-right" id="hide-menu">
+                <span>
+                    <a href="#" title="Collapse Menu">
+                        <i class="fa fa-reorder"></i>
+                    </a>
+                </span>
+            </div>
 
-        <?php if ($this->user) : ?>
             <!-- logout button -->
             <div class="btn-header transparent pull-right" id="logout">
                 <span>
@@ -35,8 +35,8 @@
                     </a>
                 </span>
             </div>
-        <?php endif; ?>
 
-    </div>
+        </div>
+    <?php endif; ?>
 
 </header>
