@@ -147,7 +147,8 @@ class Orga_CellController extends Core_Controller
         foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
             $purpose = '';
             // ACL purpose.
-            $isNarrowerGranularityACL = ($narrowerGranularity->getCellsWithACL());
+            $isNarrowerGranularityACL = ($narrowerGranularity->getCellsWithACL())
+                && ($this->aclService->isAllowed($connectedUser, Action::ALLOW(), $cell));
             if ($isNarrowerGranularityACL) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
@@ -184,7 +185,11 @@ class Orga_CellController extends Core_Controller
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
                 }
-                $purpose .= __('Orga', 'inventory', 'inventories');
+                if ($narrowerGranularity === $granularityForInventoryStatus) {
+                    $purpose .= __('Orga', 'inventory', 'editInventories');
+                } else {
+                    $purpose .= __('Orga', 'inventory', 'viewInventories');
+                }
             }
             // Input purpose.
             $isNarrowerGranularityInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
@@ -195,7 +200,8 @@ class Orga_CellController extends Core_Controller
                 $purpose .= __('UI', 'name', 'inputs');
             }
             // Reports purpose.
-            $isNarrowerGranularityAnalyses = ($narrowerGranularity->getCellsGenerateDWCubes());
+            $isNarrowerGranularityAnalyses = ($narrowerGranularity->getCellsGenerateDWCubes())
+                && ($this->aclService->isAllowed($connectedUser, CellAction::VIEW_REPORTS(), $cell));
             if ($isNarrowerGranularityAnalyses) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
