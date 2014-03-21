@@ -62,4 +62,14 @@ abstract class Core_Controller extends Zend_Controller_Action
         $json->sendJson($reponse);
     }
 
+    protected function addBreadcrumb($text, $link = null)
+    {
+        if (! is_array($this->view->breadcrumbs)) {
+            $this->view->breadcrumbs = [];
+        }
+        $this->view->breadcrumbs[] = [
+            'text' => $text,
+            'link' => $link,
+        ];
+    }
 }

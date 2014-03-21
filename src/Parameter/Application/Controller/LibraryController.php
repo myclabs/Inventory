@@ -25,5 +25,6 @@ class Parameter_LibraryController extends Core_Controller
         $this->view->assign('library', $library);
         // TODO droit d'édition
         $this->view->assign('edit', true);
+        $this->addBreadcrumb($library->getLabel());
     }
 }
