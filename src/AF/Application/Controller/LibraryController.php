@@ -9,7 +9,7 @@ use Core\Annotation\Secure;
 class AF_LibraryController extends Core_Controller
 {
     /**
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function viewAction()
     {

@@ -23,7 +23,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     private $afDeletionService;
 
     /**
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getelementsAction()
     {
@@ -62,7 +62,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
 
 
     /**
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function addelementAction()
     {
@@ -113,9 +113,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function updateelementAction()
     {
@@ -152,9 +150,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function deleteelementAction()
     {
