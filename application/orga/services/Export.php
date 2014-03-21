@@ -182,7 +182,7 @@ class Orga_Service_Export
         $modelBuilder->bindFunction(
             'getCellNarrowerMembers',
             function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
-                return $cell->getChildMembersForAxes([$axis]);
+                return $cell->getChildMembersForAxes([$axis])[$axis->getRef()];
             }
         );
         $modelBuilder->bindFunction(
