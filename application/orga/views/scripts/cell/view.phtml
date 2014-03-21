@@ -303,13 +303,11 @@ if (count($file) > 0) {
     ?>
     <fieldset class="wrapper granularity-wrapper">
         <legend data-toggle="collapse" data-target="#granularity<?=$narrowerGranularity->getId()?>">
-            <span class="withTooltip" title="<?=___('Orga', 'view', 'granularityExplanations')?>" data-placement="right">
-                <i class="filterChevron fa fa-chevron-<?=((count($this->narrowerGranularities) === 1)?'down':'right')?>"></i>
-                <?=$narrowerGranularityArray['purpose']?>
-                <small>
-                    <?=$narrowerGranularity->getLabel()?>
-                </small>
-            </span>
+            <i class="filterChevron fa fa-chevron-<?=((count($this->narrowerGranularities) === 1)?'down':'right')?>"></i>
+            <?=$narrowerGranularity->getLabel()?>
+            <small>
+                <?=___('Orga', 'view', 'granularityExplanations')?><?=$narrowerGranularityArray['purpose']?>
+            </small>
         </legend>
 
         <div id="granularity<?=$narrowerGranularity->getId()?>"
