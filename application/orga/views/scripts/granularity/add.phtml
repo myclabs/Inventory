@@ -4,7 +4,7 @@ $organization = $this->organization;
 ?>
 <form class="form form-inline" id="addGranularity<?=$organization->getId()?>_<?=$this->purpose?>"
       action="orga/organization/add-granularity-<?=$this->purpose?>/idOrganization/<?=$organization->getId()?>/">
-    <select multiple name="axes[]" class="axes" style="min-width: 250px;">
+    <select multiple name="axes[]" class="axes form-control" style="min-width: 250px;">
         <?php foreach ($organization->getFirstOrderedAxes() as $axis) : ?>
         <option value="<?=$axis->getRef()?>"><?=$axis->getLabel()?></option>
         <?php endforeach; ?>

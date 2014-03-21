@@ -3,16 +3,13 @@
     <h3><?=__('User', 'register', 'register')?></h3>
 
     <form action="user/register" method="post">
-        <input type="text" name="projectName" class="input-block-level" required
-               placeholder="<?=__('User', 'register', 'projectName')?>"
+        <input type="text" name="projectName" required placeholder="<?=__('User', 'register', 'projectName')?>"
                value="<?=$this->projectName?>">
-        <input type="text" name="email" class="input-block-level" required
-               placeholder="<?=__('User', 'user', 'emailAddress')?>"
+        <input type="text" name="email" required placeholder="<?=__('User', 'user', 'emailAddress')?>"
                value="<?=$this->email?>">
-        <input type="password" name="password" class="input-block-level" required autocomplete="off"
+        <input type="password" name="password" required autocomplete="off"
                placeholder="<?=__('User', 'register', 'password')?>">
-        <input type="password" name="password2" class="input-block-level" required
-               placeholder="<?=__('User', 'register', 'passwordAgain')?>">
+        <input type="password" name="password2" required placeholder="<?=__('User', 'register', 'passwordAgain')?>">
 
         <?php
         $captcha = new UI_Form_Element_Captcha('captcha', 'user/captcha/newimage');

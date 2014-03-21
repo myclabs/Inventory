@@ -70,7 +70,7 @@ echo $optionDatagrid->render();
 
 <form class="form-inline" id="copyTechnoMembersAsOptions" action="af/edit_components/copy-techno-members-as-options/idSelect/<?=$selectField->getId()?>">
     <div class="input-append">
-        <select name="dimension">
+        <select name="dimension" class="form-control">
             <?php foreach ($this->families as $family) : ?>
                 <?php foreach ($family->getDimensions() as $dimension) : ?>
                     <option value="<?=$dimension->getId()?>"><?=$family->getLabel()?> : <?=$dimension->getLabel()?></option>

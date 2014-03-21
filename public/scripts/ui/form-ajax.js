@@ -33,7 +33,7 @@ $.fn.parseFormData = function ()
 	var children = $(this).children('fieldset').children();
 	for(var key = 0; key < children.length; key++) {
 		var child = $(children[key]);
-		if (child.hasClass('control-group')) {
+		if (child.hasClass('form-group')) {
 			data += '"' + child.attr('id').replace('-line', '') + '": ' + child.parseFormLine() + ', ';
 		} else if (child.hasClass('subGroup')) {
 			data += '"' + child.attr('id') + '": ' + child.parseFormGroup() + ', ';
@@ -65,7 +65,7 @@ $.fn.parseFormGroup = function ()
         var childElements = $(this).children('div').children();
         for(var key = 0; key < childElements.length; key++) {
             var child = $(childElements[key]);
-            if (child.hasClass('control-group')) {
+            if (child.hasClass('form-group')) {
                 elements += '"' + child.attr('id').replace('-line', '') + '": ' + child.parseFormLine() + ', ';
             } else if (child.hasClass('subGroup')) {
                 elements += '"' + child.attr('id') + '": ' + child.parseFormGroup() + ', ';

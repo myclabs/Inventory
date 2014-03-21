@@ -82,27 +82,23 @@ $family = $this->family;
                 <?=__('Parameter', 'dimension', 'warningAddingDimension')?>
             </p>
             <p></p>
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label" for="addDimensionLabel"><?=__('UI', 'name', 'label')?></label>
-                <div class="controls">
-                    <input type="text" id="addDimensionLabel" name="label" required />
-                </div>
+                <input type="text" id="addDimensionLabel" name="label" required class="form-control">
             </div>
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label" for="addDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
-                <div class="controls">
-                    <input type="text" id="addDimensionRef" name="ref" required />
-                </div>
+                <input type="text" id="addDimensionRef" name="ref" required class="form-control">
             </div>
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label"><?=__('Parameter', 'name', 'orientation')?></label>
-                <div class="controls">
+                <div>
                     <label class="radio">
-                        <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_VERTICAL?>" checked>
+                        <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_VERTICAL?>" class="form-control" checked>
                         <?=__('Parameter', 'property', 'verticalFem')?>
                     </label>
                     <label class="radio">
-                        <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_HORIZONTAL?>">
+                        <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_HORIZONTAL?>" class="form-control">
                         <?=__('Parameter', 'property', 'horizontalFem')?>
                     </label>
                 </div>
@@ -124,20 +120,16 @@ $family = $this->family;
     </div>
     <form class="form-horizontal" action="<?=$this->baseUrl('parameter/dimension/edit')?>" method="post">
         <div class="modal-body">
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label" for="editDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
-                <div class="controls">
-                    <input type="text" id="editDimensionRef" name="ref" required />
-                </div>
+                <input type="text" id="editDimensionRef" name="ref" required class="form-control">
             </div>
-            <div class="control-group">
+            <div class="form-group">
                 <label class="control-label" for="editDimensionLabel"><?=__('UI', 'name', 'label')?></label>
-                <div class="controls">
-                    <input type="text" id="editDimensionLabel" name="label" required />
-                </div>
+                <input type="text" id="editDimensionLabel" name="label" required class="form-control">
             </div>
-            <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
-            <input type="hidden" name="refDimension" id="refDimension" />
+            <input type="hidden" name="idFamily" value="<?=$family->getId()?>">
+            <input type="hidden" name="refDimension" id="refDimension">
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
@@ -154,19 +146,17 @@ $family = $this->family;
     </div>
     <form id="addMemberForm" action="<?=$this->baseUrl('parameter/dimension/add-members')?>" method="post">
         <div class="modal-body">
-            <div class="control-group">
-                <div class="controls">
-                    <textarea id="inputMemberList" name="members" class="pre input-block-level" rows="8"></textarea>
-                    <p class="help-block">
-                        <strong><span id="inputMemberListValidationOK" class="text-success"></span></strong>
-                        <strong><span id="inputMemberListValidationNOK" class="text-error"></span></strong>
-                    </p>
-                    <p><span class="help-block"><?=__('Parameter', 'import', 'addMemberListHelp')?></span></p>
-                    <pre><code><?=__('Parameter', 'import', 'addMemberListExample')?></code></pre>
-                </div>
+            <div class="form-group">
+                <textarea id="inputMemberList" name="members" class="pre" rows="8"></textarea>
+                <p class="help-block">
+                    <strong><span id="inputMemberListValidationOK" class="text-success"></span></strong>
+                    <strong><span id="inputMemberListValidationNOK" class="text-error"></span></strong>
+                </p>
+                <p><span class="help-block"><?=__('Parameter', 'import', 'addMemberListHelp')?></span></p>
+                <pre><code><?=__('Parameter', 'import', 'addMemberListExample')?></code></pre>
             </div>
-            <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
-            <input type="hidden" name="dimension" id="inputDimension" />
+            <input type="hidden" name="idFamily" value="<?=$family->getId()?>">
+            <input type="hidden" name="dimension" id="inputDimension">
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>

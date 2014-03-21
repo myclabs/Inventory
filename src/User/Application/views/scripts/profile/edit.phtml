@@ -27,7 +27,7 @@ $form->setAction('user/profile/edit-submit/id/' . $user->getId());
 // Email
 $html = <<<HTML
     <div class="input-append">
-        <input type="text" id="inputEmail" value="{$user->getEmail()}" disabled>
+        <input type="text" id="inputEmail" value="{$user->getEmail()}" disabled class="form-control">
         <a href="{$this->baseUrl()}/user/profile/edit-email/id/{$user->getId()}" class="btn btn-default">
             $editLabel</a>
     </div>

@@ -35,21 +35,18 @@ class EditFamilyForm extends UI_Form
         $label = new UI_Form_Element_Text('label');
         $label->setLabel(__('UI', 'name', 'label'));
         $label->setValue($family->getLabel());
-        $label->setAttrib('class', 'input-block-level');
         $this->addElement($label);
 
         // Identifiant
         $ref = new UI_Form_Element_Text('ref');
         $ref->setLabel(__('UI', 'name', 'identifier'));
         $ref->setValue($family->getRef());
-        $ref->setAttrib('class', 'input-block-level');
         $this->addElement($ref);
 
         // Unité
         $unit = new UI_Form_Element_Text('unit');
         $unit->setLabel(__('Unit', 'name', 'unit'));
         $unit->setValue($family->getUnit()->getRef());
-        $unit->setAttrib('class', 'input-block-level');
         $this->addElement($unit);
 
         // Documentation

@@ -9,16 +9,16 @@
             <img alt="<?=$this->defaultFormat?>" src="images/dw/<?=$this->defaultFormat?>.png">
         </span>
         <?php if (count($this->formats) > 1) : ?>
-        <select name="format" class="input format">
+        <select name="format" class="input format form-control">
             <?php foreach ($this->formats as $formatRef => $formatLabel) : ?>
                 <option value="<?=$formatRef?>"><?=$formatLabel?></option>
             <?php endforeach; ?>
         </select>
         <?php else: ?>
-        <input name="format" type="hidden" value="<?=$this->defaultFormat?>">
+        <input class="form-control" name="format" type="hidden" value="<?=$this->defaultFormat?>">
         <?php endif; ?>
         <?php if (count($this->exports) > 1) : ?>
-            <select name="export" class="input">
+            <select name="export" class="input form-control">
                 <?php foreach ($this->exports as $exportRef => $exportArray) : ?>
                     <option value="<?=$exportRef?>"><?=$exportArray['label']?></option>
                 <?php endforeach ?>
@@ -30,7 +30,7 @@
                 <?=$exportArray['label']?>
             </strong>
         </span>
-                <input name="export" type="hidden" value="<?=$exportRef?>">
+                <input class="form-control" name="export" type="hidden" value="<?=$exportRef?>">
             <?php endforeach ?>
         <?php endif; ?>
         <button class="btn btn-primary" type="submit">

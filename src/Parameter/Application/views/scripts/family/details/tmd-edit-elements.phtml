@@ -39,18 +39,16 @@ foreach ($product as $members) {
     </div>
     <form id="editElementsForm" action="<?=$this->baseUrl('parameter/edit-elements/edit-elements')?>" method="post">
         <div class="modal-body">
-            <div class="control-group">
-                <div class="controls">
-                    <textarea id="inputElementList" name="elements" class="pre input-block-level" rows="12"><?=$inputContent?></textarea>
-                    <p class="help-block">
-                        <strong><span id="inputElementListValidationOK" class="text-success"></span></strong>
-                        <strong><span id="inputElementListValidationNOK" class="text-error"></span></strong>
-                    </p>
-                    <p><span class="help-block"><?=__('Parameter', 'import', 'editElementListHelp')?></span></p>
-                    <pre><code><?=__('Parameter', 'import', 'editElementListExample')?></code></pre>
-                </div>
+            <div class="form-group">
+                <textarea id="inputElementList" name="elements" class="pre" rows="12"><?=$inputContent?></textarea>
+                <p class="help-block">
+                    <strong><span id="inputElementListValidationOK" class="text-success"></span></strong>
+                    <strong><span id="inputElementListValidationNOK" class="text-error"></span></strong>
+                </p>
+                <p><span class="help-block"><?=__('Parameter', 'import', 'editElementListHelp')?></span></p>
+                <pre><code><?=__('Parameter', 'import', 'editElementListExample')?></code></pre>
             </div>
-            <input type="hidden" name="idFamily" value="<?=$this->family->getId()?>" />
+            <input type="hidden" name="idFamily" value="<?=$this->family->getId()?>">
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'validate')?></button>

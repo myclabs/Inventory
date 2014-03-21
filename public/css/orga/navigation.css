@@ -11,9 +11,9 @@
 #navigationPanel ul { margin: 0px; list-style: none; }
 #navigationPanel form { margin: 0px; }
 #navigationPanel form .control-label { width: 100px; }
-#navigationPanel form .controls { margin-left: 0px; }
-#navigationPanel form .controls div { width: 100%; }
-#navigationPanel .form-horizontal .control-group { margin-bottom: 5px; }
+#navigationPanel form { margin-left: 0px; }
+#navigationPanel form div { width: 100%; }
+#navigationPanel .form-horizontal .form-group { margin-bottom: 5px; }
 #navigationPanel .form-horizontal .control-label { float: none; text-align: left; }
 #navigationPanel form select { width: 100%; }
 

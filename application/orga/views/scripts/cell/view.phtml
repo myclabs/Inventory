@@ -121,7 +121,7 @@ if (count($file) > 0) {
     { margin-top: 5px;  }
 
     #addMember { margin: 0; }
-    #addMember .controls { margin-left: 0; float: right; }
+    #addMember { margin-left: 0; float: right; }
     #addMember .subGroup { margin-left: 0; }
     #addMember label { text-align: left; width: auto; }
     #addMember .input { width: auto; }
@@ -240,7 +240,7 @@ if (count($file) > 0) {
             <div class="modal-footer">
                 <form class="form-inline addUser" action="orga/cell/add-user/idCell/<?=$currentCell->id?>/">
                     <input type="text" name="userEmail" placeholder="<?=___('User', 'user', 'emailAddress')?>">
-                    <select name="userRole">
+                    <select name="userRole" class="form-control">
                         <option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>
                         <option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>
                         <option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>
@@ -323,7 +323,7 @@ if (count($file) > 0) {
             <form class="form-inline cells-filter">
                 <?php foreach ($narrowerGranularityArray['filterAxes'] as $refAxis => $memberOptions) : ?>
                 <?php if (count($memberOptions) > 2) : ?>
-                <select name="granularity<?=$narrowerGranularity->getId()?>_axis<?=$refAxis?>" data-filter="tag">
+                <select name="granularity<?=$narrowerGranularity->getId()?>_axis<?=$refAxis?>" data-filter="tag" class="form-control">
                     <?php foreach ($memberOptions as $memberTag => $memberLabel) : ?>
                         <option value="<?=$memberTag?>"><?=$memberLabel?></option>
                     <?php endforeach; ?>
@@ -331,7 +331,7 @@ if (count($file) > 0) {
                 <?php endif; ?>
                 <?php endforeach; ?>
                 <?php if ($narrowerGranularityArray['isInventory']) : ?>
-                <select name="granularity<?=$narrowerGranularity->getId()?>_inventoryStatus" data-filter="inventory-status">
+                <select name="granularity<?=$narrowerGranularity->getId()?>_inventoryStatus" data-filter="inventory-status" class="form-control">
                     <?php foreach ($inventoryStatusFilters as $statusValue => $statusLabel) : ?>
                         <? if (($statusValue === Orga_Model_Cell::STATUS_ACTIVE) && (!$narrowerGranularityArray['isGranularityForInventoryStatus'])) : ?>
                             <option value="<?=$statusValue?>" selected><?=$statusLabel?></option>
@@ -522,7 +522,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                             '<div class="modal-footer">' +
                                 '<form class="form-inline addUser" action="orga/cell/add-user/idCell/' + this.id + '/">' +
                                     '<input type="text" placeholder="<?=___('User', 'user', 'emailAddress')?>" name="userEmail"> ' +
-                                    '<select name="userRole">' +
+                                    '<select name="userRole" class="form-control">' +
                                         '<option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>' +
                                         '<option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>' +
                                         '<option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>' +

@@ -17,10 +17,8 @@
             <?=__('User', 'login', 'youAreNotConnected')?>
         </p>
         <form action="user/action/login" method="post">
-            <input type="text" name="email" class="input-block-level"
-                   placeholder="<?= __('User', 'user', 'emailAddress')?>">
-            <input type="password" name="password" class="input-block-level"
-                   placeholder="<?=__('User', 'login', 'password')?>">
+            <input type="text" name="email" placeholder="<?= __('User', 'user', 'emailAddress')?>">
+            <input type="password" name="password" placeholder="<?=__('User', 'login', 'password')?>">
 
             <input type="submit" id="connection" class="btn btn-primary btn-block"
                    value="<?=__('User', 'login', 'connection')?>">
