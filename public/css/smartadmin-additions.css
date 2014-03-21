@@ -5,3 +5,14 @@
 #logo-group>span {
     font-size: 18px;
 }
+
+/* Pas de breadcrumb */
+.fixed-ribbon #content {
+    padding-top: 10px;
+}
+
+/* Page header de bootstrap n'est pas trop compatible */
+.page-header {
+    margin: auto;
+    border-bottom: none;
+}
