@@ -2,10 +2,12 @@
 
 namespace Account\Domain;
 
+use AF\Domain\AFLibrary;
 use Doctrine\ORM\EntityManager;
 use MyCLabs\ACL\Model\CascadingResource;
 use MyCLabs\ACL\Model\ClassResource;
 use MyCLabs\ACL\Model\EntityResource;
+use Parameter\Domain\ParameterLibrary;
 
 /**
  * Compte client/d'entreprise.
@@ -76,7 +78,13 @@ class Account implements EntityResource, CascadingResource
      */
     public function getSubResources(EntityManager $entityManager)
     {
-        // TODO retourner les organisations
-        return [];
+        $query = new \Core_Model_Query();
+        $query->filter->addCondition('account', $this);
+
+        return array_merge(
+            \Orga_Model_Organization::loadList($query),
+            AFLibrary::loadList($query),
+            ParameterLibrary::loadList($query)
+        );
     }
 }

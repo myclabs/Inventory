@@ -2,6 +2,7 @@
 
 use Account\Domain\Account;
 use Account\Domain\AccountRepository;
+use Account\Domain\ACL\AccountAdminRole;
 use Core\Test\TestCase;
 use MyCLabs\ACL\ACLManager;
 use User\Domain\ACL\Actions;
@@ -198,6 +199,11 @@ class Orga_Test_ACLTest extends TestCase
     /**
      * @var User
      */
+    private $accountAdministrator;
+
+    /**
+     * @var User
+     */
     private $organizationAdministrator;
 
     /**
@@ -361,6 +367,13 @@ class Orga_Test_ACLTest extends TestCase
 
         // Ajout d'utilisateurs.
 
+        // Ajout d'un utilisateur administrateur du compte.
+        $this->accountAdministrator = $this->userService->createUser('accountAdministrator@example.com', 'accountAdministrator');
+        $this->aclManager->grant(
+            $this->accountAdministrator,
+            new AccountAdminRole($this->accountAdministrator, $this->account)
+        );
+
         // Ajout d'un utilisateur administrateur de l'administration.
         $this->organizationAdministrator= $this->userService->createUser('organizationAdministrator@example.com', 'organizationAdministrator');
         $this->aclManager->grant(
@@ -437,7 +450,10 @@ class Orga_Test_ACLTest extends TestCase
      */
     public function testUsersIsAllowed()
     {
+        $this->isAllowedAccountAdministrator();
+
         $this->isAllowedOrganizationAdministrator();
+
         $this->isAllowedGlobalCellAdmin();
         $this->isAllowedAnnecyCellAdmin();
 
@@ -450,16 +466,34 @@ class Orga_Test_ACLTest extends TestCase
     }
 
     /**
+     * Administrateur du compte.
+     */
+    public function isAllowedAccountAdministrator()
+    {
+        // Droits sur le compte
+        $this->assertAllowed($this->accountAdministrator, Actions::VIEW, $this->account);
+        $this->assertAllowed($this->accountAdministrator, Actions::EDIT, $this->account);
+        $this->assertAllowed($this->accountAdministrator, Actions::DELETE, $this->account);
+        $this->assertAllowed($this->accountAdministrator, Actions::ALLOW, $this->account);
+
+        // Droit d'admin sur l'organisation en cascade
+        $this->assertAdminOrganization($this->organizationAdministrator, $this->organization);
+
+        // Peut traverser l'organisation et le compte
+        $this->assertTraverseAccount($this->organizationAdministrator, $this->account);
+        $this->assertTraverseOrganization($this->organizationAdministrator, $this->organization);
+    }
+
+    /**
      * Administrateur de l'organisation.
      */
     public function isAllowedOrganizationAdministrator()
     {
-        // Ne peut pas créer d'organisation
-        $this->assertNotAllowed(
-            $this->organizationAdministrator,
-            Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
-        );
+        // Pas de droits sur le compte
+        $this->assertNotAllowed($this->organizationAdministrator, Actions::VIEW, $this->account);
+        $this->assertNotAllowed($this->organizationAdministrator, Actions::EDIT, $this->account);
+        $this->assertNotAllowed($this->organizationAdministrator, Actions::DELETE, $this->account);
+        $this->assertNotAllowed($this->organizationAdministrator, Actions::ALLOW, $this->account);
 
         // Droit d'admin sur l'organisation
         $this->assertAdminOrganization($this->organizationAdministrator, $this->organization);
