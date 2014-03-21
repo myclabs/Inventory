@@ -19,7 +19,7 @@ $account = $this->account;
 <div class="organizationList">
     <?php foreach ($account->organizations as $organization) : ?>
 
-        <div class="organization well well-small">
+        <div class="organization well well-sm">
             <?php if ($organization->canBeDeleted) : ?>
                 <div class="pull-right">
                     <a class="deleteOrganization btn btn-sm btn-warning"
@@ -87,7 +87,7 @@ $account = $this->account;
 <div>
     <?php foreach ($account->afLibraries as $library) : ?>
 
-        <div class="afLibrary well well-small">
+        <div class="afLibrary well well-sm">
             <h3>
                 <a href="af/library/view/id/<?=$library->id?>">
                     <?=$library->label?>
@@ -113,7 +113,7 @@ $account = $this->account;
 <div>
     <?php foreach ($account->parameterLibraries as $library) : ?>
 
-        <div class="parameterLibrary well well-small">
+        <div class="parameterLibrary well well-sm">
             <h3>
                 <a href="parameter/library/view/id/<?=$library->id?>">
                     <?=$library->label?>

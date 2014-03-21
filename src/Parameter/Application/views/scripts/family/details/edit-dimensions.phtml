@@ -14,7 +14,7 @@ $family = $this->family;
 
 <?php foreach ($family->getDimensions() as $dimension) : ?>
 
-    <div class="well well-small" data-dimension="<?=$dimension->getRef()?>">
+    <div class="well well-sm" data-dimension="<?=$dimension->getRef()?>">
 
         <h5>
             <?=$dimension->getLabel() . __('UI', 'other', ':')?> <code><?=$dimension->getRef()?></code>
