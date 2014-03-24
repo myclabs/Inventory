@@ -56,6 +56,7 @@ class AF_AfController extends Core_Controller
             $viewConfiguration->setExitUrl($this->_helper->url('list', 'af', 'af'));
         }
 
+        $this->setActiveMenuItemAFLibrary($af->getLibrary()->getId());
         $this->forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
     }
 

@@ -445,6 +445,7 @@ class Orga_OrganizationController extends Core_Controller
         UI_Form::addHeader();
         UI_Popup_Ajax::addHeader();
         $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
+        $this->setActiveMenuItemOrganization($organization->getId());
     }
 
     /**

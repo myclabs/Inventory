@@ -27,5 +27,6 @@ class Parameter_LibraryController extends Core_Controller
         $this->view->assign('library', $library);
         $canEdit = $this->aclManager->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
         $this->view->assign('edit', $canEdit);
+        $this->setActiveMenuItemParameterLibrary($library->getId());
     }
 }
