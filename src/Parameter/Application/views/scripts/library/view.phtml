@@ -54,8 +54,11 @@ if ($this->edit) {
 }
 
 $datagrid->display();
+?>
 
+<h2><?=__('UI', 'name', 'tree')?></h2>
 
+<?php
 $tree = new UI_Tree('familyTree', 'tree_family-tree', 'parameter');
 $tree->addParam('library', $library->getId());
 $tree->expandAll = false;
