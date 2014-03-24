@@ -37,7 +37,7 @@ foreach ($this->granularities as $inputGranularity) :
             . ___('Orga', 'inputGranularities', 'inputAndConfigLevelsExplanations') . '">'
             . $configGranularity->getLabel() . ' <small>' . $inputGranularity->getLabel() . '</small><span>',
         $datagridGranularityAfs->getHTML()
-    )->collapsed();
+    );
 
     $script = '';
     $script .= '$(\'#cellAfs'.$inputGranularity->getId().'\').on(\'show\', function(e) {';

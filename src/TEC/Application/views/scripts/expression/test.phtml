@@ -46,7 +46,7 @@ ob_start()
     $formExpression->addResetButton(__('UI', 'verb', 'reset'));
 ?>
   	<h1><?=__('TEC', 'interpreter', 'pageTitle')?></h1>
-  	<?=$this->collapse('help', __('UI', 'name', 'help'), $helpContent)->collapsed();?>
+  	<?=$this->collapse('help', __('UI', 'name', 'help'), $helpContent);?>
   	<hr />
 <?php
     $formExpression->display();

@@ -29,7 +29,7 @@ foreach ($this->granularities as $granularity) :
         'cellReports'.$granularity->getId(),
         $granularity->getLabel(),
         $datagridGranularityReports->getHTML() . $addButton->getHTML()
-    )->collapsed();
+    );
 
     $script = '';
     $script .= '$(\'#cellReports'.$granularity->getId().'\').on(\'show\', function(e) {';

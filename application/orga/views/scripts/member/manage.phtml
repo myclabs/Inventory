@@ -41,7 +41,7 @@ foreach ($this->axes as $axis) {
     $datagridAxisMembers->addElements = true;
     $datagridAxisMembers->addPanelTitle = ___('Orga', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));
 
-    echo $this->collapse('members'.$axis->getRef(), $axis->getLabel(), $datagridAxisMembers->getHTML())->collapsed();
+    echo $this->collapse('members'.$axis->getRef(), $axis->getLabel(), $datagridAxisMembers->getHTML());
 
     $script = '';
     $script .= '$(\'#members'.$axis->getRef().'\').on(\'show\', function(e) {';

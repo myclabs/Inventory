@@ -38,7 +38,7 @@ foreach ($this->granularities as $granularity) {
         'cellRelevance'.$granularity->getId(),
         $granularity->getLabel(),
         $datagridGranularityRelevance->getHTML()
-    )->collapsed();
+    );
 
     $script = '';
     $script .= '$(\'#cellRelevance'.$granularity->getId().'\').on(\'show\', function(e) {';

@@ -13,6 +13,9 @@ use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Collapse;
+use MyCLabs\MUIH\Icon;
 
 /** @var $af AF */
 $af = $this->af;
@@ -45,12 +48,11 @@ displayAF($af, $inputSet, __('AF', 'inputDocumentation', 'masterForm'));
  * @param \AF\Domain\InputSet\InputSet $inputSet
  * @param string   $title
  * @param string   $refPrefix
- * @return UI_HTML_Collapse
+ * @return Collapse
  */
 function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
 {
-    $collapse = new UI_HTML_Collapse($refPrefix . $af->getRef(), $title);
-    $collapse->foldedByDefault = true;
+    $collapse = new Collapse($refPrefix . $af->getRef(), $title);
 
     /** @var $mainAlgo MainSelectionAlgo */
     $mainAlgo = $af->getAlgoByRef(AF::ALGO_MAIN_REF);
@@ -58,7 +60,7 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
 
     foreach ($subAlgos as $subAlgo) {
         $algoCollapse = displayAlgo($subAlgo, $inputSet, $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR);
-        $collapse->body .= $algoCollapse->render();
+        $collapse->appendContent($algoCollapse->render());
     }
 
     if (count($subAlgos) > 0) {
@@ -127,7 +129,7 @@ function getSubAFInputSets(InputSet $inputSet)
  * @param Algo     $algo
  * @param \AF\Domain\InputSet\InputSet $inputSet
  * @param string   $refPrefix
- * @return UI_HTML_Collapse
+ * @return Collapse
  */
 function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
 {
@@ -139,8 +141,7 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
     if ($algo instanceof NumericAlgo) {
         $title .= " <small>" . $algo->getLabel() . "</small>";
     }
-    $collapse = new UI_HTML_Collapse($refPrefix . $algo->getRef(), $title);
-    $collapse->foldedByDefault = true;
+    $collapse = new Collapse($refPrefix . $algo->getRef(), $title);
 
     // Type
     switch(get_class($algo)) {
@@ -159,23 +160,23 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
         default:
             $type = get_class($algo);
     }
-    $collapse->body .= "<p><strong>" . __('UI', 'name', 'type') . __('UI', 'other', ':') . "</strong> $type</p>";
+    $collapse->appendContent("<p><strong>" . __('UI', 'name', 'type') . __('UI', 'other', ':') . "</strong> $type</p>");
 
     // Champ de saisie
     if ($algo instanceof NumericInputAlgo) {
-        $collapse->body .= "<p><strong>" . __('UI', 'name', 'field')  . __('UI', 'other', ':')
-            . "</strong> {$algo->getLabel()}</p>";
+        $collapse->appendContent("<p><strong>" . __('UI', 'name', 'field')  . __('UI', 'other', ':')
+            . "</strong> {$algo->getLabel()}</p>");
     }
 
     // Paramètre
     if ($algo instanceof NumericParameterAlgo) {
         $family = $algo->getFamily();
-        $collapse->body .= '<p>';
-        $collapse->body .= '<strong>' . __('Parameter', 'name', 'family') . __('UI', 'other', ':') . '</strong>';
-        $collapse->body .= '<a href="' . $view->baseUrl('parameter/family/details/id/' . $family->getId()) . '">'
-            . $family->getLabel() . "</a>";
-        $collapse->body .= '</p>';
-        $collapse->body .= '<ul>';
+        $collapse->appendContent('<p>');
+        $collapse->appendContent('<strong>' . __('Parameter', 'name', 'family') . __('UI', 'other', ':') . '</strong>');
+        $collapse->appendContent('<a href="' . $view->baseUrl('parameter/family/details/id/' . $family->getId()) . '">'
+            . $family->getLabel() . "</a>");
+        $collapse->appendContent('</p>');
+        $collapse->appendContent('<ul>');
         foreach ($algo->getParameterCoordinates() as $parameterCoordinate) {
             $memberRef = $parameterCoordinate->getMember($inputSet);
             try {
@@ -187,11 +188,11 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
                 $dimensionLabel = $parameterCoordinate->getDimensionRef();
                 $memberLabel = $memberRef;
             }
-            $collapse->body .= '<li>';
-            $collapse->body .= ucfirst($dimensionLabel) . __('UI', 'other', ':') . $memberLabel;
-            $collapse->body .= '</li>';
+            $collapse->appendContent('<li>');
+            $collapse->appendContent(ucfirst($dimensionLabel) . __('UI', 'other', ':') . $memberLabel);
+            $collapse->appendContent('</li>');
         }
-        $collapse->body .= '</ul>';
+        $collapse->appendContent('</ul>');
     }
 
     // Expression
@@ -208,13 +209,13 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
             $popup->title .= ' (' . $algo->getLabel() . ')';
         }
         $popup->addAttribute('class', 'large');
-        $collapse->body .= $popup->render();
-        $helper = new UI_View_Helper_Button();
-        $buttonHTML = $helper->button("", 'search', ['class' => 'btn-xs'])
-            ->showPopup('graph_' . $algo->getId());
+        $collapse->appendContent($popup->render());
+        $buttonHTML = new Button(new Icon('search'));
+        $buttonHTML->addClass('btn-xs');
+        $buttonHTML->showModal('graph_' . $algo->getId());
         $expression = $algo->getExpression();
-        $collapse->body .= "<p><strong>" . __('TEC', 'name', 'expression') . __('UI', 'other', ':')
-            . "</strong> $buttonHTML <code>$expression</code></p>";
+        $collapse->appendContent("<p><strong>" . __('TEC', 'name', 'expression') . __('UI', 'other', ':')
+            . "</strong> $buttonHTML <code>$expression</code></p>");
     }
 
     // Valeur
@@ -223,16 +224,16 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
         $stringValue = $locale->formatNumber($value->getDigitalValue(), 20)
             . ' <strong>' . $value->getUnit()->getSymbol() . '</strong> ± '
             . $locale->formatNumber($value->getRelativeUncertainty()) . ' <strong>%</strong>';
-        $collapse->body .= "<p><strong>" . __('UI', 'name', 'value') . __('UI', 'other', ':')
-            . "</strong> $stringValue</p>";
+        $collapse->appendContent("<p><strong>" . __('UI', 'name', 'value') . __('UI', 'other', ':')
+            . "</strong> $stringValue</p>");
     }
 
     // Opérandes de l'expression
     if ($algo instanceof NumericExpressionAlgo) {
         // Opérandes de l'expression
         foreach ($algo->getSubAlgos() as $subAlgo) {
-            $collapse->body .= displayAlgo($subAlgo, $inputSet,
-                                           $refPrefix . $algo->getRef() . UI_Generic::REF_SEPARATOR)->render();
+            $collapse->appendContent(displayAlgo($subAlgo, $inputSet,
+               $refPrefix . $algo->getRef() . UI_Generic::REF_SEPARATOR)->render());
         }
     }
 

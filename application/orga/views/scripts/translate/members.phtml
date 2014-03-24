@@ -29,7 +29,7 @@ foreach ($this->axes as $axis) {
     $datagrid->addParam('refAxis', $axis->getRef());
     $datagrid->initialLoading = false;
 
-    echo $this->collapse('translateMembers'.$axis->getRef(), $axis->getLabel(), $datagrid->getHTML())->collapsed();
+    echo $this->collapse('translateMembers'.$axis->getRef(), $axis->getLabel(), $datagrid->getHTML());
 
     $script = '';
     $script .= '$(\'#translateMembers'.$axis->getRef().'\').on(\'show\', function(e) {';

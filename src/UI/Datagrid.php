@@ -1,5 +1,6 @@
 <?php
 use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\Icon;
 
 /**
@@ -74,7 +75,7 @@ class UI_Datagrid extends UI_Generic
     /**
      * Définition du Collapse entourant le filtre affiché au dessus du datagrid.
      *
-     * @var   UI_HTML_Collapse
+     * @var   Collapse
      */
     public $filterCollapse = null;
 
@@ -464,8 +465,8 @@ class UI_Datagrid extends UI_Generic
         // Filtres
         $this->filterCollapseTitle = __('UI', 'name', 'filters');
         $this->filterCollapseActiveHint = __('UI', 'datagridFilter', 'TitleFilterActive');
-        $this->filterCollapse = new UI_HTML_Collapse();
-        $this->filterCollapse->title = $this->filterCollapseTitle;
+        $this->filterCollapse = new Collapse();
+        $this->filterCollapse->setTitleContent($this->filterCollapseTitle);
         $this->filterConfirmButton = new Button(__('UI', 'verb', 'filter'));
         $this->filterConfirmButton->prependContent(new Icon('search-plus'));
         $this->filterResetButton = new Button(__('UI', 'verb', 'reset'));
@@ -623,14 +624,15 @@ class UI_Datagrid extends UI_Generic
      */
     protected function initFilterCollapse()
     {
-        $this->filterCollapse->id = $this->id.'_filter';
+        $this->filterCollapse->setAttribute('id', $this->id.'_filter');
 
         $datagridSession = $this->getDatagridSession();
-        $this->filterCollapse->foldedByDefault = true;
         // Vérification de la présence de valeur par défaut nécéssitant l'affichage du l'indicateur.
         if (($datagridSession['filters'] !== null) && (count($datagridSession['filters']) != 0)) {
-            $this->filterCollapse->title = $this->filterCollapseTitle.
-                ' <i class="filterActive fa fa-filter" title="'.$this->filterCollapseActiveHint.'"></i>';
+            $icon = new Icon('filter');
+            $icon->addClass('filterActive');
+            $icon->setAttribute('title', $this->filterCollapseActiveHint);
+            $this->filterCollapse->getTitleLink()->prependContent($icon);
         }
     }
 
@@ -670,7 +672,7 @@ class UI_Datagrid extends UI_Generic
         $resetElement->content = $this->filterResetButton->getHTML();
         $formFilter->addActionElement($resetElement);
 
-        $this->filterCollapse->body = $formFilter->getHTML();
+        $this->filterCollapse->setContent($formFilter->getHTML());
 
         return $this->filterCollapse->getHTML();
     }
