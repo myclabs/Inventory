@@ -60,15 +60,19 @@
     );
 </script>
 
-<div id="exportReferentialAsExcelPopup" class="modal hide fade">
-    <div class="modal-body">
-        <p><?=___('Orga', 'analysis', 'detailedExcelExportPopup')?></p>
-        <div class="progress progress-striped active">
-            <div class="progress-bar" style="width: 100%;"></div>
+<div id="exportReferentialAsExcelPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p><?=___('Orga', 'analysis', 'detailedExcelExportPopup')?></p>
+                <div class="progress progress-striped active">
+                    <div class="progress-bar" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal"><?=___('UI', 'verb', 'close')?></button>
+            </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-default" data-dismiss="modal"><?=___('UI', 'verb', 'close')?></button>
     </div>
 </div>
 

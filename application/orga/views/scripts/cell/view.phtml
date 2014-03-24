@@ -219,81 +219,101 @@ if (count($file) > 0) {
         </div>
         <?php endif; ?>
 
-        <div id="administrators<?=$currentCell->id?>" class="modal administrators hide fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="withTooltip" title="<?=___('Orga', 'view', 'administratorExplanations')?>">
-                    <?=___('Orga', 'view', 'administratorsFrom')?> <?=$currentCell->shortLabel?>
-                    <i class="fa fa-question-circle"></i>
-                </h4>
-            </div>
-            <div class="modal-body">
-                <pre><?=implode("\n", $currentCell->administrators)?></pre>
+        <div id="administrators<?=$currentCell->id?>" class="modal administrators fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="withTooltip" title="<?=___('Orga', 'view', 'administratorExplanations')?>">
+                            <?=___('Orga', 'view', 'administratorsFrom')?> <?=$currentCell->shortLabel?>
+                            <i class="fa fa-question-circle"></i>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <pre><?=implode("\n", $currentCell->administrators)?></pre>
+                    </div>
+                </div>
             </div>
         </div>
         <?php if ($currentCell->showUsers) : ?>
-        <div id="users<?=$currentCell->id?>" class="modal users hide fade large" data-cell="<?=$currentCell->id?>">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4><?=___('Orga', 'view', 'rolesFrom')?> <?=$currentCell->shortLabel?></h4>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <form class="form-inline addUser" action="orga/cell/add-user/idCell/<?=$currentCell->id?>/">
-                    <input type="text" name="userEmail" placeholder="<?=___('User', 'user', 'emailAddress')?>">
-                    <select name="userRole" class="form-control">
-                        <option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>
-                        <option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>
-                        <option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>
-                        <option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>
-                    </select>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-plus"></i>
-                        <?=___('UI', 'verb', 'add')?>
-                    </button>
-                </form>
+        <div id="users<?=$currentCell->id?>" class="modal users fade large" data-cell="<?=$currentCell->id?>">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4><?=___('Orga', 'view', 'rolesFrom')?> <?=$currentCell->shortLabel?></h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <form class="form-inline addUser" action="orga/cell/add-user/idCell/<?=$currentCell->id?>/">
+                            <input type="text" name="userEmail" placeholder="<?=___('User', 'user', 'emailAddress')?>">
+                            <select name="userRole" class="form-control">
+                                <option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>
+                                <option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>
+                                <option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>
+                                <option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-plus"></i>
+                                <?=___('UI', 'verb', 'add')?>
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
         <?php endif; ?>
         <?php if ($currentCell->showReports) : ?>
-        <div id="reports<?=$currentCell->id?>" class="modal reports hide fade large" data-cell="<?=$currentCell->id?>">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4><?=___('Orga', 'view', 'reportsFrom')?> <?=$currentCell->shortLabel?></h4>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <a href="orga/cell/view-report/idCell/<?=$currentCell->id?>/" class="btn btn-primary">
-                    <i class="fa fa-plus"></i>
-                    <?=___('UI', 'verb', 'add')?>
-                </a>
+        <div id="reports<?=$currentCell->id?>" class="modal reports fade large" data-cell="<?=$currentCell->id?>">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4><?=___('Orga', 'view', 'reportsFrom')?> <?=$currentCell->shortLabel?></h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <a href="orga/cell/view-report/idCell/<?=$currentCell->id?>/" class="btn btn-primary">
+                            <i class="fa fa-plus"></i>
+                            <?=___('UI', 'verb', 'add')?>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="exports<?=$currentCell->id?>" class="modal exports hide fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4><?=___('Orga', 'view', 'exportsFrom')?> <?=$currentCell->shortLabel?></h4>
-            </div>
-            <div class="modal-body">
-                <div class="granularityCells row">
-                    <i class="fa fa-spinner fa-spin fa-3x"></i>
-                    <?=___('UI', 'loading', 'loading')?>
+        <div id="exports<?=$currentCell->id?>" class="modal exports fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4><?=___('Orga', 'view', 'exportsFrom')?> <?=$currentCell->shortLabel?></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="granularityCells row">
+                            <i class="fa fa-spinner fa-spin fa-3x"></i>
+                            <?=___('UI', 'loading', 'loading')?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <?php endif; ?>
         <?php if ($currentCell->showInventory) : ?>
-        <div id="inventoryUsers<?=$currentCell->id?>" class="modal inventory-users hide fade" data-cell="<?=$currentCell->id?>">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="withTooltip" title="<?=___('Orga', 'view', 'inventoryUsersExplanations')?>">
-                    <?=___('Orga', 'view', 'inventoryUsersFrom')?> <?=$currentCell->shortLabel?>
-                    <i class="fa fa-question-circle"></i>
-                </h4>
-            </div>
-            <div class="modal-body">
+        <div id="inventoryUsers<?=$currentCell->id?>" class="modal inventory-users fade" data-cell="<?=$currentCell->id?>">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="withTooltip" title="<?=___('Orga', 'view', 'inventoryUsersExplanations')?>">
+                            <?=___('Orga', 'view', 'inventoryUsersFrom')?> <?=$currentCell->shortLabel?>
+                            <i class="fa fa-question-circle"></i>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                </div>
             </div>
         </div>
         <?php endif; ?>
@@ -514,24 +534,28 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                             '<i class="fa fa-users"></i>' +
                         '</a>';
                     usersPopup +=
-                        '<div id="users' + this.id + '" class="modal users hide fade large" data-cell="' + this.id + '">' +
-                            '<div class="modal-header">' +
-                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                '<h4><?=___('Orga', 'view', 'rolesFrom')?> ' + this.shortLabel + '</h4>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
-                            '</div>' +
-                            '<div class="modal-footer">' +
-                                '<form class="form-inline addUser" action="orga/cell/add-user/idCell/' + this.id + '/">' +
-                                    '<input type="text" placeholder="<?=___('User', 'user', 'emailAddress')?>" name="userEmail"> ' +
-                                    '<select name="userRole" class="form-control">' +
-                                        '<option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>' +
-                                        '<option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>' +
-                                        '<option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>' +
-                                        '<option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>' +
-                                    '</select> ' +
-                                    '<input type="submit" class="btn btn-primary" value="<?=___('UI', 'verb', 'add')?>"> ' +
-                                '</form>' +
+                        '<div id="users' + this.id + '" class="modal users fade large" data-cell="' + this.id + '">' +
+                            '<div class="modal-dialog">' +
+                                '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                                        '<h4><?=___('Orga', 'view', 'rolesFrom')?> ' + this.shortLabel + '</h4>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                    '</div>' +
+                                    '<div class="modal-footer">' +
+                                        '<form class="form-inline addUser" action="orga/cell/add-user/idCell/' + this.id + '/">' +
+                                            '<input type="text" placeholder="<?=___('User', 'user', 'emailAddress')?>" name="userEmail"> ' +
+                                            '<select name="userRole" class="form-control">' +
+                                                '<option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>' +
+                                                '<option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>' +
+                                                '<option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>' +
+                                                '<option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>' +
+                                            '</select> ' +
+                                            '<input type="submit" class="btn btn-primary" value="<?=___('UI', 'verb', 'add')?>"> ' +
+                                        '</form>' +
+                                    '</div>' +
+                                '</div>' +
                             '</div>' +
                         '</div>';
                 }
@@ -543,18 +567,22 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                             '<i class="fa fa-bar-chart-o"></i>' +
                         '</a>';
                     reportsPopup +=
-                        '<div id="reports' + this.id + '" class="modal reports hide fade large" data-cell="' + this.id + '">' +
-                            '<div class="modal-header">' +
-                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                '<h4><?=___('Orga', 'view', 'reportsFrom')?>' + this.shortLabel + '</h4>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
-                            '</div>' +
-                            '<div class="modal-footer">' +
-                                '<a href="orga/cell/view-report/idCell/' + this.id + '/" class="btn btn-primary">' +
-                                    '<i class="fa fa-plus"></i> ' +
-                                    '<?=___('UI', 'verb', 'add')?>' +
-                                '</a>' +
+                        '<div id="reports' + this.id + '" class="modal reports fade large" data-cell="' + this.id + '">' +
+                            '<div class="modal-dialog">' +
+                                '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                                        '<h4><?=___('Orga', 'view', 'reportsFrom')?>' + this.shortLabel + '</h4>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                    '</div>' +
+                                    '<div class="modal-footer">' +
+                                        '<a href="orga/cell/view-report/idCell/' + this.id + '/" class="btn btn-primary">' +
+                                            '<i class="fa fa-plus"></i> ' +
+                                            '<?=___('UI', 'verb', 'add')?>' +
+                                        '</a>' +
+                                    '</div>' +
+                                '</div>' +
                             '</div>' +
                         '</div>';
                 }
@@ -566,14 +594,18 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                             '<i class="fa fa-download"></i>' +
                         '</a>';
                     exportsPopup +=
-                        '<div id="exports' + this.id + '" class="modal exports hide fade">' +
-                            '<div class="modal-header">' +
-                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                '<h4><?=___('Orga', 'view', 'exportsFrom')?> ' + this.shortLabel + '</h4>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
-                                '<i class="fa fa-spinner fa-spin fa-3x"></i> ' +
-                                '<?=___('UI', 'loading', 'loading')?>' +
+                        '<div id="exports' + this.id + '" class="modal exports fade">' +
+                            '<div class="modal-dialog">' +
+                                '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                                        '<h4><?=___('Orga', 'view', 'exportsFrom')?> ' + this.shortLabel + '</h4>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                        '<i class="fa fa-spinner fa-spin fa-3x"></i> ' +
+                                        '<?=___('UI', 'loading', 'loading')?>' +
+                                    '</div>' +
+                                '</div>' +
                             '</div>' +
                         '</div>';
                 }
@@ -633,15 +665,19 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                             '</div> ' +
                         '</div>';
                     inventoryPopup +=
-                        '<div id="inventoryUsers' + this.id + '" class="modal inventory-users hide fade" data-cell="' + this.id + '">' +
-                            '<div class="modal-header">' +
-                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                '<h4 class="withTooltip" title="<?=___('Orga', 'view', 'inventoryUsersExplanations')?>">' +
-                                    '<?=___('Orga', 'view', 'inventoryUsersFrom')?>' + this.shortLabel + ' ' +
-                                    '<i class="fa fa-question-circle"></i>' +
-                                '</h4>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
+                        '<div id="inventoryUsers' + this.id + '" class="modal inventory-users fade" data-cell="' + this.id + '">' +
+                            '<div class="modal-dialog">' +
+                                '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                                        '<h4 class="withTooltip" title="<?=___('Orga', 'view', 'inventoryUsersExplanations')?>">' +
+                                            '<?=___('Orga', 'view', 'inventoryUsersFrom')?>' + this.shortLabel + ' ' +
+                                            '<i class="fa fa-question-circle"></i>' +
+                                        '</h4>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                    '</div>' +
+                                '</div>' +
                             '</div>' +
                         '</div>';
                 }

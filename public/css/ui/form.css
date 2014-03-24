@@ -248,7 +248,7 @@
 }
 
 /* Form dans un popup : correction d'un margin en trop */
-.modal > form {
+.modal-content > form {
     margin-bottom: 0;
 }
 

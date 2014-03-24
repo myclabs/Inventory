@@ -171,6 +171,9 @@ abstract class UI_Popup_Generic extends UI_Generic
         }
         $html = substr($html, 0, -1).'>';
 
+        $html .= '<div class="modal-dialog">';
+        $html .= '<div class="modal-content">';
+
         // Header.
         if ($this->title !== null) {
             $html .= '<div class="modal-header">';
@@ -194,6 +197,9 @@ abstract class UI_Popup_Generic extends UI_Generic
         if ($this->footer !== null) {
             $html .= '<div class="modal-footer">'.$this->footer.'</div>';
         }
+
+        $html .= '</div>';
+        $html .= '</div>';
 
         $html .= '</div>';
 

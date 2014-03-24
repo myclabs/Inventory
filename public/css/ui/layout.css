@@ -54,9 +54,6 @@ footer .feedback-form div { text-align: left; }
     line-height: 30px;
 }
 
-/* Différente tailles de Modaux */
-.modal.large { width: 850px; margin-left: -425px; }
-
 /* Ajustement des popover */
 .popover { max-width: 476px; }
 .popover .popover-inner { padding: 1px; border-radius: 3px; height: auto; }

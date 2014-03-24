@@ -59,7 +59,7 @@ class UI_Popup_Ajax extends UI_Popup_Generic
         $this->id = $id;
         $this->source = $source;
         $this->_type = UI_Popup_Generic::TYPE_POPUP_AJAX;
-        $this->_attributes['class'] = 'modal hide fade';
+        $this->_attributes['class'] = 'modal fade';
 
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->loadingText = __('UI', 'loading', 'loading').'<br>';

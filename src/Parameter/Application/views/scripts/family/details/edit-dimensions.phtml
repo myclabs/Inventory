@@ -71,98 +71,110 @@ $family = $this->family;
 </p>
 
 
-<div id="addDimensionPopup" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><?=__('Parameter', 'familyDetail', 'dimensionAddPanelTitle')?></h3>
-    </div>
-    <form class="form-horizontal" action="<?=$this->baseUrl('parameter/dimension/add')?>" method="post">
-        <div class="modal-body">
-            <p class="alert alert-warning">
-                <?=__('Parameter', 'dimension', 'warningAddingDimension')?>
-            </p>
-            <p></p>
-            <div class="form-group">
-                <label class="control-label" for="addDimensionLabel"><?=__('UI', 'name', 'label')?></label>
-                <input type="text" id="addDimensionLabel" name="label" required class="form-control">
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="addDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
-                <input type="text" id="addDimensionRef" name="ref" required class="form-control">
-            </div>
-            <div class="form-group">
-                <label class="control-label"><?=__('Parameter', 'name', 'orientation')?></label>
-                <div>
-                    <label class="radio">
-                        <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_VERTICAL?>" class="form-control" checked>
-                        <?=__('Parameter', 'property', 'verticalFem')?>
-                    </label>
-                    <label class="radio">
-                        <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_HORIZONTAL?>" class="form-control">
-                        <?=__('Parameter', 'property', 'horizontalFem')?>
-                    </label>
+<div id="addDimensionPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" action="<?=$this->baseUrl('parameter/dimension/add')?>" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3><?=__('Parameter', 'familyDetail', 'dimensionAddPanelTitle')?></h3>
                 </div>
-            </div>
-            <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
+                <div class="modal-body">
+                    <p class="alert alert-warning">
+                        <?=__('Parameter', 'dimension', 'warningAddingDimension')?>
+                    </p>
+                    <p></p>
+                    <div class="form-group">
+                        <label class="control-label" for="addDimensionLabel"><?=__('UI', 'name', 'label')?></label>
+                        <input type="text" id="addDimensionLabel" name="label" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="addDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
+                        <input type="text" id="addDimensionRef" name="ref" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"><?=__('Parameter', 'name', 'orientation')?></label>
+                        <div>
+                            <label class="radio">
+                                <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_VERTICAL?>" class="form-control" checked>
+                                <?=__('Parameter', 'property', 'verticalFem')?>
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_HORIZONTAL?>" class="form-control">
+                                <?=__('Parameter', 'property', 'horizontalFem')?>
+                            </label>
+                        </div>
+                    </div>
+                    <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+                </div>
+            </form>
         </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
-        </div>
-    </form>
+    </div>
 </div>
 
 
-<div id="editDimensionPopup" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><?=__('Parameter', 'familyDetail', 'dimensionEditPanelTitle')?></h3>
+<div id="editDimensionPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" action="<?=$this->baseUrl('parameter/dimension/edit')?>" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3><?=__('Parameter', 'familyDetail', 'dimensionEditPanelTitle')?></h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="editDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
+                        <input type="text" id="editDimensionRef" name="ref" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="editDimensionLabel"><?=__('UI', 'name', 'label')?></label>
+                        <input type="text" id="editDimensionLabel" name="label" required class="form-control">
+                    </div>
+                    <input type="hidden" name="idFamily" value="<?=$family->getId()?>">
+                    <input type="hidden" name="refDimension" id="refDimension">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+                </div>
+            </form>
+        </div>
     </div>
-    <form class="form-horizontal" action="<?=$this->baseUrl('parameter/dimension/edit')?>" method="post">
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="control-label" for="editDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
-                <input type="text" id="editDimensionRef" name="ref" required class="form-control">
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="editDimensionLabel"><?=__('UI', 'name', 'label')?></label>
-                <input type="text" id="editDimensionLabel" name="label" required class="form-control">
-            </div>
-            <input type="hidden" name="idFamily" value="<?=$family->getId()?>">
-            <input type="hidden" name="refDimension" id="refDimension">
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
-        </div>
-    </form>
 </div>
 
 
-<div id="addMemberPopup" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><?=__('Parameter', 'dimension', 'addMemberList')?></h3>
+<div id="addMemberPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addMemberForm" action="<?=$this->baseUrl('parameter/dimension/add-members')?>" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3><?=__('Parameter', 'dimension', 'addMemberList')?></h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea id="inputMemberList" name="members" class="pre" rows="8"></textarea>
+                        <p class="help-block">
+                            <strong><span id="inputMemberListValidationOK" class="text-success"></span></strong>
+                            <strong><span id="inputMemberListValidationNOK" class="text-error"></span></strong>
+                        </p>
+                        <p><span class="help-block"><?=__('Parameter', 'import', 'addMemberListHelp')?></span></p>
+                        <pre><code><?=__('Parameter', 'import', 'addMemberListExample')?></code></pre>
+                    </div>
+                    <input type="hidden" name="idFamily" value="<?=$family->getId()?>">
+                    <input type="hidden" name="dimension" id="inputDimension">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+                </div>
+            </form>
+        </div>
     </div>
-    <form id="addMemberForm" action="<?=$this->baseUrl('parameter/dimension/add-members')?>" method="post">
-        <div class="modal-body">
-            <div class="form-group">
-                <textarea id="inputMemberList" name="members" class="pre" rows="8"></textarea>
-                <p class="help-block">
-                    <strong><span id="inputMemberListValidationOK" class="text-success"></span></strong>
-                    <strong><span id="inputMemberListValidationNOK" class="text-error"></span></strong>
-                </p>
-                <p><span class="help-block"><?=__('Parameter', 'import', 'addMemberListHelp')?></span></p>
-                <pre><code><?=__('Parameter', 'import', 'addMemberListExample')?></code></pre>
-            </div>
-            <input type="hidden" name="idFamily" value="<?=$family->getId()?>">
-            <input type="hidden" name="dimension" id="inputDimension">
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
-        </div>
-    </form>
 </div>
 
 
