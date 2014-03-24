@@ -629,13 +629,15 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
     protected function viewParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $parameterFamily = Family::load($request->getParam('id'));
+        $id = $request->getParam('id') ?: $request->getParam('idFamily');
+        $parameterFamily = Family::load($id);
         return $this->aclManager->isAllowed($identity, Actions::VIEW, $parameterFamily->getLibrary());
     }
 
     protected function editParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $parameterFamily = Family::load($request->getParam('id'));
+        $id = $request->getParam('id') ?: $request->getParam('idFamily');
+        $parameterFamily = Family::load($id);
         return $this->aclManager->isAllowed($identity, Actions::EDIT, $parameterFamily->getLibrary());
     }
 

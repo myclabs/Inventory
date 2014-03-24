@@ -78,5 +78,6 @@ class Account_DashboardController extends Core_Controller
             new ClassResource(Orga_Model_Organization::class)
         ));
         $this->addBreadcrumb(__('Account', 'name', 'dashboard'));
+        $this->setActiveMenuItem('dashboard');
     }
 }

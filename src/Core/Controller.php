@@ -62,6 +62,35 @@ abstract class Core_Controller extends Zend_Controller_Action
         $json->sendJson($reponse);
     }
 
+    /**
+     * Définit l'item qui est actif dans le menu de l'application.
+     * @param string $item
+     */
+    protected function setActiveMenuItem($item)
+    {
+        $this->view->assign('activeMenu', $item);
+    }
+
+    protected function setActiveMenuItemOrganization($organizationId)
+    {
+        $this->setActiveMenuItem('organization-' . $organizationId);
+    }
+
+    protected function setActiveMenuItemAFLibrary($libraryId)
+    {
+        $this->setActiveMenuItem('af-' . $libraryId);
+    }
+
+    protected function setActiveMenuItemParameterLibrary($libraryId)
+    {
+        $this->setActiveMenuItem('parameter-' . $libraryId);
+    }
+
+    /**
+     * Ajoute un niveau au "breadcrumb".
+     * @param string $text
+     * @param string $link
+     */
     protected function addBreadcrumb($text, $link = null)
     {
         if (! is_array($this->view->breadcrumbs)) {

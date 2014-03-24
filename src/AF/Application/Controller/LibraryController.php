@@ -19,5 +19,6 @@ class AF_LibraryController extends Core_Controller
         $this->view->assign('library', $library);
 
         $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
+        $this->setActiveMenuItemAFLibrary($library->getId());
     }
 }

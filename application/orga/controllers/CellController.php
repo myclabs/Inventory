@@ -113,6 +113,7 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('cellVWFactory', $this->cellVMFactory);
         $this->view->assign('organization', $this->organizationVMFactory->createOrganizationView($organization, $connectedUser));
         $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser, true));
+        $this->setActiveMenuItemOrganization($organization->getId());
 
         $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
             $connectedUser,
@@ -1242,6 +1243,8 @@ class Orga_CellController extends Core_Controller
             $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS);
         }
         $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
+
+        $this->setActiveMenuItemOrganization($cell->getOrganization()->getId());
 
         $this->forward('display', 'af', 'af', [
             'id' => $cell->getInputAFUsed()->getId(),
