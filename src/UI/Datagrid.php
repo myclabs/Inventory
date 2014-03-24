@@ -662,11 +662,11 @@ class UI_Datagrid extends UI_Generic
         }
         $scriptHideWrapper = '$(\'#'.$this->id.'_filter_wrapper\').collapse(\'hide\');';
         $filterElement = new UI_Form_Element_HTML($this->id.'-filter');
-        $this->filterConfirmButton->addAttribute('onclick', $this->id.'.filter();'.$scriptHideWrapper);
+        $this->filterConfirmButton->setAttribute('onclick', $this->id.'.filter();'.$scriptHideWrapper);
         $filterElement->content = $this->filterConfirmButton->getHTML();
         $formFilter->addActionElement($filterElement);
         $resetElement = new UI_Form_Element_HTML($this->id.'-resetFilter');
-        $this->filterResetButton->addAttribute('onclick', $this->id.'.resetFilter();'.$this->id.'.filter();'.$scriptHideWrapper);
+        $this->filterResetButton->setAttribute('onclick', $this->id.'.resetFilter();'.$this->id.'.filter();'.$scriptHideWrapper);
         $resetElement->content = $this->filterResetButton->getHTML();
         $formFilter->addActionElement($resetElement);
 
