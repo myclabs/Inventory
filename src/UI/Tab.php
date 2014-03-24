@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\GenericVoidTag;
+
 /**
  * @author valentin.claras
  * @package UI
@@ -90,7 +92,8 @@ class UI_Tab
         $this->label = $label;
         $this->content = $content;
 
-        $imageLoading = new UI_HTML_Image('images/ui/ajax-loader_large.gif', '');
+        $imageLoading = new GenericVoidTag('img');
+        $imageLoading->setAttribute('src', 'images/ui/ajax-loader_large.gif');
         $this->loadingText = $imageLoading->getHTML().' '.__('UI', 'loading', 'loading');
         $this->errorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error'));
     }

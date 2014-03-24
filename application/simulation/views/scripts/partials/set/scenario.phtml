@@ -1,6 +1,8 @@
 <?php
 // Liste des Simulation d'un Set.
 use AF\Domain\InputSet\PrimaryInputSet;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
 
 $datagridListScenarios = new UI_Datagrid('listScenarios', 'datagrid_scenario', 'simulation');
 
@@ -16,10 +18,18 @@ $colStateInput = new UI_Datagrid_Col_List('stateInput', __('UI', 'name', 'status
 $colStateInput->withEmptyElement = false;
 $colStateInput->editable = false;
 $colStateInput->addable = false;
-$imageFinished = new UI_HTML_Image('images/af/bullet_green.png', 'finish');
-$imageComplete = new UI_HTML_Image('images/af/bullet_orange.png', 'complet');
-$imageCalculationIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incompletecomplete');
-$imageInputIncomplete = new UI_HTML_Image('images/af/bullet_red.png', 'incomplet');
+$imageFinished = new GenericVoidTag('img');
+$imageFinished->setAttribute('src', 'images/af/bullet_green.png');
+$imageFinished->setAttribute('alt', 'finish');
+$imageComplete = new GenericVoidTag('img');
+$imageComplete->setAttribute('src', 'images/af/bullet_orange.png');
+$imageComplete->setAttribute('alt', 'complet');
+$imageCalculationIncomplete = new GenericVoidTag('img');
+$imageCalculationIncomplete->setAttribute('src', 'images/af/bullet_red.png');
+$imageCalculationIncomplete->setAttribute('alt', 'incomplet');
+$imageInputIncomplete = new GenericVoidTag('img');
+$imageInputIncomplete->setAttribute('src', 'images/af/bullet_red.png');
+$imageInputIncomplete->setAttribute('alt', 'incomplet');
 $colStateInput->list = array(
     PrimaryInputSet::STATUS_FINISHED => $imageFinished->render() . ' ' . __('AF', 'inputInput', 'statusFinished'),
     PrimaryInputSet::STATUS_COMPLETE => $imageComplete->render() . ' ' . __('AF', 'inputInput', 'statusComplete'),
