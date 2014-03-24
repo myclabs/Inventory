@@ -615,7 +615,8 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
     protected function editAFRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $af = AF::load($request->getParam('id'));
+        $afId = $request->getParam('id') ?: $request->getParam('idAF');
+        $af = AF::load($afId);
         return $this->aclManager->isAllowed($identity, Actions::EDIT, $af->getLibrary());
     }
 
