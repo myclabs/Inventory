@@ -7,6 +7,8 @@
  */
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Tab;
+use MyCLabs\MUIH\Tabs;
 
 ?>
 
@@ -160,22 +162,21 @@ use MyCLabs\MUIH\Icon;
     <div id="reportContent" class="span">
         <?php
 
-        $tabView = new UI_Tab_View('container');
+        $tabView = new Tabs();
+        $tabView->getTabsContent()->setAttribute('id', 'container');
 
-        $tabGraph = new UI_Tab('graph', __('DW', 'name', 'chart'));
-        $tabGraph->dataSource = 'dw/report/graph/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport;
-        $tabGraph->useCache = true;
+        $tabGraph = new Tab('container_graph', __('DW', 'name', 'chart'), 'dw/report/graph/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport);
+        $tabGraph->setAjax(true, true);
         if (!$this->isNew) {
-            $tabGraph->active = true;
+            $tabGraph->active();
         } else {
             $tabGraph->disabled = true;
         }
         $tabView->addTab($tabGraph);
         UI_Chart_Generic::addHeader();
 
-        $tabValues = new UI_Tab('values', __('UI', 'name', 'values'));
-        $tabValues->dataSource = 'dw/report/values/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport;
-        $tabValues->useCache = true;
+        $tabValues = new Tab('values', __('UI', 'name', 'values'), 'dw/report/values/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport);
+        $tabValues->setAjax(true, true);
         if ($this->isNew) {
             $tabValues->disabled = true;
         }

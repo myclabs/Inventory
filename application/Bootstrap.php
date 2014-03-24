@@ -288,6 +288,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
+        $view->addHelperPath(PACKAGE_PATH . '/vendor/myclabs/muih/src/MyCLabs/MUIH/Bridge/ZendViewHelper/Zend1',
+            'MyCLabs\MUIH\Bridge\ZendViewHelper\Zend1');
         $view->registerHelper($this->container->get(IsAllowedHelper::class), 'isAllowed');
         $view->registerHelper($this->container->get(TutorialHelper::class), 'tutorial');
     }

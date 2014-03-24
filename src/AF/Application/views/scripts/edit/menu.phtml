@@ -2,6 +2,8 @@
 // API Google pour les charts
 use AF\Domain\AF;
 use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Tab;
+use MyCLabs\MUIH\Tabs;
 
 $this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["orgchart"]}]}', 'text/javascript');
 
@@ -35,57 +37,57 @@ UI_Popup_Generic::addHeader();
 UI_Form::addHeader();
 UI_Tree::addHeader();
 
-$tabView = new UI_Tab_View('container');
+$tabView = new Tabs();
 
 // Général
-$general = new UI_Tab('general');
-$general->label = __('AF', 'configTab', 'general');
-$general->dataSource = 'af/edit/general-tab/id/' . $af->getId();
-$general->useCache = true;
+$general = new Tab('container_general');
+$general->setTitle(__('AF', 'configTab', 'general'));
+$general->setContent('af/edit/general-tab/id/' . $af->getId());
+$general->setAjax(true, true);
 if (!isset($this->onglet)) {
-    $general->active = true;
+    $general->active();
 }
 
 // Structure
-$structure = new UI_Tab('structure');
-$structure->label = __('AF', 'configTab', 'structure');
-$structure->dataSource = 'af/edit/structure/id/' . $af->getId();
-$structure->useCache = false;
+$structure = new Tab('container_structure');
+$structure->setTitle(__('AF', 'configTab', 'structure'));
+$structure->setContent('af/edit/structure/id/' . $af->getId());
+$structure->setAjax(true, false);
 
 // Composants
-$element = new UI_Tab('component');
+$element = new Tab('container_component');
 if (isset($this->onglet) && $this->onglet == 'component') {
-    $element->active = true;
+    $element->active();
 }
-$element->label = __('AF', 'configTab', 'components');
-$element->dataSource = 'af/edit/components/id/' . $af->getId();
-$element->useCache = true;
+$element->setTitle(__('AF', 'configTab', 'components'));
+$element->setContent('af/edit/components/id/' . $af->getId());
+$element->setAjax(true, true);
 
 // Interactions
-$interaction = new UI_Tab('interaction');
+$interaction = new Tab('container_interaction');
 if (isset($this->onglet) && $this->onglet == 'interaction') {
-    $interaction->active = true;
+    $interaction->active();
 }
-$interaction->label = __('AF', 'configTab', 'interactions');
-$interaction->dataSource = 'af/edit/interactions/id/' . $af->getId();
-$interaction->useCache = true;
+$interaction->setTitle(__('AF', 'configTab', 'interactions'));
+$interaction->setContent('af/edit/interactions/id/' . $af->getId());
+$interaction->setAjax(true, true);
 
 // Traitements
-$traitement = new UI_Tab('traitement');
-$traitement->label = __('AF', 'configTab', 'treatment');
-$traitement->dataSource = 'af/edit/traitement/id/' . $af->getId();
-$traitement->useCache = true;
+$traitement = new Tab('container_traitement');
+$traitement->setTitle(__('AF', 'configTab', 'treatment'));
+$traitement->setContent('af/edit/traitement/id/' . $af->getId());
+$traitement->setAjax(true, true);
 if (isset($this->onglet) && $this->onglet == 'traitement') {
-    $traitement->active = true;
+    $traitement->active();
 }
 
 // Controle
-$control = new UI_Tab('control');
-$control->label = __('AF', 'configTab', 'control');
-$control->dataSource = 'af/edit/control/id/' . $af->getId();
-$control->useCache = true;
+$control = new Tab('container_control');
+$control->setTitle(__('AF', 'configTab', 'control'));
+$control->setContent('af/edit/control/id/' . $af->getId());
+$control->setAjax(true, true);
 if (isset($this->onglet) && $this->onglet == 'control') {
-    $control->active = true;
+    $control->active();
 }
 
 // Ajout des tabs à l'ensemble.

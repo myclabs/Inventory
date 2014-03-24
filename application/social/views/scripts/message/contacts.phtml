@@ -1,3 +1,7 @@
+<?php
+use MyCLabs\MUIH\Tab;
+use MyCLabs\MUIH\Tabs;
+?>
 <div class="page-header">
     <h1><?=__('Social', 'contact', 'contacts')?></h1>
 </div>
@@ -6,17 +10,17 @@
 UI_Datagrid::addHeader();
 
 
-$tabView = new UI_Tab_View('contactsContainer');
+$tabView = new Tabs();
 
-$tabUser = new UI_Tab('usersTab');
-$tabUser->label = __('User', 'user', 'users');
-$tabUser->content = $this->partial('message/contacts/users.phtml', 'social');
-$tabUser->active = true;
+$tabUser = new Tab('contactsContainer_usersTab');
+$tabUser->setTitle(__('User', 'user', 'users'));
+$tabUser->setContent($this->partial('message/contacts/users.phtml', 'social'));
+$tabUser->active();
 $tabView->addTab($tabUser);
 
-$tabUserGroup = new UI_Tab('userGroupsTab');
-$tabUserGroup->label = __('Social', 'userGroup', 'userGroups');
-$tabUserGroup->content = $this->partial('message/contacts/user-groups.phtml', 'social');
+$tabUserGroup = new Tab('contactsContainer_userGroupsTab');
+$tabUserGroup->setTitle(__('Social', 'userGroup', 'userGroups'));
+$tabUserGroup->setContent($this->partial('message/contacts/user-groups.phtml', 'social'));
 $tabView->addTab($tabUserGroup);
 
 $tabView->display();

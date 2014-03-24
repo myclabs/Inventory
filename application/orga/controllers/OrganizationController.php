@@ -5,6 +5,8 @@ use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
 use MyCLabs\ACL\ACLManager;
+use MyCLabs\MUIH\Tab;
+use MyCLabs\MUIH\Tabs;
 use Orga\OrganizationViewFactory;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
@@ -286,21 +288,21 @@ class Orga_OrganizationController extends Core_Controller
             $isUserAllowedToEditCells = true;
         }
 
-        $tabView = new UI_Tab_View('orga');
+        $tabView = new Tabs('orga');
         $parameters = '/idOrganization/'.$idOrganization.'/display/render/';
 
         // Tab Organization & Axes.
         if ($isUserAllowedToEditOrganization) {
-            $organizationTab = new UI_Tab('organization');
-            $organizationTab->label = __('Orga', 'configuration', 'generalInfoTab');
-            $organizationTab->dataSource = 'orga/organization/edit-organization'.$parameters;
-            $organizationTab->useCache = false;
+            $organizationTab = new Tab('organization');
+            $organizationTab->setTitle(__('Orga', 'configuration', 'generalInfoTab'));
+            $organizationTab->setContent('orga/organization/edit-organization'.$parameters);
+            $organizationTab->setAjax(true, false);
             $tabView->addTab($organizationTab);
 
-            $axisTab = new UI_Tab('axes');
-            $axisTab->label = __('UI', 'name', 'axes');
-            $axisTab->dataSource = 'orga/axis/manage'.$parameters;
-            $axisTab->useCache = true;
+            $axisTab = new Tab('axes');
+            $axisTab->setTitle(__('UI', 'name', 'axes'));
+            $axisTab->setContent('orga/axis/manage'.$parameters);
+            $axisTab->setAjax(true, true);
             $tabView->addTab($axisTab);
         }
 
@@ -313,10 +315,10 @@ class Orga_OrganizationController extends Core_Controller
             }
         }
         if ($canUserEditMembers) {
-            $membersTab = new UI_Tab('members');
-            $membersTab->label = __('UI', 'name', 'elements');
-            $membersTab->dataSource = 'orga/member/manage'.$parameters;
-            $membersTab->useCache = false;
+            $membersTab = new Tab('members');
+            $membersTab->setTitle(__('UI', 'name', 'elements'));
+            $membersTab->setContent('orga/member/manage'.$parameters);
+            $membersTab->setAjax(true, false);
             $tabView->addTab($membersTab);
         }
 
@@ -332,64 +334,64 @@ class Orga_OrganizationController extends Core_Controller
             }
         }
         if ($canUserEditRelevance) {
-            $relevanceTab = new UI_Tab('relevance');
-            $relevanceTab->label = __('Orga', 'cellRelevance', 'relevance');
-            $relevanceTab->dataSource = 'orga/organization/edit-relevance'.$parameters;
-            $relevanceTab->useCache = false;
+            $relevanceTab = new Tab('relevance');
+            $relevanceTab->setTitle(__('Orga', 'cellRelevance', 'relevance'));
+            $relevanceTab->setContent('orga/organization/edit-relevance'.$parameters);
+            $relevanceTab->setAjax(true, false);
             $tabView->addTab($relevanceTab);
         }
 
         // Tab AFConfiguration.
         if ($isUserAllowedToEditOrganization) {
-            $afTab = new UI_Tab('afs');
-            $afTab->label = __('UI', 'name', 'forms');
-            $afTab->dataSource = 'orga/organization/edit-afs'.$parameters;
-            $afTab->useCache = false;
+            $afTab = new Tab('afs');
+            $afTab->setTitle(__('UI', 'name', 'forms'));
+            $afTab->setContent('orga/organization/edit-afs'.$parameters);
+            $afTab->setAjax(true, false);
             $tabView->addTab($afTab);
         }
 
         // Tab ACL.
         if ($isUserAllowedToEditOrganization) {
-            $aclTab = new UI_Tab('acl');
-            $aclTab->label = __('User', 'role', 'roles');
-            $aclTab->dataSource = 'orga/organization/edit-acl'.$parameters;
-            $aclTab->useCache = false;
+            $aclTab = new Tab('acl');
+            $aclTab->setTitle(__('User', 'role', 'roles'));
+            $aclTab->setContent('orga/organization/edit-acl'.$parameters);
+            $aclTab->setAjax(true, false);
             $tabView->addTab($aclTab);
         }
 
         // Tab Granularities.
         if ($isUserAllowedToEditOrganization) {
-            $granularityTab = new UI_Tab('granularities');
-            $granularityTab->label = __('Orga', 'granularity', 'granularities');
-            $granularityTab->dataSource = 'orga/granularity/manage'.$parameters;
-            $granularityTab->useCache = false;
+            $granularityTab = new Tab('granularities');
+            $granularityTab->setTitle(__('Orga', 'granularity', 'granularities'));
+            $granularityTab->setContent('orga/granularity/manage'.$parameters);
+            $granularityTab->setAjax(true, false);
             $tabView->addTab($granularityTab);
         }
 
         // Tab Consistency.
         if ($isUserAllowedToEditOrganization) {
-            $consistencyTab = new UI_Tab('consistency');
-            $consistencyTab->label = __('UI', 'name', 'control');
-            $consistencyTab->dataSource = 'orga/organization/consistency'.$parameters;
-            $consistencyTab->useCache = true;
+            $consistencyTab = new Tab('consistency');
+            $consistencyTab->setTitle(__('UI', 'name', 'control'));
+            $consistencyTab->setContent('orga/organization/consistency'.$parameters);
+            $consistencyTab->setAjax(true, true);
             $tabView->addTab($consistencyTab);
         }
 
         // Tab DW
         if ($isUserAllowedToEditOrganization) {
-            $dwTab = new UI_Tab('reports');
-            $dwTab->label = __('DW', 'name', 'analysesConfig');
-            $dwTab->dataSource = 'orga/organization/edit-reports'.$parameters;
-            $dwTab->useCache = false;
+            $dwTab = new Tab('reports');
+            $dwTab->setTitle(__('DW', 'name', 'analysesConfig'));
+            $dwTab->setContent('orga/organization/edit-reports'.$parameters);
+            $dwTab->setAjax(true, false);
             $tabView->addTab($dwTab);
         }
 
         // Tab Rebuild
         if ($canUserEditMembers) {
-            $rebuildTab = new UI_Tab('rebuild');
-            $rebuildTab->label = __('DW', 'rebuild', 'dataRebuildTab');
-            $rebuildTab->dataSource = 'orga/organization/rebuild'.$parameters;
-            $rebuildTab->useCache = !$canUserEditMembers;
+            $rebuildTab = new Tab('rebuild');
+            $rebuildTab->setTitle(__('DW', 'rebuild', 'dataRebuildTab'));
+            $rebuildTab->setContent('orga/organization/rebuild'.$parameters);
+            $rebuildTab->setAjax(true, !$canUserEditMembers);
             $tabView->addTab($rebuildTab);
         }
 
