@@ -727,7 +727,7 @@ class UI_Tree extends UI_Generic
             $buttonCancelDelete= new Button($this->deletePanelCancelLabel);
             $buttonCancelDelete->prependContent(new Icon($this->deletePanelCancelIcon));
             $buttonCancelDelete->setAttribute('href', '#');
-            $buttonCancelDelete->addset('data-toggle', 'modal');
+            $buttonCancelDelete->setAttribute('data-toggle', 'modal');
             $buttonCancelDelete->setAttribute('data-remote', 'false');
             $buttonCancelDelete->setAttribute('data-target', '#'.$this->id.'_deletePanel, #'.$this->id.'_editPanel');
 
