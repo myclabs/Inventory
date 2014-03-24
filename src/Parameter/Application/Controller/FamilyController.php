@@ -59,7 +59,7 @@ class Parameter_FamilyController extends Core_Controller
 
     /**
      * Détails d'une famille
-     * @Secure("viewParameter")
+     * @Secure("viewParameterFamily")
      */
     public function detailsAction()
     {
@@ -78,7 +78,7 @@ class Parameter_FamilyController extends Core_Controller
 
     /**
      * Édition d'une famille
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function editAction()
     {
@@ -88,7 +88,7 @@ class Parameter_FamilyController extends Core_Controller
     /**
      * Suppression d'une famille
      * AJAX
-     * @Secure("editParameter")
+     * @Secure("deleteParameterFamily")
      */
     public function deleteAction()
     {

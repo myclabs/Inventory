@@ -7,7 +7,7 @@ use Parameter\Domain\Family\Family;
 $family = $this->family;
 ?>
 
-<div class="alert">
+<div class="alert alert-warning">
     <?=__('Parameter', 'dimension', 'warningEditingDimensions');?>
 </div>
 <p></p>
@@ -35,7 +35,8 @@ $family = $this->family;
         // Datagrid des membres de la dimension
         $datagrid = new UI_Datagrid($dimension->getRef() . 'MembersDatagrid', 'datagrid_member-datagrid', 'parameter');
         $datagrid->pagination = false;
-        $datagrid->addParam('id', $dimension->getId());
+        $datagrid->addParam('id', $family->getId());
+        $datagrid->addParam('idDimension', $dimension->getId());
         $datagrid->deleteElements = true;
         $datagrid->addElements = false;
         // Colonne label

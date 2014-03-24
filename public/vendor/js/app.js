@@ -1000,7 +1000,7 @@ function setup_widgets_desktop() {
 			settingsKeyLabel : 'Reset settings?',
 			deletePositionKey : '#deletepositionkey-options',
 			positionKeyLabel : 'Reset position?',
-			sortable : true,
+			sortable : false,
 			buttonsHidden : false,
 			// toggle button
 			toggleButton : true,
@@ -1009,22 +1009,22 @@ function setup_widgets_desktop() {
 			onToggle : function() {
 			},
 			// delete btn
-			deleteButton : true,
+			deleteButton : false,
 			deleteClass : 'fa fa-times',
 			deleteSpeed : 200,
 			onDelete : function() {
 			},
 			// edit btn
-			editButton : true,
+			editButton : false,
 			editPlaceholder : '.jarviswidget-editbox',
 			editClass : 'fa fa-cog | fa fa-save',
 			editSpeed : 200,
 			onEdit : function() {
 			},
 			// color button
-			colorButton : true,
+			colorButton : false,
 			// full screen
-			fullscreenButton : true,
+			fullscreenButton : false,
 			fullscreenClass : 'fa fa-resize-full | fa fa-resize-small',
 			fullscreenDiff : 3,
 			onFullscreen : function() {
@@ -1043,7 +1043,7 @@ function setup_widgets_desktop() {
 			opacity : 1.0,
 			dragHandle : '> header',
 			placeholderClass : 'jarviswidget-placeholder',
-			indicator : true,
+			indicator : false,
 			indicatorTime : 600,
 			ajax : true,
 			timestampPlaceholder : '.jarviswidget-timestamp',

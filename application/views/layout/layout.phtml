@@ -74,6 +74,9 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 <!--            <div id="ribbon">-->
 <!--                --><?//= $this->partial('breadcrumb.phtml', ['breadcrumbs' => $this->breadcrumbs]) ?>
 <!--            </div>-->
+
+            <div id="messageZone" class="subnav subnav-fixed"><?= UI_Message::renderStatic(false) ?></div>
+
             <div id="content">
                 <?= $this->layout()->content ?>
             </div>
@@ -105,12 +108,14 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
             }
         </script>
 
-        <script src="vendor/js/libs/jquery-ui-1.10.3.min.js"></script>
         <script src="vendor/js/bootstrap/bootstrap.min.js"></script>
+        <script src="vendor/js/smartwidgets/jarvis.widget.min.js"></script>
+        <script src="vendor/js/libs/jquery.form.min.js"></script>
         <script src="vendor/js/libs/jquery.confirm.min.js"></script>
-        <script src="vendor/js/app.js"></script>
 
+        <script src="vendor/js/app.js"></script>
         <script src="scripts/ui/translate.js"></script>
+        <script src="scripts/ajax-form.js"></script>
 
         <script>
             eraseFirstMessage = function (loop) {
@@ -139,7 +144,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
                     case 'warning':
                     default :
                         title = '<?=__('UI', 'message', 'titleWarning')?>';
-                        divClass = '';
+                        divClass = ' alert-warning';
                         break;
                 }
                 var messageZone = $('#messageZone');
@@ -182,6 +187,12 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         </script>
 
         <?= $this->headScript()->toString() ?>
+
+        <script type="text/javascript">
+            $(function() {
+                pageSetUp();
+            });
+        </script>
 
         <!--[if IE 7]>
         <h1>Your browser is out of date, please update your browser by going to www.microsoft.com/download</h1>

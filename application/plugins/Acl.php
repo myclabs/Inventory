@@ -4,6 +4,7 @@ use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
 use AF\Domain\AFLibrary;
 use Doc\Domain\Library;
+use Parameter\Domain\Family\Family;
 use Parameter\Domain\ParameterLibrary;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
@@ -626,14 +627,22 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->aclManager->isAllowed($identity, Actions::EDIT, ParameterLibrary::load($libraryId));
     }
 
-    protected function viewParameterRule(User $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->loggedInRule($identity, $request);
+        $parameterFamily = Family::load($request->getParam('id'));
+        return $this->aclManager->isAllowed($identity, Actions::VIEW, $parameterFamily->getLibrary());
     }
 
-    protected function editParameterRule(User $identity)
+    protected function editParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->editRepository($identity);
+        $parameterFamily = Family::load($request->getParam('id'));
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, $parameterFamily->getLibrary());
+    }
+
+    protected function deleteParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $parameterFamily = Family::load($request->getParam('id'));
+        return $this->aclManager->isAllowed($identity, Actions::DELETE, $parameterFamily->getLibrary());
     }
 
     /**

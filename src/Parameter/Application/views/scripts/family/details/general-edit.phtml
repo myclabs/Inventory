@@ -1,26 +1,57 @@
 <?php
-
-use MyCLabs\MUIH\Button;
-use Parameter\Application\Form\EditFamilyForm;
-use Parameter\Domain\Family\Family;
-
-/** @var $family Family */
+/** @var $family Parameter\Domain\Family\Family */
 $family = $this->family;
-
-// Delete button
-$deleteButton = new Button(__('Parameter', 'familyDetail', 'deleteButtonLabel'), Button::TYPE_DANGER);
-$deleteButton->setAttribute('id', '"deleteFamily');
-
-// Edit form
-$editFamilyForm = new EditFamilyForm('editFamily', $family);
-$deleteElement = new UI_Form_Element_HTML('deleteElement', $deleteButton->render());
-$editFamilyForm->addActionElement($deleteElement);
-
-echo $editFamilyForm->render();
 ?>
+<form id="editFamily" class="form-horizontal"
+      action="parameter/form_edit-family/submit?id=<?=$family->getId()?>">
+    <div class="form-group">
+        <label for="inputLabel" class="col-sm-2 control-label">
+            <?=__('UI', 'name', 'label')?>
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputLabel" name="label" value="<?=$family->getLabel()?>">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputRef" class="col-sm-2 control-label">
+            <?=__('UI', 'name', 'identifier')?>
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputRef" name="ref" value="<?=$family->getRef()?>">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputUnit" class="col-sm-2 control-label">
+            <?=__('Unit', 'name', 'unit')?>
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputUnit" name="unit"
+                   value="<?=$family->getUnit()->getRef()?>">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputDocumentation" class="col-sm-2 control-label">
+            <?=__('UI', 'name', 'documentation')?>
+        </label>
+        <div class="col-sm-10">
+            <textarea class="form-control" id="inputDocumentation" name="documentation"
+                      rows="4"><?=$family->getDocumentation()?></textarea>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+            <?=__('UI', 'verb', 'save')?>
+        </button>
+        <button type="button" id="deleteFamily" class="btn btn-danger">
+            <?=__('Parameter', 'familyDetail', 'deleteButtonLabel')?>
+        </button>
+    </div>
+</form>
 
 <script>
     $(function() {
+        new AjaxForm('#editFamily');
+
         $('#deleteFamily').confirm({
             text: <?=json_encode(__('Parameter', 'familyDetail', 'deleteConfirm'))?>,
             confirm: function(button) {
@@ -29,7 +60,7 @@ echo $editFamilyForm->render();
                 $.post(url, {id: <?=$family->getId()?>}, function() {
                     window.location = "<?=$this->baseUrl('parameter/family/tree-edit')?>";
                 })
-                    .error(errorHandler);
+                .error(errorHandler);
             },
             confirmButton: <?=json_encode(__('UI', 'verb', 'delete'))?>,
             cancelButton: <?=json_encode(__('UI', 'verb', 'cancel'))?>,
