@@ -155,7 +155,7 @@ if (count($file) > 0) {
 <div class="span9" id="cellsView">
 
     <div class="cell current-cell well" data-inventory-status="<?=$currentCell->inventoryStatus?>" data-input-status="<?=$currentCell->inputStatus?>">
-        <h2>
+        <h4>
             <?=$currentCell->extendedLabel?>
             <small class="cell-actions btn-group">
                 <a class="btn btn-default withTooltip" data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'contactAdministrators')?>" data-container="body"><i class="fa fa-user-md"></i></a>
@@ -167,7 +167,7 @@ if (count($file) > 0) {
                 <a class="btn btn-default withTooltip" data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body"><i class="fa fa-download"></i></a>
                 <?php endif; ?>
             </small>
-        </h2>
+        </h4>
         <?php // Inventory ?>
         <?php if ($currentCell->showInventory) : ?>
         <div class="inventory-status">
