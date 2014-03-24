@@ -116,6 +116,7 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('cellVWFactory', $this->cellVMFactory);
         $this->view->assign('organization', $this->organizationVMFactory->createOrganizationViewModel($organization, $connectedUser));
         $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser, true));
+        $this->view->assign('currentGranularity', $cell->getGranularity());
 
         $isUserAllowedToEditOrganization = $this->aclService->isAllowed(
             $connectedUser,
