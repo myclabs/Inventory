@@ -1,3 +1,7 @@
+.tmd {
+    font-size: 1em;
+}
+
 /* Largeur minimale de la table */
 table.tmd.table.small {
     width: auto;
