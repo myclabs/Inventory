@@ -5,6 +5,9 @@
  * @package DW
  * @subpackage View
  */
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
+
 ?>
 
 <div class="page-header">
@@ -58,18 +61,18 @@
             <?php if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) { ?>
             <hr />
             <?php
-            $saveReportDisplayPopupButton = new UI_HTML_Button(__('UI', 'verb', 'save'));
-            $saveReportDisplayPopupButton->id = 'saveReportButton';
-            $saveReportDisplayPopupButton->icon = 'hdd';
-            $saveReportDisplayPopupButton->link = '#';
-            $saveReportDisplayPopupButton->addAttribute('data-toggle', 'modal');
+            $saveReportDisplayPopupButton = new Button(__('UI', 'verb', 'save'));
+            $saveReportDisplayPopupButton->setAttribute('id', 'saveReportButton');
+            $saveReportDisplayPopupButton->prependContent(new Icon('hdd'));
+            $saveReportDisplayPopupButton->setAttribute('href', '#');
+            $saveReportDisplayPopupButton->setAttribute('data-toggle', 'modal');
             if ($this->isNew) {
-                $saveReportDisplayPopupButton->addAttribute('class', 'disabled');
-                $saveReportDisplayPopupButton->addAttribute('data-target', '#');
-                $saveReportDisplayPopupButton->addAttribute('title', __('DW', 'config', 'applyNeededBeforeSaveReportTooltip'));
+                $saveReportDisplayPopupButton->addClass('disabled');
+                $saveReportDisplayPopupButton->setAttribute('data-target', '#');
+                $saveReportDisplayPopupButton->setAttribute('title', __('DW', 'config', 'applyNeededBeforeSaveReportTooltip'));
             } else {
-                $saveReportDisplayPopupButton->addAttribute('class', 'btn-primary');
-                $saveReportDisplayPopupButton->addAttribute('data-target', '#saveReport');
+                $saveReportDisplayPopupButton->addClass('btn-primary');
+                $saveReportDisplayPopupButton->setAttribute('data-target', '#saveReport');
             }
             $saveReportDisplayPopupButton->display();
 
@@ -125,16 +128,15 @@
                 $saveLabelReport->getElement()->addAction($setLabelNullValue);
             }
 
-            $saveReportButton = new UI_HTML_Button(__('UI', 'verb', 'save'));
-            $saveReportButton->icon = 'check';
-            $saveReportButton->addAttribute('class', 'btn-primary');
-            $saveReportButton->addAttribute('onclick', '$(\'#saveReportAs\').submit();');
+            $saveReportButton = new Button(__('UI', 'verb', 'save'), Button::TYPE_PRIMARY);
+            $saveReportButton->prependContent(new Icon('check'));
+            $saveReportButton->setAttribute('onclick', '$(\'#saveReportAs\').submit();');
 
-            $saveReportClosePopupButton = new UI_HTML_Button(__('UI', 'verb', 'cancel'));
-            $saveReportClosePopupButton->icon = 'remove';
-            $saveReportClosePopupButton->link = '#';
-            $saveReportClosePopupButton->addAttribute('data-toggle', 'modal');
-            $saveReportClosePopupButton->addAttribute('data-target', '#saveReport');
+            $saveReportClosePopupButton = new Button(__('UI', 'verb', 'cancel'));
+            $saveReportClosePopupButton->prependContent(new Icon('remove'));
+            $saveReportClosePopupButton->setAttribute('href', '#');
+            $saveReportClosePopupButton->setAttribute('data-toggle', 'modal');
+            $saveReportClosePopupButton->setAttribute('data-target', '#saveReport');
 
             $saveReportPopup = new UI_Popup_Static('saveReport');
             $saveReportPopup->title = __('DW', 'config', 'saveReportPopupTitle');

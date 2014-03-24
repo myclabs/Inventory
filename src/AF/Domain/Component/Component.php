@@ -16,9 +16,10 @@ use Core_Strategy_Ordered;
 use Core_Tools;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
 use UI_Form_Element_HTML;
 use UI_Form_ZendElement;
-use UI_HTML_Button;
 use Zend_Form_Element;
 
 /**
@@ -353,12 +354,12 @@ abstract class Component extends Core_Model_Entity
      */
     protected function getHistoryComponent(Input $input)
     {
-        $historyButton = new UI_HTML_Button('<i class="fa fa-clock-o"></i>');
-        $historyButton->addAttribute('title', __('UI', 'history', 'valueHistory'));
-        $historyButton->addAttribute('class', 'input-history');
-        $historyButton->addAttribute('data-input-id', $input->getId());
-        $historyButton->addAttribute('data-toggle', 'button');
-        $historyButton->addAttribute('data-container', 'body');
+        $historyButton = new Button(new Icon('clock-o'));
+        $historyButton->addClass('input-history');
+        $historyButton->setAttribute('title', __('UI', 'history', 'valueHistory'));
+        $historyButton->setAttribute('data-input-id', $input->getId());
+        $historyButton->setAttribute('data-toggle', 'button');
+        $historyButton->setAttribute('data-container', 'body');
 
         return new UI_Form_Element_HTML($this->ref . 'History', $historyButton->render());
     }

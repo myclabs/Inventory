@@ -1,5 +1,6 @@
 <?php
 use AF\Domain\AF;
+use MyCLabs\MUIH\Button;
 
 /**
  * @author  matthieu.napoli
@@ -9,8 +10,8 @@ use AF\Domain\AF;
 /** @var $af AF */
 $af = $this->af;
 
-$controlButton = new UI_HTML_Button(__('UI', 'verb', 'control'));
-$controlButton->addAttribute('class', 'doControl');
+$controlButton = new Button(__('UI', 'verb', 'control'));
+$controlButton->addClass('doControl');
 
 ?>
 

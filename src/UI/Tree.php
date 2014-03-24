@@ -1,4 +1,7 @@
 <?php
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
+
 /**
  * Fichier de la classe Tree.
  *
@@ -701,34 +704,32 @@ class UI_Tree extends UI_Generic
         $editPanel->body .= $this->initEditForm()->getHTML();
 
         if ($this->deleteNode === true) {
-            $buttonShowDeletePanel = new UI_HTML_Button($this->deleteButtonLabel);
-            $buttonShowDeletePanel->icon = $this->deleteButtonIcon;
-            $buttonShowDeletePanel->addAttribute('class', 'btn-warning');
-            $buttonShowDeletePanel->link = '#';
-            $buttonShowDeletePanel->addAttribute('data-toggle', 'modal');
-            $buttonShowDeletePanel->addAttribute('data-remote', 'false');
-            $buttonShowDeletePanel->addAttribute('data-target', '#'.$this->id.'_deletePanel, #'.$this->id.'_editPanel');
+            $buttonShowDeletePanel = new Button($this->deleteButtonLabel, Button::TYPE_WARNING);
+            $buttonShowDeletePanel->prependContent(new Icon($this->deleteButtonIcon));
+            $buttonShowDeletePanel->setAttribute('href', '#');
+            $buttonShowDeletePanel->setAttribute('data-toggle', 'modal');
+            $buttonShowDeletePanel->setAttribute('data-remote', 'false');
+            $buttonShowDeletePanel->setAttribute('data-target', '#'.$this->id.'_deletePanel, #'.$this->id.'_editPanel');
 
             // Placement du bouton dans le corps du popup si l'édition n'est pas possible.
             if ($this->_editNode['state'] === true) {
-                $buttonShowDeletePanel->addAttribute('style', 'float: left;');
+                $buttonShowDeletePanel->setAttribute('style', 'float: left;');
                 $editPanel->footer .= $buttonShowDeletePanel->getHTML();
             } else {
                 $editPanel->body .= $buttonShowDeletePanel->getHTML();
             }
 
-            $buttonConfirmDelete= new UI_HTML_Button($this->deletePanelConfirmLabel);
-            $buttonConfirmDelete->icon = $this->deletePanelConfirmIcon;
-            $buttonConfirmDelete->addAttribute('class', 'btn-primary');
+            $buttonConfirmDelete= new Button($this->deletePanelConfirmLabel, Button::TYPE_PRIMARY);
+            $buttonConfirmDelete->prependContent(new Icon($this->deletePanelConfirmIcon));
             $deleteAction = $this->id.'.deleteNode($(\'#' . $this->id . '_element\').val());';
-            $buttonConfirmDelete->addAttribute('onclick', $deleteAction);
+            $buttonConfirmDelete->setAttribute('onclick', $deleteAction);
 
-            $buttonCancelDelete= new UI_HTML_Button($this->deletePanelCancelLabel);
-            $buttonCancelDelete->icon = $this->deletePanelCancelIcon;
-            $buttonCancelDelete->link = '#';
-            $buttonCancelDelete->addAttribute('data-toggle', 'modal');
-            $buttonCancelDelete->addAttribute('data-remote', 'false');
-            $buttonCancelDelete->addAttribute('data-target', '#'.$this->id.'_deletePanel, #'.$this->id.'_editPanel');
+            $buttonCancelDelete= new Button($this->deletePanelCancelLabel);
+            $buttonCancelDelete->prependContent(new Icon($this->deletePanelCancelIcon));
+            $buttonCancelDelete->setAttribute('href', '#');
+            $buttonCancelDelete->addset('data-toggle', 'modal');
+            $buttonCancelDelete->setAttribute('data-remote', 'false');
+            $buttonCancelDelete->setAttribute('data-target', '#'.$this->id.'_deletePanel, #'.$this->id.'_editPanel');
 
             $deletePanel = new UI_Popup_Static($this->id.'_deletePanel');
             $deletePanel->closeWithClick = false;
@@ -743,16 +744,13 @@ class UI_Tree extends UI_Generic
         if ($this->_editNode['state'] === true) {
 
             // Ajout des boutons de confirmation / infirmation.
-            $buttonConfirmEditPanel = new UI_HTML_Button($this->editPanelConfirmLabel);
-            $buttonConfirmEditPanel->icon = $this->editPanelConfirmIcon;
-            $buttonConfirmEditPanel->addAttribute('class', 'btn-primary');
-            $buttonConfirmEditPanel->addAttribute('onclick', '$(\'#'.$this->id.'_editForm\').submit();');
+            $buttonConfirmEditPanel = new Button($this->editPanelConfirmLabel, Button::TYPE_PRIMARY);
+            $buttonConfirmEditPanel->prependContent(new Icon($this->editPanelConfirmIcon));
+            $buttonConfirmEditPanel->setAttribute('onclick', '$(\'#'.$this->id.'_editForm\').submit();');
 
-            $buttonCancelEditPanel = new UI_HTML_Button($this->editPanelCancelLabel);
-            $buttonCancelEditPanel->icon = $this->editPanelCancelIcon;
-            $buttonCancelEditPanel->link = '#';
-            $buttonCancelEditPanel->addAttribute('data-dismiss', 'modal');
-            $buttonCancelEditPanel->addAttribute('data-target', '#'.$this->id.'_addPanel');
+            $buttonCancelEditPanel = new Button($this->editPanelCancelLabel);
+            $buttonCancelEditPanel->prependContent(new Icon($this->editPanelCancelIcon));
+            $buttonCancelEditPanel->closeModal($this->id.'_addPanel');
 
             $editPanel->footer .= $buttonConfirmEditPanel->getHTML().$buttonCancelEditPanel->getHTML();
         }
@@ -815,29 +813,23 @@ class UI_Tree extends UI_Generic
 
         $add = '<div>';
 
-        $addButton = new UI_HTML_Button($this->addButtonLabel);
-        $addButton->icon = $this->addButtonIcon;
-        $addButton->link = '#';
-        $addButton->addAttribute('data-toggle', 'modal');
-        $addButton->addAttribute('data-remote', 'false');
-        $addButton->addAttribute('data-target', '#'.$this->id.'_addPanel');
+        $addButton = new Button($this->addButtonLabel);
+        $addButton->prependContent(new Icon($this->addButtonIcon));
+        $addButton->showModal($this->id.'_addPanel');
         $add .= $addButton->getHTML();
 
         $add .= '</div>';
 
         // Ajout du popup d'ajout.
-        $buttonConfirmAddPanel = new UI_HTML_Button($this->addPanelConfirmLabel);
-        $buttonConfirmAddPanel->icon = $this->addPanelConfirmIcon;
-        $buttonConfirmAddPanel->addAttribute('class', 'btn-primary');
-        $buttonConfirmAddPanel->addAttribute('onclick', '$(\'#'.$this->id.'_addForm\').submit();');
+        $buttonConfirmAddPanel = new Button($this->addPanelConfirmLabel, Button::TYPE_PRIMARY);
+        $buttonConfirmAddPanel->prependContent(new Icon($this->addPanelConfirmIcon));
+        $buttonConfirmAddPanel->setAttribute('onclick', '$(\'#'.$this->id.'_addForm\').submit();');
 
-        $buttonCancelAddPanel = new UI_HTML_Button($this->addPanelCancelLabel);
-        $buttonCancelAddPanel->icon = $this->addPanelCancelIcon;
-        $buttonCancelAddPanel->link = '#';
-        $buttonCancelAddPanel->addAttribute('data-dismiss', 'modal');
-        $buttonCancelAddPanel->addAttribute('data-target', '#'.$this->id.'_addPanel');
+        $buttonCancelAddPanel = new Button($this->addPanelCancelLabel);
+        $buttonCancelAddPanel->prependContent(new Icon($this->addPanelCancelIcon));
+        $buttonCancelAddPanel->closeModal($this->id.'_addPanel');
         $resetAction = '$(\'#'.$this->id.'_addForm\').get(0).reset();$(\'#'.$this->id.'_addForm\').eraseFormErrors();';
-        $buttonCancelAddPanel->addAttribute('onclick', $resetAction);
+        $buttonCancelAddPanel->setAttribute('onclick', $resetAction);
 
         $addPanel = new UI_Popup_Static($this->id.'_addPanel');
         $addPanel->addAttribute('class', 'large');

@@ -1,4 +1,7 @@
 <?php
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
+
 /**
  * Fichier de la classe Datagrid.
  *
@@ -78,14 +81,14 @@ class UI_Datagrid extends UI_Generic
     /**
      * Définition du bouton permettant de filtrer.
      *
-     * @var UI_HTML_Button
+     * @var Button
      */
     public $filterConfirmButton = null;
 
     /**
      * Définition du bouton permettant de réinitialiser le filtre.
      *
-     * @var UI_HTML_Button
+     * @var Button
      */
     public $filterResetButton = null;
 
@@ -463,10 +466,10 @@ class UI_Datagrid extends UI_Generic
         $this->filterCollapseActiveHint = __('UI', 'datagridFilter', 'TitleFilterActive');
         $this->filterCollapse = new UI_HTML_Collapse();
         $this->filterCollapse->title = $this->filterCollapseTitle;
-        $this->filterConfirmButton = new UI_HTML_Button(__('UI', 'verb', 'filter'));
-        $this->filterConfirmButton->icon = 'search-plus';
-        $this->filterResetButton = new UI_HTML_Button(__('UI', 'verb', 'reset'));
-        $this->filterResetButton->icon = 'search-minus';
+        $this->filterConfirmButton = new Button(__('UI', 'verb', 'filter'));
+        $this->filterConfirmButton->prependContent(new Icon('search-plus'));
+        $this->filterResetButton = new Button(__('UI', 'verb', 'reset'));
+        $this->filterResetButton->prependContent(new Icon('search-minus'));
         $this->filterIconResetFieldSuffix = 'times';
         $this->_defaultSortting['state'] = false;
         $this->_defaultSortting['column'] = null;
@@ -780,29 +783,23 @@ class UI_Datagrid extends UI_Generic
 
         $add = '<div>';
 
-        $addButton = new UI_HTML_Button($this->addButtonLabel);
-        $addButton->icon = $this->addButtonIcon;
-        $addButton->link = '#';
-        $addButton->addAttribute('data-toggle', 'modal');
-        $addButton->addAttribute('data-remote', 'false');
-        $addButton->addAttribute('data-target', '#'.$this->id.'_addPanel');
+        $addButton = new Button($this->addButtonLabel);
+        $addButton->prependContent(new Icon($this->addButtonIcon));
+        $addButton->showModal($this->id.'_addPanel');
         $add .= $addButton->getHTML();
 
         $add .= '</div>';
 
         // Ajout du popup d'ajout.
-        $buttonConfirmAddPanel = new UI_HTML_Button($this->addPanelConfirmLabel);
-        $buttonConfirmAddPanel->icon = $this->addPanelConfirmIcon;
-        $buttonConfirmAddPanel->addAttribute('class', 'btn-primary');
-        $buttonConfirmAddPanel->addAttribute('onclick', '$(\'#'.$this->id.'_addForm\').submit();');
+        $buttonConfirmAddPanel = new Button($this->addPanelConfirmLabel, Button::TYPE_PRIMARY);
+        $buttonConfirmAddPanel->prependContent(new Icon($this->addPanelConfirmIcon));
+        $buttonConfirmAddPanel->setAttribute('onclick', '$(\'#'.$this->id.'_addForm\').submit();');
 
-        $buttonCancelAddPanel = new UI_HTML_Button($this->addPanelCancelLabel);
-        $buttonCancelAddPanel->icon = $this->addPanelCancelIcon;
-        $buttonCancelAddPanel->link = '#';
-        $buttonCancelAddPanel->addAttribute('data-dismiss', 'modal');
-        $buttonCancelAddPanel->addAttribute('data-target', '#'.$this->id.'_addPanel');
+        $buttonCancelAddPanel = new Button($this->addPanelCancelLabel);
+        $buttonCancelAddPanel->prependContent(new Icon($this->addPanelCancelIcon));
+        $buttonCancelAddPanel->closeModal($this->id.'_addPanel');
         $resetAction = '$(\'#'.$this->id.'_addForm\').get(0).reset();$(\'#'.$this->id.'_addForm\').eraseFormErrors();';
-        $buttonCancelAddPanel->addAttribute('onclick', $resetAction);
+        $buttonCancelAddPanel->setAttribute('onclick', $resetAction);
 
         $addPanel = new UI_Popup_Static($this->id.'_addPanel');
         $addPanel->addAttribute('class', 'large');
@@ -848,19 +845,13 @@ class UI_Datagrid extends UI_Generic
         $delete = '';
 
         // Ajout du popup de supppression.
-        $buttonConfirmDeletePanel = new UI_HTML_Button($this->deletePanelConfirmLabel);
-        $buttonConfirmDeletePanel->icon = $this->deletePanelConfirmIcon;
-        $buttonConfirmDeletePanel->addAttribute('class', 'btn-primary');
-        $buttonConfirmDeletePanel->link = '#';
-        $buttonConfirmDeletePanel->addAttribute('data-dismiss', 'modal');
-        $buttonConfirmDeletePanel->addAttribute('data-target', '#'.$this->id.'_deletePanel');
+        $buttonConfirmDeletePanel = new Button($this->deletePanelConfirmLabel, Button::TYPE_PRIMARY);
+        $buttonConfirmDeletePanel->prependContent(new Icon($this->deletePanelConfirmIcon));
+        $buttonConfirmDeletePanel->closeModal($this->id.'_deletePanel');
 
-        $buttonCancelDeletePanel = new UI_HTML_Button($this->deletePanelCancelLabel);
-        $buttonCancelDeletePanel->icon = $this->deletePanelCancelIcon;
-        $buttonCancelDeletePanel->addAttribute('class', 'btn btn-default');
-        $buttonCancelDeletePanel->link = '#';
-        $buttonCancelDeletePanel->addAttribute('data-dismiss', 'modal');
-        $buttonCancelDeletePanel->addAttribute('data-target', '#'.$this->id.'_deletePanel');
+        $buttonCancelDeletePanel = new Button($this->deletePanelCancelLabel);
+        $buttonCancelDeletePanel->prependContent(new Icon($this->deletePanelCancelIcon));
+        $buttonCancelDeletePanel->closeModal($this->id.'_deletePanel');
 
         $deletePanel = new UI_Popup_Static($this->id.'_deletePanel');
         $deletePanel->title = $this->deletePanelTitle;

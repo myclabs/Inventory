@@ -21,9 +21,9 @@ foreach ($this->granularities as $granularity) :
     $datagridGranularityReports->deleteElements = true;
 
 
-    $addButton = new UI_HTML_Button(___('UI', 'verb', 'add'));
-    $addButton->icon = 'plus-circle';
-    $addButton->link = 'orga/granularity/view-report/idGranularity/' . $granularity->getId() . '/';
+    $addButton = new Button(___('UI', 'verb', 'add'));
+    $addButton->prependContent(new Icon('plus-circle'));
+    $addButton->link('orga/granularity/view-report/idGranularity/' . $granularity->getId() . '/');
 
     echo $this->collapse(
         'cellReports'.$granularity->getId(),

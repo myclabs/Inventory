@@ -1,4 +1,5 @@
 <?php
+use MyCLabs\MUIH\Button;
 use User\Domain\User;
 
 /** @var $user User */
@@ -64,10 +65,9 @@ $form->addSubmitButton();
 // Désactivation du compte
 if ($user->isEnabled() && $this->canDisable) {
     $disableButtonHtml = new UI_Form_Element_HTML('disableButton');
-    $disableButton = new UI_HTML_Button(__('User', 'editProfile', 'disable'));
-    $disableButton->addAttribute('class', 'btn-danger');
-    $disableButton->addAttribute('class', 'disableButton');
-    $disableButton->link = $this->baseUrl('/user/profile/disable/id/' . $user->getId());
+    $disableButton = new Button(__('User', 'editProfile', 'disable'), Button::TYPE_DANGER);
+    $disableButton->addClass('disableButton');
+    $disableButton->link($this->baseUrl('/user/profile/disable/id/' . $user->getId()));
     $disableButtonHtml->content = $disableButton->render();
     $form->addActionElement($disableButtonHtml);
 }
@@ -75,10 +75,9 @@ if ($user->isEnabled() && $this->canDisable) {
 // Réactivation du compte
 if (!$user->isEnabled() && $this->canEnable) {
     $disableButtonHtml = new UI_Form_Element_HTML('enableButton');
-    $disableButton = new UI_HTML_Button(__('User', 'editProfile', 'enable'));
-    $disableButton->addAttribute('class', 'btn-danger');
-    $disableButton->addAttribute('class', 'enableButton');
-    $disableButton->link = $this->baseUrl('/user/profile/enable/id/' . $user->getId());
+    $disableButton = new Button(__('User', 'editProfile', 'enable'), Button::TYPE_DANGER);
+    $disableButton->addClass('enableButton');
+    $disableButton->link($this->baseUrl('/user/profile/enable/id/' . $user->getId()));
     $disableButtonHtml->content = $disableButton->render();
     $form->addActionElement($disableButtonHtml);
 }

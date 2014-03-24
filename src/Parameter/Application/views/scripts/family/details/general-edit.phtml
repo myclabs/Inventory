@@ -1,5 +1,6 @@
 <?php
 
+use MyCLabs\MUIH\Button;
 use Parameter\Application\Form\EditFamilyForm;
 use Parameter\Domain\Family\Family;
 
@@ -7,9 +8,8 @@ use Parameter\Domain\Family\Family;
 $family = $this->family;
 
 // Delete button
-$deleteButton = new UI_HTML_Button(__('Parameter', 'familyDetail', 'deleteButtonLabel'));
-$deleteButton->id = "deleteFamily";
-$deleteButton->addAttribute('class', 'btn-danger');
+$deleteButton = new Button(__('Parameter', 'familyDetail', 'deleteButtonLabel'), Button::TYPE_DANGER);
+$deleteButton->setAttribute('id', '"deleteFamily');
 
 // Edit form
 $editFamilyForm = new EditFamilyForm('editFamily', $family);

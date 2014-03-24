@@ -1,6 +1,7 @@
 <?php
 // API Google pour les charts
 use AF\Domain\AF;
+use MyCLabs\MUIH\Button;
 
 $this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["orgchart"]}]}', 'text/javascript');
 
@@ -33,7 +34,6 @@ UI_Datagrid::addHeader();
 UI_Popup_Generic::addHeader();
 UI_Form::addHeader();
 UI_Tree::addHeader();
-UI_HTML_Button::addHeader();
 
 $tabView = new UI_Tab_View('container');
 
@@ -102,8 +102,8 @@ $tabView->display();
 
 <div class="well">
     <?php
-    $quitButton = new UI_HTML_Button(__('UI', 'verb', 'quit'));
-    $quitButton->link = $this->baseUrl('af/af/list');
+    $quitButton = new Button(__('UI', 'verb', 'quit'));
+    $quitButton->link('af/af/list');
     $quitButton->display();
     ?>
 </div>
