@@ -80,7 +80,7 @@ class UI_Message
     {
         switch ($type) {
             case self::TYPE_WARNING:
-                $class = 'alert';
+                $class = 'alert alert-warning';
                 $title = __('UI', 'message', 'titleWarning');
                 break;
             case self::TYPE_ERROR:

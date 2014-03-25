@@ -48,7 +48,7 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
-        $this->totalElements = Family::countTotal($this->request);
+        $this->totalElements = count($library->getFamilies());
         $this->send();
     }
 
