@@ -1077,16 +1077,16 @@
         },
         {
             "name": "myclabs/muih",
-            "version": "0.1.1",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/MUIH.git",
-                "reference": "290005c202195e8aaec0df010a212098c4764773"
+                "reference": "6405a9ce625bacdd4363061e16e51b99f4db5d5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/MUIH/zipball/290005c202195e8aaec0df010a212098c4764773",
-                "reference": "290005c202195e8aaec0df010a212098c4764773",
+                "url": "https://api.github.com/repos/myclabs/MUIH/zipball/6405a9ce625bacdd4363061e16e51b99f4db5d5c",
+                "reference": "6405a9ce625bacdd4363061e16e51b99f4db5d5c",
                 "shasum": ""
             },
             "type": "library",
@@ -1106,7 +1106,7 @@
                 "helper",
                 "ui"
             ],
-            "time": "2014-03-24 12:34:43"
+            "time": "2014-03-25 08:34:50"
         },
         {
             "name": "myclabs/php-enum",
