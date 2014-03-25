@@ -42,8 +42,8 @@ $account = $this->account;
                             </a>
                         </li>
                     <?php endforeach; ?>
-                    <li>
-                        <a href="#">
+                    <li class="<?=$this->activeMenu === 'organization-new' ? 'active' : ''?>">
+                        <a href="orga/organization/add">
                             <i class="fa fa-fw fa-plus-circle"></i>
                             <em><?=__('UI', 'verb', 'add')?></em>
                         </a>
