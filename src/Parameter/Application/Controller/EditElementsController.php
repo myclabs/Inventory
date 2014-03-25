@@ -10,7 +10,7 @@ class Parameter_EditElementsController extends Core_Controller
 {
     /**
      * Edition
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function editElementsAction()
     {

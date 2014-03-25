@@ -104,11 +104,17 @@ class ParameterLibrary extends Core_Model_Entity implements EntityResource, Casc
     }
 
     /**
+     * @param int|null $count
+     * @param int|null $offset
      * @return Collection|Family[]
      */
-    public function getFamilies()
+    public function getFamilies($count = null, $offset = null)
     {
-        return $this->families;
+        $criteria = Criteria::create();
+        $criteria->setMaxResults($count);
+        $criteria->setFirstResult($offset);
+
+        return $this->families->matching($criteria);
     }
 
     /**

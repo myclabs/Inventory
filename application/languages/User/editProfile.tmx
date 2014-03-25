@@ -33,6 +33,14 @@
                 <seg>Disable this user</seg>
             </tuv>
         </tu>
+        <tu tuid="enable">
+            <tuv xml:lang="fr">
+                <seg>Réactiver cet utilisateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Re-enable this user</seg>
+            </tuv>
+        </tu>
 
         <!-- Popup de confirmation -->
 
@@ -63,7 +71,7 @@
             <tuv xml:lang="en">
                 <seg> User has been informed by e-mail.</seg>
             </tuv>
-        </tu>   
+        </tu>
         <tu tuid="accountActivated">
             <tuv xml:lang="fr">
                 <seg>Ce compte utilisateur a été ré-activé.</seg>
@@ -71,7 +79,7 @@
             <tuv xml:lang="en">
                 <seg>This user account has been reactivated.</seg>
             </tuv>
-        </tu> 
+        </tu>
         <tu tuid="accountDeactivated">
             <tuv xml:lang="fr">
                 <seg>Ce compte utilisateur a été désactivé.</seg>
@@ -79,7 +87,7 @@
             <tuv xml:lang="en">
                 <seg>This user account has been deactivated.</seg>
             </tuv>
-        </tu>   
+        </tu>
 
     </body>
 </tmx>

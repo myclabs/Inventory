@@ -44,13 +44,6 @@ $colCreationDate->filterName = User::QUERY_CREATIONDATE;
 $colCreationDate->addable = false;
 $datagrid->addCol($colCreationDate);
 
-// 1ère connexion
-$colEmailValidated = new UI_Datagrid_Col_Bool('emailValidated', __('User', 'list', 'firstConnectionHeader'));
-$colEmailValidated->addable = false;
-$colEmailValidated->valueTrue = '<i class="fa fa-check"></i> '.__('User', 'property', 'performedFem');
-$colEmailValidated->valueFalse = '<i class="fa fa-times"></i> '.__('User', 'property', 'notPerformedFem');
-$datagrid->addCol($colEmailValidated);
-
 // Compte activé
 $colEnabled = new UI_Datagrid_Col_Bool('enabled', __('UI', 'name', 'activation'));
 $colEnabled->addable = false;

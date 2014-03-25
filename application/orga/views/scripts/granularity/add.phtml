@@ -49,7 +49,7 @@ $organization = $this->organization;
                 if (typeof(response.typeError) == 'string') {
                     granularityInfo.addClass('alert-' + response.typeError);
                 } else {
-                    granularityInfo.addClass('alert-error');
+                    granularityInfo.addClass('alert-danger');
                 }
                 if (typeof(response.message) == 'string') {
                     granularityInfo.html(response.message);

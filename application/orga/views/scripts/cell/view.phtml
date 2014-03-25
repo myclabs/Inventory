@@ -973,7 +973,7 @@ $('body').on('submit', '.addUser', function(e) {
             if (typeof(response.typeError) == 'string') {
                 form.prev().addClass('alert-' + response.typeError);
             } else {
-                form.prev().addClass('alert-error');
+                form.prev().addClass('alert-danger');
             }
             if (typeof(response.message) == 'string') {
                 form.prev().html(response.message);

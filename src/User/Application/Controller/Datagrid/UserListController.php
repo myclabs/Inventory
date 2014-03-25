@@ -47,7 +47,6 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
             $data['nom'] = $user->getLastName();
             $data['email'] = $user->getEmail();
             $data['creationDate'] = $this->cellDate($user->getCreationDate());
-            $data['emailValidated'] = $user->isEmailValidated();
             $data['enabled'] = $user->isEnabled();
             // Roles
             $data['roles'] = [];
