@@ -30,7 +30,10 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
         /** @var $library AFLibrary */
         $library = AFLibrary::load($this->getParam('library'));
 
-        foreach ($library->getAFList() as $af) {
+        $this->totalElements = count($library->getAFList());
+        $afList = $library->getAFList($this->request->totalElements, $this->request->startIndex);
+
+        foreach ($afList as $af) {
             $data = [];
             $data['index'] = $af->getId();
             $data['category'] = $this->cellList($af->getCategory()->getId());
@@ -56,7 +59,6 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             ]), __('UI', 'verb', 'duplicate'), 'plus-circle');
             $this->addLine($data);
         }
-        $this->totalElements = AF::countTotal($this->request);
         $this->send();
     }
 

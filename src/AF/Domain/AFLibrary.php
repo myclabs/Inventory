@@ -75,11 +75,17 @@ class AFLibrary extends Core_Model_Entity implements EntityResource, CascadingRe
     }
 
     /**
-     * @return AF[]
+     * @param int|null $count
+     * @param int|null $offset
+     * @return Collection|AF[]
      */
-    public function getAFList()
+    public function getAFList($count = null, $offset = null)
     {
-        return $this->afList->toArray();
+        $criteria = Criteria::create();
+        $criteria->setMaxResults($count);
+        $criteria->setFirstResult($offset);
+
+        return $this->afList->matching($criteria);
     }
 
     public function addAF(AF $af)

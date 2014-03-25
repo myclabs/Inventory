@@ -27,7 +27,10 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
         /** @var $library ParameterLibrary */
         $library = ParameterLibrary::load($this->getParam('library'));
 
-        foreach ($library->getFamilies() as $family) {
+        $this->totalElements = count($library->getFamilies());
+        $families = $library->getFamilies($this->request->totalElements, $this->request->startIndex);
+
+        foreach ($families as $family) {
             /** @var $family Family */
             $data = [];
             $data['category'] = $family->getCategory()->getId();
@@ -48,7 +51,6 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
-        $this->totalElements = count($library->getFamilies());
         $this->send();
     }
 
