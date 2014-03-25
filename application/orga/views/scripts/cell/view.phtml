@@ -29,6 +29,9 @@ $inputStatusFilters = [
 $organization = $this->organization;
 /** @var CellViewModel $currentCell */
 $currentCell = $this->currentCell;
+/** @var Orga_Model_Granularity $currentGranularity */
+$currentGranularity = $this->currentGranularity;
+$currentGranularityArray = $this->currentGranularityArray;
 
 $workspaceBanner = null;
 $file = glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $organization->id . '.*');
@@ -154,148 +157,161 @@ if (count($file) > 0) {
 
 <div class="span9" id="cellsView">
 
-    <div class="cell current-cell well" data-inventory-status="<?=$currentCell->inventoryStatus?>" data-input-status="<?=$currentCell->inputStatus?>">
-        <h2>
-            <?=$currentCell->extendedLabel?>
-            <small class="cell-actions btn-group">
-                <a class="btn btn-default withTooltip" data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'contactAdministrators')?>" data-container="body"><i class="fa fa-user-md"></i></a>
-                <?php if ($currentCell->showUsers) : ?>
-                <a class="btn btn-default withTooltip" data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'editUsers')?>" data-container="body">(<?=$currentCell->numberUsers?>) <i class="fa fa-users"></i></a>
-                <?php endif; ?>
-                <?php if ($currentCell->showReports) : ?>
-                <a class="btn btn-default withTooltip" data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body"><i class="fa fa-bar-chart-o"></i></a>
-                <a class="btn btn-default withTooltip" data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body"><i class="fa fa-download"></i></a>
-                <?php endif; ?>
+    <fieldset class="wrapper granularity-wrapper">
+        <legend data-toggle="collapse" data-target="#currentGranularity">
+            <i class="filterChevron fa fa-chevron-down"></i>
+            <?=__('Orga', 'view', 'currentGranularity')?>
+            <small>
+                <?=___('Orga', 'view', 'granularityExplanations')?><?=$this->currentCellPurpose?>
             </small>
-        </h2>
-        <?php // Inventory ?>
-        <?php if ($currentCell->showInventory) : ?>
-        <div class="inventory-status">
-            <div class="inventory-progress" style="width: <?=$currentCell->inventoryCompletion?>%;"></div>
-            <div class="inventory-actions">
-                <?php if ($currentCell->canEditInventory) : ?>
-                <div class="btn-group">
-                    <a class="btn btn-default change-inventory-status" href="orga/cell/edit-inventory-status/idCell/<?=$currentCell->id?>/inventoryStatus/<?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_ACTIVE) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_ACTIVE?>/">
-                        <?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($currentCell->inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction'))?>
-                    </a>
-                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="change-inventory-status" href="orga/cell/edit-inventory-status/idCell/<?=$currentCell->id?>/inventoryStatus/<?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_NOTLAUNCHED?>/">
-                                <?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($currentCell->inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction'))?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <?php endif; ?>
-                <a class="btn btn-default withTooltip" data-toggle="modal" href="#inventoryUsers<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'viewInventoryUsers')?>"><i class="fa fa-bullhorn"></i></a>
-            </div>
-            <div class="inventory-informations withPopover" title="<?=___('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsNotStartedMany') : ___('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsStartedMany') : ___('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? ___('Orga', 'view', 'inputsCompletedMany') : ___('Orga', 'view', 'inputsCompletedSingle')?>" data-container="body">
-                <div class="inventory-title">
-                    <?=$currentCell->inventoryStatusTitle?>
-                </div>
-                <div class="inventory-completion">
-                    <?=$currentCell->inventoryCompletion?>%
-                </div>
-            </div>
-            <a href="#" class="withPopover inventory-inputs-details"><i class="fa fa-tasks"></i></a>
-        </div>
-        <?php endif; ?>
-        <?php // Input ?>
-        <?php if ($currentCell->showInput) : ?>
-        <div class="input-status">
-            <div class="input-actions">
-                <a class="btn btn-default withTooltip" href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>" target="_blank">
-                    <?=___('Orga', 'view', 'inputLinkDetail')?>
-                </a>
-            </div>
-            <div class="input-title">
-                <?=$currentCell->inputStatusTitle?>
-            </div>
-        </div>
-        <?php endif; ?>
+        </legend>
 
-        <div id="administrators<?=$currentCell->id?>" class="modal administrators hide fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="withTooltip" title="<?=___('Orga', 'view', 'administratorExplanations')?>">
-                    <?=___('Orga', 'view', 'administratorsFrom')?> <?=$currentCell->shortLabel?>
-                    <i class="fa fa-question-circle"></i>
-                </h4>
-            </div>
-            <div class="modal-body">
-                <pre><?=implode("\n", $currentCell->administrators)?></pre>
-            </div>
-        </div>
-        <?php if ($currentCell->showUsers) : ?>
-        <div id="users<?=$currentCell->id?>" class="modal users hide fade large" data-cell="<?=$currentCell->id?>">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4><?=___('Orga', 'view', 'rolesFrom')?> <?=$currentCell->shortLabel?></h4>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <form class="form-inline addUser" action="orga/cell/add-user/idCell/<?=$currentCell->id?>/">
-                    <input type="text" name="userEmail" placeholder="<?=___('User', 'user', 'emailAddress')?>">
-                    <select name="userRole">
-                        <option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>
-                        <option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>
-                        <option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>
-                        <option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>
-                    </select>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-plus"></i>
-                        <?=___('UI', 'verb', 'add')?>
-                    </button>
-                </form>
-            </div>
-        </div>
-        <?php endif; ?>
-        <?php if ($currentCell->showReports) : ?>
-        <div id="reports<?=$currentCell->id?>" class="modal reports hide fade large" data-cell="<?=$currentCell->id?>">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4><?=___('Orga', 'view', 'reportsFrom')?> <?=$currentCell->shortLabel?></h4>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <a href="orga/cell/view-report/idCell/<?=$currentCell->id?>/" class="btn btn-primary">
-                    <i class="fa fa-plus"></i>
-                    <?=___('UI', 'verb', 'add')?>
-                </a>
-            </div>
-        </div>
-        <div id="exports<?=$currentCell->id?>" class="modal exports hide fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4><?=___('Orga', 'view', 'exportsFrom')?> <?=$currentCell->shortLabel?></h4>
-            </div>
-            <div class="modal-body">
-                <div class="granularityCells row-fluid">
-                    <i class="fa fa-spinner fa-spin fa-3x"></i>
-                    <?=___('UI', 'loading', 'loading')?>
+        <div id="currentGranularity" class="collapse in" style="overflow: visible;">
+            <div class="granularity row-fluid">
+                <div class="span4 cell well" data-inventory-status="<?=$currentCell->inventoryStatus?>" data-input-status="<?=$currentCell->inputStatus?>">
+                    <h4>
+                        <?=$currentCell->extendedLabel?>
+                        <small class="cell-actions btn-group">
+                            <a class="btn btn-default withTooltip" data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'contactAdministrators')?>" data-container="body"><i class="fa fa-user-md"></i></a>
+                            <?php if ($currentCell->showUsers) : ?>
+                            <a class="btn btn-default withTooltip" data-toggle="modal" href="#users<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'editUsers')?>" data-container="body">(<?=$currentCell->numberUsers?>) <i class="fa fa-users"></i></a>
+                            <?php endif; ?>
+                            <?php if ($currentCell->showReports) : ?>
+                            <a class="btn btn-default withTooltip" data-toggle="modal" href="#reports<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body"><i class="fa fa-bar-chart-o"></i></a>
+                            <a class="btn btn-default withTooltip" data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body"><i class="fa fa-download"></i></a>
+                            <?php endif; ?>
+                        </small>
+                    </h4>
+                    <?php // Inventory ?>
+                    <?php if ($currentCell->showInventory) : ?>
+                    <div class="inventory-status">
+                        <div class="inventory-progress" style="width: <?=$currentCell->inventoryCompletion?>%;"></div>
+                        <div class="inventory-actions">
+                            <?php if ($currentCell->canEditInventory) : ?>
+                            <div class="btn-group">
+                                <a class="btn btn-default change-inventory-status" href="orga/cell/edit-inventory-status/idCell/<?=$currentCell->id?>/inventoryStatus/<?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_ACTIVE) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_ACTIVE?>/">
+                                    <?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($currentCell->inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction'))?>
+                                </a>
+                                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="change-inventory-status" href="orga/cell/edit-inventory-status/idCell/<?=$currentCell->id?>/inventoryStatus/<?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_NOTLAUNCHED?>/">
+                                            <?=($currentCell->inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($currentCell->inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction'))?>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <?php endif; ?>
+                            <a class="btn btn-default withTooltip" data-toggle="modal" href="#inventoryUsers<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'viewInventoryUsers')?>"><i class="fa fa-bullhorn"></i></a>
+                        </div>
+                        <div class="inventory-informations withPopover" title="<?=___('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsNotStartedMany') : ___('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsStartedMany') : ___('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryCompletedInputsNumber?> <?=($currentCell->inventoryCompletedInputsNumber > 1) ? ___('Orga', 'view', 'inputsCompletedMany') : ___('Orga', 'view', 'inputsCompletedSingle')?>" data-container="body">
+                            <div class="inventory-title">
+                                <?=$currentCell->inventoryStatusTitle?>
+                            </div>
+                            <div class="inventory-completion">
+                                <?=$currentCell->inventoryCompletion?>%
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                    <?php // Input ?>
+                    <?php if ($currentCell->showInput) : ?>
+                    <div class="input-status">
+                        <div class="input-actions">
+                            <a class="btn btn-default withTooltip" href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">
+                                <?=___('Orga', 'view', 'inputLinkDetail')?>
+                            </a>
+                        </div>
+                        <div class="input-title">
+                            <?=$currentCell->inputStatusTitle?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <div id="administrators<?=$currentCell->id?>" class="modal administrators hide fade">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="withTooltip" title="<?=___('Orga', 'view', 'administratorExplanations')?>">
+                                <?=___('Orga', 'view', 'administratorsFrom')?> <?=$currentCell->shortLabel?>
+                                <i class="fa fa-question-circle"></i>
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <pre><?=implode("\n", $currentCell->administrators)?></pre>
+                        </div>
+                    </div>
+                    <?php if ($currentCell->showUsers) : ?>
+                    <div id="users<?=$currentCell->id?>" class="modal users hide fade large" data-cell="<?=$currentCell->id?>">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4><?=___('Orga', 'view', 'rolesFrom')?> <?=$currentCell->shortLabel?></h4>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <form class="form-inline addUser" action="orga/cell/add-user/idCell/<?=$currentCell->id?>/">
+                                <input type="text" name="userEmail" placeholder="<?=___('User', 'user', 'emailAddress')?>">
+                                <select name="userRole">
+                                    <option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>
+                                    <option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>
+                                    <option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>
+                                    <option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>
+                                </select>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-plus"></i>
+                                    <?=___('UI', 'verb', 'add')?>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($currentCell->showReports) : ?>
+                    <div id="reports<?=$currentCell->id?>" class="modal reports hide fade large" data-cell="<?=$currentCell->id?>">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4><?=___('Orga', 'view', 'reportsFrom')?> <?=$currentCell->shortLabel?></h4>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <a href="orga/cell/view-report/idCell/<?=$currentCell->id?>/" class="btn btn-primary">
+                                <i class="fa fa-plus"></i>
+                                <?=___('UI', 'verb', 'add')?>
+                            </a>
+                        </div>
+                    </div>
+                    <div id="exports<?=$currentCell->id?>" class="modal exports hide fade">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4><?=___('Orga', 'view', 'exportsFrom')?> <?=$currentCell->shortLabel?></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="granularityCells row-fluid">
+                                <i class="fa fa-spinner fa-spin fa-3x"></i>
+                                <?=___('UI', 'loading', 'loading')?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($currentCell->showInventory) : ?>
+                    <div id="inventoryUsers<?=$currentCell->id?>" class="modal inventory-users hide fade" data-cell="<?=$currentCell->id?>">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="withTooltip" title="<?=___('Orga', 'view', 'inventoryUsersExplanations')?>">
+                                <?=___('Orga', 'view', 'inventoryUsersFrom')?> <?=$currentCell->shortLabel?>
+                                <i class="fa fa-question-circle"></i>
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
-        <?php endif; ?>
-        <?php if ($currentCell->showInventory) : ?>
-        <div id="inventoryUsers<?=$currentCell->id?>" class="modal inventory-users hide fade" data-cell="<?=$currentCell->id?>">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="withTooltip" title="<?=___('Orga', 'view', 'inventoryUsersExplanations')?>">
-                    <?=___('Orga', 'view', 'inventoryUsersFrom')?> <?=$currentCell->shortLabel?>
-                    <i class="fa fa-question-circle"></i>
-                </h4>
-            </div>
-            <div class="modal-body">
-            </div>
-        </div>
-        <?php endif; ?>
-    </div>
+    </fieldset>
 
     <?php foreach ($this->narrowerGranularities as $narrowerGranularityArray) :
     /** @var Orga_Model_Granularity $narrowerGranularity */
@@ -303,7 +319,7 @@ if (count($file) > 0) {
     ?>
     <fieldset class="wrapper granularity-wrapper">
         <legend data-toggle="collapse" data-target="#granularity<?=$narrowerGranularity->getId()?>">
-            <i class="filterChevron fa fa-chevron-<?=((count($this->narrowerGranularities) === 1)?'down':'right')?>"></i>
+            <i class="filterChevron fa fa-chevron-<?=(count($this->narrowerGranularities) === 1) ? 'down': $narrowerGranularityArray['isInput'] ? 'down' : 'right'?>"></i>
             <?=$narrowerGranularity->getLabel()?>
             <small>
                 <?=___('Orga', 'view', 'granularityExplanations')?><?=$narrowerGranularityArray['purpose']?>
@@ -318,7 +334,8 @@ if (count($file) > 0) {
              data-total-cells="<?=$narrowerGranularityArray['totalCells']?>"
              data-first-cell="0"
              data-show-cells="6"
-             class="collapse<?=(count($this->narrowerGranularities) === 1) ? ' in': $narrowerGranularityArray['isInput'] ? ' in' : ''?>">
+             class="collapse<?=(count($this->narrowerGranularities) === 1) ? ' in': $narrowerGranularityArray['isInput'] ? ' in' : ''?>"
+             <?=(count($this->narrowerGranularities) === 1) ? ' style="overflow: visible;"': $narrowerGranularityArray['isInput'] ? ' style="overflow: visible;"' : ''?>">
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
             <form class="form-inline cells-filter">
                 <?php foreach ($narrowerGranularityArray['filterAxes'] as $refAxis => $memberOptions) : ?>
@@ -473,14 +490,14 @@ $('.history a.refresh').on('click', function(e) {
 
 $('.granularity-wrapper > div').on('show', function(e) {
     if (e.currentTarget == e.target) {
-        $('legend > span > i.filterChevron', $(this).parent()).removeClass('fa-chevron-right');
-        $('legend > span > i.filterChevron', $(this).parent()).addClass('fa-chevron-down');
+        $('legend > i.filterChevron', $(this).parent()).removeClass('fa-chevron-right');
+        $('legend > i.filterChevron', $(this).parent()).addClass('fa-chevron-down');
     }
 });
 $('.granularity-wrapper > div').on('hidden', function(e) {
     if (e.currentTarget == e.target) {
-        $('legend > span > i.filterChevron', $(this).parent()).removeClass('fa-chevron-down');
-        $('legend > span > i.filterChevron', $(this).parent()).addClass('fa-chevron-right');
+        $('legend > i.filterChevron', $(this).parent()).removeClass('fa-chevron-down');
+        $('legend > i.filterChevron', $(this).parent()).addClass('fa-chevron-right');
     }
 });
 
@@ -648,7 +665,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     inputStatusP =
                         '<div class="input-status">' +
                             '<div class="input-actions">' +
-                                '<a class="btn btn-default withTooltip" href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>" target="_blank">' +
+                                '<a class="btn btn-default withTooltip" href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">' +
                                     '<?=___('Orga', 'view', 'inputLinkDetail')?>' +
                                 '</a>' +
                             '</div>' +
@@ -1141,18 +1158,10 @@ $('.collapse').on({
 $(document).ready(function() {
     $('.withTooltip').tooltip();
     $('.withPopover').popover();
-    <?php if ($currentCell->showInventory) : ?>
-    $('.current-cell .inventory-status').on('mouseenter', function() {
-        $('.current-cell .inventory-status .inventory-informations').popover('show');
-    });
-    $('.current-cell .inventory-status').on('mouseleave', function() {
-        $('.current-cell .inventory-status .inventory-informations').popover('hide');
-    });
-    <?php endif; ?>
     var resizeTimer;
     $(window).resize(function() {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() { $('div.collapse[id^="granularity"]').trigger('resizeCells'); }, 500);
+        resizeTimer = setTimeout(function() { $('div.collapse[id^="granularity"]:not(.current-granularity)').trigger('resizeCells'); }, 500);
     });
     $('.history > h3 a').trigger('click');
     $('.comments > h3 a').trigger('click');
