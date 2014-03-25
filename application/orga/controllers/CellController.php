@@ -114,6 +114,37 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('cellVWFactory', $this->cellVMFactory);
         $this->view->assign('organization', $this->organizationVMFactory->createOrganizationView($organization, $connectedUser));
         $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser, true));
+        $currentCellPurpose = '';
+        if ($this->view->currentCell->showUsers) {
+            if ($currentCellPurpose !== '') {
+                $currentCellPurpose .= __('Orga', 'view', 'separator');
+            }
+            $currentCellPurpose .= __('User', 'user', 'users');
+        }
+        if ($this->view->currentCell->canEditInventory) {
+            if ($currentCellPurpose !== '') {
+                $currentCellPurpose .= __('Orga', 'view', 'separator');
+            }
+            $currentCellPurpose .= __('Orga', 'inventory', 'editInventories');
+        } else if ($this->view->currentCell->showInventory) {
+            if ($currentCellPurpose !== '') {
+                $currentCellPurpose .= __('Orga', 'view', 'separator');
+            }
+            $currentCellPurpose .= __('Orga', 'inventory', 'showInventories');
+        }
+        if ($this->view->currentCell->showInput) {
+            if ($currentCellPurpose !== '') {
+                $currentCellPurpose .= __('Orga', 'view', 'separator');
+            }
+            $currentCellPurpose .= __('UI', 'name', 'inputs');
+        }
+        if ($this->view->currentCell->showReports) {
+            if ($currentCellPurpose !== '') {
+                $currentCellPurpose .= __('Orga', 'view', 'separator');
+            }
+            $currentCellPurpose .= __('DW', 'name', 'analyses');
+        }
+        $this->view->assign('currentCellPurpose', $currentCellPurpose);
         $this->setActiveMenuItemOrganization($organization->getId());
 
         $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
