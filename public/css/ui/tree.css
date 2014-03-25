@@ -18,3 +18,7 @@
 .tree_fold_link:hover {
     text-decoration: underline;
 }
+
+.tree .ygtvlabel, .ygtvlabel:link, .tree .ygtvlabel:visited, .ygtvlabel:hover {
+    background: none;
+}
