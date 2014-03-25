@@ -295,6 +295,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
+     * Enregistre les helpers de vue
+     */
+    protected function _initMUIH()
+    {
+        MyCLabs\MUIH\Icon::$defaultIconPrefix = MyCLabs\MUIH\Icon::FONT_AWESOME;
+        MyCLabs\MUIH\Tab::$defaultAjaxTabLoadingText = new MyCLabs\MUIH\GenericTag('p', __('UI', 'loading', 'loading'));
+        MyCLabs\MUIH\Tab::$defaultAjaxTabLoadingText->prependContent(' ');
+        MyCLabs\MUIH\Tab::$defaultAjaxTabLoadingText->prependContent(new MyCLabs\MUIH\Icon('spinner fa-spin'));
+    }
+
+    /**
      * Initialise le mapping des types en BDD
      */
     protected function _initCalcTypeMapping()

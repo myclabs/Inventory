@@ -15,7 +15,6 @@ $tabInbox = new Tab('messageContainer_inbox');
 $tabInbox->setTitle(__('Social', 'message', 'inbox'));
 $tabInbox->setContent($this->baseUrl('social/message/list-inbox'));
 $tabInbox->setAjax(true, true);
-$tabInbox->active();
 $tabs->addTab($tabInbox);
 
 $tabOutbox = new Tab('messageContainer_outbox');
@@ -24,4 +23,5 @@ $tabOutbox->setContent($this->baseUrl('social/message/list-outbox'));
 $tabOutbox->setAjax(true, true);
 $tabs->addTab($tabOutbox);
 
+$tabs->activeTab($tabInbox);
 $tabs->display();

@@ -32,7 +32,6 @@ $baseTabs = [];
 $baseTabs[AFViewConfiguration::TAB_INPUT] = new Tab('tabs_tabInput');
 $baseTabs[AFViewConfiguration::TAB_INPUT]->setTitle(__('UI', 'name', 'input'));
 $baseTabs[AFViewConfiguration::TAB_INPUT]->setAjax(true, true);
-$baseTabs[AFViewConfiguration::TAB_INPUT]->active();
 $urlArray = array(
     'module'            => 'af',
     'controller'        => 'af',
@@ -113,6 +112,7 @@ foreach ($viewConfiguration->getTabs() as $tab) {
         $tabView->addTab($baseTabs[$tab]);
     }
 }
+$tabView->activeTab('tabs_tabInput');
 
 ?>
 

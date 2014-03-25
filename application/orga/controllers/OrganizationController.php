@@ -408,34 +408,34 @@ class Orga_OrganizationController extends Core_Controller
         }
         switch ($activeTab) {
             case 'organization':
-                $organizationTab->active = true;
+                $tabView->activeTab($organizationTab);
                 break;
             case 'axes':
-                $axisTab->active = true;
+                $tabView->activeTab($axisTab);
                 break;
             case 'members':
-                $membersTab->active = true;
+                $tabView->activeTab($membersTab);
                 break;
             case 'relevance':
-                $relevanceTab->active = true;
+                $tabView->activeTab($relevanceTab);
                 break;
             case 'afs':
-                $afTab->active = true;
+                $tabView->activeTab($afTab);
                 break;
             case 'acl':
-                $aclTab->active = true;
+                $tabView->activeTab($aclTab);
                 break;
             case 'granularities':
-                $granularityTab->active = true;
+                $tabView->activeTab($granularityTab);
                 break;
             case 'consistency':
-                $consistencyTab->active = true;
+                $tabView->activeTab($consistencyTab);
                 break;
             case 'reports':
-                $dwTab->active = true;
+                $tabView->activeTab($dwTab);
                 break;
             case 'rebuild':
-                $rebuildTab->active = true;
+                $tabView->activeTab($rebuildTab);
                 break;
         }
 

@@ -13,28 +13,28 @@ use MyCLabs\MUIH\Tabs;
     </h1>
 </div>
 <?php
-    $tabDetailsSet = new Tabs('detailSet', true);
+$tabDetailsSet = new Tabs('detailSet', true);
 
-    $tabScenario = new Tab('scenarios');
-    $tabScenario->setTitle(__('Simulation', 'name', 'scenarios'));
-    $tabScenario->setContent($this->partial(
-        'partials/set/scenario.phtml',
-        array('idSet' => $this->idSet)
-    ));
-    if (($this->activatedTab == 'scenario') || ($this->activatedTab !== 'reports')) {
-        $tabScenario->active();
-    }
-    $tabDetailsSet->addTab($tabScenario);
+$tabScenario = new Tab('scenarios');
+$tabScenario->setTitle(__('Simulation', 'name', 'scenarios'));
+$tabScenario->setContent($this->partial(
+    'partials/set/scenario.phtml',
+    array('idSet' => $this->idSet)
+));
+$tabDetailsSet->addTab($tabScenario);
 
-    $tabAnalyse = new Tab('reports');
-    $tabAnalyse->setTitle(__('DW', 'name', 'analyses'));
-    $tabAnalyse->setContent($this->partial(
-        'partials/set/report.phtml',
-        array('idSet' => $this->idSet, 'idCube' => $this->idCube, 'isSetDWCubeUpToDate' => $this->isSetDWCubeUpToDate)
-    ));
-    if ($this->activatedTab == 'reports') {
-        $tabAnalyse->active();
-    }
-    $tabDetailsSet->addTab($tabAnalyse);
+$tabAnalyse = new Tab('reports');
+$tabAnalyse->setTitle(__('DW', 'name', 'analyses'));
+$tabAnalyse->setContent($this->partial(
+    'partials/set/report.phtml',
+    array('idSet' => $this->idSet, 'idCube' => $this->idCube, 'isSetDWCubeUpToDate' => $this->isSetDWCubeUpToDate)
+));
+$tabDetailsSet->addTab($tabAnalyse);
 
-    $tabDetailsSet->display();
+if (($this->activatedTab == 'scenario') || ($this->activatedTab !== 'reports')) {
+    $tabDetailsSet->activeTab($tabScenario);
+}
+if ($this->activatedTab == 'reports') {
+    $tabDetailsSet->activeTab($tabAnalyse);
+}
+$tabDetailsSet->display();

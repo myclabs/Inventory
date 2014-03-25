@@ -243,8 +243,12 @@ if (count($file) > 0) {
                                     <pre><?=implode("\n", $currentCell->administrators)?></pre>
                                 </div>
                             </div>
-                            <?php if ($currentCell->showUsers) : ?>
-                            <div id="users<?=$currentCell->id?>" class="modal users hide fade large" data-cell="<?=$currentCell->id?>">
+                        </div>
+                    </div>
+                    <?php if ($currentCell->showUsers) : ?>
+                    <div id="users<?=$currentCell->id?>" class="modal users hide fade large" data-cell="<?=$currentCell->id?>">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     <h4><?=___('Orga', 'view', 'rolesFrom')?> <?=$currentCell->shortLabel?></h4>
@@ -535,7 +539,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 var usersPopup = '';
                 if (this.showUsers) {
                     usersP +=
-                        '<a class="btn withTooltip" data-toggle="modal" href="#users' + this.id + '" title="<?=___('Orga', 'view', 'editUsers')?>" data-container="body">' +
+                        '<a class="btn btn-default withTooltip" data-toggle="modal" href="#users' + this.id + '" title="<?=___('Orga', 'view', 'editUsers')?>" data-container="body">' +
                             '(' + this.numberUsers + ') ' +
                             '<i class="fa fa-users"></i>' +
                         '</a>';
@@ -569,7 +573,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 var reportsPopup = '';
                 if (this.showReports) {
                     reportsP +=
-                        '<a class="btn withTooltip" data-toggle="modal" href="#reports' + this.id + '" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body">' +
+                        '<a class="btn btn-default withTooltip" data-toggle="modal" href="#reports' + this.id + '" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body">' +
                             '<i class="fa fa-bar-chart-o"></i>' +
                         '</a>';
                     reportsPopup +=
@@ -596,7 +600,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 var exportsPopup = '';
                 if (this.showExports) {
                     exportsP +=
-                        '<a class="btn withTooltip" data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body">' +
+                        '<a class="btn btn-default withTooltip" data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body">' +
                             '<i class="fa fa-download"></i>' +
                         '</a>';
                     exportsPopup +=
@@ -851,7 +855,7 @@ $('body').on('click', '.display-more-cells', function (e) {
     $(this).remove();
 });
 
-$('body').on('show', '.users', function(e) {
+$('body').on('show.bs.modal', '.users', function(e) {
     if (e.target != this) {
         return;
     }

@@ -167,12 +167,12 @@ use MyCLabs\MUIH\Tabs;
 
         $tabGraph = new Tab('container_graph', __('DW', 'name', 'chart'), 'dw/report/graph/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport);
         $tabGraph->setAjax(true, true);
+        $tabView->addTab($tabGraph);
         if (!$this->isNew) {
-            $tabGraph->active();
+            $tabView->activeTab($tabGraph);
         } else {
             $tabGraph->disabled = true;
         }
-        $tabView->addTab($tabGraph);
         UI_Chart_Generic::addHeader();
 
         $tabValues = new Tab('values', __('UI', 'name', 'values'), 'dw/report/values/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport);

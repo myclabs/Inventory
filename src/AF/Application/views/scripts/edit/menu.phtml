@@ -44,9 +44,6 @@ $general = new Tab('container_general');
 $general->setTitle(__('AF', 'configTab', 'general'));
 $general->setContent('af/edit/general-tab/id/' . $af->getId());
 $general->setAjax(true, true);
-if (!isset($this->onglet)) {
-    $general->active();
-}
 
 // Structure
 $structure = new Tab('container_structure');
@@ -56,18 +53,12 @@ $structure->setAjax(true, false);
 
 // Composants
 $element = new Tab('container_component');
-if (isset($this->onglet) && $this->onglet == 'component') {
-    $element->active();
-}
 $element->setTitle(__('AF', 'configTab', 'components'));
 $element->setContent('af/edit/components/id/' . $af->getId());
 $element->setAjax(true, true);
 
 // Interactions
 $interaction = new Tab('container_interaction');
-if (isset($this->onglet) && $this->onglet == 'interaction') {
-    $interaction->active();
-}
 $interaction->setTitle(__('AF', 'configTab', 'interactions'));
 $interaction->setContent('af/edit/interactions/id/' . $af->getId());
 $interaction->setAjax(true, true);
@@ -77,18 +68,12 @@ $traitement = new Tab('container_traitement');
 $traitement->setTitle(__('AF', 'configTab', 'treatment'));
 $traitement->setContent('af/edit/traitement/id/' . $af->getId());
 $traitement->setAjax(true, true);
-if (isset($this->onglet) && $this->onglet == 'traitement') {
-    $traitement->active();
-}
 
 // Controle
 $control = new Tab('container_control');
 $control->setTitle(__('AF', 'configTab', 'control'));
 $control->setContent('af/edit/control/id/' . $af->getId());
 $control->setAjax(true, true);
-if (isset($this->onglet) && $this->onglet == 'control') {
-    $control->active();
-}
 
 // Ajout des tabs à l'ensemble.
 $tabView->addTab($general);
@@ -97,6 +82,24 @@ $tabView->addTab($element);
 $tabView->addTab($interaction);
 $tabView->addTab($traitement);
 $tabView->addTab($control);
+if (!isset($this->onglet)) {
+    $tabView->activeTab($general);
+} else {
+    switch ($this->onglet) {
+        case 'component';
+            $tabView->activeTab($element);
+            break;
+        case 'interaction';
+            $tabView->activeTab($interaction);
+            break;
+        case 'traitement';
+            $tabView->activeTab($traitement);
+            break;
+        case 'control';
+            $tabView->activeTab($control);
+            break;
+    }
+}
 
 // Affichage du TabView.
 $tabView->display();

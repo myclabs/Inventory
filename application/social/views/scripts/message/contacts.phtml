@@ -15,7 +15,6 @@ $tabView = new Tabs();
 $tabUser = new Tab('contactsContainer_usersTab');
 $tabUser->setTitle(__('User', 'user', 'users'));
 $tabUser->setContent($this->partial('message/contacts/users.phtml', 'social'));
-$tabUser->active();
 $tabView->addTab($tabUser);
 
 $tabUserGroup = new Tab('contactsContainer_userGroupsTab');
@@ -23,4 +22,5 @@ $tabUserGroup->setTitle(__('Social', 'userGroup', 'userGroups'));
 $tabUserGroup->setContent($this->partial('message/contacts/user-groups.phtml', 'social'));
 $tabView->addTab($tabUserGroup);
 
+$tabView->activeTab($tabUser);
 $tabView->display();
