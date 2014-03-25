@@ -17,6 +17,14 @@
 
         <!-- Désignation des granularités -->
 
+        <tu tuid="currentGranularity">
+            <tuv xml:lang="fr">
+                <seg>Racine</seg> <!-- ou bien &amp; ? -->
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Root</seg>
+            </tuv>
+        </tu>
         <tu tuid="separator">
             <tuv xml:lang="fr">
                 <seg>, </seg> <!-- ou bien &amp; ? -->

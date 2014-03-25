@@ -158,22 +158,17 @@ if (count($file) > 0) {
 <div class="span9" id="cellsView">
 
     <fieldset class="wrapper granularity-wrapper">
-        <legend data-toggle="collapse" data-target="#currentGranularity<?=$currentGranularity->getId()?>">
+        <legend data-toggle="collapse" data-target="#currentGranularity">
             <i class="filterChevron fa fa-chevron-down"></i>
-            <?=$currentGranularity->getLabel()?>
+            <?=__('Orga', 'view', 'currentGranularity')?>
             <small>
-                <?=___('Orga', 'view', 'granularityExplanations')?><?=$currentGranularityArray['purpose']?>
+                <?=___('Orga', 'view', 'granularityExplanations')?><?=$this->currentCellPurpose?>
             </small>
         </legend>
 
-        <div id="currentGranularity<?=$currentGranularity->getId()?>"
-            <?=$currentGranularityArray['isAcl'] ? ' data-acl' : ''?>
-            <?=$currentGranularityArray['isInventory'] ? ' data-inventory' : ''?>
-            <?=$currentGranularityArray['isInput'] ? ' data-input' : ''?>
-            <?=$currentGranularityArray['isAnalyses'] ? ' data-analyses' : ''?>
-             class="collapse in">
+        <div id="currentGranularity" class="collapse in" style="overflow: visible;">
             <div class="granularity row-fluid">
-                <div class="cell current-cell well" data-inventory-status="<?=$currentCell->inventoryStatus?>" data-input-status="<?=$currentCell->inputStatus?>">
+                <div class="span4 cell well" data-inventory-status="<?=$currentCell->inventoryStatus?>" data-input-status="<?=$currentCell->inputStatus?>">
                     <h4>
                         <?=$currentCell->extendedLabel?>
                         <small class="cell-actions btn-group">
@@ -219,14 +214,13 @@ if (count($file) > 0) {
                                 <?=$currentCell->inventoryCompletion?>%
                             </div>
                         </div>
-                        <a href="#" class="withPopover inventory-inputs-details"><i class="fa fa-tasks"></i></a>
                     </div>
                     <?php endif; ?>
                     <?php // Input ?>
                     <?php if ($currentCell->showInput) : ?>
                     <div class="input-status">
                         <div class="input-actions">
-                            <a class="btn btn-default withTooltip" href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>" target="_blank">
+                            <a class="btn btn-default withTooltip" href="orga/cell/input/idCell/<?=$currentCell->id?>/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">
                                 <?=___('Orga', 'view', 'inputLinkDetail')?>
                             </a>
                         </div>
@@ -325,7 +319,7 @@ if (count($file) > 0) {
     ?>
     <fieldset class="wrapper granularity-wrapper">
         <legend data-toggle="collapse" data-target="#granularity<?=$narrowerGranularity->getId()?>">
-            <i class="filterChevron fa fa-chevron-<?=((count($this->narrowerGranularities) === 1)?'down':'right')?>"></i>
+            <i class="filterChevron fa fa-chevron-<?=(count($this->narrowerGranularities) === 1) ? 'down': $narrowerGranularityArray['isInput'] ? 'down' : 'right'?>"></i>
             <?=$narrowerGranularity->getLabel()?>
             <small>
                 <?=___('Orga', 'view', 'granularityExplanations')?><?=$narrowerGranularityArray['purpose']?>
@@ -340,7 +334,8 @@ if (count($file) > 0) {
              data-total-cells="<?=$narrowerGranularityArray['totalCells']?>"
              data-first-cell="0"
              data-show-cells="6"
-             class="collapse<?=(count($this->narrowerGranularities) === 1) ? ' in': $narrowerGranularityArray['isInput'] ? ' in' : ''?>">
+             class="collapse<?=(count($this->narrowerGranularities) === 1) ? ' in': $narrowerGranularityArray['isInput'] ? ' in' : ''?>"
+             <?=(count($this->narrowerGranularities) === 1) ? ' style="overflow: visible;"': $narrowerGranularityArray['isInput'] ? ' style="overflow: visible;"' : ''?>">
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
             <form class="form-inline cells-filter">
                 <?php foreach ($narrowerGranularityArray['filterAxes'] as $refAxis => $memberOptions) : ?>
@@ -495,14 +490,14 @@ $('.history a.refresh').on('click', function(e) {
 
 $('.granularity-wrapper > div').on('show', function(e) {
     if (e.currentTarget == e.target) {
-        $('legend > span > i.filterChevron', $(this).parent()).removeClass('fa-chevron-right');
-        $('legend > span > i.filterChevron', $(this).parent()).addClass('fa-chevron-down');
+        $('legend > i.filterChevron', $(this).parent()).removeClass('fa-chevron-right');
+        $('legend > i.filterChevron', $(this).parent()).addClass('fa-chevron-down');
     }
 });
 $('.granularity-wrapper > div').on('hidden', function(e) {
     if (e.currentTarget == e.target) {
-        $('legend > span > i.filterChevron', $(this).parent()).removeClass('fa-chevron-down');
-        $('legend > span > i.filterChevron', $(this).parent()).addClass('fa-chevron-right');
+        $('legend > i.filterChevron', $(this).parent()).removeClass('fa-chevron-down');
+        $('legend > i.filterChevron', $(this).parent()).addClass('fa-chevron-right');
     }
 });
 
@@ -670,7 +665,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     inputStatusP =
                         '<div class="input-status">' +
                             '<div class="input-actions">' +
-                                '<a class="btn btn-default withTooltip" href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>" target="_blank">' +
+                                '<a class="btn btn-default withTooltip" href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">' +
                                     '<?=___('Orga', 'view', 'inputLinkDetail')?>' +
                                 '</a>' +
                             '</div>' +
@@ -1163,14 +1158,6 @@ $('.collapse').on({
 $(document).ready(function() {
     $('.withTooltip').tooltip();
     $('.withPopover').popover();
-    <?php if ($currentCell->showInventory) : ?>
-    $('.current-cell .inventory-status').on('mouseenter', function() {
-        $('.current-cell .inventory-status .inventory-informations').popover('show');
-    });
-    $('.current-cell .inventory-status').on('mouseleave', function() {
-        $('.current-cell .inventory-status .inventory-informations').popover('hide');
-    });
-    <?php endif; ?>
     var resizeTimer;
     $(window).resize(function() {
         clearTimeout(resizeTimer);
