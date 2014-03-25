@@ -618,6 +618,12 @@ class Inventory_Plugin_Acl extends ACLPlugin
     protected function viewParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');
+        return $this->aclManager->isAllowed($identity, Actions::VIEW, ParameterLibrary::load($libraryId));
+    }
+
+    protected function editParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('id') ?: $request->getParam('library');
         return $this->aclManager->isAllowed($identity, Actions::EDIT, ParameterLibrary::load($libraryId));
     }
 
