@@ -14,9 +14,9 @@
     <?php
     echo $this->button(
         __('UI', 'button', 'previousPage'),
-        'arrow-circle-left',
-        ['class' => 'btn-warning', 'onclick' => 'history.back();']
-    );
+        \MyCLabs\MUIH\Button::TYPE_WARNING,
+        'arrow-circle-left'
+    )->setAttribute('onclick', 'history.back();');
     ?>
 </div>
 
