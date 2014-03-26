@@ -57,6 +57,11 @@ class Account_MembersController extends Core_Controller
         if ($this->getRequest()->isPost()) {
             $email = trim($this->getParam('email'));
 
+            if (empty($email)) {
+                UI_Message::addMessageStatic(__('UI', 'formValidation', 'invalidEmail'));
+                $this->redirect('account/members?account=' . $account->getId());
+            }
+
             $task = new ServiceCallTask(
                 AccountRoleManager::class,
                 'addAdminRole',
