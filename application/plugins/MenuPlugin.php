@@ -35,9 +35,13 @@ class Inventory_Plugin_MenuPlugin extends Zend_Controller_Plugin_Abstract
             return;
         }
 
+        /** @var Zend_View_Abstract $view */
+        $view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
+
         // Tous les comptes que l'utilisateur peut voir
         $accounts = $this->accountRepository->getTraversableAccounts($user);
         if (empty($accounts)) {
+            $view->assign('accountList', []);
             return;
         }
 
@@ -58,9 +62,6 @@ class Inventory_Plugin_MenuPlugin extends Zend_Controller_Plugin_Abstract
 
         // Account view
         $accountView = $this->accountViewFactory->createAccountView($account, $user);
-
-        /** @var Zend_View_Abstract $view */
-        $view = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('view');
 
         $view->assign('accountList', $accounts);
         $view->assign('account', $accountView);

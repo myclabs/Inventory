@@ -67,7 +67,13 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 
         <?= $this->partial('header.phtml', ['user' => $user]) ?>
 
-        <?= $this->partial('sidebar.phtml', ['account' => $this->account, 'activeMenu' => $this->activeMenu]) ?>
+        <?php
+        if ($this->account !== null) {
+            echo $this->partial('sidebar.phtml', ['account' => $this->account, 'activeMenu' => $this->activeMenu]);
+        } else {
+            echo '<aside id="left-panel"></aside>';
+        }
+        ?>
 
         <!-- MAIN PANEL -->
         <div id="main">

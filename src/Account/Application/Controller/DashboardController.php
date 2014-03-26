@@ -52,6 +52,10 @@ class Account_DashboardController extends Core_Controller
         // Tous les comptes que l'utilisateur peut voir
         $accounts = $this->accountRepository->getTraversableAccounts($user);
 
+        if (count($accounts) === 0) {
+            throw new Core_Exception_User('Account', 'message', 'noAccess');
+        }
+
         $session = new Zend_Session_Namespace('account-switcher');
 
         /** @var Account $account */

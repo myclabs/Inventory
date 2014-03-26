@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="noAccess">
+            <tuv xml:lang="fr">
+                <seg>Vous n'avez accès à aucun compte ou workspace.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>You have no access to any account or workspace.</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>
