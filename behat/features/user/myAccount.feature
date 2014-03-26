@@ -54,14 +54,13 @@ Feature: My account feature
     Then the following message is shown and closed: "Modification effectuée."
     And the ".page-header h1" element should contain "Mon compte"
   # Déconnexion
-    When I click "currentUserButton"
     And I click "Déconnexion"
-    Then the following message is shown and closed: "Vous n'êtes pas connecté."
+    Then I should see "Connexion"
   # Reconnexion avec le nouvel email
     When I fill in "email" with "emmanuel.risler.abo@gmail.com"
     And I fill in "password" with "emmanuel.risler.pro@gmail.com"
     And I click "connection"
-    Then I should see "Vous ne disposez d'aucun droit d'accès à une unité organisationnelle."
+    Then I should see "Vous n'avez accès à aucun compte ou workspace."
 
   @javascript
   Scenario: Change my password
@@ -92,11 +91,10 @@ Feature: My account feature
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déconnexion
-    When I click "currentUserButton"
     And I click "Déconnexion"
-    Then the following message is shown and closed: "Vous n'êtes pas connecté."
+    Then I should see "Connexion"
   # Reconnexion avec le nouveau mot de passe
     When I fill in "email" with "emmanuel.risler.pro@gmail.com"
     And I fill in "password" with "aaaaaaaa"
     And I click "connection"
-    Then I should see "Vous ne disposez d'aucun droit d'accès à une unité organisationnelle."
+    Then I should see "Vous n'avez accès à aucun compte ou workspace."
