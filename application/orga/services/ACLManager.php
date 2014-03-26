@@ -57,12 +57,8 @@ class Orga_Service_ACLManager
      */
     public function addOrganizationAdministrator(Orga_Model_Organization $organization, $email, $sendMail = true)
     {
-        if (User::isEmailUsed($email)) {
-            $user = User::loadByEmail($email);
-        } else {
-            $user = $this->userService->inviteUser($email);
-            $this->entityManager->flush();
-        }
+        $user = $this->userService->getOrInvite($email);
+        $this->entityManager->flush();
 
         $this->aclManager->grant($user, new OrganizationAdminRole($user, $organization));
 
@@ -111,11 +107,8 @@ class Orga_Service_ACLManager
      */
     public function addCellRole(Orga_Model_Cell $cell, $roleClass, $email, $sendMail = true)
     {
-        if (User::isEmailUsed($email)) {
-            $user = User::loadByEmail($email);
-        } else {
-            $user = $this->userService->inviteUser($email);
-        }
+        $user = $this->userService->getOrInvite($email);
+        $this->entityManager->flush();
 
         if (! class_exists($roleClass)) {
             throw new InvalidArgumentException("Unknown role $roleClass");
