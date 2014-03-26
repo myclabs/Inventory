@@ -104,7 +104,6 @@ JS;
 
 // Text
 $textFields = new Collapse('textFields', __('AF', 'configComponentCollapse', 'textFieldCollapse'));
-$textFields->foldedByDefault = true;
 $textFields->setContent($this->partial('edit/components/text-fields.phtml', ['af' => $this->af]));
 echo $textFields->render();
 
