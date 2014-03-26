@@ -115,9 +115,8 @@ class User_ProfileController extends Core_Controller
             $user = $this->_helper->auth();
         }
 
-        $formData = $this->getFormData('userProfile');
-        $user->setFirstName($formData->getValue('firstName'));
-        $user->setLastName($formData->getValue('lastName'));
+        $user->setFirstName($this->getParam('firstName'));
+        $user->setLastName($this->getParam('lastName'));
         $user->save();
         $this->entityManager->flush();
 
