@@ -415,7 +415,7 @@ class FeatureContext extends MinkContext
      * @param int      $timeout Timeout en secondes.
      * @return mixed
      */
-    public function spin(callable $find, $timeout = 5)
+    public function spin(callable $find, $timeout = 4)
     {
         // Temps d'attente entre chaque boucle, en secondes
         $sleepTime = 0.1;
