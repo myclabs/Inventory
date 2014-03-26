@@ -36,14 +36,15 @@ Feature: Identification feature
     Then I should see "Connexion"
 
   @javascript @readOnly
-  Scenario: Forgottent password
+  Scenario: Forgotten password
   # TODO : à tester, pour l'instant l'accès à la page du captcha pose problème (installation des fontes) donc non testé.
     Given I am on the homepage
     And I wait for the page to finish loading
-  #  And I click "Mot de passe oublié ?"
+    And I click "Mot de passe oublié ?"
+    Then I should see "Réinitialisation de votre mot de passe"
 
   @javascript @readOnly
   Scenario: Trying to reach an url without being connected
-    Given I am on the homepage
-    And I go to "orga/granularity/report/idCell/1/"
+    When I go to "account/dashboard"
     Then the following message is shown and closed: "Vous n'êtes pas connecté."
+    And I should see "Connexion"
