@@ -1,6 +1,5 @@
 <?php
 
-use Behat\Mink\Element\NodeElement;
 use Behat\Mink\WebAssert;
 
 /**
@@ -9,7 +8,7 @@ use Behat\Mink\WebAssert;
 trait AccountFeatureContext
 {
     /**
-     * @Given /^I am on the dashboard for account (\d+)$/
+     * @Given /^I am on the dashboard for account "([^"]*)"$/
      */
     public function iAmOnTheDashboardForAccount($id)
     {
@@ -22,8 +21,8 @@ trait AccountFeatureContext
      */
     public function iSwitchToAccount($account)
     {
-        $inputNode = $this->findElement('#accountSwitcher');
-        $inputNode->selectOption($account, false);
+        $this->clickElement('#show-shortcut');
+        $this->clickElement(".account-button:contains('$account')");
     }
 
     /**
@@ -51,11 +50,5 @@ trait AccountFeatureContext
      * @param string $page
      */
     public abstract function visit($page);
-    /**
-     * Finds element with specified selector.
-     * @param string $selector
-     * @param string $type
-     * @return NodeElement
-     */
-    protected abstract function findElement($selector, $type = 'css');
+    public abstract function clickElement($selector);
 }
