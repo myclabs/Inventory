@@ -12,6 +12,9 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\DBAL\Types\Type;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Tab;
 use Symfony\Component\Translation\Translator;
 use User\Application\ViewHelper\IsAllowedHelper;
 use User\Application\ViewHelper\TutorialHelper;
@@ -299,10 +302,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initMUIH()
     {
-        MyCLabs\MUIH\Icon::$defaultIconPrefix = MyCLabs\MUIH\Icon::FONT_AWESOME;
-        MyCLabs\MUIH\Tab::$defaultAjaxTabLoadingText = new MyCLabs\MUIH\GenericTag('p', __('UI', 'loading', 'loading'));
-        MyCLabs\MUIH\Tab::$defaultAjaxTabLoadingText->prependContent(' ');
-        MyCLabs\MUIH\Tab::$defaultAjaxTabLoadingText->prependContent(new MyCLabs\MUIH\Icon('spinner fa-spin'));
+        Icon::$defaultIconPrefix = Icon::FONT_AWESOME;
+        Tab::$defaultAjaxTabLoadingText = new GenericTag('p', __('UI', 'loading', 'loading'));
+        Tab::$defaultAjaxTabLoadingText->prependContent(' ');
+        Tab::$defaultAjaxTabLoadingText->prependContent(new Icon('spinner fa-spin'));
     }
 
     /**
