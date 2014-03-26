@@ -7,7 +7,6 @@ use Core\Annotation\Secure;
 use MyCLabs\ACL\ACLManager;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
-use MyCLabs\ACL\Model\Resource;
 use User\Domain\User;
 
 /**
@@ -38,7 +37,7 @@ class Account_DashboardController extends Core_Controller
      */
     public function indexAction()
     {
-        $session = new Zend_Session_Namespace(get_class());
+        $session = new Zend_Session_Namespace('account-switcher');
 
         // Un compte spécifique est demandé
         if ($this->getParam('id') !== null) {
@@ -50,24 +49,30 @@ class Account_DashboardController extends Core_Controller
         /** @var User $user */
         $user = $this->_helper->auth();
 
-        // TODO prendre les comptes que l'utilisateur peut voir
-        $accounts = $this->accountRepository->getAll();
+        // Tous les comptes que l'utilisateur peut voir
+        $accounts = $this->accountRepository->getTraversableAccounts($user);
 
-        // TODO tester si l'utilisateur peut voir le compte demandé
-        /** @var Account $account */
-        if (isset($session->accountId)) {
-            $account = $this->accountRepository->get($session->accountId);
-        } else {
-            $account = current($accounts);
+        if (count($accounts) === 0) {
+            throw new Core_Exception_User('Account', 'message', 'noAccess');
         }
+
+        $session = new Zend_Session_Namespace('account-switcher');
+
+        /** @var Account $account */
+        $account = null;
+        if (isset($session->accountId)) {
+            // Recherche dans les comptes que l'utilisateur peut accéder
+            foreach ($accounts as $accountSearch) {
+                if ($accountSearch->getId() == $session->accountId) {
+                    $account = $accountSearch;
+                }
+            }
+        }
+        // À défaut prend le premier
+        $account = $account ?: reset($accounts);
 
         // Account view
-        if (isset($session->account[$account->getId()])) {
-            $accountView = $session->account[$account->getId()];
-        } else {
-            $accountView = $this->accountViewFactory->createAccountView($account, $user);
-            $session->account[$account->getId()] = $accountView;
-        }
+        $accountView = $this->accountViewFactory->createAccountView($account, $user);
 
         $this->view->assign('accountList', $accounts);
         $this->view->assign('account', $accountView);
@@ -76,5 +81,7 @@ class Account_DashboardController extends Core_Controller
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
         ));
+        $this->addBreadcrumb(__('Account', 'name', 'dashboard'));
+        $this->setActiveMenuItem('dashboard');
     }
 }

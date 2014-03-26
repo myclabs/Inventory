@@ -14,6 +14,7 @@ sheets:
                 do:
                   - label: "{{ broaderAxis.label }}"
           - label: "{{ inputAncestor }}"
+          - label: "{{ inputStatus }}"
           - label: "{{ inputLabel }}"
           - label: "{{ inputRef }}"
           - label: "{{ inputType }}"
@@ -34,6 +35,7 @@ sheets:
                         do:
                           - "{{ displayCellMemberForAxis(cell, broaderAxis) }}"
                   - "{{ input['ancestors'] }}"
+                  - "{{ displayInputStatus(cell) }}"
                   - "{{ input['label'] }}"
                   - "{{ input['ref'] }}"
                   - "{{ input['type'] }}"

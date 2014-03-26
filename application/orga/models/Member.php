@@ -458,6 +458,10 @@ class Orga_Model_Member extends Core_Model_Entity
         foreach ($this->getDirectChildren() as $directChildMember) {
             $directChildMember->updateTagsAndHierarchy();
         }
+
+        foreach ($this->getCells() as $cell) {
+            $cell->updateHierarchy();
+        }
     }
 
     /**
@@ -528,6 +532,10 @@ class Orga_Model_Member extends Core_Model_Entity
             }
             $this->updateParentMembersHashKeys();
             $this->addPosition();
+            // Charge les collections de cellules pour tout faire en mémoire et éviter les erreurs.
+            foreach ($this->getAxis()->getOrganization()->getGranularities() as $granularity) {
+                $granularity->getCells()->toArray();
+            }
             $this->updateTagsAndHierarchy();
         }
     }

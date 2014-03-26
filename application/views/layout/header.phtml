@@ -1,0 +1,42 @@
+<header id="header">
+
+    <div id="logo-group">
+        <span id="logo">
+            <a href="<?=$this->baseUrl()?>">My C-Tool</a>
+        </span>
+    </div>
+
+    <?php if ($this->user) : ?>
+        <div class="pull-right">
+
+            <!-- collapse menu -->
+            <div class="btn-header pull-right" id="hide-menu">
+                <span>
+                    <a href="#" title="Collapse Menu">
+                        <i class="fa fa-reorder"></i>
+                    </a>
+                </span>
+            </div>
+
+            <!-- logout button -->
+            <div class="btn-header transparent pull-right" id="logout">
+                <span>
+                    <a href="user/action/logout" title="<?=__('User', 'menu', 'logout')?>">
+                        <i class="fa fa-sign-out"></i>
+                    </a>
+                </span>
+            </div>
+
+            <!-- account button -->
+            <div class="btn-header transparent pull-right">
+                <span>
+                    <a href="user/profile/edit" title="<?=__('User', 'menu', 'myAccount')?>">
+                        <i class="fa fa-user"></i>
+                    </a>
+                </span>
+            </div>
+
+        </div>
+    <?php endif; ?>
+
+</header>

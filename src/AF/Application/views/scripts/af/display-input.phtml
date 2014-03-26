@@ -3,47 +3,35 @@ use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
 
-/**
- * @author  matthieu.napoli
- * @package AF
- */
-/** @var $af \AF\Domain\AF */
+/** @var $af AF */
 $af = $this->af;
 /** @var $form UI_Form */
 $form = $this->form;
-/** @var $inputSet \AF\Domain\InputSet\PrimaryInputSet|null */
+/** @var $inputSet PrimaryInputSet|null */
 $inputSet = $this->inputSet;
 if ($inputSet) {
     $inputSetId = $inputSet->getId();
-    $isFinished = $inputSet->isFinished();
-    $isInputComplete = $inputSet->isInputComplete();
 } else {
     $inputSetId = null;
-    $isFinished = false;
-    $isInputComplete = false;
 }
 ?>
 
-<div class="inputProgress row-fluid">
+<style type="text/css">
+    .alertFinishInput {
+        margin-top: -20px;
+        margin-bottom: 10px;
+    }
+</style>
 
-    <div class="progress span6">
-        <div class="bar"></div>
+<div class="inputProgress row">
+
+    <div class="progress col-md-9">
+        <div class="progress-bar"></div>
     </div>
 
-    <div class="span3">
+    <div class="col-md-3">
         <img class="completionIcon" src="">
         <span class="completionMessage"></span>
-    </div>
-
-    <div class="span3">
-        <?php if ($this->mode != AFViewConfiguration::MODE_READ) : ?>
-            <form class="form-inline">
-                <label class="checkbox" data-placement="bottom">
-                    <input type="checkbox" id="markInputAsFinished">
-                    <?=__('AF', 'inputInput', 'markInputAsFinished')?>
-                </label>
-            </form>
-        <?php endif; ?>
     </div>
 
 </div>
@@ -55,13 +43,16 @@ if ($this->mode != AFViewConfiguration::MODE_READ) {
     // Boutons
     $actionGroup = new UI_Form_Element_HTML('formActionGroup');
     $saveButtonLabel = __('UI', 'verb', 'save');
-    $resetButtonLabel = __('UI', 'verb', 'reset');
+    $finishButtonLabel = __('AF', 'inputInput', 'finish');
+    $resultsPreviewButtonHelp = __('AF', 'inputInput', 'resultsPreviewHelp');
     $resultsPreviewButtonLabel = __('AF', 'inputInput', 'resultsPreview');
     $quitButtonLabel = __('UI', 'verb', 'quit');
+    $inputCompleteMessage = __('AF', 'inputInput', 'inputCompleteMessage');
 
     if ($this->withResultsPreview) {
         $resultsPreviewButton = <<<HTML
-            <button type="button" class="inputPreview btn" data-loading-text="$loadingText">
+            <button type="button" class="inputPreview btn btn-default" data-loading-text="$loadingText"
+                data-title="$resultsPreviewButtonHelp">
                 $resultsPreviewButtonLabel
             </button>
 HTML;
@@ -70,14 +61,18 @@ HTML;
     }
 
     $actionGroup->content = <<<HTML
-        <button type="button" class="inputSave btn" data-loading-text="$loadingText" disabled>
+        <div class="alert alert-success alertFinishInput hide">
+            $inputCompleteMessage
+        </div>
+        $resultsPreviewButton
+        <button type="button" class="inputSave btn btn-default" data-loading-text="$loadingText">
             $saveButtonLabel
         </button>
-        <button type="button" class="inputReset btn" disabled>
-            $resetButtonLabel
+        <button type="button" class="inputFinish btn btn-default">
+            $finishButtonLabel
         </button>
-        $resultsPreviewButton
-        <button type="button" class="inputExit btn btn-primary">
+        <button type="button" class="inputExit btn btn-default">
+            <i class="fa fa-sign-out"></i>
             $quitButtonLabel
         </button>
 HTML;
@@ -90,7 +85,7 @@ HTML;
     $actionGroup = new UI_Form_Element_HTML('formActionGroup');
     $quitButtonLabel = __('UI', 'verb', 'quit');
     $actionGroup->content = <<<HTML
-        <button type="button" class="inputExit btn">
+        <button type="button" class="inputExit btn btn-default">
             $quitButtonLabel
         </button>
 HTML;
@@ -128,9 +123,6 @@ echo $form->render();
     <?=Core_Translate::exportJS('AF', 'inputInput', 'statusCalculationIncomplete')?>
     <?=Core_Translate::exportJS('AF', 'inputInput', 'statusComplete')?>
     <?=Core_Translate::exportJS('AF', 'inputInput', 'statusFinished')?>
-    // Marquer la saisie comme terminée
-    <?=Core_Translate::exportJS('AF', 'inputInput', 'markInProgressInputAsFinishedTooltip')?>
-    <?=Core_Translate::exportJS('AF', 'inputInput', 'markIncompleteInputAsFinishedTooltip')?>
     // Popups de confirmation au clic sur « Réinitialiser » ou « Quitter »
     <?=Core_Translate::exportJS('AF', 'inputInput', 'confirmReinitializeInput')?>
     <?=Core_Translate::exportJS('AF', 'inputInput', 'confirmExitInput')?>
@@ -142,20 +134,15 @@ echo $form->render();
     $(function() {
 
         <?php
-        if ($inputSet) {
-            $completion = $inputSet->getCompletion();
-            $status = $inputSet->getStatus();
-        } else {
-            // Par convention, si pas de saisie enregistrée : 0%
-            $completion = 0;
-            $status = 'input_incomplete';
-        }
+        $completion = $inputSet ? (int) $inputSet->getCompletion() : 0;
+        $status = $inputSet ? $inputSet->getStatus() : 'input_incomplete';
         ?>
-        var status = AF.InputProgress.getStatusByRef("<?=$status?>");
-
         // Complétion et statut initial
-        input.inputProgress.setCompletion(<?=$completion?>);
-        input.inputProgress.setStatus(status);
+        input.inputProgress.setStatus("<?=$status?>", <?=$completion?>);
+
+        $('.inputPreview').tooltip({
+            placement: 'bottom'
+        });
 
     });
 

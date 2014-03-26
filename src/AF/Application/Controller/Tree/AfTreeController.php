@@ -20,7 +20,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     private $afDeletionService;
 
     /**
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getnodesAction()
     {
@@ -51,7 +51,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     }
 
     /**
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getlistparentsAction()
     {
@@ -70,7 +70,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     }
 
     /**
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getlistsiblingsAction()
     {
@@ -125,7 +125,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
 
     /**
      * Fonction récupérant les informations d'édition pour le formulaire.
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getinfoeditAction()
     {
@@ -154,7 +154,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     }
 
     /**
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function addnodeAction()
     {
@@ -180,7 +180,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     }
 
     /**
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function editnodeAction()
     {
@@ -239,7 +239,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
 
     /**
      * Suppression d'un noeud
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function deletenodeAction()
     {
@@ -263,7 +263,10 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             if ($e->isSourceEntityInstanceOf(OutputElement::class)) {
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
             }
-            throw new Core_Exception_User('AF', 'formTree', 'categoryHasChild');
+            if ($node instanceof Category) {
+                throw new Core_Exception_User('AF', 'formTree', 'categoryHasChild');
+            }
+            throw $e;
         }
 
         $this->message = __('UI', 'message', 'deleted');

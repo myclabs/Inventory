@@ -98,5 +98,7 @@ class User_RegisterController extends UI_Controller_Captcha
             $this->redirect('');
             return;
         }
+
+        $this->_helper->_layout->setLayout('layout-public');
     }
 }

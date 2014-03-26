@@ -356,7 +356,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function generateCellsFromNewMember(Orga_Model_Member $member)
     {
-        $this->traverseAxesThenCreateCells(0, array($member), $member->getAxis());
+        $this->traverseAxesThenCreateCells(0, [$member], $member->getAxis());
     }
 
     /**

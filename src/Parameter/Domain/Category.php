@@ -168,12 +168,28 @@ class Category extends Core_Model_Entity
     }
 
     /**
-     * Renvoie les AF de la catégorie
+     * Renvoie les Family de la catégorie
      * @return Family[]
      */
     public function getFamilies()
     {
         return $this->families;
+    }
+
+    /**
+     * Renvoi les Family des catégories enfantes et de la catégorie.
+     * @return Family[]
+     */
+    public function getAllFamilies()
+    {
+        $families = [];
+
+        foreach ($this->getChildCategories() as $childCategory) {
+            $families = array_merge($families, $childCategory->getAllFamilies());
+        }
+        $families = array_merge($families, $this->families->toArray());
+
+        return $families;
     }
 
     /**

@@ -10,7 +10,7 @@ class Parameter_TranslateController extends Core_Controller
     /**
      * Liste des libellés des catégories en mode traduction.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function categoriesAction()
     {
@@ -19,7 +19,7 @@ class Parameter_TranslateController extends Core_Controller
     /**
      * Liste des libellés des familles en mode traduction.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function familiesLabelAction()
     {
@@ -28,7 +28,7 @@ class Parameter_TranslateController extends Core_Controller
     /**
      * Liste des documentation des familles en mode traduction.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function familiesDocumentationAction()
     {

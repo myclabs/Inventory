@@ -86,8 +86,6 @@ Feature: AF copy feature
       | label                                            | ref                            |
       | Copie forfait émissions en fonction de la marque | formulaire_forfait_marque_copy |
     When I click "Test" in the row 9 of the "listAF" datagrid
-    And I click "Aperçu des résultats"
-    Then I should see "Total : 1 t équ. CO2"
   # Saisie et enregistrement
     When I fill in "Champ sans effet" with "0"
     And I click "Enregistrer"

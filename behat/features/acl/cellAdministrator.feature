@@ -116,21 +116,21 @@ Feature: Cell administrator feature
     And I click "connection"
     When I click element "h1 small a"
   # Ajout et suppression d'un élément à l'axe "Pays"
-    And I open collapse "Pays"
+    And I open collapse "Site"
     And I click "Ajouter"
-    Then I should see the popup "Ajout d'un élément à l'axe « Pays »"
-    When I fill in "listMemberspays_label_addForm" with "AAA"
-    And I fill in "listMemberspays_ref_addForm" with "aaa"
-    And I fill in "listMemberspays_broaderzone_addForm" with "europe#da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    Then I should see the popup "Ajout d'un élément à l'axe « Site »"
+    When I fill in "listMemberssite_label_addForm" with "AAA"
+    And I fill in "listMemberssite_broaderpays_addForm" with "france#da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#da39a3ee5e6b4b0d3255bfef95601890afd80709"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
-    And the "listMemberspays" datagrid should contain 2 row
-    And the row 1 of the "listMemberspays" datagrid should contain:
-      | label | ref | broaderzone |
-      | AAA   | aaa | Europe      |
-    When I click "Supprimer" in the row 1 of the "listMemberspays" datagrid
+    And the "listMemberssite" datagrid should contain 3 row
+    And the row 1 of the "listMemberssite" datagrid should contain:
+      | label | ref | broaderpays | broadermarque |
+      | AAA   | aaa | France      | Marque A      |
+    When I click "Supprimer" in the row 1 of the "listMemberssite" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "listMemberspays" datagrid should contain 1 row
+    And the "listMemberssite" datagrid should contain 2 row
   # TODO : Suppression d'un élément entraînant la suppression de cellules associées à des DWs (par exemple un site).

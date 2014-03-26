@@ -12,7 +12,7 @@ class Parameter_DimensionController extends Core_Controller
 {
     /**
      * Ajout d'une dimension
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function addAction()
     {
@@ -41,7 +41,7 @@ class Parameter_DimensionController extends Core_Controller
 
     /**
      * Édition d'une dimension
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function editAction()
     {
@@ -69,7 +69,7 @@ class Parameter_DimensionController extends Core_Controller
 
     /**
      * Suppression d'une dimension
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function deleteAction()
     {
@@ -84,7 +84,7 @@ class Parameter_DimensionController extends Core_Controller
 
     /**
      * Ajout de membres
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function addMembersAction()
     {
@@ -99,7 +99,7 @@ class Parameter_DimensionController extends Core_Controller
         $number = 0;
 
         foreach ($lines as $line) {
-            $array = explode(';', $line);
+            $array = explode("\t", $line);
 
             if (count($array) !== 2) {
                 UI_Message::addMessageStatic(__('Parameter', 'import', 'invalidMembersInput'));
@@ -107,9 +107,17 @@ class Parameter_DimensionController extends Core_Controller
                 return;
             }
 
-            list($ref, $label) = $array;
-            $ref = trim($ref);
-            $label = trim($label);
+            if (count($array) === 2) {
+                list($label, $ref) = $array;
+                $label = trim($label);
+                $ref = trim($ref);
+            } else {
+                $label = trim(reset($array));
+                $ref = '';
+            }
+            if (empty($ref)) {
+                $ref = Core_Tools::refactor($label);
+            }
 
             try {
                 $member = new Member($dimension, $ref, $label);

@@ -32,31 +32,33 @@ foreach ($product as $members) {
     </button>
 </p>
 
-<div id="editElementsPopup" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><?=__('Parameter', 'element', 'editManyElements')?></h3>
-    </div>
-    <form id="editElementsForm" action="<?=$this->baseUrl('parameter/edit-elements/edit-elements')?>" method="post">
-        <div class="modal-body">
-            <div class="control-group">
-                <div class="controls">
-                    <textarea id="inputElementList" name="elements" class="pre input-block-level" rows="12"><?=$inputContent?></textarea>
-                    <p class="help-block">
-                        <strong><span id="inputElementListValidationOK" class="text-success"></span></strong>
-                        <strong><span id="inputElementListValidationNOK" class="text-error"></span></strong>
-                    </p>
-                    <p><span class="help-block"><?=__('Parameter', 'import', 'editElementListHelp')?></span></p>
-                    <pre><code><?=__('Parameter', 'import', 'editElementListExample')?></code></pre>
+<div id="editElementsPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editElementsForm" action="<?=$this->baseUrl('parameter/edit-elements/edit-elements')?>" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3><?=__('Parameter', 'element', 'editManyElements')?></h3>
                 </div>
-            </div>
-            <input type="hidden" name="idFamily" value="<?=$this->family->getId()?>" />
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea id="inputElementList" name="elements" class="pre col-sm-12" rows="12"><?=$inputContent?></textarea>
+                        <p class="help-block">
+                            <strong><span id="inputElementListValidationOK" class="text-success"></span></strong>
+                            <strong><span id="inputElementListValidationNOK" class="text-error"></span></strong>
+                        </p>
+                        <p><span class="help-block"><?=__('Parameter', 'import', 'editElementListHelp')?></span></p>
+                        <pre><code><?=__('Parameter', 'import', 'editElementListExample')?></code></pre>
+                    </div>
+                    <input type="hidden" name="idFamily" value="<?=$this->family->getId()?>">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'validate')?></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+                </div>
+            </form>
         </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'validate')?></button>
-            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
-        </div>
-    </form>
+    </div>
 </div>
 
 <script>

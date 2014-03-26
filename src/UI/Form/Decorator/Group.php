@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\Collapse;
+
 /**
  * @author valentin.claras
  * @package UI
@@ -26,20 +28,18 @@ class UI_Form_Decorator_Group extends Zend_Form_Decorator_Abstract
         }
 
         if ($this->getElement()->foldaway == true) {
-            $collapse = new UI_HTML_Collapse($this->getElement()->getId());
-            $collapse->title = $this->getElement()->getLabel();
-            $collapse->body = $content;
+            $collapse = new Collapse($this->getElement()->getId(), $this->getElement()->getLabel(), $content);
             $collapse->foldedByDefault = $this->getElement()->folded;
-            $collapse->addAttribute('class', 'subGroup');
+            $collapse->addClass('subGroup');
             if ($this->getElement() instanceof UI_Form_Element_GroupRepeated) {
-                $collapse->addAttribute('class', 'repeatedGroup');
+                $collapse->addClass('repeatedGroup');
             }
             foreach ($this->getElement()->getAttributes() as $name => $value) {
-                $collapse->addAttribute($name, $value);
+                $collapse->setAttribute($name, $value);
             }
 
             if ($this->getElement()->isHidden()) {
-                $collapse->addAttribute('class', 'hide');
+                $collapse->addClass('hide');
             }
 
             $content = $collapse->getHTML();

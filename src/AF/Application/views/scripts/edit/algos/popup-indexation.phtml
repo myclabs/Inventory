@@ -19,8 +19,8 @@ $datagrid->addCol($axisColumn);
 $typeColumn = new UI_Datagrid_Col_List('type', __('AF', 'configInteractionDatagrid', 'methodOfDeterminingHeader'));
 $typeColumn->editable = true;
 $typeColumn->list = [
-    FixedIndex::class      => __('AF', 'configInteractionDatagrid', 'fixedValueOption'),
-    AlgoResultIndex::class => __('Algo', 'name', 'algorithm')
+    'FixedIndex'      => __('AF', 'configInteractionDatagrid', 'fixedValueOption'),
+    'AlgoResultIndex' => __('Algo', 'name', 'algorithm')
 ];
 $datagrid->addCol($typeColumn);
 

@@ -2,54 +2,55 @@
 
 use Parameter\Domain\Family\Family;
 
-UI_Form::addHeader();
 UI_Datagrid::addHeader();
 UI_TMD::addHeader();
 
 /** @var $family Family */
 $family = $this->family;
-
-if ($this->edit) {
-    $collapseGeneralData = new UI_HTML_Collapse('collapseGeneralData');
-    $collapseGeneralData->title = __('Parameter', 'familyDetail', 'generalDataTitle');
-    $collapseGeneralData->foldedByDefault = true;
-    $collapseGeneralData->body = $this->partial('family/details/general-edit.phtml', [
-        'family' => $family,
-    ]);
-    $generalData = $collapseGeneralData->render();
-} else {
-    $generalData = $this->partial('family/details/general-view.phtml', [
-         'family' => $family,
-    ]);
-}
-
 ?>
 
 <div class="page-header">
     <h1><?=$this->escape($family->getLabel())?></h1>
 </div>
 
-<?php
-echo $generalData;
+<section id="widget-grid">
 
-// TMD
-$tmd = $this->partial('family/details/tmd.phtml', [
-    'family' => $family,
-    'edit'   => $this->edit,
-]);
-if ($this->edit) {
-    $collapseTMD = new UI_HTML_Collapse('collapseTMD', __('Parameter', 'element', 'elements'));
-    $collapseTMD->body = $tmd;
-    $collapseTMD->display();
-} else {
-    echo "<legend>" . __('UI', 'name', 'elements') . "</legend>";
-    echo $tmd;
-}
+    <div class="jarviswidget" <?=$this->edit ? 'data-widget-collapsed="true"' : ''?>>
+        <header>
+            <h2><?=__('Parameter', 'familyDetail', 'generalDataTitle')?></h2>
+        </header>
+        <div>
+            <?php
+            if ($this->edit) {
+                echo $this->partial('family/details/general-edit.phtml', ['family' => $family]);
+            } else {
+                echo $this->partial('family/details/general-view.phtml', ['family' => $family]);
+            }
+            ?>
+        </div>
+    </div>
 
-// Edition
-if ($this->edit) {
-    $collapseEditDimensions = new UI_HTML_Collapse('collapseEditDimensions');
-    $collapseEditDimensions->title = __('Parameter', 'name', 'dimensions');
-    $collapseEditDimensions->body = $this->partial('family/details/edit-dimensions.phtml', ['family' => $family]);
-    echo $collapseEditDimensions->render();
-}
+    <div class="jarviswidget">
+        <header>
+            <h2><?=__('Parameter', 'element', 'elements')?></h2>
+        </header>
+        <div>
+            <?=$this->partial('family/details/tmd.phtml', [
+                'family' => $family,
+                'edit'   => $this->edit,
+            ])?>
+        </div>
+    </div>
+
+    <?php if ($this->edit) : ?>
+        <div class="jarviswidget">
+            <header>
+                <h2><?=__('Parameter', 'name', 'dimensions')?></h2>
+            </header>
+            <div>
+                <?=$this->partial('family/details/edit-dimensions.phtml', ['family' => $family])?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+</section>

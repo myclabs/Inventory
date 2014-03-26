@@ -511,8 +511,6 @@ class Orga_Service_ETLStructure
      */
     public function addGranularityDWReportsToCellDWCube(Orga_Model_Cell $cell)
     {
-        $queryDWCube = new Core_Model_Query();
-        $queryDWCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $cell->getGranularity()->getDWCube());
         foreach ($cell->getGranularity()->getDWCube()->getReports() as $granularityDWReport) {
             $granularityReport = Orga_Model_GranularityReport::loadByGranularityDWReport($granularityDWReport);
             $this->copyGranularityReportToCellDWCube($granularityReport, $cell->getDWCube());
@@ -1036,7 +1034,7 @@ class Orga_Service_ETLStructure
      */
     public function resetCellDWCube(Orga_Model_Cell $cell)
     {
-        if ($cell->getGranularity()->getCellsGenerateDWCubes()) {
+        if (!$cell->getGranularity()->getCellsGenerateDWCubes()) {
             return;
         }
 

@@ -1,0 +1,28 @@
+/* Logo texte */
+#logo-group {
+    margin-left: 25px;
+    font-size: 18px;
+    font-weight: 300;
+}
+#logo-group a {
+    color: #333;
+}
+#logo-group a:hover {
+    text-decoration: none;
+}
+
+/* Pas de breadcrumb */
+.fixed-ribbon #content {
+    padding-top: 10px;
+}
+
+/* Page header de bootstrap n'est pas trop compatible */
+.page-header {
+    margin: auto;
+    border-bottom: none;
+}
+
+/* Correction de l'affichage des messages d'erreur en haut de page */
+#messageZone .alert {
+    margin: 0;
+}

@@ -73,8 +73,15 @@ class User_ActionController extends UI_Controller_Captcha
                 UI_Message::addMessageStatic(implode(', ', $result->getMessages()));
             }
         }
-        $this->view->assign('user', $this->_helper->auth());
+
+        $user = $this->_helper->auth();
+        if ($user !== null) {
+            $this->redirect('account/dashboard');
+        }
+
+        $this->view->assign('user', $user);
         $this->view->assign('enableRegister', $this->enableRegister);
+        $this->_helper->_layout->setLayout('layout-public');
     }
 
     /**

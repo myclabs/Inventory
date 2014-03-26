@@ -23,7 +23,7 @@ class PopulateOrga extends AbstractPopulateOrga
         $output->writeln('  <info>Populating Orga</info>');
 
         // Création d'un compte client
-        $account = new Account('The fantastic pizza factory');
+        $account = new Account('Pizza Forever Inc.');
         $this->accountRepository->add($account);
 
         // Création d'une organisation.

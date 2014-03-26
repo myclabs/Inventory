@@ -40,7 +40,7 @@ if ($author === $this->user) {
     <dd><?=$message->getCreationDate()->format('d M Y - H:m')?></dd>
 </dl>
 
-<div class="well well-small">
+<div class="well well-sm">
     <h4><?=$message->getTitle()?></h4>
     <hr>
     <?=Core_Tools::textile($message->getText())?>

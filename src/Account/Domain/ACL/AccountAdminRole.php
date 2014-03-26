@@ -24,6 +24,8 @@ class AccountAdminRole extends Role
     {
         $this->account = $account;
 
+        $account->addAdminRole($this);
+
         parent::__construct($identity);
     }
 
@@ -42,7 +44,5 @@ class AccountAdminRole extends Role
             Actions::all(),
             $this->account
         );
-
-        // TODO cascade manuelle sur les cellules globales
     }
 }

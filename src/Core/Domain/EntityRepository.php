@@ -18,26 +18,26 @@ interface EntityRepository extends ObjectRepository, Selectable
     /**
      * @param object $entity
      */
-    function add($entity);
+    public function add($entity);
 
     /**
      * @param object $entity
      */
-    function remove($entity);
+    public function remove($entity);
 
     /**
      * Returns the number of elements in the repository.
      *
      * @return int
      */
-    function count();
+    public function count();
 
     /**
      * Returns all elements of the repository.
      *
      * @return object[]
      */
-    function getAll();
+    public function getAll();
 
     /**
      * Returns one element from the repository.
@@ -47,7 +47,7 @@ interface EntityRepository extends ObjectRepository, Selectable
      * @throws \Core_Exception_NotFound The entity was not found.
      * @return object
      */
-    function get($id);
+    public function get($id);
 
     /**
      * Returns one element from the repository based on given criterias.
@@ -58,7 +58,7 @@ interface EntityRepository extends ObjectRepository, Selectable
      * @throws \Core_Exception_TooMany Too many results were found for the given criterias.
      * @return object
      */
-    function getBy(array $criteria);
+    public function getBy(array $criteria);
 
     /**
      * Selects all elements from a selectable that match the expression and
@@ -68,5 +68,5 @@ interface EntityRepository extends ObjectRepository, Selectable
      *
      * @return Paginator
      */
-    function matching(Criteria $criteria);
+    public function matching(Criteria $criteria);
 }

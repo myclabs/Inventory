@@ -1,0 +1,5 @@
+fieldset.collapse-wrapper legend a {
+    display: inline-block;
+    width: 100%;
+    color: black;
+}

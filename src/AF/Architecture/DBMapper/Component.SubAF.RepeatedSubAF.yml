@@ -7,6 +7,3 @@ AF\Domain\Component\SubAF\RepeatedSubAF:
     minInputNumber:
       type: integer
       nullable: false
-    withFreeLabel:
-      type: boolean
-      nullable: false

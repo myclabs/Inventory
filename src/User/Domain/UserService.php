@@ -162,6 +162,20 @@ class UserService
     }
 
     /**
+     * Return the user for the given email. If the user doesn't exist, invite him.
+     * @param string $email
+     * @return User
+     */
+    public function getOrInvite($email)
+    {
+        if (User::isEmailUsed($email)) {
+            return User::loadByEmail($email);
+        }
+
+        return $this->inviteUser($email);
+    }
+
+    /**
      * Envoie un mail à l'utilisateur
      * @param User   $user
      * @param string $subject

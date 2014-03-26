@@ -40,12 +40,12 @@ class AccountViewFactory
     {
         $accountView = new AccountView($account->getId(), $account->getName());
 
-        // TODO améliorer : Organisations
+        // Organisations
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
         $query->aclFilter->enabled = true;
         $query->aclFilter->user = $user;
-        $query->aclFilter->action = Actions::VIEW;
+        $query->aclFilter->action = Actions::TRAVERSE;
         foreach (Orga_Model_Organization::loadList($query) as $organization) {
             /** @var Orga_Model_Organization $organization */
             $accountView->organizations[] = $this->organizationViewFactory->createOrganizationView(

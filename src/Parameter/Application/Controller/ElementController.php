@@ -12,7 +12,7 @@ class Parameter_ElementController extends Core_Controller
 
     /**
      * Détails d'un élément
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function detailsAction()
     {
@@ -33,7 +33,7 @@ class Parameter_ElementController extends Core_Controller
 
     /**
      * Modification d'un élément
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function editSubmitAction()
     {
@@ -62,6 +62,10 @@ class Parameter_ElementController extends Core_Controller
         }
 
         if (! $this->hasFormError()) {
+            /** @noinspection PhpUndefinedVariableInspection */
+            if ($digitalValue !== null && $uncertainty === null) {
+                $uncertainty = 0;
+            }
             /** @noinspection PhpUndefinedVariableInspection */
             $value = new Calc_Value($digitalValue, $uncertainty);
             $cell->setValue($value);

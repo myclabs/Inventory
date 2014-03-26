@@ -1,7 +1,11 @@
 <?php
 
-use AF\Domain\AFLibrary;
+use Account\Domain\Account;
+use Account\Domain\AccountRepository;
 use Core\Annotation\Secure;
+use MyCLabs\ACL\ACLManager;
+use Parameter\Domain\ParameterLibrary;
+use User\Domain\ACL\Actions;
 
 /**
  * @author matthieu.napoli
@@ -9,15 +13,56 @@ use Core\Annotation\Secure;
 class Parameter_LibraryController extends Core_Controller
 {
     /**
-     * @Secure("viewParameter")
+     * @Inject
+     * @var ACLManager
+     */
+    private $aclManager;
+
+    /**
+     * @Inject
+     * @var AccountRepository
+     */
+    private $accountRepository;
+
+    /**
+     * @Secure("viewParameterLibrary")
      */
     public function viewAction()
     {
-        /** @var $library AFLibrary */
-        $library = AFLibrary::load($this->getParam('id'));
+        /** @var $library ParameterLibrary */
+        $library = ParameterLibrary::load($this->getParam('id'));
 
         $this->view->assign('library', $library);
-        // TODO droit d'édition
-        $this->view->assign('edit', true);
+        $canEdit = $this->aclManager->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
+        $this->view->assign('edit', $canEdit);
+        $this->setActiveMenuItemParameterLibrary($library->getId());
+    }
+
+    /**
+     * @Secure("editAccount")
+     */
+    public function newAction()
+    {
+        /** @var $account Account */
+        $account = $this->accountRepository->get($this->getParam('account'));
+
+        if ($this->getRequest()->isPost()) {
+            $label = trim($this->getParam('label'));
+
+            if ($label == '') {
+                UI_Message::addMessageStatic(__('UI', 'formValidation', 'allFieldsRequired'));
+            } else {
+                $library = new ParameterLibrary($account, $label);
+                $library->save();
+                $this->entityManager->flush();
+
+                UI_Message::addMessageStatic(__('Parameter', 'library', 'libraryCreated'), UI_Message::TYPE_SUCCESS);
+                $this->redirect('parameter/library/view/id/' . $library->getId());
+                return;
+            }
+        }
+
+        $this->view->assign('account', $account);
+        $this->setActiveMenuItem('parameter-new');
     }
 }

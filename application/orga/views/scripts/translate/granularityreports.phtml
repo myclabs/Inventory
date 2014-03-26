@@ -30,7 +30,7 @@ foreach ($this->granularities as $granularity) {
         $datagrid->addParam('refGranularity', $granularity->getRef());
         $datagrid->initialLoading = false;
 
-        echo $this->collapse('translateGranularityReports'.$granularity->getId(), $granularity->getLabel(), $datagrid->getHTML())->collapsed();
+        echo $this->collapse('translateGranularityReports'.$granularity->getId(), $granularity->getLabel(), $datagrid->getHTML());
 
         $script = '';
         $script .= '$(\'#translateGranularityReports'.$granularity->getId().'\').on(\'show\', function(e) {';

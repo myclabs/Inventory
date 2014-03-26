@@ -1,20 +1,14 @@
 <?php
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
+use MyCLabs\MUIH\Collapse;
 
-/**
- * Vue de l'onglet traitement des af
- * @author  matthieu.napoli
- * @package AF
- */
 /** @var $af AF */
 $af = $this->af;
 
 
 // Algo principal
-$algoMainCollapse = new UI_HTML_Collapse('algoMainCollapse');
-$algoMainCollapse->foldedByDefault = true;
-$algoMainCollapse->title = __('AF', 'configTreatmentCollapse', 'executionAlgorithmCollapse');
+$algoMainCollapse = new Collapse('algoMainCollapse', __('AF', 'configTreatmentCollapse', 'executionAlgorithmCollapse'));
 $algoMainForm = new UI_Form('mainAlgo');
 $algoMainForm->setAction('af/edit/algo-main-submit/id/' . $af->getId());
 $algoMainExpression = new UI_Form_Element_Textarea('expression');
@@ -27,96 +21,107 @@ if ($mainAlgo->getExpression()) {
 }
 $algoMainForm->addElement($algoMainExpression);
 $algoMainForm->addSubmitButton();
-$algoMainCollapse->body = $algoMainForm->render();
+$algoMainCollapse->setContent($algoMainForm->render());
 echo $algoMainCollapse->render();
 
 
 // Algorithmes numériques
-$algoNumericCollapse = new UI_HTML_Collapse('algoNumericCollapse');
-$algoNumericCollapse->foldedByDefault = true;
-$algoNumericCollapse->title = __('AF', 'configTreatmentCollapse', 'numericAlgorithmCollapse');
+$algoNumericCollapse = new Collapse(
+    'algoNumericCollapse',
+    __('AF', 'configTreatmentCollapse', 'numericAlgorithmCollapse')
+);
 
 // Numeric expression
-$algoNumericExpressionCollapse = new UI_HTML_Collapse('algoNumericExpressionCollapse');
-$algoNumericExpressionCollapse->foldedByDefault = true;
-$algoNumericExpressionCollapse->title = __('TEC', 'name', 'expressions');
-$algoNumericExpressionCollapse->body = $this->partial('edit/algos/numeric-expression.phtml', array('af' => $af));
+$algoNumericExpressionCollapse = new Collapse('algoNumericExpressionCollapse', __('TEC', 'name', 'expressions'));
+$algoNumericExpressionCollapse->setContent($this->partial('edit/algos/numeric-expression.phtml', ['af' => $af]));
 // Parameter
-$algoNumericParameterCollapse = new UI_HTML_Collapse('algoNumericParameterCollapse');
-$algoNumericParameterCollapse->foldedByDefault = true;
-$algoNumericParameterCollapse->title = __('UI', 'name', 'parameters');
-$algoNumericParameterCollapse->body = $this->partial('edit/algos/numeric-parameter.phtml', array('af' => $af));
+$algoNumericParameterCollapse = new Collapse('algoNumericParameterCollapse', __('UI', 'name', 'parameters'));
+$algoNumericParameterCollapse->setContent($this->partial('edit/algos/numeric-parameter.phtml', ['af' => $af]));
 // Constantes
-$algoNumericConstantCollapse = new UI_HTML_Collapse('algoNumericConstantCollapse');
-$algoNumericConstantCollapse->foldedByDefault = true;
-$algoNumericConstantCollapse->title = __('UI', 'name', 'constants');
-$algoNumericConstantCollapse->body = $this->partial('edit/algos/numeric-constant.phtml', array('af' => $af));
+$algoNumericConstantCollapse = new Collapse('algoNumericConstantCollapse', __('UI', 'name', 'constants'));
+$algoNumericConstantCollapse->setContent($this->partial('edit/algos/numeric-constant.phtml', ['af' => $af]));
 // Numeric input
-$algoNumericInputCollapse = new UI_HTML_Collapse('algoNumericInputCollapse');
-$algoNumericInputCollapse->foldedByDefault = true;
-$algoNumericInputCollapse->title = __('AF', 'configTreatmentCollapse', 'numericInputCollapse');
-$algoNumericInputCollapse->body = $this->partial('edit/algos/numeric-input.phtml',
-                                                 ['af' => $af, 'numericInputList' => $this->numericInputList]);
+$algoNumericInputCollapse = new Collapse(
+    'algoNumericInputCollapse',
+    __('AF', 'configTreatmentCollapse', 'numericInputCollapse')
+);
+$algoNumericInputCollapse->setContent(
+    $this->partial('edit/algos/numeric-input.phtml', ['af' => $af, 'numericInputList' => $this->numericInputList])
+);
 
-$algoNumericCollapse->body = $algoNumericExpressionCollapse->render()
+$algoNumericCollapse->setContent(
+    $algoNumericExpressionCollapse->render()
     . $algoNumericParameterCollapse->render()
     . $algoNumericConstantCollapse->render()
-    . $algoNumericInputCollapse->render();
+    . $algoNumericInputCollapse->render()
+);
 echo $algoNumericCollapse->render();
 
 
 // Algorithmes de sélection
-$algoSelectionTextKeyCollapse = new UI_HTML_Collapse('algoSelectionTextKeyCollapse');
-$algoSelectionTextKeyCollapse->foldedByDefault = true;
-$algoSelectionTextKeyCollapse->title = __('AF', 'configTreatmentCollapse', 'textkeySelectionAlgorithmCollapse');
+$algoSelectionTextKeyCollapse = new Collapse(
+    'algoSelectionTextKeyCollapse',
+    __('AF', 'configTreatmentCollapse', 'textkeySelectionAlgorithmCollapse')
+);
 
 // Algorithmes de sélection de type "Expression"
-$algoSelectionTextKeyExpressionCollapse = new UI_HTML_Collapse('algoSelectionTextKeyExpressionCollapse');
-$algoSelectionTextKeyExpressionCollapse->foldedByDefault = true;
-$algoSelectionTextKeyExpressionCollapse->title = __('TEC', 'name', 'expressions');
-$algoSelectionTextKeyExpressionCollapse->body = $this->partial('edit/algos/selection-textkey-expression.phtml',
-                                                               ['af' => $af]);
+$algoSelectionTextKeyExpressionCollapse = new Collapse(
+    'algoSelectionTextKeyExpressionCollapse',
+    __('TEC', 'name', 'expressions')
+);
+$algoSelectionTextKeyExpressionCollapse->setContent(
+    $this->partial('edit/algos/selection-textkey-expression.phtml', ['af' => $af])
+);
 
 // Algorithmes de sélection à partir d'une saisie de champ de sélection simple
-$algoSelectionTextKeyInputCollapse = new UI_HTML_Collapse('algoSelectionTextKeyInputCollapse');
-$algoSelectionTextKeyInputCollapse->foldedByDefault = true;
-$algoSelectionTextKeyInputCollapse->title = __('AF', 'configTreatmentCollapse', 'inputTextkeySelectionCollapse');
-$algoSelectionTextKeyInputCollapse->body = $this->partial('edit/algos/selection-textkey-input.phtml',
-                                                          ['af' => $af]);
+$algoSelectionTextKeyInputCollapse = new Collapse(
+    'algoSelectionTextKeyInputCollapse',
+    __('AF', 'configTreatmentCollapse', 'inputTextkeySelectionCollapse')
+);
+$algoSelectionTextKeyInputCollapse->setContent(
+    $this->partial('edit/algos/selection-textkey-input.phtml', ['af' => $af])
+);
 
 // Algorithmes de sélection de type "ContextValue"
-$algoSelectionTextKeyContextValueCollapse = new UI_HTML_Collapse('algoSelectionTextKeyContextValueCollapse');
-$algoSelectionTextKeyContextValueCollapse->foldedByDefault = true;
-$algoSelectionTextKeyContextValueCollapse->title = __('AF', 'configTreatmentCollapse', 'orgaCoordinateTextkeySelectionCollapse');
-$algoSelectionTextKeyContextValueCollapse->body = $this->partial('edit/algos/selection-textkey-context-value.phtml',
-    ['af' => $af]);
+$algoSelectionTextKeyContextValueCollapse = new Collapse(
+    'algoSelectionTextKeyContextValueCollapse',
+    __('AF', 'configTreatmentCollapse', 'orgaCoordinateTextkeySelectionCollapse')
+);
+$algoSelectionTextKeyContextValueCollapse->setContent(
+    $this->partial('edit/algos/selection-textkey-context-value.phtml', ['af' => $af])
+);
 
-$algoSelectionTextKeyCollapse->body = $algoSelectionTextKeyExpressionCollapse->render()
+$algoSelectionTextKeyCollapse->setContent(
+    $algoSelectionTextKeyExpressionCollapse->render()
     . $algoSelectionTextKeyInputCollapse->render()
-    . $algoSelectionTextKeyContextValueCollapse->render();
+    . $algoSelectionTextKeyContextValueCollapse->render()
+);
 echo $algoSelectionTextKeyCollapse->render();
 
 
 // Conditions
-$algoConditionCollapse = new UI_HTML_Collapse('algoConditionCollapse');
-$algoConditionCollapse->foldedByDefault = true;
-$algoConditionCollapse->title = __('UI', 'name', 'conditions');
+$algoConditionCollapse = new Collapse('algoConditionCollapse', __('UI', 'name', 'conditions'));
 
 // Conditions composées
-$algoConditionExpressionCollapse = new UI_HTML_Collapse('algoConditionExpressionCollapse');
-$algoConditionExpressionCollapse->foldedByDefault = true;
-$algoConditionExpressionCollapse->title = __('AF', 'configInteractionCollapse', 'composedConditionCollapse');
-$algoConditionExpressionCollapse->body = $this->partial('edit/algos/condition-expression.phtml', ['af' => $af]);
+$algoConditionExpressionCollapse = new Collapse(
+    'algoConditionExpressionCollapse',
+    __('AF', 'configInteractionCollapse', 'composedConditionCollapse')
+);
+$algoConditionExpressionCollapse->setContent($this->partial('edit/algos/condition-expression.phtml', ['af' => $af]));
 
 // Conditions élémentaires
-$algoConditionElementaryCollapse = new UI_HTML_Collapse('algoConditionElementaryCollapse');
-$algoConditionElementaryCollapse->foldedByDefault = true;
-$algoConditionElementaryCollapse->title = __('AF', 'configInteractionCollapse', 'elementaryConditionCollapse');
-$algoConditionElementaryCollapse->body = $this->partial('edit/algos/condition-elementary.phtml',
-                                                        ['af' => $af, 'fieldList' => $this->fieldList]);
+$algoConditionElementaryCollapse = new Collapse(
+    'algoConditionElementaryCollapse',
+    __('AF', 'configInteractionCollapse', 'elementaryConditionCollapse')
+);
+$algoConditionElementaryCollapse->setContent(
+    $this->partial('edit/algos/condition-elementary.phtml', ['af' => $af, 'fieldList' => $this->fieldList])
+);
 
-$algoConditionCollapse->body = $algoConditionExpressionCollapse->render()
-    . $algoConditionElementaryCollapse->render();
+$algoConditionCollapse->setContent(
+    $algoConditionExpressionCollapse->render()
+    . $algoConditionElementaryCollapse->render()
+);
 echo $algoConditionCollapse->render();
 ?>
 

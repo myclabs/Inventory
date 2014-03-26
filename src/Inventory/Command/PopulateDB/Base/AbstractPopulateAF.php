@@ -215,7 +215,6 @@ abstract class AbstractPopulateAF
      * @param $label
      * @param bool $foldaway
      * @param int $minimumRepetition
-     * @param bool $freeLabel
      * @param null $help
      * @param bool $visible
      * @return mixed
@@ -228,14 +227,12 @@ abstract class AbstractPopulateAF
         AF $calledAF,
         $foldaway = true,
         $minimumRepetition = 0,
-        $freeLabel = false,
         $help = null,
         $visible = true
     ) {
         $subAF = new RepeatedSubAF();
         $subAF->setCalledAF($calledAF);
         $subAF->setMinInputNumber($minimumRepetition);
-        $subAF->setWithFreeLabel($freeLabel);
         $subAF->setFoldaway($foldaway);
         return $this->createComponent($subAF, $aF,$parentGroup ,$ref, $label, $help, $visible, $foldaway);
     }

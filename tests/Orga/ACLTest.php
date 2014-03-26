@@ -2,6 +2,7 @@
 
 use Account\Domain\Account;
 use Account\Domain\AccountRepository;
+use Account\Domain\ACL\AccountAdminRole;
 use Core\Test\TestCase;
 use MyCLabs\ACL\ACLManager;
 use User\Domain\ACL\Actions;
@@ -39,6 +40,11 @@ class Orga_Test_ACLTest extends TestCase
      * @var ACLManager
      */
     private $aclManager;
+
+    /**
+     * @var Account
+     */
+    private $account;
 
     /**
      * @var Orga_Model_Organization
@@ -193,6 +199,11 @@ class Orga_Test_ACLTest extends TestCase
     /**
      * @var User
      */
+    private $accountAdministrator;
+
+    /**
+     * @var User
+     */
     private $organizationAdministrator;
 
     /**
@@ -236,11 +247,11 @@ class Orga_Test_ACLTest extends TestCase
 
         $this->entityManager->beginTransaction();
 
-        $account = new Account('Test');
-        $this->accountRepository->add($account);
+        $this->account = new Account('Test');
+        $this->accountRepository->add($this->account);
 
         // Création de l'organization (proche de populateTest au 08/08/2013).
-        $this->organization = new Orga_Model_Organization($account);
+        $this->organization = new Orga_Model_Organization($this->account);
         $this->organization->setLabel('ACL Test');
         $this->organization->save();
 
@@ -356,6 +367,13 @@ class Orga_Test_ACLTest extends TestCase
 
         // Ajout d'utilisateurs.
 
+        // Ajout d'un utilisateur administrateur du compte.
+        $this->accountAdministrator = $this->userService->createUser('accountAdministrator@example.com', 'accountAdministrator');
+        $this->aclManager->grant(
+            $this->accountAdministrator,
+            new AccountAdminRole($this->accountAdministrator, $this->account)
+        );
+
         // Ajout d'un utilisateur administrateur de l'administration.
         $this->organizationAdministrator= $this->userService->createUser('organizationAdministrator@example.com', 'organizationAdministrator');
         $this->aclManager->grant(
@@ -432,7 +450,10 @@ class Orga_Test_ACLTest extends TestCase
      */
     public function testUsersIsAllowed()
     {
+        $this->isAllowedAccountAdministrator();
+
         $this->isAllowedOrganizationAdministrator();
+
         $this->isAllowedGlobalCellAdmin();
         $this->isAllowedAnnecyCellAdmin();
 
@@ -445,19 +466,41 @@ class Orga_Test_ACLTest extends TestCase
     }
 
     /**
+     * Administrateur du compte.
+     */
+    public function isAllowedAccountAdministrator()
+    {
+        // Droits sur le compte
+        $this->assertAllowed($this->accountAdministrator, Actions::VIEW, $this->account);
+        $this->assertAllowed($this->accountAdministrator, Actions::EDIT, $this->account);
+        $this->assertAllowed($this->accountAdministrator, Actions::DELETE, $this->account);
+        $this->assertAllowed($this->accountAdministrator, Actions::ALLOW, $this->account);
+
+        // Droit d'admin sur l'organisation en cascade
+        $this->assertAdminOrganization($this->organizationAdministrator, $this->organization);
+
+        // Peut traverser l'organisation et le compte
+        $this->assertTraverseAccount($this->organizationAdministrator, $this->account);
+        $this->assertTraverseOrganization($this->organizationAdministrator, $this->organization);
+    }
+
+    /**
      * Administrateur de l'organisation.
      */
     public function isAllowedOrganizationAdministrator()
     {
-        // Ne peut pas créer d'organisation
-        $this->assertNotAllowed(
-            $this->organizationAdministrator,
-            Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
-        );
+        // Pas de droits sur le compte
+        $this->assertNotAllowed($this->organizationAdministrator, Actions::VIEW, $this->account);
+        $this->assertNotAllowed($this->organizationAdministrator, Actions::EDIT, $this->account);
+        $this->assertNotAllowed($this->organizationAdministrator, Actions::DELETE, $this->account);
+        $this->assertNotAllowed($this->organizationAdministrator, Actions::ALLOW, $this->account);
 
         // Droit d'admin sur l'organisation
         $this->assertAdminOrganization($this->organizationAdministrator, $this->organization);
+
+        // Peut traverser l'organisation et le compte
+        $this->assertTraverseAccount($this->organizationAdministrator, $this->account);
+        $this->assertTraverseOrganization($this->organizationAdministrator, $this->organization);
     }
 
     /**
@@ -483,6 +526,10 @@ class Orga_Test_ACLTest extends TestCase
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
         );
+
+        // Peut traverser l'organisation et le compte
+        $this->assertTraverseAccount($user, $this->account);
+        $this->assertTraverseOrganization($user, $this->organization);
     }
 
     /**
@@ -516,6 +563,10 @@ class Orga_Test_ACLTest extends TestCase
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
         );
+
+        // Peut traverser l'organisation et le compte
+        $this->assertTraverseAccount($user, $this->account);
+        $this->assertTraverseOrganization($user, $this->organization);
     }
 
     /**
@@ -541,6 +592,10 @@ class Orga_Test_ACLTest extends TestCase
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
         );
+
+        // Peut traverser l'organisation et le compte
+        $this->assertTraverseAccount($user, $this->account);
+        $this->assertTraverseOrganization($user, $this->organization);
     }
 
     /**
@@ -566,6 +621,10 @@ class Orga_Test_ACLTest extends TestCase
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
         );
+
+        // Peut traverser l'organisation et le compte
+        $this->assertTraverseAccount($user, $this->account);
+        $this->assertTraverseOrganization($user, $this->organization);
     }
 
     /**
@@ -591,6 +650,10 @@ class Orga_Test_ACLTest extends TestCase
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
         );
+
+        // Peut traverser l'organisation et le compte
+        $this->assertTraverseAccount($user, $this->account);
+        $this->assertTraverseOrganization($user, $this->organization);
     }
 
     /**
@@ -616,6 +679,10 @@ class Orga_Test_ACLTest extends TestCase
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
         );
+
+        // Peut traverser l'organisation et le compte
+        $this->assertTraverseAccount($user, $this->account);
+        $this->assertTraverseOrganization($user, $this->organization);
     }
 
     /**
@@ -641,6 +708,10 @@ class Orga_Test_ACLTest extends TestCase
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
         );
+
+        // Peut traverser l'organisation et le compte
+        $this->assertTraverseAccount($user, $this->account);
+        $this->assertTraverseOrganization($user, $this->organization);
     }
 
     /**
@@ -685,6 +756,10 @@ class Orga_Test_ACLTest extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Actions::ALLOW;
+        $queryTraverse = new Core_Model_Query();
+        $queryTraverse->aclFilter->enabled = true;
+        $queryTraverse->aclFilter->user = $user;
+        $queryTraverse->aclFilter->action = Actions::TRAVERSE;
 
         // Test toutes les ressources.
 
@@ -697,6 +772,9 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertContains($this->organization, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
+        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $this->assertCount(1, $organisationsTraverse);
+        $this->assertContains($this->organization, $organisationsTraverse);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(47, $cellsView);
@@ -987,6 +1065,10 @@ class Orga_Test_ACLTest extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Actions::ALLOW;
+        $queryTraverse = new Core_Model_Query();
+        $queryTraverse->aclFilter->enabled = true;
+        $queryTraverse->aclFilter->user = $user;
+        $queryTraverse->aclFilter->action = Actions::TRAVERSE;
 
         // Test toutes les ressources.
 
@@ -997,6 +1079,9 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertCount(0, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
+        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $this->assertCount(1, $organisationsTraverse);
+        $this->assertContains($this->organization, $organisationsTraverse);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(47, $cellsView);
@@ -1287,6 +1372,10 @@ class Orga_Test_ACLTest extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Actions::ALLOW;
+        $queryTraverse = new Core_Model_Query();
+        $queryTraverse->aclFilter->enabled = true;
+        $queryTraverse->aclFilter->user = $user;
+        $queryTraverse->aclFilter->action = Actions::TRAVERSE;
 
         // Test toutes les ressources.
 
@@ -1297,6 +1386,9 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertCount(0, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
+        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $this->assertCount(1, $organisationsTraverse);
+        $this->assertContains($this->organization, $organisationsTraverse);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(17, $cellsView);
@@ -1587,6 +1679,10 @@ class Orga_Test_ACLTest extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Actions::ALLOW;
+        $queryTraverse = new Core_Model_Query();
+        $queryTraverse->aclFilter->enabled = true;
+        $queryTraverse->aclFilter->user = $user;
+        $queryTraverse->aclFilter->action = Actions::TRAVERSE;
 
         // Test toutes les ressources.
 
@@ -1597,6 +1693,9 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertCount(0, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
+        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $this->assertCount(1, $organisationsTraverse);
+        $this->assertContains($this->organization, $organisationsTraverse);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(10, $cellsView);
@@ -1887,6 +1986,10 @@ class Orga_Test_ACLTest extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Actions::ALLOW;
+        $queryTraverse = new Core_Model_Query();
+        $queryTraverse->aclFilter->enabled = true;
+        $queryTraverse->aclFilter->user = $user;
+        $queryTraverse->aclFilter->action = Actions::TRAVERSE;
 
         // Test toutes les ressources.
 
@@ -1897,6 +2000,9 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertCount(0, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
+        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $this->assertCount(1, $organisationsTraverse);
+        $this->assertContains($this->organization, $organisationsTraverse);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(7, $cellsView);
@@ -2187,6 +2293,10 @@ class Orga_Test_ACLTest extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Actions::ALLOW;
+        $queryTraverse = new Core_Model_Query();
+        $queryTraverse->aclFilter->enabled = true;
+        $queryTraverse->aclFilter->user = $user;
+        $queryTraverse->aclFilter->action = Actions::TRAVERSE;
 
         // Test toutes les ressources.
 
@@ -2197,6 +2307,9 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertCount(0, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
+        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $this->assertCount(1, $organisationsTraverse);
+        $this->assertContains($this->organization, $organisationsTraverse);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(7, $cellsView);
@@ -2487,6 +2600,10 @@ class Orga_Test_ACLTest extends TestCase
         $queryAllow->aclFilter->enabled = true;
         $queryAllow->aclFilter->user = $user;
         $queryAllow->aclFilter->action = Actions::ALLOW;
+        $queryTraverse = new Core_Model_Query();
+        $queryTraverse->aclFilter->enabled = true;
+        $queryTraverse->aclFilter->user = $user;
+        $queryTraverse->aclFilter->action = Actions::TRAVERSE;
 
         // Test toutes les ressources.
 
@@ -2497,6 +2614,9 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertCount(0, $organisationsEdit);
         $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
+        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $this->assertCount(1, $organisationsTraverse);
+        $this->assertContains($this->organization, $organisationsTraverse);
 
         $cellsView = Orga_Model_Cell::loadList($queryView);
         $this->assertCount(7, $cellsView);
@@ -2775,6 +2895,16 @@ class Orga_Test_ACLTest extends TestCase
     public function assertNotAllowed(User $user, $action, ResourceInterface $resource, $message = '')
     {
         $this->assertFalse($this->aclManager->isAllowed($user, $action, $resource), $message);
+    }
+
+    public function assertTraverseAccount(User $user, Account $account)
+    {
+        $this->assertAllowed($user, Actions::TRAVERSE, $account);
+    }
+
+    public function assertTraverseOrganization(User $user, Orga_Model_Organization $organization)
+    {
+        $this->assertAllowed($user, Actions::TRAVERSE, $organization);
     }
 
     public function assertAdminOrganization(User $user, Orga_Model_Organization $organization)

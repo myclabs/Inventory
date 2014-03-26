@@ -1,45 +1,39 @@
 <?php
-
-use Parameter\Domain\Family\Family;
-
-/** @var $family Family */
+/** @var $family Parameter\Domain\Family\Family */
 $family = $this->family;
 ?>
 
-<div class="well">
-    <p>
-        <strong><?=__('UI', 'name', 'category') . __('UI', 'other', ':')?></strong>
-        <?php
-        $category = $family->getCategory();
-        if ($category) {
-            $categories = '';
-            while ($category) {
-                $categories = $category->getLabel() . ' / ' . $categories;
-                $category = $category->getParentCategory();
-            }
-            echo substr($categories, 0, -3);
-        } else {
-            echo '<span class="muted">'.__('UI', 'other', 'noneFem').'</span>';
-        }
-        ?>
-    </p>
-
-    <p>
-        <strong><?=__('Unit', 'name', 'unit') . __('UI', 'other', ':')?></strong>
-        <?=$family->getValueUnit()->getSymbol()?>
-    </p>
-
-    <p>
-        <strong><?=__('UI', 'name', 'documentation') . __('UI', 'other', ':')?></strong>
-    </p>
-
+<p>
+    <strong><?=__('UI', 'name', 'category') . __('UI', 'other', ':')?></strong>
     <?php
-    $documentation = $family->getDocumentation();
-    if ($documentation) {
-        $displayedDocumentation = Core_Tools::textile($documentation);
+    $category = $family->getCategory();
+    if ($category) {
+        $categories = '';
+        while ($category) {
+            $categories = $category->getLabel() . ' / ' . $categories;
+            $category = $category->getParentCategory();
+        }
+        echo substr($categories, 0, -3);
     } else {
-        $displayedDocumentation = '<p class="muted">' . __('Parameter', 'familyDetail', 'noDocumentation') . '</p>';
+        echo '<span class="text-muted">'.__('UI', 'other', 'noneFem').'</span>';
     }
-    echo $displayedDocumentation;
     ?>
-</div>
+</p>
+
+<p>
+    <strong><?=__('Unit', 'name', 'unit') . __('UI', 'other', ':')?></strong>
+    <?=$family->getValueUnit()->getSymbol()?>
+</p>
+
+<p>
+    <strong><?=__('UI', 'name', 'documentation') . __('UI', 'other', ':')?></strong>
+</p>
+
+<?php
+$documentation = $family->getDocumentation();
+if ($documentation) {
+    $displayedDocumentation = Core_Tools::textile($documentation);
+} else {
+    $displayedDocumentation = '<p class="text-muted">' . __('Parameter', 'familyDetail', 'noDocumentation') . '</p>';
+}
+echo $displayedDocumentation;

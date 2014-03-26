@@ -6,7 +6,7 @@
  */
 
 /**
- * Add div tag with control-group class around an Element.
+ * Add div tag with form-group class around an Element.
  *
  * @author MyC.Sense
  * @package UI
@@ -24,7 +24,7 @@ class UI_Form_Decorator_Line extends Zend_Form_Decorator_Abstract
 
         $options = array(
             'tag'   => 'div',
-            'class' => 'control-group',
+            'class' => 'form-group',
             'id'    => $this->getElement()->getId().'-line'
         );
 

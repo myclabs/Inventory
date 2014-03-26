@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\Button;
+
 /**
  * @author valentin.claras
  * @package UI
@@ -84,9 +86,9 @@ class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha implements UI_Fo
         if ($urlReload !== null) {
             $this->_urlController = $urlReload;
             $captchaReload = new UI_Form_Element_HTML('reloadCaptcha-'.$name);
-            $buttonReload = new UI_HTML_Button(__('UI', 'captcha', 'reloadCaptcha'));
-            $buttonReload->id = $this->getId().'-reload';
-            $captchaReload->content = $buttonReload->render(false);
+            $buttonReload = new Button(__('UI', 'captcha', 'reloadCaptcha'));
+            $buttonReload->setAttribute('id', $this->getId().'-reload');
+            $captchaReload->content = $buttonReload->render();
             $captchaReload->setWithoutDecorators(true);
 
             $this->getElement()->addElement($captchaReload);

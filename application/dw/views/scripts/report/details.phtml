@@ -5,25 +5,30 @@
  * @package DW
  * @subpackage View
  */
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Tab;
+use MyCLabs\MUIH\Tabs;
+
 ?>
 
 <div class="page-header">
     <h1 id="reportLabel"><?=$this->reportLabel?><?=$this->viewConfiguration->getComplementaryPageTitle()?></h1>
     <div>
         <?php if ($this->isNew) { ?>
-        <a id="exportAsPdf" href="javascript: void(0)" class="btn disabled">
+        <a id="exportAsPdf" href="javascript: void(0)" class="btn btn-default disabled">
             <img src="images/dw/pdf_gris.png" alt="pdf" />
         <?php } else { ?>
-        <a id="exportAsPdf" href="dw/report/pdf/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn">
+        <a id="exportAsPdf" href="dw/report/pdf/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn btn-default">
             <img src="images/dw/pdf.png" alt="pdf" />
         <?php }?>
             <?=__('UI', 'verb','exportToPDF')?>
         </a>
         <?php if ($this->isNew) { ?>
-        <a id="exportAsExcel" href="javascript: void(0)" class="btn disabled">
+        <a id="exportAsExcel" href="javascript: void(0)" class="btn btn-default disabled">
             <img src="images/dw/xls_gris.png" alt="xls" />
         <?php } else { ?>
-        <a id="exportAsExcel" href="dw/report/excel/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn">
+        <a id="exportAsExcel" href="dw/report/excel/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn btn-default">
             <img src="images/dw/xls.png" alt="xls" />
         <?php }?>
             <?=__('UI', 'verb','exportToExcel')?>
@@ -33,7 +38,7 @@
         </div>
     </div>
 </div>
-<div class="row-fluid">
+<div class="row">
     <div class="span well" id="configurationPanel">
         <div>
             <!-- <h2><?=__('UI', 'name', 'configuration')?></h2>  -->
@@ -58,18 +63,18 @@
             <?php if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) { ?>
             <hr />
             <?php
-            $saveReportDisplayPopupButton = new UI_HTML_Button(__('UI', 'verb', 'save'));
-            $saveReportDisplayPopupButton->id = 'saveReportButton';
-            $saveReportDisplayPopupButton->icon = 'hdd';
-            $saveReportDisplayPopupButton->link = '#';
-            $saveReportDisplayPopupButton->addAttribute('data-toggle', 'modal');
+            $saveReportDisplayPopupButton = new Button(__('UI', 'verb', 'save'));
+            $saveReportDisplayPopupButton->setAttribute('id', 'saveReportButton');
+            $saveReportDisplayPopupButton->prependContent(new Icon('hdd'));
+            $saveReportDisplayPopupButton->setAttribute('href', '#');
+            $saveReportDisplayPopupButton->setAttribute('data-toggle', 'modal');
             if ($this->isNew) {
-                $saveReportDisplayPopupButton->addAttribute('class', 'btn-inverse disabled');
-                $saveReportDisplayPopupButton->addAttribute('data-target', '#');
-                $saveReportDisplayPopupButton->addAttribute('title', __('DW', 'config', 'applyNeededBeforeSaveReportTooltip'));
+                $saveReportDisplayPopupButton->addClass('disabled');
+                $saveReportDisplayPopupButton->setAttribute('data-target', '#');
+                $saveReportDisplayPopupButton->setAttribute('title', __('DW', 'config', 'applyNeededBeforeSaveReportTooltip'));
             } else {
-                $saveReportDisplayPopupButton->addAttribute('class', 'btn-primary');
-                $saveReportDisplayPopupButton->addAttribute('data-target', '#saveReport');
+                $saveReportDisplayPopupButton->addClass('btn-primary');
+                $saveReportDisplayPopupButton->setAttribute('data-target', '#saveReport');
             }
             $saveReportDisplayPopupButton->display();
 
@@ -125,16 +130,15 @@
                 $saveLabelReport->getElement()->addAction($setLabelNullValue);
             }
 
-            $saveReportButton = new UI_HTML_Button(__('UI', 'verb', 'save'));
-            $saveReportButton->icon = 'check';
-            $saveReportButton->addAttribute('class', 'btn-primary');
-            $saveReportButton->addAttribute('onclick', '$(\'#saveReportAs\').submit();');
+            $saveReportButton = new Button(__('UI', 'verb', 'save'), Button::TYPE_PRIMARY);
+            $saveReportButton->prependContent(new Icon('check'));
+            $saveReportButton->setAttribute('onclick', '$(\'#saveReportAs\').submit();');
 
-            $saveReportClosePopupButton = new UI_HTML_Button(__('UI', 'verb', 'cancel'));
-            $saveReportClosePopupButton->icon = 'remove';
-            $saveReportClosePopupButton->link = '#';
-            $saveReportClosePopupButton->addAttribute('data-toggle', 'modal');
-            $saveReportClosePopupButton->addAttribute('data-target', '#saveReport');
+            $saveReportClosePopupButton = new Button(__('UI', 'verb', 'cancel'));
+            $saveReportClosePopupButton->prependContent(new Icon('remove'));
+            $saveReportClosePopupButton->setAttribute('href', '#');
+            $saveReportClosePopupButton->setAttribute('data-toggle', 'modal');
+            $saveReportClosePopupButton->setAttribute('data-target', '#saveReport');
 
             $saveReportPopup = new UI_Popup_Static('saveReport');
             $saveReportPopup->title = __('DW', 'config', 'saveReportPopupTitle');
@@ -158,22 +162,21 @@
     <div id="reportContent" class="span">
         <?php
 
-        $tabView = new UI_Tab_View('container');
+        $tabView = new Tabs();
+        $tabView->getTabsContent()->setAttribute('id', 'container');
 
-        $tabGraph = new UI_Tab('graph', __('DW', 'name', 'chart'));
-        $tabGraph->dataSource = 'dw/report/graph/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport;
-        $tabGraph->useCache = true;
+        $tabGraph = new Tab('container_graph', __('DW', 'name', 'chart'), 'dw/report/graph/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport);
+        $tabGraph->setAjax(true, true);
+        $tabView->addTab($tabGraph);
         if (!$this->isNew) {
-            $tabGraph->active = true;
+            $tabView->activeTab($tabGraph);
         } else {
             $tabGraph->disabled = true;
         }
-        $tabView->addTab($tabGraph);
         UI_Chart_Generic::addHeader();
 
-        $tabValues = new UI_Tab('values', __('UI', 'name', 'values'));
-        $tabValues->dataSource = 'dw/report/values/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport;
-        $tabValues->useCache = true;
+        $tabValues = new Tab('values', __('UI', 'name', 'values'), 'dw/report/values/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport);
+        $tabValues->setAjax(true, true);
         if ($this->isNew) {
             $tabValues->disabled = true;
         }
@@ -201,14 +204,14 @@
         $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-important\');';
         $script .= '$(\'#reportState\').html(\'<i class="fa fa-exclamation-circle"></i> '.__('DW', 'config', 'reportChangedApplyRequired').'\');';
         if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
-            $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-inverse disabled\');';
+            $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn disabled\');';
             $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#\');';
             $script .= '$(\'#saveReportButton\').attr(\'title\', \''.addslashes(__('DW', 'config', 'applyNeededBeforeSaveReportTooltip')).'\');';
         }
-        $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn disabled\');';
+        $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn btn-default disabled\');';
         $script .= '$(\'#exportAsPdf\').attr(\'href\', \'javascript: void(0)\');';
         $script .= '$(\'#exportAsPdf img\').attr(\'src\', \'images/dw/pdf_gris.png\');';
-        $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn disabled\');';
+        $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn btn-default disabled\');';
         $script .= '$(\'#exportAsExcel\').attr(\'href\', \'javascript: void(0)\');';
         $script .= '$(\'#exportAsExcel img\').attr(\'src\', \'images/dw/xls_gris.png\');';
         $script .= '});';
@@ -218,7 +221,7 @@
             $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-warning\');';
             if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) {
                 $script .= '$(\'#reportState\').html(\'<i class="fa fa-info-circle"></i> '.__('DW', 'config', 'reportNotSaved').'\');';
-                $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-inverse disabled\');';
+                $script .= '$(\'#saveReportButton\').attr(\'class\', \'btn btn-default disabled\');';
                 $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#\');';
                 $script .= '$(\'#saveReportButton\').attr(\'title\', \''.addslashes(__('DW', 'config', 'applyNeededBeforeSaveReportTooltip')).'\');';
             } else {
@@ -237,7 +240,7 @@
             $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn\');';
             $script .= '$(\'#exportAsPdf\').attr(\'href\', \'dw/report/pdf/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
             $script .= '$(\'#exportAsPdf img\').attr(\'src\', \'images/dw/pdf.png\');';
-            $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn\');';
+            $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn btn-default\');';
             $script .= '$(\'#exportAsExcel\').attr(\'href\', \'dw/report/excel/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
             $script .= '$(\'#exportAsExcel img\').attr(\'src\', \'images/dw/xls.png\');';
             $script .= '$(\'#reportState\').attr(\'class\', \'badge badge-success\');';
@@ -276,10 +279,10 @@
             $script .= '$(\'#saveReportButton\').attr(\'data-target\', \'#saveReport\');';
             $script .= '$(\'#saveReportButton\').attr(\'title\', \'\');';
         }
-        $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn\');';
+        $script .= '$(\'#exportAsPdf\').attr(\'class\', \'btn btn-default\');';
         $script .= '$(\'#exportAsPdf\').attr(\'href\', \'dw/report/pdf/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
         $script .= '$(\'#exportAsPdf img\').attr(\'src\', \'images/dw/pdf.png\');';
-        $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn\');';
+        $script .= '$(\'#exportAsExcel\').attr(\'class\', \'btn btn-default\');';
         $script .= '$(\'#exportAsExcel\').attr(\'href\', \'dw/report/excel/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport.'\');';
         $script .= '$(\'#exportAsExcel img\').attr(\'src\', \'images/dw/xls.png\');';
         if ($this->isNew) {

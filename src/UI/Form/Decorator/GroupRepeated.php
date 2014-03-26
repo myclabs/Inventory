@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\Button;
+
 /**
  * @author valentin.claras
  * @package UI
@@ -44,8 +46,8 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         );
         $htmlElementTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlElementTagDecorator->setOptions($elementOptions);
-        $deleteButton = new UI_HTML_Button(__('UI', 'verb', 'delete'));
-        $deleteButton->addAttribute('class', 'deleteRow');
+        $deleteButton = new Button(__('UI', 'verb', 'delete'));
+        $deleteButton->addClass('deleteRow');
 
 
         // Header.
@@ -109,15 +111,15 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $content = $htmlTagDecorator->render($headerRow.$elementsRow);
 
         // Add Button
-        $addButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
-        $addButton->addAttribute('id', $this->getElement()->getId().'_add');
-        $addButton->addAttribute('class', 'addRow');
+        $addButton = new Button(__('UI', 'verb', 'add'));
+        $addButton->setAttribute('id', $this->getElement()->getId().'_add');
+        $addButton->addClass('addRow');
         $content .= $addButton->render();
 
         $addScript = '';
         $addScript .= 'var '.$this->getElement()->getId().'_nextRowId = '.$occurrence.';';
         $addScript .= '$(\'#'.$this->getElement()->getId().'_add'.'\').on(\'click\', function(e) {';
-        $addScript .= '$(\'#'.$this->getElement()->getId().' tbody\').append(\''.$baseElementsRow.'\'.replace('.
+        $addScript .= '$(\'#'.$this->getElement()->getId().' tbody\').append(\''.str_replace('\'', '\\\'', $baseElementsRow).'\'.replace('.
             '/'.self::OCCURRENCE_SEPARATOR.'0/g, \''.self::OCCURRENCE_SEPARATOR.'\'+'.$this->getElement()->getId().'_nextRowId));';
         $addScript .= ''.$this->getElement()->getId().'_nextRowId++;';
         $addScript .= '});';

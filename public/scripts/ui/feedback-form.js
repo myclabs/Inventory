@@ -40,7 +40,7 @@
 					<textarea name="details" rows="2" style="width: 100%"></textarea> \
 				</p> \
 				<input type="submit" class="btn btn-primary" value="' + __('UI', 'verb', 'send') + '"> \
-				<input type="button" class="cancel btn" value="' + __('UI', 'verb', 'cancel') + '"> \
+				<input type="button" class="cancel btn btn-default" value="' + __('UI', 'verb', 'cancel') + '"> \
 			</div> \
 		</form>');
 

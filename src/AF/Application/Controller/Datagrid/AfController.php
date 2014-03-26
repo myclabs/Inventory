@@ -23,14 +23,17 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     private $afDeletionService;
 
     /**
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getelementsAction()
     {
         /** @var $library AFLibrary */
         $library = AFLibrary::load($this->getParam('library'));
 
-        foreach ($library->getAFList() as $af) {
+        $this->totalElements = count($library->getAFList());
+        $afList = $library->getAFList($this->request->totalElements, $this->request->startIndex);
+
+        foreach ($afList as $af) {
             $data = [];
             $data['index'] = $af->getId();
             $data['category'] = $this->cellList($af->getCategory()->getId());
@@ -56,13 +59,12 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             ]), __('UI', 'verb', 'duplicate'), 'plus-circle');
             $this->addLine($data);
         }
-        $this->totalElements = AF::countTotal($this->request);
         $this->send();
     }
 
 
     /**
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function addelementAction()
     {
@@ -113,9 +115,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function updateelementAction()
     {
@@ -152,9 +152,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function deleteelementAction()
     {

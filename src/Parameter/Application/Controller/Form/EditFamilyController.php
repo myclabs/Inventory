@@ -13,22 +13,20 @@ class Parameter_Form_EditFamilyController extends Core_Controller
 
     /**
      * Soumission du formulaire
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function submitAction()
     {
         /** @var $family Family */
         $family = Family::load($this->getParam('id'));
 
-        $formData = $this->getFormData('editFamily');
-
         // Label
-        $label = $formData->getValue('label');
+        $label = $this->getParam('label');
         if (empty($label)) {
             $this->addFormError('label', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         // Ref
-        $ref = $formData->getValue('ref');
+        $ref = $this->getParam('ref');
         if (empty($ref)) {
             $this->addFormError('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
@@ -45,7 +43,7 @@ class Parameter_Form_EditFamilyController extends Core_Controller
             }
         }
         // Unit
-        $refUnit = $formData->getValue('unit');
+        $refUnit = $this->getParam('unit');
         if (empty($refUnit)) {
             $this->addFormError('unit', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
@@ -55,7 +53,7 @@ class Parameter_Form_EditFamilyController extends Core_Controller
             }
         }
         // Documentation
-        $documentation = $formData->getValue('documentation');
+        $documentation = $this->getParam('documentation');
 
         if (! $this->hasFormError()) {
             $family->setLabel($label);

@@ -57,12 +57,8 @@ Feature: Subforms input feature
 
   @javascript
   Scenario: Subform input scenario : display of free label in the result tab
-    Given I am on "af/edit/menu/id/3"
+    Given I am on "af/af/test/id/3"
     And I wait for the page to finish loading
-    And I open tab "Composants"
-    And I open collapse "Sous-formulaires répétés"
-    And I set "Oui" for column "hasFreeLabel" of row 1 of the "subAfRepeatedDatagrid" datagrid with a confirmation message
-    And I click "Test"
     And I click "Ajouter"
     And I fill in "s_f_r__freeLabel__1" with "Blablablabla"
     And I select "Charbon" from "s_f_r__nature_combustible__1"

@@ -8,6 +8,9 @@ use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\Model\CascadingResource;
+use MyCLabs\ACL\Model\EntityResource;
 use Parameter\Domain\Family\Family;
 
 /**
@@ -15,7 +18,7 @@ use Parameter\Domain\Family\Family;
  *
  * @author matthieu.napoli
  */
-class ParameterLibrary extends Core_Model_Entity
+class ParameterLibrary extends Core_Model_Entity implements EntityResource, CascadingResource
 {
     use Core_Model_Entity_Translatable;
 
@@ -101,11 +104,17 @@ class ParameterLibrary extends Core_Model_Entity
     }
 
     /**
+     * @param int|null $count
+     * @param int|null $offset
      * @return Collection|Family[]
      */
-    public function getFamilies()
+    public function getFamilies($count = null, $offset = null)
     {
-        return $this->families;
+        $criteria = Criteria::create();
+        $criteria->setMaxResults($count);
+        $criteria->setFirstResult($offset);
+
+        return $this->families->matching($criteria);
     }
 
     /**
@@ -125,5 +134,21 @@ class ParameterLibrary extends Core_Model_Entity
             ->where(Criteria::expr()->isNull('parentCategory'));
 
         return $this->categories->matching($criteria);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParentResources(EntityManager $entityManager)
+    {
+        return [ $this->account ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSubResources(EntityManager $entityManager)
+    {
+        return [];
     }
 }

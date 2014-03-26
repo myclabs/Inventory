@@ -172,13 +172,13 @@ class Orga_Service_Export
                 $axes = [];
                 foreach ($organization->getFirstOrderedAxes() as $organizationAxis) {
                     foreach ($cell->getMembers() as $member) {
-                        if ($organizationAxis->isNarrowerThan($member->getAxis())) {
-                            continue;
-                        } elseif (!($organizationAxis->isTransverse([$member->getAxis()]))) {
+                        if ($organizationAxis->isBroaderThan($member->getAxis())) {
                             continue 2;
                         }
                     }
-                    $axes[] = $organizationAxis;
+                    if (!$organizationAxis->isTransverse($cell->getGranularity()->getAxes())) {
+                        $axes[] = $organizationAxis;
+                    }
                 }
                 return $axes;
             }
@@ -186,18 +186,7 @@ class Orga_Service_Export
         $modelBuilder->bindFunction(
             'getCellNarrowerMembers',
             function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
-                $members = [];
-                foreach ($axis->getMembers() as $axisMember) {
-                    foreach ($cell->getMembers() as $member) {
-                        if (($axis->isNarrowerThan($member->getAxis())) && in_array($member, $axisMember->getAllParents())) {
-                            continue;
-                        } elseif (!($axis->isTransverse([$member->getAxis()]))) {
-                            continue 2;
-                        }
-                    }
-                    $members[] = $axisMember;
-                }
-                return $members;
+                return $cell->getChildMembersForAxes([$axis])[$axis->getRef()];
             }
         );
         $modelBuilder->bindFunction(
@@ -376,6 +365,7 @@ class Orga_Service_Export
         $modelBuilder->bind('inputs', $inputs);
 
         $modelBuilder->bind('inputAncestor', __('Orga', 'export', 'subForm'));
+        $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
         $modelBuilder->bind('inputLabel', __('Orga', 'export', 'fieldLabel'));
         $modelBuilder->bind('inputRef', __('Orga', 'export', 'fieldRef'));
         $modelBuilder->bind('inputType', __('Orga', 'export', 'fieldType'));
@@ -396,6 +386,28 @@ class Orga_Service_Export
                     }
                 }
                 return '';
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayInputStatus',
+            function (Orga_Model_Cell $cell) {
+                switch ($cell->getAFInputSetPrimary()->getStatus()) {
+                    case PrimaryInputSet::STATUS_FINISHED:
+                        return __('AF', 'inputInput', 'statusFinished');
+                        break;
+                    case PrimaryInputSet::STATUS_COMPLETE:
+                        return __('AF', 'inputInput', 'statusComplete');
+                        break;
+                    case PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE:
+                        return __('AF', 'inputInput', 'statusCalculationIncomplete');
+                        break;
+                    case PrimaryInputSet::STATUS_INPUT_INCOMPLETE;
+                        return __('AF', 'inputInput', 'statusInputIncomplete');
+                        break;
+                    default:
+                        return '';
+                }
             }
         );
 
@@ -451,6 +463,7 @@ class Orga_Service_Export
                 }
             };
             $columns[] = __('Orga', 'export', 'subForm');
+            $columns[] = __('Orga', 'input', 'inputStatus');
             $columns[] = __('Orga', 'export', 'fieldLabel');
             $columns[] = __('Orga', 'export', 'fieldRef');
             $columns[] = __('Orga', 'export', 'fieldType');
@@ -478,9 +491,9 @@ class Orga_Service_Export
             // Ajout des exports de chaque cellules.
             if ($cell->getGranularity() === $granularity) {
                 if ($cell->getAFInputSetPrimary() !== null) {
-                    $cells = [$cell];
+                    $childCells = [$cell];
                 } else {
-                    $cells = [];
+                    $childCells = [];
                 }
             } else {
                 $criteria = new \Doctrine\Common\Collections\Criteria();
@@ -488,23 +501,23 @@ class Orga_Service_Export
                 $criteria->where($criteria->expr()->eq('relevant', true));
                 $criteria->where($criteria->expr()->eq('allParentsRelevant', true));
                 $criteria->orderBy(['tag' => 'ASC']);
-                $cells = $cell->getChildCellsForGranularity($granularity)->matching($criteria)->toArray();
+                $childCells = $cell->getChildCellsForGranularity($granularity)->matching($criteria)->toArray();
             }
-            foreach ($cells as $cell) {
-                $cellFile = $inputsExportsDirectory . $cell->getId() . '.' . $format;
-                if (!file_exists($cellFile)) {
+            foreach ($childCells as $childCell) {
+                $childCellFile = $inputsExportsDirectory . $childCell->getId() . '.' . $format;
+                if (!file_exists($childCellFile)) {
                     continue;
                 }
-                $cellInputsPHPExcel = PHPExcel_IOFactory::load($cellFile);
-                $cellInputsEndDataRow = $cellInputsPHPExcel->getActiveSheet()->getHighestRow();
-                if ($cellInputsEndDataRow < 2) {
+                $childCellInputsPHPExcel = PHPExcel_IOFactory::load($childCellFile);
+                $childCellInputsEndDataRow = $childCellInputsPHPExcel->getActiveSheet()->getHighestRow();
+                if ($childCellInputsEndDataRow < 2) {
                     continue;
                 }
-                $cellInputsEndData = $cellInputsPHPExcel->getActiveSheet()->getHighestColumn() . $cellInputsEndDataRow;
-                $cellInputsData = $cellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $cellInputsEndData);
-                $granularitySheet->fromArray($cellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1), true);
-                $cellInputsPHPExcel->disconnectWorksheets();
-                unset($cellInputsPHPExcel);
+                $childCellInputsEndData = $childCellInputsPHPExcel->getActiveSheet()->getHighestColumn() . $childCellInputsEndDataRow;
+                $childCellInputsData = $childCellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $childCellInputsEndData);
+                $granularitySheet->fromArray($childCellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1), true);
+                $childCellInputsPHPExcel->disconnectWorksheets();
+                unset($childCellInputsPHPExcel);
             }
 
             foreach (array_values($columns) as $columnIndex => $column) {
@@ -655,9 +668,19 @@ class Orga_Service_Export
         );
 
         $modelBuilder->bindFunction(
+            'displayValue',
+            function ($value) {
+                if (preg_match('#\.\d+#', $value, $matches) === 1) {
+                    return number_format($value, (strlen($matches[0]) - 1), '.', '');
+                }
+                return $value;
+            }
+        );
+
+        $modelBuilder->bindFunction(
             'displayRoundedValue',
             function ($value) {
-                return round($value, floor(3 - log10(abs($value))));
+                return number_format(round($value, floor(3 - log10(abs($value)))), strlen($value), '.', '');
             }
         );
 
@@ -683,12 +706,11 @@ class Orga_Service_Export
 
 function getInputsDetails(Input $input, $path = '')
 {
-    if ($input->getComponent() !== null) {
+    if (($input->getComponent() !== null) && (!$input->isHidden())) {
         $componentLabel = $input->getComponent()->getLabel();
         $componentRef = $input->getComponent()->getRef();
     } else {
-        $componentLabel = __('Orga', 'export', 'unknownComponent');
-        $componentRef = __('Orga', 'export', 'unknownComponent');
+        return [];
     }
     if ($input instanceof NotRepeatedSubAFInput) {
         $subInputs = [];
@@ -706,9 +728,10 @@ function getInputsDetails(Input $input, $path = '')
         foreach ($input->getValue() as $number => $subInputSet) {
             foreach ($subInputSet->getInputs() as $subInput) {
                 if (!$subInput instanceof GroupInput) {
+                    $label = ($number + 1) . ' - ' . $subInputSet->getFreeLabel();
                     $subInputs = array_merge(
                         $subInputs,
-                        getInputsDetails($subInput, $path . $componentLabel . '/' . ($number + 1) . ' / ')
+                        getInputsDetails($subInput, $path . $componentLabel . '/' . $label . '/')
                     );
                 }
             }
@@ -721,6 +744,7 @@ function getInputsDetails(Input $input, $path = '')
         return [
             [
                 'ancestors' => $path,
+                'status' => '',
                 'label' => $componentLabel,
                 'ref' => $componentRef,
                 'type' => getInputType($input),
@@ -753,27 +777,31 @@ function getInputValues(Input $input)
     switch (get_class($input)) {
         case NumericFieldInput::class:
             /** @var NumericFieldInput $input */
+            $inputDigitalValue = $inputValue->getDigitalValue();
+            if (preg_match('{\.\d+}', $inputDigitalValue, $matches)===1) {
+                $inputDigitalValue = number_format($inputDigitalValue, (strlen($matches[0]) - 1), '.', '');
+            }
             if ($input->getComponent() !== null) {
                 try {
                     $conversionFactor = $input->getComponent()->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
                     $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
                     return [
-                        $inputValue->getDigitalValue(),
+                        $inputDigitalValue,
                         $inputValue->getRelativeUncertainty(),
                         $inputValue->getUnit()->getSymbol(),
                         $baseConvertedValue->getDigitalValue(),
-                        $baseConvertedValue->getUnit()->getSymbol(),
+                        $input->getComponent()->getUnit()->getSymbol(),
                     ];
                 } catch (IncompatibleUnitsException $e) {
                     return [
-                        $inputValue->getDigitalValue(),
+                        $inputDigitalValue,
                         $inputValue->getRelativeUncertainty(),
                         $inputValue->getUnit()->getSymbol(),
                     ];
                 }
             }
             return [
-                $inputValue->getDigitalValue(),
+                $inputDigitalValue,
                 $inputValue->getRelativeUncertainty(),
                 $inputValue->getUnit()->getSymbol(),
             ];
@@ -795,10 +823,10 @@ function getInputValues(Input $input)
             }
         case SelectSingleInput::class:
             /** @var SelectSingleInput $input */
-            if (empty($value)) {
+            if (empty($inputValue)) {
                 return [''];
             } elseif ($input->getComponent() !== null) {
-                return [$input->getComponent()->getOptionByRef($value)->getLabel()];
+                return [$input->getComponent()->getOptionByRef($inputValue)->getLabel()];
             }
             return [$value];
         case CheckboxInput::class:

@@ -45,7 +45,7 @@ class RebuildConfiguration
 }
 
 /** @var \DI\Container $container */
-$container = \Zend_Registry::get('container');
+$container = \Core\ContainerSingleton::getContainer();
 
 /** @var RebuildExports $rebuildExports */
 $rebuildExports = $container->get(RebuildConfiguration::class);

@@ -50,12 +50,6 @@ class RepeatedSubAF extends SubAF
      */
     protected $minInputNumber = 0;
 
-    /**
-     * Active un libellé libre saisi par l'utilisateur
-     * @var bool
-     */
-    protected $withFreeLabel = false;
-
 
     /**
      * {@inheritdoc}
@@ -79,11 +73,9 @@ class RepeatedSubAF extends SubAF
         }
 
         // Ajoute les en-têtes du tableau
-        if ($this->withFreeLabel) {
-            $label = new UI_Form_Element_Text('freeLabel');
-            $label->setLabel(__('AF', 'inputInput', 'freeLabel'));
-            $uiElement->addElement($label);
-        }
+        $label = new UI_Form_Element_Text('freeLabel');
+        $label->setLabel(__('AF', 'inputInput', 'freeLabel'));
+        $uiElement->addElement($label);
         foreach ($this->calledAF->getRootGroup()->getSubComponentsRecursive() as $component) {
             $subElement = $component->getUIElement(new AFGenerationHelper());
             $uiElement->addElement($subElement);
@@ -92,7 +84,7 @@ class RepeatedSubAF extends SubAF
         // Récupère la saisie correspondant à cet élément
         $input = null;
         if ($generationHelper->getInputSet()) {
-            /** @var $input \AF\Domain\Input\SubAF\RepeatedSubAFInput */
+            /** @var $input RepeatedSubAFInput */
             $input = $generationHelper->getInputSet()->getInputForComponent($this);
             if ($input) {
                 $uiElement->getElement()->hidden = $input->isHidden();
@@ -132,20 +124,21 @@ class RepeatedSubAF extends SubAF
     ) {
         // On crée un groupe qui contient un sous-formulaire
         $afGroup = new UI_Form_Element_Group($this->ref);
+
         // Pour chaque sous af, on peut ajouter un label choisi librement par l'utilisateur
-        if ($this->withFreeLabel) {
-            $label = new UI_Form_Element_Text('freeLabel');
-            $label->setLabel(__('AF', 'inputInput', 'freeLabel'));
-            if ($inputSet) {
-                $label->setValue($inputSet->getFreeLabel());
-            }
-            if ($generationHelper->isReadOnly()) {
-                $label->getElement()->setReadOnly();
-            }
-            $afGroup->addElement($label);
+        $label = new UI_Form_Element_Text('freeLabel');
+        $label->setLabel(__('AF', 'inputInput', 'freeLabel'));
+        if ($inputSet) {
+            $label->setValue($inputSet->getFreeLabel());
         }
+        if ($generationHelper->isReadOnly()) {
+            $label->getElement()->setReadOnly();
+        }
+        $afGroup->addElement($label);
+
         // Génère le sous-formulaire
         $subForm = $this->calledAF->generateSubForm($generationHelper, $inputSet);
+
         // Ajoute chaque élément du sous-formulaire au groupe
         foreach ($subForm->getElement()->getChildrenElements() as $uiElement) {
             $afGroup->addElement($uiElement);
@@ -201,21 +194,5 @@ class RepeatedSubAF extends SubAF
     public function setMinInputNumber($minInputNumber)
     {
         $this->minInputNumber = (int) $minInputNumber;
-    }
-
-    /**
-     * @return bool Active un libellé libre saisi par l'utilisateur
-     */
-    public function getWithFreeLabel()
-    {
-        return $this->withFreeLabel;
-    }
-
-    /**
-     * @param bool $withFreeLabel Active un libellé libre saisi par l'utilisateur
-     */
-    public function setWithFreeLabel($withFreeLabel)
-    {
-        $this->withFreeLabel = (bool) $withFreeLabel;
     }
 }

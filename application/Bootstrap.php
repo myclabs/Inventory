@@ -12,6 +12,9 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\DBAL\Types\Type;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Tab;
 use Symfony\Component\Translation\Translator;
 use User\Application\ViewHelper\IsAllowedHelper;
 use User\Application\ViewHelper\TutorialHelper;
@@ -288,8 +291,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
+        $view->addHelperPath(PACKAGE_PATH . '/vendor/myclabs/muih/src/MyCLabs/MUIH/Bridge/ZendViewHelper/Zend1',
+            'MyCLabs\MUIH\Bridge\ZendViewHelper\Zend1');
         $view->registerHelper($this->container->get(IsAllowedHelper::class), 'isAllowed');
         $view->registerHelper($this->container->get(TutorialHelper::class), 'tutorial');
+    }
+
+    /**
+     * Enregistre les helpers de vue
+     */
+    protected function _initMUIH()
+    {
+        Icon::$defaultIconPrefix = Icon::FONT_AWESOME;
+        Tab::$defaultAjaxTabLoadingText = new GenericTag('p', __('UI', 'loading', 'loading'));
+        Tab::$defaultAjaxTabLoadingText->prependContent(' ');
+        Tab::$defaultAjaxTabLoadingText->prependContent(new Icon('spinner fa-spin'));
     }
 
     /**
@@ -326,5 +342,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         if ($this->container->get('application.url') == '') {
             throw new RuntimeException("Il est nécessaire de définir 'application.url' dans parameters.php");
         }
+    }
+
+    /**
+     * Plugin qui gère le menu
+     */
+    protected function _initMenuPlugin()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin($this->container->get(Inventory_Plugin_MenuPlugin::class));
     }
 }

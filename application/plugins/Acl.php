@@ -1,7 +1,13 @@
 <?php
 
+use Account\Domain\AccountRepository;
 use AF\Application\AFViewConfiguration;
+use AF\Domain\AF;
+use AF\Domain\AFLibrary;
 use Doc\Domain\Library;
+use Parameter\Domain\Family\Family;
+use Parameter\Domain\ParameterLibrary;
+use User\Application\HttpNotFoundException;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use User\Application\ForbiddenException;
@@ -16,6 +22,12 @@ use User\Domain\User;
  */
 class Inventory_Plugin_Acl extends ACLPlugin
 {
+    /**
+     * @Inject
+     * @var AccountRepository
+     */
+    private $accountRepository;
+
     public function viewOrganizationsRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $isIdentityAbleToEditOrganizations = $this->editOrganizationsRule($identity, $request);
@@ -560,11 +572,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->editAFRule($identity, $request);
     }
 
-    protected function editAFRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
     protected function viewTECRule(User $identity)
     {
         return $this->editRepository($identity);
@@ -580,41 +587,74 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->editRepository($identity);
     }
 
-    protected function viewParameterRule(User $identity, Zend_Controller_Request_Abstract $request)
-    {
-        return $this->loggedInRule($identity, $request);
-    }
-
-    protected function editParameterRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
     protected function viewUnitRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->loggedInRule($identity, $request);
     }
 
-    protected function viewReferential(User $identity)
+    protected function editAccountRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        // TODO
-        throw new Exception('TODO');
+        try {
+            $account = $this->accountRepository->get($request->getParam('account'));
+        } catch (Core_Exception_NotFound $e) {
+            throw new HttpNotFoundException;
+        }
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, $account);
     }
 
-    protected function editRepository(User $identity)
+    protected function allowAccountRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        // TODO
-        throw new Exception('TODO');
+        try {
+            $account = $this->accountRepository->get($request->getParam('account'));
+        } catch (Core_Exception_NotFound $e) {
+            throw new HttpNotFoundException;
+        }
+        return $this->aclManager->isAllowed($identity, Actions::ALLOW, $account);
     }
 
-    protected function viewLibraryRule()
+    protected function editAFLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return true;
+        $libraryId = $request->getParam('id') ?: $request->getParam('library');
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, AFLibrary::load($libraryId));
     }
 
-    protected function editLibraryRule()
+    protected function editAFRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return true;
+        $afId = $request->getParam('id') ?: $request->getParam('idAF');
+        $af = AF::load($afId);
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, $af->getLibrary());
+    }
+
+    protected function viewParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('id') ?: $request->getParam('library');
+        return $this->aclManager->isAllowed($identity, Actions::VIEW, ParameterLibrary::load($libraryId));
+    }
+
+    protected function editParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('id') ?: $request->getParam('library');
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, ParameterLibrary::load($libraryId));
+    }
+
+    protected function viewParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $id = $request->getParam('id') ?: $request->getParam('idFamily');
+        $parameterFamily = Family::load($id);
+        return $this->aclManager->isAllowed($identity, Actions::VIEW, $parameterFamily->getLibrary());
+    }
+
+    protected function editParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $id = $request->getParam('id') ?: $request->getParam('idFamily');
+        $parameterFamily = Family::load($id);
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, $parameterFamily->getLibrary());
+    }
+
+    protected function deleteParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $parameterFamily = Family::load($request->getParam('id'));
+        return $this->aclManager->isAllowed($identity, Actions::DELETE, $parameterFamily->getLibrary());
     }
 
     /**

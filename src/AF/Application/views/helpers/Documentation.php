@@ -3,6 +3,7 @@
 use AF\Domain\AF;
 use AF\Domain\Component\SubAF\RepeatedSubAF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
+use MyCLabs\MUIH\Collapse;
 use Parameter\Domain\Family\Family;
 
 /**
@@ -40,7 +41,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
      */
     protected function renderAf(AF $af, $title, $repeatedSubAf = false)
     {
-        $collapse = new UI_HTML_Collapse($af->getRef(), $title);
+        $collapse = new Collapse($af->getRef(), $title);
 
         // Lien vers la saisie en test
         $html = __('AF', 'inputDocumentation', 'calledForm') . ' ' . $af->getLabel();
@@ -67,7 +68,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
         }
         $html .= "</p>";
 
-        $collapse->body = $html;
+        $collapse->setContent($html);
 
         return $collapse->render();
     }

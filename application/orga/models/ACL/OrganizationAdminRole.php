@@ -31,6 +31,16 @@ class OrganizationAdminRole extends Role
         $aclManager->allow(
             $this,
             new Actions([
+                Actions::TRAVERSE, // naviguer dans le compte
+            ]),
+            $this->organization->getAccount(),
+            false // pas de cascade sinon on pourrait naviguer dans toutes les organisations
+        );
+
+        $aclManager->allow(
+            $this,
+            new Actions([
+                Actions::TRAVERSE, // naviguer dans l'organisation
                 Actions::VIEW, // voir l'organisation, et par extension les cellules
                 Actions::EDIT, // modifier l'organisation et les cellules
                 Actions::ALLOW, // donner des droits d'accès

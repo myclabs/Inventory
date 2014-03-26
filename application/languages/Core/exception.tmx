@@ -5,10 +5,10 @@
 	<body>
 		<tu tuid="pageNotFound">
             <tuv xml:lang="fr">
-                <seg>La page recherchée n'a pas pu être trouvée.</seg>
+                <seg>Page ou ressource introuvable.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>The requested page could not be found.</seg>
+                <seg>Page or resource not found.</seg>
             </tuv>
 		</tu>
 		<tu tuid="applicationError">

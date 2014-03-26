@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\GenericVoidTag;
+
 /**
  * Fichier de la classe Popup Ajax.
  *
@@ -25,7 +27,7 @@ class UI_Popup_Ajax extends UI_Popup_Generic
     /**
      * Image affichée pendant le chargement du corps du popup.
      *
-     * @var UI_HTML_Image
+     * @var GenericVoidTag
      */
     public $loadingImage = null;
 
@@ -59,11 +61,13 @@ class UI_Popup_Ajax extends UI_Popup_Generic
         $this->id = $id;
         $this->source = $source;
         $this->_type = UI_Popup_Generic::TYPE_POPUP_AJAX;
-        $this->_attributes['class'] = 'modal hide fade';
+        $this->_attributes['class'] = 'modal fade';
 
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->loadingText = __('UI', 'loading', 'loading').'<br>';
-        $this->loadingImage = new UI_HTML_Image('images/ui/ajax-loader_large.gif', __('UI', 'loading', 'loading'));
+        $this->loadingImage = new GenericVoidTag('img');
+        $this->loadingImage->setAttribute('src', 'images/ui/ajax-loader_large.gif');
+        $this->loadingImage->setAttribute('alt', __('UI', 'loading', 'loading'));
         $this->errorText = str_replace('\'', '\\\'', __('UI', 'loading', 'error')).'<br>';
     }
 

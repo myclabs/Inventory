@@ -17,20 +17,28 @@
 
         <!-- Désignation des granularités -->
 
-        <tu tuid="separator">
+        <tu tuid="currentGranularity">
             <tuv xml:lang="fr">
-                <seg> - </seg> <!-- ou bien &amp; ? -->
+                <seg>Racine</seg> <!-- ou bien &amp; ? -->
             </tuv>
             <tuv xml:lang="en">
-                <seg> - </seg>
+                <seg>Root</seg>
+            </tuv>
+        </tu>
+        <tu tuid="separator">
+            <tuv xml:lang="fr">
+                <seg>, </seg> <!-- ou bien &amp; ? -->
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>, </seg>
             </tuv>
         </tu>
         <tu tuid="granularityExplanations">
             <tuv xml:lang="fr">
-                <seg>Fonctionnalités disponibles à ce niveau</seg>
+                <seg>Fonctionnalités disponibles à ce niveau : </seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Features available at this level</seg>
+                <seg>Features available at this level: </seg>
             </tuv>
         </tu>
 

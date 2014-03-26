@@ -2,93 +2,43 @@
 
 use Core\Annotation\Secure;
 use Parameter\Domain\Family\Family;
-use Parameter\Domain\Category;
 
-/**
- * Controleur des familles
- * @author matthieu.napoli
- */
 class Parameter_FamilyController extends Core_Controller
 {
     use UI_Controller_Helper_Form;
 
     /**
-     * Arbre des familles en édition
-     * @Secure("editParameter")
-     */
-    public function treeEditAction()
-    {
-        $this->forward('tree', 'family', 'parameter', array('mode' => 'edition'));
-    }
-
-    /**
-     * Arbre des familles
-     * @Secure("viewParameter")
-     */
-    public function treeAction()
-    {
-        $mode = $this->getParam('mode');
-        if (empty($mode)) {
-            $mode = 'consultation';
-        }
-        $this->view->mode = $mode;
-    }
-
-    /**
-     * Liste des familles en édition
-     * @Secure("editParameter")
-     */
-    public function listEditAction()
-    {
-        $this->forward('list', 'family', 'parameter', array('mode' => 'edition'));
-    }
-
-    /**
-     * Liste des familles
-     * @Secure("viewParameter")
-     */
-    public function listAction()
-    {
-        $mode = $this->getParam('mode');
-        if (empty($mode)) {
-            $mode = 'consultation';
-        }
-        $this->view->mode = $mode;
-        $this->view->categoryList = Category::loadList();
-    }
-
-    /**
      * Détails d'une famille
-     * @Secure("viewParameter")
+     * @Secure("viewParameterFamily")
      */
     public function detailsAction()
     {
-        $mode = $this->getParam('mode');
-        if (empty($mode)) {
-            $mode = 'consultation';
-        }
-        if ($mode == 'consultation') {
-            $this->view->edit = false;
-        } else {
-            $this->view->edit = true;
-        }
-        $this->view->mode = $mode;
-        $this->view->family = Family::load($this->getParam('id'));
+        $family = Family::load($this->getParam('id'));
+
+        $this->view->assign('edit', false);
+        $this->view->assign('family', $family);
+        $this->setActiveMenuItemParameterLibrary($family->getLibrary()->getId());
     }
 
     /**
      * Édition d'une famille
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function editAction()
     {
-        $this->forward('details', 'family', 'parameter', array('mode' => 'edition'));
+        $family = Family::load($this->getParam('id'));
+
+        $this->view->assign('edit', true);
+        $this->view->assign('family', $family);
+        $this->setActiveMenuItemParameterLibrary($family->getLibrary()->getId());
+
+        $this->renderScript('family/details.phtml');
     }
 
     /**
      * Suppression d'une famille
      * AJAX
-     * @Secure("editParameter")
+     * @Secure("deleteParameterFamily")
      */
     public function deleteAction()
     {

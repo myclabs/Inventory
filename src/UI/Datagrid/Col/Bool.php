@@ -1,4 +1,7 @@
 <?php
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
+
 /**
  * Fichier de la classe Colonne Booleen.
  *
@@ -186,11 +189,10 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
             $filterFormElement->setValue($defaultValue[$this->filterOperator]);
         }
 
-        $resetButton = new UI_HTML_Button();
-        $resetButton->icon = $datagrid->filterIconResetFieldSuffix;
+        $resetButton = new Button(new Icon($datagrid->filterIconResetFieldSuffix));
         $resetAction = '$(\'#'.$this->getFilterFormId($datagrid).' :checked\')';
         $resetAction .= '.removeAttr(\'checked\');';
-        $resetButton->addAttribute('onclick', $resetAction);
+        $resetButton->setAttribute('onclick', $resetAction);
 
         $resetElement = new UI_Form_Element_HTML($this->getFilterFormId($datagrid).'_reset');
         $resetElement->content = $resetButton->getHTML();

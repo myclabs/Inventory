@@ -7,6 +7,7 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\ACL\ACLManager;
+use MyCLabs\MUIH\Tab;
 use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\ViewModel\CellViewModelFactory;
@@ -113,6 +114,38 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('cellVWFactory', $this->cellVMFactory);
         $this->view->assign('organization', $this->organizationVMFactory->createOrganizationView($organization, $connectedUser));
         $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser, true));
+        $currentCellPurpose = '';
+        if ($this->view->currentCell->showUsers) {
+            if ($currentCellPurpose !== '') {
+                $currentCellPurpose .= __('Orga', 'view', 'separator');
+            }
+            $currentCellPurpose .= __('User', 'user', 'users');
+        }
+        if ($this->view->currentCell->canEditInventory) {
+            if ($currentCellPurpose !== '') {
+                $currentCellPurpose .= __('Orga', 'view', 'separator');
+            }
+            $currentCellPurpose .= __('Orga', 'inventory', 'editInventories');
+        } else if ($this->view->currentCell->showInventory) {
+            if ($currentCellPurpose !== '') {
+                $currentCellPurpose .= __('Orga', 'view', 'separator');
+            }
+            $currentCellPurpose .= __('Orga', 'inventory', 'showInventories');
+        }
+        if ($this->view->currentCell->showInput) {
+            if ($currentCellPurpose !== '') {
+                $currentCellPurpose .= __('Orga', 'view', 'separator');
+            }
+            $currentCellPurpose .= __('UI', 'name', 'inputs');
+        }
+        if ($this->view->currentCell->showReports) {
+            if ($currentCellPurpose !== '') {
+                $currentCellPurpose .= __('Orga', 'view', 'separator');
+            }
+            $currentCellPurpose .= __('DW', 'name', 'analyses');
+        }
+        $this->view->assign('currentCellPurpose', $currentCellPurpose);
+        $this->setActiveMenuItemOrganization($organization->getId());
 
         $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
             $connectedUser,
@@ -144,7 +177,8 @@ class Orga_CellController extends Core_Controller
         foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
             $purpose = '';
             // ACL purpose.
-            $isNarrowerGranularityACL = ($narrowerGranularity->getCellsWithACL());
+            $isNarrowerGranularityACL = ($narrowerGranularity->getCellsWithACL())
+                && ($this->aclManager->isAllowed($connectedUser, Actions::ALLOW, $cell));
             if ($isNarrowerGranularityACL) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
@@ -155,15 +189,37 @@ class Orga_CellController extends Core_Controller
             $isNarrowerGranularityInventory = (($granularityForInventoryStatus !== null)
                 && (($narrowerGranularity === $granularityForInventoryStatus)
                     || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
-            $narrowerGranularityHasSubInputGranlarities = false;
-            foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
-                if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
-                    $narrowerGranularityHasSubInputGranlarities = true;
-                    break;
+            if ($isNarrowerGranularityInventory) {
+                $narrowerGranularityHasACLParent = $narrowerGranularity->getCellsWithACL();
+                if (!$narrowerGranularityHasACLParent) {
+                    foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
+                        if ($broaderInventoryGranularity->getCellsWithACL()) {
+                            $narrowerGranularityHasACLParent = true;
+                            break;
+                        }
+                    }
                 }
+                $isNarrowerGranularityInventory = $isNarrowerGranularityInventory && $narrowerGranularityHasACLParent;
             }
-            if ($isNarrowerGranularityInventory && $narrowerGranularityHasSubInputGranlarities) {
-                $purpose .= __('Orga', 'inventory', 'inventories');
+            if ($isNarrowerGranularityInventory) {
+                $narrowerGranularityHasSubInputGranlarities = false;
+                foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
+                    if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
+                        $narrowerGranularityHasSubInputGranlarities = true;
+                        break;
+                    }
+                }
+                $isNarrowerGranularityInventory = $isNarrowerGranularityInventory && $narrowerGranularityHasSubInputGranlarities;
+            }
+            if ($isNarrowerGranularityInventory) {
+                if ($purpose !== '') {
+                    $purpose .= __('Orga', 'view', 'separator');
+                }
+                if ($narrowerGranularity === $granularityForInventoryStatus) {
+                    $purpose .= __('Orga', 'inventory', 'editInventories');
+                } else {
+                    $purpose .= __('Orga', 'inventory', 'viewInventories');
+                }
             }
             // Input purpose.
             $isNarrowerGranularityInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
@@ -174,7 +230,8 @@ class Orga_CellController extends Core_Controller
                 $purpose .= __('UI', 'name', 'inputs');
             }
             // Reports purpose.
-            $isNarrowerGranularityAnalyses = ($narrowerGranularity->getCellsGenerateDWCubes());
+            $isNarrowerGranularityAnalyses = ($narrowerGranularity->getCellsGenerateDWCubes())
+                && ($this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell));
             if ($isNarrowerGranularityAnalyses) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
@@ -205,6 +262,11 @@ class Orga_CellController extends Core_Controller
                 }
             }
             if ($purpose !== '') {
+                $relevantQuery = new Core_Model_Query();
+                $relevantQuery->filter->addCondition(Orga_Model_Cell::QUERY_RELEVANT, true);
+                $relevantQuery->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
+                $totalChildCells = $cell->countTotalChildCellsForGranularity($narrowerGranularity, $relevantQuery);
+
                 $narrowerGranularities[] = [
                     'granularity' => $narrowerGranularity,
                     'purpose' => $purpose,
@@ -214,6 +276,7 @@ class Orga_CellController extends Core_Controller
                     'isGranularityForInventoryStatus' => ($narrowerGranularity === $granularityForInventoryStatus),
                     'isInput' => $isNarrowerGranularityInput,
                     'isAnalyses' => $isNarrowerGranularityAnalyses,
+                    'totalCells' => $totalChildCells
                 ];
             }
         }
@@ -347,33 +410,71 @@ class Orga_CellController extends Core_Controller
             $granularityForInventoryStatus = null;
         }
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
-            && $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell)
-            && $this->aclManager->isAllowed($connectedUser, Actions::INPUT, $cell));
-        $isInventory = (($narrowerGranularity === $granularityForInventoryStatus)
-                || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus)));
-        $narrowerGranularityHasSubInputGranlarities = false;
-        foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
-            if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
-                $narrowerGranularityHasSubInputGranlarities = true;
-                break;
+            && $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE(), $cell)
+            && $this->aclManager->isAllowed($connectedUser, Actions::INPUT(), $cell));
+        $showInventory = (($granularityForInventoryStatus !== null)
+            && (($narrowerGranularity === $granularityForInventoryStatus)
+                || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
+        if ($showInventory) {
+            $narrowerGranularityHasACLParent = $narrowerGranularity->getCellsWithACL();
+            if (!$narrowerGranularityHasACLParent) {
+                foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
+                    if ($broaderInventoryGranularity->getCellsWithACL()) {
+                        $narrowerGranularityHasACLParent = true;
+                        break;
+                    }
+                }
             }
+            $showInventory = $showInventory && $narrowerGranularityHasACLParent;
         }
-        $showInventory = $isInventory && $narrowerGranularityHasSubInputGranlarities;
+        if ($showInventory) {
+            $narrowerGranularityHasSubInputGranlarities = false;
+            foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
+                if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
+                    $narrowerGranularityHasSubInputGranlarities = true;
+                    break;
+                }
+            }
+
+        }
+        if ($showInventory) {
+            $narrowerGranularityHasSubInputGranlarities = false;
+            foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
+                if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
+                    $narrowerGranularityHasSubInputGranlarities = true;
+                    break;
+                }
+            }
+            $showInventory = $showInventory && $narrowerGranularityHasSubInputGranlarities;
+        }
 
         // Input.
         $showInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
 
         // Uniquement les sous-cellules pertinentes.
-        $relevantCriteria = new Criteria();
-        $relevantCriteria->where($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_RELEVANT, true));
-        $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true));
+        $childCellsCriteria = new Criteria();
+        $childCellsCriteria->where($childCellsCriteria->expr()->eq(Orga_Model_Cell::QUERY_RELEVANT, true));
+        $childCellsCriteria->andWhere($childCellsCriteria->expr()->eq(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true));
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $cell->getTag()) as $pathTag) {
-            $relevantCriteria->andWhere($relevantCriteria->expr()->contains('tag', $pathTag));
+            $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $pathTag));
+        }
+        $childCellsCriteria->setFirstResult($this->getParam('firstCell'));
+        $childCellsCriteria->setMaxResults($this->getParam('showCells'));
+        $filters = $this->getParam('filters');
+        $filterPrefix = 'granularity' . $idNarrowerGranularity . '_';
+        foreach ($filters as $filter) {
+            if (!empty($filter['value'])) {
+                if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
+                    $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
+                } else {
+                    $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
+                }
+            }
         }
 
         $childCells = [];
         /** @var Orga_Model_Cell $childCell */
-        foreach ($narrowerGranularity->getCells()->matching($relevantCriteria) as $childCell) {
+        foreach ($narrowerGranularity->getCells()->matching($childCellsCriteria) as $childCell) {
             $childCells[] = $this->cellVMFactory->createCellViewModel(
                 $childCell,
                 $connectedUser,
@@ -387,10 +488,19 @@ class Orga_CellController extends Core_Controller
             );
         }
 
-        $relevantQuery = new Core_Model_Query();
-        $relevantQuery->filter->addCondition(Orga_Model_Cell::QUERY_RELEVANT, true);
-        $relevantQuery->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
-        $totalChildCells = $cell->countTotalChildCellsForGranularity($narrowerGranularity, $relevantQuery);
+        $childCellsQuery = new Core_Model_Query();
+        $childCellsQuery->filter->addCondition(Orga_Model_Cell::QUERY_RELEVANT, true);
+        $childCellsQuery->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
+        foreach ($filters as $filter) {
+            if (!empty($filter['value'])) {
+                if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
+                    $childCellsQuery->filter->addCondition('inventoryStatus', $filter['value']);
+                } else {
+                    $childCellsQuery->filter->addCondition('tag', $filter['value'], Core_Model_Filter::OPERATOR_CONTAINS);
+                }
+            }
+        }
+        $totalChildCells = $cell->countTotalChildCellsForGranularity($narrowerGranularity, $childCellsQuery);
 
         $this->sendJsonResponse(['childCells' => $childCells, 'totalCells' => $totalChildCells]);
     }
@@ -1143,16 +1253,16 @@ class Orga_CellController extends Core_Controller
             $aFViewConfiguration->setIdInputSet($cell->getAFInputSetPrimary()->getId());
         }
 
-        $tabComments = new UI_Tab('inputComments');
-        $tabComments->label = __('Social', 'comment', 'comments');
-        $tabComments->dataSource = 'orga/cell/input-comments/idCell/'.$idCell;
-        $tabComments->useCache = true;
+        $tabComments = new Tab('inputComments');
+        $tabComments->setTitle(__('Social', 'comment', 'comments'));
+        $tabComments->setContent('orga/cell/input-comments/idCell/'.$idCell);
+        $tabComments->setAjax(true, true);
         $aFViewConfiguration->addTab($tabComments);
 
-        $tabDocs = new UI_Tab('inputDocs');
-        $tabDocs->label = __('Doc', 'name', 'documents');
-        $tabDocs->dataSource = 'orga/cell/input-docs/idCell/'.$idCell;
-        $tabDocs->useCache = true;
+        $tabDocs = new Tab('inputDocs');
+        $tabDocs->setTitle(__('Doc', 'name', 'documents'));
+        $tabDocs->setContent('orga/cell/input-docs/idCell/'.$idCell);
+        $tabDocs->setAjax(true, true);
         $aFViewConfiguration->addTab($tabDocs);
 
         $isUserAllowedToViewCellReports = $this->aclManager->isAllowed(
@@ -1165,6 +1275,8 @@ class Orga_CellController extends Core_Controller
             $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS);
         }
         $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
+
+        $this->setActiveMenuItemOrganization($cell->getOrganization()->getId());
 
         $this->forward('display', 'af', 'af', [
             'id' => $cell->getInputAFUsed()->getId(),
@@ -1199,7 +1311,7 @@ class Orga_CellController extends Core_Controller
         $this->view->inputSet = $inputSet;
 
         // Moche mais sinon je me petit-suicide
-        $this->view->addScriptPath(APPLICATION_PATH . '/af/views/scripts/');
+        $this->view->addScriptPath(PACKAGE_PATH . '/src/AF/Application/views/scripts/');
         $data = $this->view->render('af/display-results.phtml');
 
         // Force le statut en success (sinon les handlers JS ne sont pas exécutés)

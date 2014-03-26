@@ -1,7 +1,8 @@
 <?php
-$closeButton = new UI_HTML_Button(__('UI', 'verb', 'close'));
-$closeButton->addAttribute('class', 'btn-primary');
-$closeButton->addAttribute('data-dismiss', 'modal');
+use MyCLabs\MUIH\Button;
+
+$closeButton = new Button(__('UI', 'verb', 'close'), Button::TYPE_PRIMARY);
+$closeButton->setAttribute('data-dismiss', 'modal');
 
 $datagrid = new UI_Datagrid('inbox', 'datagrid_message_inbox', 'social');
 $datagrid->pagination = true;

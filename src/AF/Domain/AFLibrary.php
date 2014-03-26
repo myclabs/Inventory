@@ -8,13 +8,16 @@ use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\Model\CascadingResource;
+use MyCLabs\ACL\Model\EntityResource;
 
 /**
  * Bibliothèque d'AF.
  *
  * @author matthieu.napoli
  */
-class AFLibrary extends Core_Model_Entity
+class AFLibrary extends Core_Model_Entity implements EntityResource, CascadingResource
 {
     use Core_Model_Entity_Translatable;
 
@@ -72,11 +75,17 @@ class AFLibrary extends Core_Model_Entity
     }
 
     /**
-     * @return AF[]
+     * @param int|null $count
+     * @param int|null $offset
+     * @return Collection|AF[]
      */
-    public function getAFList()
+    public function getAFList($count = null, $offset = null)
     {
-        return $this->afList->toArray();
+        $criteria = Criteria::create();
+        $criteria->setMaxResults($count);
+        $criteria->setFirstResult($offset);
+
+        return $this->afList->matching($criteria);
     }
 
     public function addAF(AF $af)
@@ -124,5 +133,21 @@ class AFLibrary extends Core_Model_Entity
     public function getAccount()
     {
         return $this->account;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParentResources(EntityManager $entityManager)
+    {
+        return [ $this->account ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSubResources(EntityManager $entityManager)
+    {
+        return [];
     }
 }
