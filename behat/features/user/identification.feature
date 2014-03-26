@@ -7,7 +7,6 @@ Feature: Identification feature
     Given I am on the homepage
     And I wait for the page to finish loading
     Then I should be on "user/action/login"
-    And I should see "Vous n'êtes pas connecté"
     And I should see "Connexion"
 
   @javascript @readOnly
@@ -26,19 +25,15 @@ Feature: Identification feature
     When I fill in "email" with "admin@myc-sense.com"
     And I fill in "password" with "myc-53n53"
     And I click "connection"
-    Then I should see "Workspaces"
+    Then I should see "Tableau de bord"
 
   @javascript @readOnly
   Scenario: Logging out
     Given I am logged in
     And I am on the homepage
     And I wait for the page to finish loading
-    When I click "currentUserButton"
-    And I click "Déconnexion"
-    # On est redirigé vers la page d'accueil
-    Then the following message is shown and closed: "Vous n'êtes pas connecté."
-    And I should see "Vous n'êtes pas connecté"
-    And I should see "Connexion"
+    When I click "Déconnexion"
+    Then I should see "Connexion"
 
   @javascript @readOnly
   Scenario: Forgottent password
