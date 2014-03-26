@@ -60,6 +60,7 @@ class Account_MembersController extends Core_Controller
             if (empty($email)) {
                 UI_Message::addMessageStatic(__('UI', 'formValidation', 'invalidEmail'));
                 $this->redirect('account/members?account=' . $account->getId());
+                return;
             }
 
             $task = new ServiceCallTask(
@@ -77,7 +78,12 @@ class Account_MembersController extends Core_Controller
             $timeout = function () {
                 UI_Message::addMessageStatic(__('UI', 'message', 'addedLater'), UI_Message::TYPE_SUCCESS);
             };
-            $error = function (Exception $e) {
+            $error = function (Exception $e) use ($account) {
+                if ($e instanceof Core_Exception_InvalidArgument) {
+                    UI_Message::addMessageStatic(__('UI', 'formValidation', 'invalidEmail'));
+                    $this->redirect('account/members?account=' . $account->getId());
+                    return;
+                }
                 throw $e;
             };
             $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
