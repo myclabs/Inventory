@@ -25,7 +25,7 @@
     <h2>Information complémentaire pour l'environnement : <?= APPLICATION_ENV ?></h2>
 
     <p>
-        <code><?= $this->exception->getMessage() ?></code>
+        <code><?= get_class($this->exception) . ': ' . $this->exception->getMessage() ?></code>
     </p>
 
     <pre><?= $this->exception->getTraceAsString() ?></pre>

@@ -16,3 +16,8 @@
     margin: auto;
     border-bottom: none;
 }
+
+/* Correction de l'affichage des messages d'erreur en haut de page */
+#messageZone .alert {
+    margin: 0;
+}
