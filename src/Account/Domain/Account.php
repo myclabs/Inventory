@@ -2,7 +2,10 @@
 
 namespace Account\Domain;
 
+use Account\Domain\ACL\AccountAdminRole;
 use AF\Domain\AFLibrary;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use MyCLabs\ACL\Model\CascadingResource;
 use MyCLabs\ACL\Model\ClassResource;
@@ -27,11 +30,19 @@ class Account implements EntityResource, CascadingResource
     protected $name;
 
     /**
+     * Liste des roles sur cette cellule.
+     *
+     * @var AccountAdminRole[]|Collection
+     */
+    protected $adminRoles;
+
+    /**
      * @param string $name Nom du compte.
      */
     public function __construct($name)
     {
         $this->name = (string) $name;
+        $this->adminRoles = new ArrayCollection();
     }
 
     /**
@@ -58,9 +69,17 @@ class Account implements EntityResource, CascadingResource
         $this->name = (string) $name;
     }
 
-    public function __toString()
+    public function addAdminRole(AccountAdminRole $adminRole)
     {
-        return $this->name;
+        $this->adminRoles[] = $adminRole;
+    }
+
+    /**
+     * @return AccountAdminRole[]
+     */
+    public function getAdminRoles()
+    {
+        return $this->adminRoles;
     }
 
     /**
@@ -86,5 +105,10 @@ class Account implements EntityResource, CascadingResource
             AFLibrary::loadList($query),
             ParameterLibrary::loadList($query)
         );
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 }

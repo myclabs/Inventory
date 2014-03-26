@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="membersPageIntroduction">
+            <tuv xml:lang="fr">
+                <seg>
+                    Cette page liste les utilisateurs ayant le droit d'accéder à ce compte.
+                    Les accès au sous-éléments (workspaces, …) ne sont pas répertoriés sur cette page.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    This page shows the users allowed to access this account.
+                    User having only access to sub-elements (workspaces, …) are not shown here.
+                </seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="accountAdmin">
+            <tuv xml:lang="fr">
+                <seg>Administrateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Administrator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="accountAdmins">
+            <tuv xml:lang="fr">
+                <seg>Administrateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Administrators</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noAccountAdmin">
+            <tuv xml:lang="fr">
+                <seg>Aucun administrateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No administrator</seg>
+            </tuv>
+        </tu>
+        <tu tuid="accountAdminHelp">
+            <tuv xml:lang="fr">
+                <seg>
+                    Un administrateur de compte a un accès non restreint à tous les workspaces et
+                    toutes les bibliothèques du compte. Il peut également en créer des nouveaux
+                    et supprimer les éléments existant. Enfin, il peut nommer d'autres administrateurs
+                    de compte.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    An account administrator has a non restricted access to all the workspaces
+                    and libraries of the account. He can also create new ones and delete
+                    existing ones. Finally, he can promote other users as account administrators.
+                </seg>
+            </tuv>
+        </tu>
+        <tu tuid="confirmRemoveAdminRole">
+            <tuv xml:lang="fr">
+                <seg>Voulez-vous vraiment que cet utilisateur ne soit plus administrateur de compte ?</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Do you really want this user to not be an administrator of this account anymore?</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="emailToAddRole">
+            <tuv xml:lang="fr">
+                <seg>Adresse e-mail de l'utilisateur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>User e-mail address</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="task.addRole">
+            <tuv xml:lang="fr">
+                <seg>Attribution du rôle : [ROLE] à l’utilisateur : [USER]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of role: [ROLE] for user: [USER]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="task.removeRole">
+            <tuv xml:lang="fr">
+                <seg>Suppression du rôle : [ROLE] de l’utilisateur : [USER]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Removal of role: [ROLE] from user: [USER]</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

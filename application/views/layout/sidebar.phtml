@@ -20,7 +20,7 @@ $account = $this->account;
     <nav>
         <ul>
             <li class="<?=$this->activeMenu === 'dashboard' ? 'active' : ''?>">
-                <a href="account/dashboard" title="Dashboard">
+                <a href="account/dashboard">
                     <i class="fa fa-lg fa-fw fa-home"></i>
                     <span class="menu-item-parent"><?=__('Account', 'name', 'dashboard')?></span>
                 </a>
@@ -101,6 +101,14 @@ $account = $this->account;
                 </ul>
             </li>
 
+
+            <!-- Members -->
+            <li class="<?=$this->activeMenu === 'members' ? 'active' : ''?>">
+                <a href="account/members?account=<?=$account->id?>">
+                    <i class="fa fa-lg fa-fw fa-users"></i>
+                    <span class="menu-item-parent"><?=__('Account', 'name', 'members')?></span>
+                </a>
+            </li>
 
         </ul>
     </nav>

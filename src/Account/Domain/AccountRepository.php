@@ -13,6 +13,12 @@ use User\Domain\User;
 interface AccountRepository extends EntityRepository
 {
     /**
+     * {@inheritdoc}
+     * @return Account
+     */
+    public function get($id);
+
+    /**
      * Returns all accounts that the user can traverse.
      *
      * @param User $user

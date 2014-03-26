@@ -12,5 +12,14 @@
             </tuv>
         </tu>
 
+        <tu tuid="members">
+            <tuv xml:lang="fr">
+                <seg>Utilisateurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Users</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

@@ -602,6 +602,16 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->aclManager->isAllowed($identity, Actions::EDIT, $account);
     }
 
+    protected function allowAccountRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        try {
+            $account = $this->accountRepository->get($request->getParam('account'));
+        } catch (Core_Exception_NotFound $e) {
+            throw new HttpNotFoundException;
+        }
+        return $this->aclManager->isAllowed($identity, Actions::ALLOW, $account);
+    }
+
     protected function editAFLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');

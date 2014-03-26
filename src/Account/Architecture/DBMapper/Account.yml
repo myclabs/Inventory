@@ -13,3 +13,9 @@ Account\Domain\Account:
     name:
       type: string
       nullable: false
+
+  oneToMany:
+    adminRoles:
+      targetEntity: Account\Domain\ACL\AccountAdminRole
+      mappedBy: account
+      cascade: [ all ]
