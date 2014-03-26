@@ -1,10 +1,10 @@
 <?php
-// API Google pour les charts
 use AF\Domain\AF;
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Tab;
 use MyCLabs\MUIH\Tabs;
 
+// API Google pour les charts
 $this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["orgchart"]}]}', 'text/javascript');
 
 /** @var $af AF */
@@ -18,7 +18,7 @@ $af = $this->af;
             <a class="navbar-brand" href="#"><?=$af->getLabel()?></a>
         </div>
 
-        <ul class="nav">
+        <ul class="nav navbar-nav">
             <li class="active">
                 <a href="#"><?= __('UI', 'name', 'configuration');?></a>
             </li>

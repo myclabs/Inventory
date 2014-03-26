@@ -1,13 +1,9 @@
 <?php
-use AF\Domain\AF;
 use AF\Domain\Component\TextField;
 use AF\Domain\Component\Field;
 use AF\Domain\Condition\ElementaryCondition;
+use MyCLabs\MUIH\Button;
 
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 /** @var $af \AF\Domain\AF */
 $af = $this->af;
 
@@ -65,12 +61,9 @@ $editValueColumn->popup->title = __('AF', 'configInteractionDatagrid', 'elementa
 $editValueColumn->popup->addAttribute('class', 'large');
 $editValueColumn->popup->footer = (string) $this->button(
     __('UI', 'verb', 'save'),
-    'check',
-    [
-         'class'   => 'btn-primary',
-         'onclick' => '$(\'#updateCondition\').submit();',
-    ]
-);
+    Button::TYPE_PRIMARY,
+    'check'
+)->setAttribute('onclick', '$(\'#updateCondition\').submit();');
 $closeButton = '<button type="button" class="btn btn-default" data-dismiss="modal">' .
     '<i class="fa fa-times"></i> ' . __('UI', 'verb', 'cancel') .
     '</button>';

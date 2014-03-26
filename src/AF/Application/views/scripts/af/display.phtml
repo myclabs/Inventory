@@ -121,12 +121,12 @@ $tabView->activeTab('tabs_tabInput');
         <div class="container">
 
             <div class="navbar-header">
-                <a class="brand" href="#"><?=$viewConfiguration->getPageTitle()?></a>
+                <a class="navbar-brand" href="#"><?=$viewConfiguration->getPageTitle()?></a>
             </div>
 
             <?php if ($viewConfiguration->getDisplayConfigurationLink()) : ?>
 
-                <ul class="nav">
+                <ul class="nav navbar-nav">
                     <li>
                         <a href="<?=$this->baseUrl()?>/af/edit/menu/id/<?=$af->getId()?>">
                             <?=__('UI', 'name', 'configuration');?></a>
