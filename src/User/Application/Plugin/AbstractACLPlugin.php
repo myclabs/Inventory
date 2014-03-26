@@ -74,9 +74,12 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
         // Vérifie si l'utilisateur est connecté.
         $identity = $this->getLoggedInUser();
 
-        if ($this->isAuthorized($identity, $module, $controller, $action, $request)) {
-            // L'utilisateur est autorisé
-            return;
+        try {
+            if ($this->isAuthorized($identity, $module, $controller, $action, $request)) {
+                // L'utilisateur est autorisé
+                return;
+            }
+        } catch (ForbiddenException $e) {
         }
 
         // Si l'utilisateur n'a pas accès et qu'il n'est pas connecté : redirection sur la page de login.
