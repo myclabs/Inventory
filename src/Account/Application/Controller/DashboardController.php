@@ -76,11 +76,7 @@ class Account_DashboardController extends Core_Controller
 
         $this->view->assign('accountList', $accounts);
         $this->view->assign('account', $accountView);
-        $this->view->assign('canCreateOrganization', $this->aclManager->isAllowed(
-            $user,
-            Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
-        ));
+        $this->view->assign('canEditAccount', $this->aclManager->isAllowed($user, Actions::EDIT, $account));
         $this->addBreadcrumb(__('Account', 'name', 'dashboard'));
         $this->setActiveMenuItem('dashboard');
     }

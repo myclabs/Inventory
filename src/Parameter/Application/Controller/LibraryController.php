@@ -63,6 +63,5 @@ class Parameter_LibraryController extends Core_Controller
         }
 
         $this->view->assign('account', $account);
-        $this->setActiveMenuItem('parameter-new');
     }
 }

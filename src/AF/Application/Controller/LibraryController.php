@@ -55,6 +55,5 @@ class AF_LibraryController extends Core_Controller
         }
 
         $this->view->assign('account', $account);
-        $this->setActiveMenuItem('af-new');
     }
 }

@@ -60,7 +60,7 @@ $account = $this->account;
         </p>
     <?php endif; ?>
 
-    <?php if ($this->canCreateOrganization) : ?>
+    <?php if ($this->canEditAccount) : ?>
         <p>
             <a href="orga/organization/add" class="btn btn-default">
                 <i class="fa fa-plus"></i>
@@ -108,6 +108,15 @@ $account = $this->account;
             Aucune bibliothèque de formulaires.
         </p>
     <?php endif; ?>
+
+    <?php if ($this->canEditAccount) : ?>
+        <p>
+            <a href="af/library/new?account=<?=$account->id?>" class="btn btn-default">
+                <i class="fa fa-plus"></i>
+                <?=__('UI', 'verb', 'add')?>
+            </a>
+        </p>
+    <?php endif; ?>
 </div>
 
 <h3>Paramètres</h3>
@@ -132,6 +141,15 @@ $account = $this->account;
     <?php if (empty($account->parameterLibraries)) : ?>
         <p class="text-muted">
             Aucune bibliothèque de paramètres.
+        </p>
+    <?php endif; ?>
+
+    <?php if ($this->canEditAccount) : ?>
+        <p>
+            <a href="parameter/library/new?account=<?=$account->id?>" class="btn btn-default">
+                <i class="fa fa-plus"></i>
+                <?=__('UI', 'verb', 'add')?>
+            </a>
         </p>
     <?php endif; ?>
 </div>
