@@ -618,6 +618,12 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->aclManager->isAllowed($identity, Actions::EDIT, AFLibrary::load($libraryId));
     }
 
+    protected function deleteAFLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('id') ?: $request->getParam('library');
+        return $this->aclManager->isAllowed($identity, Actions::DELETE, AFLibrary::load($libraryId));
+    }
+
     protected function editAFRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $afId = $request->getParam('id') ?: $request->getParam('idAF');
@@ -635,6 +641,12 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');
         return $this->aclManager->isAllowed($identity, Actions::EDIT, ParameterLibrary::load($libraryId));
+    }
+
+    protected function deleteParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('id') ?: $request->getParam('library');
+        return $this->aclManager->isAllowed($identity, Actions::DELETE, ParameterLibrary::load($libraryId));
     }
 
     protected function viewParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)

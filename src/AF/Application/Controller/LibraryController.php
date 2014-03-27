@@ -56,4 +56,23 @@ class AF_LibraryController extends Core_Controller
 
         $this->view->assign('account', $account);
     }
+
+    /**
+     * @Secure("deleteAFLibrary")
+     */
+    public function deleteAction()
+    {
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('id'));
+
+        $library->delete();
+        try {
+            $this->entityManager->flush();
+            UI_Message::addMessageStatic(__('UI', 'message', 'deleted'), UI_Message::TYPE_SUCCESS);
+        } catch (Core_ORM_ForeignKeyViolationException $e) {
+            UI_Message::addMessageStatic(__('AF', 'library', 'libraryDeletionError'), UI_Message::TYPE_ERROR);
+        }
+
+        $this->redirect('account/dashboard');
+    }
 }

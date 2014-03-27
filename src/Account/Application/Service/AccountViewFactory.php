@@ -66,7 +66,11 @@ class AccountViewFactory
         $query->filter->addCondition('account', $account);
         foreach (AFLibrary::loadList($query) as $library) {
             /** @var AFLibrary $library */
-            $accountView->afLibraries[] = new AFLibraryView($library->getId(), $library->getLabel());
+
+            $libraryView = new AFLibraryView($library->getId(), $library->getLabel());
+            $libraryView->canDelete = $this->aclManager->isAllowed($user, Actions::DELETE, $library);
+
+            $accountView->afLibraries[] = $libraryView;
         }
 
         // Bibliothèques de paramètres
@@ -74,7 +78,11 @@ class AccountViewFactory
         $query->filter->addCondition('account', $account);
         foreach (ParameterLibrary::loadList($query) as $library) {
             /** @var ParameterLibrary $library */
-            $accountView->parameterLibraries[] = new ParameterLibraryView($library->getId(), $library->getLabel());
+
+            $libraryView = new ParameterLibraryView($library->getId(), $library->getLabel());
+            $libraryView->canDelete = $this->aclManager->isAllowed($user, Actions::DELETE, $library);
+
+            $accountView->parameterLibraries[] = $libraryView;
         }
 
         // TODO Bibliothèques d'indicateurs

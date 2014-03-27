@@ -5,10 +5,6 @@ use Account\Application\ViewModel\AccountView;
 $account = $this->account;
 ?>
 
-<style>
-    .deleteOrganization { margin-left: 15px; }
-</style>
-
 <div class="page-header">
     <h1>
         <i class="fa fa-fw fa-home"></i>
@@ -70,17 +66,6 @@ $account = $this->account;
     <?php endif; ?>
 </div>
 
-<script>
-    $(function() {
-        $(".deleteOrganization").confirm({
-            text: '<?=___('UI', 'message', 'areYouSure')?>',
-            confirmButton: '<i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?>',
-            cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',
-            post: true
-        });
-    });
-</script>
-
 
 <h2>Bibliothèques</h2>
 
@@ -90,6 +75,16 @@ $account = $this->account;
     <?php foreach ($account->afLibraries as $library) : ?>
 
         <div class="afLibrary well well-sm">
+            <?php if ($library->canDelete) : ?>
+                <div class="pull-right">
+                    <a class="deleteAFLibrary btn btn-sm btn-warning"
+                       href="af/library/delete/id/<?=$library->id?>">
+                        <i class="fa fa-trash-o"></i>
+                        <?=___('UI', 'verb', 'delete')?>
+                    </a>
+                </div>
+            <?php endif; ?>
+
             <h3>
                 <a href="af/library/view/id/<?=$library->id?>">
                     <?=$library->label?>
@@ -125,6 +120,16 @@ $account = $this->account;
     <?php foreach ($account->parameterLibraries as $library) : ?>
 
         <div class="parameterLibrary well well-sm">
+            <?php if ($library->canDelete) : ?>
+                <div class="pull-right">
+                    <a class="deleteParameterLibrary btn btn-sm btn-warning"
+                       href="parameter/library/delete/id/<?=$library->id?>">
+                        <i class="fa fa-trash-o"></i>
+                        <?=___('UI', 'verb', 'delete')?>
+                    </a>
+                </div>
+            <?php endif; ?>
+
             <h3>
                 <a href="parameter/library/view/id/<?=$library->id?>">
                     <?=$library->label?>
@@ -153,3 +158,27 @@ $account = $this->account;
         </p>
     <?php endif; ?>
 </div>
+
+
+<script>
+    $(function() {
+        $(".deleteOrganization").confirm({
+            text: '<?=___('UI', 'message', 'areYouSure')?>',
+            confirmButton: '<i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?>',
+            cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',
+            post: true
+        });
+        $(".deleteAFLibrary").confirm({
+            text: '<?=___('UI', 'message', 'areYouSure')?>',
+            confirmButton: '<i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?>',
+            cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',
+            post: true
+        });
+        $(".deleteParameterLibrary").confirm({
+            text: '<?=___('UI', 'message', 'areYouSure')?>',
+            confirmButton: '<i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?>',
+            cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',
+            post: true
+        });
+    });
+</script>

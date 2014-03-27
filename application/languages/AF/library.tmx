@@ -30,5 +30,14 @@
             </tuv>
         </tu>
 
+        <tu tuid="libraryDeletionError">
+            <tuv xml:lang="fr">
+                <seg>La bibliothèque ne peut pas être supprimée car elle n'est pas vide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The library can't be deleted because it isn't empty.</seg>
+            </tuv>
+        </tu>
+
     </body>
 </tmx>

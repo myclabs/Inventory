@@ -28,7 +28,6 @@ AF\Domain\AFLibrary:
     afList:
       targetEntity: AF
       mappedBy: library
-      cascade: [ all ]
       orphanRemoval: true
     categories:
       targetEntity: Category

@@ -27,7 +27,6 @@ Parameter\Domain\ParameterLibrary:
     families:
       targetEntity: Parameter\Domain\Family\Family
       mappedBy: library
-      cascade: [ all ]
       orphanRemoval: true
     categories:
       targetEntity: Category
