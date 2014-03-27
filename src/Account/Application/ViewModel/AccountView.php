@@ -35,6 +35,16 @@ class AccountView
     public $parameterLibraries = [];
 
     /**
+     * @var bool
+     */
+    public $canEdit = false;
+
+    /**
+     * @var bool
+     */
+    public $canAllow = false;
+
+    /**
      * @param int    $id
      * @param string $name
      */

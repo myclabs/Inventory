@@ -8,6 +8,7 @@ use Account\Application\ViewModel\ParameterLibraryView;
 use Account\Domain\Account;
 use AF\Domain\AFLibrary;
 use Core_Model_Query;
+use MyCLabs\ACL\ACLManager;
 use User\Domain\ACL\Actions;
 use Orga_Model_Organization;
 use Parameter\Domain\ParameterLibrary;
@@ -25,9 +26,15 @@ class AccountViewFactory
      */
     private $organizationViewFactory;
 
-    public function __construct(OrganizationViewFactory $organizationViewFactory)
+    /**
+     * @var ACLManager
+     */
+    private $aclManager;
+
+    public function __construct(OrganizationViewFactory $organizationViewFactory, ACLManager $aclManager)
     {
         $this->organizationViewFactory = $organizationViewFactory;
+        $this->aclManager = $aclManager;
     }
 
     /**
@@ -71,6 +78,12 @@ class AccountViewFactory
         }
 
         // TODO Bibliothèques d'indicateurs
+
+        // Est-ce que l'utilisateur peut modifier le compte
+        $accountView->canEdit = $this->aclManager->isAllowed($user, Actions::EDIT, $account);
+
+        // Est-ce que l'utilisateur peut gérer les utilisateurs
+        $accountView->canAllow = $this->aclManager->isAllowed($user, Actions::ALLOW, $account);
 
         return $accountView;
     }

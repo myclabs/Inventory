@@ -91,12 +91,14 @@ $account = $this->account;
 
 
             <!-- Members -->
-            <li class="<?=$this->activeMenu === 'members' ? 'active' : ''?>">
-                <a href="account/members?account=<?=$account->id?>">
-                    <i class="fa fa-lg fa-fw fa-users"></i>
-                    <span class="menu-item-parent"><?=__('Account', 'name', 'members')?></span>
-                </a>
-            </li>
+            <?php if (count($account->canAllow) > 0) : ?>
+                <li class="<?=$this->activeMenu === 'members' ? 'active' : ''?>">
+                    <a href="account/members?account=<?=$account->id?>">
+                        <i class="fa fa-lg fa-fw fa-users"></i>
+                        <span class="menu-item-parent"><?=__('Account', 'name', 'members')?></span>
+                    </a>
+                </li>
+            <?php endif; ?>
 
         </ul>
     </nav>
