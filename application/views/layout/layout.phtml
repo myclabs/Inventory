@@ -126,6 +126,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         <script src="vendor/js/muih.js"></script>
         <script src="scripts/ui/translate.js"></script>
         <script src="scripts/ajax-form.js"></script>
+        <script src="scripts/feedback-form.js"></script>
 
         <script>
             eraseFirstMessage = function (loop) {
@@ -137,7 +138,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
             };
             addMessage = function (text, type) {
                 var title, divClass;
-                type = typeof type !== 'undefined' ? type : 'alert';
+                type = typeof type !== 'undefined' ? type : 'warning';
                 switch (type) {
                     case 'info':
                         title = '<?=__('UI', 'message', 'titleInfo')?>';
@@ -198,9 +199,33 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 
         <?= $this->headScript()->toString() ?>
 
-        <script type="text/javascript">
+        <script>
             $(function() {
+                // Set up from the template
                 pageSetUp();
+
+                <?=Core_Translate::exportJS('UI', 'verb', 'cancel')?>
+                <?=Core_Translate::exportJS('UI', 'verb', 'send')?>
+                <?=Core_Translate::exportJS('UI', 'feedback', 'title')?>
+                <?=Core_Translate::exportJS('UI', 'feedback', 'unclearContent')?>
+                <?=Core_Translate::exportJS('UI', 'feedback', 'bugReport')?>
+                <?=Core_Translate::exportJS('UI', 'feedback', 'improvement')?>
+                <?=Core_Translate::exportJS('UI', 'feedback', 'moreDetails')?>
+                <?=Core_Translate::exportJS('UI', 'feedback', 'thanks')?>
+
+                // Feedback form
+                $('#feedbackButton').click(function(e) {
+                    e.preventDefault();
+                    <?php
+                    if ($user) {
+                        $userEmail = $user->getEmail();
+                        echo "var data = {user: '$userEmail'};";
+                    } else {
+                        echo "var data = {};";
+                    }
+                    ?>
+                    feedbackForm("<?=$this->baseUrl('feedback/submit')?>", data);
+                });
             });
         </script>
 
