@@ -22,7 +22,7 @@ class DoctrineAccountRepository extends DoctrineEntityRepository implements Acco
     public function getTraversableAccounts(User $user)
     {
         $qb = $this->createQueryBuilder('account');
-        QueryBuilderHelper::joinACL($qb, Account::class, 'account', $user, Actions::TRAVERSE);
+        QueryBuilderHelper::joinACL($qb, $user, Actions::TRAVERSE);
 
         return $qb->getQuery()->getResult();
     }

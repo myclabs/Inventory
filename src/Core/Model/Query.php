@@ -351,10 +351,10 @@ class Core_Model_Query
 
             QueryBuilderHelper::joinACL(
                 $queryBuilder,
-                $this->entityName,
-                $this->rootAlias,
                 $this->aclFilter->user,
-                $this->aclFilter->action
+                $this->aclFilter->action,
+                $this->entityName,
+                $this->rootAlias
             );
         }
     }

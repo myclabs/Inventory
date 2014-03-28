@@ -1,7 +1,6 @@
 <?php
 
 use Account\Domain\ACL\AccountAdminRole;
-use AF\Domain\InputSet\PrimaryInputSet;
 use DI\Container;
 use Doctrine\ORM\EntityManager;
 use User\Domain\ACL\Actions;
@@ -15,7 +14,6 @@ use Orga\Model\ACL\CellContributorRole;
 use Orga\Model\ACL\CellManagerRole;
 use Orga\Model\ACL\CellObserverRole;
 use Orga\Model\ACL\CellResourceGraphTraverser;
-use Orga\Model\ACL\InputSetResourceGraphTraverser;
 use Orga\Model\ACL\OrganizationAdminRole;
 use Orga\Model\ACL\OrganizationResourceGraphTraverser;
 use Symfony\Component\EventDispatcher\EventDispatcher;
