@@ -6,7 +6,7 @@ Feature: AF tree edit category feature
 
   @javascript
   Scenario: Creation of an AF category
-    Given I am on "af/af/tree"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
   # Ajout d'une catégorie, libellé vide
     When I click "Ajouter une catégorie"
@@ -23,7 +23,7 @@ Feature: AF tree edit category feature
 
   @javascript
   Scenario: Edition of label of an AF category
-    Given I am on "af/af/tree"
+    Given I am on "af/library/view/id/1"
   # Ouverture popup modification
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
@@ -39,7 +39,7 @@ Feature: AF tree edit category feature
 
   @javascript
   Scenario: Edition of position an parent of an AF category
-    Given I am on "af/af/tree"
+    Given I am on "af/library/view/id/1"
   # Déplacement dans une autre catégorie
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
@@ -70,7 +70,7 @@ Feature: AF tree edit category feature
 
   @javascript
   Scenario:  Deletion of an AF category
-    Given I am on "af/af/tree"
+    Given I am on "af/library/view/id/1"
   # Catégorie contenant une sous-catégorie
     And I click "Catégorie contenant une sous-catégorie"
     Then I should see the popup "Édition d'une catégorie"

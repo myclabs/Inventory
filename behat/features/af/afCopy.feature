@@ -6,7 +6,7 @@ Feature: AF copy feature
 
   @javascript
   Scenario: Copy of the combustion form, correct input, and test of the copied form scenario
-    Given I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the "listAF" datagrid should contain 8 row
@@ -48,7 +48,7 @@ Feature: AF copy feature
 
   @javascript @readOnly
   Scenario: Copy of the combustion form, incorrect input
-    Given I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
   # Essai de duplication avec libellé et identifiant vides
     And I click "Dupliquer" in the row 1 of the "listAF" datagrid
@@ -68,7 +68,7 @@ Feature: AF copy feature
 
   @javascript
   Scenario: Copy of the forfait emission fonction marque form and test of the copied form scenario
-    Given I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the "listAF" datagrid should contain 8 row
@@ -99,7 +99,7 @@ Feature: AF copy feature
 
   @javascript
   Scenario: Copy of the formulaire avec tout type de champ form and test of the copied form scenario
-    Given I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the "listAF" datagrid should contain 8 row
@@ -131,7 +131,7 @@ Feature: AF copy feature
 
   @javascript
   Scenario: Copy of the formulaire avec sous-formulaire repete contenant tout type de champ form and test of the copied form scenario
-    Given I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the "listAF" datagrid should contain 8 row
