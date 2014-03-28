@@ -26,6 +26,7 @@ $this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules
 
 // Création d'un TabView.
 $tabView = new Tabs();
+/** @var Tab[] $baseTabs */
 $baseTabs = [];
 
 // ONGLET DE SAISIE
@@ -49,7 +50,7 @@ if ($viewConfiguration->getIdInputSet()) {
 }
 $url = $this->url($urlArray, null, true);
 $url .= '?actionStack=' . urlencode(json_encode($viewConfiguration->getActionStack()));
-$baseTabs[AFViewConfiguration::TAB_INPUT]->dataSource = $url;
+$baseTabs[AFViewConfiguration::TAB_INPUT]->setContent($url);
 
 // ONGLET DE RESULTAT
 if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_RESULT)) {
@@ -67,7 +68,7 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_RESULT)) {
     if ($viewConfiguration->getIdInputSet()) {
         $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
     }
-    $baseTabs[AFViewConfiguration::TAB_RESULT]->dataSource = $this->url($urlArray, null, true);
+    $baseTabs[AFViewConfiguration::TAB_RESULT]->setContent($this->url($urlArray, null, true));
 }
 
 // ONGLET DETAIL CALCUL
@@ -86,7 +87,7 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS)
     if ($viewConfiguration->getIdInputSet()) {
         $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
     }
-    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->dataSource = $this->url($urlArray, null, true);
+    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->setContent($this->url($urlArray, null, true));
 }
 
 // ONGLET DOCUMENTATION
@@ -100,7 +101,7 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_DOCUMENTATION)) {
         'idAF'       => $af->getId(),
     );
     $urlArray += $viewConfiguration->getUrlParams();
-    $documentationTab->dataSource = $this->url($urlArray, null, true);
+    $documentationTab->setContent($this->url($urlArray, null, true));
     $baseTabs[AFViewConfiguration::TAB_DOCUMENTATION] = $documentationTab;
 }
 
