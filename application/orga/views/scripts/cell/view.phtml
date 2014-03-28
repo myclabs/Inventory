@@ -339,13 +339,13 @@ if (count($file) > 0) {
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
             <form class="form-inline cells-filter">
                 <?php foreach ($narrowerGranularityArray['filterAxes'] as $refAxis => $memberOptions) : ?>
-                <?php if (count($memberOptions) > 2) : ?>
-                <select name="granularity<?=$narrowerGranularity->getId()?>_axis<?=$refAxis?>" data-filter="tag">
-                    <?php foreach ($memberOptions as $memberTag => $memberLabel) : ?>
-                        <option value="<?=$memberTag?>"><?=$memberLabel?></option>
-                    <?php endforeach; ?>
-                </select>
-                <?php endif; ?>
+                    <?php if (count($memberOptions) > 2) : ?>
+                        <select name="granularity<?=$narrowerGranularity->getId()?>_axis<?=$refAxis?>" data-filter="tag">
+                            <?php foreach ($memberOptions as $memberTag => $memberLabel) : ?>
+                                <option value="<?=$memberTag?>"><?=$memberLabel?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php endif; ?>
                 <?php endforeach; ?>
                 <?php if ($narrowerGranularityArray['isInventory']) : ?>
                 <select name="granularity<?=$narrowerGranularity->getId()?>_inventoryStatus" data-filter="inventory-status">

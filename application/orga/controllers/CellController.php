@@ -461,14 +461,16 @@ class Orga_CellController extends Core_Controller
         }
         $childCellsCriteria->setFirstResult($this->getParam('firstCell'));
         $childCellsCriteria->setMaxResults($this->getParam('showCells'));
-        $filters = $this->getParam('filters');
-        $filterPrefix = 'granularity' . $idNarrowerGranularity . '_';
-        foreach ($filters as $filter) {
-            if (!empty($filter['value'])) {
-                if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
-                    $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
-                } else {
-                    $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
+        if ($this->hasParam('filters')) {
+            $filters = $this->getParam('filters');
+            $filterPrefix = 'granularity' . $idNarrowerGranularity . '_';
+            foreach ($filters as $filter) {
+                if (!empty($filter['value'])) {
+                    if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
+                        $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
+                    } else {
+                        $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
+                    }
                 }
             }
         }
