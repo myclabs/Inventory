@@ -12,6 +12,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\DBAL\Types\Type;
+use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Tab;
@@ -306,6 +307,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Tab::$defaultAjaxTabLoadingText = new GenericTag('p', __('UI', 'loading', 'loading'));
         Tab::$defaultAjaxTabLoadingText->prependContent(' ');
         Tab::$defaultAjaxTabLoadingText->prependContent(new Icon('spinner fa-spin'));
+        Collapse::$defaultOpenedIndicator = new Icon('chevron-down');
+        Collapse::$defaultClosedIndicator = new Icon('chevron-right');
     }
 
     /**
