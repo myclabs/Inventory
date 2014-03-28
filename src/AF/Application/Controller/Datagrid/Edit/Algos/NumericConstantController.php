@@ -3,7 +3,6 @@
  * @author  matthieu.napoli
  * @author  hugo.charbonnier
  * @author  thibaud.rolland
- * @package AF
  */
 
 use AF\Domain\AF;
@@ -12,15 +11,9 @@ use Classification\Domain\ContextIndicator;
 use Core\Annotation\Secure;
 use Unit\UnitAPI;
 
-/**
- * @package AF
- */
 class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -43,11 +36,13 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                         . "#" . $contextIndicator->getIndicator()->getRef();
                     $data['contextIndicator'] = $this->cellList($ref);
                 }
-                $data['resultIndex'] = $this->cellPopup($this->_helper->url('popup-indexation',
-                                                                            'edit_algos',
-                                                                            'af',
-                                                                            ['id' => $algo->getId()]),
-                    '<i class="fa fa-search-plus"></i> '.__('Algo', 'name', 'indexation'));
+                $data['resultIndex'] = $this->cellPopup(
+                    $this->_helper->url('popup-indexation', 'edit_algos', 'af', [
+                        'idAF' => $af->getId(),
+                        'algo' => $algo->getId(),
+                    ]),
+                    '<i class="fa fa-search-plus"></i> ' . __('Algo', 'name', 'indexation')
+                );
                 $this->addLine($data);
             }
         }
@@ -55,8 +50,6 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
@@ -133,8 +126,6 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
      * @Secure("editAF")
      */
     public function updateelementAction()
@@ -212,8 +203,6 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -275,5 +264,4 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
     {
         return $contextIndicator->getIndicator()->getLabel() . ' - ' . $contextIndicator->getContext()->getLabel();
     }
-
 }

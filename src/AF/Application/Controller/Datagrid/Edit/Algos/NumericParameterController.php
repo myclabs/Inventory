@@ -62,12 +62,13 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                         . "#" . $contextIndicator->getIndicator()->getRef();
                     $data['contextIndicator'] = $this->cellList($ref);
                 }
-                $data['resultIndex'] = $this->cellPopup($this->_helper->url(
-                    'popup-indexation',
-                    'edit_algos',
-                    'af',
-                    ['id' => $algo->getId()]
-                ), __('Algo', 'name', 'indexation'), 'search');
+                $data['resultIndex'] = $this->cellPopup(
+                    $this->_helper->url('popup-indexation', 'edit_algos', 'af', [
+                        'idAF' => $af->getId(),
+                        'algo' => $algo->getId(),
+                    ]),
+                    '<i class="fa fa-search-plus"></i> ' . __('Algo', 'name', 'indexation')
+                );
                 $this->addLine($data);
             }
         }
@@ -179,18 +180,6 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
         $algo->getSet()->save();
         $this->entityManager->flush();
         $this->message = __('UI', 'message', 'deleted');
-        $this->send();
-    }
-
-    /**
-     * Fonction permettant de récupérer la forme brute de l'expression
-     * @Secure("editAF")
-     */
-    public function getExpressionAction()
-    {
-        /** @var $algo NumericExpressionAlgo */
-        $algo = NumericExpressionAlgo::load($this->getParam('id'));
-        $this->data = $algo->getExpression();
         $this->send();
     }
 

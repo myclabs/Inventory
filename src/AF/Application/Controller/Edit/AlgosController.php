@@ -21,7 +21,7 @@ class AF_Edit_AlgosController extends Core_Controller
      */
     public function popupExpressionAction()
     {
-        $this->view->algo = Algo::load($this->getParam('id'));
+        $this->view->algo = Algo::load($this->getParam('algo'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -31,7 +31,7 @@ class AF_Edit_AlgosController extends Core_Controller
      */
     public function popupIndexationAction()
     {
-        $this->view->algo = Algo::load($this->getParam('id'));
+        $this->view->algo = Algo::load($this->getParam('algo'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -87,7 +87,7 @@ class AF_Edit_AlgosController extends Core_Controller
         }
         $algo->save();
         $this->entityManager->flush();
-        $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/traitement');
+        $this->redirect('af/edit/menu/id/' . $af->getId() . '/onglet/traitement');
     }
 
     /**
