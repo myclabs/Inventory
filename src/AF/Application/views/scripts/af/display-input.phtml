@@ -16,13 +16,6 @@ if ($inputSet) {
 }
 ?>
 
-<style type="text/css">
-    .alertFinishInput {
-        margin-top: -20px;
-        margin-bottom: 10px;
-    }
-</style>
-
 <div class="inputProgress row">
 
     <div class="progress col-md-9">
@@ -61,7 +54,7 @@ HTML;
     }
 
     $actionGroup->content = <<<HTML
-        <div class="alert alert-success alertFinishInput hide">
+        <div class="alert alert-success alertFinishInput">
             $inputCompleteMessage
         </div>
         $resultsPreviewButton
