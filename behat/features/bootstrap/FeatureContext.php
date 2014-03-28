@@ -216,7 +216,10 @@ class FeatureContext extends MinkContext
     public function toggleCollapse($label)
     {
         $label = $this->fixStepArgument($label);
-        $node = $this->findElement('//legend[text()[normalize-space(.)="' . $label . '"]]', 'xpath');
+        $node = $this->getSession()->getPage()->find(
+            'css',
+            'legend:contains("' . $label . '")'
+        );
 
         $node->click();
 

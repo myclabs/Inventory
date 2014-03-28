@@ -30,8 +30,10 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
         /** @var $library AFLibrary */
         $library = AFLibrary::load($this->getParam('library'));
 
-        $this->totalElements = count($library->getAFList());
-        $afList = $library->getAFList($this->request->totalElements, $this->request->startIndex);
+        $this->request->filter->addCondition('library', $library);
+
+        $this->totalElements = AF::countTotal($this->request);
+        $afList = AF::loadList($this->request);
 
         foreach ($afList as $af) {
             $data = [];

@@ -98,7 +98,7 @@ Feature: AF list edit feature
     And I open tab "Contrôle"
     Then I should see "Combustion de combustible, mesuré en unité de masse"
   # Retour à la liste des formulaires, clic sur "Test"
-    When I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     And I click "Test" in the row 1 of the "listAF" datagrid
   # Vérification qu'on est bien sur la page "Test"
