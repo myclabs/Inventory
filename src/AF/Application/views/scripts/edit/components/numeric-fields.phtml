@@ -1,11 +1,6 @@
 <?php
 use AF\Domain\AF;
 
-/**
- * @author  matthieu.napoli
- * @author  yoann.croizer
- * @package AF
- */
 /** @var $af AF */
 $af = $this->af;
 
@@ -35,8 +30,10 @@ $help->popup->title = __('UI', 'name', 'help');
 $numericDatagrid->addCol($help);
 
 // Hidden / Visible
-$isVisibleColumn = new UI_Datagrid_Col_Bool('isVisible',
-                                            __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));
+$isVisibleColumn = new UI_Datagrid_Col_Bool(
+    'isVisible',
+    __('AF', 'configComponentDatagrid', 'initialVisibilityHeader')
+);
 $isVisibleColumn->editable = true;
 $isVisibleColumn->defaultAddValue = true;
 $isVisibleColumn->textTrue = __('UI', 'property', 'visible');
@@ -71,7 +68,10 @@ $unitColumn->editable = true;
 $numericDatagrid->addCol($unitColumn);
 
 // Unit choice
-$unitSelectionColumn = new UI_Datagrid_Col_Bool('unitSelection', __('AF', 'configComponentDatagrid', 'editableUnitHeader'));
+$unitSelectionColumn = new UI_Datagrid_Col_Bool(
+    'unitSelection',
+    __('AF', 'configComponentDatagrid', 'editableUnitHeader')
+);
 $unitSelectionColumn->editable = true;
 $unitSelectionColumn->defaultAddValue = true;
 $unitSelectionColumn->textTrue = __('UI', 'property', 'editable');
@@ -81,8 +81,10 @@ $unitSelectionColumn->valueFalse = '<i class="fa fa-times"></i> '.__('UI', 'prop
 $numericDatagrid->addCol($unitSelectionColumn);
 
 // Has Uncertainty
-$withUncertaintyColumn = new UI_Datagrid_Col_Bool('withUncertainty',
-                                                  __('AF', 'configComponentDatagrid', 'withUncertaintyHeader'));
+$withUncertaintyColumn = new UI_Datagrid_Col_Bool(
+    'withUncertainty',
+    __('AF', 'configComponentDatagrid', 'withUncertaintyHeader')
+);
 $withUncertaintyColumn->editable = true;
 $withUncertaintyColumn->defaultAddValue = true;
 $withUncertaintyColumn->textTrue = __('UI', 'property', 'displayedFem');
@@ -97,14 +99,18 @@ $digitalValue->editable = true;
 $numericDatagrid->addCol($digitalValue);
 
 // Uncertainty
-$relativeUncertainty = new UI_Datagrid_Col_Text('relativeUncertainty',
-                                                __('AF', 'configComponentDatagrid', 'initialUncertaintyHeader'));
+$relativeUncertainty = new UI_Datagrid_Col_Text(
+    'relativeUncertainty',
+    __('AF', 'configComponentDatagrid', 'initialUncertaintyHeader')
+);
 $relativeUncertainty->editable = true;
 $numericDatagrid->addCol($relativeUncertainty);
 
 // Default value reminder
-$defaultValueReminder = new UI_Datagrid_Col_Bool('defaultValueReminder',
-                                                 __('AF', 'configComponentDatagrid', 'defaultValueReminderHeader'));
+$defaultValueReminder = new UI_Datagrid_Col_Bool(
+    'defaultValueReminder',
+    __('AF', 'configComponentDatagrid', 'defaultValueReminderHeader')
+);
 $defaultValueReminder->editable = true;
 $defaultValueReminder->defaultAddValue = false;
 $defaultValueReminder->textTrue = __('UI', 'property', 'displayed');
@@ -115,6 +121,9 @@ $numericDatagrid->addCol($defaultValueReminder);
 
 echo $numericDatagrid->render();
 ?>
-<script type="text/javascript">
-    $(document).ready(function() { refFromLabel('numericFieldDatagrid_label_addForm', 'numericFieldDatagrid_ref_addForm') });
+
+<script>
+    $(document).ready(function() {
+        refFromLabel('numericFieldDatagrid_label_addForm', 'numericFieldDatagrid_ref_addForm')
+    });
 </script>

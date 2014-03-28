@@ -15,19 +15,15 @@ use Core\Annotation\Secure;
 
 /**
  * Permet de gérer les options d'un champ de sélection
- * @package AF
  */
 class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
     {
-        /** @var $selectField \AF\Domain\Component\Select */
+        /** @var $selectField Select */
         $selectField = Select::load($this->getParam('idSelect'));
         $options = $selectField->getOptions();
         foreach ($options as $option) {
@@ -39,7 +35,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
             $data['enabled'] = $option->isEnabled();
             // Si il s'agit d'une selection multiple on précise si l'option fait partie de la séléction par défaut
             if ($selectField instanceof SelectMulti) {
-                /** @var $selectField \AF\Domain\Component\Select\SelectMulti */
+                /** @var $selectField SelectMulti */
                 $data['defaultValue'] = $selectField->hasDefaultValue($option);
             }
             $canMoveUp = ($option->getPosition() > 1);
@@ -51,13 +47,11 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
     {
-        /** @var $selectField \AF\Domain\Component\Select */
+        /** @var $selectField Select */
         $selectField = Select::load($this->getParam('idSelect'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
@@ -83,7 +77,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
 
             $selectField->addOption($option);
             if ($selectField instanceof SelectMulti) {
-                /** @var $selectField \AF\Domain\Component\Select\SelectMulti */
+                /** @var $selectField SelectMulti */
                 if ($this->getAddElementValue('defaultValue') == 'true') {
                     $selectField->addDefaultValue($option);
                 }
@@ -105,8 +99,6 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
      * @Secure("editAF")
      */
     public function updateelementAction()
@@ -133,7 +125,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
                 break;
             // Ce cas peut se produire uniquement avec les champs de selection multiple
             case 'defaultValue':
-                /** @var $select \AF\Domain\Component\Select\SelectMulti */
+                /** @var $select SelectMulti */
                 $select = SelectMulti::load($this->getParam('idSelect'));
                 if ($newValue) {
                     $select->addDefaultValue($option);
@@ -176,13 +168,11 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
     {
-        /** @var $select \AF\Domain\Component\Select */
+        /** @var $select Select */
         $select = Select::load($this->getParam('idSelect'));
         /** @var $option SelectOption */
         $option = SelectOption::load($this->getParam('index'));
@@ -196,12 +186,12 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
         }
         $select->removeOption($option);
         if ($select instanceof SelectSingle) {
-            /** @var $select \AF\Domain\Component\Select\SelectSingle */
+            /** @var $select SelectSingle */
             if ($select->getDefaultValue() === $option) {
                 $select->setDefaultValue(null);
             }
         } elseif ($select instanceof SelectMulti) {
-            /** @var $select \AF\Domain\Component\Select\SelectMulti */
+            /** @var $select SelectMulti */
             if ($select->hasDefaultValue($option)) {
                 $select->removeDefaultValue($option);
             }
@@ -218,5 +208,4 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
-
 }

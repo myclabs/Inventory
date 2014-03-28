@@ -14,15 +14,9 @@ use AF\Domain\Condition\ElementaryCondition;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 use Core\Annotation\Secure;
 
-/**
- * @package AF
- */
 class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -31,18 +25,19 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $selectFields \AF\Domain\Component\Select\SelectMulti[] */
+        /** @var $selectFields SelectMulti[] */
         $selectFields = SelectMulti::loadList($this->request);
         foreach ($selectFields as $selectField) {
             $data = [];
             $data['index'] = $selectField->getId();
             $data['label'] = $selectField->getLabel();
             $data['ref'] = $selectField->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $selectField->getId(),
-                                                ' af/datagrid_edit_components_select-multi-fields/get-raw-help/id/'
-                                                    . $selectField->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $selectField->getId(),
+                'af/datagrid_edit_components_select-fields/get-raw-help?id=' . $af->getId()
+                . '&component=' . $selectField->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $selectField->isVisible();
             $data['enabled'] = $selectField->isEnabled();
             $data['required'] = $selectField->getRequired();
@@ -115,7 +110,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
      */
     public function updateelementAction()
     {
-        /** @var $selectField \AF\Domain\Component\Select\SelectMulti */
+        /** @var $selectField SelectMulti */
         $selectField = SelectMulti::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
@@ -129,11 +124,6 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
                 break;
             case 'help':
                 $selectField->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $selectField->getId(),
-                                                  ' af/datagrid_edit_components_select-multi-fields/get-raw-help/id/'
-                                                      . $selectField->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
                 break;
             case 'isVisible':
                 $selectField->setVisible($newValue);
@@ -169,7 +159,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
      */
     public function deleteelementAction()
     {
-        /** @var $field \AF\Domain\Component\Select\SelectMulti */
+        /** @var $field SelectMulti */
         $field = SelectMulti::load($this->getParam('index'));
         // Vérifie qu'il n'y a pas d'Algo_Condition qui référence cet input
         $query = new Core_Model_Query();
@@ -200,9 +190,8 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
     public function getRawHelpAction()
     {
         /** @var $select Select */
-        $select = Select::load($this->getParam('id'));
+        $select = Select::load($this->getParam('component'));
         $this->data = $select->getHelp();
         $this->send();
     }
-
 }

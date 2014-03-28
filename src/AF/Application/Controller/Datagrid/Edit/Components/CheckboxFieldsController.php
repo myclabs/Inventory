@@ -1,9 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\Component\Component;
@@ -14,14 +9,12 @@ use Core\Annotation\Secure;
 
 /**
  * Checkbox fields datagrid Controller
- * @package AF
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
  */
 class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -37,11 +30,12 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
             $data['index'] = $checkboxField->getId();
             $data['label'] = $checkboxField->getLabel();
             $data['ref'] = $checkboxField->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $checkboxField->getId(),
-                                                ' af/datagrid_edit_components_checkbox-fields/get-raw-help/id/'
-                                                    . $checkboxField->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $checkboxField->getId(),
+                'af/datagrid_edit_components_checkbox-fields/get-raw-help?id=' . $af->getId()
+                . '&component=' . $checkboxField->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $checkboxField->isVisible();
             $data['enabled'] = $checkboxField->isEnabled();
             $data['defaultValue'] = $checkboxField->getDefaultValue();
@@ -51,8 +45,6 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
@@ -104,8 +96,6 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
      * @Secure("editAF")
      */
     public function updateelementAction()
@@ -124,11 +114,6 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
                 break;
             case 'help':
                 $checkboxField->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $checkboxField->getId(),
-                                                  ' af/datagrid_edit_components_checkbox-fields/get-raw-help/id/'
-                                                      . $checkboxField->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
                 break;
             case 'isVisible':
                 $checkboxField->setVisible($newValue);
@@ -154,8 +139,6 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -191,9 +174,8 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     public function getRawHelpAction()
     {
         /** @var $checkboxField Checkbox */
-        $checkboxField = Checkbox::load($this->getParam('id'));
+        $checkboxField = Checkbox::load($this->getParam('component'));
         $this->data = $checkboxField->getHelp();
         $this->send();
     }
-
 }

@@ -17,7 +17,7 @@ class AF_Edit_ComponentsController extends Core_Controller
      */
     public function popupHelpAction()
     {
-        $this->view->component = Component::load($this->getParam('id'));
+        $this->view->component = Component::load($this->getParam('component'));
         $this->_helper->layout()->disableLayout();
     }
 

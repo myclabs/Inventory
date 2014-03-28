@@ -17,15 +17,12 @@ use Core\Annotation\Secure;
  */
 class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
@@ -36,11 +33,12 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
             $data['index'] = $field->getId();
             $data['label'] = $field->getLabel();
             $data['ref'] = $field->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $field->getId(),
-                                                ' af/datagrid_edit_components_text-fields/get-raw-help/id/'
-                                                    . $field->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $field->getId(),
+                'af/datagrid_edit_components_text-fields/get-raw-help?id=' . $af->getId()
+                . '&component=' . $field->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $field->isVisible();
             $data['enabled'] = $field->isEnabled();
             $data['required'] = $field->getRequired();
@@ -121,11 +119,6 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
                 break;
             case 'help':
                 $field->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $field->getId(),
-                                                  ' af/datagrid_edit_components_text-fields/get-raw-help/id/'
-                                                      . $field->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
                 break;
             case 'isVisible':
                 $field->setVisible($newValue);
@@ -155,13 +148,11 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         /** @var $field TextField */
         $field = TextField::load($this->getParam('index'));
@@ -196,9 +187,8 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
     public function getRawHelpAction()
     {
         /** @var $numeric TextField */
-        $numeric = TextField::load($this->getParam('id'));
+        $numeric = TextField::load($this->getParam('component'));
         $this->data = $numeric->getHelp();
         $this->send();
     }
-
 }
