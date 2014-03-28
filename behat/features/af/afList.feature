@@ -119,11 +119,9 @@ Feature: AF list edit feature
       | label           | ref             |
       | Formulaire vide | formulaire_vide |
   # Clic sur "Réinitialiser"
-    When I open collapse "Filtres"
     And I click "Réinitialiser"
     Then the "listAF" datagrid should contain 8 row
   # Filtre sur l'identifiant
-    When I open collapse "Filtres"
     And I fill in "listAF_ref_filterForm" with "_test"
     And I click "Filtrer"
     Then the "listAF" datagrid should contain 1 row
@@ -131,17 +129,13 @@ Feature: AF list edit feature
       | label           | ref             |
       | Formulaire test | formulaire_test |
   # Filtre sur les deux combinés
-    When I open collapse "Filtres"
     And I click "Réinitialiser"
-    And I open collapse "Filtres"
     And I fill in "listAF_label_filterForm" with "Formulaire"
     And I fill in "listAF_ref_filterForm" with "_vide"
     And I click "Filtrer"
     Then the "listAF" datagrid should contain 1 row
   # Alors que…
-    When I open collapse "Filtres"
     And I click "Réinitialiser"
-    And I open collapse "Filtres"
     And I fill in "listAF_label_filterForm" with "Formulaire"
     And I click "Filtrer"
     Then the "listAF" datagrid should contain 5 row
