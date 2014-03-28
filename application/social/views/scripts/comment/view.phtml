@@ -14,11 +14,11 @@ $canEdit = ($comment->getAuthor() === $this->currentUser);
         <?=__('Social', 'comment', 'dated')?> <?=$comment->getCreationDate()->format('d M Y')?>
 
         <?php if ($canEdit) : ?>
-            <button type="button" class="editComment btn btn-mini">
+            <button type="button" class="editComment btn btn-default btn-xs">
                 <i class="fa fa-pencil-square-o"></i>
                 <?=__('UI', 'verb', 'edit')?>
             </button>
-            <button type="button" class="deleteComment btn btn-mini">
+            <button type="button" class="deleteComment btn btn-default btn-xs">
                 <i class="fa fa-trash-o"></i>
                 <?=__('UI', 'verb', 'delete')?>
             </button>

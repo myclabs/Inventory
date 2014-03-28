@@ -29,9 +29,6 @@ $inputStatusFilters = [
 $organization = $this->organization;
 /** @var CellViewModel $currentCell */
 $currentCell = $this->currentCell;
-/** @var Orga_Model_Granularity $currentGranularity */
-$currentGranularity = $this->currentGranularity;
-$currentGranularityArray = $this->currentGranularityArray;
 
 $workspaceBanner = null;
 $file = glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $organization->id . '.*');
@@ -89,10 +86,12 @@ if (count($file) > 0) {
     .cell[data-input-status="<?=PrimaryInputSet::STATUS_COMPLETE?>"] .input-status { background-color: #f0aD4e; }
     .cell[data-input-status="<?=PrimaryInputSet::STATUS_INPUT_INCOMPLETE?>"] .input-status { background-color: #f0aD4e; }
 
-    .granularity-wrapper .cells-filter > * { margin-top: 2px; }
     .granularity-wrapper .cells-filter .granularity-info { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
-    .granularity-wrapper .granularity > .cell.firstRowCell { margin-left: 0; }
-    .granularity-wrapper .display-more-cells { margin-left: 0; }
+    .granularity-wrapper .granularity { margin-left: -2.5px; margin-right: -2.5px; }
+    .granularity-wrapper .granularity .col-md-4 { padding-left: 2.5px; padding-right: 2.5px; }
+    .granularity-wrapper .granularity .cell { margin-top: 5px; margin-bottom: 0; }
+    .granularity-wrapper .display-more-cells { padding-left: 2.5px; padding-right: 2.5px; }
+    .granularity-wrapper .display-more-cells button { display: block; width: 100%; margin-top: 5px; margin-bottom: 0; }
     .granularity-wrapper .no-cell { margin-left: 0; text-align: center; vertical-align: middle; padding: 8px 12px; font-size: 14px; font-weight: normal; }
 
     .history,
@@ -113,18 +112,18 @@ if (count($file) > 0) {
     .history h4 span,
     .comments h4 span
     { position: relative; top: 10px; background-color: #ffffff; padding-right: 5px; color: #999999; }
-    .history div.row-fluid div.span2,
-    .comments div.row-fluid div.span2
+    .history div.row div.col-md-2,
+    .comments div.row div.col-md-2
     { color: #999999; font-size: small; font-weight: normal; text-align: right; }
-    .history div.row-fluid + div.row-fluid,
-    .comments div.row-fluid + div.row-fluid
+    .history div.row + div.row,
+    .comments div.row + div.row
     { border-top: solid 1px #eeeeee; margin-top: 8px; padding-top: 8px; }
     .history > div > div + div,
     .comments >div > div + div
     { margin-top: 5px;  }
 
     #addMember { margin: 0; }
-    #addMember .controls { margin-left: 0; float: right; }
+    #addMember { margin-left: 0; float: right; }
     #addMember .subGroup { margin-left: 0; }
     #addMember label { text-align: left; width: auto; }
     #addMember .input { width: auto; }
@@ -137,7 +136,7 @@ if (count($file) > 0) {
         <?php if ($organization->canBeEdited) : ?>
             <div class="pull-right">
                 <small>
-                    <a class="editOrganization btn btn-small btn-primary"
+                    <a class="editOrganization btn btn-sm btn-primary"
                        href="orga/organization/edit/idOrganization/<?=$organization->id?>/">
                         <i class="fa fa-wrench"></i>
                         <?=___('UI', 'name', 'configurationOrga')?>
@@ -153,9 +152,9 @@ if (count($file) > 0) {
     </h1>
 </div>
 
-<div class="row-fluid">
+<div class="row">
 
-<div class="span9" id="cellsView">
+<div class="col-md-9" id="cellsView">
 
     <fieldset class="wrapper granularity-wrapper">
         <legend data-toggle="collapse" data-target="#currentGranularity">
@@ -167,8 +166,8 @@ if (count($file) > 0) {
         </legend>
 
         <div id="currentGranularity" class="collapse in" style="overflow: visible;">
-            <div class="granularity row-fluid">
-                <div class="span4 cell well" data-inventory-status="<?=$currentCell->inventoryStatus?>" data-input-status="<?=$currentCell->inputStatus?>">
+            <div class="granularity row">
+                <div class="col-md-4 cell well" data-inventory-status="<?=$currentCell->inventoryStatus?>" data-input-status="<?=$currentCell->inputStatus?>">
                     <h4>
                         <?=$currentCell->extendedLabel?>
                         <small class="cell-actions btn-group">
@@ -230,81 +229,97 @@ if (count($file) > 0) {
                     </div>
                     <?php endif; ?>
 
-                    <div id="administrators<?=$currentCell->id?>" class="modal administrators hide fade">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="withTooltip" title="<?=___('Orga', 'view', 'administratorExplanations')?>">
-                                <?=___('Orga', 'view', 'administratorsFrom')?> <?=$currentCell->shortLabel?>
-                                <i class="fa fa-question-circle"></i>
-                            </h4>
-                        </div>
-                        <div class="modal-body">
-                            <pre><?=implode("\n", $currentCell->administrators)?></pre>
+                    <div id="administrators<?=$currentCell->id?>" class="modal administrators fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="withTooltip" title="<?=___('Orga', 'view', 'administratorExplanations')?>">
+                                        <?=___('Orga', 'view', 'administratorsFrom')?> <?=$currentCell->shortLabel?>
+                                        <i class="fa fa-question-circle"></i>
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <pre><?=implode("\n", $currentCell->administrators)?></pre>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <?php if ($currentCell->showUsers) : ?>
                     <div id="users<?=$currentCell->id?>" class="modal users hide fade large" data-cell="<?=$currentCell->id?>">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4><?=___('Orga', 'view', 'rolesFrom')?> <?=$currentCell->shortLabel?></h4>
-                        </div>
-                        <div class="modal-body">
-                        </div>
-                        <div class="modal-footer">
-                            <form class="form-inline addUser" action="orga/cell/add-user/idCell/<?=$currentCell->id?>/">
-                                <input type="text" name="userEmail" placeholder="<?=___('User', 'user', 'emailAddress')?>">
-                                <select name="userRole">
-                                    <option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>
-                                    <option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>
-                                    <option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>
-                                    <option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>
-                                </select>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-plus"></i>
-                                    <?=___('UI', 'verb', 'add')?>
-                                </button>
-                            </form>
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4><?=___('Orga', 'view', 'rolesFrom')?> <?=$currentCell->shortLabel?></h4>
+                                </div>
+                                <div class="modal-body">
+                                </div>
+                                <div class="modal-footer">
+                                    <form class="form-inline addUser" action="orga/cell/add-user/idCell/<?=$currentCell->id?>/">
+                                        <input type="text" name="userEmail" placeholder="<?=___('User', 'user', 'emailAddress')?>">
+                                        <select name="userRole">
+                                            <option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>
+                                            <option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>
+                                            <option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>
+                                            <option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>
+                                        </select>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-plus"></i>
+                                            <?=___('UI', 'verb', 'add')?>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <?php endif; ?>
                     <?php if ($currentCell->showReports) : ?>
-                    <div id="reports<?=$currentCell->id?>" class="modal reports hide fade large" data-cell="<?=$currentCell->id?>">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4><?=___('Orga', 'view', 'reportsFrom')?> <?=$currentCell->shortLabel?></h4>
-                        </div>
-                        <div class="modal-body">
-                        </div>
-                        <div class="modal-footer">
-                            <a href="orga/cell/view-report/idCell/<?=$currentCell->id?>/" class="btn btn-primary">
-                                <i class="fa fa-plus"></i>
-                                <?=___('UI', 'verb', 'add')?>
-                            </a>
-                        </div>
-                    </div>
-                    <div id="exports<?=$currentCell->id?>" class="modal exports hide fade">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4><?=___('Orga', 'view', 'exportsFrom')?> <?=$currentCell->shortLabel?></h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="granularityCells row-fluid">
-                                <i class="fa fa-spinner fa-spin fa-3x"></i>
-                                <?=___('UI', 'loading', 'loading')?>
+                    <div id="reports<?=$currentCell->id?>" class="modal reports fade" data-cell="<?=$currentCell->id?>">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4><?=___('Orga', 'view', 'reportsFrom')?> <?=$currentCell->shortLabel?></h4>
+                                </div>
+                                <div class="modal-body">
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="orga/cell/view-report/idCell/<?=$currentCell->id?>/" class="btn btn-primary">
+                                        <i class="fa fa-plus"></i>
+                                        <?=___('UI', 'verb', 'add')?>
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="exports<?=$currentCell->id?>" class="modal exports hide fade">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4><?=___('Orga', 'view', 'exportsFrom')?> <?=$currentCell->shortLabel?></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="granularityCells row-fluid">
+                                        <i class="fa fa-spinner fa-spin fa-3x"></i>
+                                        <?=___('UI', 'loading', 'loading')?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <?php endif; ?>
                     <?php if ($currentCell->showInventory) : ?>
-                    <div id="inventoryUsers<?=$currentCell->id?>" class="modal inventory-users hide fade" data-cell="<?=$currentCell->id?>">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="withTooltip" title="<?=___('Orga', 'view', 'inventoryUsersExplanations')?>">
-                                <?=___('Orga', 'view', 'inventoryUsersFrom')?> <?=$currentCell->shortLabel?>
-                                <i class="fa fa-question-circle"></i>
-                            </h4>
-                        </div>
-                        <div class="modal-body">
+                    <div id="inventoryUsers<?=$currentCell->id?>" class="modal inventory-users fade" data-cell="<?=$currentCell->id?>">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="withTooltip" title="<?=___('Orga', 'view', 'inventoryUsersExplanations')?>">
+                                        <?=___('Orga', 'view', 'inventoryUsersFrom')?> <?=$currentCell->shortLabel?>
+                                        <i class="fa fa-question-circle"></i>
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <?php endif; ?>
@@ -340,7 +355,7 @@ if (count($file) > 0) {
             <form class="form-inline cells-filter">
                 <?php foreach ($narrowerGranularityArray['filterAxes'] as $refAxis => $memberOptions) : ?>
                 <?php if (count($memberOptions) > 2) : ?>
-                <select name="granularity<?=$narrowerGranularity->getId()?>_axis<?=$refAxis?>" data-filter="tag">
+                <select name="granularity<?=$narrowerGranularity->getId()?>_axis<?=$refAxis?>" data-filter="tag" class="form-control">
                     <?php foreach ($memberOptions as $memberTag => $memberLabel) : ?>
                         <option value="<?=$memberTag?>"><?=$memberLabel?></option>
                     <?php endforeach; ?>
@@ -348,9 +363,9 @@ if (count($file) > 0) {
                 <?php endif; ?>
                 <?php endforeach; ?>
                 <?php if ($narrowerGranularityArray['isInventory']) : ?>
-                <select name="granularity<?=$narrowerGranularity->getId()?>_inventoryStatus" data-filter="inventory-status">
+                <select name="granularity<?=$narrowerGranularity->getId()?>_inventoryStatus" data-filter="inventory-status" class="form-control">
                     <?php foreach ($inventoryStatusFilters as $statusValue => $statusLabel) : ?>
-                        <? if (($statusValue === Orga_Model_Cell::STATUS_ACTIVE) && (!$narrowerGranularityArray['isGranularityForInventoryStatus'])) : ?>
+                        <?php if (($statusValue === Orga_Model_Cell::STATUS_ACTIVE) && (!$narrowerGranularityArray['isGranularityForInventoryStatus'])) : ?>
                             <option value="<?=$statusValue?>" selected><?=$statusLabel?></option>
                         <?php else: ?>
                             <option value="<?=$statusValue?>"><?=$statusLabel?></option>
@@ -358,19 +373,19 @@ if (count($file) > 0) {
                     <?php endforeach ?>
                 </select>
                 <?php endif; ?>
-                <button class="btn reset"><i class="fa fa-search-minus"></i> <?=___('UI', 'verb', 'reset')?></button>
+                <button class="btn btn-default reset"><i class="fa fa-search-minus"></i> <?=___('UI', 'verb', 'reset')?></button>
                 <span class="badge badge-info granularity-info withTooltip" title="<?=___('Orga', 'view', 'ratioNumberFilteredCellsOverTotal')?>" data-toggle="tooltip" data-placement="right" data-trigger="hover"></span>
             </form>
             <?php endif; ?>
 
-            <div class="granularity row-fluid" data-total-cells="0"></div>
+            <div class="granularity row" data-total-cells="0"></div>
         </div>
     </fieldset>
     <?php endforeach; ?>
 
 </div>
 
-<div class="span3">
+<div class="col-md-3">
     <div class="comments">
         <h3>
             <?=___('Social', 'comment', 'comments')?>
@@ -402,7 +417,7 @@ if (count($file) > 0) {
         <h3>
             <div class="pull-right">
                 <small>
-                    <a class="editOrganization btn btn-small btn-primary"
+                    <a class="editOrganization btn btn-sm btn-primary"
                        href="orga/organization/edit/idOrganization/<?=$organization->id?>/tab/members/">
                         <i class="fa fa-wrench"></i>
                         <?=___('UI', 'name', 'configurationOrga')?>
@@ -436,9 +451,9 @@ $('.comments a.refresh').on('click', function(e) {
                     var divDate = $('.comments > div > div[data-date="' + date + '"]');
                     $.each(this.comments, function() {
                         divDate.append(
-                            '<div class="row-fluid">' +
-                                '<div class="span2">' + this.time + '</div>' +
-                                '<div class="span10">' + this.comment + '</div>' +
+                            '<div class="row">' +
+                                '<div class="col-md-2">' + this.time + '</div>' +
+                                '<div class="col-md-10">' + this.comment + '</div>' +
                             '</div>'
                         );
                     });
@@ -470,9 +485,9 @@ $('.history a.refresh').on('click', function(e) {
                     var divDate = $('.history > div > div[data-date="' + date + '"]');
                     $.each(this.events, function() {
                         divDate.append(
-                            '<div class="row-fluid">' +
-                                '<div class="span2">' + this.time + '</div>' +
-                                '<div class="span10">' + this.event + '</div>' +
+                            '<div class="row">' +
+                                '<div class="col-md-2">' + this.time + '</div>' +
+                                '<div class="col-md-10">' + this.event + '</div>' +
                             '</div>'
                         );
                     });
@@ -486,19 +501,6 @@ $('.history a.refresh').on('click', function(e) {
             $('.history > div').html('<?=addslashes(___('UI', 'loading', 'error'))?>');
         }
     });
-});
-
-$('.granularity-wrapper > div').on('show', function(e) {
-    if (e.currentTarget == e.target) {
-        $('legend > i.filterChevron', $(this).parent()).removeClass('fa-chevron-right');
-        $('legend > i.filterChevron', $(this).parent()).addClass('fa-chevron-down');
-    }
-});
-$('.granularity-wrapper > div').on('hidden', function(e) {
-    if (e.currentTarget == e.target) {
-        $('legend > i.filterChevron', $(this).parent()).removeClass('fa-chevron-down');
-        $('legend > i.filterChevron', $(this).parent()).addClass('fa-chevron-right');
-    }
 });
 
 $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
@@ -524,29 +526,33 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 var usersPopup = '';
                 if (this.showUsers) {
                     usersP +=
-                        '<a class="btn withTooltip" data-toggle="modal" href="#users' + this.id + '" title="<?=___('Orga', 'view', 'editUsers')?>" data-container="body">' +
+                        '<a class="btn btn-default withTooltip" data-toggle="modal" href="#users' + this.id + '" title="<?=___('Orga', 'view', 'editUsers')?>" data-container="body">' +
                             '(' + this.numberUsers + ') ' +
                             '<i class="fa fa-users"></i>' +
                         '</a>';
                     usersPopup +=
-                        '<div id="users' + this.id + '" class="modal users hide fade large" data-cell="' + this.id + '">' +
-                            '<div class="modal-header">' +
-                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                '<h4><?=___('Orga', 'view', 'rolesFrom')?> ' + this.shortLabel + '</h4>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
-                            '</div>' +
-                            '<div class="modal-footer">' +
-                                '<form class="form-inline addUser" action="orga/cell/add-user/idCell/' + this.id + '/">' +
-                                    '<input type="text" placeholder="<?=___('User', 'user', 'emailAddress')?>" name="userEmail"> ' +
-                                    '<select name="userRole">' +
-                                        '<option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>' +
-                                        '<option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>' +
-                                        '<option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>' +
-                                        '<option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>' +
-                                    '</select> ' +
-                                    '<input type="submit" class="btn btn-primary" value="<?=___('UI', 'verb', 'add')?>"> ' +
-                                '</form>' +
+                        '<div id="users' + this.id + '" class="modal users fade large" data-cell="' + this.id + '">' +
+                            '<div class="modal-dialog">' +
+                                '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                                        '<h4><?=___('Orga', 'view', 'rolesFrom')?> ' + this.shortLabel + '</h4>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                    '</div>' +
+                                    '<div class="modal-footer">' +
+                                        '<form class="form-inline addUser" action="orga/cell/add-user/idCell/' + this.id + '/">' +
+                                            '<input type="text" placeholder="<?=___('User', 'user', 'emailAddress')?>" name="userEmail"> ' +
+                                            '<select name="userRole" class="form-control">' +
+                                                '<option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>' +
+                                                '<option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>' +
+                                                '<option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>' +
+                                                '<option value="CellObserverRole"><?=CellObserverRole::getLabel()?></option>' +
+                                            '</select> ' +
+                                            '<input type="submit" class="btn btn-primary" value="<?=___('UI', 'verb', 'add')?>"> ' +
+                                        '</form>' +
+                                    '</div>' +
+                                '</div>' +
                             '</div>' +
                         '</div>';
                 }
@@ -554,22 +560,26 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 var reportsPopup = '';
                 if (this.showReports) {
                     reportsP +=
-                        '<a class="btn withTooltip" data-toggle="modal" href="#reports' + this.id + '" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body">' +
+                        '<a class="btn btn-default withTooltip" data-toggle="modal" href="#reports' + this.id + '" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body">' +
                             '<i class="fa fa-bar-chart-o"></i>' +
                         '</a>';
                     reportsPopup +=
-                        '<div id="reports' + this.id + '" class="modal reports hide fade large" data-cell="' + this.id + '">' +
-                            '<div class="modal-header">' +
-                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                '<h4><?=___('Orga', 'view', 'reportsFrom')?>' + this.shortLabel + '</h4>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
-                            '</div>' +
-                            '<div class="modal-footer">' +
-                                '<a href="orga/cell/view-report/idCell/' + this.id + '/" class="btn btn-primary">' +
-                                    '<i class="fa fa-plus"></i> ' +
-                                    '<?=___('UI', 'verb', 'add')?>' +
-                                '</a>' +
+                        '<div id="reports' + this.id + '" class="modal reports fade large" data-cell="' + this.id + '">' +
+                            '<div class="modal-dialog">' +
+                                '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                                        '<h4><?=___('Orga', 'view', 'reportsFrom')?>' + this.shortLabel + '</h4>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                    '</div>' +
+                                    '<div class="modal-footer">' +
+                                        '<a href="orga/cell/view-report/idCell/' + this.id + '/" class="btn btn-primary">' +
+                                            '<i class="fa fa-plus"></i> ' +
+                                            '<?=___('UI', 'verb', 'add')?>' +
+                                        '</a>' +
+                                    '</div>' +
+                                '</div>' +
                             '</div>' +
                         '</div>';
                 }
@@ -577,18 +587,22 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 var exportsPopup = '';
                 if (this.showExports) {
                     exportsP +=
-                        '<a class="btn withTooltip" data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body">' +
+                        '<a class="btn btn-default withTooltip" data-toggle="modal" data-target="#exports' + this.id + '" href="orga/cell/view-exports/idCell/' + this.id + '/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body">' +
                             '<i class="fa fa-download"></i>' +
                         '</a>';
                     exportsPopup +=
-                        '<div id="exports' + this.id + '" class="modal exports hide fade">' +
-                            '<div class="modal-header">' +
-                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                '<h4><?=___('Orga', 'view', 'exportsFrom')?> ' + this.shortLabel + '</h4>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
-                                '<i class="fa fa-spinner fa-spin fa-3x"></i> ' +
-                                '<?=___('UI', 'loading', 'loading')?>' +
+                        '<div id="exports' + this.id + '" class="modal exports fade">' +
+                            '<div class="modal-dialog">' +
+                                '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                                        '<h4><?=___('Orga', 'view', 'exportsFrom')?> ' + this.shortLabel + '</h4>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                        '<i class="fa fa-spinner fa-spin fa-3x"></i> ' +
+                                        '<?=___('UI', 'loading', 'loading')?>' +
+                                    '</div>' +
+                                '</div>' +
                             '</div>' +
                         '</div>';
                 }
@@ -648,15 +662,19 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                             '</div> ' +
                         '</div>';
                     inventoryPopup +=
-                        '<div id="inventoryUsers' + this.id + '" class="modal inventory-users hide fade" data-cell="' + this.id + '">' +
-                            '<div class="modal-header">' +
-                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                                '<h4 class="withTooltip" title="<?=___('Orga', 'view', 'inventoryUsersExplanations')?>">' +
-                                    '<?=___('Orga', 'view', 'inventoryUsersFrom')?>' + this.shortLabel + ' ' +
-                                    '<i class="fa fa-question-circle"></i>' +
-                                '</h4>' +
-                            '</div>' +
-                            '<div class="modal-body">' +
+                        '<div id="inventoryUsers' + this.id + '" class="modal inventory-users fade" data-cell="' + this.id + '">' +
+                            '<div class="modal-dialog">' +
+                                '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+                                        '<h4 class="withTooltip" title="<?=___('Orga', 'view', 'inventoryUsersExplanations')?>">' +
+                                            '<?=___('Orga', 'view', 'inventoryUsersFrom')?>' + this.shortLabel + ' ' +
+                                            '<i class="fa fa-question-circle"></i>' +
+                                        '</h4>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                    '</div>' +
+                                '</div>' +
                             '</div>' +
                         '</div>';
                 }
@@ -675,21 +693,23 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                         '</div>';
                 }
                 granularity.append(
-                    '<div class="span4 well cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
-                        '<h4>'+
-                            '<small class="btn-group cell-actions">' +
-                                usersP +
-                                reportsP +
-                                exportsP +
-                            '</small>' +
-                            cellTitle +
-                        '</h4>' +
-                        inventoryP +
-                        inputStatusP +
-                        usersPopup +
-                        reportsPopup +
-                        exportsPopup +
-                        inventoryPopup +
+                    '<div class="col-md-4">' +
+                        '<div class="well cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
+                            '<h4>'+
+                                '<small class="btn-group cell-actions">' +
+                                    usersP +
+                                    reportsP +
+                                    exportsP +
+                                '</small>' +
+                                cellTitle +
+                            '</h4>' +
+                            inventoryP +
+                            inputStatusP +
+                            usersPopup +
+                            reportsPopup +
+                            exportsPopup +
+                            inventoryPopup +
+                        '</div>' +
                     '</div>'
                 );
             });
@@ -798,17 +818,7 @@ $('.cells-filter').on('resetCellsFilter', function(e) {
 $('div.collapse[id^="granularity"]').on('showCells', function(e) {
     var granularity = $('.granularity', $(this));
     $('.display-more-cells', granularity).remove();
-    $('.cell', granularity).removeClass('firstRowCell');
 
-    var numberElement = 0;
-    $('.cell', granularity).each(function() {
-        var cell = $(this);
-        if ((numberElement % 3) == 0) {
-            cell.addClass('firstRowCell');
-        }
-
-        numberElement++;
-    });
     $(this).trigger('resizeCells');
 
     if ($('.cell', granularity).length == 0) {
@@ -818,8 +828,10 @@ $('div.collapse[id^="granularity"]').on('showCells', function(e) {
         $(this).attr('data-show-cells', $('.cell', granularity).length);
         $(this).attr('data-first-cell', $(this).attr('data-show-cells'));
         granularity.append(
-            '<div class="btn display-more-cells span">' +
-                '<?=___('Orga', 'view', 'display-more-cells')?>' +
+            '<div class="display-more-cells col-md-12">' +
+                '<button class="btn btn-default">' +
+                    '<?=___('Orga', 'view', 'display-more-cells')?>' +
+                '</button>' +
             '</div>'
         );
     }
@@ -830,7 +842,7 @@ $('body').on('click', '.display-more-cells', function (e) {
     $(this).remove();
 });
 
-$('body').on('show', '.users', function(e) {
+$('body').on('show.bs.modal', '.users', function(e) {
     if (e.target != this) {
         return;
     }
@@ -869,7 +881,7 @@ $('body').on('click', '.delete-user', function(e) {
                 '<?=___('Orga', 'view', 'askConfirmDeleteUser')?>' +
                 $(this).parent().prev().prev().html() +
                 '<button class="btn btn-primary confirm"><i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?></button>' +
-                '<button class="btn close-user-message"><i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?></button>' +
+                '<button class="btn btn-default close-user-message"><i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?></button>' +
             '</td>' +
         '</tr>'
     );
@@ -948,7 +960,7 @@ $('body').on('submit', '.addUser', function(e) {
             if (typeof(response.typeError) == 'string') {
                 form.prev().addClass('alert-' + response.typeError);
             } else {
-                form.prev().addClass('alert-error');
+                form.prev().addClass('alert-danger');
             }
             if (typeof(response.message) == 'string') {
                 form.prev().html(response.message);
@@ -998,7 +1010,7 @@ $('body').on('click', '.delete-report', function(e) {
                 '<?=___('Orga', 'view', 'askConfirmDeleteReport')?>' +
                 $('a', $(this).parent().prev().prev()).html() +
                 '<button class="btn btn-primary confirm"><i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?></button>' +
-                '<button class="btn close-report-message"><i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?></button>' +
+                '<button class="btn btn-default close-report-message"><i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?></button>' +
             '</td>' +
         '</tr>'
     );

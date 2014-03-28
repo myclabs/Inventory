@@ -1,5 +1,7 @@
 <?php
     // Détail d'un Set.
+use MyCLabs\MUIH\Tab;
+use MyCLabs\MUIH\Tabs;
 ?>
 <div class="page-header">
     <h1>
@@ -11,28 +13,28 @@
     </h1>
 </div>
 <?php
-    $tabDetailsSet = new UI_Tab_View('detailSet', true);
+$tabDetailsSet = new Tabs('detailSet', true);
 
-    $tabScenario = new UI_Tab('scenarios');
-    $tabScenario->label = __('Simulation', 'name', 'scenarios');
-    $tabScenario->content = $this->partial(
-        'partials/set/scenario.phtml',
-        array('idSet' => $this->idSet)
-    );
-    if (($this->activatedTab == 'scenario') || ($this->activatedTab !== 'reports')) {
-        $tabScenario->active = true;
-    }
-    $tabDetailsSet->addTab($tabScenario);
+$tabScenario = new Tab('scenarios');
+$tabScenario->setTitle(__('Simulation', 'name', 'scenarios'));
+$tabScenario->setContent($this->partial(
+    'partials/set/scenario.phtml',
+    array('idSet' => $this->idSet)
+));
+$tabDetailsSet->addTab($tabScenario);
 
-    $tabAnalyse = new UI_Tab('reports');
-    $tabAnalyse->label = __('DW', 'name', 'analyses');
-    $tabAnalyse->content = $this->partial(
-        'partials/set/report.phtml',
-        array('idSet' => $this->idSet, 'idCube' => $this->idCube, 'isSetDWCubeUpToDate' => $this->isSetDWCubeUpToDate)
-    );
-    if ($this->activatedTab == 'reports') {
-        $tabAnalyse->active = true;
-    }
-    $tabDetailsSet->addTab($tabAnalyse);
+$tabAnalyse = new Tab('reports');
+$tabAnalyse->setTitle(__('DW', 'name', 'analyses'));
+$tabAnalyse->setContent($this->partial(
+    'partials/set/report.phtml',
+    array('idSet' => $this->idSet, 'idCube' => $this->idCube, 'isSetDWCubeUpToDate' => $this->isSetDWCubeUpToDate)
+));
+$tabDetailsSet->addTab($tabAnalyse);
 
-    $tabDetailsSet->display();
+if (($this->activatedTab == 'scenario') || ($this->activatedTab !== 'reports')) {
+    $tabDetailsSet->activeTab($tabScenario);
+}
+if ($this->activatedTab == 'reports') {
+    $tabDetailsSet->activeTab($tabAnalyse);
+}
+$tabDetailsSet->display();

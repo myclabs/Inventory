@@ -14,9 +14,9 @@ $entries = $this->entries;
 $locale = Core_Locale::loadDefault();
 
 if (empty($entries)) : ?>
-    <p class="muted"><?=__('UI', 'history', 'noHistory')?></p>
+    <p class="text-muted"><?=__('UI', 'history', 'noHistory')?></p>
 <?php else : ?>
-    <ul class="unstyled">
+    <ul class="list-unstyled">
         <?php
         foreach ($entries as $entry) {
             $value = $entry->getValue();

@@ -1,0 +1,13 @@
+<?php
+if (empty($this->breadcrumbs)) {
+    return;
+}
+?>
+
+<ol class="breadcrumb">
+    <?php foreach ($this->breadcrumbs as $breadcrumb) : ?>
+        <li>
+            <?=$breadcrumb['text']?>
+        </li>
+    <?php endforeach; ?>
+</ol>

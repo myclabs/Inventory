@@ -41,11 +41,11 @@ foreach ($this->axes as $axis) {
     $datagridAxisMembers->addElements = true;
     $datagridAxisMembers->addPanelTitle = ___('Orga', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));
 
-    echo $this->collapse('members'.$axis->getRef(), $axis->getLabel(), $datagridAxisMembers->getHTML())->collapsed();
+    echo $this->collapse('members'.$axis->getRef(), $axis->getLabel(), $datagridAxisMembers->getHTML())->addClass('collapse-wrapper');
 
     $script = '';
-    $script .= '$(\'#members'.$axis->getRef().'\').on(\'show\', function(e) {';
-    $script .= 'if ($(e.target).attr(\'id\') == \'members'.$axis->getRef().'_wrapper\') {';
+    $script .= '$(\'#members'.$axis->getRef().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'members'.$axis->getRef().'\') {';
     $script .= 'listMembers'.$axis->getRef().'.filter();';
     $script .= '}';
     $script .= '});';

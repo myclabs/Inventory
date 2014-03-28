@@ -12,7 +12,7 @@ class Parameter_ElementController extends Core_Controller
 
     /**
      * Détails d'un élément
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function detailsAction()
     {
@@ -33,7 +33,7 @@ class Parameter_ElementController extends Core_Controller
 
     /**
      * Modification d'un élément
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function editSubmitAction()
     {

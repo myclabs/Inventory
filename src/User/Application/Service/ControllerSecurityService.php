@@ -10,6 +10,7 @@ use Core\Annotation\Secure;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Psr\Log\LoggerInterface;
 use ReflectionMethod;
+use User\Application\HttpNotFoundException;
 use Zend_Controller_Front;
 
 /**
@@ -65,8 +66,12 @@ class ControllerSecurityService
         if (!class_exists($className)) {
             // Le contrôleur n'est peut-être pas encore chargé
             if (!$this->loadController($module, $controller)) {
-                throw new Core_Exception_InvalidArgument("The class $className doesn't exist");
+                throw new HttpNotFoundException;
             }
+        }
+
+        if (! method_exists($className, $methodName)) {
+            throw new HttpNotFoundException;
         }
 
         $method = new ReflectionMethod($className, $methodName);

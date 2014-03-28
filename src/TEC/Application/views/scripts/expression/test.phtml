@@ -46,7 +46,7 @@ ob_start()
     $formExpression->addResetButton(__('UI', 'verb', 'reset'));
 ?>
   	<h1><?=__('TEC', 'interpreter', 'pageTitle')?></h1>
-  	<?=$this->collapse('help', __('UI', 'name', 'help'), $helpContent)->collapsed();?>
+  	<?=$this->collapse('help', __('UI', 'name', 'help'), $helpContent);?>
   	<hr />
 <?php
     $formExpression->display();
@@ -55,7 +55,7 @@ ob_start()
 <?php if ($this->displayResult) { ?>
     <?php if (count($this->errors) > 0) { ?>
 
-    <div class="alert alert-error">
+    <div class="alert alert-danger">
     	<button type="button" class="close" data-dismiss="alert">&times;</button>
     	<?=__('TEC', 'interpreter', 'incorrectExpressionMessage')?>
 	</div>

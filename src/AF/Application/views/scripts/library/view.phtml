@@ -2,6 +2,7 @@
 use AF\Domain\AF;
 use AF\Domain\AFLibrary;
 use AF\Domain\Category;
+use MyCLabs\MUIH\Button;
 
 /** @var AFLibrary $library */
 $library = $this->library;
@@ -55,9 +56,8 @@ $datagrid->addCol($testColumn);
 
 $duplicateColumn = new UI_Datagrid_Col_Popup('duplicate', __('UI', 'verb', 'duplicate'));
 $duplicateColumn->popup->title = __('AF', 'formList', 'duplicatePanelTitle');
-$button = new UI_HTML_Button(__('UI', 'verb', 'duplicate'));
-$button->id = 'submit';
-$button->addAttribute('class', 'btn-primary');
+$button = new Button(__('UI', 'verb', 'duplicate'), Button::TYPE_PRIMARY);
+$button->setAttribute('id', 'submit');
 $duplicateColumn->popup->footer = $button->render();
 $datagrid->addCol($duplicateColumn);
 
@@ -70,5 +70,7 @@ $datagrid->display();
         $("#duplicateAF").submit();
     });
 </script>
+
+<h2><?=__('UI', 'name', 'tree')?></h2>
 
 <?=$this->partial('library/view-tree.phtml', ['library' => $library])?>

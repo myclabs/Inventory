@@ -40,6 +40,11 @@ class ACLPlugin extends AbstractACLPlugin
             return true;
         }
 
+        $user = User::load($request->getParam('id'));
+        if ($user === $identity) {
+            return true;
+        }
+
         // Si on peut modifier tous les utilisateurs
         // Pas d'ACL directe entre utilisateurs, c'est overkill
         return $this->aclManager->isAllowed(

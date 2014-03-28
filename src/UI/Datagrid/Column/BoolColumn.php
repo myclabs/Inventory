@@ -2,11 +2,12 @@
 
 namespace UI\Datagrid\Column;
 
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
 use UI\Datagrid\Datagrid;
 use UI_Form_Element_HTML;
 use UI_Form_Element_Radio;
 use UI_Form_Element_Option;
-use UI_HTML_Button;
 
 /**
  * Classe représentant une colonne contenant des booleens.
@@ -155,11 +156,10 @@ JS;
             $filterFormElement->setValue($defaultValue[$this->criteriaFilterOperator]);
         }
 
-        $resetButton = new UI_HTML_Button();
-        $resetButton->icon = $datagrid->filterIconResetFieldSuffix;
+        $resetButton = new Button(new Icon($datagrid->filterIconResetFieldSuffix));
         $resetAction = '$(\'#'.$this->getFilterFormId($datagrid).' :checked\')';
         $resetAction .= '.removeAttr(\'checked\');';
-        $resetButton->addAttribute('onclick', $resetAction);
+        $resetButton->setAttribute('onclick', $resetAction);
 
         $resetElement = new UI_Form_Element_HTML($this->getFilterFormId($datagrid).'_reset');
         $resetElement->content = $resetButton->getHTML();

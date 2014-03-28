@@ -115,9 +115,8 @@ class User_ProfileController extends Core_Controller
             $user = $this->_helper->auth();
         }
 
-        $formData = $this->getFormData('userProfile');
-        $user->setFirstName($formData->getValue('firstName'));
-        $user->setLastName($formData->getValue('lastName'));
+        $user->setFirstName($this->getParam('firstName'));
+        $user->setLastName($this->getParam('lastName'));
         $user->save();
         $this->entityManager->flush();
 
@@ -177,7 +176,7 @@ class User_ProfileController extends Core_Controller
         $content = __('User', 'email', 'bodyAccountActivated', [ 'APPLICATION_NAME' => $this->emailNoReplyName ]);
         $this->userService->sendEmail($user, $subject, $content);
 
-        $message = __('User', 'messages', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
+        $message = __('User', 'editProfile', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
         UI_Message::addMessageStatic($message, UI_Message::TYPE_SUCCESS);
 
         $this->redirect('user/profile/edit/id/' . $user->getId());

@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\Button;
+
 $columnControl = new UI_Datagrid_Col_Text('control', ___('Orga', 'control', 'seekedIssue'));
 
 $columnDiag = new UI_Datagrid_Col_Bool('diagnostic', ___('UI', 'name', 'diagnostic'));
@@ -20,7 +22,6 @@ if ($this->display === false) {
     $datagrid->display();
 }
 
-$controlButton = new UI_HTML_Button(___('Orga', 'control', 'renewControl'));
-$controlButton->addAttribute('onclick', 'consistency'.$this->idOrganization.'.filter();');
-$controlButton->addAttribute('class', 'btn-primary');
+$controlButton = new Button(___('Orga', 'control', 'renewControl'), Button::TYPE_PRIMARY);
+$controlButton->setAttribute('onclick', 'consistency'.$this->idOrganization.'.filter();');
 $controlButton->display();

@@ -38,7 +38,7 @@ class UI_Popup_Static extends UI_Popup_Generic
     {
         $this->id = $id;
         $this->_type = UI_Popup_Generic::TYPE_POPUP_STATIQUE;
-        $this->_attributes['class'] = 'modal hide fade';
+        $this->_attributes['class'] = 'modal fade';
     }
 
     /**

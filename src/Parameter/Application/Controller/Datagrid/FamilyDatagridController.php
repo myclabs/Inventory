@@ -1,10 +1,12 @@
 <?php
 
 use Core\Annotation\Secure;
+use MyCLabs\ACL\ACLManager;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Category;
 use Parameter\Domain\ParameterLibrary;
 use Unit\UnitAPI;
+use User\Domain\ACL\Actions;
 
 /**
  * @author matthieu.napoli
@@ -12,22 +14,32 @@ use Unit\UnitAPI;
 class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
 {
     /**
-     * @Secure("viewParameter")
+     * @Inject
+     * @var ACLManager
+     */
+    private $aclManager;
+
+    /**
+     * @Secure("viewParameterLibrary")
      */
     public function getelementsAction()
     {
         /** @var $library ParameterLibrary */
         $library = ParameterLibrary::load($this->getParam('library'));
 
-        foreach ($library->getFamilies() as $family) {
+        $this->totalElements = count($library->getFamilies());
+        $families = $library->getFamilies($this->request->totalElements, $this->request->startIndex);
+
+        foreach ($families as $family) {
             /** @var $family Family */
             $data = [];
             $data['category'] = $family->getCategory()->getId();
             $data['label'] = $family->getLabel();
             $data['ref'] = $family->getRef();
             $data['unit'] = $family->getValueUnit()->getSymbol();
-            // TODO tester les droits (consultation/édition)
-            if (true) {
+            // Test des droits (consultation/édition)
+            $canEdit = $this->aclManager->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
+            if ($canEdit) {
                 $data['detail'] = $this->cellLink(
                     $this->_helper->url('edit', 'family', 'parameter', ['id' => $family->getId()])
                 );
@@ -39,12 +51,11 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             $this->addLine($data);
         }
 
-        $this->totalElements = Family::countTotal($this->request);
         $this->send();
     }
 
     /**
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function addelementAction()
     {

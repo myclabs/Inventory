@@ -51,12 +51,12 @@ foreach ($this->listAxes as $axis) {
     $datagridAxis->addElements = true;
     $datagridAxis->addPanelTitle = __('Classification', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));
 
-    echo $this->collapse($axis->getRef(), $axis->getLabel(), $datagridAxis->getHTML())->collapsed();
+    echo $this->collapse($axis->getRef(), $axis->getLabel(), $datagridAxis->getHTML());
     UI_Datagrid::addHeader($datagridAxis);
 
     $script = '';
-    $script .= '$(\'#'.$axis->getRef().'\').on(\'show\', function(e) {';
-    $script .= 'if ($(e.target).attr(\'id\') == \''.$axis->getRef().'_wrapper\') {';
+    $script .= '$(\'#'.$axis->getRef().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \''.$axis->getRef().'\') {';
     $script .= 'members'.$axis->getRef().'.filter();';
     $script .= '}';
     $script .= '});';

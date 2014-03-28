@@ -10,7 +10,7 @@ $cellReports = $this->cellReports;
             <th>
                 <?=___('UI', 'name', 'type')?> :
                 <form class="form-inline filter-reports">
-                    <select name="reportType">
+                    <select name="reportType" class="form-control">
                         <option value=""><?=___('Orga', 'view', 'filterAllReports')?></option>
                         <?php if (count($this->otherUsers) > 0) : ?>
                         <optgroup label="<?=___('Orga', 'view', 'reportTypes')?>">

@@ -2,11 +2,11 @@
     <h1><?=___('UI', 'name', 'exports')?></h1>
 </div>
 
-<div class="row-fluid">
+<div class="row">
 
     <?php foreach ($this->exports as $exportRef => $exportArray) : ?>
 
-        <div class="span3 well well-small text-center">
+        <div class="col-md-3 well well-sm text-center">
             <h4><?=$exportArray['label']?></h4>
 
             <form class="form-inline" action="orga/referential/export">
@@ -15,16 +15,16 @@
                         <img alt="<?=$this->defaultFormat?>" src="images/dw/<?=$this->defaultFormat?>.png">
                     </span>
 
-                    <input name="export" type="hidden" value="<?=$exportRef?>">
+                    <input name="export" type="hidden" value="<?=$exportRef?>" class="form-control">
 
                     <?php if (count($this->formats) > 1) : ?>
-                        <select name="format" class="input format">
+                        <select name="format" class="input format form-control">
                             <?php foreach($this->formats as $formatRef => $formatLabel) : ?>
                                 <option value="<?=$formatRef?>"><?=$formatLabel?></option>
                             <?php endforeach; ?>
                         </select>
                     <?php else : ?>
-                        <input name="format" type="hidden" value="<?=$this->defaultFormat?>">
+                        <input name="format" type="hidden" value="<?=$this->defaultFormat?>" class="form-control">
                     <?php endif; ?>
 
                     <?php if (isset($exportArray['version']) && (count($exportArray['version']) > 0)) { ?>
@@ -33,7 +33,7 @@
                                 -
                             </span>
                         <?php endif; ?>
-                        <select name="version" >
+                        <select name="version" class="form-control">
                             <?php foreach($exportArray['version'] as $versionRef => $versionLabel) { ?>
                                 <option value="<?=$versionRef?>"><?=$versionLabel?></option>
                             <?php } ?>
@@ -60,15 +60,19 @@
     );
 </script>
 
-<div id="exportReferentialAsExcelPopup" class="modal hide fade">
-    <div class="modal-body">
-        <p><?=___('Orga', 'analysis', 'detailedExcelExportPopup')?></p>
-        <div class="progress progress-striped active">
-            <div class="bar" style="width: 100%;"></div>
+<div id="exportReferentialAsExcelPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p><?=___('Orga', 'analysis', 'detailedExcelExportPopup')?></p>
+                <div class="progress progress-striped active">
+                    <div class="progress-bar" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-dismiss="modal"><?=___('UI', 'verb', 'close')?></button>
+            </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal"><?=___('UI', 'verb', 'close')?></button>
     </div>
 </div>
 

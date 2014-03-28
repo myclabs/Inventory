@@ -37,7 +37,7 @@ class Account_DashboardController extends Core_Controller
      */
     public function indexAction()
     {
-        $session = new Zend_Session_Namespace(get_class());
+        $session = new Zend_Session_Namespace('account-switcher');
 
         // Un compte spécifique est demandé
         if ($this->getParam('id') !== null) {
@@ -52,26 +52,32 @@ class Account_DashboardController extends Core_Controller
         // Tous les comptes que l'utilisateur peut voir
         $accounts = $this->accountRepository->getTraversableAccounts($user);
 
-        /** @var Account $account */
-        if (isset($session->accountId)) {
-            $account = $this->accountRepository->get($session->accountId);
-            // Teste si l'utilisateur peut voir le compte demandé
-            if (! $this->aclManager->isAllowed($user, Actions::TRAVERSE, $account)) {
-                $account = current($accounts);
-            }
-        } else {
-            $account = current($accounts);
+        if (count($accounts) === 0) {
+            throw new Core_Exception_User('Account', 'message', 'noAccess');
         }
+
+        $session = new Zend_Session_Namespace('account-switcher');
+
+        /** @var Account $account */
+        $account = null;
+        if (isset($session->accountId)) {
+            // Recherche dans les comptes que l'utilisateur peut accéder
+            foreach ($accounts as $accountSearch) {
+                if ($accountSearch->getId() == $session->accountId) {
+                    $account = $accountSearch;
+                }
+            }
+        }
+        // À défaut prend le premier
+        $account = $account ?: reset($accounts);
 
         // Account view
         $accountView = $this->accountViewFactory->createAccountView($account, $user);
 
         $this->view->assign('accountList', $accounts);
         $this->view->assign('account', $accountView);
-        $this->view->assign('canCreateOrganization', $this->aclManager->isAllowed(
-            $user,
-            Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
-        ));
+        $this->view->assign('canEditAccount', $this->aclManager->isAllowed($user, Actions::EDIT, $account));
+        $this->addBreadcrumb(__('Account', 'name', 'dashboard'));
+        $this->setActiveMenuItem('dashboard');
     }
 }

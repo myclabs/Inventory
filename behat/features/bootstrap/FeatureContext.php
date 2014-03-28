@@ -171,7 +171,7 @@ class FeatureContext extends MinkContext
     {
         $value = $this->fixStepArgument($value);
 
-        $selector = ".control-group:contains(\"$label\") label:contains(\"$value\")>input";
+        $selector = ".form-group:contains(\"$label\") label:contains(\"$value\")>input";
 
         /** @var NodeElement[] $nodes */
         $nodes = $this->getSession()->getPage()->findAll('css', $selector);
@@ -415,7 +415,7 @@ class FeatureContext extends MinkContext
      * @param int      $timeout Timeout en secondes.
      * @return mixed
      */
-    public function spin(callable $find, $timeout = 5)
+    public function spin(callable $find, $timeout = 4)
     {
         // Temps d'attente entre chaque boucle, en secondes
         $sleepTime = 0.1;

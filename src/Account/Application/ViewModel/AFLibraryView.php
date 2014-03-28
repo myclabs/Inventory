@@ -20,6 +20,11 @@ class AFLibraryView
     public $label;
 
     /**
+     * @var bool
+     */
+    public $canDelete = false;
+
+    /**
      * @param int    $id
      * @param string $label
      */

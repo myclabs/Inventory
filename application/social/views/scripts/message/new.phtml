@@ -1,4 +1,5 @@
 <?php
+use MyCLabs\MUIH\Button;
 use User\Domain\User;
 ?>
 <div class="page-header">
@@ -45,8 +46,8 @@ $form->addElement($contentField);
 
 $form->addSubmitButton(__('Social', 'message', 'send'));
 
-$buttonCancel = new UI_HTML_Button(__('UI', 'verb', 'cancel'));
-$buttonCancel->addAttribute('class', "cancel");
+$buttonCancel = new Button(__('UI', 'verb', 'cancel'));
+$buttonCancel->addClass('cancel');
 $button = new UI_Form_Element_HTML('button');
 $button->content = $buttonCancel->render();
 $form->addActionElement($button);

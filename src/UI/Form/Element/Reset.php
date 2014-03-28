@@ -36,7 +36,7 @@ class UI_Form_Element_Reset extends Zend_Form_Element_Reset implements UI_Form_Z
         parent::__construct($ref, $label);
         $this->_element = new UI_Form_Element($this);
 
-        $this->setAttrib('class', 'btn');
+        $this->setAttrib('class', 'btn btn-default');
     }
 
     /**

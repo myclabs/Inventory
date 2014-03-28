@@ -235,6 +235,14 @@
                 <seg>Elements</seg>
             </tuv>
         </tu>
+        <tu tuid="error">
+            <tuv xml:lang="fr">
+                <seg>Erreur</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Error</seg>
+            </tuv>
+        </tu>
         <tu tuid="errors">
             <tuv xml:lang="fr">
                 <seg>Erreurs</seg>

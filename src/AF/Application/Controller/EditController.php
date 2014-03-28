@@ -38,9 +38,11 @@ class AF_EditController extends Core_Controller
      */
     public function menuAction()
     {
-        $this->view->af = AF::load($this->getParam('id'));
+        $af = AF::load($this->getParam('id'));
+        $this->view->assign('af', $af);
         $this->view->onglet = $this->getParam('onglet');
         $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
+        $this->setActiveMenuItemAFLibrary($af->getLibrary()->getId());
     }
 
     /**

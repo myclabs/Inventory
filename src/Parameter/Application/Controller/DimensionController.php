@@ -12,7 +12,7 @@ class Parameter_DimensionController extends Core_Controller
 {
     /**
      * Ajout d'une dimension
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function addAction()
     {
@@ -41,7 +41,7 @@ class Parameter_DimensionController extends Core_Controller
 
     /**
      * Édition d'une dimension
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function editAction()
     {
@@ -69,7 +69,7 @@ class Parameter_DimensionController extends Core_Controller
 
     /**
      * Suppression d'une dimension
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function deleteAction()
     {
@@ -84,7 +84,7 @@ class Parameter_DimensionController extends Core_Controller
 
     /**
      * Ajout de membres
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function addMembersAction()
     {

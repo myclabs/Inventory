@@ -24,6 +24,8 @@ class AccountAdminRole extends Role
     {
         $this->account = $account;
 
+        $account->addAdminRole($this);
+
         parent::__construct($identity);
     }
 

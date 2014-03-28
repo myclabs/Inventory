@@ -7,25 +7,25 @@ use Parameter\Domain\Family\Family;
 $family = $this->family;
 ?>
 
-<div class="alert">
+<div class="alert alert-warning">
     <?=__('Parameter', 'dimension', 'warningEditingDimensions');?>
 </div>
 <p></p>
 
 <?php foreach ($family->getDimensions() as $dimension) : ?>
 
-    <div class="well well-small" data-dimension="<?=$dimension->getRef()?>">
+    <div class="well well-sm" data-dimension="<?=$dimension->getRef()?>">
 
         <h5>
             <?=$dimension->getLabel() . __('UI', 'other', ':')?> <code><?=$dimension->getRef()?></code>
 
-            <a class="btn btn-mini btn-warning pull-right deleteDimensionButton"
+            <a class="btn btn-warning btn-xs pull-right deleteDimensionButton"
                     href="<?=$this->baseUrl('parameter/dimension/delete/id/' . $dimension->getId())?>"
                     title="<?=__('Parameter', 'dimension', 'deleteDimension')?>">
                 <?=__('UI', 'verb', 'delete')?>
             </a>
 
-            <a class="btn btn-mini pull-right editDimensionButton" data-dimension-ref="<?=$dimension->getRef()?>"
+            <a class="btn btn-default btn-xs pull-right editDimensionButton" data-dimension-ref="<?=$dimension->getRef()?>"
                data-dimension-label="<?=$dimension->getLabel()?>" style="margin-right: 5px">
                 <?=__('UI', 'verb', 'edit')?>
             </a>
@@ -35,7 +35,8 @@ $family = $this->family;
         // Datagrid des membres de la dimension
         $datagrid = new UI_Datagrid($dimension->getRef() . 'MembersDatagrid', 'datagrid_member-datagrid', 'parameter');
         $datagrid->pagination = false;
-        $datagrid->addParam('id', $dimension->getId());
+        $datagrid->addParam('id', $family->getId());
+        $datagrid->addParam('idDimension', $dimension->getId());
         $datagrid->deleteElements = true;
         $datagrid->addElements = false;
         // Colonne label
@@ -54,7 +55,7 @@ $family = $this->family;
         ?>
 
         <p>
-            <button type="button" id="<?=$dimension->getRef()?>AddMemberButton" class="btn addMemberButton"
+            <button type="button" id="<?=$dimension->getRef()?>AddMemberButton" class="btn btn-default addMemberButton"
                     data-dimension="<?=$dimension->getRef()?>">
                 <?=__('Parameter', 'dimension', 'addMembers')?>
             </button>
@@ -65,114 +66,132 @@ $family = $this->family;
 <?php endforeach; ?>
 
 <p>
-    <button type="button" class="btn addDimensionButton">
+    <button type="button" class="btn btn-default addDimensionButton">
         <?=__('Parameter', 'familyDetail', 'dimensionAddPanelTitle')?>
     </button>
 </p>
 
 
-<div id="addDimensionPopup" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><?=__('Parameter', 'familyDetail', 'dimensionAddPanelTitle')?></h3>
-    </div>
-    <form class="form-horizontal" action="<?=$this->baseUrl('parameter/dimension/add')?>" method="post">
-        <div class="modal-body">
-            <p class="alert alert-warning">
-                <?=__('Parameter', 'dimension', 'warningAddingDimension')?>
-            </p>
-            <p></p>
-            <div class="control-group">
-                <label class="control-label" for="addDimensionLabel"><?=__('UI', 'name', 'label')?></label>
-                <div class="controls">
-                    <input type="text" id="addDimensionLabel" name="label" required />
+<div id="addDimensionPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" action="parameter/dimension/add" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3><?=__('Parameter', 'familyDetail', 'dimensionAddPanelTitle')?></h3>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="addDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
-                <div class="controls">
-                    <input type="text" id="addDimensionRef" name="ref" required />
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label"><?=__('Parameter', 'name', 'orientation')?></label>
-                <div class="controls">
-                    <label class="radio">
-                        <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_VERTICAL?>" checked>
-                        <?=__('Parameter', 'property', 'verticalFem')?>
-                    </label>
-                    <label class="radio">
-                        <input type="radio" name="orientation" value="<?=Dimension::ORIENTATION_HORIZONTAL?>">
-                        <?=__('Parameter', 'property', 'horizontalFem')?>
-                    </label>
-                </div>
-            </div>
-            <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
-            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
-        </div>
-    </form>
-</div>
-
-
-<div id="editDimensionPopup" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><?=__('Parameter', 'familyDetail', 'dimensionEditPanelTitle')?></h3>
-    </div>
-    <form class="form-horizontal" action="<?=$this->baseUrl('parameter/dimension/edit')?>" method="post">
-        <div class="modal-body">
-            <div class="control-group">
-                <label class="control-label" for="editDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
-                <div class="controls">
-                    <input type="text" id="editDimensionRef" name="ref" required />
-                </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="editDimensionLabel"><?=__('UI', 'name', 'label')?></label>
-                <div class="controls">
-                    <input type="text" id="editDimensionLabel" name="label" required />
-                </div>
-            </div>
-            <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
-            <input type="hidden" name="refDimension" id="refDimension" />
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
-            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
-        </div>
-    </form>
-</div>
-
-
-<div id="addMemberPopup" class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3><?=__('Parameter', 'dimension', 'addMemberList')?></h3>
-    </div>
-    <form id="addMemberForm" action="<?=$this->baseUrl('parameter/dimension/add-members')?>" method="post">
-        <div class="modal-body">
-            <div class="control-group">
-                <div class="controls">
-                    <textarea id="inputMemberList" name="members" class="pre input-block-level" rows="8"></textarea>
-                    <p class="help-block">
-                        <strong><span id="inputMemberListValidationOK" class="text-success"></span></strong>
-                        <strong><span id="inputMemberListValidationNOK" class="text-error"></span></strong>
+                <div class="modal-body">
+                    <p class="alert alert-warning">
+                        <?=__('Parameter', 'dimension', 'warningAddingDimension')?>
                     </p>
-                    <p><span class="help-block"><?=__('Parameter', 'import', 'addMemberListHelp')?></span></p>
-                    <pre><code><?=__('Parameter', 'import', 'addMemberListExample')?></code></pre>
+                    <p></p>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="addDimensionLabel">
+                            <?=__('UI', 'name', 'label')?>
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" id="addDimensionLabel" name="label" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="addDimensionRef">
+                            <?=__('UI', 'name', 'identifier')?>
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" id="addDimensionRef" name="ref" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">
+                            <?=__('Parameter', 'name', 'orientation')?>
+                        </label>
+                        <div class="col-sm-10">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="orientation"
+                                           value="<?=Dimension::ORIENTATION_VERTICAL?>" checked>
+                                    <?=__('Parameter', 'property', 'verticalFem')?>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="orientation"
+                                           value="<?=Dimension::ORIENTATION_HORIZONTAL?>">
+                                    <?=__('Parameter', 'property', 'horizontalFem')?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
                 </div>
-            </div>
-            <input type="hidden" name="idFamily" value="<?=$family->getId()?>" />
-            <input type="hidden" name="dimension" id="inputDimension" />
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+                </div>
+            </form>
         </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
-            <button type="button" class="btn" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+    </div>
+</div>
+
+
+<div id="editDimensionPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" action="<?=$this->baseUrl('parameter/dimension/edit')?>" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3><?=__('Parameter', 'familyDetail', 'dimensionEditPanelTitle')?></h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="editDimensionRef"><?=__('UI', 'name', 'identifier')?></label>
+                        <input type="text" id="editDimensionRef" name="ref" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="editDimensionLabel"><?=__('UI', 'name', 'label')?></label>
+                        <input type="text" id="editDimensionLabel" name="label" required class="form-control">
+                    </div>
+                    <input type="hidden" name="idFamily" value="<?=$family->getId()?>">
+                    <input type="hidden" name="refDimension" id="refDimension">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
+</div>
+
+
+<div id="addMemberPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addMemberForm" action="<?=$this->baseUrl('parameter/dimension/add-members')?>" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3><?=__('Parameter', 'dimension', 'addMemberList')?></h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea id="inputMemberList" name="members" class="pre col-sm-12" rows="8"></textarea>
+                        <p class="help-block">
+                            <strong><span id="inputMemberListValidationOK" class="text-success"></span></strong>
+                            <strong><span id="inputMemberListValidationNOK" class="text-error"></span></strong>
+                        </p>
+                        <p><span class="help-block"><?=__('Parameter', 'import', 'addMemberListHelp')?></span></p>
+                        <pre><code><?=__('Parameter', 'import', 'addMemberListExample')?></code></pre>
+                    </div>
+                    <input type="hidden" name="idFamily" value="<?=$family->getId()?>">
+                    <input type="hidden" name="dimension" id="inputDimension">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'add')?></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 

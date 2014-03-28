@@ -1,53 +1,53 @@
-<div class="login-form">
+<div class="well no-padding">
+    <form action="user/action/login" method="post" class="smart-form client-form">
+        <header>
+            <?=__('User', 'login', 'connection')?>
+        </header>
 
-    <h3><?=__('User', 'login', 'connection')?></h3>
+        <fieldset>
 
+            <section>
+                <label class="input"> <i class="icon-append fa fa-user"></i>
+                    <input type="email" name="email" required
+                           placeholder="<?=__('User', 'user', 'emailAddress')?>">
+                    <b class="tooltip tooltip-top-right">
+                        <i class="fa fa-user txt-color-teal"></i>
+                        <?=__('User', 'user', 'emailAddress')?>
+                    </b>
+                </label>
+            </section>
 
-    <?php
-    if ($this->user) {
-        ?>
-        <p>
-            <?=__('User', 'login', 'youAreConnected')?>
-            <?=$this->user->getName()?>.
-        </p>
-        <?php
-    } else {
-        ?>
-        <p>
-            <?=__('User', 'login', 'youAreNotConnected')?>
-        </p>
-        <form action="user/action/login" method="post">
-            <input type="text" name="email" class="input-block-level"
-                   placeholder="<?= __('User', 'user', 'emailAddress')?>">
-            <input type="password" name="password" class="input-block-level"
-                   placeholder="<?=__('User', 'login', 'password')?>">
+            <section>
+                <label class="input"> <i class="icon-append fa fa-lock"></i>
+                    <input type="password" name="password" required
+                           placeholder="<?=__('User', 'login', 'password')?>">
+                    <b class="tooltip tooltip-top-right">
+                        <i class="fa fa-lock txt-color-teal"></i>
+                        <?=__('User', 'login', 'password')?>
+                    </b>
+                </label>
+                <div class="note">
+                    <a href="user/password/forgotten">
+                        <?=__('User', 'login', 'forgottenPassword')?>
+                    </a>
+                </div>
+            </section>
 
-            <input type="submit" id="connection" class="btn btn-primary btn-block"
-                   value="<?=__('User', 'login', 'connection')?>">
+        </fieldset>
+
+        <footer>
+
+            <button type="submit" id="connection" class="btn btn-primary">
+                <?=__('User', 'login', 'connection')?>
+            </button>
 
             <?php if ($this->enableRegister) : ?>
-                <a href="user/register" class="btn btn-block">
-                    <?=__('User', 'register', 'register')?></a>
+                <a href="user/register" class="btn btn-default">
+                    <?=__('User', 'register', 'register')?>
+                </a>
             <?php endif; ?>
 
-            <p>
-                <a class="fieldForgotPassword" href="user/password/forgotten">
-                    <?=__('User', 'login', 'forgottenPassword')?></a>
-            </p>
-        </form>
-        <?php
-    }
-    ?>
+        </footer>
+    </form>
 
 </div>
-
-<script>
-    $.fn.loginSuccess = function () {
-        var referer = '<?=$this->referer?>';
-        if (referer != null && referer != '') {
-            window.location.assign(referer);
-        } else {
-            window.location.reload();
-        }
-    };
-</script>

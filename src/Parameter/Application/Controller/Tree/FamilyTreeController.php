@@ -1,9 +1,11 @@
 <?php
 
 use Core\Annotation\Secure;
+use MyCLabs\ACL\ACLManager;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Category;
 use Parameter\Domain\ParameterLibrary;
+use User\Domain\ACL\Actions;
 
 /**
  * Controller de l'arbre des familles
@@ -12,15 +14,21 @@ use Parameter\Domain\ParameterLibrary;
 class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
 {
     /**
-     * @Secure("viewParameter")
+     * @Inject
+     * @var ACLManager
+     */
+    private $aclManager;
+
+    /**
+     * @Secure("viewParameterLibrary")
      */
     public function getnodesAction()
     {
         /** @var $library ParameterLibrary */
         $library = ParameterLibrary::load($this->getParam('library'));
 
-        // TODO tester les droits (consultation/édition)
-        $isEditable = true;
+        // Test des droits (consultation/édition)
+        $isEditable = $this->aclManager->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
 
         // Chargement des catégories racine
         if ($this->idNode === null) {
@@ -49,7 +57,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
     }
 
     /**
-     * @Secure("viewParameter")
+     * @Secure("viewParameterLibrary")
      */
     public function getlistparentsAction()
     {
@@ -68,7 +76,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
     }
 
     /**
-     * @Secure("editAF")
+     * @Secure("editParameterLibrary")
      */
     public function getlistsiblingsAction()
     {
@@ -122,7 +130,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
     }
 
     /**
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function addnodeAction()
     {
@@ -143,9 +151,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Tree::editnodeAction()
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function editnodeAction()
     {
@@ -208,8 +214,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
     }
 
     /**
-     * Suppression d'un noeud
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function deletenodeAction()
     {
@@ -228,7 +233,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
 
     /**
      * Fonction récupérant les informations d'édition pour le formulaire.
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function getinfoeditAction()
     {

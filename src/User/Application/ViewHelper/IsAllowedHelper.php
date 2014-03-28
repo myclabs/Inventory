@@ -3,7 +3,7 @@
 namespace User\Application\ViewHelper;
 
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\Model\EntityResourceInterface;
+use MyCLabs\ACL\Model\ResourceInterface;
 use Zend_Auth;
 use Zend_View_Helper_Abstract;
 use User\Domain\User;
@@ -27,12 +27,12 @@ class IsAllowedHelper extends Zend_View_Helper_Abstract
     /**
      * Vérifie une autorisation d'accès à une ressource pour l'utilisateur connecté
      *
-     * @param string                                              $action Action demandée
-     * @param \MyCLabs\ACL\Model\Resource|EntityResourceInterface $target Ressource ou entité
+     * @param string            $action Action demandée
+     * @param ResourceInterface $target Ressource
      *
      * @return boolean
      */
-    public function isAllowed($action, $target)
+    public function isAllowed($action, ResourceInterface $target)
     {
         $auth = Zend_Auth::getInstance();
         if (!$auth->hasIdentity()) {

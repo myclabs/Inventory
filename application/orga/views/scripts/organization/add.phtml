@@ -27,50 +27,42 @@
 
     <div>
 
-        <div class="control-group navigation-buttons">
+        <div class="form-group navigation-buttons">
             <div class="control-label">
                 <button class="btn btn-warning navigation-previous hide" type="button">
                     <i class="fa fa-chevron-left"></i> <?=___('Orga', 'add', 'navigationPrevious')?>
                 </button>
             </div>
-            <div class="controls">
-                <button class="btn btn-primary navigation-next" type="button">
-                    <?=___('Orga', 'add', 'navigationNext')?> <i class="fa fa-chevron-right"></i>
-                </button>
-            </div>
-            <div class="controls">
-                <button class="btn btn-primary navigation-end hide" type="button">
-                    <?=___('Orga', 'add', 'navigationEnd')?> <i class="fa fa-check"></i>
-                </button>
-            </div>
+            <button class="btn btn-primary navigation-next" type="button">
+                <?=___('Orga', 'add', 'navigationNext')?> <i class="fa fa-chevron-right"></i>
+            </button>
+            <button class="btn btn-primary navigation-end hide" type="button">
+                <?=___('Orga', 'add', 'navigationEnd')?> <i class="fa fa-check"></i>
+            </button>
         </div>
 
         <div class="tab-content">
             <div class="tab-pane active subGroup" id="organization">
                 <div>
-                    <div id="organizationLabel-line" class="control-group">
+                    <div id="organizationLabel-line" class="form-group">
                         <label class="control-label" for="label"><?=___('Orga', 'add', 'organizationLabel')?></label>
-                        <div class="controls">
-                            <div class="input">
-                                <input type="text" id="organizationLabel" name="organizationLabel" placeholder="<?=___('Orga', 'add', 'organizationLabelPlaceholder')?>">
-                            </div>
+                        <div class="input">
+                            <input type="text" id="organizationLabel" name="organizationLabel" placeholder="<?=___('Orga', 'add', 'organizationLabelPlaceholder')?>" class="form-control">
                         </div>
                     </div>
-                    <div id="organizationTemplate-line" class="control-group">
+                    <div id="organizationTemplate-line" class="form-group">
                         <label class="control-label" for="organizationTemplate">
                             <?=___('Orga', 'add', 'organizationTemplate')?>
                             <a href="#" data-toggle="tooltip" data-placement="top" title="<?=___('Orga', 'add', 'organizationTemplateExplanation')?>">
                                 <i class="fa fa-question-circle"></i>
                             </a>
                         </label>
-                        <div class="controls">
-                            <div class="input">
-                                <select id="organizationTemplate" name="organizationTemplate">
-                                    <? foreach ($this->templates as $templateRef => $templateName) : ?>
-                                    <option value="<?=$templateRef?>"><?=$templateName?></option>
-                                    <? endforeach; ?>
-                                </select>
-                            </div>
+                        <div class="input">
+                            <select id="organizationTemplate" name="organizationTemplate" class="form-control">
+                                <? foreach ($this->templates as $templateRef => $templateName) : ?>
+                                <option value="<?=$templateRef?>"><?=$templateName?></option>
+                                <? endforeach; ?>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -84,17 +76,15 @@
                     <fieldset id="mainAxisGroup" class=subGroup>
                         <legend><?=___('Orga', 'add', 'organizationMainAxisTitle')?></legend>
                         <div>
-                            <div id="mainAxis-line" class="control-group" data-level="1">
+                            <div id="mainAxis-line" class="form-group" data-level="1">
                                 <label class="control-label" for="mainAxis">
                                     <?=___('Orga', 'add', 'organizationMainAxisLabel')?>
                                 </label>
-                                <div class="controls">
-                                    <div class="input">
-                                        <input type="text" id="mainAxis" name="mainAxis" placeholder="<?=___('Orga', 'add', 'organizationMainAxisPlaceholder')?>" required>
-                                    </div>
-                                    <div class="input">
-                                        <button class="btn addAggregation"><i class="fa fa-plus"></i> <?=___('Orga', 'add', 'organizationAddMainSubAxis')?></button>
-                                    </div>
+                                <div class="input">
+                                    <input type="text" id="mainAxis" name="mainAxis" placeholder="<?=___('Orga', 'add', 'organizationMainAxisPlaceholder')?>" class="form-control" required>
+                                </div>
+                                <div class="input">
+                                    <button class="btn btn-default addAggregation"><i class="fa fa-plus"></i> <?=___('Orga', 'add', 'organizationAddMainSubAxis')?></button>
                                 </div>
                             </div>
                         </div>
@@ -102,12 +92,10 @@
                     <fieldset id="timeAxisGroup" class="subGroup">
                         <legend><?=___('Orga', 'add', 'organizationTimeAxisTitle')?></legend>
                         <div>
-                            <div id="timeAxis-line" class="control-group">
-                                <label class="control-label" for="timeAxis"><?=___('Orga', 'add', 'organizationTimeAxisLabel')?></label>
-                                <div class="controls">
-                                    <div class="input">
-                                        <input type="text" id="timeAxis" name="timeAxis" placeholder="<?=___('Orga', 'add', 'organizationTimeAxisPlaceholder')?>" required>
-                                    </div>
+                            <div id="timeAxis-line" class="form-group">
+                            <label class="control-label" for="timeAxis"><?=___('Orga', 'add', 'organizationTimeAxisLabel')?></label>
+                                <div class="input">
+                                    <input type="text" id="timeAxis" name="timeAxis" placeholder="<?=___('Orga', 'add', 'organizationTimeAxisPlaceholder')?>" class="form-control" required>
                                 </div>
                             </div>
                         </div>
@@ -115,12 +103,10 @@
                     <fieldset id="subdivisionAxisGroup" class="subGroup">
                         <legend><?=___('Orga', 'add', 'organizationInputsAxisTitle')?></legend>
                         <div>
-                            <div id="subdivisionAxis-line" class="control-group">
+                            <div id="subdivisionAxis-line" class="form-group">
                                 <label class="control-label" for="subdivisionAxis"><?=___('Orga', 'add', 'organizationInputsAxisLabel')?></label>
-                                <div class="controls">
-                                    <div class="input">
-                                        <input type="text" id="subdivisionAxis" name="subdivisionAxis" placeholder="<?=___('Orga', 'add', 'organizationInputsAxisPlaceholder')?>">
-                                    </div>
+                                <div class="input">
+                                    <input type="text" id="subdivisionAxis" name="subdivisionAxis" placeholder="<?=___('Orga', 'add', 'organizationInputsAxisPlaceholder')?>" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -135,11 +121,9 @@
                     <fieldset id="inventoryGranularityGroup" class="subGroup">
                         <legend><?=___('Orga', 'add', 'inventoryGranularityTitle')?></legend>
                         <div>
-                            <div id="inventoryGranularity-line" class="control-group">
-                                <div class="controls">
-                                    <div class="input" style="margin-top: 5px;">
-                                        <div id="inventoryGranularity"></div>
-                                    </div>
+                            <div id="inventoryGranularity-line" class="form-group">
+                                <div class="input" style="margin-top: 5px;">
+                                    <div id="inventoryGranularity"></div>
                                 </div>
                             </div>
                         </div>
@@ -151,11 +135,9 @@
                     <fieldset id="aclGranularitiesGroup" class="subGroup">
                         <legend><?=___('Orga', 'add', 'aclGranularitiesTitle')?></legend>
                         <div>
-                            <div id="aclGranularities-line" class="control-group">
-                                <div class="controls">
-                                    <div class="input" style="margin-top: 5px;">
-                                        <div id="aclGranularities"></div>
-                                    </div>
+                            <div id="aclGranularities-line" class="form-group">
+                                <div class="input" style="margin-top: 5px;">
+                                    <div id="aclGranularities"></div>
                                 </div>
                             </div>
                         </div>
@@ -167,11 +149,9 @@
                     <fieldset id="reportsGranularitiesGroup" class="subGroup">
                         <legend><?=___('Orga', 'add', 'reportsGranularitiesTitle')?></legend>
                         <div>
-                            <div id="reportsGranularities-line" class="control-group">
-                                <div class="controls">
-                                    <div class="input" style="margin-top: 5px;">
-                                        <div id="reportsGranularities"></div>
-                                    </div>
+                            <div id="reportsGranularities-line" class="form-group">
+                                <div class="input" style="margin-top: 5px;">
+                                    <div id="reportsGranularities"></div>
                                 </div>
                             </div>
                         </div>
@@ -195,35 +175,35 @@
             </div>
         </div>
 
-        <div class="control-group navigation-buttons">
+        <div class="form-group navigation-buttons">
             <div class="control-label">
                 <button class="btn btn-warning navigation-previous hide" type="button">
                     <i class="fa fa-chevron-left"></i> <?=___('Orga', 'add', 'navigationPrevious')?>
                 </button>
             </div>
-            <div class="controls">
-                <button class="btn btn-primary navigation-next" type="button">
-                    <?=___('Orga', 'add', 'navigationNext')?> <i class="fa fa-chevron-right"></i>
-                </button>
-            </div>
-            <div class="controls">
-                <button class="btn btn-primary navigation-end hide" type="button">
-                    <?=___('Orga', 'add', 'navigationEnd')?> <i class="fa fa-check"></i>
-                </button>
-            </div>
+            <button class="btn btn-primary navigation-next" type="button">
+                <?=___('Orga', 'add', 'navigationNext')?> <i class="fa fa-chevron-right"></i>
+            </button>
+            <button class="btn btn-primary navigation-end hide" type="button">
+                <?=___('Orga', 'add', 'navigationEnd')?> <i class="fa fa-check"></i>
+            </button>
         </div>
 
     </div>
 </form>
 
-<div id="organizationBuilding" class="modal hide fade" data-backdrop="static">
-    <div class="modal-header">
-        <h3><?=___('Orga', 'add', 'organizationBuildingPopupTitle')?></h3>
-    </div>
-    <div class="modal-body">
-        <div class="alert alert-info">
-            <i class="fa fa-spinner fa-spin"></i>
-            <?=___('Orga', 'add', 'organizationBuildingMessage')?>
+<div id="organizationBuilding" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><?=___('Orga', 'add', 'organizationBuildingPopupTitle')?></h3>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fa fa-spinner fa-spin"></i>
+                    <?=___('Orga', 'add', 'organizationBuildingMessage')?>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -269,7 +249,7 @@
                         '<i class="fa fa-home"></i> ' +
                         '<?=___('Orga', 'add', 'organizationBuildingGoHome')?>' +
                     '</a> ' +
-                    '<a class="btn pull-right" href="orga/organization/add">' +
+                    '<a class="btn btn-default pull-right" href="orga/organization/add">' +
                         '<i class="fa fa-plus"></i> ' +
                         '<?=___('Orga', 'add', 'organizationBuildingAddMore')?>' +
                     '</a> '
@@ -386,19 +366,17 @@
         var level = row.attr('data-level') * 1;
         var identifier = 'mainAxis' + globalAxisCounter;
         row.after(
-            '<div id="' + identifier + '-line" class="control-group" style="padding-left: ' + (level * 45) + 'px" data-level="' + (level + 1) + '">' +
+            '<div id="' + identifier + '-line" class="form-group" style="padding-left: ' + (level * 45) + 'px" data-level="' + (level + 1) + '">' +
                 '<label class="control-label" for="' + identifier + '"><?=___('Orga', 'add', 'organizationMainSubAxisLabel')?></label>' +
-                '<div class="controls">' +
-                    '<div class="input">' +
-                        '<input type="text" id="' + identifier + '" name="' + identifier + '" placeholder="<?=___('Orga', 'add', 'organizationMainSubAxisPlaceholder')?>">' +
-                        '<input type="hidden" id="' + identifier + '-parent" name="' + identifier + '-parent" value="' + parentAxisId + '">' +
-                    '</div>' +
-                    '<div class="input">' +
-                        '<button class="btn addAggregation"><i class="fa fa-plus"></i></button>' +
-                    '</div>' +
-                    '<div class="input">' +
-                        '<button class="btn removeAggregation"><i class="fa fa-minus"></i></button>' +
-                    '</div>' +
+                '<div class="input">' +
+                    '<input type="text" id="' + identifier + '" name="' + identifier + '" placeholder="<?=___('Orga', 'add', 'organizationMainSubAxisPlaceholder')?>" class="form-control">' +
+                    '<input type="hidden" id="' + identifier + '-parent" name="' + identifier + '-parent" value="' + parentAxisId + '">' +
+                '</div>' +
+                '<div class="input">' +
+                    '<button class="btn btn-default addAggregation"><i class="fa fa-plus"></i></button>' +
+                '</div>' +
+                '<div class="input">' +
+                    '<button class="btn btn-default removeAggregation"><i class="fa fa-minus"></i></button>' +
                 '</div>' +
             '</div>'
         );
@@ -424,24 +402,22 @@
             if (this != '') {
                 parentMembers +=
                     '<div id="parentMember' + globalMemberCounter + this + '" class="input">' +
-                        '<select data-axis="' + this + '" name="parentMember' + globalMemberCounter + this + '">' +
+                        '<select data-axis="' + this + '" name="parentMember' + globalMemberCounter + this + '" class="form-control">' +
                         '</select>' +
                     '</div>';
             }
         });
         row.before(
-            '<div id="' + identifier + '-line" class="control-group">' +
-                '<div class="controls">' +
-                    '<div class="input">' +
-                        '<input type="text" name="' + identifier + '">' +
-                    '</div>' +
-                    parentMembers +
+            '<div id="' + identifier + '-line" class="form-group">' +
+                '<div class="input">' +
+                    '<input type="text" name="' + identifier + '" class="form-control">' +
                 '</div>' +
+                parentMembers +
             '</div>'
         );
         $.each($(this).attr('data-parent-axes').split('|'), function() {
             if (this != '') {
-                $('#members fieldset[data-axis="' + this + '"] .controls:first input').trigger('change');
+                $('#members fieldset[data-axis="' + this + '"] input').trigger('change');
             }
         });
     });
@@ -464,8 +440,8 @@
 
     var validateActiveTab = function () {
         $('form span.help-block').remove();
-        $('#addOrganization div.control-group').removeClass('error');
-        $('#addOrganization div.control-group').removeClass('warning');
+        $('#addOrganization div.form-group').removeClass('error');
+        $('#addOrganization div.form-group').removeClass('warning');
 
         var organizationTemplate = $('#organizationTemplate').val();
 
@@ -542,7 +518,7 @@
                                 parentAxes += parentAxis + '|';
                                 parentMembersSelect +=
                                     '<div id="parentMember' + globalMemberCounter + parentAxis + '" class="input">' +
-                                        '<select data-axis="' + parentAxis + '" name="parentMember' + globalMemberCounter + parentAxis + '">' +
+                                        '<select data-axis="' + parentAxis + '" name="parentMember' + globalMemberCounter + parentAxis + '" class="form-control">' +
                                         '</select>' +
                                     '</div>'
                             });
@@ -553,21 +529,17 @@
                                 '<fieldset id="' + $(this).attr('name') + '-members" class="subGroup" data-axis="' + $(this).attr('id') + '">' +
                                     '<legend>' + $(this).val() + '</legend>' +
                                     '<div>' +
-                                        '<div id="member' + globalMemberCounter + '-line" class="control-group">' +
-                                            '<div class="controls">' +
-                                                '<div class="input">' +
-                                                    '<input type="text" name="member' + globalMemberCounter + '">' +
-                                                '</div>' +
-                                                parentMembersSelect +
+                                        '<div id="member' + globalMemberCounter + '-line" class="form-group">' +
+                                            '<div class="input">' +
+                                                '<input type="text" name="member' + globalMemberCounter + '" class="form-control">' +
                                             '</div>' +
+                                            parentMembersSelect +
                                         '</div>' +
-                                        '<div id="addMember' + $(this).attr('name') + '" class="control-group">' +
-                                            '<div class="controls">' +
-                                                '<div class="input">' +
-                                                    '<button class="btn addMember" data-parent-axes="' + parentAxes + '">' +
-                                                        '<i class="fa fa-plus"></i> <?=___('Orga', 'add', 'addMember')?>' +
-                                                    '</button>' +
-                                                '</div>' +
+                                        '<div id="addMember' + $(this).attr('name') + '" class="form-group">' +
+                                            '<div class="input">' +
+                                                '<button class="btn btn-default addMember" data-parent-axes="' + parentAxes + '">' +
+                                                    '<i class="fa fa-plus"></i> <?=___('Orga', 'add', 'addMember')?>' +
+                                                '</button>' +
                                             '</div>' +
                                         '</div>' +
                                     '</div>' +
@@ -605,29 +577,29 @@
                         reportsGranularitiesList.push({ 'ref': granularityAxes.substr(0, (granularityAxes.length - 1)), 'label': granularityLabel.substr(0, (granularityLabel.length - 3))});
                         level++;
                     }
-                    $('#inventoryGranularity-line .controls .input > div').html('');
+                    $('#inventoryGranularity-line .input > div').html('');
                     $(inventoryGranularitiesList).each(function() {
-                        $('#inventoryGranularity-line .controls .input > div').append(
+                        $('#inventoryGranularity-line .input > div').append(
                             '<label for="inventoryGranularity' + this.ref + '" class="radio">' +
-                                '<input id="inventoryGranularity' + this.ref + '" name="inventoryGranularity" type="radio" value="' + this.ref  + '"' + this.checked + '>' +
+                                '<input id="inventoryGranularity' + this.ref + '" name="inventoryGranularity" type="radio" value="' + this.ref  + '"' + this.checked + ' class="form-control">' +
                                 ' <span>' + this.label + '</span>' +
                             '</label>'
                         );
                     });
-                    $('#aclGranularities-line .controls .input > div').html('');
+                    $('#aclGranularities-line .input > div').html('');
                     $(aclGranularitiesList).each(function(index) {
-                        $('#aclGranularities-line .controls .input > div').append(
+                        $('#aclGranularities-line .input > div').append(
                             '<label for="aclGranularity' + this.ref + '" class="checkbox">' +
-                                '<input id="aclGranularity' + this.ref + '" name="aclGranularities" type="checkbox" value="' + this.ref  + '"' + (((index == 0) || (index == 1)) ? ' checked' : '') + '>' +
+                                '<input id="aclGranularity' + this.ref + '" name="aclGranularities" type="checkbox" value="' + this.ref  + '"' + (((index == 0) || (index == 1)) ? ' checked' : '') + ' class="form-control">' +
                                 ' <span>' + this.label + '</span>' +
                             '</label>'
                         );
                     });
-                    $('#reportsGranularities-line .controls .input > div').html('');
+                    $('#reportsGranularities-line .input > div').html('');
                     $(reportsGranularitiesList).each(function() {
-                        $('#reportsGranularities-line .controls .input > div').append(
+                        $('#reportsGranularities-line .input > div').append(
                             '<label for="reportsGranularity' + this.ref + '" class="checkbox">' +
-                                '<input id="reportsGranularity' + this.ref + '" name="reportsGranularities" type="checkbox" value="' + this.ref  + '">' +
+                                '<input id="reportsGranularity' + this.ref + '" name="reportsGranularities" type="checkbox" value="' + this.ref  + '" class="form-control">' +
                                 ' <span>' + this.label + '</span>' +
                             '</label>'
                         );
@@ -693,7 +665,7 @@
                 var inventoryGranularity = $('#inventory input[name="inventoryGranularity"]:checked');
                 if (inventoryGranularity.length == 0) {
                     $('#inventoryGranularity-line').addClass('error');
-                    $('#inventoryGranularity-line .controls').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    $('#inventoryGranularity-line').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                     state = false;
                 }
 
@@ -711,8 +683,8 @@
             case '#acl':
                 var aclGranularity = $('#acl input[name="aclGranularities"]:checked');
                 if (aclGranularity.length == 0) {
-                    $('#acl fieldset:first .control-group').addClass('error');
-                    $('#acl fieldset:first .controls').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    $('#acl fieldset:first .form-group').addClass('error');
+                    $('#acl fieldset:first').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                     state = false;
                 }
 
@@ -739,8 +711,8 @@
             case '#reports':
                 var reportsGranularity = $('#reports input[name="reportsGranularities"]:checked');
                 if (reportsGranularity.length == 0) {
-                    $('#reports fieldset:first .control-group').addClass('error');
-                    $('#reports fieldset:first .controls').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    $('#reports fieldset:first .form-group').addClass('error');
+                    $('#reports fieldset:first').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                     state = false;
                 }
 
@@ -772,7 +744,7 @@
         var children = $('#addOrganization div.tab-content').children();
         for(var key = 0; key < children.length; key++) {
             var child = $(children[key]);
-            if (child.hasClass('control-group')) {
+            if (child.hasClass('form-group')) {
                 data += '"' + child.attr('id').replace('-line', '') + '": ' + child.parseFormLine() + ', ';
             } else if (child.hasClass('subGroup')) {
                 data += '"' + child.attr('id') + '": ' + child.parseFormGroup() + ', ';

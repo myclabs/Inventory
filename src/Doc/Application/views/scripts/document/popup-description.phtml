@@ -15,5 +15,5 @@ $description = $document->getDescription();
 if ($description) {
     echo Core_Tools::textile($document->getDescription());
 } else {
-    echo '<p class="muted">' . __('UI', 'other', 'noDescription') . '</p>';
+    echo '<p class="text-muted">' . __('UI', 'other', 'noDescription') . '</p>';
 }

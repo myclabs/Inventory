@@ -4,6 +4,7 @@ namespace User\Application\Plugin;
 
 use ArrayObject;
 use Core_Exception_NotFound;
+use Core_Exception_User;
 use Core_View_Helper_GetUrl;
 use Exception;
 use MyCLabs\ACL\ACLManager;
@@ -73,9 +74,12 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
         // Vérifie si l'utilisateur est connecté.
         $identity = $this->getLoggedInUser();
 
-        if ($this->isAuthorized($identity, $module, $controller, $action, $request)) {
-            // L'utilisateur est autorisé
-            return;
+        try {
+            if ($this->isAuthorized($identity, $module, $controller, $action, $request)) {
+                // L'utilisateur est autorisé
+                return;
+            }
+        } catch (ForbiddenException $e) {
         }
 
         // Si l'utilisateur n'a pas accès et qu'il n'est pas connecté : redirection sur la page de login.
@@ -118,6 +122,8 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
     {
         try {
             $securityRule = $this->controllerSecurityService->getSecurityRule($module, $controller, $action);
+        } catch (Core_Exception_User $e) {
+            throw $e;
         } catch (Exception $e) {
             // En cas d'erreur, on loggue et on refuse l'accès.
             $this->logger->error(

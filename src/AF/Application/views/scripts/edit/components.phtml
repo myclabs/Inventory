@@ -1,26 +1,17 @@
 <?php
-use AF\Domain\AF;
+use MyCLabs\MUIH\Collapse;
 
-/**
- * @author matthieu.napoli
- * @author hugo.charbonnier
- * @package AF
- */
-/** @var $af \AF\Domain\AF */
-$af = $this->af;
 $script = '';
 
 
 // Groupes
-$groups = new UI_HTML_Collapse('groups');
-$groups->foldedByDefault = true;
-$groups->title = __('AF', 'configComponentCollapse', 'groupCollapse');
-$groups->body = $this->partial('edit/components/groups.phtml', array('af' => $this->af));
+$groups = new Collapse('groups', __('AF', 'configComponentCollapse', 'groupCollapse'));
+$groups->setContent($this->partial('edit/components/groups.phtml', ['af' => $this->af]));
 echo $groups->render();
 
 $script .= <<<JS
-$('#groups').on('show', function(e) {
-    if ($(e.target).attr('id') == 'groups_wrapper') {
+$('#groups').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'groups') {
         groupDatagrid.filter();
     }
 });
@@ -28,15 +19,13 @@ JS;
 
 
 // Sous-formulaires non répétés
-$subAFNotRepeated = new UI_HTML_Collapse('subAFNotRepeated');
-$subAFNotRepeated->foldedByDefault = true;
-$subAFNotRepeated->title = __('AF', 'configComponentCollapse', 'nonRepeatedSubFormCollapse');
-$subAFNotRepeated->body = $this->partial('edit/components/sub-af-not-repeated.phtml', array('af' => $this->af));
+$subAFNotRepeated = new Collapse('subAFNotRepeated', __('AF', 'configComponentCollapse', 'nonRepeatedSubFormCollapse'));
+$subAFNotRepeated->setContent($this->partial('edit/components/sub-af-not-repeated.phtml', ['af' => $this->af]));
 echo $subAFNotRepeated->render();
 
 $script .= <<<JS
-$('#subAFNotRepeated').on('show', function(e) {
-    if ($(e.target).attr('id') == 'subAFNotRepeated_wrapper') {
+$('#subAFNotRepeated').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'subAFNotRepeated') {
         subAfNotRepeatedDatagrid.filter();
     }
 });
@@ -44,15 +33,13 @@ JS;
 
 
 // Sous-formulaires répétés
-$subAFRepeated = new UI_HTML_Collapse('subAFRepeated');
-$subAFRepeated->foldedByDefault = true;
-$subAFRepeated->title = __('AF', 'configComponentCollapse', 'repeatedSubFormCollapse');
-$subAFRepeated->body = $this->partial('edit/components/sub-af-repeated.phtml', array('af' => $this->af));
+$subAFRepeated = new Collapse('subAFRepeated', __('AF', 'configComponentCollapse', 'repeatedSubFormCollapse'));
+$subAFRepeated->setContent($this->partial('edit/components/sub-af-repeated.phtml', ['af' => $this->af]));
 echo $subAFRepeated->render();
 
 $script .= <<<JS
-$('#subAFRepeated').on('show', function(e) {
-    if ($(e.target).attr('id') == 'subAFRepeated_wrapper') {
+$('#subAFRepeated').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'subAFRepeated') {
         subAfRepeatedDatagrid.filter();
     }
 });
@@ -60,15 +47,13 @@ JS;
 
 
 // Champs numériques
-$numericFields = new UI_HTML_Collapse('numericFields');
-$numericFields->foldedByDefault = true;
-$numericFields->title = __('AF', 'configComponentCollapse', 'numericInputFieldCollapse');
-$numericFields->body = $this->partial('edit/components/numeric-fields.phtml', array('af' => $this->af));
+$numericFields = new Collapse('numericFields', __('AF', 'configComponentCollapse', 'numericInputFieldCollapse'));
+$numericFields->setContent($this->partial('edit/components/numeric-fields.phtml', ['af' => $this->af]));
 echo $numericFields->render();
 
 $script .= <<<JS
-$('#numericFields').on('show', function(e) {
-    if ($(e.target).attr('id') == 'numericFields_wrapper') {
+$('#numericFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'numericFields') {
         numericFieldDatagrid.filter();
     }
 });
@@ -76,15 +61,13 @@ JS;
 
 
 // Champs de sélection simple
-$selectSingleFields = new UI_HTML_Collapse('selectSingleFields');
-$selectSingleFields->foldedByDefault = true;
-$selectSingleFields->title = __('AF', 'configComponentCollapse', 'singleSelectionFieldCollapse');
-$selectSingleFields->body = $this->partial('edit/components/select-single-fields.phtml', array('af' => $this->af));
+$selectSingleFields = new Collapse('selectSingleFields', __('AF', 'configComponentCollapse', 'singleSelectionFieldCollapse'));
+$selectSingleFields->setContent($this->partial('edit/components/select-single-fields.phtml', ['af' => $this->af]));
 echo $selectSingleFields->render();
 
 $script .= <<<JS
-$('#selectSingleFields').on('show', function(e) {
-    if ($(e.target).attr('id') == 'selectSingleFields_wrapper') {
+$('#selectSingleFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'selectSingleFields') {
         selectSingleFieldDatagrid.filter();
     }
 });
@@ -92,21 +75,13 @@ JS;
 
 
 // Champs de sélection multiple
-$selectMultiFields = new UI_HTML_Collapse('selectMultiFields');
-$selectMultiFields->foldedByDefault = true;
-$selectMultiFields->title = __('AF', 'configComponentCollapse', 'multipleSelectionFieldCollapse');
-$selectMultiFields->body = $this->partial('edit/components/select-multi-fields.phtml', array('af' => $this->af));
+$selectMultiFields = new Collapse('selectMultiFields', __('AF', 'configComponentCollapse', 'multipleSelectionFieldCollapse'));
+$selectMultiFields->setContent($this->partial('edit/components/select-multi-fields.phtml', ['af' => $this->af]));
 echo $selectMultiFields->render();
 
-$script .= '$(\'#selectMultiFields\').on(\'show\', function(e) {';
-$script .= 'if ($(e.target).attr(\'id\') == \'selectMultiFields_wrapper\') {';
-$script .= 'selectMultiFieldDatagrid.filter();';
-$script .= '}';
-$script .= '});';
-
 $script .= <<<JS
-$('#selectSingleFields').on('show', function(e) {
-    if ($(e.target).attr('id') == 'selectSingleFields_wrapper') {
+$('#selectSingleFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'selectSingleFields') {
         selectSingleFieldDatagrid.filter();
     }
 });
@@ -114,15 +89,13 @@ JS;
 
 
 // Checkbox
-$checkboxFields = new UI_HTML_Collapse('checkboxFields');
-$checkboxFields->foldedByDefault = true;
-$checkboxFields->title = __('AF', 'configComponentCollapse', 'booleanFieldCollapse');
-$checkboxFields->body = $this->partial('edit/components/checkbox-fields.phtml', array('af' => $this->af));
+$checkboxFields = new Collapse('checkboxFields', __('AF', 'configComponentCollapse', 'booleanFieldCollapse'));
+$checkboxFields->setContent($this->partial('edit/components/checkbox-fields.phtml', ['af' => $this->af]));
 echo $checkboxFields->render();
 
 $script .= <<<JS
-$('#checkboxFields').on('show', function(e) {
-    if ($(e.target).attr('id') == 'checkboxFields_wrapper') {
+$('#checkboxFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'checkboxFields') {
         checkboxFieldDatagrid.filter();
     }
 });
@@ -130,19 +103,18 @@ JS;
 
 
 // Text
-$textFields = new UI_HTML_Collapse('textFields');
-$textFields->foldedByDefault = true;
-$textFields->title = __('AF', 'configComponentCollapse', 'textFieldCollapse');
-$textFields->body = $this->partial('edit/components/text-fields.phtml', array('af' => $this->af));
+$textFields = new Collapse('textFields', __('AF', 'configComponentCollapse', 'textFieldCollapse'));
+$textFields->setContent($this->partial('edit/components/text-fields.phtml', ['af' => $this->af]));
 echo $textFields->render();
 
 $script .= <<<JS
-$('#textFields').on('show', function(e) {
-    if ($(e.target).attr('id') == 'textFields_wrapper') {
+$('#textFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'textFields') {
         textFieldDatagrid.filter();
     }
 });
 JS;
+
 $script .= <<<JS
 $('body').on('submit', '#copyTechnoMembersAsOptions', function(e) {
     e.preventDefault();
@@ -170,6 +142,8 @@ $('body').on('submit', '#copyTechnoMembersAsOptions', function(e) {
     });
 });
 JS;
+?>
 
-
-echo '<script type="text/javascript">/*<![CDATA[*/'.$script.'/*]]>*/</script>';
+<script>
+    <?=$script?>
+</script>

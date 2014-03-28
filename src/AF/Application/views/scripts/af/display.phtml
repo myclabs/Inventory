@@ -1,6 +1,8 @@
 <?php
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
+use MyCLabs\MUIH\Tab;
+use MyCLabs\MUIH\Tabs;
 
 /**
  * @author  matthieu.napoli
@@ -23,14 +25,13 @@ $this->headScript()->appendFile('scripts/af/input-progress.js', 'text/javascript
 $this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["orgchart"]}]}', 'text/javascript');
 
 // Création d'un TabView.
-$tabView = new UI_Tab_View('tabs');
+$tabView = new Tabs();
 $baseTabs = [];
 
 // ONGLET DE SAISIE
-$baseTabs[AFViewConfiguration::TAB_INPUT] = new UI_Tab('tabInput');
-$baseTabs[AFViewConfiguration::TAB_INPUT]->label = __('UI', 'name', 'input');
-$baseTabs[AFViewConfiguration::TAB_INPUT]->useCache = true;
-$baseTabs[AFViewConfiguration::TAB_INPUT]->active = true;
+$baseTabs[AFViewConfiguration::TAB_INPUT] = new Tab('tabs_tabInput');
+$baseTabs[AFViewConfiguration::TAB_INPUT]->setTitle(__('UI', 'name', 'input'));
+$baseTabs[AFViewConfiguration::TAB_INPUT]->setAjax(true, true);
 $urlArray = array(
     'module'            => 'af',
     'controller'        => 'af',
@@ -52,9 +53,9 @@ $baseTabs[AFViewConfiguration::TAB_INPUT]->dataSource = $url;
 
 // ONGLET DE RESULTAT
 if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_RESULT)) {
-    $baseTabs[AFViewConfiguration::TAB_RESULT] = new UI_Tab('tabResult');
-    $baseTabs[AFViewConfiguration::TAB_RESULT]->useCache = false;
-    $baseTabs[AFViewConfiguration::TAB_RESULT]->label = __('UI', 'name', 'results');
+    $baseTabs[AFViewConfiguration::TAB_RESULT] = new Tab('tabs_tabResult');
+    $baseTabs[AFViewConfiguration::TAB_RESULT]->setAjax(true, false);
+    $baseTabs[AFViewConfiguration::TAB_RESULT]->setTitle(__('UI', 'name', 'results'));
     $urlArray = array(
         'module'     => 'af',
         'controller' => 'af',
@@ -71,9 +72,9 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_RESULT)) {
 
 // ONGLET DETAIL CALCUL
 if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS)) {
-    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS] = new UI_Tab('tabCalculationDetails');
-    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->useCache = false;
-    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->label = __('AF', 'inputCalculationDetail', 'tab');
+    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS] = new Tab('tabs_tabCalculationDetails');
+    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->setAjax(true, false);
+    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->setTitle(__('AF', 'inputCalculationDetail', 'tab'));
     $urlArray = array(
         'module'     => 'af',
         'controller' => 'af',
@@ -90,8 +91,8 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS)
 
 // ONGLET DOCUMENTATION
 if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_DOCUMENTATION)) {
-    $documentationTab = new UI_Tab('tabDocumentation');
-    $documentationTab->label = __('UI', 'name', 'documentation');
+    $documentationTab = new Tab('tabDocumentation');
+    $documentationTab->setTitle(__('UI', 'name', 'documentation'));
     $urlArray = array(
         'module'     => 'af',
         'controller' => 'af',
@@ -111,18 +112,21 @@ foreach ($viewConfiguration->getTabs() as $tab) {
         $tabView->addTab($baseTabs[$tab]);
     }
 }
+$tabView->activeTab('tabs_tabInput');
 
 ?>
 
 <?php if ($viewConfiguration->getDisplayConfigurationLink()) : ?>
-    <div class="navbar">
-        <div class="navbar-inner">
+    <div class="navbar navbar-default">
+        <div class="container">
 
-            <a class="brand" href="#"><?=$viewConfiguration->getPageTitle()?></a>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"><?=$viewConfiguration->getPageTitle()?></a>
+            </div>
 
             <?php if ($viewConfiguration->getDisplayConfigurationLink()) : ?>
 
-                <ul class="nav">
+                <ul class="nav navbar-nav">
                     <li>
                         <a href="<?=$this->baseUrl()?>/af/edit/menu/id/<?=$af->getId()?>">
                             <?=__('UI', 'name', 'configuration');?></a>

@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\Collapse;
+
 /**
  * @author valentin.claras
  * @package UI
@@ -165,13 +167,7 @@ class UI_Form_Element_Group extends Zend_Form_Element implements UI_Form_ZendEle
         $script = '';
 
         if ($this->foldaway == true) {
-            $collapse = new UI_HTML_Collapse($this->getId());
-            $collapse->foldedByDefault = $this->folded;
-
-            if ($this->isHidden()) {
-                $collapse->addAttribute('class', 'hide');
-            }
-
+            $collapse = new Collapse($this->getId());
             $script .= $collapse->getScript();
         }
 

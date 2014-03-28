@@ -15,7 +15,7 @@ $endpointDelete = $this->endpointDelete;
 
     if (count($comments) === 0) {
         ?>
-        <p class="muted noComments">
+        <p class="text-muted noComments">
             <?=__('Social', 'comment', 'noComment')?>
         </p>
         <?php
@@ -28,7 +28,7 @@ $endpointDelete = $this->endpointDelete;
 if ($endpointAdd !== null) :
     ?>
     <p>
-        <button class="addComment btn" type="button"><?=__('Social', 'comment', 'addComment')?></button>
+        <button class="addComment btn btn-default" type="button"><?=__('Social', 'comment', 'addComment')?></button>
     </p>
     <?php
 endif;

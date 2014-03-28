@@ -1,5 +1,5 @@
 @dbEmpty
-Feature: User list feature
+Feature: User list
 
   Background:
     Given I am logged in
@@ -10,14 +10,5 @@ Feature: User list feature
     Then I should see the "users" datagrid
     And the "users" datagrid should contain 1 row
     And the row 1 of the "users" datagrid should contain:
-      | prenom         | nom     | email               | emailValidated | enabled | detailsUser |
-      | Administrateur | Système | admin@myc-sense.com | Effectuée      | Activé  | Éditer      |
-
-  @javascript
-  Scenario: Adding user with empty form
-    Given I am on "user/profile/list"
-    When I follow "Ajouter"
-    Then I should see the popup "Ajout d'un compte utilisateur"
-    When I press "Valider"
-    And I wait for the page to finish loading
-    Then the field "users_email_addForm" should have error: "Merci de renseigner ce champ."
+      | prenom         | nom     | email               | enabled | detailsUser |
+      | Administrateur | Système | admin@myc-sense.com | Activé  | Éditer      |

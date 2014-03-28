@@ -1,0 +1,107 @@
+<?php
+/** @var Account\Application\ViewModel\AccountView $account */
+$account = $this->account;
+?>
+
+<aside id="left-panel">
+
+    <!-- Account switcher -->
+    <div class="login-info">
+        <span>
+            <!-- User image size is adjusted inside CSS, it should stay as it -->
+            <a href="#" id="show-shortcut">
+                <img alt="me" class="online" src="images/account-default.png">
+                <span><?=$account->name?></span>
+                <i class="fa fa-angle-down"></i>
+            </a>
+        </span>
+    </div>
+
+    <nav>
+        <ul>
+            <li class="<?=$this->activeMenu === 'dashboard' ? 'active' : ''?>">
+                <a href="account/dashboard">
+                    <i class="fa fa-lg fa-fw fa-home"></i>
+                    <span class="menu-item-parent"><?=__('Account', 'name', 'dashboard')?></span>
+                </a>
+            </li>
+
+
+            <!-- Organizations -->
+            <?php if (count($account->organizations) > 0) : ?>
+                <li>
+                    <a href="#">
+                        <i class="fa fa-lg fa-fw fa-inbox"></i>
+                        <span class="menu-item-parent">Workspaces</span>
+                    </a>
+                    <ul>
+                        <?php foreach ($account->organizations as $organization) : ?>
+                            <li class="<?=$this->activeMenu === 'organization-' . $organization->id ? 'active' : ''?>">
+                                <a href="orga/organization/view/idOrganization/<?=$organization->id?>"
+                                    title="<?=$organization->label?>">
+                                    <?=$organization->label?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </li>
+            <?php endif; ?>
+
+
+            <!-- AF libraries -->
+            <?php if (count($account->afLibraries) > 0) : ?>
+                <li>
+                    <a href="#">
+                        <i class="fa fa-lg fa-fw fa-list-alt"></i>
+                        <span class="menu-item-parent">Formulaires</span>
+                    </a>
+                    <ul>
+                        <?php foreach ($account->afLibraries as $library) : ?>
+                            <li class="<?=$this->activeMenu === 'af-' . $library->id ? 'active' : ''?>">
+                                <a href="af/library/view/id/<?=$library->id?>"
+                                   title="<?=$library->label?>">
+                                    <?=$library->label?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </li>
+            <?php endif; ?>
+
+
+            <!-- Parameter libraries -->
+            <?php if (count($account->parameterLibraries) > 0) : ?>
+                <li>
+                    <a href="#">
+                        <i class="fa fa-lg fa-fw fa-table"></i>
+                        <span class="menu-item-parent">Paramètres</span>
+                    </a>
+                    <ul>
+                        <?php foreach ($account->parameterLibraries as $library) : ?>
+                            <li class="<?=$this->activeMenu === 'parameter-' . $library->id ? 'active' : ''?>">
+                                <a href="parameter/library/view/id/<?=$library->id?>"
+                                   title="<?=$library->label?>">
+                                    <?=$library->label?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </li>
+            <?php endif; ?>
+
+
+            <!-- Members -->
+            <?php if (count($account->canAllow) > 0) : ?>
+                <li class="<?=$this->activeMenu === 'members' ? 'active' : ''?>">
+                    <a href="account/members?account=<?=$account->id?>">
+                        <i class="fa fa-lg fa-fw fa-users"></i>
+                        <span class="menu-item-parent"><?=__('Account', 'name', 'members')?></span>
+                    </a>
+                </li>
+            <?php endif; ?>
+
+        </ul>
+    </nav>
+
+    <span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
+</aside>

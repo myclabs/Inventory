@@ -38,11 +38,11 @@ foreach ($this->granularities as $granularity) {
         'cellRelevance'.$granularity->getId(),
         $granularity->getLabel(),
         $datagridGranularityRelevance->getHTML()
-    )->collapsed();
+    );
 
     $script = '';
-    $script .= '$(\'#cellRelevance'.$granularity->getId().'\').on(\'show\', function(e) {';
-    $script .= 'if ($(e.target).attr(\'id\') == \'cellRelevance'.$granularity->getId().'_wrapper\') {';
+    $script .= '$(\'#cellRelevance'.$granularity->getId().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'cellRelevance'.$granularity->getId().'\') {';
     $script .= 'datagridCellRelevance'.$granularity->getId().'.filter();';
     $script .= '}';
     $script .= '});';

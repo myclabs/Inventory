@@ -485,12 +485,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "fdb9f908481edc5969aa7f6a90544a83f47c1c6e"
+                "reference": "927d69b61a520e939c2f2e4105329907850e61fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/fdb9f908481edc5969aa7f6a90544a83f47c1c6e",
-                "reference": "fdb9f908481edc5969aa7f6a90544a83f47c1c6e",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/927d69b61a520e939c2f2e4105329907850e61fa",
+                "reference": "927d69b61a520e939c2f2e4105329907850e61fa",
                 "shasum": ""
             },
             "require": {
@@ -554,7 +554,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-03-20 13:28:32"
+            "time": "2014-03-23 14:41:27"
         },
         {
             "name": "dompdf/dompdf",
@@ -562,12 +562,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dompdf/dompdf.git",
-                "reference": "9e47d8c83ca6afe163f062bda787114595df2613"
+                "reference": "4c5b3c977579f45ec5cd815a32dea835e2416d6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/9e47d8c83ca6afe163f062bda787114595df2613",
-                "reference": "9e47d8c83ca6afe163f062bda787114595df2613",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/4c5b3c977579f45ec5cd815a32dea835e2416d6d",
+                "reference": "4c5b3c977579f45ec5cd815a32dea835e2416d6d",
                 "shasum": ""
             },
             "require": {
@@ -595,7 +595,7 @@
             ],
             "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
             "homepage": "https://github.com/dompdf/dompdf",
-            "time": "2014-03-15 10:33:14"
+            "time": "2014-03-21 21:57:56"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -894,16 +894,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "6225b22de9dcf36546be3a0b2fa8e3d986153f57"
+                "reference": "392ef35fd470638e08d0160d6b1cbab63cb23174"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/6225b22de9dcf36546be3a0b2fa8e3d986153f57",
-                "reference": "6225b22de9dcf36546be3a0b2fa8e3d986153f57",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/392ef35fd470638e08d0160d6b1cbab63cb23174",
+                "reference": "392ef35fd470638e08d0160d6b1cbab63cb23174",
                 "shasum": ""
             },
             "require": {
@@ -911,11 +911,11 @@
                 "psr/log": "~1.0"
             },
             "require-dev": {
-                "aws/aws-sdk-php": "~2.4.8",
-                "doctrine/couchdb": "dev-master",
-                "mlehner/gelf-php": "1.0.*",
+                "aws/aws-sdk-php": "~2.4, >2.4.8",
+                "doctrine/couchdb": "~1.0@dev",
+                "graylog2/gelf-php": "~1.0",
                 "phpunit/phpunit": "~3.7.0",
-                "raven/raven": "0.5.*",
+                "raven/raven": "~0.5",
                 "ruflin/elastica": "0.90.*"
             },
             "suggest": {
@@ -923,19 +923,20 @@
                 "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
-                "mlehner/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
                 "raven/raven": "Allow sending log messages to a Sentry server",
+                "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.7.x-dev"
+                    "dev-master": "1.8.x-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Monolog": "src/"
+                "psr-4": {
+                    "Monolog\\": "src/Monolog"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -957,7 +958,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2013-11-14 19:48:31"
+            "time": "2014-03-23 19:50:26"
         },
         {
             "name": "myclabs/acl",
@@ -1034,16 +1035,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.0.1",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "1ee53258c4076953dc512e78db00adbd7e5b21cd"
+                "reference": "804c17d20d938a1d3c425307189e65f49b53231e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/1ee53258c4076953dc512e78db00adbd7e5b21cd",
-                "reference": "1ee53258c4076953dc512e78db00adbd7e5b21cd",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/804c17d20d938a1d3c425307189e65f49b53231e",
+                "reference": "804c17d20d938a1d3c425307189e65f49b53231e",
                 "shasum": ""
             },
             "require": {
@@ -1072,20 +1073,20 @@
                 "object",
                 "object graph"
             ],
-            "time": "2014-02-14 08:59:38"
+            "time": "2014-03-21 12:53:08"
         },
         {
             "name": "myclabs/muih",
-            "version": "0.1.0",
+            "version": "0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/MUIH.git",
-                "reference": "bcec2be7af1a5aac664f0baa0db1af3760393c4c"
+                "reference": "c9c9e7e31a6ca4d78cd44ee36d08ff3e32414f37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/MUIH/zipball/bcec2be7af1a5aac664f0baa0db1af3760393c4c",
-                "reference": "bcec2be7af1a5aac664f0baa0db1af3760393c4c",
+                "url": "https://api.github.com/repos/myclabs/MUIH/zipball/c9c9e7e31a6ca4d78cd44ee36d08ff3e32414f37",
+                "reference": "c9c9e7e31a6ca4d78cd44ee36d08ff3e32414f37",
                 "shasum": ""
             },
             "type": "library",
@@ -1105,7 +1106,7 @@
                 "helper",
                 "ui"
             ],
-            "time": "2014-03-21 12:02:29"
+            "time": "2014-03-25 14:06:24"
         },
         {
             "name": "myclabs/php-enum",

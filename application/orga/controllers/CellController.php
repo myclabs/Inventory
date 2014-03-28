@@ -7,6 +7,7 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\ACL\ACLManager;
+use MyCLabs\MUIH\Tab;
 use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\ViewModel\CellViewModelFactory;
@@ -144,6 +145,7 @@ class Orga_CellController extends Core_Controller
             $currentCellPurpose .= __('DW', 'name', 'analyses');
         }
         $this->view->assign('currentCellPurpose', $currentCellPurpose);
+        $this->setActiveMenuItemOrganization($organization->getId());
 
         $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
             $connectedUser,
@@ -1251,16 +1253,16 @@ class Orga_CellController extends Core_Controller
             $aFViewConfiguration->setIdInputSet($cell->getAFInputSetPrimary()->getId());
         }
 
-        $tabComments = new UI_Tab('inputComments');
-        $tabComments->label = __('Social', 'comment', 'comments');
-        $tabComments->dataSource = 'orga/cell/input-comments/idCell/'.$idCell;
-        $tabComments->useCache = true;
+        $tabComments = new Tab('inputComments');
+        $tabComments->setTitle(__('Social', 'comment', 'comments'));
+        $tabComments->setContent('orga/cell/input-comments/idCell/'.$idCell);
+        $tabComments->setAjax(true, true);
         $aFViewConfiguration->addTab($tabComments);
 
-        $tabDocs = new UI_Tab('inputDocs');
-        $tabDocs->label = __('Doc', 'name', 'documents');
-        $tabDocs->dataSource = 'orga/cell/input-docs/idCell/'.$idCell;
-        $tabDocs->useCache = true;
+        $tabDocs = new Tab('inputDocs');
+        $tabDocs->setTitle(__('Doc', 'name', 'documents'));
+        $tabDocs->setContent('orga/cell/input-docs/idCell/'.$idCell);
+        $tabDocs->setAjax(true, true);
         $aFViewConfiguration->addTab($tabDocs);
 
         $isUserAllowedToViewCellReports = $this->aclManager->isAllowed(
@@ -1273,6 +1275,8 @@ class Orga_CellController extends Core_Controller
             $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS);
         }
         $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
+
+        $this->setActiveMenuItemOrganization($cell->getOrganization()->getId());
 
         $this->forward('display', 'af', 'af', [
             'id' => $cell->getInputAFUsed()->getId(),

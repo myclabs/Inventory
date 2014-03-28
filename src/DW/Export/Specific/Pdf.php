@@ -130,7 +130,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $this->html .= '</style>';
             $this->html .= '<body>';
             if ($isPreview) {
-                $this->html .= '<a id="exportAsPdfTop" href="'.$exportUrl.'" class="btn">';
+                $this->html .= '<a id="exportAsPdfTop" href="'.$exportUrl.'" class="btn btn-default">';
                 $this->html .= '<img src="images/dw/pdf.png" alt="pdf" /> ';
                 $this->html .= __('UI', 'verb','exportToPDF');
                 $this->html .= '</a>';
@@ -249,7 +249,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
             $this->html .= '</div>';
             if ($isPreview) {
-                $this->html .= '<a id="exportAsPdfBottom" href="'.$exportUrl.'" class="btn">';
+                $this->html .= '<a id="exportAsPdfBottom" href="'.$exportUrl.'" class="btn btn-default">';
                 $this->html .= '<img src="images/dw/pdf.png" alt="pdf" /> ';
                 $this->html .= __('UI', 'verb','exportToPDF');
                 $this->html .= '</a>';

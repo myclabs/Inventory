@@ -10,12 +10,12 @@ use Parameter\Domain\Family\Member;
 class Parameter_Datagrid_MemberDatagridController extends UI_Controller_Datagrid
 {
     /**
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function getelementsAction()
     {
         /** @var $dimension Dimension */
-        $dimension = Dimension::load($this->getParam('id'));
+        $dimension = Dimension::load($this->getParam('idDimension'));
         $members = $dimension->getMembers();
 
         foreach ($members as $member) {
@@ -35,7 +35,7 @@ class Parameter_Datagrid_MemberDatagridController extends UI_Controller_Datagrid
     }
 
     /**
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function updateelementAction()
     {
@@ -80,7 +80,7 @@ class Parameter_Datagrid_MemberDatagridController extends UI_Controller_Datagrid
     }
 
     /**
-     * @Secure("editParameter")
+     * @Secure("editParameterFamily")
      */
     public function deleteelementAction()
     {
