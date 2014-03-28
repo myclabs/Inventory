@@ -5,16 +5,15 @@ Feature: AF list edit feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an AF (in AF list), correct input
-  # Affichage du datagrid
-    Given I am on "af/af/list"
+  Scenario: Creation of an AF, correct input
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the row 1 of the "listAF" datagrid should contain:
       | category                          | label                                               | ref                                |
       | Catégorie contenant un formulaire | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse |
   # Ajout, saisie correcte
-    When I click "Ajouter"
+    When I click "Ajouter un formulaire"
     Then I should see the popup "Ajout d'un formulaire"
     When I select "Catégorie contenant un formulaire" from "listAF_category_addForm"
     And I fill in "listAF_label_addForm" with "Test"
@@ -26,10 +25,10 @@ Feature: AF list edit feature
       | Catégorie contenant un formulaire | Test  | test |
 
   @javascript @readOnly
-  Scenario: Creation of an AF (in AF list), incorrect input
-    Given I am on "af/af/list"
+  Scenario: Creation of an AF, incorrect input
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
-    When I click "Ajouter"
+    When I click "Ajouter un formulaire"
     Then I should see the popup "Ajout d'un formulaire"
   # Aucun champ rempli
     When I click "Valider"
@@ -50,7 +49,7 @@ Feature: AF list edit feature
 
   @javascript
   Scenario: Edition of an AF in AF list, correct input
-    Given I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the row 1 of the "listAF" datagrid should contain:
@@ -66,7 +65,7 @@ Feature: AF list edit feature
 
   @javascript @readOnly
   Scenario: Edition of an AF in AF list, incorrect input
-    Given I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
   # Modification du libellé, libellé vide
@@ -87,7 +86,7 @@ Feature: AF list edit feature
 
   @javascript @readOnly
   Scenario: Links towards configuration and test views, from AF list
-    Given I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the row 1 of the "listAF" datagrid should contain:
@@ -107,7 +106,7 @@ Feature: AF list edit feature
 
   @javascript @readOnly
   Scenario: Filters on AF list
-    Given I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the "listAF" datagrid should contain 8 row
@@ -150,7 +149,7 @@ Feature: AF list edit feature
   @javascript
   Scenario: Deletion of an AF form from AF list
     #6193 	Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
-    Given I am on "af/af/list"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the row 1 of the "listAF" datagrid should contain:

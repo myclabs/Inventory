@@ -12,6 +12,14 @@
                 <seg>Form list</seg>
             </tuv>
         </tu>
+        <tu tuid="addAFButton">
+            <tuv xml:lang="fr">
+                <seg>Ajouter un formulaire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Create a form</seg>
+            </tuv>
+        </tu>
         <tu tuid="addPanelTitle">
             <tuv xml:lang="fr">
                 <seg>Ajout d'un formulaire</seg>
