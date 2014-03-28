@@ -1,6 +1,4 @@
 /* Redéfinition de la largeur des label dans les formulaires */
-.form .control-label { width: 400px; }
-.form { margin-left: 430px; }
 .form > div { margin-right: 25px; vertical-align: top; }
 .form > div:first-child { width: 380px; margin-right: 0px; }
 .form .input { display: inline-block; margin-right: 5px; }
