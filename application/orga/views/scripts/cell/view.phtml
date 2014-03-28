@@ -503,19 +503,6 @@ $('.history a.refresh').on('click', function(e) {
     });
 });
 
-$('.granularity-wrapper > div').on('show', function(e) {
-    if (e.currentTarget == e.target) {
-        $('legend > i.filterChevron', $(this).parent()).removeClass('fa-chevron-right');
-        $('legend > i.filterChevron', $(this).parent()).addClass('fa-chevron-down');
-    }
-});
-$('.granularity-wrapper > div').on('hidden', function(e) {
-    if (e.currentTarget == e.target) {
-        $('legend > i.filterChevron', $(this).parent()).removeClass('fa-chevron-down');
-        $('legend > i.filterChevron', $(this).parent()).addClass('fa-chevron-right');
-    }
-});
-
 $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
     if (e.target != this) {
         return;

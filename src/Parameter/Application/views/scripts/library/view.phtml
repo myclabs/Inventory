@@ -101,7 +101,7 @@ if ($this->edit) {
                     errorHandler(o);
                 });
             });
-            $('#familyTree_addPanel').on('show', function(e) {
+            $('#familyTree_addPanel').on('show.bs.modal', function(e) {
                 $.get('parameter/tree_family-tree/getlistparents?idNode=',
                     function(o){
                         $('#addAxis_parent').formActionSetOptions(o);

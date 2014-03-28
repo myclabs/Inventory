@@ -66,7 +66,7 @@
     $script .= 'errorHandler(o);';
     $script .= '});';
     $script .= '});';
-    $script .= '$(\'#editAxis_addPanel\').on(\'show\', function(e) {';
+    $script .= '$(\'#editAxis_addPanel\').on(\'show.bs.modal\', function(e) {';
     $script .= '$.get(';
     $script .= '\'classification/tree_axis/getlistparents?idNode=\', ';
     $script .= 'function(o){';

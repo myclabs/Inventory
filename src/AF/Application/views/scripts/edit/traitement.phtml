@@ -126,48 +126,48 @@ echo $algoConditionCollapse->render();
 ?>
 
 <script>
-    $('#algoNumericExpressionCollapse').on('show', function(e) {
-        if ($(e.target).attr('id') == 'algoNumericExpressionCollapse_wrapper') {
+    $('#algoNumericExpressionCollapse').on('show.bs.collapse', function(e) {
+        if ($(e.target).attr('id') == 'algoNumericExpressionCollapse') {
             algoNumericExpression.filter();
         }
     });
-    $('#algoNumericParameterCollapse').on('show', function(e) {
-        if ($(e.target).attr('id') == 'algoNumericParameterCollapse_wrapper') {
+    $('#algoNumericParameterCollapse').on('show.bs.collapse', function(e) {
+        if ($(e.target).attr('id') == 'algoNumericParameterCollapse') {
             algoNumericParameter.filter();
         }
     });
-    $('#algoNumericConstantCollapse').on('show', function(e) {
-        if ($(e.target).attr('id') == 'algoNumericConstantCollapse_wrapper') {
+    $('#algoNumericConstantCollapse').on('show.bs.collapse', function(e) {
+        if ($(e.target).attr('id') == 'algoNumericConstantCollapse') {
             algoNumericConstant.filter();
         }
     });
-    $('#algoNumericInputCollapse').on('show', function(e) {
-        if ($(e.target).attr('id') == 'algoNumericInputCollapse_wrapper') {
+    $('#algoNumericInputCollapse').on('show.bs.collapse', function(e) {
+        if ($(e.target).attr('id') == 'algoNumericInputCollapse') {
             algoNumericInput.filter();
         }
     });
-    $('#algoSelectionTextKeyExpressionCollapse').on('show', function(e) {
-        if ($(e.target).attr('id') == 'algoSelectionTextKeyExpressionCollapse_wrapper') {
+    $('#algoSelectionTextKeyExpressionCollapse').on('show.bs.collapse', function(e) {
+        if ($(e.target).attr('id') == 'algoSelectionTextKeyExpressionCollapse') {
             algoSelectionTextkeyExpression.filter();
         }
     });
-    $('#algoSelectionTextKeyInputCollapse').on('show', function(e) {
-        if ($(e.target).attr('id') == 'algoSelectionTextKeyInputCollapse_wrapper') {
+    $('#algoSelectionTextKeyInputCollapse').on('show.bs.collapse', function(e) {
+        if ($(e.target).attr('id') == 'algoSelectionTextKeyInputCollapse') {
             algoSelectionTextkeyInput.filter();
         }
     });
-    $('#algoSelectionTextKeyContextValueCollapse').on('show', function(e) {
-        if ($(e.target).attr('id') == 'algoSelectionTextKeyContextValueCollapse_wrapper') {
+    $('#algoSelectionTextKeyContextValueCollapse').on('show.bs.collapse', function(e) {
+        if ($(e.target).attr('id') == 'algoSelectionTextKeyContextValueCollapse') {
             algoSelectionTextkeyContextValue.filter();
         }
     });
-    $('#algoConditionExpressionCollapse').on('show', function(e) {
-        if ($(e.target).attr('id') == 'algoConditionExpressionCollapse_wrapper') {
+    $('#algoConditionExpressionCollapse').on('show.bs.collapse', function(e) {
+        if ($(e.target).attr('id') == 'algoConditionExpressionCollapse') {
             algoConditionExpression.filter();
         }
     });
-    $('#algoConditionElementaryCollapse').on('show', function(e) {
-        if ($(e.target).attr('id') == 'algoConditionElementaryCollapse_wrapper') {
+    $('#algoConditionElementaryCollapse').on('show.bs.collapse', function(e) {
+        if ($(e.target).attr('id') == 'algoConditionElementaryCollapse') {
             algoConditionElementary.filter();
         }
     });

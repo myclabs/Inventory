@@ -1,5 +1,9 @@
 // Ouverture et fermeture des collapses
-$(document.body).on('show.bs.collapse', '.collapse-wrapper', function() {
+$(document.body).on('show.bs.collapse', '.collapse-wrapper', function(e) {
+    if (!$(e.target).parent().is($(this))) {
+        return;
+    }
+
     var title = $('legend', $(this)).first();
     var titleLink = $('legend > a', $(this)).first();
 
@@ -14,7 +18,11 @@ $(document.body).on('show.bs.collapse', '.collapse-wrapper', function() {
         )
     );
 });
-$(document.body).on('hidden.bs.collapse', '.collapse-wrapper', function() {
+$(document.body).on('hidden.bs.collapse', '.collapse-wrapper', function(e) {
+    if (!$(e.target).parent().is($(this))) {
+        return;
+    }
+
     var title = $('legend', $(this)).first();
     var titleLink = $('legend > a', $(this)).first();
 

@@ -624,7 +624,7 @@ class UI_Datagrid extends UI_Generic
      */
     protected function initFilterCollapse()
     {
-        $this->filterCollapse->setAttribute('id', $this->id.'_filter');
+        $this->filterCollapse->getCollapse()->setAttribute('id', $this->id.'_filter');
 
         $datagridSession = $this->getDatagridSession();
         // Vérification de la présence de valeur par défaut nécéssitant l'affichage du l'indicateur.

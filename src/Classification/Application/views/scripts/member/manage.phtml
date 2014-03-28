@@ -55,8 +55,8 @@ foreach ($this->listAxes as $axis) {
     UI_Datagrid::addHeader($datagridAxis);
 
     $script = '';
-    $script .= '$(\'#'.$axis->getRef().'\').on(\'show\', function(e) {';
-    $script .= 'if ($(e.target).attr(\'id\') == \''.$axis->getRef().'_wrapper\') {';
+    $script .= '$(\'#'.$axis->getRef().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \''.$axis->getRef().'\') {';
     $script .= 'members'.$axis->getRef().'.filter();';
     $script .= '}';
     $script .= '});';

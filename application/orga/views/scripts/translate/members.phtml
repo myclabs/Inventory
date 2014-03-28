@@ -32,8 +32,8 @@ foreach ($this->axes as $axis) {
     echo $this->collapse('translateMembers'.$axis->getRef(), $axis->getLabel(), $datagrid->getHTML());
 
     $script = '';
-    $script .= '$(\'#translateMembers'.$axis->getRef().'\').on(\'show\', function(e) {';
-    $script .= 'if ($(e.target).attr(\'id\') == \'translateMembers'.$axis->getRef().'_wrapper\') {';
+    $script .= '$(\'#translateMembers'.$axis->getRef().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'translateMembers'.$axis->getRef().'\') {';
     $script .= 'datagridTranslate_Orga_Model_Member_label_'.$axis->getRef().'.filter();';
     $script .= '}';
     $script .= '});';

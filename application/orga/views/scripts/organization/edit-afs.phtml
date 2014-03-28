@@ -40,8 +40,8 @@ foreach ($this->granularities as $inputGranularity) :
     );
 
     $script = '';
-    $script .= '$(\'#cellAfs'.$inputGranularity->getId().'\').on(\'show\', function(e) {';
-    $script .= 'if ($(e.target).attr(\'id\') == \'cellAfs'.$inputGranularity->getId().'_wrapper\') {';
+    $script .= '$(\'#cellAfs'.$inputGranularity->getId().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'cellAfs'.$inputGranularity->getId().'\') {';
     $script .= 'datagridCellAfs'.$inputGranularity->getId().'.filter();';
     $script .= '}';
     $script .= '});';

@@ -32,8 +32,8 @@ foreach ($this->granularities as $granularity) :
     );
 
     $script = '';
-    $script .= '$(\'#cellReports'.$granularity->getId().'\').on(\'show\', function(e) {';
-    $script .= 'if ($(e.target).attr(\'id\') == \'cellReports'.$granularity->getId().'_wrapper\') {';
+    $script .= '$(\'#cellReports'.$granularity->getId().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'cellReports'.$granularity->getId().'\') {';
     $script .= 'datagridCellReports'.$granularity->getId().'.filter();';
     $script .= '}';
     $script .= '});';

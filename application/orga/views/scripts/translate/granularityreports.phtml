@@ -33,8 +33,8 @@ foreach ($this->granularities as $granularity) {
         echo $this->collapse('translateGranularityReports'.$granularity->getId(), $granularity->getLabel(), $datagrid->getHTML());
 
         $script = '';
-        $script .= '$(\'#translateGranularityReports'.$granularity->getId().'\').on(\'show\', function(e) {';
-        $script .= 'if ($(e.target).attr(\'id\') == \'translateGranularityReports'.$granularity->getId().'_wrapper\') {';
+        $script .= '$(\'#translateGranularityReports'.$granularity->getId().'\').on(\'show.bs.collapse\', function(e) {';
+        $script .= 'if ($(e.target).attr(\'id\') == \'translateGranularityReports'.$granularity->getId().'\') {';
         $script .= 'datagridTranslate_DW_Model_Report_label_'.$granularity->getId().'.filter();';
         $script .= '}';
         $script .= '});';

@@ -44,8 +44,8 @@ foreach ($this->axes as $axis) {
     echo $this->collapse('members'.$axis->getRef(), $axis->getLabel(), $datagridAxisMembers->getHTML())->addClass('collapse-wrapper');
 
     $script = '';
-    $script .= '$(\'#members'.$axis->getRef().'\').on(\'show\', function(e) {';
-    $script .= 'if ($(e.target).attr(\'id\') == \'members'.$axis->getRef().'_wrapper\') {';
+    $script .= '$(\'#members'.$axis->getRef().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'members'.$axis->getRef().'\') {';
     $script .= 'listMembers'.$axis->getRef().'.filter();';
     $script .= '}';
     $script .= '});';
