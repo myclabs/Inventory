@@ -1570,7 +1570,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      */
     public function getAllRoles()
     {
-        return $this->roles;
+        return $this->roles->toArray();
     }
 
     public function addRole(AbstractCellRole $role)
