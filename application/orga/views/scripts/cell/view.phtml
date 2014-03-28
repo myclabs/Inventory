@@ -156,16 +156,18 @@ if (count($file) > 0) {
 
 <div class="col-md-9" id="cellsView">
 
-    <fieldset class="wrapper granularity-wrapper">
-        <legend data-toggle="collapse" data-target="#currentGranularity">
-            <i class="filterChevron fa fa-chevron-down"></i>
-            <?=__('Orga', 'view', 'currentGranularity')?>
-            <small>
-                <?=___('Orga', 'view', 'granularityExplanations')?><?=$this->currentCellPurpose?>
-            </small>
+    <fieldset class="collapse-wrapper granularity-wrapper">
+        <legend data-closed-indicator="<i class=&quot;fa fa-chevron-right&quot;></i>" data-opened-indicator="<i class=&quot;fa fa-chevron-down&quot;></i>">
+            <a data-toggle="collapse" href="#currentGranularity">
+                <i class="fa fa-chevron-down"></i>
+                <?=__('Orga', 'view', 'currentGranularity')?>
+                <small>
+                    <?=___('Orga', 'view', 'granularityExplanations')?><?=$this->currentCellPurpose?>
+                </small>
+            </a>
         </legend>
 
-        <div id="currentGranularity" class="collapse in" style="overflow: visible;">
+        <div id="currentGranularity" class="collapse in">
             <div class="granularity row">
                 <div class="col-md-4 cell well" data-inventory-status="<?=$currentCell->inventoryStatus?>" data-input-status="<?=$currentCell->inputStatus?>">
                     <h4>
@@ -332,13 +334,15 @@ if (count($file) > 0) {
     /** @var Orga_Model_Granularity $narrowerGranularity */
     $narrowerGranularity = $narrowerGranularityArray['granularity'];
     ?>
-    <fieldset class="wrapper granularity-wrapper">
-        <legend data-toggle="collapse" data-target="#granularity<?=$narrowerGranularity->getId()?>">
-            <i class="filterChevron fa fa-chevron-<?=(count($this->narrowerGranularities) === 1) ? 'down': $narrowerGranularityArray['isInput'] ? 'down' : 'right'?>"></i>
-            <?=$narrowerGranularity->getLabel()?>
-            <small>
-                <?=___('Orga', 'view', 'granularityExplanations')?><?=$narrowerGranularityArray['purpose']?>
-            </small>
+    <fieldset class="collapse-wrapper granularity-wrapper">
+        <legend data-closed-indicator="<i class=&quot;fa fa-chevron-right&quot;></i>" data-opened-indicator="<i class=&quot;fa fa-chevron-down&quot;></i>">
+            <a data-toggle="collapse" href="#granularity<?=$narrowerGranularity->getId()?>">
+                <i class="fa fa-chevron-<?=(count($this->narrowerGranularities) === 1) ? 'down': $narrowerGranularityArray['isInput'] ? 'down' : 'right'?>"></i>
+                <?=$narrowerGranularity->getLabel()?>
+                <small>
+                    <?=___('Orga', 'view', 'granularityExplanations')?><?=$narrowerGranularityArray['purpose']?>
+                </small>
+            </a>
         </legend>
 
         <div id="granularity<?=$narrowerGranularity->getId()?>"
@@ -350,7 +354,7 @@ if (count($file) > 0) {
              data-first-cell="0"
              data-show-cells="6"
              class="collapse<?=(count($this->narrowerGranularities) === 1) ? ' in': $narrowerGranularityArray['isInput'] ? ' in' : ''?>"
-             <?=(count($this->narrowerGranularities) === 1) ? ' style="overflow: visible;"': $narrowerGranularityArray['isInput'] ? ' style="overflow: visible;"' : ''?>">
+             <?=(count($this->narrowerGranularities) === 1) ? ' ': $narrowerGranularityArray['isInput'] ? ' ' : ''?>">
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
             <form class="form-inline cells-filter">
                 <?php foreach ($narrowerGranularityArray['filterAxes'] as $refAxis => $memberOptions) : ?>
@@ -1155,12 +1159,12 @@ $('body').on('show', '.inventory-users', function(e) {
 });
 
 $('.collapse').on({
-    shown: function(e) {
+    'shown.bs.collapse': function(e) {
         if (e.target == this) {
             $(this).css('overflow','visible');
         }
     },
-    hide: function(e) {
+    'hide.bs.collapse': function(e) {
         if (e.target == this) {
             $(this).css('overflow','hidden');
         }
@@ -1177,8 +1181,9 @@ $(document).ready(function() {
     });
     $('.history > h3 a').trigger('click');
     $('.comments > h3 a').trigger('click');
-    $('div.collapse[id^="granularity"]').on('show',
+    $('div.collapse[id^="granularity"]').on('show.bs.collapse',
         function(e) {
+        console.log($(this));
             if ((e.target != this) || ($('.granularity', $(this)).html() != '')) {
                 return;
             }
@@ -1187,7 +1192,7 @@ $(document).ready(function() {
             $('.granularity', $(this)).html('');
         }
     );
-    $('div.collapse[id^="granularity"].in').trigger('loadCells');
+    $('div.collapse[id^="granularity"].in').trigger('loadCells').css('overflow','visible');
 });
 </script>
 
