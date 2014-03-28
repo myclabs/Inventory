@@ -34,6 +34,3 @@ Feature: AF configuration general tab feature
     And the "label" field should contain "Test"
     And the "ref" field should contain "Test"
     And the "documentation" field should contain "Blabla"
-  # Clic sur "Quitter", retour au datagrid des formulaires comptables
-    When I click "Quitter"
-    Then I should see the "listAF" datagrid

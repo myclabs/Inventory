@@ -11,7 +11,7 @@ $af = $this->af;
 
 // Formulaire d'édition
 $form = new UI_Form('generalForm');
-$form->setAction($this->baseUrl('af/edit/general-submit'));
+$form->setAction($this->baseUrl('af/edit/general-submit?id=' . $af->getId()));
 
 $idField = new UI_Form_Element_Hidden('id');
 $idField->setValue($af->getId());
