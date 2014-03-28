@@ -171,11 +171,9 @@ class Orga_OrganizationController extends Core_Controller
         $timeout = function () {
             $this->sendJsonResponse(
                 [
-                    [
-                        'message' => __('UI', 'message', 'addedLater'),
-                        'typeMessage' => 'info',
-                        'info' => __('Orga', 'add', 'complementaryInfo')
-                    ]
+                    'message' => __('UI', 'message', 'addedLater'),
+                    'typeMessage' => 'info',
+                    'info' => __('Orga', 'add', 'complementaryInfo')
                 ]
             );
         };
