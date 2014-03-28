@@ -91,7 +91,7 @@ $account = $this->account;
 
 
             <!-- Members -->
-            <?php if (count($account->canAllow) > 0) : ?>
+            <?php if ($account->canAllow) : ?>
                 <li class="<?=$this->activeMenu === 'members' ? 'active' : ''?>">
                     <a href="account/members?account=<?=$account->id?>">
                         <i class="fa fa-lg fa-fw fa-users"></i>
