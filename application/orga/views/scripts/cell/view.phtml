@@ -1183,7 +1183,6 @@ $(document).ready(function() {
     $('.comments > h3 a').trigger('click');
     $('div.collapse[id^="granularity"]').on('show.bs.collapse',
         function(e) {
-        console.log($(this));
             if ((e.target != this) || ($('.granularity', $(this)).html() != '')) {
                 return;
             }
