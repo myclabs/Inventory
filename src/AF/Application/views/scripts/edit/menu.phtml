@@ -1,6 +1,5 @@
 <?php
 use AF\Domain\AF;
-use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Tab;
 use MyCLabs\MUIH\Tabs;
 
@@ -42,20 +41,17 @@ $tabView = new Tabs();
 // Général
 $general = new Tab('container_general');
 $general->setTitle(__('AF', 'configTab', 'general'));
-$general->setContent('af/edit/general-tab/id/' . $af->getId());
-$general->setAjax(true, true);
+$general->setContent($this->partial('edit/general-tab.phtml', ['af' => $af]));
 
 // Structure
 $structure = new Tab('container_structure');
 $structure->setTitle(__('AF', 'configTab', 'structure'));
-$structure->setContent('af/edit/structure/id/' . $af->getId());
-$structure->setAjax(true, false);
+$structure->setContent($this->partial('edit/structure.phtml', ['af' => $af]));
 
 // Composants
 $element = new Tab('container_component');
 $element->setTitle(__('AF', 'configTab', 'components'));
-$element->setContent('af/edit/components/id/' . $af->getId());
-$element->setAjax(true, true);
+$element->setContent($this->partial('edit/components.phtml', ['af' => $af]));
 
 // Interactions
 $interaction = new Tab('container_interaction');
@@ -72,8 +68,7 @@ $traitement->setAjax(true, true);
 // Controle
 $control = new Tab('container_control');
 $control->setTitle(__('AF', 'configTab', 'control'));
-$control->setContent('af/edit/control/id/' . $af->getId());
-$control->setAjax(true, true);
+$control->setContent($this->partial('edit/control.phtml', ['af' => $af]));
 
 // Ajout des tabs à l'ensemble.
 $tabView->addTab($general);
@@ -86,16 +81,16 @@ if (!isset($this->onglet)) {
     $tabView->activeTab($general);
 } else {
     switch ($this->onglet) {
-        case 'component';
+        case 'component':
             $tabView->activeTab($element);
             break;
-        case 'interaction';
+        case 'interaction':
             $tabView->activeTab($interaction);
             break;
-        case 'traitement';
+        case 'traitement':
             $tabView->activeTab($traitement);
             break;
-        case 'control';
+        case 'control':
             $tabView->activeTab($control);
             break;
     }
@@ -103,12 +98,3 @@ if (!isset($this->onglet)) {
 
 // Affichage du TabView.
 $tabView->display();
-?>
-
-<div class="well">
-    <?php
-    $quitButton = new Button(__('UI', 'verb', 'quit'));
-    $quitButton->link('af/af/list');
-    $quitButton->display();
-    ?>
-</div>

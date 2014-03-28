@@ -62,12 +62,10 @@ class AF_EditController extends Core_Controller
      */
     public function generalSubmitAction()
     {
-        $formData = $this->getFormData('generalForm');
-
         /** @var $af AF */
-        $af = AF::load($formData->getValue('id'));
+        $af = AF::load($this->getParam('id'));
         if ($this->getRequest()->isPost()) {
-            $ref = $formData->getValue('ref');
+            $ref = $this->getParam('ref');
             if (empty($ref)) {
                 $this->addFormError('ref', __('UI', 'formValidation', 'emptyRequiredField'));
                 $this->sendFormResponse();
@@ -81,14 +79,14 @@ class AF_EditController extends Core_Controller
                     return;
                 }
             }
-            $label = $formData->getValue('label');
+            $label = $this->getParam('label');
             if (empty($label)) {
                 $this->addFormError('label', __('UI', 'formValidation', 'emptyRequiredField'));
                 $this->sendFormResponse();
                 return;
             }
             $af->setLabel($label);
-            $af->setDocumentation($formData->getValue('documentation'));
+            $af->setDocumentation($this->getParam('documentation'));
             $af->save();
             try {
                 $this->entityManager->flush();
