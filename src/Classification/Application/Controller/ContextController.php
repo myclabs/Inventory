@@ -1,38 +1,20 @@
 <?php
-/**
- * Classe Classification_ContextController
- * @author valentin.claras
- * @package    Classification
- * @subpackage Controller
- */
 
+use Classification\Domain\ClassificationLibrary;
 use Core\Annotation\Secure;
 
-
-/**
- * Classe du controller gérant les Context.
- * @package    Classification
- * @subpackage Controller
- */
 class Classification_ContextController extends Core_Controller
 {
     /**
-     * Action appelé à l'affichage des Context.
-     *
-     * @Secure("viewClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function listAction()
     {
-    }
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
 
-    /**
-     * Action appelé à la gestion des Context.
-     *
-     * @Secure("editClassification")
-     */
-    public function manageAction()
-    {
+        $this->view->assign('library', $library);
         $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
+        $this->setActiveMenuItemClassificationLibrary($library->getId());
     }
-
 }

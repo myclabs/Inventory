@@ -30,9 +30,14 @@ class AccountView
     public $afLibraries = [];
 
     /**
-     * @var AFLibraryView[]
+     * @var ParameterLibraryView[]
      */
     public $parameterLibraries = [];
+
+    /**
+     * @var ClassificationLibraryView[]
+     */
+    public $classificationLibraries = [];
 
     /**
      * @var bool

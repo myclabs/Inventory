@@ -42,15 +42,9 @@ abstract class AbstractPopulateClassification
 
     abstract public function run(OutputInterface $output);
 
-    /**
-     * @param string $ref
-     * @param string $label
-     * @param \Classification\Domain\Axis|null $narrower
-     * @return \Classification\Domain\Axis
-     */
-    protected function createAxis($ref, $label, Axis $narrower = null)
+    protected function createAxis(ClassificationLibrary $library, $ref, $label, Axis $narrower = null)
     {
-        $axis = new Axis();
+        $axis = new Axis($library);
         $axis->setRef($ref);
         $axis->setLabel($label);
         if ($narrower !== null) {
@@ -60,13 +54,6 @@ abstract class AbstractPopulateClassification
         return $axis;
     }
 
-    /**
-     * @param \Classification\Domain\Axis $axis
-     * @param string $ref
-     * @param string $label
-     * @param array $parents
-     * @return \Classification\Domain\AxisMember
-     */
     protected function createMember(Axis $axis, $ref, $label, array $parents = [])
     {
         $member = new AxisMember();
@@ -100,34 +87,22 @@ abstract class AbstractPopulateClassification
         return $indicator;
     }
 
-    /**
-     * @param string $ref
-     * @param string $label
-     * @return \Classification\Domain\Context
-     */
-    protected function createContext($ref, $label)
+    protected function createContext(ClassificationLibrary $library, $ref, $label)
     {
-        $context = new Context();
+        $context = new Context($library);
         $context->setRef($ref);
         $context->setLabel($label);
         $context->save();
         return $context;
     }
 
-    /**
-     * @param Context $context
-     * @param Indicator $indicator
-     * @param \Classification\Domain\Axis[] $axes
-     * @return \Classification\Domain\ContextIndicator
-     */
     protected function createContextIndicator(
+        ClassificationLibrary $library,
         Context $context,
         Indicator $indicator,
         array $axes = []
     ) {
-        $contextIndicator = new ContextIndicator();
-        $contextIndicator->setContext($context);
-        $contextIndicator->setIndicator($indicator);
+        $contextIndicator = new ContextIndicator($library, $context, $indicator);
         foreach ($axes as $axis) {
             $contextIndicator->addAxis($axis);
         }

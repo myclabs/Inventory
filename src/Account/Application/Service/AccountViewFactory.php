@@ -4,9 +4,11 @@ namespace Account\Application\Service;
 
 use Account\Application\ViewModel\AccountView;
 use Account\Application\ViewModel\AFLibraryView;
+use Account\Application\ViewModel\ClassificationLibraryView;
 use Account\Application\ViewModel\ParameterLibraryView;
 use Account\Domain\Account;
 use AF\Domain\AFLibrary;
+use Classification\Domain\ClassificationLibrary;
 use Core_Model_Query;
 use MyCLabs\ACL\ACLManager;
 use User\Domain\ACL\Actions;
@@ -85,7 +87,17 @@ class AccountViewFactory
             $accountView->parameterLibraries[] = $libraryView;
         }
 
-        // TODO Bibliothèques d'indicateurs
+        // Bibliothèques de classification
+        $query = new Core_Model_Query();
+        $query->filter->addCondition('account', $account);
+        foreach (ClassificationLibrary::loadList($query) as $library) {
+            /** @var ClassificationLibrary $library */
+
+            $libraryView = new ClassificationLibraryView($library->getId(), $library->getLabel());
+            $libraryView->canDelete = $this->aclManager->isAllowed($user, Actions::DELETE, $library);
+
+            $accountView->classificationLibraries[] = $libraryView;
+        }
 
         // Est-ce que l'utilisateur peut modifier le compte
         $accountView->canEdit = $this->aclManager->isAllowed($user, Actions::EDIT, $account);

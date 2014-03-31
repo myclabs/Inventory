@@ -1,0 +1,35 @@
+<?php
+use Classification\Domain\ClassificationLibrary;
+
+/** @var ClassificationLibrary $library */
+$library = $this->library;
+?>
+
+<div class="page-header">
+    <h1>
+        <?=$library->getLabel()?>
+    </h1>
+</div>
+
+<ul>
+    <li>
+        <a href="classification/indicator/list?library=<?=$library->getId()?>">
+            <?=__('Classification', 'indicator', 'indicators')?>
+        </a>
+    </li>
+    <li>
+        <a href="classification/axis/list?library=<?=$library->getId()?>">
+            <?=__('Classification', 'axis', 'axes')?>
+        </a>
+    </li>
+    <li>
+        <a href="classification/context/list?library=<?=$library->getId()?>">
+            <?=__('Classification', 'context', 'contexts')?>
+        </a>
+    </li>
+    <li>
+        <a href="classification/contextindicator/list?library=<?=$library->getId()?>">
+            <?=__('Classification', 'contextIndicator', 'contextIndicators')?>
+        </a>
+    </li>
+</ul>

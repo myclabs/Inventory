@@ -1,22 +1,11 @@
 <?php
-/**
- * Classe Classification_Tree_AxisController
- * @author valentin.claras
- * @author sidoine.tardieu
- * @package Classification
- * @subpackage Controller
- */
 
 use Classification\Application\Service\IndicatorAxisService;
 use Classification\Domain\Axis;
+use Classification\Domain\ClassificationLibrary;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 
-/**
- * Classe controlleur de tree des axes.
- * @package Classification
- * @subpackage Controller
- */
 class Classification_Tree_AxisController extends UI_Controller_Tree
 {
     /**
@@ -26,29 +15,15 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     private $axisService;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tri de la manière suivante :
-     *  $this->order['colonne'|'direction'|'nombreElement'|'startElement'].
-     *
-     * Récupération des paramètres du filtre de la mnière suivante :
-     *  $this->filter['indexDeLaColonne'].
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
-     * @Secure("viewClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function getnodesAction()
     {
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
         if ($this->idNode === null) {
-            $queryRootAxes = new Core_Model_Query();
-            $queryRootAxes->filter->addCondition(Axis::QUERY_NARROWER, null,
-                Core_Model_Filter::OPERATOR_NULL);
-            $queryRootAxes->order->addOrder(Axis::QUERY_POSITION);
-            $axes = Axis::loadList($queryRootAxes);
+            $axes = $library->getRootAxes();
         } else {
             $axes = Axis::loadByRef($this->idNode)->getDirectBroaders();
         }
@@ -61,17 +36,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction permettant d'ajouter un élément.
-     *
-     * Récupération des champs du formulaire de la manière suivante :
-     *  $this->add['nomDuChamps'].
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie une message d'information.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function addnodeAction()
     {
@@ -93,17 +58,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction modifiant un node.
-     *
-     * Récupération de l'id du node.
-     *  $this->idNode
-     *
-     * Renvoie un message d'information.
-     *
-     * @see getEditElementValue
-     * @see setEditElementErrorMessage
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function editnodeAction()
     {
@@ -117,11 +72,11 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
         switch ($this->getEditElementValue('changeOrder')) {
             case 'first':
                 $newPosition = 1;
-            break;
+                break;
             case 'last':
                 if ($newParentRef === '') {
                     $newPosition = $axis->getLastEligiblePosition();
-                } else if ($newParentRef === null) {
+                } elseif ($newParentRef === null) {
                     $queryRootAxis = new Core_Model_Query();
                     $queryRootAxis->filter->addCondition(Axis::QUERY_NARROWER, null,
                         Core_Model_Filter::OPERATOR_NULL);
@@ -129,7 +84,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
                 } else {
                     $newPosition = count(Axis::loadByRef($this->idNode)->getDirectBroaders()) + 1;
                 }
-            break;
+                break;
             case 'after':
                 $refAfter = $this->_form[$this->id.'_changeOrder']['children'][$this->id.'_selectAfter_child']['value'];
                 $currentAxisPosition = Axis::loadByRef($this->idNode)->getPosition();
@@ -137,7 +92,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
                 if (($newParentRef !== '') || ($currentAxisPosition > $newPosition)) {
                     $newPosition += 1;
                 }
-            break;
+                break;
             default:
                 $newPosition = null;
                 break;
@@ -154,14 +109,14 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
             $label = null;
             if (($axis->getRef() !== $newRef) && ($axis->getLabel() !== $newLabel)) {
                 $label = $this->axisService->updateRefAndLabel($this->idNode, $newRef, $newLabel);
-            } else if ($axis->getLabel() !== $newLabel) {
+            } elseif ($axis->getLabel() !== $newLabel) {
                 $label = $this->axisService->updateLabel($this->idNode, $newLabel);
-            } else if ($axis->getRef() !== $newRef) {
+            } elseif ($axis->getRef() !== $newRef) {
                 $label = $this->axisService->updateRef($this->idNode, $newRef);
             }
             if ($newParentRef !== '') {
                 $label = $this->axisService->updateParent($this->idNode, $newParentRef, $newPosition);
-            } else if (($newPosition !== null) && ($axis->getPosition() !== $newPosition)) {
+            } elseif (($newPosition !== null) && ($axis->getPosition() !== $newPosition)) {
                 $label = $this->axisService->updatePosition($this->idNode, $newPosition);
             }
             if ($label !== null) {
@@ -175,15 +130,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction réupérant la liste des parents possible d'un élément.
-     *
-     * Récupération de l'id du node.
-     *  $this->idNode
-     *
-     * Renvoie un un tableau contenant les parents possibles de l'élément au format :
-     *  array('id' => id, 'label' => label).
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function getlistparentsAction()
     {
@@ -209,15 +156,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction réupérant la liste des frères possible d'un élément.
-     *
-     * Récupération de l'id du node.
-     *  $this->idNode
-     *
-     * Renvoie un un tableau contenant la fratrie de l'élément au format :
-     *  array('id' => id, 'label' => label).
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function getlistsiblingsAction()
     {
@@ -225,7 +164,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
         if (($this->getParam('idParent') != null) && ($this->getParam('idParent') !== $this->id.'_root')) {
             $axisParent = Axis::loadByRef($this->getParam('idParent'));
             $siblingAxes = $axisParent->getDirectBroaders();
-        } else if (($axis->getDirectNarrower() === null) || ($this->getParam('idParent') === $this->id.'_root')) {
+        } elseif (($axis->getDirectNarrower() === null) || ($this->getParam('idParent') === $this->id.'_root')) {
             $queryRootAxes = new Core_Model_Query();
             $queryRootAxes->filter->addCondition(Axis::QUERY_NARROWER, null,
                 Core_Model_Filter::OPERATOR_NULL);
@@ -245,9 +184,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction récupérant les informations d'édition pour le formulaire.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function getinfoeditAction()
     {
@@ -258,18 +195,11 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     }
 
     /**
-     * Fonction supprimant un node.
-     *
-     * Récupération de l'id du node.
-     *  $this->idNode
-     *
-     * Renvoie une message d'information.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function deletenodeAction()
     {
-        $labelNode = $this->axisService->delete($this->idNode);
+        $this->axisService->delete($this->idNode);
 
         $this->message = __('UI', 'message', 'deleted');
 

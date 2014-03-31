@@ -2,17 +2,22 @@
 
 namespace Classification\Domain;
 
+use Account\Domain\Account;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\Model\CascadingResource;
+use MyCLabs\ACL\Model\EntityResource;
 
 /**
  * Bibliothèque de classification.
  *
  * @author matthieu.napoli
  */
-class ClassificationLibrary extends Core_Model_Entity
+class ClassificationLibrary extends Core_Model_Entity implements EntityResource, CascadingResource
 {
     use Core_Model_Entity_Translatable;
 
@@ -20,6 +25,11 @@ class ClassificationLibrary extends Core_Model_Entity
      * @var int
      */
     protected $id;
+
+    /**
+     * @var Account
+     */
+    protected $account;
 
     /**
      * @var string
@@ -42,15 +52,17 @@ class ClassificationLibrary extends Core_Model_Entity
     protected $contexts;
 
     /**
-     * @var Context[]|Collection
+     * @var ContextIndicator[]|Collection
      */
     protected $contextIndicators;
 
     /**
-     * @param string $label
+     * @param Account $account
+     * @param string  $label
      */
-    public function __construct($label)
+    public function __construct(Account $account, $label)
     {
+        $this->account = $account;
         $this->label = $label;
 
         $this->indicators = new ArrayCollection();
@@ -101,6 +113,17 @@ class ClassificationLibrary extends Core_Model_Entity
         return $this->axes->toArray();
     }
 
+    /**
+     * @return Axis[]
+     */
+    public function getRootAxes()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('directNarrower', null));
+
+        return $this->axes->matching($criteria)->toArray();
+    }
+
     public function addAxis(Axis $axis)
     {
         $this->axes[] = $axis;
@@ -145,5 +168,21 @@ class ClassificationLibrary extends Core_Model_Entity
     public function removeContextIndicator(ContextIndicator $contextIndicator)
     {
         $this->contextIndicators->removeElement($contextIndicator);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParentResources(EntityManager $entityManager)
+    {
+        return [ $this->account ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSubResources(EntityManager $entityManager)
+    {
+        return [];
     }
 }

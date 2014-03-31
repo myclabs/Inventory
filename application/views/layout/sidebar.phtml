@@ -52,8 +52,8 @@ $account = $this->account;
             <?php if (count($account->afLibraries) > 0) : ?>
                 <li>
                     <a href="#">
-                        <i class="fa fa-lg fa-fw fa-list-alt"></i>
-                        <span class="menu-item-parent">Formulaires</span>
+                        <i class="fa fa-lg fa-fw fa-edit"></i>
+                        <span class="menu-item-parent"><?=__('AF', 'name', 'forms')?></span>
                     </a>
                     <ul>
                         <?php foreach ($account->afLibraries as $library) : ?>
@@ -74,12 +74,33 @@ $account = $this->account;
                 <li>
                     <a href="#">
                         <i class="fa fa-lg fa-fw fa-table"></i>
-                        <span class="menu-item-parent">Paramètres</span>
+                        <span class="menu-item-parent"><?=__('Parameter', 'name', 'parameters')?></span>
                     </a>
                     <ul>
                         <?php foreach ($account->parameterLibraries as $library) : ?>
                             <li class="<?=$this->activeMenu === 'parameter-' . $library->id ? 'active' : ''?>">
                                 <a href="parameter/library/view/id/<?=$library->id?>"
+                                   title="<?=$library->label?>">
+                                    <?=$library->label?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </li>
+            <?php endif; ?>
+
+
+            <!-- Classification libraries -->
+            <?php if (count($account->classificationLibraries) > 0) : ?>
+                <li>
+                    <a href="#">
+                        <i class="fa fa-lg fa-fw fa-sitemap"></i>
+                        <span class="menu-item-parent"><?=__('Classification', 'name', 'classification')?></span>
+                    </a>
+                    <ul>
+                        <?php foreach ($account->classificationLibraries as $library) : ?>
+                            <li class="<?=$this->activeMenu === 'classification-' . $library->id ? 'active' : ''?>">
+                                <a href="classification/library/view/id/<?=$library->id?>"
                                    title="<?=$library->label?>">
                                     <?=$library->label?>
                                 </a>

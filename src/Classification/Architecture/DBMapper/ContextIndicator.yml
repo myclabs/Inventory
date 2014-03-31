@@ -4,38 +4,25 @@ Classification\Domain\ContextIndicator:
   table: Classification_ContextIndicator
 
   id:
-    context:
-      associationKey: true
-    indicator:
-      associationKey: true
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
 
   manyToOne:
-    context:
-      targetEntity: Context
-      joinColumn:
-        name: idContext
-        referencedColumnName: id
-    indicator:
-      targetEntity: Indicator
-      joinColumn:
-        name: idIndicator
-        referencedColumnName: id
     library:
       targetEntity: ClassificationLibrary
       inversedBy: contextIndicators
       joinColumn:
         nullable: false
+    context:
+      targetEntity: Context
+    indicator:
+      targetEntity: Indicator
 
-#  manyToMany:
-#    axes:
-#      targetEntity: Classification\Domain\Axis
-#      joinTable:
-#        name: Classification_ContextIndicator_Axes
-#        joinColumns:
-#          idContext:
-#            referencedColumnName: idContext
-#          idIndicator:
-#            referencedColumnName: idIndicator
-#        inverseJoinColumns:
-#          idAxis:
-#            referencedColumnName: id
+  manyToMany:
+    axes:
+      targetEntity: Axis
+      joinTable:
+        name: Classification_ContextIndicator_Axes

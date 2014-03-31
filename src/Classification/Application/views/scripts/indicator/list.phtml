@@ -1,0 +1,42 @@
+<div class="page-header">
+    <h1><?=__('Classification', 'indicator', 'indicators')?></h1>
+</div>
+
+<?
+$datagrid = new UI_Datagrid('editIndicators', 'datagrid_indicator', 'classification');
+$datagrid->addParam('library', $this->library->getId());
+
+$columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$columnLabel->editable = true;
+$datagrid->addCol($columnLabel);
+
+$columnRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$columnRef->editable = true;
+$datagrid->addCol($columnRef);
+
+$columnUnit = new UI_Datagrid_Col_Text('unit', __('Unit', 'name', 'unit'));
+$columnUnit->editable = true;
+$datagrid->addCol($columnUnit);
+
+$columnRatioUnit = new UI_Datagrid_Col_Text('ratioUnit', __('Unit', 'name', 'ratioUnit'));
+$columnRatioUnit->editable = true;
+$datagrid->addCol($columnRatioUnit);
+
+$columnPosition = new UI_Datagrid_Col_Order('position');
+$columnPosition->editable = true;
+$columnPosition->addable = false;
+$columnPosition->sortName = Classification\Domain\Indicator::QUERY_POSITION;
+$datagrid->addCol($columnPosition);
+
+$datagrid->deleteElements = true;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('Classification', 'indicator', 'addPanelTitle');
+$datagrid->setDefaultSorting($columnPosition->id);
+$datagrid->display();
+?>
+
+<script>
+    $(function() {
+        refFromLabel('editIndicators_label_addForm', 'editIndicators_ref_addForm');
+    });
+</script>

@@ -22,6 +22,8 @@ Parameter\Domain\ParameterLibrary:
   manyToOne:
     account:
       targetEntity: Account\Domain\Account
+      joinColumn:
+        nullable: false
 
   oneToMany:
     families:

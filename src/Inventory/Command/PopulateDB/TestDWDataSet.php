@@ -10,6 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Jeu de données de test.
  *
+ * @Injectable(lazy=true)
+ *
  * @author matthieu.napoli
  */
 class TestDWDataSet

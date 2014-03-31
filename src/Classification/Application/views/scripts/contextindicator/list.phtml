@@ -1,0 +1,28 @@
+<div class="page-header">
+    <h1><?=__('Classification', 'contextIndicator', 'contextIndicators')?></h1>
+</div>
+<?
+$datagrid = new UI_Datagrid('editContextIndicators', 'datagrid_contextindicator', 'classification');
+$datagrid->addParam('library', $this->library->getId());
+
+$columnContext = new UI_Datagrid_Col_List('context', __('Classification', 'context', 'context'));
+$columnContext->list = $this->listContexts;
+$columnContext->editable = false;
+$datagrid->addCol($columnContext);
+
+$columnIndicator = new UI_Datagrid_Col_List('indicator', __('Classification', 'indicator', 'indicator'));
+$columnIndicator->list = $this->listIndicators;
+$columnIndicator->editable = false;
+$datagrid->addCol($columnIndicator);
+
+$columnAxes = new UI_Datagrid_Col_List('axes', __('UI', 'name', 'axes'));
+$columnAxes->list = $this->listAxes;
+$columnAxes->multiple = true;
+$columnAxes->withEmptyElement = false;
+$columnAxes->editable = true;
+$datagrid->addCol($columnAxes);
+
+$datagrid->deleteElements = true;
+$datagrid->addElements = true;
+$datagrid->addPanelTitle = __('Classification', 'contextIndicator', 'addPanelTitle');
+$datagrid->display();

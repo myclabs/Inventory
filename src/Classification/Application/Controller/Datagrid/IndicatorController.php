@@ -1,32 +1,23 @@
 <?php
-/**
- * Classe du controller du datagrid des indicateurs
- * @author cyril.perraud
- * @package Classification
- * @subpackage Controller
- */
 
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
 use Core\Annotation\Secure;
 use Unit\UnitAPI;
 use Unit\IncompatibleUnitsException;
 
-/**
- * Classe du controller du datagrid des indicateurs
- * @package Classification
- * @subpackage Controller
- */
 class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
 {
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * @Secure("viewClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function getelementsAction()
     {
-        foreach (Indicator::loadList($this->request) as $indicator) {
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
+        foreach ($library->getIndicators() as $indicator) {
             $data = array();
             $data['index'] = $indicator->getRef();
             $data['label'] = $this->cellText($indicator->getLabel());
@@ -44,12 +35,11 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction permettant d'ajouter un élément.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function addelementAction()
     {
+        $library = ClassificationLibrary::load($this->getParam('library'));
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
         $unit = new UnitAPI($this->getAddElementValue('unit'));
@@ -71,17 +61,13 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
                 Indicator::loadByRef($ref);
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
-                $indicator = new Indicator();
-                $indicator->setRef($ref);
-                $indicator->setLabel($label);
+                $indicator = new Indicator($library, $ref, $label, $unit, $ratioUnit);
             }
         } catch (Core_Exception_User $e) {
             $this->setAddElementErrorMessage('ref', $e->getMessage());
         }
 
         if (empty($this->_addErrorMessages)) {
-            $indicator->setUnit($unit);
-            $indicator->setRatioUnit($ratioUnit);
             $indicator->save();
             $this->message = __('UI', 'message', 'added');
         }
@@ -90,9 +76,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction supprimant un élément.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function deleteelementAction()
     {
@@ -110,9 +94,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction modifiant la valeur d'un élément.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function updateelementAction()
     {
@@ -159,7 +141,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
                     throw new Core_Exception_User('Unit', 'message', 'incorrectUnitIdentifier');
                 }
                 break;
-            case 'position' :
+            case 'position':
                 switch ($this->update['value']) {
                     case 'goFirst':
                         $indicator->setPosition(1);
@@ -173,7 +155,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
                     case 'goLast':
                         $indicator->setPosition($indicator->getLastEligiblePosition());
                         break;
-                    default :
+                    default:
                         if ($this->update['value'] > $indicator->getLastEligiblePosition()) {
                             $this->update['value'] = $indicator->getLastEligiblePosition();
                         }

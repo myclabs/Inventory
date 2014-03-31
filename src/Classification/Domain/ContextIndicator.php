@@ -23,6 +23,11 @@ class ContextIndicator extends Core_Model_Entity
     const QUERY_INDICATOR = 'indicator';
 
     /**
+     * @var int
+     */
+    protected $id;
+
+    /**
      * Contexte de l'indicateur.
      *
      * @var Context
@@ -55,6 +60,14 @@ class ContextIndicator extends Core_Model_Entity
         $this->indicator = $indicator;
 
         $this->axes = new ArrayCollection();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

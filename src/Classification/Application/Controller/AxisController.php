@@ -1,23 +1,21 @@
 <?php
 
-use Classification\Domain\Axis;
+use Classification\Domain\ClassificationLibrary;
 use Core\Annotation\Secure;
 
 class Classification_AxisController extends Core_Controller
 {
     /**
-     * @Secure("viewClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function listAction()
     {
-    }
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
 
-    /**
-     * @Secure("editClassification")
-     */
-    public function manageAction()
-    {
-        $this->view->listParents = Axis::loadList();
+        $this->view->assign('library', $library);
+        $this->view->assign('listParents', $library->getRootAxes());
         $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
+        $this->setActiveMenuItemClassificationLibrary($library->getId());
     }
 }

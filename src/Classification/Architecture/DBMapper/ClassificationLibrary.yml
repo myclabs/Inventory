@@ -1,7 +1,7 @@
 Classification\Domain\ClassificationLibrary:
   type: entity
   repositoryClass: \Core_Model_Repository
-  table: Classification_IndicatorLibrary
+  table: Classification_Library
 
   gedmo:
     translation:
@@ -20,6 +20,12 @@ Classification\Domain\ClassificationLibrary:
       nullable: false
       gedmo:
         - translatable
+
+  manyToOne:
+    account:
+      targetEntity: Account\Domain\Account
+      joinColumn:
+        nullable: false
 
   oneToMany:
     indicators:

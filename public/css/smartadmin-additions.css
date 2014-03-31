@@ -11,6 +11,11 @@
     text-decoration: none;
 }
 
+/* Textes des sous-menus en plus petit */
+nav ul ul li a {
+    font-size: 13px;
+}
+
 /* Pas de breadcrumb */
 .fixed-ribbon #content {
     padding-top: 10px;

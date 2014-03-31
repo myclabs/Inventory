@@ -69,7 +69,7 @@ $account = $this->account;
 
 <h2>Bibliothèques</h2>
 
-<h3>Formulaires</h3>
+<h3><?=__('AF', 'name', 'forms')?></h3>
 
 <div>
     <?php foreach ($account->afLibraries as $library) : ?>
@@ -114,7 +114,8 @@ $account = $this->account;
     <?php endif; ?>
 </div>
 
-<h3>Paramètres</h3>
+
+<h3><?=__('Parameter', 'name', 'parameters')?></h3>
 
 <div>
     <?php foreach ($account->parameterLibraries as $library) : ?>
@@ -160,6 +161,52 @@ $account = $this->account;
 </div>
 
 
+<h3><?=__('Classification', 'name', 'classification')?></h3>
+
+<div>
+    <?php foreach ($account->classificationLibraries as $library) : ?>
+
+        <div class="classificationLibrary well well-sm">
+            <?php if ($library->canDelete) : ?>
+                <div class="pull-right">
+                    <a class="deleteClassificationLibrary btn btn-sm btn-warning"
+                       href="classification/library/delete/id/<?=$library->id?>">
+                        <i class="fa fa-trash-o"></i>
+                        <?=___('UI', 'verb', 'delete')?>
+                    </a>
+                </div>
+            <?php endif; ?>
+
+            <h3>
+                <a href="classification/library/view/id/<?=$library->id?>">
+                    <?=$library->label?>
+                    <small>
+                        <i class="fa fa-external-link"></i>
+                        <?=___('Orga', 'organizationList', 'goToData')?>
+                    </small>
+                </a>
+            </h3>
+        </div>
+
+    <?php endforeach; ?>
+
+    <?php if (empty($account->classificationLibraries)) : ?>
+        <p class="text-muted">
+            Aucune bibliothèque de classification.
+        </p>
+    <?php endif; ?>
+
+    <?php if ($this->canEditAccount) : ?>
+        <p>
+            <a href="classification/library/new?account=<?=$account->id?>" class="btn btn-default">
+                <i class="fa fa-plus"></i>
+                <?=__('UI', 'verb', 'add')?>
+            </a>
+        </p>
+    <?php endif; ?>
+</div>
+
+
 <script>
     $(function() {
         $(".deleteOrganization").confirm({
@@ -175,6 +222,12 @@ $account = $this->account;
             post: true
         });
         $(".deleteParameterLibrary").confirm({
+            text: '<?=___('UI', 'message', 'areYouSure')?>',
+            confirmButton: '<i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?>',
+            cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',
+            post: true
+        });
+        $(".deleteClassificationLibrary").confirm({
             text: '<?=___('UI', 'message', 'areYouSure')?>',
             confirmButton: '<i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?>',
             cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',

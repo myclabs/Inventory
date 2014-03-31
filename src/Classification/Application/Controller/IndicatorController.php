@@ -1,38 +1,20 @@
 <?php
-/**
- * Classe Classification_IndicatorController
- * @author valentin.claras
- * @package    Classification
- * @subpackage Controller
- */
 
+use Classification\Domain\ClassificationLibrary;
 use Core\Annotation\Secure;
 
-
-/**
- * Classe du controller gérant les Indicator.
- * @package    Classification
- * @subpackage Controller
- */
 class Classification_IndicatorController extends Core_Controller
 {
     /**
-     * Action appelé à l'affichage des Indicator.
-     *
-     * @Secure("viewClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function listAction()
     {
-    }
+        /** @var $library ClassificationLibrary */
+        $library = ClassificationLibrary::load($this->getParam('library'));
 
-    /**
-     * Action appelé à la gestion des Indicator.
-     *
-     * @Secure("editClassification")
-     */
-    public function manageAction()
-    {
+        $this->view->assign('library', $library);
         $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
+        $this->setActiveMenuItemClassificationLibrary($library->getId());
     }
-
 }

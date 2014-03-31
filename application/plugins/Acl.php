@@ -4,6 +4,7 @@ use Account\Domain\AccountRepository;
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
 use AF\Domain\AFLibrary;
+use Classification\Domain\ClassificationLibrary;
 use Doc\Domain\Library;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\ParameterLibrary;
@@ -572,21 +573,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
         return $this->editAFRule($identity, $request);
     }
 
-    protected function viewTECRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
-    protected function viewClassificationRule(User $identity)
-    {
-        return $this->viewReferential($identity);
-    }
-
-    protected function editClassificationRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
     protected function viewUnitRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->loggedInRule($identity, $request);
@@ -667,6 +653,24 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $parameterFamily = Family::load($request->getParam('id'));
         return $this->aclManager->isAllowed($identity, Actions::DELETE, $parameterFamily->getLibrary());
+    }
+
+    protected function viewClassificationLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('library') ?: $request->getParam('id');
+        return $this->aclManager->isAllowed($identity, Actions::VIEW, ClassificationLibrary::load($libraryId));
+    }
+
+    protected function editClassificationLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('library') ?: $request->getParam('id');
+        return $this->aclManager->isAllowed($identity, Actions::EDIT, ClassificationLibrary::load($libraryId));
+    }
+
+    protected function deleteClassificationLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('library') ?: $request->getParam('id');
+        return $this->aclManager->isAllowed($identity, Actions::DELETE, ClassificationLibrary::load($libraryId));
     }
 
     /**

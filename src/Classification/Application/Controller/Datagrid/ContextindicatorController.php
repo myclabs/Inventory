@@ -1,45 +1,25 @@
 <?php
-/**
- * Classe du controller du datagrid des indicateurs contextualisés
- * @author cyril.perraud
- * @package Classification
- * @subpackage Controller
- */
 
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Axis;
 use Classification\Domain\Context;
 use Classification\Domain\Indicator;
 use Core\Annotation\Secure;
 
-/**
- * Classe du controller du datagrid des indicateurs contextualisés
- * @package Classification
- * @subpackage Controller
- */
 class Classification_Datagrid_ContextindicatorController extends UI_Controller_Datagrid
 {
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * @Secure("viewClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function getelementsAction()
     {
-        $this->request->order->addOrder(
-            Context::QUERY_POSITION,
-            Core_Model_Order::ORDER_ASC,
-            Context::getAlias()
-        );
-        $this->request->order->addOrder(
-            Indicator::QUERY_POSITION,
-            Core_Model_Order::ORDER_ASC,
-            Indicator::getAlias()
-        );
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
 
-        foreach (ContextIndicator::loadList($this->request) as $contextIndicator) {
+        foreach ($library->getContextIndicators() as $contextIndicator) {
             $data = array();
-            $data['index'] = $contextIndicator->getContext()->getRef().'#'.$contextIndicator->getIndicator()->getRef();
+            $data['index'] = $contextIndicator->getId();
             $data['context'] = $this->cellList($contextIndicator->getContext()->getRef());
             $data['indicator'] = $this->cellList($contextIndicator->getIndicator()->getRef());
             $refAxes = array();
@@ -55,12 +35,13 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
     }
 
     /**
-     * Fonction permettant d'ajouter un élément.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function addelementAction()
     {
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
         $refContext = $this->getAddElementValue('context');
         if (empty($refContext)) {
             $this->setAddElementErrorMessage('context', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -74,16 +55,14 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
             $context = Context::loadByRef($refContext);
             $indicator = Indicator::loadByRef($refIndicator);
             try {
-                $contextIndicator = ContextIndicator::load(array(
+                ContextIndicator::load(array(
                         'context' => $context,
                         'indicator' => $indicator
                 ));
                 $this->setAddElementErrorMessage('context', __('Classification', 'contextIndicator', 'ContextIndicatorAlreadyExists'));
                 $this->setAddElementErrorMessage('indicator', __('Classification', 'contextIndicator', 'ContextIndicatorAlreadyExists'));
             } catch (Core_Exception_NotFound $e) {
-                $contextIndicator = new ContextIndicator();
-                $contextIndicator->setContext($context);
-                $contextIndicator->setIndicator($indicator);
+                $contextIndicator = new ContextIndicator($library, $context, $indicator);
 
                 try {
                     if ($this->getAddElementValue('axes') != null) {
@@ -105,42 +84,23 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
     }
 
     /**
-     * Fonction supprimant un élément.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function deleteelementAction()
     {
-        list($refContext, $refIndicator) = explode('#', $this->delete);
-        $context = Context::loadByRef($refContext);
-        $indicator = Indicator::loadByRef($refIndicator);
-        $contextIndicator = ContextIndicator::load(array(
-                    'context' => $context,
-                    'indicator' => $indicator
-                ));
+        $contextIndicator = ContextIndicator::load($this->delete);
         $contextIndicator->delete();
-        $this->message = __('UI', 'message', 'deleted', array(
-                    'LABELINDICATOR' => $contextIndicator->getIndicator()->getLabel(),
-             	    'LABELCONTEXT' => $contextIndicator->getContext()->getLabel()
-                ));
+        $this->message = __('UI', 'message', 'deleted');
 
         $this->send();
     }
 
     /**
-     * Fonction modifiant la valeur d'un élément.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function updateelementAction()
     {
-        list($refContext, $refIndicator) = explode('#', $this->update['index']);
-        $context = Context::loadByRef($refContext);
-        $indicator = Indicator::loadByRef($refIndicator);
-        $contextIndicator = ContextIndicator::load(array(
-                    'context' => $context,
-                    'indicator' => $indicator
-                ));
+        $contextIndicator = ContextIndicator::load($this->update['index']);
 
         switch ($this->update['column']) {
             case 'axes':
