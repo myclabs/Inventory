@@ -2,7 +2,7 @@
 
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
-use Classification\Domain\IndicatorLibrary;
+use Classification\Domain\ClassificationLibrary;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateClassification;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,7 +26,7 @@ class PopulateClassification extends AbstractPopulateClassification
     {
         $output->writeln('  <info>Populating Classification</info>');
 
-        $library = new IndicatorLibrary('Défaut');
+        $library = new ClassificationLibrary('Défaut');
         $library->save();
 
         // Création des axes.

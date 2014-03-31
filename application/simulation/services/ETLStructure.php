@@ -5,7 +5,7 @@
  */
 
 use Classification\Domain\AxisMember;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\Indicator;
 use Doctrine\ORM\EntityManager;
 
@@ -41,7 +41,7 @@ class Simulation_Service_ETLStructure
     /**
      * Traduit les labels des objets originaux dans DW.
      *
-     * @param Indicator|IndicatorAxis|AxisMember|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param Indicator|Axis|AxisMember|Orga_Model_Axis|Orga_Model_Member $originalEntity
      * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
      */
     protected function translateEntity($originalEntity, $dWEntity)
@@ -75,7 +75,7 @@ class Simulation_Service_ETLStructure
     /**
      * Vérifie que les traductions sont à jour entre les objets originaux et ceux de DW.
      *
-     * @param Indicator|IndicatorAxis|AxisMember|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param Indicator|Axis|AxisMember|Orga_Model_Axis|Orga_Model_Member $originalEntity
      * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
      *
      * @return bool
@@ -138,12 +138,12 @@ class Simulation_Service_ETLStructure
 
         $queryRootAxes = new Core_Model_Query();
         $queryRootAxes->filter->addCondition(
-            IndicatorAxis::QUERY_NARROWER,
+            Axis::QUERY_NARROWER,
             null,
             Core_Model_Filter::OPERATOR_NULL
         );
-        foreach (IndicatorAxis::loadList($queryRootAxes) as $classifAxis) {
-            /** @var IndicatorAxis $classifAxis */
+        foreach (Axis::loadList($queryRootAxes) as $classifAxis) {
+            /** @var Axis $classifAxis */
             $this->copyAxisAndMembersFromClassifToDW($classifAxis, $dWCube);
         }
     }
@@ -166,7 +166,7 @@ class Simulation_Service_ETLStructure
     /**
      * Copie un axe de Classification dans un cube DW.
      *
-     * @param IndicatorAxis $classifAxis
+     * @param Axis $classifAxis
      * @param DW_Model_Cube $dwCube
      * @param array &$associationArray
      */
@@ -287,16 +287,16 @@ class Simulation_Service_ETLStructure
     {
         $queryClassifRootAxes = new Core_Model_Query();
         $queryClassifRootAxes->filter->addCondition(
-            IndicatorAxis::QUERY_NARROWER,
+            Axis::QUERY_NARROWER,
             null,
             Core_Model_Filter::OPERATOR_NULL
         );
-        $classifRootAxes = IndicatorAxis::loadList($queryClassifRootAxes);
+        $classifRootAxes = Axis::loadList($queryClassifRootAxes);
         $dWRootAxes = $dWCube->getRootAxes();
 
         foreach ($dWCube->getRootAxes() as $dWIndex => $dWAxis) {
             if ($dWAxis->getRef() !== 'set') {
-                foreach (IndicatorAxis::loadList($queryClassifRootAxes) as $classifIndex => $classifAxis) {
+                foreach (Axis::loadList($queryClassifRootAxes) as $classifIndex => $classifAxis) {
                     if (!($this->isDWAxisDifferentFromClassif($dWAxis, $classifAxis))) {
                         unset($classifRootAxes[$classifIndex]);
                         unset($dWRootAxes[$dWIndex]);
@@ -316,7 +316,7 @@ class Simulation_Service_ETLStructure
      * Compare un axe de DW et un de Classification.
      *
      * @param DW_Model_Axis $dWAxis
-     * @param IndicatorAxis $classifAxis
+     * @param Axis $classifAxis
      *
      * @return bool
      */
@@ -355,7 +355,7 @@ class Simulation_Service_ETLStructure
      * Compare un membre de DW et un de Classification.
      *
      * @param DW_Model_Axis $dWAxis
-     * @param IndicatorAxis $classifAxis
+     * @param Axis $classifAxis
      *
      * @return bool
      */

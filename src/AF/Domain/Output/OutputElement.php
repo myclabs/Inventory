@@ -6,7 +6,7 @@ use AF\Domain\InputSet\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\Output;
 use Calc_Value;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\ContextIndicator;
 use Core_Exception_NotFound;
 use Core_Model_Entity;
@@ -108,11 +108,11 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      * @throws Core_Exception_NotFound
      * @return OutputIndex
      */
-    public function getIndexForAxis(IndicatorAxis $axis)
+    public function getIndexForAxis(Axis $axis)
     {
         foreach ($this->indexes as $index) {
             if ($index->getAxis() === $axis) {

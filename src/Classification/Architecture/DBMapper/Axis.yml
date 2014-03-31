@@ -1,4 +1,4 @@
-Classification\Domain\IndicatorAxis:
+Classification\Domain\Axis:
   type: entity
   repositoryClass: \Core_Model_Repository_Ordered
   table: Classification_Axis
@@ -30,21 +30,26 @@ Classification\Domain\IndicatorAxis:
 
   manyToOne:
     directNarrower:
-      targetEntity: Classification\Domain\IndicatorAxis
+      targetEntity: Axis
       inversedBy: directBroaders
       joinColumn:
         name: idDirectNarrower
         referencedColumnName: id
+    library:
+      targetEntity: ClassificationLibrary
+      inversedBy: axes
+      joinColumn:
+        nullable: false
 
   oneToMany:
     directBroaders:
-      targetEntity: Classification\Domain\IndicatorAxis
+      targetEntity: Axis
       mappedBy: directNarrower
       cascade: [ remove ]
       orderBy:
         position: ASC
     members:
-      targetEntity: Classification\Domain\AxisMember
+      targetEntity: AxisMember
       mappedBy: axis
       cascade: [ remove ]
       orderBy:

@@ -1,4 +1,4 @@
-Classification\Domain\IndicatorLibrary:
+Classification\Domain\ClassificationLibrary:
   type: entity
   repositoryClass: \Core_Model_Repository
   table: Classification_IndicatorLibrary
@@ -28,4 +28,21 @@ Classification\Domain\IndicatorLibrary:
       mappedBy: library
       orderBy:
         position: ASC
+      cascade: [ persist, remove ]
+    axes:
+      targetEntity: Axis
+      orphanRemoval: true
+      mappedBy: library
+      cascade: [ persist, remove ]
+    contexts:
+      targetEntity: Context
+      orphanRemoval: true
+      mappedBy: library
+      orderBy:
+        position: ASC
+      cascade: [ persist, remove ]
+    contextIndicators:
+      targetEntity: ContextIndicator
+      orphanRemoval: true
+      mappedBy: library
       cascade: [ persist, remove ]

@@ -18,7 +18,7 @@ use AF\Domain\Input\SubAF\NotRepeatedSubAFInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputSet\SubInputSet;
 use AF\Domain\Output\OutputElement;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\Indicator;
 use Orga\Model\ACL\AbstractCellRole;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
@@ -570,7 +570,7 @@ class Orga_Service_Export
         }
         $modelBuilder->bind('orgaAxes', $orgaAxes);
 
-        $modelBuilder->bind('classifAxes', IndicatorAxis::loadListOrderedAsAscendantTree());
+        $modelBuilder->bind('classifAxes', Axis::loadListOrderedAsAscendantTree());
 
         $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
         $modelBuilder->bind('resultLabel', __('UI', 'name', 'label'));
@@ -614,7 +614,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayMemberForClassifAxis',
-            function (OutputElement $output, IndicatorAxis $axis) {
+            function (OutputElement $output, Axis $axis) {
                 try {
                     $member = $output->getIndexForAxis($axis)->getMember();
                     if ($member->getAxis() !== $axis) {

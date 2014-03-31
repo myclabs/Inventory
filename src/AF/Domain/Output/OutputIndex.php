@@ -2,7 +2,7 @@
 
 namespace AF\Domain\Output;
 
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\AxisMember;
 use Core_Model_Entity;
 
@@ -37,27 +37,27 @@ class OutputIndex extends Core_Model_Entity
 
 
     /**
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      * @param AxisMember    $member
      */
-    public function __construct(IndicatorAxis $axis, AxisMember $member)
+    public function __construct(Axis $axis, AxisMember $member)
     {
         $this->setAxis($axis);
         $this->setMember($member);
     }
 
     /**
-     * @return IndicatorAxis
+     * @return Axis
      */
     public function getAxis()
     {
-        return IndicatorAxis::loadByRef($this->refAxis);
+        return Axis::loadByRef($this->refAxis);
     }
 
     /**
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      */
-    public function setAxis(IndicatorAxis $axis)
+    public function setAxis(Axis $axis)
     {
         $this->refAxis = $axis->getRef();
     }

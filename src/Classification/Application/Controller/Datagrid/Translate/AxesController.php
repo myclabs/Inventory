@@ -6,7 +6,7 @@
  * @subpackage Controller
  */
 
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 
@@ -37,7 +37,7 @@ class Classification_Datagrid_Translate_AxesController extends UI_Controller_Dat
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        foreach (IndicatorAxis::loadList($this->request) as $axis) {
+        foreach (Axis::loadList($this->request) as $axis) {
             $data = array();
             $data['index'] = $axis->getRef();
             $data['identifier'] = $axis->getRef();
@@ -49,7 +49,7 @@ class Classification_Datagrid_Translate_AxesController extends UI_Controller_Dat
             }
             $this->addline($data);
         }
-        $this->totalElements = IndicatorAxis::countTotal($this->request);
+        $this->totalElements = Axis::countTotal($this->request);
 
         $this->send();
     }
@@ -62,7 +62,7 @@ class Classification_Datagrid_Translate_AxesController extends UI_Controller_Dat
     public function updateelementAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $axis = IndicatorAxis::loadByRef($this->update['index']);
+        $axis = Axis::loadByRef($this->update['index']);
         $axis->reloadWithLocale(Core_Locale::load($this->update['column']));
         $axis->setLabel($this->update['value']);
         $this->data = $axis->getLabel();

@@ -4,7 +4,7 @@ namespace Classification\Application\Service;
 
 use Classification\Domain\AxisMember;
 use Classification\Domain\ContextIndicator;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\Context;
 use Classification\Domain\Indicator;
 use PHPExcel_Writer_Excel2007;
@@ -65,10 +65,10 @@ class ClassificationExportService
         $modelBuilder->bind('axisColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('axisColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bind('axisColumnNarrower', __('Classification', 'export', 'axisColumnNarrower'));
-        $modelBuilder->bind('axes', IndicatorAxis::loadListOrderedAsAscendantTree());
+        $modelBuilder->bind('axes', Axis::loadListOrderedAsAscendantTree());
         $modelBuilder->bindFunction(
             'displayAxisDirectNarrower',
-            function (IndicatorAxis $axis) {
+            function (Axis $axis) {
                 if ($axis->getDirectNarrower() !== null) {
                     return $axis->getDirectNarrower()->getLabel() . ' (' . $axis->getDirectNarrower()->getRef() . ')';
                 }
@@ -83,7 +83,7 @@ class ClassificationExportService
         $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bindFunction(
             'displayParentMemberForAxis',
-            function (AxisMember $member, IndicatorAxis $broaderAxis) {
+            function (AxisMember $member, Axis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
                         return $directParent->getLabel();

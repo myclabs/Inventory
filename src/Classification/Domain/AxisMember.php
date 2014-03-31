@@ -48,7 +48,7 @@ class AxisMember extends Core_Model_Entity
     /**
      * Axe auquel appartien le membre.
      *
-     * @var IndicatorAxis
+     * @var Axis
      */
     protected $axis;
 
@@ -76,11 +76,11 @@ class AxisMember extends Core_Model_Entity
      * Charge un Member par son ref et son Axis.
      *
      * @param string        $ref
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      *
      * @return AxisMember
      */
-    public static function loadByRefAndAxis($ref, IndicatorAxis $axis)
+    public static function loadByRefAndAxis($ref, Axis $axis)
     {
         return self::getEntityRepository()->loadBy(['ref' => $ref, 'axis' => $axis]);
     }
@@ -128,9 +128,9 @@ class AxisMember extends Core_Model_Entity
     /**
      * Modifie l'axe du membre.
      *
-     * @param IndicatorAxis|null $axis
+     * @param Axis|null $axis
      */
-    public function setAxis(IndicatorAxis $axis = null)
+    public function setAxis(Axis $axis = null)
     {
         if ($this->axis !== $axis) {
             if ($this->axis !== null) {
@@ -149,7 +149,7 @@ class AxisMember extends Core_Model_Entity
      * Retourne l'axe du membre.
      *
      * @throws Core_Exception_UndefinedAttribute
-     * @return IndicatorAxis
+     * @return Axis
      */
     public function getAxis()
     {

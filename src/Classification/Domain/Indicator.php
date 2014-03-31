@@ -32,7 +32,7 @@ class Indicator extends Core_Model_Entity
     protected $id;
 
     /**
-     * @var IndicatorLibrary
+     * @var ClassificationLibrary
      */
     protected $library;
 
@@ -76,7 +76,7 @@ class Indicator extends Core_Model_Entity
     }
 
     /**
-     * @param IndicatorLibrary $library
+     * @param ClassificationLibrary $library
      * @param string           $ref       Identifiant textuel
      * @param string           $label     Libellé
      * @param UnitAPI          $unit      Unité de l'indicateur.
@@ -84,7 +84,7 @@ class Indicator extends Core_Model_Entity
      *
      * @throws IncompatibleUnitsException Unit ant RatioUnit should be compatible
      */
-    public function __construct(IndicatorLibrary $library, $ref, $label, UnitAPI $unit, UnitAPI $ratioUnit = null)
+    public function __construct(ClassificationLibrary $library, $ref, $label, UnitAPI $unit, UnitAPI $ratioUnit = null)
     {
         $this->library = $library;
         $this->ref = $ref;
@@ -189,6 +189,14 @@ class Indicator extends Core_Model_Entity
     public function getRatioUnit()
     {
         return $this->ratioUnit;
+    }
+
+    /**
+     * @return ClassificationLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
     }
 
     /**

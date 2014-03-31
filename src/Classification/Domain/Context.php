@@ -29,6 +29,11 @@ class Context extends Core_Model_Entity
     protected $id;
 
     /**
+     * @var ClassificationLibrary
+     */
+    protected $library;
+
+    /**
      * Référence unique.
      *
      * @var string
@@ -54,12 +59,25 @@ class Context extends Core_Model_Entity
         return self::getEntityRepository()->loadBy(['ref' => $ref]);
     }
 
+    public function __construct(ClassificationLibrary $library)
+    {
+        $this->library = $library;
+    }
+
     /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return ClassificationLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
     }
 
     /**

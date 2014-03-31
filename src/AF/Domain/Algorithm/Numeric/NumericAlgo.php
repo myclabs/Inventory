@@ -6,7 +6,7 @@ use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Index\Index;
 use AF\Domain\Algorithm\Output;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\ContextIndicator;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
@@ -140,10 +140,10 @@ abstract class NumericAlgo extends Algo
 
     /**
      * Retourne l'index correspondant à l'axe passé en paramètre
-     * @param \Classification\Domain\IndicatorAxis $axis
+     * @param \Classification\Domain\Axis $axis
      * @return Index|null
      */
-    public function getIndexForAxis(IndicatorAxis $axis)
+    public function getIndexForAxis(Axis $axis)
     {
         foreach ($this->indexes as $index) {
             if ($index->getClassificationAxis() === $axis) {

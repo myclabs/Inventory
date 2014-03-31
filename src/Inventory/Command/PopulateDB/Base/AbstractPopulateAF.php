@@ -46,7 +46,7 @@ use AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo;
 use AF\Domain\Algorithm\Selection\TextKey\ContextValueSelectionAlgo;
 use Calc_UnitValue;
 use Calc_Value;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\AxisMember;
 use Core_Exception;
@@ -628,8 +628,8 @@ abstract class AbstractPopulateAF
     {
         $numeric->setContextIndicator(ContextIndicator::loadByRef($refContext, $refIndicator));
         foreach ($indexes as $refAxis => $refMember) {
-            $classificationAxis = IndicatorAxis::loadByRef($refAxis);
-            $index = new FixedIndex(IndicatorAxis::loadByRef($refAxis));
+            $classificationAxis = Axis::loadByRef($refAxis);
+            $index = new FixedIndex(Axis::loadByRef($refAxis));
             $index->setClassificationMember(AxisMember::loadByRefAndAxis($refMember, $classificationAxis));
             $index->setAlgoNumeric($numeric);
             $index->save();
@@ -646,7 +646,7 @@ abstract class AbstractPopulateAF
     {
         $numeric->setContextIndicator(ContextIndicator::loadByRef($refContext, $refIndicator));
         foreach ($indexes as $refAxis => $algo) {
-            $index = new AlgoResultIndex(IndicatorAxis::loadByRef($refAxis));
+            $index = new AlgoResultIndex(Axis::loadByRef($refAxis));
             $index->setAlgo($algo);
             $index->setAlgoNumeric($numeric);
             $index->save();

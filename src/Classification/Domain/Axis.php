@@ -12,12 +12,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Un axe d'indicateur de classification.
+ * Un axe de classification.
  *
  * @author valentin.claras
  * @author simon.rieu
  */
-class IndicatorAxis extends Core_Model_Entity
+class Axis extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
     use Core_Model_Entity_Translatable;
@@ -32,6 +32,11 @@ class IndicatorAxis extends Core_Model_Entity
      * @var int
      */
     protected $id;
+
+    /**
+     * @var ClassificationLibrary
+     */
+    protected $library;
 
     /**
      * Ref unique de l'Axis.
@@ -50,14 +55,14 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Axe plus fins.
      *
-     * @var IndicatorAxis
+     * @var Axis
      */
     protected $directNarrower;
 
     /**
      * Axes plus grossiers.
      *
-     * @var Collection|IndicatorAxis[]
+     * @var Collection|Axis[]
      */
     protected $directBroaders;
 
@@ -69,10 +74,11 @@ class IndicatorAxis extends Core_Model_Entity
     protected $members;
 
 
-    public function __construct()
+    public function __construct(ClassificationLibrary $library)
     {
         $this->directBroaders = new ArrayCollection();
         $this->members = new ArrayCollection();
+        $this->library = $library;
     }
 
     /**
@@ -80,7 +86,7 @@ class IndicatorAxis extends Core_Model_Entity
      *
      * @param string $ref
      *
-     * @return IndicatorAxis $axis
+     * @return Axis $axis
      */
     public static function loadByRef($ref)
     {
@@ -90,7 +96,7 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Charge l'ensemble des axes dans l'ordre de parcours récursif dernière visite.
      *
-     * @return IndicatorAxis[]
+     * @return Axis[]
      */
     public static function loadListOrderedAsAscendantTree()
     {
@@ -98,8 +104,8 @@ class IndicatorAxis extends Core_Model_Entity
 
         $queryRoots = new Core_Model_Query();
         $queryRoots->filter->addCondition(self::QUERY_NARROWER, null, Core_Model_Filter::OPERATOR_NULL);
-        foreach (IndicatorAxis::loadList($queryRoots) as $rootAxis) {
-            /** @var IndicatorAxis $rootAxis */
+        foreach (Axis::loadList($queryRoots) as $rootAxis) {
+            /** @var Axis $rootAxis */
             foreach ($rootAxis->getAllBroaders() as $recursiveBroader) {
                 $axes[] = $recursiveBroader;
             }
@@ -152,9 +158,9 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Modifie l'axe plus fin que cet axe.
      *
-     * @param IndicatorAxis|null $narrowerAxis
+     * @param Axis|null $narrowerAxis
      */
-    public function setDirectNarrower(IndicatorAxis $narrowerAxis = null)
+    public function setDirectNarrower(Axis $narrowerAxis = null)
     {
         if ($this->directNarrower !== $narrowerAxis) {
             if ($this->directNarrower !== null) {
@@ -179,7 +185,7 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Retourne l'axe plus fin que cet axe si il en existe un.
      *
-     * @return IndicatorAxis|null
+     * @return Axis|null
      */
     public function getDirectNarrower()
     {
@@ -189,9 +195,9 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Ajoute un axe donné aux axes plus grossiers directs.
      *
-     * @param IndicatorAxis $broaderAxis
+     * @param Axis $broaderAxis
      */
-    public function addDirectBroader(IndicatorAxis $broaderAxis)
+    public function addDirectBroader(Axis $broaderAxis)
     {
         if (!($this->hasDirectBroader($broaderAxis))) {
             $this->directBroaders->add($broaderAxis);
@@ -202,11 +208,11 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Vérifie si l'axe donné est bien un axe plus grossier direct.
      *
-     * @param IndicatorAxis $broaderAxis
+     * @param Axis $broaderAxis
      *
      * @return boolean
      */
-    public function hasDirectBroader(IndicatorAxis $broaderAxis)
+    public function hasDirectBroader(Axis $broaderAxis)
     {
         return $this->directBroaders->contains($broaderAxis);
     }
@@ -214,9 +220,9 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Supprime l'axe donné des axes plus grossiers directs.
      *
-     * @param IndicatorAxis $broaderAxis
+     * @param Axis $broaderAxis
      */
-    public function removeDirectBroader(IndicatorAxis $broaderAxis)
+    public function removeDirectBroader(Axis $broaderAxis)
     {
         if ($this->hasDirectBroader($broaderAxis)) {
             $this->directBroaders->removeElement($broaderAxis);
@@ -237,7 +243,7 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Retourne l'ensemble des axes grossiers directs.
      *
-     * @return IndicatorAxis[]
+     * @return Axis[]
      */
     public function getDirectBroaders()
     {
@@ -247,7 +253,7 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Retourne récursivement, tous les axes plus grossiers.
      *
-     * @return IndicatorAxis[]
+     * @return Axis[]
      */
     public function getAllBroaders()
     {
@@ -264,7 +270,7 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Vérifie si l'axe courant est plus fin que l'axe donné.
      *
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      *
      * @return bool
      */
@@ -277,7 +283,7 @@ class IndicatorAxis extends Core_Model_Entity
     /**
      * Vérifie si l'axe courant est plus grossier que l'axe donné.
      *
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      *
      * @return bool
      */
@@ -396,6 +402,14 @@ class IndicatorAxis extends Core_Model_Entity
     public function postLoad()
     {
         $this->updateCachePosition();
+    }
+
+    /**
+     * @return ClassificationLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
     }
 
     /**

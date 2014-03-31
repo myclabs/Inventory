@@ -8,7 +8,7 @@
  */
 
 use Classification\Domain\AxisMember;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Core\Annotation\Secure;
 
 /**
@@ -25,7 +25,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        $axis = IndicatorAxis::loadByRef($this->getParam('refAxis'));
+        $axis = Axis::loadByRef($this->getParam('refAxis'));
 
         $this->request->filter->addCondition(AxisMember::QUERY_AXIS, $axis);
         foreach (AxisMember::loadList($this->request) as $member) {
@@ -61,7 +61,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function addelementAction()
     {
-        $axis = IndicatorAxis::loadByRef($this->getParam('refAxis'));
+        $axis = Axis::loadByRef($this->getParam('refAxis'));
         $label = $this->getAddElementValue('label');
         $ref = $this->getAddElementValue('ref');
         try {
@@ -112,7 +112,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $axis = IndicatorAxis::loadByRef($this->getParam('refAxis'));
+        $axis = Axis::loadByRef($this->getParam('refAxis'));
         $member = AxisMember::loadByRefAndAxis($this->delete, $axis);
         $member->delete();
         $this->message = __('UI', 'message', 'deleted');
@@ -126,7 +126,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $axis = IndicatorAxis::loadByRef($this->getParam('refAxis'));
+        $axis = Axis::loadByRef($this->getParam('refAxis'));
         $member = AxisMember::loadByRefAndAxis($this->update['index'], $axis);
 
         switch ($this->update['column']) {
@@ -172,7 +172,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
             default:
                 try {
                     $refBroaderAxis = substr($this->update['column'], 7);
-                    $broaderAxis = IndicatorAxis::loadByRef($refBroaderAxis);
+                    $broaderAxis = Axis::loadByRef($refBroaderAxis);
                     foreach ($member->getDirectParents() as $parentMember) {
                         if (($parentMember->getAxis()->getRef() === $refBroaderAxis)
                                 && ($parentMember->getRef() === $this->update['value'])) {
@@ -201,7 +201,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
      */
     public function getparentsAction()
     {
-        $broaderAxis = IndicatorAxis::loadByRef($this->getParam('refParentAxis'));
+        $broaderAxis = Axis::loadByRef($this->getParam('refParentAxis'));
 
         if (($this->hasParam('source')) && ($this->getParam('source') === 'add')) {
             $this->addElementList('', '');

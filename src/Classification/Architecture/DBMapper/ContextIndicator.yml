@@ -1,6 +1,6 @@
 Classification\Domain\ContextIndicator:
   type: entity
-  repositoryClass: \Classification\Architecture\Repository\ContextIndicatorRepository
+  repositoryClass: Classification\Architecture\Repository\ContextIndicatorRepository
   table: Classification_ContextIndicator
 
   id:
@@ -11,19 +11,24 @@ Classification\Domain\ContextIndicator:
 
   manyToOne:
     context:
-      targetEntity: Classification\Domain\Context
+      targetEntity: Context
       joinColumn:
         name: idContext
         referencedColumnName: id
     indicator:
-      targetEntity: Classification\Domain\Indicator
+      targetEntity: Indicator
       joinColumn:
         name: idIndicator
         referencedColumnName: id
-#
+    library:
+      targetEntity: ClassificationLibrary
+      inversedBy: contextIndicators
+      joinColumn:
+        nullable: false
+
 #  manyToMany:
 #    axes:
-#      targetEntity: Classification\Domain\IndicatorAxis
+#      targetEntity: Classification\Domain\Axis
 #      joinTable:
 #        name: Classification_ContextIndicator_Axes
 #        joinColumns:

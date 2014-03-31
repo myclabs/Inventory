@@ -5,7 +5,7 @@
  */
 
 use Classification\Domain\ContextIndicator;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\Indicator;
 use Core\Annotation\Secure;
 
@@ -29,7 +29,7 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
         $listIndicatorsWithNoncoherentUnits = array();
         $listContextIndicatorsWithLinkedAxes = array();
 
-        foreach (IndicatorAxis::loadList() as $axis) {
+        foreach (Axis::loadList() as $axis) {
             if (!$axis->hasMembers()) {
                 $listAxisWithoutMember[] = $axis->getLabel();
             } else {
@@ -118,10 +118,10 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
         $data['diag'] = empty($listAxisWithMemberNotLinkedToNarrower);
         $data['fail'] = '';
         foreach ($listAxisWithMemberNotLinkedToNarrower as $refAxis => $members) {
-            $axis = IndicatorAxis::loadByRef($refAxis);
+            $axis = Axis::loadByRef($refAxis);
             $data['fail'] .= $axis->getLabel() . ' : { ';
             foreach ($members as $refNarrowerAxis => $refMember) {
-                $narrowerAxis = IndicatorAxis::loadByRef($refNarrowerAxis);
+                $narrowerAxis = Axis::loadByRef($refNarrowerAxis);
                 $data['fail'] .= $narrowerAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);
@@ -137,10 +137,10 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
         $data['diag'] = empty($listAxisWithMemberNotLinkedToBroader);
         $data['fail'] = '';
         foreach ($listAxisWithMemberNotLinkedToBroader as $refAxis => $members) {
-            $axis = IndicatorAxis::loadByRef($refAxis);
+            $axis = Axis::loadByRef($refAxis);
             $data['fail'] .= $axis->getLabel() . ' : { ';
             foreach ($members as $refBroaderAxis => $refMember) {
-                $broaderAxis = IndicatorAxis::loadByRef($refBroaderAxis);
+                $broaderAxis = Axis::loadByRef($refBroaderAxis);
                 $data['fail'] .= $broaderAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);

@@ -3,7 +3,7 @@
 namespace Classification\Application\Service;
 
 use Classification\Domain\ContextIndicator;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Core_Exception_User;
 use Core_Model_Query;
 use Core_Tools;
@@ -22,11 +22,11 @@ class IndicatorAxisService
      * @param string $label
      * @param string $refParent
      *
-     * @return IndicatorAxis
+     * @return Axis
      */
     public function add($ref, $label, $refParent = null)
     {
-        $axis = new IndicatorAxis();
+        $axis = new Axis();
 
         if (empty($ref)) {
             $ref = $label;
@@ -36,7 +36,7 @@ class IndicatorAxisService
         $axis->setRef($ref);
         $axis->setLabel($label);
         if ($refParent != null) {
-            $axis->setDirectNarrower(IndicatorAxis::loadByRef($refParent));
+            $axis->setDirectNarrower(Axis::loadByRef($refParent));
         }
 
         $axis->save();
@@ -54,7 +54,7 @@ class IndicatorAxisService
      */
     public function updateRef($axisRef, $newRef)
     {
-        $axis = IndicatorAxis::loadByRef($axisRef);
+        $axis = Axis::loadByRef($axisRef);
 
         $this->checkAxisRef($newRef);
 
@@ -73,7 +73,7 @@ class IndicatorAxisService
      */
     public function updateLabel($axisRef, $newLabel)
     {
-        $axis = IndicatorAxis::loadByRef($axisRef);
+        $axis = Axis::loadByRef($axisRef);
 
         $axis->setLabel($newLabel);
 
@@ -91,7 +91,7 @@ class IndicatorAxisService
      */
     public function updateRefAndLabel($axisRef, $newRef, $newLabel)
     {
-        $axis = IndicatorAxis::loadByRef($axisRef);
+        $axis = Axis::loadByRef($axisRef);
 
         $this->checkAxisRef($newRef);
 
@@ -112,12 +112,12 @@ class IndicatorAxisService
      */
     public function updateParent($axisRef, $newParentRef, $newPosition = null)
     {
-        $axis = IndicatorAxis::loadByRef($axisRef);
+        $axis = Axis::loadByRef($axisRef);
 
         if ($newParentRef === null) {
             $axis->setDirectNarrower();
         } else {
-            $axis->setDirectNarrower(IndicatorAxis::loadByRef($newParentRef));
+            $axis->setDirectNarrower(Axis::loadByRef($newParentRef));
         }
         if ($newPosition !== null) {
             $axis->setPosition($newPosition);
@@ -136,7 +136,7 @@ class IndicatorAxisService
      */
     public function updatePosition($axisRef, $newPosition)
     {
-        $axis = IndicatorAxis::loadByRef($axisRef);
+        $axis = Axis::loadByRef($axisRef);
 
         $axis->setPosition($newPosition);
 
@@ -153,7 +153,7 @@ class IndicatorAxisService
      */
     public function delete($axisRef)
     {
-        $axis = IndicatorAxis::loadByRef($axisRef);
+        $axis = Axis::loadByRef($axisRef);
 
         if ($axis->hasDirectBroaders()) {
             throw new Core_Exception_User('Classification', 'axis', 'axisHasDirectBroaders');
@@ -188,8 +188,8 @@ class IndicatorAxisService
             return $e->getMessage();
         }
         $queryRefUsed = new Core_Model_Query();
-        $queryRefUsed->filter->addCondition(IndicatorAxis::QUERY_REF, $ref);
-        if (IndicatorAxis::countTotal($queryRefUsed) > 0) {
+        $queryRefUsed->filter->addCondition(Axis::QUERY_REF, $ref);
+        if (Axis::countTotal($queryRefUsed) > 0) {
             return __('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
 
@@ -207,8 +207,8 @@ class IndicatorAxisService
     {
         Core_Tools::checkRef($ref);
         $queryRefUsed = new Core_Model_Query();
-        $queryRefUsed->filter->addCondition(IndicatorAxis::QUERY_REF, $ref);
-        if (IndicatorAxis::countTotal($queryRefUsed) > 0) {
+        $queryRefUsed->filter->addCondition(Axis::QUERY_REF, $ref);
+        if (Axis::countTotal($queryRefUsed) > 0) {
             throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
     }

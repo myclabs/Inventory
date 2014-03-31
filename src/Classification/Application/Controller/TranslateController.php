@@ -16,7 +16,7 @@ class Classification_TranslateController extends Core_Controller
 {
 
     /**
-     * Liste des libellés des IndicatorAxis en mode traduction.
+     * Liste des libellés des Axis en mode traduction.
      *
      * @Secure("editClassification")
      */

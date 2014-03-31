@@ -29,7 +29,7 @@ Classification\Domain\AxisMember:
 
   manyToOne:
     axis:
-      targetEntity: Classification\Domain\IndicatorAxis
+      targetEntity: Classification\Domain\Axis
       inversedBy: members
       joinColumn:
         name: idAxis

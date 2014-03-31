@@ -6,7 +6,7 @@ use AF\Domain\Algorithm\Index\FixedIndex;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
 use Classification\Domain\AxisMember;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Core\Annotation\Secure;
 
 /**
@@ -68,8 +68,8 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     {
         /** @var $algo NumericAlgo */
         $algo = NumericAlgo::load($this->getParam('idAlgo'));
-        /** @var $axis IndicatorAxis */
-        $axis = IndicatorAxis::load($this->update['index']);
+        /** @var $axis Axis */
+        $axis = Axis::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'type':
@@ -154,8 +154,8 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     {
         /** @var $algo NumericAlgo */
         $algo = NumericAlgo::load($this->getParam('idAlgo'));
-        /** @var $axis IndicatorAxis */
-        $axis = IndicatorAxis::load($this->getParam('index'));
+        /** @var $axis Axis */
+        $axis = Axis::load($this->getParam('index'));
         $index = $algo->getIndexForAxis($axis);
         if ($index) {
             $type = get_class($index);
@@ -184,11 +184,11 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     /**
      * Saves the index type that the user chosen, stored in session
      * @param Algo               $algo
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      * @param string             $type
      * @return void
      */
-    private function setChosenIndexType(Algo $algo, IndicatorAxis $axis, $type)
+    private function setChosenIndexType(Algo $algo, Axis $axis, $type)
     {
         $session = new Zend_Session_Namespace(get_class());
         if (!isset($session->chosenType)) {
@@ -202,10 +202,10 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
     /**
      * Returns the index type that the user chosen, stored in session
      * @param Algo               $algo
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      * @return string|null
      */
-    private function getChosenIndexType(Algo $algo, IndicatorAxis $axis)
+    private function getChosenIndexType(Algo $algo, Axis $axis)
     {
         $session = new Zend_Session_Namespace(get_class());
         if (isset($session->chosenType[$algo->getRef()][$axis->getRef()])) {

@@ -36,7 +36,7 @@ Classification\Domain\Indicator:
 
   manyToOne:
     library:
-      targetEntity: IndicatorLibrary
+      targetEntity: ClassificationLibrary
       inversedBy: indicators
       joinColumn:
         nullable: false

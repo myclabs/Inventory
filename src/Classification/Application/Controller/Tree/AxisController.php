@@ -8,7 +8,7 @@
  */
 
 use Classification\Application\Service\IndicatorAxisService;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 
@@ -45,12 +45,12 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     {
         if ($this->idNode === null) {
             $queryRootAxes = new Core_Model_Query();
-            $queryRootAxes->filter->addCondition(IndicatorAxis::QUERY_NARROWER, null,
+            $queryRootAxes->filter->addCondition(Axis::QUERY_NARROWER, null,
                 Core_Model_Filter::OPERATOR_NULL);
-            $queryRootAxes->order->addOrder(IndicatorAxis::QUERY_POSITION);
-            $axes = IndicatorAxis::loadList($queryRootAxes);
+            $queryRootAxes->order->addOrder(Axis::QUERY_POSITION);
+            $axes = Axis::loadList($queryRootAxes);
         } else {
-            $axes = IndicatorAxis::loadByRef($this->idNode)->getDirectBroaders();
+            $axes = Axis::loadByRef($this->idNode)->getDirectBroaders();
         }
         foreach ($axes as $axis) {
             $axisLabel = '<b>' . $axis->getLabel() . '</b> <i>('.$axis->getRef().')</i>';
@@ -107,7 +107,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      */
     public function editnodeAction()
     {
-        $axis = IndicatorAxis::loadByRef($this->idNode);
+        $axis = Axis::loadByRef($this->idNode);
         $newLabel = $this->getEditElementValue('label');
         $newRef = $this->getEditElementValue('ref');
         $newParentRef = $this->getEditElementValue('changeParent');
@@ -123,17 +123,17 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
                     $newPosition = $axis->getLastEligiblePosition();
                 } else if ($newParentRef === null) {
                     $queryRootAxis = new Core_Model_Query();
-                    $queryRootAxis->filter->addCondition(IndicatorAxis::QUERY_NARROWER, null,
+                    $queryRootAxis->filter->addCondition(Axis::QUERY_NARROWER, null,
                         Core_Model_Filter::OPERATOR_NULL);
-                    $newPosition = IndicatorAxis::countTotal($queryRootAxis) + 1;
+                    $newPosition = Axis::countTotal($queryRootAxis) + 1;
                 } else {
-                    $newPosition = count(IndicatorAxis::loadByRef($this->idNode)->getDirectBroaders()) + 1;
+                    $newPosition = count(Axis::loadByRef($this->idNode)->getDirectBroaders()) + 1;
                 }
             break;
             case 'after':
                 $refAfter = $this->_form[$this->id.'_changeOrder']['children'][$this->id.'_selectAfter_child']['value'];
-                $currentAxisPosition = IndicatorAxis::loadByRef($this->idNode)->getPosition();
-                $newPosition = IndicatorAxis::loadByRef($refAfter)->getPosition();
+                $currentAxisPosition = Axis::loadByRef($this->idNode)->getPosition();
+                $newPosition = Axis::loadByRef($refAfter)->getPosition();
                 if (($newParentRef !== '') || ($currentAxisPosition > $newPosition)) {
                     $newPosition += 1;
                 }
@@ -188,21 +188,21 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     public function getlistparentsAction()
     {
         $this->addElementList(null, '');
-        if (($this->idNode != null) && (IndicatorAxis::loadByRef($this->idNode)->getDirectNarrower() !== null)) {
+        if (($this->idNode != null) && (Axis::loadByRef($this->idNode)->getDirectNarrower() !== null)) {
             $this->addElementList($this->id.'_root', __('Classification', 'axis', 'rootParentAxisLabel'));
         }
         $queryOrdered = new Core_Model_Query();
         if (!empty($this->idNode)) {
             $queryOrdered->filter->addCondition(
-                IndicatorAxis::QUERY_REF,
+                Axis::QUERY_REF,
                 $this->idNode,
                 Core_Model_Filter::OPERATOR_NOT_EQUAL
             );
         }
-        $queryOrdered->order->addOrder(IndicatorAxis::QUERY_NARROWER);
-        $queryOrdered->order->addOrder(IndicatorAxis::QUERY_POSITION);
-        foreach (IndicatorAxis::loadList($queryOrdered) as $axis) {
-            /** @var IndicatorAxis $axis */
+        $queryOrdered->order->addOrder(Axis::QUERY_NARROWER);
+        $queryOrdered->order->addOrder(Axis::QUERY_POSITION);
+        foreach (Axis::loadList($queryOrdered) as $axis) {
+            /** @var Axis $axis */
             $this->addElementList($axis->getRef(), $axis->getLabel());
         }
         $this->send();
@@ -221,16 +221,16 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      */
     public function getlistsiblingsAction()
     {
-        $axis = IndicatorAxis::loadByRef($this->idNode);
+        $axis = Axis::loadByRef($this->idNode);
         if (($this->getParam('idParent') != null) && ($this->getParam('idParent') !== $this->id.'_root')) {
-            $axisParent = IndicatorAxis::loadByRef($this->getParam('idParent'));
+            $axisParent = Axis::loadByRef($this->getParam('idParent'));
             $siblingAxes = $axisParent->getDirectBroaders();
         } else if (($axis->getDirectNarrower() === null) || ($this->getParam('idParent') === $this->id.'_root')) {
             $queryRootAxes = new Core_Model_Query();
-            $queryRootAxes->filter->addCondition(IndicatorAxis::QUERY_NARROWER, null,
+            $queryRootAxes->filter->addCondition(Axis::QUERY_NARROWER, null,
                 Core_Model_Filter::OPERATOR_NULL);
-            $queryRootAxes->order->addOrder(IndicatorAxis::QUERY_POSITION);
-            $siblingAxes = IndicatorAxis::loadList($queryRootAxes);
+            $queryRootAxes->order->addOrder(Axis::QUERY_POSITION);
+            $siblingAxes = Axis::loadList($queryRootAxes);
         } else {
             $siblingAxes = $axis->getDirectNarrower()->getDirectBroaders();
         }
@@ -251,7 +251,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      */
     public function getinfoeditAction()
     {
-        $axis = IndicatorAxis::loadByRef($this->idNode);
+        $axis = Axis::loadByRef($this->idNode);
         $this->data['ref'] = $axis->getRef();
         $this->data['label'] = $axis->getLabel();
         $this->send();

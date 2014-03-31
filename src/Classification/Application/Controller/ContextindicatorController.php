@@ -6,7 +6,7 @@
  * @subpackage Controller
  */
 
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\Context;
 use Classification\Domain\Indicator;
 use Core\Annotation\Secure;
@@ -44,7 +44,7 @@ class Classification_ContextindicatorController extends Core_Controller
             $this->view->listIndicators[$indicator->getRef()] = $indicator->getLabel();
         }
         $this->view->listAxes = array();
-        foreach (IndicatorAxis::loadList() as $axis) {
+        foreach (Axis::loadList() as $axis) {
             $this->view->listAxes[$axis->getRef()] = $axis->getLabel();
         }
     }

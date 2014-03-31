@@ -2,8 +2,11 @@
 
 namespace Tests\Classification;
 
+use Classification\Domain\ClassificationLibrary;
+use Classification\Domain\Context;
 use Classification\Domain\ContextIndicator;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
+use Classification\Domain\Indicator;
 use Core\Test\TestCase;
 
 /**
@@ -13,11 +16,16 @@ class ContextIndicatorTest extends TestCase
 {
     public function testManageAxes()
     {
-        $contextIndicator = new ContextIndicator();
+        $library = $this->getMock(ClassificationLibrary::class, [], [], '', false);
 
-        $axis1 = new IndicatorAxis();
-        $axis2 = new IndicatorAxis();
-        $axis3 = new IndicatorAxis();
+        $context = new Context($library);
+        $indicator = $this->getMock(Indicator::class, [], [], '', false);
+
+        $contextIndicator = new ContextIndicator($library, $context, $indicator);
+
+        $axis1 = new Axis($library);
+        $axis2 = new Axis($library);
+        $axis3 = new Axis($library);
 
         $this->assertFalse($contextIndicator->hasAxes());
         $this->assertFalse($contextIndicator->hasAxis($axis1));

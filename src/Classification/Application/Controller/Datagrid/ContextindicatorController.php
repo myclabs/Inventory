@@ -7,7 +7,7 @@
  */
 
 use Classification\Domain\ContextIndicator;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\Context;
 use Classification\Domain\Indicator;
 use Core\Annotation\Secure;
@@ -88,7 +88,7 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
                 try {
                     if ($this->getAddElementValue('axes') != null) {
                         foreach ($this->getAddElementValue('axes') as $refAxis) {
-                            $axis = IndicatorAxis::loadByRef($refAxis);
+                            $axis = Axis::loadByRef($refAxis);
                             $contextIndicator->addAxis($axis);
                         }
                     }
@@ -157,7 +157,7 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
                     }
                 }
                 foreach ($listRefAxes as $refAxis) {
-                    $axis = IndicatorAxis::loadByRef($refAxis);
+                    $axis = Axis::loadByRef($refAxis);
                     try {
                         $contextIndicator->addAxis($axis);
                     } catch (Core_Exception_InvalidArgument $e) {

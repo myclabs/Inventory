@@ -4,7 +4,6 @@ namespace Classification\Domain;
 
 use Core_Exception_InvalidArgument;
 use Core_Exception_NotFound;
-use Core_Exception_TooMany;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -40,24 +39,22 @@ class ContextIndicator extends Core_Model_Entity
     /**
      * Collection d'axes regroupé dans l'indicateur contextualisé.
      *
-     * @var Collection|IndicatorAxis[]
+     * @var Collection|Axis[]
      */
     protected $axes;
 
-    public function __construct()
-    {
-        $this->axes = new ArrayCollection();
-    }
-
     /**
-     * @param Context $context
+     * @var ClassificationLibrary
      */
-    public function setContext($context)
+    protected $library;
+
+    public function __construct(ClassificationLibrary $library, Context $context, Indicator $indicator)
     {
-        if ($this->context !== null) {
-            throw new Core_Exception_TooMany('The Context has already been defined');
-        }
+        $this->library = $library;
         $this->context = $context;
+        $this->indicator = $indicator;
+
+        $this->axes = new ArrayCollection();
     }
 
     /**
@@ -69,17 +66,6 @@ class ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * @param Indicator $indicator
-     */
-    public function setIndicator($indicator)
-    {
-        if ($this->indicator !== null) {
-            throw new Core_Exception_TooMany('The Indicator has already been defined');
-        }
-        $this->indicator = $indicator;
-    }
-
-    /**
      * @return Indicator
      */
     public function getIndicator()
@@ -88,15 +74,15 @@ class ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      * @throws Core_Exception_InvalidArgument
      */
-    public function addAxis(IndicatorAxis $axis)
+    public function addAxis(Axis $axis)
     {
         if (!($this->hasAxis($axis))) {
             foreach ($this->getAxes() as $existentAxis) {
                 if ($existentAxis->isBroaderThan($axis) || $existentAxis->isNarrowerThan($axis)) {
-                    throw new Core_Exception_InvalidArgument('Axes must be transverse');
+                    throw new Core_Exception_InvalidArgument('Axis must be transverse');
                 }
             }
 
@@ -105,16 +91,16 @@ class ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      * @return boolean
      */
-    public function hasAxis(IndicatorAxis $axis)
+    public function hasAxis(Axis $axis)
     {
         return $this->axes->contains($axis);
     }
 
     /**
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      */
     public function removeAxis($axis)
     {
@@ -132,11 +118,19 @@ class ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * @return IndicatorAxis[]
+     * @return Axis[]
      */
     public function getAxes()
     {
         return $this->axes->toArray();
+    }
+
+    /**
+     * @return ClassificationLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
     }
 
     /**

@@ -2,18 +2,21 @@
 
 namespace Tests\Classification;
 
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
+use Classification\Domain\ClassificationLibrary;
 use Core\Test\TestCase;
 
 /**
- * @covers \Classification\Domain\IndicatorAxis
+ * @covers \Classification\Domain\Axis
  */
 class AxisTest extends TestCase
 {
     public function testSetGetNarrower()
     {
-        $axis = new IndicatorAxis();
-        $narrower = new IndicatorAxis();
+        $library = $this->getMock(ClassificationLibrary::class, [], [], '', false);
+
+        $axis = new Axis($library);
+        $narrower = new Axis($library);
 
         $axis->setDirectNarrower($narrower);
         $this->assertSame($axis->getDirectNarrower(), $narrower);
@@ -23,12 +26,14 @@ class AxisTest extends TestCase
 
     public function testManageBroaders()
     {
-        $axis = new IndicatorAxis();
+        $library = $this->getMock(ClassificationLibrary::class, [], [], '', false);
 
-        $broader1 = new IndicatorAxis();
-        $broader11 = new IndicatorAxis();
-        $broader2 = new IndicatorAxis();
-        $broader3 = new IndicatorAxis();
+        $axis = new Axis($library);
+
+        $broader1 = new Axis($library);
+        $broader11 = new Axis($library);
+        $broader2 = new Axis($library);
+        $broader3 = new Axis($library);
 
         $this->assertFalse($axis->hasDirectBroaders());
         $this->assertFalse($axis->hasDirectBroader($broader1));
