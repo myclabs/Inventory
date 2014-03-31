@@ -491,6 +491,14 @@ class Family extends Core_Model_Entity
     }
 
     /**
+     * @return FamilyReference
+     */
+    public function getFamilyReference()
+    {
+        return new FamilyReference($this->library->getId(), $this->ref);
+    }
+
+    /**
      * Renvoie les valeurs du contexte pour la position
      * @return array
      */

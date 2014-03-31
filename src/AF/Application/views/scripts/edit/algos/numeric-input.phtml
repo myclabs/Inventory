@@ -36,7 +36,7 @@ $contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Class
 $contextIndicatorColumn->editable = true;
 $contextIndicatorColumn->dynamicList = true;
 $contextIndicatorColumn->list = $this->baseUrl(
-    'af/datagrid_edit_algos_numeric-expression/get-context-indicator-list'
+    'af/datagrid_edit_algos_numeric-input/get-context-indicator-list'
 );
 $contextIndicatorColumn->withEmptyElement = true;
 $datagrid->addCol($contextIndicatorColumn);

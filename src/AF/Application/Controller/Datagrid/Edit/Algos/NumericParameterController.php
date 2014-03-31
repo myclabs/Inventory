@@ -1,18 +1,12 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  thibaud.rolland
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
-use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Classification\Domain\ContextIndicator;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use Parameter\Application\Service\ParameterService;
+use Parameter\Domain\Family\FamilyReference;
 
 /**
  * @author matthieu.napoli
@@ -43,7 +37,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 $data['label'] = $algo->getLabel();
 
                 try {
-                    $data['family'] = $algo->getFamily()->getRef();
+                    $data['family'] = (string) $algo->getFamilyReference();
                 } catch (Core_Exception_NotFound $e) {
                     // Si la famille n'existe plus
                     $data['family'] = $this->cellText(null, __('AF', 'configTreatmentInvalidRef', 'family'));
@@ -86,14 +80,15 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        $familyRef = $this->getAddElementValue('family');
-        if (empty($familyRef)) {
+        if (empty($this->getAddElementValue('family'))) {
             $this->setAddElementErrorMessage('family', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
-        try {
-            $family = $this->parameterService->getFamily($familyRef);
-        } catch (Core_Exception_NotFound $e) {
-            $this->setAddElementErrorMessage('family', __('UI', 'formValidation', 'emptyRequiredField'));
+        } else {
+            try {
+                $familyReference = FamilyReference::fromString($this->getAddElementValue('family'));
+                $family = $this->parameterService->getFamily($familyReference);
+            } catch (Core_Exception_NotFound $e) {
+                $this->setAddElementErrorMessage('family', __('UI', 'formValidation', 'emptyRequiredField'));
+            }
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
@@ -142,7 +137,8 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 break;
             case 'family':
                 try {
-                    $family = $this->parameterService->getFamily($newValue);
+                    $familyReference = FamilyReference::fromString($newValue);
+                    $family = $this->parameterService->getFamily($familyReference);
                 } catch (Core_Exception_NotFound $e) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }

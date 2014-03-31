@@ -6,6 +6,8 @@ use Calc_UnitValue;
 use Core_Exception_InvalidArgument;
 use Core_Exception_NotFound;
 use Parameter\Domain\Family\Family;
+use Parameter\Domain\Family\FamilyReference;
+use Parameter\Domain\ParameterLibrary;
 
 /**
  * Service haut niveau pour accéder en lecture aux paramètres.
@@ -15,14 +17,18 @@ use Parameter\Domain\Family\Family;
 class ParameterService
 {
     /**
-     * Retourne une famille
-     * @param string $ref Identifiant de la famille
-     * @return Family
+     * Retourne une famille.
+     *
+     * @param FamilyReference $familyReference Identifiant de la famille
+     *
      * @throws Core_Exception_NotFound Famille inconnue
+     * @return Family
      */
-    public function getFamily($ref)
+    public function getFamily(FamilyReference $familyReference)
     {
-        return Family::loadByRef($ref);
+        $library = ParameterLibrary::load($familyReference->getLibraryId());
+
+        return $library->getFamily($familyReference->getFamilyRef());
     }
 
     /**

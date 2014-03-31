@@ -6,12 +6,12 @@ use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\ParameterCoordinate\ParameterCoordinate;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\ExecutionException;
-use Calc_UnitValue;
 use Core_Exception_NotFound;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Parameter\Application\Service\ParameterService;
 use Parameter\Domain\Family\Family;
+use Parameter\Domain\Family\FamilyReference;
 use Unit\UnitAPI;
 
 /**
@@ -22,9 +22,9 @@ use Unit\UnitAPI;
 class NumericParameterAlgo extends NumericAlgo
 {
     /**
-     * @var string
+     * @var FamilyReference
      */
-    protected $familyRef;
+    protected $familyReference;
 
     /**
      * @var ParameterCoordinate[]|Collection
@@ -78,7 +78,7 @@ class NumericParameterAlgo extends NumericAlgo
 
         // Vérifie que la famille liée est bien trouvable
         try {
-            $family = $parameterService->getFamily($this->familyRef);
+            $family = $parameterService->getFamily($this->familyReference);
         } catch (Core_Exception_NotFound $e) {
             $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
@@ -143,7 +143,15 @@ class NumericParameterAlgo extends NumericAlgo
         /** @var ParameterService $parameterService */
         $parameterService = \Core\ContainerSingleton::getContainer()->get(ParameterService::class);
 
-        return $parameterService->getFamily($this->familyRef);
+        return $parameterService->getFamily($this->familyReference);
+    }
+
+    /**
+     * @return FamilyReference
+     */
+    public function getFamilyReference()
+    {
+        return $this->familyReference;
     }
 
     /**
@@ -151,7 +159,7 @@ class NumericParameterAlgo extends NumericAlgo
      */
     public function setFamily(Family $family)
     {
-        $this->familyRef = $family->getRef();
+        $this->familyReference = $family->getFamilyReference();
         // Supprime les coordonnées pour l'ancienne famille
         $this->parameterCoordinates->clear();
     }

@@ -36,7 +36,10 @@ $algoNumericExpressionCollapse = new Collapse('algoNumericExpressionCollapse', _
 $algoNumericExpressionCollapse->setContent($this->partial('edit/algos/numeric-expression.phtml', ['af' => $af]));
 // Parameter
 $algoNumericParameterCollapse = new Collapse('algoNumericParameterCollapse', __('UI', 'name', 'parameters'));
-$algoNumericParameterCollapse->setContent($this->partial('edit/algos/numeric-parameter.phtml', ['af' => $af]));
+$algoNumericParameterCollapse->setContent($this->partial('edit/algos/numeric-parameter.phtml', [
+    'af' => $af,
+    'parameterLibraries' => $this->parameterLibraries,
+]));
 // Constantes
 $algoNumericConstantCollapse = new Collapse('algoNumericConstantCollapse', __('UI', 'name', 'constants'));
 $algoNumericConstantCollapse->setContent($this->partial('edit/algos/numeric-constant.phtml', ['af' => $af]));
