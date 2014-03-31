@@ -5,6 +5,7 @@ namespace Parameter\Domain;
 use Account\Domain\Account;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
+use Core_Model_Query;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -118,6 +119,25 @@ class ParameterLibrary extends Core_Model_Entity implements EntityResource, Casc
     }
 
     /**
+     * @param string $ref
+     * @throws \Core_Exception_NotFound
+     * @return Family
+     */
+    public function getFamily($ref)
+    {
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('ref', $ref));
+
+        $families = $this->families->matching($criteria);
+
+        if (count($families) === 0) {
+            throw new \Core_Exception_NotFound;
+        }
+
+        return $families->first();
+    }
+
+    /**
      * @return Category[]
      */
     public function getCategories()
@@ -150,5 +170,17 @@ class ParameterLibrary extends Core_Model_Entity implements EntityResource, Casc
     public function getSubResources(EntityManager $entityManager)
     {
         return [];
+    }
+
+    /**
+     * @param Account $account
+     * @return ParameterLibrary[]
+     */
+    public static function loadByAccount(Account $account)
+    {
+        $query = new Core_Model_Query();
+        $query->filter->addCondition('account', $account);
+
+        return self::getEntityRepository()->loadList($query);
     }
 }

@@ -15,6 +15,7 @@ use AF\Domain\Condition\Condition;
 use AF\Domain\Component\Component;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Parameter\Domain\ParameterLibrary;
 use TEC\Exception\InvalidExpressionException;
 
 /**
@@ -147,11 +148,18 @@ class AF_EditController extends Core_Controller
      */
     public function traitementAction()
     {
-        $this->view->af = AF::load($this->getParam('id'));
+        $af = AF::load($this->getParam('id'));
+
+        $libraries = ParameterLibrary::loadByAccount($af->getLibrary()->getAccount());
+
+        $this->view->assign('parameterLibraries', $libraries);
+        $this->view->assign('af', $af);
+
         // Composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(Field::QUERY_AF, $this->view->af);
         $this->view->fieldList = Field::loadList($query);
+
         // Composants numériques
         $query = new Core_Model_Query();
         $query->filter->addCondition(NumericField::QUERY_AF, $this->view->af);

@@ -1,14 +1,16 @@
 <?php
 
-use AF\Domain\Algorithm\Index\AlgoResultIndex;
-use AF\Domain\Algorithm\Index\FixedIndex;
+use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 
+/** @var $af AF */
+$af = $this->af;
 /** @var $algo NumericExpressionAlgo */
 $algo = $this->algo;
 
 $datagrid = new UI_Datagrid('algoResultIndexes', 'datagrid_edit_algos_indexation', 'af');
 $datagrid->pagination = false;
+$datagrid->addParam('idAF', $af->getId());
 $datagrid->addParam('idAlgo', $algo->getId());
 
 // Colonne Axe

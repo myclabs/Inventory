@@ -106,7 +106,7 @@ $account = $this->account;
 
     <?php if ($this->canEditAccount) : ?>
         <p>
-            <a href="af/library/new?account=<?=$account->id?>" class="btn btn-default">
+            <a id="createAFLibrary" href="af/library/new?account=<?=$account->id?>" class="btn btn-default">
                 <i class="fa fa-plus"></i>
                 <?=__('UI', 'verb', 'add')?>
             </a>

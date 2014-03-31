@@ -45,7 +45,8 @@ $contextIndicatorColumn->addable = false;
 $contextIndicatorColumn->editable = true;
 $contextIndicatorColumn->dynamicList = true;
 $contextIndicatorColumn->list = $this->baseUrl(
-    '/af/datagrid_edit_algos_numeric-expression/get-context-indicator-list/');
+    'af/datagrid_edit_algos_numeric-expression/get-context-indicator-list'
+);
 $contextIndicatorColumn->withEmptyElement = true;
 $datagrid->addCol($contextIndicatorColumn);
 
@@ -56,6 +57,9 @@ $datagrid->addCol($resultIndexColumn);
 
 echo $datagrid->render();
 ?>
-<script type="text/javascript">
-    $(document).ready(function() { refFromLabel('algoNumericExpression_label_addForm', 'algoNumericExpression_ref_addForm') });
+
+<script>
+    $(function() {
+        refFromLabel('algoNumericExpression_label_addForm', 'algoNumericExpression_ref_addForm')
+    });
 </script>

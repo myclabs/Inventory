@@ -1,15 +1,15 @@
 <?php
-/**
- * Datagrid des algos paramètres
- * @author  matthieu.napoli
- * @package AF
- */
 use AF\Domain\AF;
 use MyCLabs\MUIH\GenericTag;
 use Parameter\Domain\Family\Family;
+use Parameter\Domain\Family\FamilyReference;
+use Parameter\Domain\ParameterLibrary;
 
-/** @var $af \AF\Domain\AF */
+/** @var $af AF */
 $af = $this->af;
+
+/** @var $parameterLibraries ParameterLibrary[] */
+$parameterLibraries = $this->parameterLibraries;
 
 $datagrid = new UI_Datagrid('algoNumericParameter', 'datagrid_edit_algos_numeric-parameter', 'af');
 $datagrid->initialLoading = false;
@@ -32,9 +32,16 @@ $datagrid->addCol($refColumn);
 // Famille
 $familyColumn = new UI_Datagrid_Col_List('family', __('Parameter', 'name', 'family'));
 $familyColumn->list = [];
-foreach (Family::loadList() as $family) {
-    /** @var $family Family */
-    $familyColumn->list[$family->getRef()] = $family->getLabel();
+foreach ($parameterLibraries as $parameterLibrary) {
+    foreach ($parameterLibrary->getFamilies() as $family) {
+        $ref = new FamilyReference($parameterLibrary->getId(), $family->getRef());
+        /** @var $family Family */
+        $familyColumn->list[(string) $ref] = sprintf(
+            '%s > %s',
+            $parameterLibrary->getLabel(),
+            $family->getLabel()
+        );
+    }
 }
 $familyColumn->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
 $familyColumn->editable = true;
@@ -51,7 +58,8 @@ $contextIndicatorColumn->addable = false;
 $contextIndicatorColumn->editable = true;
 $contextIndicatorColumn->dynamicList = true;
 $contextIndicatorColumn->list = $this->baseUrl(
-    '/af/datagrid_edit_algos_numeric-parameter/get-context-indicator-list/');
+    'af/datagrid_edit_algos_numeric-parameter/get-context-indicator-list'
+);
 $contextIndicatorColumn->withEmptyElement = true;
 $datagrid->addCol($contextIndicatorColumn);
 
@@ -62,9 +70,12 @@ $datagrid->addCol($resultIndexColumn);
 
 echo $datagrid->render();
 ?>
-<script type="text/javascript">
+
+<script>
     $('#algoNumericParameter_addPanel').on('hidden', function() {
         $('#algoNumericParameter_family_addForm').val('').trigger('change');
     });
-    $(document).ready(function() { refFromLabel('algoNumericParameter_label_addForm', 'algoNumericParameter_ref_addForm') });
+    $(function() {
+        refFromLabel('algoNumericParameter_label_addForm', 'algoNumericParameter_ref_addForm')
+    });
 </script>

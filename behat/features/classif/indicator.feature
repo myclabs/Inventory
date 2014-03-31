@@ -6,7 +6,7 @@ Feature: Classification indicator feature
 
   @javascript
   Scenario: Creation of a classification indicator, correct input
-    Given I am on "classification/indicator/manage"
+    Given I am on "classification/indicator/list?library=1"
     Then I should see the "editIndicators" datagrid
   # Popup d'ajout
     When I click "Ajouter"
@@ -24,7 +24,7 @@ Feature: Classification indicator feature
 
   @javascript
   Scenario: Creation of a classification indicator, incorrect input
-    Given I am on "classification/indicator/manage"
+    Given I am on "classification/indicator/list?library=1"
     Then I should see the "editIndicators" datagrid
   # Popup d'ajout
     When I click "Ajouter"
@@ -62,7 +62,7 @@ Feature: Classification indicator feature
   @javascript
   Scenario: Edition of a classification indicator, correct input
   # TODO : position
-    Given I am on "classification/indicator/manage"
+    Given I am on "classification/indicator/list?library=1"
     Then I should see the "editIndicators" datagrid
   # Modification des différents attributs, saisie correcte
     When I set "GES modifié" for column "label" of row 1 of the "editIndicators" datagrid with a confirmation message
@@ -75,7 +75,7 @@ Feature: Classification indicator feature
 
   @javascript
   Scenario: Edition of a classification indicator, incorrect input
-    Given I am on "classification/indicator/manage"
+    Given I am on "classification/indicator/list?library=1"
     Then I should see the "editIndicators" datagrid
   # Modification de l'identifiant, identifiant vide
     When I set "" for column "ref" of row 1 of the "editIndicators" datagrid
@@ -111,7 +111,7 @@ Feature: Classification indicator feature
 
   @javascript
   Scenario:  Deletion of a classification indicator
-    Given I am on "classification/indicator/manage"
+    Given I am on "classification/indicator/list?library=1"
     Then I should see the "editIndicators" datagrid
     And the row 3 of the "editIndicators" datagrid should contain:
       | label                         | ref                           |
