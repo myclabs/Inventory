@@ -21,7 +21,8 @@ if ($this->edit) {
 
     $editPopup = new Modal();
     $editPopup->setAttribute('id', 'element_edit');
-    $editPopup->setHeaderContent(new GenericTag('h4', __('UI', 'loading', 'loading')));
+    $editPopup->addTitle(__('UI', 'loading', 'loading'));
+    $editPopup->addDefaultDismissButton();
     $editPopup->large();
     $editPopup->setFooterContent('<button class="btn btn-primary" onclick="$(\'#element_editForm\').submit();">'
         .'<i class="fa fa-check"></i> '.__('UI', 'verb', 'save').'</button>'

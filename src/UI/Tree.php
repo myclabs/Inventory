@@ -700,7 +700,8 @@ class UI_Tree extends UI_Generic
 
         $editPanel = new Modal();
         $editPanel->setAttribute('id', $this->id.'_editPanel');
-        $editPanel->setHeaderContent(new GenericTag('h4', $this->editPanelTitle));
+        $editPanel->addTitle($this->editPanelTitle);
+        $editPanel->addDefaultDismissButton();
 
         $editPanel->setContent($this->initEditForm()->getHTML());
 
@@ -738,7 +739,8 @@ class UI_Tree extends UI_Generic
             $deletePanel = new Modal();
             $deletePanel->setAttribute('id', $this->id.'_deletePanel');
             $deletePanel->setBackdropStatic();
-            $deletePanel->setHeaderContent(new GenericTag('h4', $this->deletePanelTitle));
+            $deletePanel->addTitle($this->deletePanelTitle);
+            $deletePanel->addDefaultDismissButton();
             $deletePanel->setFooterContent($buttonConfirmDelete->getHTML().$buttonCancelDelete->getHTML());
             $deletePanel->setContent($this->deletePanelText);
 
@@ -842,7 +844,8 @@ class UI_Tree extends UI_Generic
         $addPanel = new Modal();
         $addPanel->setAttribute('id', $this->id.'_addPanel');
         $addPanel->large();
-        $addPanel->setHeaderContent(new GenericTag('h4', $this->addPanelTitle));
+        $addPanel->addTitle($this->addPanelTitle);
+        $addPanel->addDefaultDismissButton();
         $addPanel->setFooterContent($buttonConfirmAddPanel->getHTML().$buttonCancelAddPanel->getHTML());
         $addPanel->setContent($this->addPanelForm->getHTML());
         $addPanel->setBackdropStatic();

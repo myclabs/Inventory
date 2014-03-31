@@ -207,7 +207,7 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
                           ]);
         $popup = new Modal();
         $popup->setAttribute('id', 'graph_' . $algo->getId());
-        $popup->setHeaderContent(new GenericTag('h4', $algo->getRef()));
+        $popup->addTitle($algo->getRef());
         if ($algo->getLabel()) {
             $popup->getHeader()->appendContent(' (' . $algo->getLabel() . ')');
         }

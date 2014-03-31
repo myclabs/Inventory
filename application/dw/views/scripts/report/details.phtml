@@ -147,7 +147,8 @@ use MyCLabs\MUIH\Tabs;
 
             $saveReportPopup = new Modal();
             $saveReportPopup->setAttribute('id', 'saveReport');
-            $saveReportPopup->setHeaderContent(new GenericTag('h4', __('DW', 'config', 'saveReportPopupTitle')));
+            $saveReportPopup->addTitle(__('DW', 'config', 'saveReportPopupTitle'));
+            $saveReportPopup->addDefaultDismissButton();
             $saveReportPopup->setContent($saveReportForm->getHTML());
             $saveReportPopup->setFooterContent($saveReportButton->getHTML().$saveReportClosePopupButton->getHTML());
             $saveReportPopup->display();

@@ -15,14 +15,14 @@ $datagrid->addCol($columnAuthor);
 // Objet
 $columnObject = new UI_Datagrid_Col_Popup('message', __('Social', 'name', 'message'));
 $columnObject->editable = false;
-$columnObject->popup->setHeaderContent(new GenericTag('h4', _('Social', 'message', 'outboxDetailMessagePopupTitle')));
+$columnObject->popup->addTitle(_('Social', 'message', 'outboxDetailMessagePopupTitle'));
 $columnObject->popup->setFooterContent($closeButton->render());
 $datagrid->addCol($columnObject);
 
 // Destinataire
 $columnRecipient = new UI_Datagrid_Col_Popup('recipient', __('Social', 'message', 'recipient'));
 $columnRecipient->editable = false;
-$columnRecipient->popup->setHeaderContent(new GenericTag('h4', __('UI', 'name', 'informations')));
+$columnRecipient->popup->addTitle(__('UI', 'name', 'informations'));
 $columnRecipient->popup->setFooterContent($closeButton->render());
 $datagrid->addCol($columnRecipient);
 

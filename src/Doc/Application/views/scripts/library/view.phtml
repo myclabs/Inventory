@@ -42,7 +42,7 @@ $datagrid->addHeader();
 // Popup d'ajout
 $popup = new Modal();
 $popup->setAttribute('id', 'library'.$library->getId().'_add');
-$popup->setHeaderContent(new GenericTag('h4', __('Doc', 'library', 'addPanelTitle')));
+$popup->addTitle(__('Doc', 'library', 'addPanelTitle'));
 $popup->setContent($this->partial('library/upload.phtml', 'doc', ['library' => $library]));
 $validateButton = new Button(__('UI', 'verb', 'add'), Button::TYPE_PRIMARY);
 $validateButton->addClass('validateNewDocument');

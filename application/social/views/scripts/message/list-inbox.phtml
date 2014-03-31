@@ -15,7 +15,7 @@ $datagrid->addCol($columnAuthor);
 // Objet
 $columnObject = new UI_Datagrid_Col_Popup('message', __('Social', 'message', 'message'));
 $columnObject->editable = false;
-$columnObject->popup->setHeaderContent(new GenericTag('h4', __('Social', 'message', 'inboxDetailMessagePopupTitle')));
+$columnObject->popup->addTitle(__('Social', 'message', 'inboxDetailMessagePopupTitle'));
 $columnObject->popup->setFooterContent($closeButton->render());
 $datagrid->addCol($columnObject);
 

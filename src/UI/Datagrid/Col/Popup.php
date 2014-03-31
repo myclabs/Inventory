@@ -52,7 +52,8 @@ class UI_Datagrid_Col_Popup extends UI_Datagrid_Col_Generic
         $this->popup = new Modal();
         $this->popup->large();
         $this->popup->ajax(true);
-        $this->popup->setHeaderContent(new GenericTag('h4', $label));
+        $this->popup->addTitle($this->label);
+        $this->popup->addDefaultDismissButton();
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_CENTER;
         $this->defaultValue = '<i class="fa fa-search-plus"></i> '.__('UI', 'name', 'details');
@@ -72,6 +73,8 @@ class UI_Datagrid_Col_Popup extends UI_Datagrid_Col_Generic
             $this->popup->setAttribute('id', $datagrid->id.'_'.$this->id.'_popup');
             $this->popup->large();
             $this->popup->ajax(true);
+            $this->popup->addTitle($this->label);
+            $this->popup->addDefaultDismissButton();
         } else {
 
             $this->popup->setAttribute('id', $datagrid->id.'_'.$this->id.'_popup');

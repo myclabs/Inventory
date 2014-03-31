@@ -71,7 +71,7 @@ $conditionColumn->list = $list;
 $actionsDatagrid->addCol($conditionColumn);
 
 $editValueColumn = new UI_Datagrid_Col_Popup('editValue', __('UI', 'name', 'edition'));
-$editValueColumn->popup->setHeaderContent(new GenericTag('h4', __('AF', 'configInteractionDatagrid', 'valueAssignmentActionEditPanelTitle')));
+$editValueColumn->popup->addTitle(__('AF', 'configInteractionDatagrid', 'valueAssignmentActionEditPanelTitle'));
 $editValueColumn->popup->large();
 $actionsDatagrid->addCol($editValueColumn);
 
