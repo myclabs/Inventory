@@ -8,19 +8,14 @@ use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Mapping\Driver\DriverChain;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
-use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Gedmo\Loggable\LoggableListener;
 use Gedmo\Translatable\TranslatableListener;
 use MyCLabs\ACL\ACLManager;
-use MyCLabs\ACL\EntityManagerListener;
-use MyCLabs\ACL\MetadataLoader;
-use MyCLabs\ACL\Model\SecurityIdentityInterface;
-use User\Domain\User;
+use MyCLabs\ACL\Doctrine\ACLSetup;
 
 return [
 
@@ -134,16 +129,11 @@ return [
         $evm->addEventSubscriber($c->get(LoggableListener::class));
 
         // Configuration pour MyCLabs\ACL
-        $rtel = new ResolveTargetEntityListener();
-        // TODO simplify
-        $rtel->addResolveTargetEntity(SecurityIdentityInterface::class, User::class, []);
-        $evm->addEventListener(Events::loadClassMetadata, $rtel);
-        $metadataLoader = $c->get(MetadataLoader::class);
-        $evm->addEventListener(Events::loadClassMetadata, $metadataLoader);
-        $aclManagerLocator = function () use ($c) {
+        /** @var ACLSetup $aclSetup */
+        $aclSetup = $c->get(ACLSetup::class);
+        $aclSetup->setUpEntityManager($em, function () use ($c) {
             return $c->get(ACLManager::class);
-        };
-        $evm->addEventSubscriber(new EntityManagerListener($aclManagerLocator));
+        });
 
         return $em;
     }),

@@ -484,12 +484,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "8f688509c83f2176d0c3bb01f024ddf021d36c93"
+                "reference": "da96f4938a9c6d0fe5c14fa45c28bac35e627358"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/8f688509c83f2176d0c3bb01f024ddf021d36c93",
-                "reference": "8f688509c83f2176d0c3bb01f024ddf021d36c93",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/da96f4938a9c6d0fe5c14fa45c28bac35e627358",
+                "reference": "da96f4938a9c6d0fe5c14fa45c28bac35e627358",
                 "shasum": ""
             },
             "require": {
@@ -553,7 +553,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-03-28 13:05:20"
+            "time": "2014-03-29 01:51:00"
         },
         {
             "name": "dompdf/dompdf",
@@ -965,12 +965,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/ACL.git",
-                "reference": "48b0a2e011a0be54d81ce91916d5cfe9fdd59da2"
+                "reference": "46ae02f10634ad59f28ba3f48bb14009aec1cc2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/ACL/zipball/48b0a2e011a0be54d81ce91916d5cfe9fdd59da2",
-                "reference": "48b0a2e011a0be54d81ce91916d5cfe9fdd59da2",
+                "url": "https://api.github.com/repos/myclabs/ACL/zipball/46ae02f10634ad59f28ba3f48bb14009aec1cc2e",
+                "reference": "46ae02f10634ad59f28ba3f48bb14009aec1cc2e",
                 "shasum": ""
             },
             "require": {
@@ -995,7 +995,7 @@
                 "doctrine",
                 "permission"
             ],
-            "time": "2014-03-28 15:08:33"
+            "time": "2014-03-28 17:35:04"
         },
         {
             "name": "myclabs/array-comparator",

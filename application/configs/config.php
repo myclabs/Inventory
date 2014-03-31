@@ -3,12 +3,12 @@
 use Account\Domain\ACL\AccountAdminRole;
 use DI\Container;
 use Doctrine\ORM\EntityManager;
+use MyCLabs\ACL\Doctrine\ACLSetup;
 use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
 use MyCLabs\ACL\ACLManager;
 use MyCLabs\ACL\CascadeStrategy\SimpleCascadeStrategy;
-use MyCLabs\ACL\MetadataLoader;
 use Orga\Model\ACL\CellAdminRole;
 use Orga\Model\ACL\CellContributorRole;
 use Orga\Model\ACL\CellManagerRole;
@@ -18,6 +18,7 @@ use Orga\Model\ACL\OrganizationAdminRole;
 use Orga\Model\ACL\OrganizationResourceGraphTraverser;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use User\Domain\ACL\AdminRole;
+use User\Domain\User;
 
 return [
     // Nom de l'application installée
@@ -106,17 +107,18 @@ return [
 
         return new ACLManager($em, $cascadeStrategy);
     }),
-    MetadataLoader::class => DI\factory(function () {
-        $loader = new MetadataLoader();
-        $loader->registerActionsClass(Actions::class);
-        $loader->registerRoleClass(AdminRole::class, 'superadmin');
-        $loader->registerRoleClass(AccountAdminRole::class, 'accountAdmin');
-        $loader->registerRoleClass(OrganizationAdminRole::class, 'organizationAdmin');
-        $loader->registerRoleClass(CellAdminRole::class, 'cellAdmin');
-        $loader->registerRoleClass(CellManagerRole::class, 'cellManager');
-        $loader->registerRoleClass(CellContributorRole::class, 'cellContributor');
-        $loader->registerRoleClass(CellObserverRole::class, 'cellObserver');
-        return $loader;
+    ACLSetup::class => DI\factory(function () {
+        $setup = new ACLSetup();
+        $setup->setSecurityIdentityClass(User::class);
+        $setup->setActionsClass(Actions::class);
+        $setup->registerRoleClass(AdminRole::class, 'superadmin');
+        $setup->registerRoleClass(AccountAdminRole::class, 'accountAdmin');
+        $setup->registerRoleClass(OrganizationAdminRole::class, 'organizationAdmin');
+        $setup->registerRoleClass(CellAdminRole::class, 'cellAdmin');
+        $setup->registerRoleClass(CellManagerRole::class, 'cellManager');
+        $setup->registerRoleClass(CellContributorRole::class, 'cellContributor');
+        $setup->registerRoleClass(CellObserverRole::class, 'cellObserver');
+        return $setup;
     }),
 
 ];

@@ -1,6 +1,6 @@
 <?php
 
-use MyCLabs\ACL\QueryBuilderHelper;
+use MyCLabs\ACL\Doctrine\ACLQueryHelper;
 
 /**
  * Requete avec filtres et tri.
@@ -349,7 +349,7 @@ class Core_Model_Query
             // Pas top au niveau perfs, à voir si on peut trouver mieux
             $queryBuilder->distinct();
 
-            QueryBuilderHelper::joinACL(
+            ACLQueryHelper::joinACL(
                 $queryBuilder,
                 $this->aclFilter->user,
                 $this->aclFilter->action,

@@ -2,10 +2,9 @@
 
 namespace Account\Architecture\Repository;
 
-use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use Core\Domain\DoctrineEntityRepository;
-use MyCLabs\ACL\QueryBuilderHelper;
+use MyCLabs\ACL\Doctrine\ACLQueryHelper;
 use User\Domain\ACL\Actions;
 use User\Domain\User;
 
@@ -22,7 +21,7 @@ class DoctrineAccountRepository extends DoctrineEntityRepository implements Acco
     public function getTraversableAccounts(User $user)
     {
         $qb = $this->createQueryBuilder('account');
-        QueryBuilderHelper::joinACL($qb, $user, Actions::TRAVERSE);
+        ACLQueryHelper::joinACL($qb, $user, Actions::TRAVERSE);
 
         return $qb->getQuery()->getResult();
     }
