@@ -5,6 +5,7 @@ use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Condition\Condition;
 use AF\Domain\Component\Component;
+use MyCLabs\MUIH\GenericTag;
 
 /**
  * @author  matthieu.napoli
@@ -70,9 +71,8 @@ $conditionColumn->list = $list;
 $actionsDatagrid->addCol($conditionColumn);
 
 $editValueColumn = new UI_Datagrid_Col_Popup('editValue', __('UI', 'name', 'edition'));
-$editValueColumn->popup->title = __('AF', 'configInteractionDatagrid', 'valueAssignmentActionEditPanelTitle');
-$editValueColumn->popup->source = '';
-$editValueColumn->popup->addAttribute('class', 'large');
+$editValueColumn->popup->setHeaderContent(new GenericTag('h4', __('AF', 'configInteractionDatagrid', 'valueAssignmentActionEditPanelTitle')));
+$editValueColumn->popup->large();
 $actionsDatagrid->addCol($editValueColumn);
 
 echo $actionsDatagrid->render();

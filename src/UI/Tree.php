@@ -1,6 +1,8 @@
 <?php
 use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Modal;
 
 /**
  * Fichier de la classe Tree.
@@ -696,12 +698,11 @@ class UI_Tree extends UI_Generic
     {
         $edit = '';
 
-        $editPanel = new UI_Popup_Static($this->id.'_editPanel');
-        $editPanel->title = $this->editPanelTitle;
-        $editPanel->body = '';
-        $editPanel->footer = '';
+        $editPanel = new Modal();
+        $editPanel->setAttribute('id', $this->id.'_editPanel');
+        $editPanel->setHeaderContent(new GenericTag('h4', $this->editPanelTitle));
 
-        $editPanel->body .= $this->initEditForm()->getHTML();
+        $editPanel->setContent($this->initEditForm()->getHTML());
 
         if ($this->deleteNode === true) {
             $buttonShowDeletePanel = new Button($this->deleteButtonLabel, Button::TYPE_WARNING);
@@ -714,9 +715,9 @@ class UI_Tree extends UI_Generic
             // Placement du bouton dans le corps du popup si l'édition n'est pas possible.
             if ($this->_editNode['state'] === true) {
                 $buttonShowDeletePanel->setAttribute('style', 'float: left;');
-                $editPanel->footer .= $buttonShowDeletePanel->getHTML();
+                $editPanel->setFooterContent($buttonShowDeletePanel->getHTML());
             } else {
-                $editPanel->body .= $buttonShowDeletePanel->getHTML();
+                $editPanel->appendContent($buttonShowDeletePanel->getHTML());
             }
 
             $buttonConfirmDelete= new Button($this->deletePanelConfirmLabel, Button::TYPE_PRIMARY);
@@ -731,13 +732,12 @@ class UI_Tree extends UI_Generic
             $buttonCancelDelete->setAttribute('data-remote', 'false');
             $buttonCancelDelete->setAttribute('data-target', '#'.$this->id.'_deletePanel, #'.$this->id.'_editPanel');
 
-            $deletePanel = new UI_Popup_Static($this->id.'_deletePanel');
-            $deletePanel->closeWithClick = false;
-            $deletePanel->closeWithCross = false;
-            $deletePanel->closeWithEscape = false;
-            $deletePanel->title = $this->deletePanelTitle;
-            $deletePanel->footer = $buttonConfirmDelete->getHTML().$buttonCancelDelete->getHTML();
-            $deletePanel->body = $this->deletePanelText;
+            $deletePanel = new Modal();
+            $deletePanel->setAttribute('id', $this->id.'_deletePanel');
+            $deletePanel->setBackdropStatic();
+            $deletePanel->setHeaderContent(new GenericTag('h4', $this->deletePanelTitle));
+            $deletePanel->setFooterContent($buttonConfirmDelete->getHTML().$buttonCancelDelete->getHTML());
+            $deletePanel->setContent($this->deletePanelText);
 
         }
 
@@ -752,7 +752,7 @@ class UI_Tree extends UI_Generic
             $buttonCancelEditPanel->prependContent(new Icon($this->editPanelCancelIcon));
             $buttonCancelEditPanel->closeModal($this->id.'_addPanel');
 
-            $editPanel->footer .= $buttonConfirmEditPanel->getHTML().$buttonCancelEditPanel->getHTML();
+            $editPanel->getFooter()->appendContent($buttonConfirmEditPanel->getHTML().$buttonCancelEditPanel->getHTML());
         }
 
         $edit .= $editPanel->getHTML();
@@ -831,12 +831,13 @@ class UI_Tree extends UI_Generic
         $resetAction = '$(\'#'.$this->id.'_addForm\').get(0).reset();$(\'#'.$this->id.'_addForm\').eraseFormErrors();';
         $buttonCancelAddPanel->setAttribute('onclick', $resetAction);
 
-        $addPanel = new UI_Popup_Static($this->id.'_addPanel');
-        $addPanel->addAttribute('class', 'large');
-        $addPanel->title = $this->addPanelTitle;
-        $addPanel->footer = $buttonConfirmAddPanel->getHTML().$buttonCancelAddPanel->getHTML();
-        $addPanel->body = $this->addPanelForm->getHTML();
-        $addPanel->closeWithClick = false;
+        $addPanel = new Modal();
+        $addPanel->setAttribute('id', $this->id.'_addPanel');
+        $addPanel->large();
+        $addPanel->setHeaderContent(new GenericTag('h4', $this->addPanelTitle));
+        $addPanel->setFooterContent($buttonConfirmAddPanel->getHTML().$buttonCancelAddPanel->getHTML());
+        $addPanel->setContent($this->addPanelForm->getHTML());
+        $addPanel->setBackdropStatic();
 
         $add .= $addPanel->getHTML();
 

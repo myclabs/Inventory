@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\Modal;
+
 /**
  * Fichier de la classe TMD.
  *
@@ -95,14 +97,14 @@ class UI_TMD extends UI_Generic
     /**
      * Popup affiché lorsque l'option de détail est activé.
      *
-     * @var UI_Popup_Ajax
+     * @var Modal
      */
     public $detailPanel = null;
 
     /**
      * Popup affiché lorsque l'option d'ajout est est activé.
      *
-     * @var UI_Popup_Ajax
+     * @var Modal
      */
     public $addPanel = null;
 
@@ -129,8 +131,10 @@ class UI_TMD extends UI_Generic
         $this->textEmptyCell = '-';
         $this->formatCells = '{value} ± {uncertainty} %';
         $this->dataCellsSent = array('value', 'uncertainty');
-        $this->detailPanel = new UI_Popup_Ajax($this->id.'_detailPanel');
-        $this->addPanel = new UI_Popup_Ajax($this->id.'_addPanel');
+        $this->detailPanel = new Modal();
+        $this->detailPanel->setAttribute('id', $this->id.'_detailPanel');
+        $this->addPanel = new Modal();
+        $this->addPanel->setAttribute('id', $this->id.'_addPanel');
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 use AF\Domain\AF;
+use MyCLabs\MUIH\GenericTag;
 
 /**
  * @author  matthieu.napoli
@@ -28,7 +29,7 @@ $checkboxDatagrid->addCol($checkboxRef);
 // Help
 $help = new UI_Datagrid_Col_LongText('help', __('UI', 'name', 'help'));
 $help->editable = true;
-$help->popup->title = __('UI', 'name', 'help');
+$help->popup->setHeaderContent(new GenericTag('h4', __('UI', 'name', 'help')));
 $checkboxDatagrid->addCol($help);
 // Hidden / Show
 $isVisibleCheckbox = new UI_Datagrid_Col_Bool('isVisible', __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));

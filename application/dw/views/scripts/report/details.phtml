@@ -6,7 +6,9 @@
  * @subpackage View
  */
 use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Modal;
 use MyCLabs\MUIH\Tab;
 use MyCLabs\MUIH\Tabs;
 
@@ -140,10 +142,11 @@ use MyCLabs\MUIH\Tabs;
             $saveReportClosePopupButton->setAttribute('data-toggle', 'modal');
             $saveReportClosePopupButton->setAttribute('data-target', '#saveReport');
 
-            $saveReportPopup = new UI_Popup_Static('saveReport');
-            $saveReportPopup->title = __('DW', 'config', 'saveReportPopupTitle');
-            $saveReportPopup->body = $saveReportForm->getHTML();
-            $saveReportPopup->footer = $saveReportButton->getHTML().$saveReportClosePopupButton->getHTML();
+            $saveReportPopup = new Modal();
+            $saveReportPopup->setAttribute('id', 'saveReport');
+            $saveReportPopup->setHeaderContent(new GenericTag('h4', __('DW', 'config', 'saveReportPopupTitle')));
+            $saveReportPopup->setContent($saveReportForm->getHTML());
+            $saveReportPopup->setFooterContent($saveReportButton->getHTML().$saveReportClosePopupButton->getHTML());
             $saveReportPopup->display();
 
             $this->headScript()->appendScript('$(document).ready(function(){'.$saveReportForm->getScript().'});');

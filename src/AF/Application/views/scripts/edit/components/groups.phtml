@@ -1,6 +1,7 @@
 <?php
 use AF\Domain\AF;
 use AF\Domain\Component\Group;
+use MyCLabs\MUIH\GenericTag;
 
 /**
  * Configuration des groupes d'un AF
@@ -31,7 +32,7 @@ $groupDatagrid->addCol($groupRef);
 // Help
 $groupHelp = new UI_Datagrid_Col_LongText('help', __('UI', 'name', 'help'));
 $groupHelp->editable = true;
-$groupHelp->popup->title = __('UI', 'name', 'help');
+$groupHelp->popup->setHeaderContent(new GenericTag('h4', __('UI', 'name', 'help')));
 $groupDatagrid->addCol($groupHelp);
 // Hidden / Show
 $isVisible = new UI_Datagrid_Col_Bool('isVisible', __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));

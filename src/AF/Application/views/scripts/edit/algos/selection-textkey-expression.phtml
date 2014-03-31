@@ -1,5 +1,6 @@
 <?php
 use AF\Domain\AF;
+use MyCLabs\MUIH\GenericTag;
 
 /** @var $af AF */
 $af = $this->af;
@@ -21,7 +22,7 @@ $datagrid->addCol($refColumn);
 $expressionColumn = new UI_Datagrid_Col_LongText('expression', __('TEC', 'name', 'expression'));
 $expressionColumn->editable = true;
 $expressionColumn->textileEditor = false;
-$expressionColumn->popup->title = __('TEC', 'name', 'expression');
+$expressionColumn->popup->setHeaderContent(new GenericTag('h4', __('TEC', 'name', 'expression')));
 $datagrid->addCol($expressionColumn);
 
 echo $datagrid->render();

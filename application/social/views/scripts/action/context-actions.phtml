@@ -1,3 +1,6 @@
+<?php
+use MyCLabs\MUIH\GenericTag;
+?>
 <div class="page-header">
     <h1><?=__('Social', 'action', 'actions')?></h1>
 </div>
@@ -45,7 +48,7 @@ $progressColumn->list = [
 $datagrid->addCol($progressColumn);
 
 $descriptionColumn = new UI_Datagrid_Col_LongText('description', __('UI', 'name', 'description'));
-$descriptionColumn->popup->title = __('UI', 'name', 'description');
+$descriptionColumn->popup->setHeaderContent(new GenericTag('h4', __('UI', 'name', 'description')));
 $descriptionColumn->popup->render();
 $datagrid->addCol($descriptionColumn);
 

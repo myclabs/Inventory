@@ -1,3 +1,6 @@
+<?php
+use MyCLabs\MUIH\GenericTag;
+?>
 <div class="page-header">
     <h1><?=__('Social', 'actionTemplate', 'actionTemplates')?></h1>
 </div>
@@ -20,7 +23,7 @@ $themeColumn->entityAlias = Social_Model_Theme::getAlias();
 $datagrid->addCol($themeColumn);
 
 $descriptionColumn = new UI_Datagrid_Col_LongText('description', __('UI', 'name', 'description'));
-$descriptionColumn->popup->title = __('UI', 'name', 'description');
+$descriptionColumn->popup->setHeaderContent(new GenericTag('h4', __('UI', 'name', 'description')));
 $descriptionColumn->popup->render();
 $datagrid->addCol($descriptionColumn);
 

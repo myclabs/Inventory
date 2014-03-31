@@ -1,6 +1,7 @@
 <?php
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
+use MyCLabs\MUIH\GenericTag;
 
 /**
  * @author  matthieu.napoli
@@ -52,8 +53,8 @@ $datagrid->addCol($valueColumn);
 
 // Popup d'udpdate de la valeur de référence de la condition
 $editValueColumn = new UI_Datagrid_Col_Popup('editValue', __('UI', 'name', 'edition'));
-$editValueColumn->popup->title = __('AF', 'configInteractionDatagrid', 'elementaryConditionEditPanelTitle');
-$editValueColumn->popup->addAttribute('class', 'large');
+$editValueColumn->popup->setHeaderContent(new GenericTag('h4', __('AF', 'configInteractionDatagrid', 'elementaryConditionEditPanelTitle')));
+$editValueColumn->popup->large();
 $datagrid->addCol($editValueColumn);
 
 echo $datagrid->render();

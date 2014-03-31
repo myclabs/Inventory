@@ -2,8 +2,8 @@
 
 namespace UI\Datagrid\Column;
 
+use MyCLabs\MUIH\Modal;
 use UI\Datagrid\Datagrid;
-use UI_Popup_Ajax;
 
 /**
  * Classe représentant une colonne affichant des popups.
@@ -22,7 +22,7 @@ class PopupColumn extends GenericColumn
     /**
      * Popup Ajax qui sera affiché dans la colonne.
      *
-     * @var UI_Popup_Ajax
+     * @var Modal
      */
     public $popup;
 
@@ -30,7 +30,9 @@ class PopupColumn extends GenericColumn
     public function __construct($id = null, $label = null)
     {
         parent::__construct($id, $label);
-        $this->popup = new UI_Popup_Ajax('temp');
+        $this->popup = new Modal();
+        $this->popup->large();
+        $this->popup->ajax();
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_CENTER;
         $this->defaultValue = '<i class="fa fa-search-plus"></i> '.__('UI', 'name', 'details');
@@ -41,15 +43,17 @@ class PopupColumn extends GenericColumn
      *
      * @param Datagrid $datagrid
      *
-     * @return UI_Popup_Ajax
+     * @return Modal
      */
     public function getPopup(Datagrid $datagrid)
     {
         if ($this->popup === null) {
-            $this->popup = new UI_Popup_Ajax($datagrid->id.'_'.$this->id.'_popup');
-            $this->popup->addAttribute('class', 'large');
+            $this->popup = new Modal();
+            $this->popup->setAttribute('id', $datagrid->id.'_'.$this->id.'_popup');
+            $this->popup->large();
+            $this->popup->ajax();
         } else {
-            $this->popup->id = $datagrid->id.'_'.$this->id.'_popup';
+            $this->popup->setAttribute('id', $datagrid->id.'_'.$this->id.'_popup');
         }
         return $this->popup;
     }

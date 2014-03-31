@@ -5,6 +5,7 @@
  * @package AF
  */
 use AF\Domain\AF;
+use MyCLabs\MUIH\GenericTag;
 use Parameter\Domain\Family\Family;
 
 /** @var $af \AF\Domain\AF */
@@ -41,7 +42,7 @@ $datagrid->addCol($familyColumn);
 
 // Coordonnées
 $coordinatesColumn = new UI_Datagrid_Col_Popup('coordinates', __('Parameter', 'name', 'coordinates'));
-$coordinatesColumn->popup->addAttribute('class', 'large');
+$coordinatesColumn->popup->large();
 $datagrid->addCol($coordinatesColumn);
 
 // Context indicator
@@ -56,8 +57,8 @@ $datagrid->addCol($contextIndicatorColumn);
 
 // Indexation
 $resultIndexColumn = new UI_Datagrid_Col_Popup('resultIndex', __('Algo', 'name', 'indexation'));
-$resultIndexColumn->popup->title = __('Algo', 'name', 'indexation');
-$resultIndexColumn->popup->addAttribute('class', 'large');
+$resultIndexColumn->popup->setHeaderContent(new GenericTag('h4', __('Algo', 'name', 'indexation')));
+$resultIndexColumn->popup->large();
 $datagrid->addCol($resultIndexColumn);
 
 echo $datagrid->render();

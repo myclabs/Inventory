@@ -3,10 +3,11 @@
 namespace UI\Datagrid;
 
 use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Collapse;
+use MyCLabs\MUIH\Modal;
 use UI_Generic;
-use UI_Popup_Static;
 use UI_Form;
 use UI_Form_Element_HTML;
 use Core_Exception_InvalidArgument;
@@ -791,12 +792,13 @@ class Datagrid extends UI_Generic
         $resetAction = '$(\'#'.$this->id.'_addForm\').get(0).reset();$(\'#'.$this->id.'_addForm\').eraseFormErrors();';
         $buttonCancelAddPanel->setAttribute('onclick', $resetAction);
 
-        $addPanel = new UI_Popup_Static($this->id.'_addPanel');
-        $addPanel->addAttribute('class', 'large');
-        $addPanel->title = $this->addPanelTitle;
-        $addPanel->footer = $buttonConfirmAddPanel->getHTML().$buttonCancelAddPanel->getHTML();
-        $addPanel->body = $this->addPanelForm->getHTML();
-        $addPanel->closeWithClick = false;
+        $addPanel = new Modal();
+        $addPanel->setAttribute('id', $this->id.'_addPanel');
+        $addPanel->large();
+        $addPanel->setHeaderContent(new GenericTag('h4', $this->addPanelTitle));
+        $addPanel->setFooterContent($buttonConfirmAddPanel->getHTML().$buttonCancelAddPanel->getHTML());
+        $addPanel->setContent($this->addPanelForm->getHTML());
+        $addPanel->setBackdropStatic();
 
         $add .= $addPanel->getHTML();
 
@@ -842,10 +844,11 @@ JS;
         $buttonCancelDeletePanel->prependContent(new Icon($this->deletePanelCancelIcon));
         $buttonCancelDeletePanel->closeModal($this->id.'_deletePanel');
 
-        $deletePanel = new UI_Popup_Static($this->id.'_deletePanel');
-        $deletePanel->title = $this->deletePanelTitle;
-        $deletePanel->footer = $buttonConfirmDeletePanel->getHTML().$buttonCancelDeletePanel->getHTML();
-        $deletePanel->body = $this->deletePanelText;
+        $deletePanel = new Modal();
+        $deletePanel->setAttribute('id', $this->id.'_deletePanel');
+        $deletePanel->setHeaderContent(new GenericTag('h4', $this->deletePanelTitle));
+        $deletePanel->setFooterContent($buttonConfirmDeletePanel->getHTML().$buttonCancelDeletePanel->getHTML());
+        $deletePanel->setContent($this->deletePanelText);
 
         $delete .= $deletePanel->getHTML();
 

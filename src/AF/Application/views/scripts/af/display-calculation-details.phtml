@@ -15,7 +15,9 @@ use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Collapse;
+use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Modal;
 
 /** @var $af AF */
 $af = $this->af;
@@ -203,16 +205,17 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
                           'action' => 'popup-expression-graph',
                           'id' => $algo->getId(),
                           ]);
-        $popup = new UI_Popup_Ajax('graph_' . $algo->getId(), $url);
-        $popup->title = $algo->getRef();
+        $popup = new Modal();
+        $popup->setAttribute('id', 'graph_' . $algo->getId());
+        $popup->setHeaderContent(new GenericTag('h4', $algo->getRef()));
         if ($algo->getLabel()) {
-            $popup->title .= ' (' . $algo->getLabel() . ')';
+            $popup->getHeader()->appendContent(' (' . $algo->getLabel() . ')');
         }
-        $popup->addAttribute('class', 'large');
+        $popup->large();
         $collapse->appendContent($popup->render());
         $buttonHTML = new Button(new Icon('search'));
         $buttonHTML->addClass('btn-xs');
-        $buttonHTML->showModal('graph_' . $algo->getId());
+        $buttonHTML->showAjaxModal('graph_' . $algo->getId(), $url);
         $expression = $algo->getExpression();
         $collapse->appendContent("<p><strong>" . __('TEC', 'name', 'expression') . __('UI', 'other', ':')
             . "</strong> $buttonHTML <code>$expression</code></p>");

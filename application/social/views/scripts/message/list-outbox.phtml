@@ -1,5 +1,6 @@
 <?php
 use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\GenericTag;
 
 $closeButton = new Button(__('UI', 'verb', 'close'), Button::TYPE_PRIMARY);
 $closeButton->setAttribute('data-dismiss', 'modal');
@@ -14,15 +15,15 @@ $datagrid->addCol($columnAuthor);
 // Objet
 $columnObject = new UI_Datagrid_Col_Popup('message', __('Social', 'name', 'message'));
 $columnObject->editable = false;
-$columnObject->popup->title = __('Social', 'message', 'outboxDetailMessagePopupTitle');
-$columnObject->popup->footer = $closeButton->render();
+$columnObject->popup->setHeaderContent(new GenericTag('h4', _('Social', 'message', 'outboxDetailMessagePopupTitle')));
+$columnObject->popup->setFooterContent($closeButton->render());
 $datagrid->addCol($columnObject);
 
 // Destinataire
 $columnRecipient = new UI_Datagrid_Col_Popup('recipient', __('Social', 'message', 'recipient'));
 $columnRecipient->editable = false;
-$columnRecipient->popup->title = __('UI', 'name', 'informations');
-$columnRecipient->popup->footer = $closeButton->render();
+$columnRecipient->popup->setHeaderContent(new GenericTag('h4', __('UI', 'name', 'informations')));
+$columnRecipient->popup->setFooterContent($closeButton->render());
 $datagrid->addCol($columnRecipient);
 
 // Date

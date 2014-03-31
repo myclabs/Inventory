@@ -1,6 +1,7 @@
 <?php
 use AF\Domain\AF;
 use AF\Domain\Component\NumericField;
+use MyCLabs\MUIH\GenericTag;
 
 /** @var $af AF */
 $af = $this->af;
@@ -42,8 +43,8 @@ $datagrid->addCol($contextIndicatorColumn);
 
 // Indexation
 $resultIndexColumn = new UI_Datagrid_Col_Popup('resultIndex', __('Algo', 'name', 'indexation'));
-$resultIndexColumn->popup->title = __('Algo', 'name', 'indexation');
-$resultIndexColumn->popup->addAttribute('class', 'large');
+$resultIndexColumn->popup->setHeaderContent(new GenericTag('h4', __('Algo', 'name', 'indexation')));
+$resultIndexColumn->popup->large();
 $datagrid->addCol($resultIndexColumn);
 
 echo $datagrid->render();

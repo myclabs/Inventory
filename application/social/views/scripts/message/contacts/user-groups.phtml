@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\GenericTag;
+
 $datagrid = new UI_Datagrid('usergroups', 'datagrid_message_contact_user-group', 'social');
 $datagrid->pagination = true;
 
@@ -12,7 +14,7 @@ $datagrid->addCol($labelColumn);
 $detailsColumn = new UI_Datagrid_Col_Popup('details', __('UI', 'name', 'members'));
 $detailsColumn->editable = false;
 $detailsColumn->filterName = Social_Model_Message::QUERY_USER_RECIPIENTS;
-$detailsColumn->popup->title =  __('UI', 'name', 'members');
+$detailsColumn->popup->setHeaderContent(new GenericTag('h4', __('UI', 'name', 'members')));
 $datagrid->addCol($detailsColumn);
 
 // Nouveau message
