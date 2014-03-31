@@ -1,8 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
@@ -26,7 +22,7 @@ $datagridFixed->pagination = false;
 $datagridFixed->addElements = true;
 $datagridFixed->addPanelTitle = __('AF', 'configTreatmentDatagrid', 'fixedCoordinateAddPanelTitle');
 $datagridFixed->deleteElements = true;
-$datagridFixed->addParam('id', $af->getId());
+$datagridFixed->addParam('idAF', $af->getId());
 $datagridFixed->addParam('idAlgo', $algo->getId());
 // Colonne dimension
 $dimensionColumn = new UI_Datagrid_Col_List('dimension', __('Parameter', 'name', 'dimension'));
@@ -40,7 +36,9 @@ $memberRef = new UI_Datagrid_Col_List('member', __('UI', 'name', 'element'));
 $memberRef->editable = true;
 $memberRef->addable = false;
 $memberRef->dynamicList = true;
-$memberRef->list = $this->baseUrl('af/datagrid_edit_algos_numeric-parameter_coordinates-fixed/get-member-list/');
+$memberRef->list = $this->baseUrl(
+    'af/datagrid_edit_algos_numeric-parameter_coordinates-fixed/get-member-list?idAF=' . $af->getId()
+);
 $datagridFixed->addCol($memberRef);
 
 // Datagrid des coordonnées déterminées par un algorithme
