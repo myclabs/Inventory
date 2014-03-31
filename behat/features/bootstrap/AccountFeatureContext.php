@@ -60,6 +60,26 @@ trait AccountFeatureContext
     }
 
     /**
+     * @Then /^I create a new "([^"]*)" parameter library$/
+     */
+    public function iCreateANewParameterLibrary($name)
+    {
+        $this->clickElement('#createParameterLibrary');
+        $this->fillField('label', $name);
+        $this->click('Ajouter');
+    }
+
+    /**
+     * @Then /^I create a new "([^"]*)" classification library$/
+     */
+    public function iCreateANewClassificationLibrary($name)
+    {
+        $this->clickElement('#createClassificationLibrary');
+        $this->fillField('label', $name);
+        $this->click('Ajouter');
+    }
+
+    /**
      * @param string|null $name
      * @return WebAssert
      */

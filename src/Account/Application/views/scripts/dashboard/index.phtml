@@ -152,7 +152,8 @@ $account = $this->account;
 
     <?php if ($this->canEditAccount) : ?>
         <p>
-            <a href="parameter/library/new?account=<?=$account->id?>" class="btn btn-default">
+            <a id="createParameterLibrary" href="parameter/library/new?account=<?=$account->id?>"
+               class="btn btn-default">
                 <i class="fa fa-plus"></i>
                 <?=__('UI', 'verb', 'add')?>
             </a>
@@ -198,7 +199,8 @@ $account = $this->account;
 
     <?php if ($this->canEditAccount) : ?>
         <p>
-            <a href="classification/library/new?account=<?=$account->id?>" class="btn btn-default">
+            <a id="createClassificationLibrary" href="classification/library/new?account=<?=$account->id?>"
+               class="btn btn-default">
                 <i class="fa fa-plus"></i>
                 <?=__('UI', 'verb', 'add')?>
             </a>

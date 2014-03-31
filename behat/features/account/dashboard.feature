@@ -19,3 +19,18 @@ Feature: Dashboard
     Then the following message is shown and closed: "La bibliothèque a été créée."
     And I should see "Test library"
     And I should see "Liste des formulaires"
+
+  @javascript @readOnly
+  Scenario: I should be able to create a new parameter library
+    Given I am on the dashboard for account "My C-Sense"
+    When I create a new "Test library" parameter library
+    Then the following message is shown and closed: "La bibliothèque a été créée."
+    And I should see "Test library"
+    And I should see "Liste des familles"
+
+  @javascript @readOnly
+  Scenario: I should be able to create a new classification library
+    Given I am on the dashboard for account "My C-Sense"
+    When I create a new "Test library" classification library
+    Then the following message is shown and closed: "La bibliothèque a été créée."
+    And I should see "Test library"
