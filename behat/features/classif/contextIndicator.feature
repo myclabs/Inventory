@@ -6,7 +6,7 @@ Feature: Classification context indicator feature
 
   @javascript
   Scenario: Creation of a classification context indicator
-    Given I am on "classification/contextindicator/manage"
+    Given I am on "classification/contextindicator/list?library=1"
     Then I should see the "editContextIndicators" datagrid
   # Ajout d'un indicateur contextualisé, Contexte et indicateurs vides
     When I click "Ajouter"
@@ -32,8 +32,8 @@ Feature: Classification context indicator feature
   # Vérification contenu datagrid
     When I click "Annuler"
     Then the row 4 of the "editContextIndicators" datagrid should contain:
-      | context       | indicator         | axes    |
-      | Déplacements | Chiffre d'affaires |   |
+      | context      | indicator          | axes |
+      | Déplacements | Chiffre d'affaires |      |
   # Suppression
     When I click "Supprimer" in the row 1 of the "editContextIndicators" datagrid
     Then I should see the popup "Demande de confirmation"
@@ -51,7 +51,7 @@ Feature: Classification context indicator feature
 
   @javascript
   Scenario: Edition of the list of axes of a classification context indicator
-    Given I am on "classification/contextindicator/manage"
+    Given I am on "classification/contextindicator/list?library=1"
     Then I should see the "editContextIndicators" datagrid
   # Ajout d'un axe, relié hiérarchiquement à un axe existant
     When I additionally select "Scope" for column "axes" of row 1 of the "editContextIndicators" datagrid
@@ -65,7 +65,7 @@ Feature: Classification context indicator feature
 
   @javascript
   Scenario:  Deletion of a classification context indicator
-    Given I am on "classification/contextindicator/manage"
+    Given I am on "classification/contextindicator/list?library=1"
     Then I should see the "editContextIndicators" datagrid
     When I click "Supprimer" in the row 1 of the "editContextIndicators" datagrid
     Then I should see the popup "Demande de confirmation"
