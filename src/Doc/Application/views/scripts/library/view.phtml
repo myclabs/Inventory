@@ -53,6 +53,7 @@ $popup->display();
 
 // Bouton d'ajout
 $addButton = new Button(__('Doc', 'library', 'addPanelTitle'));
+$addButton->prependContent(' ');
 $addButton->prependContent(new Icon('plus'));
 $addButton->setAttribute('id', 'addDocumentButton'.$library->getId());
 echo $addButton->render();

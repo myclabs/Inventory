@@ -470,8 +470,10 @@ class UI_Datagrid extends UI_Generic
         $this->filterCollapse = new Collapse();
         $this->filterCollapse->setTitleContent($this->filterCollapseTitle);
         $this->filterConfirmButton = new Button(__('UI', 'verb', 'filter'));
+        $this->filterConfirmButton->prependContent(' ');
         $this->filterConfirmButton->prependContent(new Icon('search-plus'));
         $this->filterResetButton = new Button(__('UI', 'verb', 'reset'));
+        $this->filterResetButton->prependContent(' ');
         $this->filterResetButton->prependContent(new Icon('search-minus'));
         $this->filterIconResetFieldSuffix = 'times';
         $this->_defaultSortting['state'] = false;
@@ -788,6 +790,7 @@ class UI_Datagrid extends UI_Generic
         $add = '<div>';
 
         $addButton = new Button($this->addButtonLabel);
+        $addButton->prependContent(' ');
         $addButton->prependContent(new Icon($this->addButtonIcon));
         $addButton->showModal($this->id.'_addPanel');
         $add .= $addButton->getHTML();
@@ -796,16 +799,19 @@ class UI_Datagrid extends UI_Generic
 
         // Ajout du popup d'ajout.
         $buttonConfirmAddPanel = new Button($this->addPanelConfirmLabel, Button::TYPE_PRIMARY);
+        $buttonConfirmAddPanel->prependContent(' ');
         $buttonConfirmAddPanel->prependContent(new Icon($this->addPanelConfirmIcon));
         $buttonConfirmAddPanel->setAttribute('onclick', '$(\'#'.$this->id.'_addForm\').submit();');
 
         $buttonCancelAddPanel = new Button($this->addPanelCancelLabel);
+        $buttonCancelAddPanel->prependContent(' ');
         $buttonCancelAddPanel->prependContent(new Icon($this->addPanelCancelIcon));
         $buttonCancelAddPanel->closeModal($this->id.'_addPanel');
         $resetAction = '$(\'#'.$this->id.'_addForm\').get(0).reset();$(\'#'.$this->id.'_addForm\').eraseFormErrors();';
         $buttonCancelAddPanel->setAttribute('onclick', $resetAction);
 
-        $addPanel = new Modal($this->id.'_addPanel');
+        $addPanel = new Modal();
+        $addPanel->setAttribute('id', $this->id.'_addPanel');
         $addPanel->large();
         $addPanel->setHeaderContent(new GenericTag('h4', $this->addPanelTitle));
         $addPanel->setFooterContent($buttonConfirmAddPanel->getHTML().$buttonCancelAddPanel->getHTML());
@@ -850,10 +856,12 @@ class UI_Datagrid extends UI_Generic
 
         // Ajout du popup de supppression.
         $buttonConfirmDeletePanel = new Button($this->deletePanelConfirmLabel, Button::TYPE_PRIMARY);
+        $buttonConfirmDeletePanel->prependContent(' ');
         $buttonConfirmDeletePanel->prependContent(new Icon($this->deletePanelConfirmIcon));
         $buttonConfirmDeletePanel->closeModal($this->id.'_deletePanel');
 
         $buttonCancelDeletePanel = new Button($this->deletePanelCancelLabel);
+        $buttonCancelDeletePanel->prependContent(' ');
         $buttonCancelDeletePanel->prependContent(new Icon($this->deletePanelCancelIcon));
         $buttonCancelDeletePanel->closeModal($this->id.'_deletePanel');
 

@@ -1,5 +1,8 @@
 <?php
 
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
+
 foreach ($this->granularities as $granularity) :
     /** @var $granularity Orga_Model_Granularity */
 
@@ -22,6 +25,7 @@ foreach ($this->granularities as $granularity) :
 
 
     $addButton = new Button(___('UI', 'verb', 'add'));
+    $addButton->prependContent(' ');
     $addButton->prependContent(new Icon('plus-circle'));
     $addButton->link('orga/granularity/view-report/idGranularity/' . $granularity->getId() . '/');
 

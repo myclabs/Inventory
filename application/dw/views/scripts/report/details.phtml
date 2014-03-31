@@ -67,6 +67,7 @@ use MyCLabs\MUIH\Tabs;
             <?php
             $saveReportDisplayPopupButton = new Button(__('UI', 'verb', 'save'));
             $saveReportDisplayPopupButton->setAttribute('id', 'saveReportButton');
+            $saveReportDisplayPopupButton->prependContent(' ');
             $saveReportDisplayPopupButton->prependContent(new Icon('hdd'));
             $saveReportDisplayPopupButton->setAttribute('href', '#');
             $saveReportDisplayPopupButton->setAttribute('data-toggle', 'modal');
@@ -133,10 +134,12 @@ use MyCLabs\MUIH\Tabs;
             }
 
             $saveReportButton = new Button(__('UI', 'verb', 'save'), Button::TYPE_PRIMARY);
+            $saveReportButton->prependContent(' ');
             $saveReportButton->prependContent(new Icon('check'));
             $saveReportButton->setAttribute('onclick', '$(\'#saveReportAs\').submit();');
 
             $saveReportClosePopupButton = new Button(__('UI', 'verb', 'cancel'));
+            $saveReportClosePopupButton->prependContent(' ');
             $saveReportClosePopupButton->prependContent(new Icon('remove'));
             $saveReportClosePopupButton->setAttribute('href', '#');
             $saveReportClosePopupButton->setAttribute('data-toggle', 'modal');
