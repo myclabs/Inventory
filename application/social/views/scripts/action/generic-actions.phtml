@@ -23,7 +23,6 @@ $themeColumn->entityAlias = Social_Model_Theme::getAlias();
 $datagrid->addCol($themeColumn);
 
 $descriptionColumn = new UI_Datagrid_Col_LongText('description', __('UI', 'name', 'description'));
-$descriptionColumn->popup->setHeaderContent(new GenericTag('h4', __('UI', 'name', 'description')));
 $descriptionColumn->popup->render();
 $datagrid->addCol($descriptionColumn);
 

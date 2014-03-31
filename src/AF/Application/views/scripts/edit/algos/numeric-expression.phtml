@@ -32,7 +32,6 @@ $datagrid->addCol($refColumn);
 $expressionColumn = new UI_Datagrid_Col_LongText('expression', __('TEC', 'name', 'expression'));
 $expressionColumn->editable = true;
 $expressionColumn->textileEditor = false;
-$expressionColumn->popup->setHeaderContent(new GenericTag('h4', __('TEC', 'name', 'expression')));
 $datagrid->addCol($expressionColumn);
 
 // Unité
@@ -52,7 +51,6 @@ $datagrid->addCol($contextIndicatorColumn);
 
 // Indexation
 $resultIndexColumn = new UI_Datagrid_Col_Popup('resultIndex', __('Algo', 'name', 'indexation'));
-$resultIndexColumn->popup->setHeaderContent(new GenericTag('h4', __('Algo', 'name', 'indexation')));
 $resultIndexColumn->popup->large();
 $datagrid->addCol($resultIndexColumn);
 

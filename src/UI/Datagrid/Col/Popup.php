@@ -1,4 +1,5 @@
 <?php
+use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Modal;
 
 /**
@@ -51,6 +52,7 @@ class UI_Datagrid_Col_Popup extends UI_Datagrid_Col_Generic
         $this->popup = new Modal();
         $this->popup->large();
         $this->popup->ajax(true);
+        $this->popup->setHeaderContent(new GenericTag('h4', $label));
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_CENTER;
         $this->defaultValue = '<i class="fa fa-search-plus"></i> '.__('UI', 'name', 'details');
@@ -71,6 +73,7 @@ class UI_Datagrid_Col_Popup extends UI_Datagrid_Col_Generic
             $this->popup->large();
             $this->popup->ajax(true);
         } else {
+
             $this->popup->setAttribute('id', $datagrid->id.'_'.$this->id.'_popup');
         }
         return $this->popup;

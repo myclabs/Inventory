@@ -2,6 +2,7 @@
 
 namespace UI\Datagrid\Column;
 
+use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Modal;
 use UI\Datagrid\Datagrid;
 
@@ -32,7 +33,8 @@ class PopupColumn extends GenericColumn
         parent::__construct($id, $label);
         $this->popup = new Modal();
         $this->popup->large();
-        $this->popup->ajax();
+        $this->popup->ajax(true);
+        $this->popup->setHeaderContent(new GenericTag('h4', $label));
         // Définition des pseudo-constantes pouvant être redéfinies.
         $this->valueAlignment = self::DISPLAY_TEXT_CENTER;
         $this->defaultValue = '<i class="fa fa-search-plus"></i> '.__('UI', 'name', 'details');
@@ -51,7 +53,7 @@ class PopupColumn extends GenericColumn
             $this->popup = new Modal();
             $this->popup->setAttribute('id', $datagrid->id.'_'.$this->id.'_popup');
             $this->popup->large();
-            $this->popup->ajax();
+            $this->popup->ajax(true);
         } else {
             $this->popup->setAttribute('id', $datagrid->id.'_'.$this->id.'_popup');
         }
