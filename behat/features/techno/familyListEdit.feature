@@ -6,7 +6,7 @@ Feature: Family list edit feature
 
   @javascript
   Scenario: Creation of a parameter family, correct input
-    Given I am on "parameter/family/list-edit"
+    Given I am on "parameter/library/view/id/1"
     Then I should see the "familyDatagrid" datagrid
   # Affichage du datagrid
     And the row 1 of the "familyDatagrid" datagrid should contain:
@@ -28,7 +28,7 @@ Feature: Family list edit feature
 
   @javascript @readOnly
   Scenario: Creation of a parameter family, incorrect input
-    Given I am on "parameter/family/list-edit"
+    Given I am on "parameter/library/view/id/1"
     Then I should see the "familyDatagrid" datagrid
   # Ajout
     When I click "Ajouter"
@@ -58,7 +58,7 @@ Feature: Family list edit feature
 
   @javascript @readOnly
   Scenario: Link to reach a parameter family from the family list edit datagrid
-    Given I am on "parameter/family/list-edit"
+    Given I am on "parameter/library/view/id/1"
     Then I should see the "familyDatagrid" datagrid
   # Clic sur "Cliquer pour accéder"
     When I click "Cliquer pour accéder" in the row 1 of the "familyDatagrid" datagrid

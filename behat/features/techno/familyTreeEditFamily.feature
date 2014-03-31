@@ -6,7 +6,7 @@ Feature: Family tree edit of families feature
 
   @javascript
   Scenario: Edit family label in family tree edit
-    Given I am on "parameter/family/tree-edit"
+    Given I am on "parameter/library/view/id/1"
   # Modification du libellé, libellé vide
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I fill in "familyTree_labelEdit" with ""
@@ -20,7 +20,7 @@ Feature: Family tree edit of families feature
 
   @javascript
   Scenario: Edition of position and parent of a family in family tree edit
-    Given I am on "parameter/family/tree-edit"
+    Given I am on "parameter/library/view/id/1"
   # Déplacement en dernier
     And I click "Combustion de combustible, mesuré en unité de masse"
     And I check "Premier"
@@ -46,7 +46,7 @@ Feature: Family tree edit of families feature
 
   @javascript
   Scenario: Deletion of a family in family tree edit
-    Given I am on "parameter/family/tree-edit"
+    Given I am on "parameter/library/view/id/1"
   # Suppression
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I click "Supprimer"
