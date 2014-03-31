@@ -10,3 +10,12 @@ Feature: Dashboard
     Then I should see "Aucun workspace."
     And I should see the "Formulaires My C-Sense" AF library
     And I should see the "Paramètres My C-Sense" parameter library
+    And I should see the "Classification My C-Sense" classification library
+
+  @javascript @readOnly
+  Scenario: I should be able to create a new AF library
+    Given I am on the dashboard for account "My C-Sense"
+    When I create a new "Test library" AF library
+    Then the following message is shown and closed: "La bibliothèque a été créée."
+    And I should see "Test library"
+    And I should see "Liste des formulaires"

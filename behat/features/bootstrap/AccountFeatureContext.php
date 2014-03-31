@@ -42,6 +42,24 @@ trait AccountFeatureContext
     }
 
     /**
+     * @Then /^I should see the "([^"]*)" classification library$/
+     */
+    public function iShouldSeeTheClassificationLibrary($name)
+    {
+        $this->assertSession()->elementExists('css', ".classificationLibrary:contains(\"$name\")");
+    }
+
+    /**
+     * @Then /^I create a new "([^"]*)" AF library$/
+     */
+    public function iCreateANewAFLibrary($name)
+    {
+        $this->clickElement('#createAFLibrary');
+        $this->fillField('label', $name);
+        $this->click('Ajouter');
+    }
+
+    /**
      * @param string|null $name
      * @return WebAssert
      */
@@ -51,4 +69,6 @@ trait AccountFeatureContext
      */
     public abstract function visit($page);
     public abstract function clickElement($selector);
+    public abstract function click($name);
+    public abstract function fillField($field, $value);
 }
