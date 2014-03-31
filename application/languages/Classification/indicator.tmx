@@ -31,7 +31,7 @@
                 <seg>Indicator addition</seg>
             </tuv>
         </tu>
-    
+
         <!-- Messages -->
 
         <tu tuid="IndicatorIsUsedInContextIndicator">
@@ -40,6 +40,41 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>This indicator cannot be deleted, since (at least) one context indicator relates to it.</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="libraryCreationTitle">
+            <tuv xml:lang="fr">
+                <seg>Création d'une nouvelle bibliothèque de classification</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of a new classification library</seg>
+            </tuv>
+        </tu>
+        <tu tuid="libraryCreationHelp">
+            <tuv xml:lang="fr">
+                <seg>La nouvelle bibliothèque sera créée dans le compte « [ACCOUNT] ».</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>La new library will be created in the "[ACCOUNT]" account.</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="libraryCreated">
+            <tuv xml:lang="fr">
+                <seg>La bibliothèque a été créée.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The library has been created.</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="libraryDeletionError">
+            <tuv xml:lang="fr">
+                <seg>La bibliothèque ne peut pas être supprimée car elle n'est pas vide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The library can't be deleted because it isn't empty.</seg>
             </tuv>
         </tu>
 
