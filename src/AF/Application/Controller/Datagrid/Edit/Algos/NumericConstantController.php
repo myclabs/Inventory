@@ -1,12 +1,8 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  thibaud.rolland
- */
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
 use Core\Annotation\Secure;
 use Unit\UnitAPI;
@@ -32,9 +28,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $data['uncertainty'] = $this->cellNumber($algo->getUnitValue()->getRelativeUncertainty());
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
-                    $ref = $contextIndicator->getContext()->getRef()
-                        . "#" . $contextIndicator->getIndicator()->getRef();
-                    $data['contextIndicator'] = $this->cellList($ref);
+                    $data['contextIndicator'] = $this->cellList($contextIndicator->getId());
                 }
                 $data['resultIndex'] = $this->cellPopup(
                     $this->_helper->url('popup-indexation', 'edit_algos', 'af', [
@@ -154,10 +148,10 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $algo->setUnitValue(new Calc_UnitValue(
-                        $unit,
-                        $algo->getUnitValue()->getDigitalValue(),
-                        $algo->getUnitValue()->getRelativeUncertainty()
-                    ));
+                    $unit,
+                    $algo->getUnitValue()->getDigitalValue(),
+                    $algo->getUnitValue()->getRelativeUncertainty()
+                ));
                 $this->data = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
                 break;
             case 'value':
@@ -185,8 +179,9 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 break;
             case 'contextIndicator':
                 if ($newValue) {
-                    $contextIndicator = $this->getContextIndicatorByRef($newValue);
+                    $contextIndicator = ContextIndicator::load($newValue);
                     $algo->setContextIndicator($contextIndicator);
+                    $this->data = $this->cellList($contextIndicator->getId());
                 } else {
                     $algo->setContextIndicator(null);
                 }
@@ -223,45 +218,18 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
      */
     public function getContextIndicatorListAction()
     {
+        /** @var $af AF */
+        $af = AF::load($this->getParam('id'));
+        $classificationLibraries = ClassificationLibrary::loadByAccount($af->getLibrary()->getAccount());
+
         $this->addElementList(null, '');
-        /** @var $contextIndicators ContextIndicator[] */
-        $contextIndicators = ContextIndicator::loadList();
-        foreach ($contextIndicators as $contextIndicator) {
-            $this->addElementList($this->getContextIndicatorRef($contextIndicator),
-                                  $this->getContextIndicatorLabel($contextIndicator));
+
+        foreach ($classificationLibraries as $library) {
+            foreach ($library->getContextIndicators() as $contextIndicator) {
+                $this->addElementList($contextIndicator->getId(), $contextIndicator->getLabel());
+            }
         }
+
         $this->send();
-    }
-
-    /**
-     * @param ContextIndicator $contextIndicator
-     * @return string
-     */
-    private function getContextIndicatorRef(ContextIndicator $contextIndicator)
-    {
-        return $contextIndicator->getContext()->getRef()
-            . '#' . $contextIndicator->getIndicator()->getRef();
-    }
-
-    /**
-     * @param string $ref
-     * @return ContextIndicator
-     */
-    private function getContextIndicatorByRef($ref)
-    {
-        if (empty($ref)) {
-            return null;
-        }
-        list($refContext, $refIndicator) = explode('#', $ref);
-        return ContextIndicator::loadByRef($refContext, $refIndicator);
-    }
-
-    /**
-     * @param ContextIndicator $contextIndicator
-     * @return string
-     */
-    private function getContextIndicatorLabel(ContextIndicator $contextIndicator)
-    {
-        return $contextIndicator->getIndicator()->getLabel() . ' - ' . $contextIndicator->getContext()->getLabel();
     }
 }

@@ -31,7 +31,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                 $data['axis'] = $axis->getLabel();
                 $index = $algo->getIndexForAxis($axis);
                 if ($index instanceof FixedIndex) {
-                    $data['type'] = $this->cellList(FixedIndex::class);
+                    $data['type'] = $this->cellList('FixedIndex');
                     $member = $index->getClassificationMember();
                     if ($member) {
                         $data['value'] = $this->cellList($member->getRef());

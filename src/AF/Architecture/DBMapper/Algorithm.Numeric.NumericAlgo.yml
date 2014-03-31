@@ -13,12 +13,10 @@ AF\Domain\Algorithm\Numeric\NumericAlgo:
       nullable: true
       gedmo:
         - translatable
-    refContext:
-      type: string
-      nullable: true
-    refIndicator:
-      type: string
-      nullable: true
+
+  manyToOne:
+    contextIndicator:
+      targetEntity: Classification\Domain\ContextIndicator
 
   oneToMany:
     indexes:

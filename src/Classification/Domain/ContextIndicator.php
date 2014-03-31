@@ -62,6 +62,11 @@ class ContextIndicator extends Core_Model_Entity
         $this->axes = new ArrayCollection();
     }
 
+    public function getLabel()
+    {
+        return $this->context->getLabel() . ' - ' . $this->indicator->getLabel();
+    }
+
     /**
      * @return int
      */

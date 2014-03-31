@@ -31,6 +31,7 @@ class AF_Edit_AlgosController extends Core_Controller
      */
     public function popupIndexationAction()
     {
+        $this->view->af = AF::load($this->getParam('idAF'));
         $this->view->algo = Algo::load($this->getParam('algo'));
         $this->_helper->layout()->disableLayout();
     }
