@@ -2,7 +2,6 @@
 
 namespace UI\Datagrid\Column;
 
-use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Modal;
 use UI\Datagrid\Datagrid;
 

@@ -1,5 +1,4 @@
 <?php
-use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Modal;
 
 /**

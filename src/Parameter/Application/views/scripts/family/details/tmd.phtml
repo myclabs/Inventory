@@ -1,6 +1,6 @@
 <?php
 
-use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Modal;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Family\Dimension;
@@ -24,6 +24,8 @@ if ($this->edit) {
     $editPopup->addTitle(__('UI', 'loading', 'loading'));
     $editPopup->addDefaultDismissButton();
     $editPopup->large();
+    $editPopup->ajax(true);
+    $editPopup->setContent(new Icon('spinner fa-spin fa-3x'));
     $editPopup->setFooterContent('<button class="btn btn-primary" onclick="$(\'#element_editForm\').submit();">'
         .'<i class="fa fa-check"></i> '.__('UI', 'verb', 'save').'</button>'
         .'<button class="btn btn-default" data-dismiss="modal">'

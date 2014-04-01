@@ -3,7 +3,6 @@
 namespace UI\Datagrid;
 
 use MyCLabs\MUIH\Button;
-use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\Modal;
