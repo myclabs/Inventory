@@ -115,6 +115,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
                 break;
             case 'help':
                 $group->setHelp($newValue);
+                $this->data = null;
                 break;
             case 'isVisible':
                 $group->setVisible($newValue);

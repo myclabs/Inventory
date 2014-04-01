@@ -100,6 +100,8 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
      */
     public function updateelementAction()
     {
+        /** @var $af \AF\Domain\AF */
+        $af = AF::load($this->getParam('id'));
         /** @var $checkboxField Checkbox */
         $checkboxField = Checkbox::load($this->update['index']);
         $newValue = $this->update['value'];
@@ -114,6 +116,7 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
                 break;
             case 'help':
                 $checkboxField->setHelp($newValue);
+                $this->data = null;
                 break;
             case 'isVisible':
                 $checkboxField->setVisible($newValue);

@@ -147,6 +147,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 break;
             case 'help':
                 $numericField->setHelp($newValue);
+                $this->data = null;
                 break;
             case 'isVisible':
                 $numericField->setVisible($newValue);

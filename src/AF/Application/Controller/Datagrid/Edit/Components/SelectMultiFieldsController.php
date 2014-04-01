@@ -124,6 +124,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
                 break;
             case 'help':
                 $selectField->setHelp($newValue);
+                $this->data = null;
                 break;
             case 'isVisible':
                 $selectField->setVisible($newValue);

@@ -114,6 +114,7 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
                 break;
             case 'help':
                 $subAF->setHelp($newValue);
+                $this->data = null;
                 break;
             case 'isVisible':
                 $subAF->setVisible($newValue);

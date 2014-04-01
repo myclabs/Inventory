@@ -119,6 +119,7 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
                 break;
             case 'help':
                 $field->setHelp($newValue);
+                $this->data = null;
                 break;
             case 'isVisible':
                 $field->setVisible($newValue);
