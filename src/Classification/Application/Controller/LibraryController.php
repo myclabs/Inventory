@@ -69,7 +69,7 @@ class Classification_LibraryController extends Core_Controller
     }
 
     /**
-     * @Secure("deleteParameterLibrary")
+     * @Secure("deleteClassificationLibrary")
      */
     public function deleteAction()
     {

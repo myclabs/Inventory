@@ -7,7 +7,7 @@ Feature: Family list consult feature
   @javascript @readOnly
   Scenario: Family list consult scenario
   # Affichage du datagrid
-    Given I am on "parameter/family/list"
+    Given I am on "parameter/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "familyDatagrid" datagrid
     And the row 1 of the "familyDatagrid" datagrid should contain:

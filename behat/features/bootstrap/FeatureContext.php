@@ -221,6 +221,13 @@ class FeatureContext extends MinkContext
             'legend:contains("' . $label . '")'
         );
 
+        if (! $node) {
+            throw new ExpectationException(
+                "No collapse with lable $label was found.",
+                $this->getSession()
+            );
+        }
+
         $node->click();
 
         // Animation

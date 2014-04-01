@@ -6,7 +6,7 @@ Feature: Family tree edit of categories feature
 
   @javascript
   Scenario: Creation of a Parameter category
-    Given I am on "parameter/family/tree-edit"
+    Given I am on "parameter/library/view/id/1"
     And I wait for the page to finish loading
   # Ajout d'une catégorie, libellé vide
     When I click "Ajouter une catégorie"
@@ -22,7 +22,7 @@ Feature: Family tree edit of categories feature
 
   @javascript
   Scenario: Edition of label of a Parameter category
-    Given I am on "parameter/family/tree-edit"
+    Given I am on "parameter/library/view/id/1"
   # Popup d'édition
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
@@ -38,7 +38,7 @@ Feature: Family tree edit of categories feature
 
   @javascript
   Scenario: Edition of parent and position of a Parameter category
-    Given I am on "parameter/family/tree-edit"
+    Given I am on "parameter/library/view/id/1"
   # Déplacement dans une autre catégorie
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
@@ -71,7 +71,7 @@ Feature: Family tree edit of categories feature
 
   @javascript
   Scenario: Deletion of a Parameter category
-    Given I am on "parameter/family/tree-edit"
+    Given I am on "parameter/library/view/id/1"
   # Catégorie contenant une sous-catégorie
     When I click "Catégorie contenant une sous-catégorie"
     Then I should see the popup "Édition d'une catégorie"
