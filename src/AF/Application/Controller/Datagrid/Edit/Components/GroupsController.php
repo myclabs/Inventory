@@ -40,7 +40,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
             $data['ref'] = $group->getRef();
             $data['help'] = $this->cellLongText(
                 'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $group->getId(),
-                'af/datagrid_edit_components_groups-fields/get-raw-help?id=' . $af->getId()
+                'af/datagrid_edit_components_groups/get-raw-help?id=' . $af->getId()
                 . '&component=' . $group->getId(),
                 __('UI', 'name', 'help')
             );

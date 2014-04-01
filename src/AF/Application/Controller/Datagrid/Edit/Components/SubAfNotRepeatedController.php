@@ -31,7 +31,7 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
             $data['ref'] = $subAF->getRef();
             $data['help'] = $this->cellLongText(
                 'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $subAF->getId(),
-                'af/datagrid_edit_components_sub-fields/get-raw-help?id=' . $af->getId()
+                'af/datagrid_edit_components_sub-af-not-repeated/get-raw-help?id=' . $af->getId()
                 . '&component=' . $subAF->getId(),
                 __('UI', 'name', 'help')
             );

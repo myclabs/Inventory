@@ -34,7 +34,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
             $data['ref'] = $selectField->getRef();
             $data['help'] = $this->cellLongText(
                 'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $selectField->getId(),
-                'af/datagrid_edit_components_select-fields/get-raw-help?id=' . $af->getId()
+                'af/datagrid_edit_components_select-multi-fields/get-raw-help?id=' . $af->getId()
                 . '&component=' . $selectField->getId(),
                 __('UI', 'name', 'help')
             );
