@@ -21,6 +21,7 @@ class AF_Edit_ActionsController extends Core_Controller
      */
     public function updateActionPopupAction()
     {
+        $this->view->af = AF::load($this->getParam('idAF'));
         $this->view->action = Action::load($this->getParam('idAction'));
         $this->_helper->layout()->disableLayout();
     }

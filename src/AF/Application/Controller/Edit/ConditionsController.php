@@ -1,5 +1,6 @@
 <?php
 
+use AF\Domain\AF;
 use AF\Domain\Component\Select\SelectOption;
 use AF\Domain\Condition\ExpressionCondition;
 use AF\Domain\Condition\ElementaryCondition;
@@ -20,6 +21,7 @@ class AF_Edit_ConditionsController extends Core_Controller
      */
     public function updateConditionPopupAction()
     {
+        $this->view->af = AF::load($this->getParam('idAF'));
         $this->view->condition = ElementaryCondition::load($this->getParam('idCondition'));
         $this->_helper->layout()->disableLayout();
     }

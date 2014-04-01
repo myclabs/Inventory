@@ -1,22 +1,19 @@
 <?php
-use AF\Domain\Component\Select\SelectSingle;
-use AF\Domain\Component\Select\SelectMulti;
 use AF\Domain\Condition\ElementaryCondition;
 use AF\Domain\Condition\NumericFieldCondition;
 use AF\Domain\Condition\CheckboxCondition;
 use AF\Domain\Condition\Select\SelectSingleCondition;
 use AF\Domain\Condition\Select\SelectMultiCondition;
 
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 /** @var $condition \AF\Domain\Condition\ElementaryCondition */
 $condition = $this->condition;
 
 $form = new UI_Form('updateCondition');
 $form->setAjax(false);
-$form->setAction('af/edit_conditions/update-condition-submit/idCondition/' . $condition->getId());
+$form->setAction(
+    'af/edit_conditions/update-condition-submit' . '/idAF/' . $this->af->getId()
+    . '/idCondition/' . $condition->getId()
+);
 
 // Relation
 $relationSelect = new UI_Form_Element_Select('relation');
