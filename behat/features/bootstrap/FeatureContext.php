@@ -216,10 +216,18 @@ class FeatureContext extends MinkContext
     public function toggleCollapse($label)
     {
         $label = $this->fixStepArgument($label);
+
         $node = $this->getSession()->getPage()->find(
             'css',
             'legend:contains("' . $label . '")'
         );
+
+        if (! $node) {
+            $node = $this->getSession()->getPage()->find(
+                'css',
+                '.jarviswidget header:contains("' . $label . '") a'
+            );
+        }
 
         if (! $node) {
             throw new ExpectationException(
