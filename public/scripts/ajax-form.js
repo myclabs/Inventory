@@ -16,13 +16,22 @@ AjaxForm = function (selector) {
     this.form.ajaxForm({
         dataType: 'json',
         beforeSubmit: function(formData) {
-            self.beforeSubmit(formData);
+            if (self.form.trigger('beforeSubmit')) {
+                self.beforeSubmit(formData);
+            }
         },
         success: function(data) {
-            self.onSuccess(data);
+            if (self.form.trigger('successSubmit')) {
+                self.onSuccess(data);
+            }
         },
         error: function(jqXHR) {
-            self.onError(jqXHR);
+            if (self.form.trigger('errorSubmit')) {
+                self.onError(jqXHR);
+            }
+        },
+        complete: function() {
+            self.form.trigger('afterSubmit')
         }
     });
 

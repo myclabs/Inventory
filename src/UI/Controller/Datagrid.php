@@ -541,7 +541,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      */
     public function getAddElementValue($elementName)
     {
-        return $this->_add[$this->id.'_'.$elementName.'_addForm']['value'];
+        return $this->getParam($this->id.'_'.$elementName.'_addForm');
     }
 
     /**

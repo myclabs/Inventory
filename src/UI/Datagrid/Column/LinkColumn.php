@@ -2,6 +2,8 @@
 
 namespace UI\Datagrid\Column;
 
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
 use UI\Datagrid\Datagrid;
 use UI_Form_Element_Text;
 
@@ -152,12 +154,32 @@ class LinkColumn extends GenericColumn
      */
     public function getAddFormElement(Datagrid $datagrid)
     {
+        // Le'ajout est possible uniquement sur les Colonne Lien (lorsque la valeur de la cellule est le texte).
         if ($this->linkValue !== true) {
-            $addFormElement = new UI_Form_Element_Text($this->getAddFormElementId($datagrid));
-            $addFormElement->setLabel($this->getAddFormElementLabel());
-            $addFormElement->setValue($this->defaultAddValue);
+            $colWrapper = new GenericTag('div');
+            $colWrapper->addClass('form-group');
 
-            return $addFormElement;
+            $colLabel = new GenericTag('label', $this->getAddFormElementLabel());
+            $colLabel->setAttribute('for', $this->getAddFormElementId($datagrid));
+            $colLabel->addClass('col-sm-2');
+            $colLabel->addClass('control-label');
+            $colLabel->addClass('field-label');
+            $colWrapper->appendContent($colLabel);
+
+            $linkWrapper = new GenericTag('div');
+            $linkWrapper->addClass('col-sm-10');
+
+            $linkInput = new GenericVoidTag('input');
+            $linkInput->setAttribute('type', 'text');
+            $linkInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+            $linkInput->setAttribute('id', $this->getAddFormElementId($datagrid));
+            $linkInput->setAttribute('value', $this->defaultAddValue);
+            $linkInput->addClass('form-control');
+            $linkWrapper->appendContent($linkInput);
+
+            $colWrapper->appendContent($linkWrapper);
+
+            return $colWrapper;
         } else {
             return null;
         }

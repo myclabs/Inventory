@@ -500,6 +500,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
      */
     public function getAddFormElement($datagrid)
     {
+        throw new Exception('Col Order needs to be refactored before being able to add element.');
         $addFormElement = new UI_Form_Element_Radio($this->getAddFormElementId($datagrid));
         $addFormElement->setLabel($this->getAddFormElementLabel());
 

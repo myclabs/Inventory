@@ -3,13 +3,18 @@
 namespace UI\Datagrid;
 
 use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\Modal;
+use UI\Datagrid\Column\ListColumn;
+use UI\Datagrid\Column\LongTextColumn;
 use UI_Generic;
 use UI_Form;
 use UI_Form_Element_HTML;
 use Core_Exception_InvalidArgument;
+use Zend_Json;
+use Zend_Json_Expr;
 use Zend_Session_Namespace;
 use Zend_Controller_Action_HelperBroker;
 use Doctrine\Common\Collections\Criteria;
@@ -712,20 +717,21 @@ class Datagrid extends UI_Generic
     protected function initAddForm()
     {
         if ($this->addPanelForm !== null) {
-            $this->addPanelForm->setRef($this->id.'_addForm');
+            $this->addPanelForm->setAttribute('id', $this->id.'_addForm');
         } else {
-            $this->addPanelForm = new UI_Form($this->id.'_addForm');
-            foreach ($this->columns as $column) {
+            $this->addPanelForm = new GenericTag('form');
+            $this->addPanelForm->setAttribute('id', $this->id.'_addForm');
+            $this->addPanelForm->addClass('form-horizontal');
+            foreach ($this->_cols as $column) {
                 if ($column->addable == true) {
                     $columnAddElement = $column->getAddFormElement($this);
                     if ($columnAddElement !== null) {
-                        $this->addPanelForm->addElement($columnAddElement);
+                        $this->addPanelForm->appendContent($columnAddElement);
                     }
                 }
             }
         }
-        $this->addPanelForm->setAction($this->getActionUrl('addelement'));
-        $this->addPanelForm->setAjax(null, 'parse'.$this->id.'AddFormValidation');
+        $this->addPanelForm->setAttribute('action', $this->getActionUrl('addelement'));
     }
 
     /**
@@ -741,11 +747,43 @@ class Datagrid extends UI_Generic
 
         // Ajout des scripts du formulaire.
         $addScript .= $this->addPanelForm->getScript();
+        foreach ($this->_cols as $column) {
+            if ($column->addable === true) {
+                if (($column instanceof LongTextColumn)
+                    && ($column->textileEditor)) {
+                    $addScript .= '$("#'.$column->getAddFormElementId($this).'").markItUp(mySettings);';
+                }
+                if (($column instanceof ListColumn)
+                    && ($column->fieldType === ListColumn::FIELD_AUTOCOMPLETE)) {
+                    $options = [
+                        'allowClear' => 'true',
+
+                    ];
+                    if ($column->multiple) {
+                        if ($column->dynamicList) {
+                            $options['multiple'] = 'true';
+                        }
+                    }
+                    if ($column->dynamicList) {
+                        $options['ajax'] = [
+                            'url' => $column->getUrlDynamicList($this, 'add'),
+                            'dataType' => "json",
+                            'quietMillis' => 200,
+                            'data' => new Zend_Json_Expr('function(term, page) { return {q: term} }'),
+                            'results' => new Zend_Json_Expr('function(data, page) { return {results: data} }')
+                        ];
+                    }
+                    $addScript .= '$("#'.$column->getAddFormElementId($this).'").select2('.
+                        Zend_Json::encode($options, false, ['enableJsonExprFinder' => true]).
+                        ');';
+                }
+            }
+        }
 
         // Ajout d'une fonction d'encapsulation de l'ajout.
-        $addScript .= '$.fn.parse'.$this->id.'AddFormValidation = function(response) {';
-        $addScript .= 'addMessage(response.message, response.type);';
-        $addScript .= 'this.get(0).reset();';
+        $addScript .= 'var test = new AjaxForm(\'#'.$this->id.'_addForm\');';
+        $addScript .= '$(\'#'.$this->id.'_addForm\').on(\'afterSubmit\', function () {';
+        $addScript .= 'this.reset();';
         if ($this->automaticFiltering === true) {
             if ($this->pagination === true) {
                 $addScript .= 'var paginator = '.$this->id.'.Datagrid.getState().pagination.paginator;';
@@ -756,7 +794,7 @@ class Datagrid extends UI_Generic
             }
         }
         $addScript .= '$(\'#'.$this->id.'_addPanel\').modal(\'hide\');';
-        $addScript .= '};';
+        $addScript .= '});';
 
         return $addScript;
     }

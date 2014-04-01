@@ -1,5 +1,7 @@
 <?php
 use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
 use MyCLabs\MUIH\Icon;
 
 /**
@@ -179,7 +181,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
      *
      * @return string
      */
-    protected function getUrlDynamicList($datagrid, $source)
+    public function getUrlDynamicList($datagrid, $source)
     {
         return $this->list . $datagrid->encodeParameters() . '/source/' . $source;
     }
@@ -719,61 +721,149 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
      */
     public function getAddFormElement($datagrid)
     {
+        $colWrapper = new GenericTag('div');
+        $colWrapper->addClass('form-group');
+
+        $colLabel = new GenericTag('label', $this->getAddFormElementLabel());
+        $colLabel->setAttribute('for', $this->getAddFormElementId($datagrid));
+        $colLabel->addClass('col-sm-2');
+        $colLabel->addClass('control-label');
+        $colLabel->addClass('field-label');
+        $colWrapper->appendContent($colLabel);
+
+        $selectWrapper = new GenericTag('div');
+        $selectWrapper->addClass('col-sm-10');
+
         if ($this->dynamicList === true) {
             if ($this->fieldType === self::FIELD_AUTOCOMPLETE) {
-                $addFormElement = new UI_Form_Element_Pattern_AjaxAutocomplete($this->getAddFormElementId($datagrid));
-                $addFormElement->getAutocomplete()->source = $this->getUrlDynamicList($datagrid, 'add');
-                $addFormElement->getAutocomplete()->multiple = $this->multiple;
-                $addFormElement->setLabel($this->getAddFormElementLabel());
+                $textInput = new GenericVoidTag('input');
+                $textInput->setAttribute('type', 'hidden');
+                $textInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+                $textInput->setAttribute('id', $this->getAddFormElementId($datagrid));
+                $textInput->setAttribute('value', $this->defaultAddValue);
+                $selectWrapper->appendContent($textInput);
             } else {
+                $selectInput = new GenericTag('select');
+                $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+                $selectInput->setAttribute('id', $this->getAddFormElementId($datagrid));
+                $selectInput->addClass('form-control');
                 if ($this->multiple) {
-                    $addFormElement = new UI_Form_Element_MultiSelect($this->getAddFormElementId($datagrid));
-                    $addFormElement->size = $this->multipleListSize;
-                } else {
-                    $addFormElement = new UI_Form_Element_Select($this->getAddFormElementId($datagrid));
+                    $selectInput->setAttribute('multiple', $this->multipleListSize);
                 }
-                $addFormElement->setLabel($this->getAddFormElementLabel());
-                $addFormElement->setValue($this->defaultAddValue);
                 if (($this->multiple) && (is_array($this->defaultAddValue))) {
                     foreach ($this->defaultAddValue as $index => $defaultAddValue) {
-                        $option = new UI_Form_Element_Option('loading'.$index, $defaultAddValue, $this->loadingText);
-                        $addFormElement->addOption($option);
+                        $elementOption = new GenericTag('option', $this->loadingText);
+                        $elementOption->setAttribute('value', $defaultAddValue);
+                        $selectInput->appendContent($elementOption);
                     }
                 } else {
-                    $option = new UI_Form_Element_Option('loading', $this->defaultAddValue, $this->loadingText);
-                    $addFormElement->addOption($option);
+                    $elementOption = new GenericTag('option', $this->loadingText);
+                    $elementOption->setAttribute('value', $this->defaultAddValue);
+                    $selectInput->appendContent($elementOption);
                 }
             }
         } else {
             if ($this->multiple) {
                 if ($this->fieldType === self::FIELD_BOX) {
-                    $addFormElement = new UI_Form_Element_MultiCheckbox($this->getAddFormElementId($datagrid));
+                    $selectWrapper->setAttribute('id', $this->getAddFormElementId($datagrid));
+
+                    $selectInput = new GenericTag('select');
+                    $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+                    $selectInput->addClass('form-control');
+
+                    foreach ($this->list as $idElement => $element) {
+                        $elementInput = new GenericVoidTag('input');
+                        $elementInput->setAttribute('type', 'checkbox');
+                        $elementInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+                        $elementInput->setAttribute('value', $idElement);
+                        $elementInput->setAttribute('id', $this->getAddFormElementId($datagrid).'_'.$idElement);
+                        $elementOption = new GenericTag('label');
+                        $elementOption->addClass('checkbox-inline');
+                        $elementOption->appendContent($elementInput);
+                        $elementOption->appendContent($element);
+                        $selectWrapper->appendContent($elementOption);
+                    }
+
+                    $selectWrapper->appendContent($selectInput);
                 } else {
-                    $addFormElement = new UI_Form_Element_MultiSelect($this->getAddFormElementId($datagrid));
-                    $addFormElement->size = $this->multipleListSize;
+                    $selectInput = new GenericTag('select');
+                    $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+                    $selectInput->setAttribute('id', $this->getAddFormElementId($datagrid));
+                    if ($this->fieldType !== self::FIELD_AUTOCOMPLETE) {
+                        $selectInput->addClass('form-control');
+                    }
+                    $selectInput->setAttribute('multiple', $this->multipleListSize);
+
+                    if ($this->withEmptyElement === true) {
+                        $elementOption = new GenericTag('option', '');
+                        $elementOption->setAttribute('value', '');
+                        $selectInput->appendContent($elementOption);
+                    }
+                    foreach ($this->list as $idElement => $element) {
+                        $elementOption = new GenericTag('option', $element);
+                        $elementOption->setAttribute('value', $idElement);
+                        if (is_array($this->defaultAddValue) && in_array($idElement, $this->defaultAddValue)
+                            || ($idElement === $this->defaultAddValue)) {
+                            $elementOption->setBooleanAttribute('selected');
+                        }
+                        $selectInput->appendContent($elementOption);
+                    }
+
+                    $selectWrapper->appendContent($selectInput);
                 }
             } else {
                 if ($this->fieldType === self::FIELD_BOX) {
-                    $addFormElement = new UI_Form_Element_Radio($this->getAddFormElementId($datagrid));
+                    $selectWrapper->setAttribute('id', $this->getAddFormElementId($datagrid));
+
+                    $selectInput = new GenericTag('select');
+                    $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+                    $selectInput->addClass('form-control');
+
+                    foreach ($this->list as $idElement => $element) {
+                        $elementInput = new GenericVoidTag('input');
+                        $elementInput->setAttribute('type', 'radio');
+                        $elementInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+                        $elementInput->setAttribute('value', $idElement);
+                        $elementInput->setAttribute('id', $this->getAddFormElementId($datagrid).'_'.$idElement);
+                        $elementOption = new GenericTag('label');
+                        $elementOption->addClass('radio-inline');
+                        $elementOption->appendContent($elementInput);
+                        $elementOption->appendContent($element);
+                        $selectWrapper->appendContent($elementOption);
+                    }
+
+                    $selectWrapper->appendContent($selectInput);
                 } else {
-                    $addFormElement = new UI_Form_Element_Select($this->getAddFormElementId($datagrid));
+                    $selectInput = new GenericTag('select');
+                    $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+                    $selectInput->setAttribute('id', $this->getAddFormElementId($datagrid));
+                    if ($this->fieldType !== self::FIELD_AUTOCOMPLETE) {
+                        $selectInput->addClass('form-control');
+                    }
+                    $selectInput->setAttribute('multiple', $this->multipleListSize);
+
+                    if ($this->withEmptyElement === true) {
+                        $elementOption = new GenericTag('option', '');
+                        $elementOption->setAttribute('value', '');
+                        $selectInput->appendContent($elementOption);
+                    }
+                    foreach ($this->list as $idElement => $element) {
+                        $elementOption = new GenericTag('option', $element);
+                        $elementOption->setAttribute('value', $idElement);
+                        if ($idElement === $this->defaultAddValue) {
+                            $elementOption->setBooleanAttribute('selected');
+                        }
+                        $selectInput->appendContent($elementOption);
+                    }
+
+                    $selectWrapper->appendContent($selectInput);
                 }
-            }
-            if ($this->fieldType === self::FIELD_AUTOCOMPLETE) {
-                $addFormElement->useAutocomplete = true;
-            }
-            $addFormElement->setLabel($this->getAddFormElementLabel());
-            $addFormElement->setValue($this->defaultAddValue);
-            if (($this->withEmptyElement === true) && ($this->fieldType !== self::FIELD_BOX)) {
-                $addFormElement->addNullOption('');
-            }
-            foreach ($this->list as $idElement => $element) {
-                $option = new UI_Form_Element_Option(json_encode($idElement), $idElement, $element);
-                $addFormElement->addOption($option);
             }
         }
 
-        return $addFormElement;
+        $colWrapper->appendContent($selectWrapper);
+
+        return $colWrapper;
     }
 
 }

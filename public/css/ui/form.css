@@ -236,13 +236,16 @@
 .modal .form { margin-left: 165px; }
 .modal .form .markItUp .markItUpContainer { width: 500px; }
 
-/* Fix temporaires pour select2 et les append/prepend de Bootstrap */
-.select2-dropdown-open .select2-choice, .select2-container .select2-choice {
-    font-size:initial;
-}
+/* Select2 */
 .input-append .select2-offscreen,
 .input-prepend .select2-offscreen {
     position: absolute;
+}
+.form-horizontal .select2-container {
+    width: 100%;
+}
+.form-horizontal .select2-choice {
+    padding-left: 12px;
 }
 
 /* Form dans un popup : correction d'un margin en trop */

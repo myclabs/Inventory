@@ -2,6 +2,7 @@
 
 namespace UI\Datagrid\Column;
 
+use Exception;
 use UI\Datagrid\Datagrid;
 use UI_Form_Element_Numeric;
 use UI_Form_Element_Radio;
@@ -451,6 +452,7 @@ JS;
      */
     public function getAddFormElement(Datagrid $datagrid)
     {
+        throw new Exception('Col Order needs to be refactored before being able to add element.');
         $addFormElement = new UI_Form_Element_Radio($this->getAddFormElementId($datagrid));
         $addFormElement->setLabel($this->getAddFormElementLabel());
 

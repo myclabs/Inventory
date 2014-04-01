@@ -2,6 +2,8 @@
 
 namespace UI\Datagrid\Column;
 
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
 use UI\Datagrid\Datagrid;
 use UI_Form_Element_Text;
 use UI_Form_Element_Numeric;
@@ -203,10 +205,30 @@ JS;
      */
     public function getAddFormElement(Datagrid $datagrid)
     {
-        $addFormElement = new UI_Form_Element_Numeric($this->getAddFormElementId($datagrid));
-        $addFormElement->setLabel($this->getAddFormElementLabel());
-        $addFormElement->setValue($this->defaultAddValue);
+        $colWrapper = new GenericTag('div');
+        $colWrapper->addClass('form-group');
 
-        return $addFormElement;
+        $colLabel = new GenericTag('label', $this->getAddFormElementLabel());
+        $colLabel->setAttribute('for', $this->getAddFormElementId($datagrid));
+        $colLabel->addClass('col-sm-2');
+        $colLabel->addClass('control-label');
+        $colLabel->addClass('field-label');
+        $colWrapper->appendContent($colLabel);
+
+        $numberWrapper = new GenericTag('div');
+        $numberWrapper->addClass('col-sm-10');
+
+        $numberInput = new GenericVoidTag('input');
+        $numberInput->setAttribute('type', 'text');
+        $numberInput->setAttribute('pattern', '-?[0-9]*[.,]?[0-9]*');
+        $numberInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+        $numberInput->setAttribute('id', $this->getAddFormElementId($datagrid));
+        $numberInput->setAttribute('value', $this->defaultAddValue);
+        $numberInput->addClass('form-control');
+        $numberWrapper->appendContent($numberInput);
+
+        $colWrapper->appendContent($numberWrapper);
+
+        return $colWrapper;
     }
 }
