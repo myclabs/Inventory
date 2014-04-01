@@ -80,20 +80,20 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
     $value = $cell->getValue();
     if ($value !== null && $value->getDigitalValue() !== null) {
         return [
-            'url'         => 'parameter/element/details/idFamily/' . $family->getId()
+            'url'       => 'parameter/element/details/idFamily/' . $family->getId()
                 . '?coordinates=' . urlencode(json_encode($membersCoordinates)),
-            'elementId'   => implode('-', $membersCoordinates),
-            'value'       => $locale->formatNumber($value->getDigitalValue(), 3)
+            'elementId' => implode('-', $membersCoordinates),
+            'value'     => $locale->formatNumber($value->getDigitalValue(), 3)
                 . ' ± ' . $locale->formatUncertainty($value->getRelativeUncertainty()),
-            'unit'        => $family->getValueUnit()->getSymbol(),
+            'unit'      => $family->getValueUnit()->getSymbol(),
         ];
     }
     return [
-        'url'         => 'parameter/element/details/idFamily/' . $family->getId()
+        'url'       => 'parameter/element/details/idFamily/' . $family->getId()
             . '?coordinates=' . urlencode(json_encode($membersCoordinates)),
-        'elementId'   => implode('-', $membersCoordinates),
-        'value'       => '-',
-        'unit'        => $family->getValueUnit()->getSymbol(),
+        'elementId' => implode('-', $membersCoordinates),
+        'value'     => '-',
+        'unit'      => $family->getValueUnit()->getSymbol(),
     ];
 };
 

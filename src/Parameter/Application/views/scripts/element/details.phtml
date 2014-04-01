@@ -16,7 +16,7 @@ $title = __('Parameter', 'element', 'element');
 
 <?php
 $editForm = new UI_Form('element_editForm');
-$editForm->setAction('parameter/element/edit-submit');
+$editForm->setAction('parameter/element/edit-submit?id=' . $this->family->getId());
 $editForm->setAjax(true, 'elementEditSuccess');
 
 // Valeur
