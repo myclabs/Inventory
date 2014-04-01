@@ -15,7 +15,7 @@ $locale = Core_Locale::loadDefault();
 
 $form = new UI_Form('updateAction');
 $form->setAjax(false);
-$form->setAction('af/edit_actions/update-action-submit/idAf/' . $af->getId() . '/idAction/' . $action->getId());
+$form->setAction('af/edit_actions/update-action-submit/idAF/' . $af->getId() . '/idAction/' . $action->getId());
 
 if ($action instanceof SetNumericFieldValue) {
     /** @var $action \AF\Domain\Action\SetValue\SetNumericFieldValue */

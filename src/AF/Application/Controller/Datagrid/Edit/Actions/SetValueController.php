@@ -89,12 +89,12 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
                             }
                             break;
                     }
-                    $data['editValue'] = $this->cellPopup($this->_helper->url('update-action-popup',
-                                                                              'edit_actions',
-                                                                              'af',
-                                                                              ['idAction' => $action->getId()]),
-                                                          __('UI', 'verb', 'edit'),
-                                                          'pencil');
+                    $data['editValue'] = $this->cellPopup($this->_helper->url(
+                        'update-action-popup',
+                        'edit_actions',
+                        'af',
+                        ['idAction' => $action->getId(), 'idAF' => $af->getId()]
+                    ), __('UI', 'verb', 'edit'), 'pencil');
                     $this->addLine($data);
                 }
             }
