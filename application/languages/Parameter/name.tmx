@@ -4,6 +4,15 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="parameterLibraries">
+            <tuv xml:lang="fr">
+                <seg>Bibliothèques de paramètres</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Parameter libraries</seg>
+            </tuv>
+        </tu>
+
         <tu tuid="coefficient">
             <tuv xml:lang="fr">
                 <seg>Coefficient</seg>

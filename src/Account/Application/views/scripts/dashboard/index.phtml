@@ -1,7 +1,5 @@
 <?php
-use Account\Application\ViewModel\AccountView;
-
-/** @var AccountView $account */
+/** @var Account\Application\ViewModel\AccountView $account */
 $account = $this->account;
 ?>
 
@@ -12,200 +10,236 @@ $account = $this->account;
     </h1>
 </div>
 
-<h2>Workspaces</h2>
+<div class="well">
 
-<div class="organizationList">
-    <?php foreach ($account->organizations as $organization) : ?>
-
-        <div class="organization well well-sm">
-            <?php if ($organization->canBeDeleted) : ?>
-                <div class="pull-right">
-                    <a class="deleteOrganization btn btn-sm btn-warning"
-                       href="orga/organization/delete/idOrganization/<?=$organization->id?>">
-                        <i class="fa fa-trash-o"></i>
-                        <?=___('UI', 'verb', 'delete')?>
+    <table class="table table-hover table-forum">
+        <thead>
+        <tr>
+            <th colspan="2">Workspaces</th>
+            <th class="col-button hidden-xs">
+                <?php if ($this->canEditAccount) : ?>
+                    <a href="orga/organization/add" class="btn btn-default btn-xs pull-right"
+                       title="<?=__('Orga', 'workspace', 'createNewWorkspace')?>">
+                        <i class="fa fa-lg fa-plus"></i>
                     </a>
-                </div>
-            <?php endif; ?>
-            <?php if ($organization->canBeEdited) : ?>
-                <div class="pull-right">
-                    <a class="editOrganization btn btn-sm btn-primary"
-                       href="orga/organization/edit/idOrganization/<?=$organization->id?>">
-                        <i class="fa fa-wrench"></i>
-                        <?=___('UI', 'name', 'configurationOrga')?>
+                <?php endif; ?>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <?php foreach ($account->organizations as $organization) : ?>
+            <tr class="organization">
+                <td class="col-icon">
+                    <i class="fa fa-inbox fa-2x text-muted"></i>
+                </td>
+                <td>
+                    <h4>
+                        <a href="orga/organization/view/idOrganization/<?=$organization->id?>">
+                            <?=$organization->label?>
+                        </a>
+                        <small><?=___('Orga', 'organizationList', 'goToData')?></small>
+                    </h4>
+                </td>
+                <td class="col-button hidden-xs">
+                    <div class="btn-group pull-right">
+                        <?php if ($organization->canBeEdited) : ?>
+                            <a class="editOrganization btn btn-sm btn-default"
+                               href="orga/organization/edit/idOrganization/<?=$organization->id?>">
+                                <i class="fa fa-wrench"></i>
+                                <?=___('UI', 'name', 'configurationOrga')?>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($organization->canBeDeleted) : ?>
+                            <a class="deleteOrganization btn btn-sm btn-warning"
+                               href="orga/organization/delete/idOrganization/<?=$organization->id?>">
+                                <i class="fa fa-trash-o"></i>
+                                <?=___('UI', 'verb', 'delete')?>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+
+        <?php if (empty($account->organizations)) : ?>
+            <tr>
+                <td class="text-muted" colspan="4">
+                    Aucun workspace
+                </td>
+            </tr>
+        <?php endif; ?>
+
+        </tbody>
+    </table>
+
+
+
+    <table class="table table-hover table-forum">
+        <thead>
+        <tr>
+            <th colspan="2"><?=__('AF', 'name', 'formLibraries')?></th>
+            <th class="col-button hidden-xs">
+                <?php if ($this->canEditAccount) : ?>
+                    <a id="createAFLibrary" href="af/library/new?account=<?=$account->id?>"
+                       class="btn btn-default btn-xs pull-right"
+                       title="<?=__('AF', 'library', 'createNewLibrary')?>">
+                        <i class="fa fa-lg fa-plus"></i>
                     </a>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
 
-            <h3>
-                <a href="orga/organization/view/idOrganization/<?=$organization->id?>">
-                    <?=$organization->label?>
-                    <small>
-                        <i class="fa fa-external-link"></i>
-                        <?=___('Orga', 'organizationList', 'goToData')?>
-                    </small>
-                </a>
-            </h3>
-        </div>
+        <?php foreach ($account->afLibraries as $library) : ?>
+            <tr class="afLibrary">
+                <td class="col-icon">
+                    <i class="fa fa-edit fa-2x text-muted"></i>
+                </td>
+                <td>
+                    <h4>
+                        <a href="af/library/view/id/<?=$library->id?>">
+                            <?=$library->label?>
+                        </a>
+                        <small><?=___('Orga', 'organizationList', 'goToData')?></small>
+                    </h4>
+                </td>
+                <?php if ($library->canDelete) : ?>
+                    <td class="col-button hidden-xs">
+                        <a class="deleteAFLibrary btn btn-sm btn-warning pull-right"
+                           href="af/library/delete/id/<?=$library->id?>">
+                            <i class="fa fa-trash-o"></i>
+                            <?=___('UI', 'verb', 'delete')?>
+                        </a>
+                    </td>
+                <?php endif; ?>
+            </tr>
+        <?php endforeach; ?>
 
-    <?php endforeach; ?>
+        <?php if (empty($account->afLibraries)) : ?>
+            <tr>
+                <td class="text-muted" colspan="3">
+                    Aucune bibliothèque de formulaires
+                </td>
+            </tr>
+        <?php endif; ?>
 
-    <?php if (empty($account->organizations)) : ?>
-        <p class="text-muted">
-            Aucun workspace.
-        </p>
-    <?php endif; ?>
-
-    <?php if ($this->canEditAccount) : ?>
-        <p>
-            <a href="orga/organization/add" class="btn btn-default">
-                <i class="fa fa-plus"></i>
-                Créer un nouveau workspace
-            </a>
-        </p>
-    <?php endif; ?>
-</div>
+        </tbody>
+    </table>
 
 
-<h2>Bibliothèques</h2>
 
-<h3><?=__('AF', 'name', 'forms')?></h3>
-
-<div>
-    <?php foreach ($account->afLibraries as $library) : ?>
-
-        <div class="afLibrary well well-sm">
-            <?php if ($library->canDelete) : ?>
-                <div class="pull-right">
-                    <a class="deleteAFLibrary btn btn-sm btn-warning"
-                       href="af/library/delete/id/<?=$library->id?>">
-                        <i class="fa fa-trash-o"></i>
-                        <?=___('UI', 'verb', 'delete')?>
+    <table class="table table-hover table-forum">
+        <thead>
+        <tr>
+            <th colspan="2"><?=__('Parameter', 'name', 'parameterLibraries')?></th>
+            <th class="col-button hidden-xs">
+                <?php if ($this->canEditAccount) : ?>
+                    <a id="createParameterLibrary" href="parameter/library/new?account=<?=$account->id?>"
+                       class="btn btn-default btn-xs pull-right"
+                       title="<?=__('Parameter', 'library', 'createNewLibrary')?>">
+                        <i class="fa fa-lg fa-plus"></i>
                     </a>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
 
-            <h3>
-                <a href="af/library/view/id/<?=$library->id?>">
-                    <?=$library->label?>
-                    <small>
-                        <i class="fa fa-external-link"></i>
-                        <?=___('Orga', 'organizationList', 'goToData')?>
-                    </small>
-                </a>
-            </h3>
-        </div>
+        <?php foreach ($account->parameterLibraries as $library) : ?>
+            <tr class="parameterLibrary">
+                <td class="col-icon">
+                    <i class="fa fa-table fa-2x text-muted"></i>
+                </td>
+                <td>
+                    <h4>
+                        <a href="parameter/library/view/id/<?=$library->id?>">
+                            <?=$library->label?>
+                        </a>
+                        <small><?=___('Orga', 'organizationList', 'goToData')?></small>
+                    </h4>
+                </td>
+                <?php if ($library->canDelete) : ?>
+                    <td class="col-button hidden-xs">
+                        <a class="deleteParameterLibrary btn btn-sm btn-warning pull-right"
+                           href="parameter/library/delete/id/<?=$library->id?>">
+                            <i class="fa fa-trash-o"></i>
+                            <?=___('UI', 'verb', 'delete')?>
+                        </a>
+                    </td>
+                <?php endif; ?>
+            </tr>
+        <?php endforeach; ?>
 
-    <?php endforeach; ?>
+        <?php if (empty($account->parameterLibraries)) : ?>
+            <tr>
+                <td class="text-muted" colspan="3">
+                    Aucune bibliothèque de paramètres
+                </td>
+            </tr>
+        <?php endif; ?>
 
-    <?php if (empty($account->afLibraries)) : ?>
-        <p class="text-muted">
-            Aucune bibliothèque de formulaires.
-        </p>
-    <?php endif; ?>
-
-    <?php if ($this->canEditAccount) : ?>
-        <p>
-            <a id="createAFLibrary" href="af/library/new?account=<?=$account->id?>" class="btn btn-default">
-                <i class="fa fa-plus"></i>
-                <?=__('UI', 'verb', 'add')?>
-            </a>
-        </p>
-    <?php endif; ?>
-</div>
+        </tbody>
+    </table>
 
 
-<h3><?=__('Parameter', 'name', 'parameters')?></h3>
 
-<div>
-    <?php foreach ($account->parameterLibraries as $library) : ?>
 
-        <div class="parameterLibrary well well-sm">
-            <?php if ($library->canDelete) : ?>
-                <div class="pull-right">
-                    <a class="deleteParameterLibrary btn btn-sm btn-warning"
-                       href="parameter/library/delete/id/<?=$library->id?>">
-                        <i class="fa fa-trash-o"></i>
-                        <?=___('UI', 'verb', 'delete')?>
+    <table class="table table-hover table-forum">
+        <thead>
+        <tr>
+            <th colspan="2"><?=__('Classification', 'name', 'classificationLibraries')?></th>
+            <th class="col-button hidden-xs">
+                <?php if ($this->canEditAccount) : ?>
+                    <a id="createClassificationLibrary" href="classification/library/new?account=<?=$account->id?>"
+                       class="btn btn-default btn-xs pull-right"
+                       title="<?=__('Classification', 'library', 'createNewLibrary')?>">
+                        <i class="fa fa-lg fa-plus"></i>
                     </a>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
 
-            <h3>
-                <a href="parameter/library/view/id/<?=$library->id?>">
-                    <?=$library->label?>
-                    <small>
-                        <i class="fa fa-external-link"></i>
-                        <?=___('Orga', 'organizationList', 'goToData')?>
-                    </small>
-                </a>
-            </h3>
-        </div>
+        <?php foreach ($account->classificationLibraries as $library) : ?>
+            <tr class="classificationLibrary">
+                <td class="col-icon">
+                    <i class="fa fa-sitemap fa-2x text-muted"></i>
+                </td>
+                <td>
+                    <h4>
+                        <a href="classification/library/view/id/<?=$library->id?>">
+                            <?=$library->label?>
+                        </a>
+                        <small><?=___('Orga', 'organizationList', 'goToData')?></small>
+                    </h4>
+                </td>
+                <?php if ($library->canDelete) : ?>
+                    <td class="col-button hidden-xs">
+                        <a class="deleteClassificationLibrary btn btn-sm btn-warning pull-right"
+                           href="classification/library/delete/id/<?=$library->id?>">
+                            <i class="fa fa-trash-o"></i>
+                            <?=___('UI', 'verb', 'delete')?>
+                        </a>
+                    </td>
+                <?php endif; ?>
+            </tr>
+        <?php endforeach; ?>
 
-    <?php endforeach; ?>
+        <?php if (empty($account->parameterLibraries)) : ?>
+            <tr>
+                <td class="text-muted" colspan="3">
+                    Aucune bibliothèque de classification
+                </td>
+            </tr>
+        <?php endif; ?>
 
-    <?php if (empty($account->parameterLibraries)) : ?>
-        <p class="text-muted">
-            Aucune bibliothèque de paramètres.
-        </p>
-    <?php endif; ?>
-
-    <?php if ($this->canEditAccount) : ?>
-        <p>
-            <a id="createParameterLibrary" href="parameter/library/new?account=<?=$account->id?>"
-               class="btn btn-default">
-                <i class="fa fa-plus"></i>
-                <?=__('UI', 'verb', 'add')?>
-            </a>
-        </p>
-    <?php endif; ?>
-</div>
+        </tbody>
+    </table>
 
 
-<h3><?=__('Classification', 'name', 'classification')?></h3>
-
-<div>
-    <?php foreach ($account->classificationLibraries as $library) : ?>
-
-        <div class="classificationLibrary well well-sm">
-            <?php if ($library->canDelete) : ?>
-                <div class="pull-right">
-                    <a class="deleteClassificationLibrary btn btn-sm btn-warning"
-                       href="classification/library/delete/id/<?=$library->id?>">
-                        <i class="fa fa-trash-o"></i>
-                        <?=___('UI', 'verb', 'delete')?>
-                    </a>
-                </div>
-            <?php endif; ?>
-
-            <h3>
-                <a href="classification/library/view/id/<?=$library->id?>">
-                    <?=$library->label?>
-                    <small>
-                        <i class="fa fa-external-link"></i>
-                        <?=___('Orga', 'organizationList', 'goToData')?>
-                    </small>
-                </a>
-            </h3>
-        </div>
-
-    <?php endforeach; ?>
-
-    <?php if (empty($account->classificationLibraries)) : ?>
-        <p class="text-muted">
-            Aucune bibliothèque de classification.
-        </p>
-    <?php endif; ?>
-
-    <?php if ($this->canEditAccount) : ?>
-        <p>
-            <a id="createClassificationLibrary" href="classification/library/new?account=<?=$account->id?>"
-               class="btn btn-default">
-                <i class="fa fa-plus"></i>
-                <?=__('UI', 'verb', 'add')?>
-            </a>
-        </p>
-    <?php endif; ?>
 </div>
 
 
@@ -235,5 +269,8 @@ $account = $this->account;
             cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',
             post: true
         });
+
+        // Tooltips
+        $('th .btn').tooltip();
     });
 </script>
