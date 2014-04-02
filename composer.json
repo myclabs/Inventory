@@ -31,7 +31,6 @@
         "mnapoli/php-di-zf1": "*",
         "psr/log": "~1.0",
         "monolog/monolog": "~1.6",
-        "pear/console_commandline": "dev-trunk",
         "netcarver/textile": "~3.5",
         "dompdf/dompdf": "dev-master",
         "phpoffice/phpexcel": "dev-WriterExcel5OptionalConstructor as 1.7.99",
