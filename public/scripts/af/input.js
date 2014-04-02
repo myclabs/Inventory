@@ -216,7 +216,7 @@ AF.Input.prototype = {
         }, 0);
 
         // Cache l'aperçu des résultats
-        $(".resultsPreview").hide();
+        $(".resultsPreview").addClass('hide');
 
         // Met à jour la complétion de la saisie
         this.inputProgress.setStatus(response.data.status, response.data.completion);
@@ -262,7 +262,7 @@ AF.Input.prototype = {
     onResultsPreviewHandler: function (response, textStatus, jqXHR) {
         this.form.find(".inputPreview").button("reset");
         $(".resultsPreviewContent").html(response.data);
-        $(".resultsPreview").show();
+        $(".resultsPreview").removeClass('hide');
         // Restaure l'URL de submit par défaut
         this.form.prop("action", this.defaultFormAction);
         // Restaure le handler par défaut

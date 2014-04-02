@@ -31,7 +31,6 @@ if (count($indicators) == 0) {
 // Affiche les résultats pour chaque indicateur
 foreach ($indicators as $indicator) {
 
-    $refIndicator = $indicator->getRef();
     $outputTotal = $outputSet->getTotalByIndicator($indicator);
     $formattedUnit = $indicator->getUnit()->getSymbol();
 
