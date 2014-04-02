@@ -31,3 +31,17 @@ nav ul ul li a {
 #messageZone .alert {
     margin: 0;
 }
+
+/* Page du dashboard (tableaux) */
+.table-forum {
+    margin-bottom: 25px;
+}
+/* une class spéciale pour ces colonnes pour éviter d'avoir du style dans la vue */
+.table-forum .col-icon {
+    text-align: center;
+    width: 40px;
+}
+.table-forum .col-button {
+    /*width: 100px;*/
+    position: relative;
+}
