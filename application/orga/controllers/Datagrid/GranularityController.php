@@ -70,30 +70,30 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         $refAxes = $this->getAddElementValue('axes');
-        $axes = array();
-        $refGranularity = '';
         if (empty($refAxes)) {
-            $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'emptyGranularity'));
-        }
-
-        foreach ($refAxes as $refAxis) {
-            $refGranularity .= $refAxis . '|';
-            $axis = $organization->getAxisByRef($refAxis);
-            // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
-            if (!$axis->isTransverse($axes)) {
-                $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'hierarchicallyLinkedAxes'));
-                break;
-            } else {
-                $axes[] = $axis;
+            $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'emptyGranularity'), true);
+        } else {
+            $axes = [];
+            $refGranularity = '';
+            foreach ($refAxes as $refAxis) {
+                $refGranularity .= $refAxis . '|';
+                $axis = $organization->getAxisByRef($refAxis);
+                // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
+                if (!$axis->isTransverse($axes)) {
+                    $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'hierarchicallyLinkedAxes'), true);
+                    break;
+                } else {
+                    $axes[] = $axis;
+                }
             }
-        }
-        $refGranularity = substr($refGranularity, 0, -1);
+            $refGranularity = substr($refGranularity, 0, -1);
 
-        try {
-            $organization->getGranularityByRef($refGranularity);
-            $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'granularityAlreadyExists'));
-        } catch (Core_Exception_NotFound $e) {
-            // La granularité n'existe pas déjà.
+            try {
+                $organization->getGranularityByRef($refGranularity);
+                $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'granularityAlreadyExists'), true);
+            } catch (Core_Exception_NotFound $e) {
+                // La granularité n'existe pas déjà.
+            }
         }
 
         if (empty($this->_addErrorMessages)) {

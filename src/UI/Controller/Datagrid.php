@@ -549,10 +549,16 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      *
      * @param string $elementName
      * @param string $errorMessage
+     * @param bool   $multiple
      */
-    public function setAddElementErrorMessage($elementName, $errorMessage)
+    public function setAddElementErrorMessage($elementName, $errorMessage, $multiple=false)
     {
-        $this->_addErrorMessages[$this->id.'_'.$elementName.'_addForm'] = $errorMessage;
+        // Les select multiples doivent avoir un nom finissant par "[]" afin d'être décodés comme un tableau.
+        if ($multiple) {
+            $this->_addErrorMessages[$this->id.'_'.$elementName.'_addForm[]'] = $errorMessage;
+        } else {
+            $this->_addErrorMessages[$this->id.'_'.$elementName.'_addForm'] = $errorMessage;
+        }
     }
 
     /**
