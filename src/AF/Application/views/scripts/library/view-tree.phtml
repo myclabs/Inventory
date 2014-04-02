@@ -37,11 +37,12 @@ $tree->display();
 
 
 // TODO ça sert à quoi ce caca ?
+$idLibrary = $library->getId();
 $script = <<<JS
 $('#afTree_element').change(function(e) {
     var idNode = $(this).val();
     $.get(
-        'af/tree_af-tree/getinfoedit?idNode=' + idNode,
+        'af/tree_af-tree/getinfoedit?idNode=' + idNode + '&library=$idLibrary',
         function(o) {
             $('#afTree_labelEdit').val(o.label);
             $('#afTree_htmlComplement').html(o.htmlComplement);
