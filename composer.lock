@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8957616a07675409825983dc1b6bb5da",
+    "hash": "6e5aac729c2b7e0c3a41039bc72c6292",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -961,7 +961,7 @@
         },
         {
             "name": "myclabs/acl",
-            "version": "dev-master",
+            "version": "0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/ACL.git",
@@ -2736,7 +2736,6 @@
     "stability-flags": {
         "doctrine/orm": 20,
         "gedmo/doctrine-extensions": 20,
-        "myclabs/acl": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "mnapoli/metaconsole": 20
