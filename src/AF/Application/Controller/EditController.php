@@ -173,13 +173,12 @@ class AF_EditController extends Core_Controller
      */
     public function algoMainSubmitAction()
     {
-        $formData = $this->getFormData("mainAlgo");
         /** @var $af AF */
-        $af = AF::load($formData->getValue('id'));
+        $af = AF::load($this->getParam('id'));
 
         if ($this->getRequest()->isPost()) {
             try {
-                $af->getMainAlgo()->setExpression(trim($formData->getValue('expression')));
+                $af->getMainAlgo()->setExpression(trim($this->getParam('expression')));
             } catch (InvalidExpressionException $e) {
                 $message = __('AF', 'configTreatmentMessage', 'invalidExpression')
                     . "<br>" . implode("<br>", $e->getErrors());

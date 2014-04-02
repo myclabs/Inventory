@@ -9,19 +9,36 @@ $af = $this->af;
 
 // Algo principal
 $algoMainCollapse = new Collapse('algoMainCollapse', __('AF', 'configTreatmentCollapse', 'executionAlgorithmCollapse'));
-$algoMainForm = new UI_Form('mainAlgo');
-$algoMainForm->setAction('af/edit/algo-main-submit/id/' . $af->getId());
-$algoMainExpression = new UI_Form_Element_Textarea('expression');
-$algoMainExpression->setLabel('Expression');
-$algoMainExpression->setAttrib('rows', '5');
-/** @var $algo MainSelectionAlgo */
-$mainAlgo = $af->getMainAlgo();
-if ($mainAlgo->getExpression()) {
-    $algoMainExpression->setValue($mainAlgo->getExpression());
-}
-$algoMainForm->addElement($algoMainExpression);
-$algoMainForm->addSubmitButton();
-$algoMainCollapse->setContent($algoMainForm->render());
+
+$saveLabel = __('UI', 'verb', 'save');
+$content = <<<HTML
+<form id="mainAlgo" class="form-horizontal" action="af/edit/algo-main-submit?id={$af->getId()}" method="post">
+    <div class="form-group">
+        <label for="inputExpression" class="col-sm-2 control-label">
+            Expression
+        </label>
+        <div class="col-sm-10">
+            <textarea class="form-control" id="inputExpression" name="expression"
+                      rows="5">{$af->getMainAlgo()->getExpression()}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-10 col-sm-offset-2">
+            <button type="submit" class="btn btn-primary">
+                $saveLabel
+            </button>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(function() {
+        new AjaxForm('#mainAlgo');
+    });
+</script>
+HTML;
+
+$algoMainCollapse->setContent($content);
 echo $algoMainCollapse->render();
 
 
