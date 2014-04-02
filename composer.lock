@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6e5aac729c2b7e0c3a41039bc72c6292",
+    "hash": "deba605194c75c9a76d4208992c62a16",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -779,16 +779,16 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "4.0.0",
+            "version": "4.1.0-beta1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "6c1a1d4ad23e49460975b7f57218b90fe3bca434"
+                "reference": "4b30cb1f079f68e2c674a07bba74cb90561d7e8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/6c1a1d4ad23e49460975b7f57218b90fe3bca434",
-                "reference": "6c1a1d4ad23e49460975b7f57218b90fe3bca434",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/4b30cb1f079f68e2c674a07bba74cb90561d7e8b",
+                "reference": "4b30cb1f079f68e2c674a07bba74cb90561d7e8b",
                 "shasum": ""
             },
             "require": {
@@ -822,7 +822,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2014-02-04 10:22:57"
+            "time": "2014-03-22 20:20:04"
         },
         {
             "name": "mnapoli/php-di-zf1",
@@ -2736,6 +2736,7 @@
     "stability-flags": {
         "doctrine/orm": 20,
         "gedmo/doctrine-extensions": 20,
+        "mnapoli/php-di": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "mnapoli/metaconsole": 20
