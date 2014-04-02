@@ -704,6 +704,7 @@ class ListColumn extends GenericColumn
                 $selectInput->setAttribute('id', $this->getAddFormElementId($datagrid));
                 $selectInput->addClass('form-control');
                 if ($this->multiple) {
+                    $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid).'[]');
                     $selectInput->setAttribute('multiple', $this->multipleListSize);
                 }
                 if (($this->multiple) && (is_array($this->defaultAddValue))) {
@@ -743,7 +744,7 @@ class ListColumn extends GenericColumn
                     $selectWrapper->appendContent($selectInput);
                 } else {
                     $selectInput = new GenericTag('select');
-                    $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+                    $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid).'[]');
                     $selectInput->setAttribute('id', $this->getAddFormElementId($datagrid));
                     if ($this->fieldType !== self::FIELD_AUTOCOMPLETE) {
                         $selectInput->addClass('form-control');

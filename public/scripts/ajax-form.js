@@ -16,21 +16,21 @@ AjaxForm = function (selector) {
     this.form.ajaxForm({
         dataType: 'json',
         beforeSubmit: function(formData) {
-            if (self.form.triggerHandler('beforeSubmit')) {
+            if (self.form.triggerHandler('beforeSubmit') !== false) {
                 self.beforeSubmit(formData);
             } else {
                 return false;
             }
         },
         success: function(data) {
-            if (self.form.triggerHandler('successSubmit')) {
+            if (self.form.triggerHandler('successSubmit') !== false) {
                 self.onSuccess(data);
             } else {
                 return false;
             }
         },
         error: function(jqXHR) {
-            if (self.form.triggerHandler('errorSubmit')) {
+            if (self.form.triggerHandler('errorSubmit') !== false) {
                 self.onError(jqXHR);
             } else {
                 return false;

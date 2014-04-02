@@ -733,6 +733,7 @@ class UI_Datagrid extends UI_Generic
         } else {
             $this->addPanelForm = new GenericTag('form');
             $this->addPanelForm->setAttribute('id', $this->id.'_addForm');
+            $this->addPanelForm->setAttribute('method', 'POST');
             $this->addPanelForm->addClass('form-horizontal');
             foreach ($this->_cols as $column) {
                 if ($column->addable == true) {
