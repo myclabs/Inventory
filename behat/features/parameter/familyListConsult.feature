@@ -19,7 +19,3 @@ Feature: Family list consult feature
   # Lien "Cliquer pour accéder"
     When I click "Cliquer pour accéder" in the row 1 of the "familyDatagrid" datagrid
     Then I should see a "h1:contains('Combustion de combustible, mesuré en unité de masse')" element
-  # Vérification qu'on est bien en consultation
-    And I should see "Il n'y a aucune documentation pour cette famille."
-  # Vérification de l'unité affichée
-    And I should see "Unité : kg équ. CO2/t"
