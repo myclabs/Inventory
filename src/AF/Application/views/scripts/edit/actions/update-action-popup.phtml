@@ -47,18 +47,14 @@ $locale = Core_Locale::loadDefault();
             <label class="col-sm-2 control-label">
             </label>
             <div class="col-sm-10">
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="checkboxValue" value="1" <?=$action->getChecked() ? 'checked' : ''?>>
+                <select name="checkboxValue" class="form-control">
+                    <option value="1" <?=$action->getChecked() ? 'selected' : ''?>>
                         <?=__('UI', 'property', 'checked')?>
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="checkboxValue" value="0" <?=!$action->getChecked() ? 'checked' : ''?>>
+                    </option>
+                    <option value="0" <?=!$action->getChecked() ? 'selected' : ''?>>
                         <?=__('UI', 'property', 'unchecked')?>
-                    </label>
-                </div>
+                    </option>
+                </select>
             </div>
         </div>
     <?php endif; ?>
