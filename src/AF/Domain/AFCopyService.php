@@ -2,6 +2,7 @@
 
 namespace AF\Domain;
 
+use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Component\SubAF;
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
@@ -41,6 +42,8 @@ class AFCopyService
         $deepCopy->addFilter(new DoctrineCollectionFilter(), new PropertyTypeMatcher(Collection::class));
         // SubAF
         $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher(SubAF::class, 'calledAF'));
+        // Indexation
+        $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher(NumericAlgo::class, 'contextIndicator'));
 
         /** @var AF $newAF */
         $newAF = $deepCopy->copy($af);
