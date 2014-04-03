@@ -196,6 +196,7 @@ class SelectOption extends Core_Model_Entity
     {
         // Cherche si une condition d'algo porte sur ce champ
         $query = new Core_Model_Query();
+        $query->filter->addCondition(SelectConditionAlgo::QUERY_SET, $this->getSelect()->getAf()->getMainAlgo()->getSet());
         $query->filter->addCondition(SelectConditionAlgo::QUERY_VALUE, $this->getRef());
         $algos = SelectConditionAlgo::loadList($query);
         $unitOfWork = \Core\ContainerSingleton::getEntityManager()->getUnitOfWork();
