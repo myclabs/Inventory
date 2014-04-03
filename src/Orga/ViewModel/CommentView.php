@@ -1,6 +1,6 @@
 <?php
 
-namespace Social\ViewModel;
+namespace Orga\ViewModel;
 
 class CommentView
 {

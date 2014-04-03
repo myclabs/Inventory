@@ -37,7 +37,6 @@ return [
         $paths = [
             APPLICATION_PATH . '/models/mappers',
             APPLICATION_PATH . '/dw/models/mappers',
-            APPLICATION_PATH . '/social/models/mappers',
             APPLICATION_PATH . '/orga/models/mappers',
             APPLICATION_PATH . '/simulation/models/mappers',
         ];

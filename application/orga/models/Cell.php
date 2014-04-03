@@ -131,11 +131,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     protected $docLibraryForAFInputSetPrimary = null;
 
     /**
-     * Collection des SocialComment utilisés pour l'AFInputSetPrimary de la cellule.
+     * Commentaires de la saisie.
      *
-     * @var Collection|Social_Model_Comment[]
+     * @var Collection|Orga_Model_Cell_InputComment[]
      */
-    protected $socialCommentsForAFInputSetPrimary = null;
+    protected $commentsForAFInputSetPrimary = null;
 
     /**
      * Organization de DW généré par et propre à la Cell.
@@ -168,7 +168,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     {
         $this->members = new ArrayCollection();
         $this->cellsGroups = new ArrayCollection();
-        $this->socialCommentsForAFInputSetPrimary = new ArrayCollection();
+        $this->commentsForAFInputSetPrimary = new ArrayCollection();
         $this->dWResults = new ArrayCollection();
         $this->roles = new ArrayCollection();
 
@@ -1018,36 +1018,36 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     /**
      * Vérifie si un SocialComment est utilisée par la cellule.
      *
-     * @param Social_Model_Comment $socialComment
+     * @param Orga_Model_Cell_InputComment $comment
      *
      * @return bool
      */
-    public function hasSocialCommentForInputSetPrimary(Social_Model_Comment $socialComment)
+    public function hasCommentForInputSetPrimary(Orga_Model_Cell_InputComment $comment)
     {
-        return $this->socialCommentsForAFInputSetPrimary->contains($socialComment);
+        return $this->commentsForAFInputSetPrimary->contains($comment);
     }
 
     /**
      * Ajoute un SocialComment à la Cellule.
      *
-     * @param Social_Model_Comment $socialComment
+     * @param Orga_Model_Cell_InputComment $comment
      */
-    public function addSocialCommentForInputSetPrimary(Social_Model_Comment $socialComment)
+    public function addCommentForInputSetPrimary(Orga_Model_Cell_InputComment $comment)
     {
-        if (!($this->hasSocialCommentForInputSetPrimary($socialComment))) {
-            $this->socialCommentsForAFInputSetPrimary->add($socialComment);
+        if (!($this->hasCommentForInputSetPrimary($comment))) {
+            $this->commentsForAFInputSetPrimary->add($comment);
         }
     }
 
     /**
      * Retire un SocialComment de la cellule.
      *
-     * @param Social_Model_Comment $socialComment
+     * @param Orga_Model_Cell_InputComment $comment
      */
-    public function removeSocialCommentForInputSetPrimary(Social_Model_Comment $socialComment)
+    public function removeCommentForInputSetPrimary(Orga_Model_Cell_InputComment $comment)
     {
-        if ($this->hasSocialCommentForInputSetPrimary($socialComment)) {
-            $this->socialCommentsForAFInputSetPrimary->removeElement($socialComment);
+        if ($this->hasCommentForInputSetPrimary($comment)) {
+            $this->commentsForAFInputSetPrimary->removeElement($comment);
         }
     }
 
@@ -1056,19 +1056,19 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      *
      * @return bool
      */
-    public function hasSocialCommentsForInputSetPrimary()
+    public function hasCommentsForInputSetPrimary()
     {
-        return !$this->socialCommentsForAFInputSetPrimary->isEmpty();
+        return !$this->commentsForAFInputSetPrimary->isEmpty();
     }
 
     /**
      * Renvoi l'ensemble des GeneriAction de la cellule.
      *
-     * @return Social_Model_Comment[]
+     * @return Orga_Model_Cell_InputComment[]
      */
-    public function getSocialCommentsForInputSetPrimary()
+    public function getCommentsForInputSetPrimary()
     {
-        return $this->socialCommentsForAFInputSetPrimary->toArray();
+        return $this->commentsForAFInputSetPrimary->toArray();
     }
 
     /**
