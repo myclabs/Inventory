@@ -57,7 +57,8 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 'module'     => 'af',
                 'controller' => 'af',
                 'action'     => 'duplicate-popup',
-                'id'         => $af->getId(),
+                'idAF'       => $af->getId(),
+                'library'    => $library->getId(),
             ]), __('UI', 'verb', 'duplicate'), 'plus-circle');
             $this->addLine($data);
         }

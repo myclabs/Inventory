@@ -10,6 +10,7 @@ use AF\Application\AFViewConfiguration;
 use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\AFCopyService;
+use AF\Domain\AFLibrary;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
@@ -228,28 +229,34 @@ class AF_AfController extends Core_Controller
 
     /**
      * Popup de copie d'un AF
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function duplicatePopupAction()
     {
-        $this->view->assign('id', $this->getParam('id'));
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
+
+        $this->view->assign('id', $this->getParam('idAF'));
+        $this->view->assign('library', $library);
         $this->_helper->layout->disableLayout();
     }
 
     /**
      * Duplique un AF
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function duplicateAction()
     {
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
         /** @var $af AF */
-        $af = AF::load($this->getParam('id'));
+        $af = AF::load($this->getParam('idAF'));
 
         $newRef = $this->getParam('ref');
         $newLabel = $this->getParam('label');
         if ($newRef == '' || $newLabel == '') {
             UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'), UI_Message::TYPE_ERROR);
-            $this->redirect('af/af/list');
+            $this->redirect('af/library/view/id/' . $library->getId());
             return;
         }
 
@@ -260,11 +267,11 @@ class AF_AfController extends Core_Controller
             $this->entityManager->flush();
         } catch (Core_ORM_DuplicateEntryException $e) {
             UI_Message::addMessageStatic(__('UI', 'formValidation', 'alreadyUsedIdentifier'), UI_Message::TYPE_ERROR);
-            $this->redirect('af/af/list');
+            $this->redirect('af/library/view/id/' . $library->getId());
             return;
         }
 
         UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
-        $this->redirect('af/af/list');
+        $this->redirect('af/library/view/id/' . $library->getId());
     }
 }
