@@ -1255,8 +1255,15 @@ class Orga_CellController extends Core_Controller
 
         $tabComments = new Tab('inputComments');
         $tabComments->setTitle(__('Social', 'comment', 'comments'));
-        $tabComments->setContent('orga/cell/input-comments/idCell/'.$idCell);
-        $tabComments->setAjax(true, true);
+        $commentView = new Zend_View();
+        $commentView->setScriptPath(__DIR__ . '/../views/scripts');
+        $commentView->assign('idCell', $idCell);
+        $commentView->assign('currentUser', $this->_helper->auth());
+        $commentView->assign(
+            'isUserAbleToComment',
+            $this->aclManager->isAllowed($this->_helper->auth(), Actions::INPUT, $cell)
+        );
+        $tabComments->setContent($commentView->render('cell/input-comments.phtml'));
         $aFViewConfiguration->addTab($tabComments);
 
         $tabDocs = new Tab('inputDocs');
@@ -1340,90 +1347,6 @@ class Orga_CellController extends Core_Controller
         $inputSetContainer->inputSet = $cell->getAFInputSetPrimary();
 
         $this->_helper->viewRenderer->setNoRender(true);
-    }
-
-    /**
-     * @Secure("viewCell")
-     */
-    public function inputCommentsAction()
-    {
-        /** @var User $connectedUser */
-        $connectedUser = $this->_helper->auth();
-
-        $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
-
-        $this->view->assign('idCell', $idCell);
-
-        $this->view->assign('idCell', $idCell);
-        $this->view->assign('comments', $cell->getSocialCommentsForInputSetPrimary());
-        $this->view->assign('currentUser', $connectedUser);
-        $this->view->assign(
-            'isUserAbleToComment',
-            $this->aclManager->isAllowed($connectedUser, Actions::INPUT, $cell)
-        );
-
-        // Désactivation du layout.
-        $this->_helper->layout()->disableLayout();
-    }
-
-    /**
-     * @Secure("inputCell")
-     */
-    public function inputCommentAddAction()
-    {
-        /** @var User $connectedUser */
-        $connectedUser = $this->_helper->auth();
-
-        $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
-
-        $this->view->assign('idCell', $idCell);
-
-        $formData = $this->getFormData('addCommentForm');
-
-        $content = $formData->getValue('addContent');
-        if (empty($content)) {
-            $this->addFormError('addContent', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
-        if (!$this->hasFormError()) {
-            // Ajoute le commentaire
-            $comment = $this->commentService->addComment($connectedUser, $content);
-            $cell->addSocialCommentForInputSetPrimary($comment);
-            $cell->save();
-            $this->entityManager->flush();
-
-            // Retourne la vue du commentaire
-            $this->forward('comment-added', 'comment', 'social', [
-                'comment' => $comment,
-                'currentUser' => $connectedUser
-            ]);
-            return;
-        }
-
-        // Désactivation du layout.
-        $this->_helper->layout()->disableLayout();
-
-        $this->sendFormResponse();
-    }
-
-    /**
-     * @Secure("deleteComment")
-     */
-    public function inputCommentDeleteAction()
-    {
-        $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
-
-        $comment = Social_Model_Comment::load($this->getParam('id'));
-
-        $cell->removeSocialCommentForInputSetPrimary($comment);
-        $this->commentService->deleteComment($comment->getId());
-
-        $this->sendFormResponse();
     }
 
     /**

@@ -12,6 +12,14 @@
                 <seg>Comments</seg>
             </tuv>
         </tu>
+        <tu tuid="comment">
+            <tuv xml:lang="fr">
+                <seg>Commentaire</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Comment</seg>
+            </tuv>
+        </tu>
         <tu tuid="noComment">
             <tuv xml:lang="fr">
                 <seg>Aucun commentaire.</seg>
@@ -62,4 +70,4 @@
         </tu>
 
     </body>
-</tmx>    
+</tmx>

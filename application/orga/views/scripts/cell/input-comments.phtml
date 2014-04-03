@@ -4,10 +4,11 @@ if ($this->isUserAbleToComment) {
         'comment/list.phtml',
         'social',
         [
-            'comments'       => $this->comments,
             'currentUser'    => $this->currentUser,
-            'endpointAdd'    => 'orga/cell/input-comment-add/idCell/' . $this->idCell,
-            'endpointDelete' => 'orga/cell/input-comment-delete/idCell/' . $this->idCell,
+            'endpointGet'    => 'orga/comment/list?idCell=' . $this->idCell,
+            'endpointAdd'    => 'orga/comment/new?idCell=' . $this->idCell,
+            'endpointEdit'   => 'orga/comment/edit?idCell=' . $this->idCell,
+            'endpointDelete' => 'orga/comment/delete?idCell=' . $this->idCell,
         ]
     );
 } else {
@@ -15,8 +16,8 @@ if ($this->isUserAbleToComment) {
         'comment/list.phtml',
         'social',
         [
-            'comments'    => $this->comments,
             'currentUser' => $this->currentUser,
+            'endpointGet' => 'orga/comment/comments?idCell=' . $this->idCell,
         ]
     );
 }

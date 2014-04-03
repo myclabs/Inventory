@@ -1,139 +1,119 @@
-<?php
-/** @var $comments Social_Model_Comment[] */
-$comments = $this->comments;
-$currentUser = $this->currentUser;
+<div ng-app="Comments" ng-controller="CommentsController">
 
-$endpointAdd = $this->endpointAdd;
-$endpointDelete = $this->endpointDelete;
-?>
+    <blockquote ng-repeat="comment in comments">
+        <div ng-show="!comment.edition">
+            <div ng-bind-html="comment.html | rawHtml"></div>
+            <small>
+                <?=__('Social', 'comment', 'by')?> <strong>{{ comment.author }}</strong>
+                <?=__('Social', 'comment', 'dated')?> {{ comment.date }}
+            </small>
+        </div>
+        <div ng-if="comment.canBeEdited">
 
-<div class="commentList">
-    <?php
-    foreach ($comments as $comment) {
-        echo $this->partial('comment/view.phtml', 'social', ['comment' => $comment, 'currentUser' => $currentUser]);
-    }
+            <div ng-show="!comment.edition">
+                <button ng-click="comment.edition = true" type="button" class="btn btn-default btn-xs">
+                    <i class="fa fa-pencil-square-o"></i>
+                    <?=__('UI', 'verb', 'edit')?>
+                </button>
+                <button ng-click="deleteComment(comment)" type="button" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o"></i>
+                    <?=__('UI', 'verb', 'delete')?>
+                </button>
+            </div>
 
-    if (count($comments) === 0) {
-        ?>
-        <p class="text-muted noComments">
-            <?=__('Social', 'comment', 'noComment')?>
-        </p>
-        <?php
-    }
-    ?>
-</div>
+            <form ng-show="comment.edition" ng-submit="editComment(comment)">
+                <div class="form-group">
+                    <textarea ng-model="comment.text" class="form-control" rows="5"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <?=__('UI', 'verb', 'save')?>
+                </button>
+                <button ng-click="comment.edition = false" type="button" class="btn btn-default">
+                    <?=__('UI', 'verb', 'cancel')?>
+                </button>
+            </form>
 
-<?php
-// Désactivation de l'ajout de commentaires
-if ($endpointAdd !== null) :
-    ?>
-    <p>
-        <button class="addComment btn btn-default" type="button"><?=__('Social', 'comment', 'addComment')?></button>
+        </div>
+    </blockquote>
+
+    <p ng-if="comment.length == 0" class="text-muted">
+        <?=__('Social', 'comment', 'noComment')?>
     </p>
-    <?php
-endif;
-?>
 
-<div class="commentForms">
-    <?php
-    // Add form
-    if ($endpointAdd !== null) {
-        $form = new UI_Form('addCommentForm');
-        $form->setAction($endpointAdd);
-        $form->setAjax(true, 'addCommentSuccess');
-        $form->addClass('hide');
+    <?php if ($this->endpointAdd !== null) : ?>
+        <form ng-submit="addComment()">
+            <div class="form-group">
+                <textarea ng-model="newComment" class="form-control" rows="5"
+                          placeholder="<?=__('Social', 'comment', 'comment')?>"></textarea>
+            </div>
+            <button type="submit" class="btn btn-default">
+                <?=__('Social', 'comment', 'addComment')?>
+            </button>
+        </form>
+    <?php endif; ?>
 
-        $contentField = new UI_Form_Element_Textarea('addContent');
-        $contentField->setWithMarkItUp(true);
-        $form->addElement($contentField);
-
-        $form->addSubmitButton(__('UI', 'verb', 'add'));
-        $form->addResetButton(__('UI', 'verb', 'cancel'));
-        echo $form->render();
-    }
-
-    // Edit form
-    $form = new UI_Form('editCommentForm');
-    $form->setAjax(true, 'editCommentSuccess');
-    $form->addClass('hide');
-
-    $contentField = new UI_Form_Element_Textarea('editContent');
-    $contentField->setWithMarkItUp(true);
-    $form->addElement($contentField);
-
-    $form->addSubmitButton(__('UI', 'verb', 'save'));
-    $form->addResetButton(__('UI', 'verb', 'cancel'));
-    echo $form->render();
-    ?>
 </div>
 
 <script>
-    var addCommentEnabled = <?=json_encode($endpointAdd !== null)?>;
+    var app = angular.module('Comments', []);
 
-    if (addCommentEnabled) {
-        // Add a comment
-        $(".addComment").click(function() {
-            $("#addCommentForm").show(400)
-                .find("#addContent").focus();
-        });
-        // Add a comment success callback
-        $.fn.addCommentSuccess = function(response) {
-            $("#addCommentForm")[0].reset();
-            var commentList = $(".commentList");
-            commentList.find(".noComments").remove();
-            commentList.append($(response.data));
+    // Configure Angular pour poster en "form data" plutôt qu'en JSON
+    app.config(function ($httpProvider) {
+        $httpProvider.defaults.transformRequest = function(data){
+            if (data === undefined) {
+                return data;
+            }
+            return $.param(data);
         };
-        // Cancel add a comment
-        $("#addCommentForm").on("reset", function() {
-            $("#addCommentForm").hide(400);
-        });
-    }
+        $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+    });
 
-    var commentList = $(".commentList");
+    app.filter('rawHtml', function($sce){
+        return function(text) {
+            return $sce.trustAsHtml(text);
+        };
+    });
 
-    // Delete a comment
-    commentList.on("click", ".deleteComment", function() {
-        var commentBlock = $(this).closest("blockquote");
-        var commentId = commentBlock.data('comment-id');
-        setMask(true);
-        $.post("<?=$endpointDelete?>", {'id': commentId})
-        .done(function() {
-            setMask(false);
-            commentBlock.hide(400, function(){
-                commentBlock.remove();
+    app.controller('CommentsController', function ($scope, $http) {
+        $scope.comments = [];
+
+        $scope.refresh = function() {
+            $http.get('<?=$this->endpointGet?>').success(function(data) {
+                $scope.comments = data;
+            }).error(function(data) {
+                addMessage(data);
             });
-        });
-    });
+        };
 
-    // Edit a comment
-    commentList.on("click", ".editComment", function() {
-        var commentBlock = $(this).closest("blockquote");
-        var commentId = commentBlock.data('comment-id');
-        setMask(true);
-        // Fetch the comments raw content
-        $.post("social/comment/get-comment-content", {'id': commentId})
-        .done(function(response) {
-            setMask(false);
-            // Init and moves the form
-            $("#editCommentForm").detach()
-                .appendTo('#comment' + commentId)
-                .attr('action', 'social/comment/edit-comment/id/' + commentId)
-                .show(400)
-                .find("#editContent").val(response.data).focus();
-        });
-    });
-    // Edit a comment success callback
-    $.fn.editCommentSuccess = function(response) {
-        var form = $("#editCommentForm");
-        form[0].reset();
-        // Move the form again
-        form.detach()
-            .appendTo('.commentForms');
-        // Replace the HTML element
-        $('#comment' + response.data.commentId).replaceWith($(response.data.html));
-    };
-    // Cancel edit a comment
-    $("#editCommentForm").on("reset", function() {
-        $("#editCommentForm").hide(400);
+        $scope.addComment = function() {
+            $http.post('<?=$this->endpointAdd?>', { text: $scope.newComment }).success(function(data) {
+                addMessage(JSON.parse(data), 'success');
+                $scope.refresh();
+                $scope.newComment = '';
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.editComment = function(comment) {
+            $http.post('<?=$this->endpointEdit?>', { id: comment.id, text: comment.text })
+            .success(function(data) {
+                addMessage(JSON.parse(data), 'success');
+                $scope.refresh();
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.deleteComment = function(comment) {
+            $http.post('<?=$this->endpointDelete?>', { id: comment.id }).success(function(data) {
+                addMessage(JSON.parse(data), 'success');
+                $scope.refresh();
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.refresh();
     });
 </script>
