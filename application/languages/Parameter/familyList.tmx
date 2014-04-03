@@ -52,8 +52,15 @@
                 <seg>Creation of a family</seg>
             </tuv>
         </tu>
-    
-    
+        <tu tuid="addFamily">
+            <tuv xml:lang="fr">
+                <seg>Ajouter une famille</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Create a family</seg>
+            </tuv>
+        </tu>
+
+
     </body>
 </tmx>
-    

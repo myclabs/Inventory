@@ -13,7 +13,7 @@ Feature: Family list edit feature
       | category                        | label                                               | ref                                | unit          |
       | Catégorie contenant une famille | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse | kg équ. CO2/t |
   # Ajout
-    When I click "Ajouter"
+    When I click "Ajouter une famille"
     Then I should see the popup "Ajout d'une famille"
     When I select "Catégorie contenant une famille" from "familyDatagrid_category_addForm"
     And I fill in "familyDatagrid_label_addForm" with "AAA"
@@ -31,7 +31,7 @@ Feature: Family list edit feature
     Given I am on "parameter/library/view/id/1"
     Then I should see the "familyDatagrid" datagrid
   # Ajout
-    When I click "Ajouter"
+    When I click "Ajouter une famille"
     Then I should see the popup "Ajout d'une famille"
   # Aucun champ rempli
     When I click "Valider"

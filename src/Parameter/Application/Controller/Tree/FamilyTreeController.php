@@ -134,6 +134,9 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
      */
     public function addnodeAction()
     {
+        /** @var $library ParameterLibrary */
+        $library = ParameterLibrary::load($this->getParam('library'));
+
         // Validate the form
         $label = $this->getAddElementValue('label');
         if ($label == '') {
@@ -142,7 +145,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
             return;
         }
 
-        $category = new Category($label);
+        $category = new Category($library, $label);
         $category->save();
         $this->entityManager->flush();
 

@@ -17,6 +17,7 @@ $library = $this->library;
 <?php
 $datagrid = new UI_Datagrid('familyDatagrid', 'datagrid_family-datagrid', 'parameter');
 $datagrid->addParam('library', $library->getId());
+$datagrid->addButtonLabel = __('Parameter', 'familyList', 'addFamily');
 
 $columns = [];
 
@@ -91,7 +92,8 @@ if ($this->edit) {
         $(function() {
             $('#familyTree_element').change(function(e) {
                 var idNode = $(this).val();
-                $.get('parameter/tree_family-tree/getinfoedit?idNode=' + idNode,
+                $.get('parameter/tree_family-tree/getinfoedit?idNode=' + idNode
+                        + '&library=' + <?=$library->getId()?>,
                     function(o){
                         $('#familyTree_labelEdit').val(o.label);
                         $('#familyTree_htmlComplement').html(o.htmlComplement);
@@ -102,7 +104,7 @@ if ($this->edit) {
                 });
             });
             $('#familyTree_addPanel').on('show.bs.modal', function(e) {
-                $.get('parameter/tree_family-tree/getlistparents?idNode=',
+                $.get('parameter/tree_family-tree/getlistparents?library=' + <?=$library->getId()?>,
                     function(o){
                         $('#addAxis_parent').formActionSetOptions(o);
                     }
