@@ -127,34 +127,6 @@ Orga_Model_Cell:
             nullable: false
             unique: true
       cascade: [ persist, remove ]
-    socialGenericActions:
-      targetEntity: Social_Model_GenericAction
-      joinTable:
-        name: Orga_Cell_GenericActions
-        joinColumns:
-          idCell:
-            referencedColumnName: id
-            nullable: false
-        inverseJoinColumns:
-          idSocialGenericAction:
-            referencedColumnName: id
-            nullable: false
-            unique: true
-      cascade: [ persist, remove ]
-    socialContextActions:
-      targetEntity: Social_Model_ContextAction
-      joinTable:
-        name: Orga_Cell_ContextActions
-        joinColumns:
-          idCell:
-            referencedColumnName: id
-            nullable: false
-        inverseJoinColumns:
-          idSocialContextAction:
-            referencedColumnName: id
-            nullable: false
-            unique: true
-      cascade: [ persist, remove ]
     dWResults:
       targetEntity: DW_Model_Result
       joinTable:

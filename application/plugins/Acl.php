@@ -688,16 +688,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
         } catch (Core_Exception_NotFound $e) {
             // Pas de Cell
         }
-        try {
-            return Orga_Model_Cell::loadByDocLibraryForSocialGenericAction($library);
-        } catch (Core_Exception_NotFound $e) {
-            // Pas de Cell
-        }
-        try {
-            return Orga_Model_Cell::loadByDocLibraryForSocialContextAction($library);
-        } catch (Core_Exception_NotFound $e) {
-            // Pas de Cell
-        }
 
         throw new ForbiddenException();
     }
