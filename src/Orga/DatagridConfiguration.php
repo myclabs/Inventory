@@ -85,7 +85,6 @@ class Orga_DatagridConfiguration
             $columnAxis->entityAlias = Orga_Model_Member::getAlias();
             $columnAxis->withEmptyElement = false;
             $columnAxis->multipleFilters = true;
-            $columnAxis->multipleListSize = $sizeFilter;
             $columnAxis->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
         }
         $this->datagrid->addCol($columnAxis);

@@ -133,15 +133,6 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
     public $multipleFilters = null;
 
     /**
-     * Nombre définissant la hauteur du champs select multiple.
-     *
-     * Par défaut auto.
-     *
-     * @var integer
-     */
-    public $multipleListSize = 'auto';
-
-    /**
      * Permet de savoir si la liste aura un élément vide rajouté automatiquement.
      *  (ne sera pas pris en compte pour les filtres de type checkbox)
      *
@@ -580,7 +571,6 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                 $filterFormElement = new UI_Form_Element_MultiSelect($this->getFilterFormId($datagrid));
                 $filterFormElement->addNullOption('');
                 $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
-                $filterFormElement->size = $this->multipleListSize;
             }
         } else {
             if ($this->getFilterFieldType() === self::FIELD_BOX) {
@@ -749,7 +739,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                 $selectInput->addClass('form-control');
                 if ($this->multiple) {
                     $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid).'[]');
-                    $selectInput->setAttribute('multiple', $this->multipleListSize);
+                    $selectInput->setAttribute('multiple', 'multiple');
                 }
                 if (($this->multiple) && (is_array($this->defaultAddValue))) {
                     foreach ($this->defaultAddValue as $index => $defaultAddValue) {
@@ -793,7 +783,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                     if ($this->fieldType !== self::FIELD_AUTOCOMPLETE) {
                         $selectInput->addClass('form-control');
                     }
-                    $selectInput->setAttribute('multiple', $this->multipleListSize);
+                    $selectInput->setAttribute('multiple', 'multiple');
 
                     if ($this->withEmptyElement === true) {
                         $elementOption = new GenericTag('option', '');
@@ -841,7 +831,6 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                     if ($this->fieldType !== self::FIELD_AUTOCOMPLETE) {
                         $selectInput->addClass('form-control');
                     }
-                    $selectInput->setAttribute('multiple', $this->multipleListSize);
 
                     if ($this->withEmptyElement === true) {
                         $elementOption = new GenericTag('option', '');
