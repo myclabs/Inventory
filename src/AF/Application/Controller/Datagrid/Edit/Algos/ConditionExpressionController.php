@@ -33,11 +33,13 @@ class AF_Datagrid_Edit_Algos_ConditionExpressionController extends UI_Controller
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
-                $data['expression'] = $this->cellLongText('af/edit_algos/popup-expression/id/' . $algo->getId(),
-                                                          'af/datagrid_edit_algos_condition-expression/'
-                                                              . 'get-expression/id/' . $algo->getId(),
-                                                          __('TEC', 'name', 'expression'),
-                                                          'zoom-in');
+                $data['expression'] = $this->cellLongText(
+                    'af/edit_algos/popup-expression/idAF/' . $af->getId() . '/algo/' . $algo->getId(),
+                    'af/datagrid_edit_algos_condition-expression/get-expression/idAF/' . $af->getId() . '/algo/'
+                    . $algo->getId(),
+                    __('TEC', 'name', 'expression'),
+                    'zoom-in'
+                );
                 $this->addLine($data);
             }
         }
@@ -154,7 +156,7 @@ class AF_Datagrid_Edit_Algos_ConditionExpressionController extends UI_Controller
     public function getExpressionAction()
     {
         /** @var $algo ExpressionConditionAlgo */
-        $algo = ExpressionConditionAlgo::load($this->getParam('id'));
+        $algo = ExpressionConditionAlgo::load($this->getParam('algo'));
         $this->data = $algo->getExpression();
         $this->send();
     }

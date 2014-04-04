@@ -30,11 +30,13 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
-                $data['expression'] = $this->cellLongText('af/edit_algos/popup-expression/id/' . $algo->getId(),
-                                                          'af/datagrid_edit_algos_selection-textkey-expression/'
-                                                              . 'get-expression/id/' . $algo->getId(),
-                                                          __('TEC', 'name', 'expression'),
-                                                          'zoom-in');
+                $data['expression'] = $this->cellLongText(
+                    'af/edit_algos/popup-expression/idAF/' . $af->getId() . '/algo/' . $algo->getId(),
+                    'af/datagrid_edit_algos_selection-textkey-expression/get-expression/idAF/' . $af->getId()
+                    . '/algo/' . $algo->getId(),
+                    __('TEC', 'name', 'expression'),
+                    'zoom-in'
+                );
                 $this->addLine($data);
             }
         }
@@ -155,7 +157,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
     public function getExpressionAction()
     {
         /** @var $algo ExpressionSelectionAlgo */
-        $algo = ExpressionSelectionAlgo::load($this->getParam('id'));
+        $algo = ExpressionSelectionAlgo::load($this->getParam('algo'));
         $this->data = $algo->getExpression();
         $this->send();
     }
