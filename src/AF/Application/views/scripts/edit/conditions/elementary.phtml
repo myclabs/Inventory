@@ -59,15 +59,6 @@ $datagrid->addCol($valueColumn);
 $editValueColumn = new UI_Datagrid_Col_Popup('editValue', __('UI', 'name', 'edition'));
 $editValueColumn->popup->addTitle(__('AF', 'configInteractionDatagrid', 'elementaryConditionEditPanelTitle'));
 $editValueColumn->popup->large();
-$editValueColumn->popup->setFooterContent((string) $this->button(
-    __('UI', 'verb', 'save'),
-    Button::TYPE_PRIMARY,
-    'check'
-)->setAttribute('onclick', '$(\'#updateCondition\').submit();'));
-$closeButton = '<button type="button" class="btn btn-default" data-dismiss="modal">' .
-    '<i class="fa fa-times"></i> ' . __('UI', 'verb', 'cancel') .
-    '</button>';
-$editValueColumn->popup->getFooter()->appendContent($closeButton);
 $datagrid->addCol($editValueColumn);
 
 echo $datagrid->render();
