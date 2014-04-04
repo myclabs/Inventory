@@ -16,28 +16,28 @@ AjaxForm = function (selector) {
     this.form.ajaxForm({
         dataType: 'json',
         beforeSubmit: function(formData) {
-            if (self.form.triggerHandler('beforeSubmit') !== false) {
+            if (self.form.triggerHandler('beforeSubmit', [formData]) !== false) {
                 self.beforeSubmit(formData);
             } else {
                 return false;
             }
         },
         success: function(data) {
-            if (self.form.triggerHandler('successSubmit') !== false) {
+            if (self.form.triggerHandler('successSubmit', [data]) !== false) {
                 self.onSuccess(data);
             } else {
                 return false;
             }
         },
         error: function(jqXHR) {
-            if (self.form.triggerHandler('errorSubmit') !== false) {
+            if (self.form.triggerHandler('errorSubmit', [jqXHR]) !== false) {
                 self.onError(jqXHR);
             } else {
                 return false;
             }
         },
-        complete: function() {
-            return self.form.triggerHandler('afterSubmit')
+        complete: function(jqXHR) {
+            return self.form.triggerHandler('afterSubmit', [jqXHR])
         }
     });
 
@@ -79,9 +79,11 @@ AjaxForm = function (selector) {
             }
 
             var input = self.form.find('[name="' + name + '"]');
-            input.parent().append('<span class="help-block errorMessage">'
-                + data.errorMessages[name]
-                + '</span>');
+            input.parent().append(
+                '<span class="help-block errorMessage">' +
+                data.errorMessages[name] +
+                '</span>'
+            );
 
             var inputLine = input.parents('.form-group');
             if (! inputLine.hasClass('has-error')) {

@@ -782,7 +782,7 @@ class Datagrid extends UI_Generic
         }
 
         // Ajout d'une fonction d'encapsulation de l'ajout.
-        $addScript .= 'var test = new AjaxForm(\'#'.$this->id.'_addForm\');';
+        $addScript .= 'new AjaxForm(\'#'.$this->id.'_addForm\');';
         $addScript .= '$(\'#'.$this->id.'_addForm\').on(\'successSubmit\', function () {';
         $addScript .= 'this.reset();';
         if ($this->automaticFiltering === true) {
