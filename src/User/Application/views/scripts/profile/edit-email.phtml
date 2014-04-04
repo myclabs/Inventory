@@ -17,40 +17,47 @@ if ($this->editSelfEmail) {
     </h1>
 </div>
 
-<?php
-$form = new UI_Form('editEmail');
-$form->setAction('user/profile/edit-email/id/'.$user->getId());
-$form->setAjax(true, 'emailUpdated');
 
-$oldEmail = new UI_Form_Element_Pattern_Email('oldEmail');
-$oldEmail->setLabel(__('User', 'editEmail', 'oldEmail'));
-$oldEmail->setAttrib('readonly', 'readonly');
-$oldEmail->setValue($user->getEmail());
-$form->addElement($oldEmail);
+<div class="well">
+    <form id="editEmail" class="form-horizontal" method="post"
+          action="user/profile/edit-email?id=<?=$user->getId()?>">
 
-if ($this->editSelfEmail) {
-    $pwd = new UI_Form_Element_Password('password');
-    $pwd->setLabel(__('User', 'editEmail', 'password'));
-    $pwd->setRequired();
-    $form->addElement($pwd);
-}
+        <?php if ($this->editSelfEmail) : ?>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">
+                    <?=__('User', 'editEmail', 'password')?>
+                </label>
+                <div class="col-sm-10">
+                    <input name="password" type="password" class="form-control" required autocomplete="off">
+                </div>
+            </div>
+        <?php endif; ?>
 
-$email = new UI_Form_Element_Pattern_Email('email');
-$email->setLabel(__('User', 'editEmail', 'newEmail'));
-$email->setRequired();
-$form->addElement($email);
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('User', 'editEmail', 'newEmail')?>
+            </label>
+            <div class="col-sm-10">
+                <input name="email" type="email" class="form-control" required>
+            </div>
+        </div>
 
-$email2 = new UI_Form_Element_Pattern_Email('email2');
-$email2->setLabel(__('User', 'editEmail', 'confirmNewEmail'));
-$email2->setRequired();
-$form->addElement($email2);
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">
+                    <?=__('UI', 'verb', 'save')?>
+                </button>
+                <a class="btn btn-default" href="user/profile/edit/id/<?=$user->getId()?>">
+                    <?=__('UI', 'other', 'backButton')?>
+                </a>
+            </div>
+        </div>
 
-$form->addSubmitButton();
-$form->display();
-?>
+    </form>
+</div>
 
 <script>
-    $.fn.emailUpdated = function (o) {
-        window.location = "<?=$this->baseUrl('user/profile/edit/id/' . $user->getId())?>";
-    };
+    $(function() {
+        new AjaxForm('#editEmail');
+    })
 </script>
