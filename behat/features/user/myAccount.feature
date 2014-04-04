@@ -34,22 +34,14 @@ Feature: My account feature
   # Saisie avec un mauvais mot de passe, première adresse email existe déjà, seconde adresse email différente de la première
     When I fill in "Merci de re-saisir votre mot de passe" with "mauvais_mot_de_passe"
     And I fill in "Nouvelle adresse e-mail" with "emmanuel.risler.pro@gmail.com"
-    And I fill in "Nouvelle adresse e-mail (confirmation)" with "adresse email différente"
     And I click "Enregistrer"
     Then the field "Merci de re-saisir votre mot de passe" should have error: "Le mot de passe indiqué est invalide."
     And the field "Nouvelle adresse e-mail" should have error: "Il existe déjà un compte utilisateur associé à cette adresse e-mail."
-    And the field "Nouvelle adresse e-mail (confirmation)" should have error: "Cette saisie de la nouvelle adresse e-mail n'est pas identique à la précédente."
   # Bon mot de passe
     When I fill in "Merci de re-saisir votre mot de passe" with "emmanuel.risler.pro@gmail.com"
     And I click "Enregistrer"
     Then the field "Nouvelle adresse e-mail" should have error: "Il existe déjà un compte utilisateur associé à cette adresse e-mail."
-    And the field "Nouvelle adresse e-mail (confirmation)" should have error: "Cette saisie de la nouvelle adresse e-mail n'est pas identique à la précédente."
-  # Première adresse email non déjà existante
     When I fill in "Nouvelle adresse e-mail" with "emmanuel.risler.abo@gmail.com"
-    And I click "Enregistrer"
-    Then the field "Nouvelle adresse e-mail (confirmation)" should have error: "Cette saisie de la nouvelle adresse e-mail n'est pas identique à la précédente."
-  # Seconde adresse email identique à la première
-    And I fill in "Nouvelle adresse e-mail (confirmation)" with "emmanuel.risler.abo@gmail.com"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
     And the ".page-header h1" element should contain "Mon compte"
