@@ -112,11 +112,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
                                                   ['ERRORS' => implode("<br>", $e->getErrors())]);
                 }
-                $this->data = $this->cellLongText('af/edit_algos/popup-expression/id/' . $algo->getId(),
-                                                  'af/datagrid_edit_algos_selection-textkey-expression/'
-                                                      . 'get-expression/id/' . $algo->getId(),
-                                                  __('TEC', 'name', 'expression'),
-                                                  'zoom-in');
+                $this->data = null;
                 break;
         }
         $algo->save();
