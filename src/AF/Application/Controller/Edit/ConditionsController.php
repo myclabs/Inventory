@@ -9,6 +9,7 @@ use AF\Domain\Condition\CheckboxCondition;
 use AF\Domain\Condition\Select\SelectSingleCondition;
 use AF\Domain\Condition\Select\SelectMultiCondition;
 use Core\Annotation\Secure;
+use User\Application\HttpNotFoundException;
 
 /**
  * @author matthieu.napoli
@@ -34,7 +35,7 @@ class AF_Edit_ConditionsController extends Core_Controller
     public function updateConditionSubmitAction()
     {
         if (!$this->getRequest()->isPost()) {
-            throw new Core_Exception_NotFound("Page invalide");
+            throw new HttpNotFoundException;
         }
         $condition = ElementaryCondition::load($this->getParam('idCondition'));
 
