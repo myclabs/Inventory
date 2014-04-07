@@ -1,19 +1,13 @@
 <?php
 
 use Core\Annotation\Secure;
-use Social\ViewModel\CommentView;
+use Orga\ViewModel\CommentView;
 use User\Application\HttpNotFoundException;
 use User\Domain\User;
 
 class Orga_CommentController extends Core_Controller
 {
     use UI_Controller_Helper_Form;
-
-    /**
-     * @Inject
-     * @var Social_Service_CommentService
-     */
-    private $commentService;
 
     /**
      * @Secure("viewCell")
@@ -27,7 +21,7 @@ class Orga_CommentController extends Core_Controller
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $comments = [];
-        foreach ($cell->getSocialCommentsForInputSetPrimary() as $comment) {
+        foreach ($cell->getCommentsForInputSetPrimary() as $comment) {
             $commentView = new CommentView();
             $commentView->id = $comment->getId();
             $commentView->text = $comment->getText();
@@ -64,9 +58,10 @@ class Orga_CommentController extends Core_Controller
         }
 
         // Ajoute le commentaire
-        $comment = $this->commentService->addComment($connectedUser, $content);
-        $cell->addSocialCommentForInputSetPrimary($comment);
-        $cell->save();
+        $comment = new Orga_Model_Cell_InputComment($cell, $connectedUser);
+        $comment->setText($content);
+        $comment->save();
+        $cell->addCommentForInputSetPrimary($comment);
         $this->entityManager->flush();
 
         $this->sendJsonResponse(__('UI', 'message', 'added'));
@@ -81,7 +76,8 @@ class Orga_CommentController extends Core_Controller
             throw new HttpNotFoundException;
         }
 
-        $this->commentService->editComment($this->getParam('id'), $this->getParam('text'));
+        $comment = Orga_Model_Cell_InputComment::load($this->getParam('id'));
+        $comment->setText($this->getParam('text'));
 
         $this->sendJsonResponse(__('UI', 'message', 'updated'));
     }
@@ -98,10 +94,10 @@ class Orga_CommentController extends Core_Controller
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
-        $comment = Social_Model_Comment::load($this->getParam('id'));
-
-        $cell->removeSocialCommentForInputSetPrimary($comment);
-        $this->commentService->deleteComment($comment->getId());
+        $comment = Orga_Model_Cell_InputComment::load($this->getParam('id'));
+        $comment->delete();
+        $cell->removeCommentForInputSetPrimary($comment);
+        $this->entityManager->flush();
 
         $this->sendJsonResponse(__('UI', 'message', 'deleted'));
     }

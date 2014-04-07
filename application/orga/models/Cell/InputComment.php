@@ -1,18 +1,13 @@
 <?php
+
 use User\Domain\User;
 
 /**
- * @package Social
+ * @author joseph.rouffet
+ * @author matthieu.napoli
  */
-
-/**
- * @author  matthieu.napoli
- * @author  joseph.rouffet
- * @package Social
- */
-abstract class Social_Model_Text extends Core_Model_Entity
+class Orga_Model_Cell_InputComment extends Core_Model_Entity
 {
-
     const QUERY_AUTHOR = "author";
     const QUERY_CREATION_DATE = 'creationDate';
 
@@ -22,7 +17,12 @@ abstract class Social_Model_Text extends Core_Model_Entity
     protected $id;
 
     /**
-     * @var User|null
+     * @var Orga_Model_Cell
+     */
+    protected $cell;
+
+    /**
+     * @var User
      */
     protected $author;
 
@@ -37,15 +37,11 @@ abstract class Social_Model_Text extends Core_Model_Entity
      */
     protected $creationDate;
 
-
-    /**
-     * Assigne la date du jour de création de l'instance à creationDate
-     * @param User|null $author Auteur
-     */
-    public function __construct(User $author = null)
+    public function __construct(Orga_Model_Cell $cell, User $author)
     {
-        $this->setCreationDate(new DateTime());
-        $this->setAuthor($author);
+        $this->cell = $cell;
+        $this->author = $author;
+        $this->creationDate = new DateTime();
     }
 
     /**
@@ -57,19 +53,19 @@ abstract class Social_Model_Text extends Core_Model_Entity
     }
 
     /**
-     * @return User|null
+     * @return Orga_Model_Cell
+     */
+    public function getCell()
+    {
+        return $this->cell;
+    }
+
+    /**
+     * @return User
      */
     public function getAuthor()
     {
         return $this->author;
-    }
-
-    /**
-     * @param User|null $author
-     */
-    public function setAuthor(User $author = null)
-    {
-        $this->author = $author;
     }
 
     /**
@@ -95,13 +91,4 @@ abstract class Social_Model_Text extends Core_Model_Entity
     {
         return $this->creationDate;
     }
-
-    /**
-     * @param DateTime $creationDate
-     */
-    public function setCreationDate(DateTime $creationDate)
-    {
-        $this->creationDate = $creationDate;
-    }
-
 }

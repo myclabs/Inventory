@@ -1,0 +1,27 @@
+Orga_Model_Cell_InputComment:
+  type: entity
+  repositoryClass: Core_Model_Repository
+  table: Orga_Cell_InputComment
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    text:
+      type: text
+    creationDate:
+      type: datetime
+
+  manyToOne:
+    cell:
+      targetEntity: Orga_Model_Cell
+      inversedBy: commentsForAFInputSetPrimary
+      joinColumn:
+        nullable: false
+    author:
+      targetEntity: User\Domain\User
+      joinColumn:
+        nullable: false

@@ -860,34 +860,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Défini si les cellules de la granularité posséderont des GenericAction de Social.
-     *
-     * @param bool $bool
-     *
-     * @throws Core_Exception_User
-     */
-    public function setCellsWithSocialGenericActions($bool)
-    {
-        if ($this->cellsWithSocialGenericActions !== (bool) $bool) {
-            $this->cellsWithSocialGenericActions = (bool) $bool;
-            if ($this->cellsWithSocialGenericActions === false) {
-                foreach ($this->getCells() as $cell) {
-                    if ($cell->getDocLibraryForSocialGenericAction()->hasDocuments()) {
-                        throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialGenericActions');
-                    }
-                }
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialGenericAction();
-                }
-            } else {
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialGenericAction(new Library());
-                }
-            }
-        }
-    }
-
-    /**
      * Indique si les cellules de la granularité possédent des GenericAction de Social.
      *
      * @return bool
@@ -895,34 +867,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getCellsWithSocialGenericActions()
     {
         return $this->cellsWithSocialGenericActions;
-    }
-
-    /**
-     * Défini si les cellules de la granularité posséderont des GenericAction de Social.
-     *
-     * @param bool $bool
-     *
-     * @throws Core_Exception_User
-     */
-    public function setCellsWithSocialContextActions($bool)
-    {
-        if ($this->cellsWithSocialContextActions !== (bool) $bool) {
-            $this->cellsWithSocialContextActions = (bool) $bool;
-            if ($this->cellsWithSocialContextActions === false) {
-                foreach ($this->getCells() as $cell) {
-                    if ($cell->getDocLibraryForSocialContextAction()->hasDocuments()) {
-                        throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialContextActions');
-                    }
-                }
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialContextAction();
-                }
-            } else {
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialContextAction(new Library());
-                }
-            }
-        }
     }
 
     /**

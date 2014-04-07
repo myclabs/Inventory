@@ -85,12 +85,6 @@ class Orga_CellController extends Core_Controller
     private $auditTrailRepository;
 
     /**
-     * @Inject
-     * @var Social_Service_CommentService
-     */
-    private $commentService;
-
-    /**
      * Redirection sur la liste.
      * @Secure("loggedIn")
      */
@@ -627,7 +621,7 @@ class Orga_CellController extends Core_Controller
         $locale = Core_Locale::loadDefault();
 
         $comments = [];
-        /** @var Orga_Model_InputComment|Social_Model_Comment $comment */
+        /** @var Orga_Model_Cell_InputComment $comment */
         foreach ($cellRepository->getLatestComments($cell, 10) as $comment) {
             $commentText = __('Social', 'comment', 'by') . ' <b>' . $comment->getAuthor()->getName() . '</b> '
                 . __('Orga', 'input', 'aboutInput')
@@ -1327,7 +1321,6 @@ class Orga_CellController extends Core_Controller
         $commentView = new Zend_View();
         $commentView->setScriptPath(__DIR__ . '/../views/scripts');
         $commentView->assign('idCell', $idCell);
-        $commentView->assign('currentUser', $this->_helper->auth());
         $commentView->assign(
             'isUserAbleToComment',
             $this->acl->isAllowed($this->_helper->auth(), Actions::INPUT, $cell)

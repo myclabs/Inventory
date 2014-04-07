@@ -1,13 +1,13 @@
 <?php
-use AF\Domain\InputSet\PrimaryInputSet;
-use Doctrine\ORM\QueryBuilder;
-
 /**
  * Classe Orga_Model_Repository_Cell
  * @author     valentin.claras
  * @package    Orga
  * @subpackage Model
  */
+
+use AF\Domain\InputSet\PrimaryInputSet;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Gère les Cell.
@@ -272,15 +272,14 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
      * @param Orga_Model_Cell $cell
      * @param int             $count
      *
-     * @return Orga_Model_InputComment[]
+     * @return Orga_Model_Cell_InputComment[]
      */
     public function getLatestComments(Orga_Model_Cell $cell, $count)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('NEW Orga_Model_InputComment(cell, comment)')
-            ->from('Social_Model_Comment', 'comment')
-            ->from('Orga_Model_Cell', 'cell')
-            ->where('comment MEMBER OF cell.socialCommentsForAFInputSetPrimary')
+        $qb->select('comment')
+            ->from('Orga_Model_Cell_InputComment', 'comment')
+            ->join('comment.cell', 'cell')
             ->orderBy('comment.creationDate', 'DESC');
         $qb->setMaxResults($count);
 
@@ -288,9 +287,6 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
 
         $comments = $qb->getQuery()->getResult();
 
-//        return array_map(function (Social_Model_Comment $comment) use ($cell) {
-//            return new Orga_Model_InputComment($cell, $comment);
-//        }, $comments);
         return $comments;
     }
 }

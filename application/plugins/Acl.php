@@ -364,7 +364,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editCommentRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $comment = Social_Model_Comment::load($request->getParam('id'));
+        $comment = Orga_Model_Cell_InputComment::load($request->getParam('id'));
 
         return $identity === $comment->getAuthor();
     }
@@ -376,7 +376,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function deleteCommentRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $comment = Social_Model_Comment::load($request->getParam('id'));
+        $comment = Orga_Model_Cell_InputComment::load($request->getParam('id'));
 
         return $identity === $comment->getAuthor();
     }
@@ -685,16 +685,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
         try {
             return Orga_Model_Cell::loadByDocLibraryForAFInputSetsPrimary($library);
-        } catch (Core_Exception_NotFound $e) {
-            // Pas de Cell
-        }
-        try {
-            return Orga_Model_Cell::loadByDocLibraryForSocialGenericAction($library);
-        } catch (Core_Exception_NotFound $e) {
-            // Pas de Cell
-        }
-        try {
-            return Orga_Model_Cell::loadByDocLibraryForSocialContextAction($library);
         } catch (Core_Exception_NotFound $e) {
             // Pas de Cell
         }
