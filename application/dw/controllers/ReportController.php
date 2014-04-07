@@ -68,25 +68,25 @@ class DW_ReportController extends Core_Controller
             }
         }
         if ($report->getKey() != array()) {
-            $this->view->isNew = false;
+            $this->view->assign('isNew', false);
         } else {
-            $this->view->isNew = true;
+            $this->view->assign('isNew', true);
         }
         $hash = ($this->hasParam('hashReport')) ? $this->getParam('hashReport') : (string) spl_object_hash($report);
 
-        $this->view->headLink()->appendStylesheet('css/dw/report.css');
-        $this->view->idCube = $report->getCube()->getId();;
-        $this->view->hashReport = $hash;
-        $this->view->reportLabel = $report->getLabel();
+        $this->view->assign('idCube', $report->getCube()->getId());
+        $this->view->assign('hashReport', $hash);
+        $this->view->assign('reportLabel', $report->getLabel());
         require_once (dirname(__FILE__).'/../forms/Configuration.php');
-        $this->view->configurationForm = new DW_Form_configuration($report, $hash);
+        $this->view->assign('configurationForm', new DW_Form_configuration($report, $hash));
 
         if ($this->hasParam('viewConfiguration')) {
-            $this->view->viewConfiguration = $this->getParam('viewConfiguration');
+            $this->view->assign('viewConfiguration', $this->getParam('viewConfiguration'));
         } else {
-            $this->view->viewConfiguration = new DW_ViewConfiguration();
-            $this->view->viewConfiguration->setOutputUrl('index/report/idCube/'.$report->getCube()->getId());
-            $this->view->viewConfiguration->setSaveURL('dw/report/details');
+            $viewConfiguration = new DW_ViewConfiguration();
+            $viewConfiguration->setOutputUrl('index/report/idCube/'.$report->getCube()->getId());
+            $viewConfiguration->setSaveURL('dw/report/details');
+            $this->view->assign('viewConfiguration', $viewConfiguration);
         }
 
         $this->setReportByHash($hash, $report);
@@ -100,72 +100,71 @@ class DW_ReportController extends Core_Controller
     {
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
-        $configurationPost = json_decode($this->getParam($this->getParam('hashReport')), true);
-        $errors = array();
+        $errors = [];
 
         // Options de configuration.
-        if ($configurationPost['value']['elements']['indicatorRatio']['value'] === 'ratio') {
-            $numeratorIndicatorRef = $configurationPost['value']['elements']['numerator']['value'];
+        if ($this->getParam('typeSumRatioChoice') === 'ratio') {
+            $numeratorIndicatorRef = $this->getParam('numeratorIndicator');
             try {
                 $numeratorIndicator = DW_Model_Indicator::loadByRefAndCube($numeratorIndicatorRef, $report->getCube());
             } catch (Core_Exception_NotFound $e) {
-                $errors['numerator'] = __('DW', 'configValidation', 'numeratorIsRequired');
+                $errors['numeratorIndicator'] = __('DW', 'configValidation', 'numeratorIsRequired');
             }
             $report->setNumerator($numeratorIndicator);
 
-            $denominatorIndicatorRef = $configurationPost['value']['elements']['denominator']['value'];
+            $denominatorIndicatorRef = $this->getParam('denominatorIndicator');
             try {
                 $denominatorIndicator = DW_Model_Indicator::loadByRefAndCube($denominatorIndicatorRef, $report->getCube());
             } catch (Core_Exception_NotFound $e) {
-                $errors['denominator'] = __('DW', 'configValidation', 'denominatorIsRequired');
+                $errors['denominatorIndicator'] = __('DW', 'configValidation', 'denominatorIsRequired');
             }
             $report->setDenominator($denominatorIndicator);
 
             $report->setNumeratorAxis1(null);
             $report->setNumeratorAxis2(null);
-            $numeratorAxisOneRef = $configurationPost['numeratorAxes']['elements']['numeratorAxisOne']['value'];
+            $numeratorAxisOneRef = $this->getParam('ratioNumeratorAxisOne');
             try {
                 $numeratorAxisOne = DW_Model_Axis::loadByRefAndCube($numeratorAxisOneRef, $report->getCube());
                 $report->setNumeratorAxis1($numeratorAxisOne);
             } catch (Core_Exception_NotFound $e) {
-                $errors['numeratorAxisOne'] = __('DW', 'configValidation', 'numeratorAxisOneInvalid');
+                $errors['ratioNumeratorAxisOne'] = __('DW', 'configValidation', 'numeratorAxisOneInvalid');
             }
-            if ($configurationPost['numeratorAxes']['elements']['numeratorAxesNumber']['value'] === '2') {
-                $numeratorAxisTwoRef = $configurationPost['numeratorAxes']['elements']['numeratorAxisTwo']['value'];
+            if ($this->getParam('ratioAxisNumberChoice') === 'two') {
+                $numeratorAxisTwoRef = $this->getParam('ratioNumeratorAxisTwo');
                 if ($numeratorAxisTwoRef === $numeratorAxisOneRef) {
-                    $errors['numeratorAxisTwo'] = __('DW', 'configValidation', 'axisTwoSameAsOne');
+                    $errors['ratioNumeratorAxisTwo'] = __('DW', 'configValidation', 'axisTwoSameAsOne');
                 } else {
                     try {
                         $numeratorAxisTwo = DW_Model_Axis::loadByRefAndCube($numeratorAxisTwoRef, $report->getCube());
                         if (!$numeratorAxisTwo->isTransverseWith($numeratorAxisOne)) {
-                            $errors['numeratorAxisTwo'] = __('DW', 'configValidation', 'axisTwoLinkedToOne');
+                            $errors['ratioNumeratorAxisTwo'] = __('DW', 'configValidation', 'axisTwoLinkedToOne');
                         } else {
                             $report->setNumeratorAxis2($numeratorAxisTwo);
                         }
                     } catch (Core_Exception_NotFound $e) {
-                        $errors['numeratorAxisTwo'] = __('DW', 'configValidation', 'numeratorAxisTwoInvalid');
+                        $errors['ratioNumeratorAxisTwo'] = __('DW', 'configValidation', 'numeratorAxisTwoInvalid');
                     }
                 }
             }
 
             $report->setDenominatorAxis1(null);
             $report->setDenominatorAxis2(null);
-            $denominatorAxisOneRef = $configurationPost['denominatorAxes']['elements']['denominatorAxisOne']['value'];
+            $denominatorAxisOneRef = $this->getParam('ratioDenominatorAxisOne');
             try {
                 $denominatorAxisOne = DW_Model_Axis::loadByRefAndCube($denominatorAxisOneRef, $report->getCube());
                 $report->setDenominatorAxis1($denominatorAxisOne);
             } catch (Core_Exception_NotFound $e) {
                 // Possibilité de ne pas avoir d'axe au dénominateur.
             }
-            if ($configurationPost['numeratorAxes']['elements']['numeratorAxesNumber']['value'] === '2') {
-                $denominatorAxisTwoRef = $configurationPost['denominatorAxes']['elements']['denominatorAxisTwo']['value'];
+            if ($this->getParam('ratioAxisNumberChoice') === 'two') {
+                $denominatorAxisTwoRef = $this->getParam('ratioDenominatorAxisTwo');
                 if (($denominatorAxisTwoRef != null) && ($denominatorAxisTwoRef === $denominatorAxisOneRef)) {
-                    $errors['denominatorAxisTwo'] = __('DW', 'configValidation', 'axisTwoSameAsOne');
+                    $errors['ratioDenominatorAxisTwo'] = __('DW', 'configValidation', 'axisTwoSameAsOne');
                 } else {
                     try {
                         $denominatorAxisTwo = DW_Model_Axis::loadByRefAndCube($denominatorAxisTwoRef, $report->getCube());
                         if (isset($denominatorAxisOne) && (!$denominatorAxisTwo->isTransverseWith($denominatorAxisOne))) {
-                            $errors['denominatorAxisTwo'] = __('DW', 'configValidation', 'axisTwoLinkedToOne');
+                            $errors['ratioDenominatorAxisTwo'] = __('DW', 'configValidation', 'axisTwoLinkedToOne');
                         } else {
                             $report->setDenominatorAxis2($denominatorAxisTwo);
                         }
@@ -174,65 +173,65 @@ class DW_ReportController extends Core_Controller
                     }
                 }
             }
-        } else if ($configurationPost['value']['elements']['indicatorRatio']['value'] === 'indicator') {
+        } else if ($this->getParam('typeSumRatioChoice') === 'sum') {
             // Suppression des anciens dénominateurs.
             $report->setDenominator(null);
             $report->setDenominatorAxis1(null);
             $report->setDenominatorAxis2(null);
 
-            $indicatorRef = $configurationPost['value']['elements']['indicator']['value'];
+            $indicatorRef = $this->getParam('numeratorIndicator');
             try {
                 $indicator = DW_Model_Indicator::loadByRefAndCube($indicatorRef, $report->getCube());
             } catch (Core_Exception_NotFound $e) {
-                $errors['indicator'] = __('DW', 'configValidation', 'indicatorIsRequired');
+                $errors['numeratorIndicator'] = __('DW', 'configValidation', 'indicatorIsRequired');
             }
             $report->setNumerator($indicator);
 
             $report->setNumeratorAxis1(null);
             $report->setNumeratorAxis2(null);
-            $indicatorAxisOneRef = $configurationPost['indicatorAxes']['elements']['indicatorAxisOne']['value'];
+            $sumAxisOneRef = $this->getParam('sumAxisOne');
             try {
-                $indicatorAxisOne = DW_Model_Axis::loadByRefAndCube($indicatorAxisOneRef, $report->getCube());
-                $report->setNumeratorAxis1($indicatorAxisOne);
+                $sumAxisOne = DW_Model_Axis::loadByRefAndCube($sumAxisOneRef, $report->getCube());
+                $report->setNumeratorAxis1($sumAxisOne);
             } catch (Core_Exception_NotFound $e) {
-                $errors['indicatorAxisOne'] = __('DW', 'configValidation', 'indicatorAxisOneInvalid');
+                $errors['sumAxisOne'] = __('DW', 'configValidation', 'indicatorAxisOneInvalid');
             }
-            if ($configurationPost['indicatorAxes']['elements']['indicatorAxesNumber']['value'] === '2') {
-                $indicatorAxisTwoRef = $configurationPost['indicatorAxes']['elements']['indicatorAxisTwo']['value'];
-                if ($indicatorAxisTwoRef === $indicatorAxisOneRef) {
-                    $errors['indicatorAxisTwo'] = __('DW', 'configValidation', 'axisTwoSameAsOne');
+            if ($this->getParam('sumAxisNumberChoice') === '2') {
+                $sumAxisTwoRef = $this->getParam('sumAxisTwo');
+                if ($sumAxisTwoRef === $sumAxisOneRef) {
+                    $errors['sumAxisTwo'] = __('DW', 'configValidation', 'axisTwoSameAsOne');
                 } else {
                     try {
-                        $indicatorAxisTwo = DW_Model_Axis::loadByRefAndCube($indicatorAxisTwoRef, $report->getCube());
-                        if (!$indicatorAxisTwo->isTransverseWith($indicatorAxisOne)) {
-                            $errors['indicatorAxisTwo'] = __('DW', 'configValidation', 'axisTwoLinkedToOne');
+                        $sumAxisTwo = DW_Model_Axis::loadByRefAndCube($sumAxisTwoRef, $report->getCube());
+                        if (!$sumAxisTwo->isTransverseWith($sumAxisOne)) {
+                            $errors['sumAxisTwo'] = __('DW', 'configValidation', 'axisTwoLinkedToOne');
                         } else {
-                            $report->setNumeratorAxis2($indicatorAxisTwo);
+                            $report->setNumeratorAxis2($sumAxisTwo);
                         }
                     } catch (Core_Exception_NotFound $e) {
-                        $errors['indicatorAxisTwo'] = __('DW', 'configValidation', 'indicatorAxisTwoInvalid');
+                        $errors['sumAxisTwo'] = __('DW', 'configValidation', 'indicatorAxisTwoInvalid');
                     }
                 }
             }
         } else {
-            $errors['indicatorRatio'] = __('DW', 'configValidation', 'reportTypeMandatory');
+            $errors['typeSumRatioChoice'] = __('DW', 'configValidation', 'reportTypeMandatory');
         }
 
         // Options d'affichage.
         try {
-            $report->setChartType($configurationPost['display']['elements']['chartType']['value']);
+            $report->setChartType($this->getParam('displayType'));
         } catch (Core_Exception_InvalidArgument $e) {
-            $errors['chartType'] = __('DW', 'configValidation', 'chartTypeInvalid');
+            $errors['displayType'] = __('DW', 'configValidation', 'chartTypeInvalid');
         }
         $acceptedSortType = array(
             DW_Model_Report::SORT_VALUE_INCREASING,
             DW_Model_Report::SORT_VALUE_DECREASING,
             DW_Model_Report::SORT_CONVENTIONAL,
         );
-        if (in_array($configurationPost['display']['elements']['sortType']['value'], $acceptedSortType)) {
-            $report->setSortType($configurationPost['display']['elements']['sortType']['value']);
+        if (in_array($this->getParam('resultsOrder'), $acceptedSortType)) {
+            $report->setSortType($this->getParam('resultsOrder'));
         }
-        if ($configurationPost['display']['elements']['withUncertainty']['value'] == array('1')) {
+        if ($this->getParam('uncertaintyChoice') == 'withUncertainty') {
             $report->setWithUncertainty(true);
         } else {
             $report->setWithUncertainty(false);
@@ -242,33 +241,27 @@ class DW_ReportController extends Core_Controller
         foreach ($report->getFilters() as $oldFilter) {
             $report->removeFilter($oldFilter);
         }
-        foreach ($configurationPost['filters']['elements'] as $filterArray) {
-            $filterAxisRef = $filterArray['elements']['refAxis']['hiddenValues']['refAxis'];
-            if ($filterArray['elements']['filterAxis'.$filterAxisRef.'NumberMembers']['value'] !== 'all') {
-                try {
-                    $filterAxis = DW_Model_Axis::loadByRefAndCube($filterAxisRef, $report->getCube());
-                } catch (Core_Exception_NotFound $e) {
-                    $errors['filterAxis'.$filterAxisRef.'NumberMembers'] = __('DW', 'configValidation', 'filterAxisInvalid');
-                }
-                $filter = new DW_Model_Filter($report, $filterAxis);
+        foreach ($report->getCube()->getAxes() as $axis) {
+            if ($this->getParam($axis->getRef().'_memberNumberChoice') !== 'all') {
+                $filter = new DW_Model_Filter($report, $axis);
 
-                if ($filterArray['elements']['filterAxis'.$filterAxisRef.'NumberMembers']['value'] === 'some') {
-                    $filterMemberRefs = $filterArray['elements']['selectAxis'.$filterAxisRef.'MembersFilter']['value'];
-                    foreach ($filterMemberRefs as $filterMemberRef) {
+                if ($this->getParam($axis->getRef().'_memberNumberChoice') === 'several') {
+                    foreach ($this->getParam($axis->getRef().'_members') as $filterMemberRef) {
                         try {
-                            $filterMember = DW_Model_Member::loadByRefAndAxis($filterMemberRef, $filterAxis);
+                            $filterMember = DW_Model_Member::loadByRefAndAxis($filterMemberRef, $axis);
                             $filter->addMember($filterMember);
                         } catch (Core_Exception_NotFound $e) {
-                            $errors['selectAxis'.$filterAxisRef.'MembersFilter'] = __('DW', 'configValidation', 'filterMemberInvalid');
+                            $errors[$axis->getRef().'_members'] = __('DW', 'configValidation', 'filterMemberInvalid');
                         }
                     }
-                } else if ($filterArray['elements']['filterAxis'.$filterAxisRef.'NumberMembers']['value'] === 'one') {
-                    $filterMemberRef = $filterArray['elements']['selectAxis'.$filterAxisRef.'MemberFilter']['value'];
+                } else if ($this->getParam($axis->getRef().'_memberNumberChoice') === 'one') {
+
+                    $filterMemberRef = $this->getParam($axis->getRef().'_members');
                     try {
-                        $filterMember = DW_Model_Member::loadByRefAndAxis($filterMemberRef, $filterAxis);
+                        $filterMember = DW_Model_Member::loadByRefAndAxis(reset($filterMemberRef), $axis);
                         $filter->addMember($filterMember);
                     } catch (Core_Exception_NotFound $e) {
-                        $errors['selectAxis'.$filterAxisRef.'MemberFilter'] = __('DW', 'configValidation', 'filterMemberInvalid');
+                        $errors[$axis->getRef().'_members'] = __('DW', 'configValidation', 'filterMemberInvalid');
                     }
                 }
 
@@ -305,22 +298,21 @@ class DW_ReportController extends Core_Controller
     {
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
-        $savePost = json_decode($this->getParam('saveReportAs'), JSON_OBJECT_AS_ARRAY);
-        $reportLabel = $savePost['saveLabelReport']['value'];
+        $reportLabel = $this->getParam('reportLabel');
         if (empty($reportLabel)) {
             $this->entityManager->clear();
             $this->getResponse()->setHttpResponseCode(400);
             $this->sendJsonResponse(
-                array(
-                    'errorMessages' => array('saveLabelReport' => __('DW', 'report', 'reportLabelInvalid')),
+                [
+                    'errorMessages' => ['reportLabel' => __('DW', 'report', 'reportLabelInvalid')],
                     'message'       => '',
                     'type'          => 'warning'
-                )
+                ]
             );
         } else {
-            if (($savePost['isNew']['hiddenValues']['isNew'] != '1')
-                && (isset($savePost['saveType']))
-                && ($savePost['saveType']['value'] == 'saveAs')
+            if (($this->getParam('isNew') != '1')
+                && ($this->hasParam('saveType'))
+                && ($this->getParam('saveType') == 'saveAs')
             ) {
                 $clonedReport = clone $report;
                 $this->entityManager->refresh($report);
@@ -351,11 +343,11 @@ class DW_ReportController extends Core_Controller
     public function valuesAction()
     {
         $report = $this->getReportByHash($this->getParam('hashReport'));
-        $this->view->idCube = $this->getParam('idCube');
-        $this->view->hashReport = $this->getParam('hashReport');
-        $this->view->numeratorAxis1 = $report->getNumeratorAxis1();
-        $this->view->numeratorAxis2 = $report->getNumeratorAxis2();
-        $this->view->valueUnit = $report->getValuesUnitSymbol();
+        $this->view->assign('idCube', $this->getParam('idCube'));
+        $this->view->assign('hashReport', $this->getParam('hashReport'));
+        $this->view->assign('numeratorAxis1', $report->getNumeratorAxis1());
+        $this->view->assign('numeratorAxis2', $report->getNumeratorAxis2());
+        $this->view->assign('valueUnit', $report->getValuesUnitSymbol());
         $this->_helper->layout()->disableLayout();
 
         $this->entityManager->clear();
@@ -369,8 +361,8 @@ class DW_ReportController extends Core_Controller
     {
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
-        $this->view->chart = $report->getChart();
-        $this->view->valueUnit = $report->getValuesUnitSymbol();
+        $this->view->assign('chart', $report->getChart());
+        $this->view->assign('valueUnit', $report->getValuesUnitSymbol());
         $this->_helper->layout()->disableLayout();
 
         $this->entityManager->clear();

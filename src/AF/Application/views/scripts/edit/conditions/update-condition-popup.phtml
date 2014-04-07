@@ -1,118 +1,206 @@
 <?php
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Condition\ElementaryCondition;
 use AF\Domain\Condition\NumericFieldCondition;
 use AF\Domain\Condition\CheckboxCondition;
 use AF\Domain\Condition\Select\SelectSingleCondition;
 use AF\Domain\Condition\Select\SelectMultiCondition;
 
-/** @var $condition \AF\Domain\Condition\ElementaryCondition */
+/** @var $condition ElementaryCondition */
 $condition = $this->condition;
+$af = $condition->getAf();
 
-$form = new UI_Form('updateCondition');
-$form->setAjax(false);
-$form->setAction(
-    'af/edit_conditions/update-condition-submit' . '/idAF/' . $this->af->getId()
-    . '/idCondition/' . $condition->getId()
-);
+$locale = Core_Locale::loadDefault();
 
-// Relation
-$relationSelect = new UI_Form_Element_Select('relation');
-$relationSelect->setLabel(__('UI', 'name', 'relation'));
-$relationSelect->setValue($condition->getRelation());
-$form->addElement($relationSelect);
-// Options de la liste
-$optionEqual = new UI_Form_Element_Option('equal', ElementaryCondition::RELATION_EQUAL);
-$optionEqual->label = __('AF', 'configInteractionDatagrid', 'equalOption');
-$optionNotEqual = new UI_Form_Element_Option('nequal', ElementaryCondition::RELATION_NEQUAL);
-$optionNotEqual->label = __('AF', 'configInteractionDatagrid', 'differentOption');
-$optionSuperior = new UI_Form_Element_Option('gt', ElementaryCondition::RELATION_GT);
-$optionSuperior->label = __('AF', 'configInteractionDatagrid', 'greaterOption');
-$optionInferior = new UI_Form_Element_Option('lt', ElementaryCondition::RELATION_LT);
-$optionInferior->label = __('AF', 'configInteractionDatagrid', 'lowerOption');
-$optionSuperiorOrEqual = new UI_Form_Element_Option('ge', ElementaryCondition::RELATION_GE);
-$optionSuperiorOrEqual->label = __('AF', 'configInteractionDatagrid', 'greaterOrEqualOption');
-$optionInferiorOrEqual = new UI_Form_Element_Option('le', ElementaryCondition::RELATION_LE);
-$optionInferiorOrEqual->label = __('AF', 'configInteractionDatagrid', 'lowerOrEqualOption');
-$optionContains = new UI_Form_Element_Option('contains', ElementaryCondition::RELATION_CONTAINS);
-$optionContains->label = __('AF', 'configInteractionDatagrid', 'containsOption');
-$optionNotContains = new UI_Form_Element_Option('ncontains', ElementaryCondition::RELATION_NCONTAINS);
-$optionNotContains->label = __('AF', 'configInteractionDatagrid', 'doesNotContainOption');
+$allRelations = [
+    ElementaryCondition::RELATION_EQUAL     => __('AF', 'configInteractionDatagrid', 'equalOption'),
+    ElementaryCondition::RELATION_NEQUAL    => __('AF', 'configInteractionDatagrid', 'differentOption'),
+    ElementaryCondition::RELATION_GT        => __('AF', 'configInteractionDatagrid', 'greaterOption'),
+    ElementaryCondition::RELATION_LT        => __('AF', 'configInteractionDatagrid', 'lowerOption'),
+    ElementaryCondition::RELATION_GE        => __('AF', 'configInteractionDatagrid', 'greaterOrEqualOption'),
+    ElementaryCondition::RELATION_LE        => __('AF', 'configInteractionDatagrid', 'lowerOrEqualOption'),
+    ElementaryCondition::RELATION_CONTAINS  => __('AF', 'configInteractionDatagrid', 'containsOption'),
+    ElementaryCondition::RELATION_NCONTAINS => __('AF', 'configInteractionDatagrid', 'doesNotContainOption'),
+]
+?>
 
-if ($condition instanceof NumericFieldCondition) {
-    /** @var $condition \AF\Domain\Condition\NumericFieldCondition */
-    // Relation
-    $relationSelect->addOption($optionEqual);
-    $relationSelect->addOption($optionNotEqual);
-    $relationSelect->addOption($optionSuperior);
-    $relationSelect->addOption($optionInferior);
-    $relationSelect->addOption($optionSuperiorOrEqual);
-    $relationSelect->addOption($optionInferiorOrEqual);
-    // Value
-    $numericValueField = new UI_Form_Element_Text('value');
-    $numericValueField->setLabel(__('UI', 'name', 'referenceValue'));
-    $numericValueField->setValue($condition->getValue());
-    $form->addElement($numericValueField);
-}
+<form class="form-horizontal" method="post"
+      action="af/edit_conditions/update-condition-submit?idAF=<?=$af->getId()?>&idCondition=<?=$condition->getId()?>">
 
-if ($condition instanceof CheckboxCondition) {
-    /** @var $condition \AF\Domain\Condition\CheckboxCondition */
-    // Relation
-    $relationSelect->addOption($optionEqual);
-    // Value
-    $checkboxValueField = new UI_Form_Element_Select('value');
-    $checkboxValueField->setLabel(__('UI', 'name', 'referenceValue'));
-    $optionChecked = new UI_Form_Element_Option('checked', 1);
-    $optionChecked->label = __('UI', 'property', 'checked');
-    $checkboxValueField->addOption($optionChecked);
-    $optionUncheked = new UI_Form_Element_Option('unchecked', 0);
-    $optionUncheked->label = __('UI', 'property', 'unchecked');
-    $checkboxValueField->addOption($optionUncheked);
-    $checkboxValueField->setValue((int) $condition->getValue());
-    $form->addElement($checkboxValueField);
-}
+    <?php if ($condition instanceof NumericFieldCondition) : ?>
+        <?php
+        /** @var $condition NumericFieldCondition */
+        $relations = [];
+        $relations[ElementaryCondition::RELATION_EQUAL] = $allRelations[ElementaryCondition::RELATION_EQUAL];
+        $relations[ElementaryCondition::RELATION_NEQUAL] = $allRelations[ElementaryCondition::RELATION_NEQUAL];
+        $relations[ElementaryCondition::RELATION_GT] = $allRelations[ElementaryCondition::RELATION_GT];
+        $relations[ElementaryCondition::RELATION_LT] = $allRelations[ElementaryCondition::RELATION_LT];
+        $relations[ElementaryCondition::RELATION_GE] = $allRelations[ElementaryCondition::RELATION_GE];
+        $relations[ElementaryCondition::RELATION_LE] = $allRelations[ElementaryCondition::RELATION_LE];
+        ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('UI', 'name', 'relation')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="relation" class="form-control">
+                    <?php foreach ($relations as $relation => $label) : ?>
+                        <option value="<?=$relation?>"
+                                <?=$condition->getRelation() == $relation ? 'selected' : ''?>>
+                            <?=$label?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('UI', 'name', 'referenceValue')?>
+            </label>
+            <div class="col-sm-10">
+                <input name="value" type="text" class="form-control"
+                       value="<?=$locale->formatNumberForInput($condition->getValue())?>">
+            </div>
+        </div>
+    <?php endif; ?>
 
-if ($condition instanceof SelectSingleCondition) {
-    /** @var $condition \AF\Domain\Condition\Select\SelectSingleCondition */
-    // Relation
-    $relationSelect->addOption($optionEqual);
-    $relationSelect->addOption($optionNotEqual);
-    // Value
-    $selectField = new UI_Form_Element_Select('value');
-    $selectField->setLabel(__('UI', 'name', 'referenceValue'));
-    // Ajout d'une option vide
-    $selectField->addNullOption('', null);
-    /** @var $selectComponent \AF\Domain\Condition\Select\SelectSingleCondition */
-    $selectComponent = $condition->getField();
-    foreach ($selectComponent->getOptions() as $option) {
-        $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getId(), $option->getLabel());
-        $selectField->addOption($uiOption);
-    }
-    if ($condition->getOption()) {
-        $selectField->setValue($condition->getOption()->getId());
-    }
-    $form->addElement($selectField);
-}
 
-if ($condition instanceof SelectMultiCondition) {
-    /** @var $condition \AF\Domain\Condition\Select\SelectMultiCondition */
-    // Relation
-    $relationSelect->addOption($optionContains);
-    $relationSelect->addOption($optionNotContains);
-    // Value
-    $selectField = new UI_Form_Element_Select('value');
-    $selectField->setLabel(__('UI', 'name', 'referenceValue'));
-    // Ajout d'une option vide
-    $selectField->addNullOption('', null);
-    /** @var $selectComponent \AF\Domain\Component\Select\SelectMulti */
-    $selectComponent = $condition->getField();
-    foreach ($selectComponent->getOptions() as $option) {
-        $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getId(), $option->getLabel());
-        $selectField->addOption($uiOption);
-    }
-    if ($condition->getOption()) {
-        $selectField->setValue($condition->getOption()->getId());
-    }
-    $form->addElement($selectField);
-}
+    <?php if ($condition instanceof CheckboxCondition) : ?>
+        <?php
+        /** @var $condition CheckboxCondition */
+        $relations = [];
+        $relations[ElementaryCondition::RELATION_EQUAL] = $allRelations[ElementaryCondition::RELATION_EQUAL];
+        ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('UI', 'name', 'relation')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="relation" class="form-control">
+                    <?php foreach ($relations as $relation => $label) : ?>
+                        <option value="<?=$relation?>"
+                            <?=$condition->getRelation() == $relation ? 'selected' : ''?>>
+                            <?=$label?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('UI', 'name', 'referenceValue')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="value" class="form-control">
+                    <option value="1" <?=$condition->getValue() ? 'selected' : ''?>>
+                        <?=__('UI', 'property', 'checked')?>
+                    </option>
+                    <option value="0" <?=!$condition->getValue() ? 'selected' : ''?>>
+                        <?=__('UI', 'property', 'unchecked')?>
+                    </option>
+                </select>
+            </div>
+        </div>
+    <?php endif; ?>
 
-echo $form->render();
+
+    <?php if ($condition instanceof SelectSingleCondition) : ?>
+        <?php
+        /** @var $condition SelectSingleCondition */
+        $relations = [];
+        $relations[ElementaryCondition::RELATION_EQUAL] = $allRelations[ElementaryCondition::RELATION_EQUAL];
+        $relations[ElementaryCondition::RELATION_NEQUAL] = $allRelations[ElementaryCondition::RELATION_NEQUAL];
+        ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('UI', 'name', 'relation')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="relation" class="form-control">
+                    <?php foreach ($relations as $relation => $label) : ?>
+                        <option value="<?=$relation?>"
+                            <?=$condition->getRelation() == $relation ? 'selected' : ''?>>
+                            <?=$label?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('UI', 'name', 'referenceValue')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="value" class="form-control">
+                    <?php
+                    /** @var $selectComponent SelectSingle */
+                    $selectComponent = $condition->getField();
+                    $selected = $condition->getOption() ? $condition->getOption()->getId() : null;
+                    ?>
+                    <option value="" <?=$selected == null ? 'selected' : ''?>></option>
+                    <?php foreach ($selectComponent->getOptions() as $option) : ?>
+                        <option value="<?=$option->getId()?>"
+                                <?=$option->getId() == $selected ? 'selected' : ''?>>
+                            <?=$option->getLabel()?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+    <?php if ($condition instanceof SelectMultiCondition) : ?>
+        <?php
+        /** @var $condition SelectSingleCondition */
+        $relations = [];
+        $relations[ElementaryCondition::RELATION_CONTAINS] = $allRelations[ElementaryCondition::RELATION_CONTAINS];
+        $relations[ElementaryCondition::RELATION_NCONTAINS] = $allRelations[ElementaryCondition::RELATION_NCONTAINS];
+        ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('UI', 'name', 'relation')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="relation" class="form-control">
+                    <?php foreach ($relations as $relation => $label) : ?>
+                        <option value="<?=$relation?>"
+                            <?=$condition->getRelation() == $relation ? 'selected' : ''?>>
+                            <?=$label?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('UI', 'name', 'referenceValue')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="value" class="form-control">
+                    <?php
+                    /** @var $selectComponent SelectMulti */
+                    $selectComponent = $condition->getField();
+                    $selected = $condition->getOption() ? $condition->getOption()->getId() : null;
+                    ?>
+                    <option value="" <?=$selected == null ? 'selected' : ''?>></option>
+                    <?php foreach ($selectComponent->getOptions() as $option) : ?>
+                        <option value="<?=$option->getId()?>"
+                            <?=$option->getId() == $selected ? 'selected' : ''?>>
+                            <?=$option->getLabel()?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+        </div>
+    </div>
+
+</form>

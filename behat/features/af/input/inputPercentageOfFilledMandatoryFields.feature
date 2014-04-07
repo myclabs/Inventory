@@ -12,7 +12,7 @@ Feature: Percentage of filled mandatory fields feature
     And I fill in "c_n" with "10"
     And I click "Enregistrer"
   # 7 champs obligatoires, un seul rempli, le pourcentage de remplissage est de 100/7 = 14,29
-    Then the "#tabs_tabInput .inputProgress .bar" element should contain "14%"
+    Then the "#tabs_tabInput .inputProgress .progress-bar" element should contain "14%"
 
   @javascript
   Scenario: Percentage of filled mandatory fields scenario, some fiels are mandatory some are not scenario, 1
@@ -31,7 +31,7 @@ Feature: Percentage of filled mandatory fields feature
     And I fill in "c_n" with "10"
     And I click "Enregistrer"
   # 5 champs obligatoires, un rempli, le pourcentage doit être de 20%
-    Then the "#tabs_tabInput .inputProgress .bar" element should contain "20%"
+    Then the "#tabs_tabInput .inputProgress .progress-bar" element should contain "20%"
 
   @javascript
   Scenario: Percentage of filled mandatory fields scenario, some fiels are mandatory some are not scenario, 2
@@ -50,7 +50,7 @@ Feature: Percentage of filled mandatory fields feature
     And I fill in "c_n" with "10"
     And I click "Enregistrer"
   # 5 champs obligatoires, un rempli, le pourcentage doit être de 20%
-    Then the "#tabs_tabInput .inputProgress .bar" element should contain "20%"
+    Then the "#tabs_tabInput .inputProgress .progress-bar" element should contain "20%"
   # On remplit un champ de sélection multiple
 
 
@@ -82,7 +82,7 @@ Feature: Percentage of filled mandatory fields feature
     And I check "c_b"
     And I click "Enregistrer"
   # La saisie est complète
-    Then the "#tabs_tabInput .inputProgress .bar" element should contain "100%"
+    Then the "#tabs_tabInput .inputProgress .progress-bar" element should contain "100%"
 
   @javascript @readOnly
   Scenario: Percentage of filled mandatory fields scenario, all fields are mandatory and completed scenario
@@ -97,4 +97,4 @@ Feature: Percentage of filled mandatory fields feature
     And I fill in "c_t_l" with "Blabla"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
-    And the "#tabs_tabInput .inputProgress .bar" element should contain "100%"
+    And the "#tabs_tabInput .inputProgress .progress-bar" element should contain "100%"

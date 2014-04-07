@@ -2,7 +2,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Core\Work\ServiceCall\ServiceCallTask;
@@ -16,9 +16,9 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Inject
@@ -61,12 +61,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($idOrganization);
         $axis = $organization->getAxisByRef($this->getParam('refAxis'));
 
-        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganization = $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization
         );
-        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclManager->isAllowed(
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization->getGranularityByRef('global')->getCellByMembers([])
@@ -301,12 +301,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($idOrganization);
         $broaderAxis = $organization->getAxisByRef($this->getParam('refParentAxis'));
 
-        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganization = $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization
         );
-        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization || $this->aclManager->isAllowed(
+        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization || $this->acl->isAllowed(
                 $connectedUser,
                 Actions::EDIT,
                 $organization->getGranularityByRef('global')->getCellByMembers([])

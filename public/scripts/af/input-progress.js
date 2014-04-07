@@ -20,7 +20,7 @@ AF.InputProgress.prototype = {
      * @param {int} completion Pourcentage d'avancement
      */
     inputIncomplete: function (completion) {
-        $('.inputProgress .progress .bar')
+        $('.inputProgress .progress .progress-bar')
             .width(completion + '%')
             .text(completion + '%');
         $('.inputProgress .completionIcon').prop('src', 'images/af/bullet_red.png');
@@ -56,7 +56,7 @@ AF.InputProgress.prototype = {
      * Saisie complète mais erreur dans les calculs
      */
     inputCompleteCalculationIncomplete: function () {
-        $('.inputProgress .progress .bar')
+        $('.inputProgress .progress .progress-bar')
             .width('100%')
             .text('100%');
         $('.inputProgress .completionIcon').prop('src', 'images/af/bullet_orange.png');
@@ -74,7 +74,7 @@ AF.InputProgress.prototype = {
      * Saisie complète
      */
     inputComplete: function () {
-        $('.inputProgress .progress .bar')
+        $('.inputProgress .progress .progress-bar')
             .width('100%')
             .text('100%');
         $('.inputProgress .completionIcon').prop('src', 'images/af/bullet_yellow.png');
@@ -92,7 +92,7 @@ AF.InputProgress.prototype = {
      * Saisie terminée
      */
     inputFinished: function () {
-        $('.inputProgress .progress .bar')
+        $('.inputProgress .progress .progress-bar')
             .width('100%')
             .text('100%');
         $('.inputProgress .completionIcon').prop('src', 'images/af/bullet_green.png');

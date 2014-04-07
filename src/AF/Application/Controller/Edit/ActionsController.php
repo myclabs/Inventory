@@ -9,6 +9,7 @@ use AF\Domain\Action\Action;
 use AF\Domain\Component\Select\SelectOption;
 use AF\Domain\Algorithm\Algo;
 use Core\Annotation\Secure;
+use User\Application\HttpNotFoundException;
 
 /**
  * @author matthieu.napoli
@@ -36,7 +37,7 @@ class AF_Edit_ActionsController extends Core_Controller
         /** @var $af AF */
         $af = AF::load($this->getParam('idAF'));
         if (!$this->getRequest()->isPost()) {
-            throw new Core_Exception_NotFound("Page invalide");
+            throw new HttpNotFoundException;
         }
         $action = Action::load($this->getParam('idAction'));
 

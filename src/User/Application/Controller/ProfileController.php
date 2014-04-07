@@ -1,7 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use User\Application\ForbiddenException;
@@ -23,9 +23,9 @@ class User_ProfileController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Inject("emails.noreply.name")
@@ -49,7 +49,7 @@ class User_ProfileController extends Core_Controller
     public function listAction()
     {
         $loggedInUser = $this->_helper->auth();
-        $this->view->canCreateUsers = $this->aclManager->isAllowed(
+        $this->view->canCreateUsers = $this->acl->isAllowed(
             $loggedInUser,
             Actions::CREATE,
             new ClassResource(User::class)
@@ -85,12 +85,12 @@ class User_ProfileController extends Core_Controller
         $this->view->canEditPassword = ($user === $loggedInUser);
 
         // Est-ce que l'utilisateur peut désactiver le compte
-        $this->view->canDisable = $this->aclManager->isAllowed(
+        $this->view->canDisable = $this->acl->isAllowed(
             $loggedInUser,
             Actions::DELETE,
             $user
         );
-        $this->view->canEnable = $this->aclManager->isAllowed(
+        $this->view->canEnable = $this->acl->isAllowed(
             $loggedInUser,
             Actions::UNDELETE,
             $user
@@ -195,21 +195,12 @@ class User_ProfileController extends Core_Controller
         $editSelfEmail = ($user === $loggedInUser);
 
         if ($this->getRequest()->isPost()) {
-            $formData = $this->getFormData('editEmail');
-            $oldEmail = $formData->getValue('oldEmail');
-            $email = $formData->getValue('email');
-            $email2 = $formData->getValue('email2');
-            $password = $formData->getValue('password');
+            $email = $this->getParam('email');
+            $password = $this->getParam('password');
 
             // Validation
             if (empty($email)) {
                 $this->addFormError('email', __('UI', 'formValidation', 'emptyRequiredField'));
-            }
-            if (empty($email2)) {
-                $this->addFormError('email2', __('UI', 'formValidation', 'emptyRequiredField'));
-            }
-            if ($email && ($email != $email2)) {
-                $this->addFormError('email2', __('User', 'editEmail', 'emailsAreNotIdentical'));
             }
             if ($editSelfEmail) {
                 if (empty($password)) {
@@ -226,13 +217,13 @@ class User_ProfileController extends Core_Controller
                 $subject = __('User', 'email', 'subjectEmailModified');
                 if ($user === $this->_helper->auth()) {
                     $content = __('User', 'email', 'bodyEmailModifiedByUser', [
-                        'OLD_EMAIL_ADDRESS' => $oldEmail,
+                        'OLD_EMAIL_ADDRESS' => $user->getEmail(),
                         'NEW_EMAIL_ADDRESS' => $email,
                         'APPLICATION_NAME'  => $this->emailNoReplyName
                     ]);
                 } else {
                     $content = __('User', 'email', 'bodyEmailModifiedByAdmin', [
-                        'OLD_EMAIL_ADDRESS' => $oldEmail,
+                        'OLD_EMAIL_ADDRESS' => $user->getEmail(),
                         'NEW_EMAIL_ADDRESS' => $email,
                         'APPLICATION_NAME'  => $this->emailNoReplyName
                     ]);
@@ -247,7 +238,7 @@ class User_ProfileController extends Core_Controller
                 // Envoi de l'email à la nouvelle adresse
                 $this->userService->sendEmail($user, $subject, $content);
 
-                if ($user === $this->_helper->auth()) {
+                if ($editSelfEmail) {
                     $message = __('UI', 'message', 'updated');
                 } else {
                     $message = __('UI', 'message', 'updated') . __('User', 'editEmail', 'userInformedByEmail');
@@ -255,6 +246,7 @@ class User_ProfileController extends Core_Controller
                 UI_Message::addMessageStatic($message, UI_Message::TYPE_SUCCESS);
             }
             $this->sendFormResponse();
+            return;
         }
         $this->view->editSelfEmail = $editSelfEmail;
         $this->view->user = $user;

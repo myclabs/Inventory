@@ -4,7 +4,7 @@ use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use Account\Domain\ACL\AccountAdminRole;
 use Core\Test\TestCase;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use MyCLabs\ACL\Model\ResourceInterface;
@@ -37,9 +37,9 @@ class Orga_Test_ACLTest extends TestCase
 
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @var Account
@@ -369,28 +369,28 @@ class Orga_Test_ACLTest extends TestCase
 
         // Ajout d'un utilisateur administrateur du compte.
         $this->accountAdministrator = $this->userService->createUser('accountAdministrator@example.com', 'accountAdministrator');
-        $this->aclManager->grant(
+        $this->acl->grant(
             $this->accountAdministrator,
             new AccountAdminRole($this->accountAdministrator, $this->account)
         );
 
         // Ajout d'un utilisateur administrateur de l'administration.
         $this->organizationAdministrator= $this->userService->createUser('organizationAdministrator@example.com', 'organizationAdministrator');
-        $this->aclManager->grant(
+        $this->acl->grant(
             $this->organizationAdministrator,
             new OrganizationAdminRole($this->organizationAdministrator, $this->organization)
         );
 
         // Ajout d'un administrateur de cellule globale.
         $this->globaleCellAdministrator = $this->userService->createUser('globalAdministrator@example.com', 'globalAdministrator');
-        $this->aclManager->grant(
+        $this->acl->grant(
             $this->globaleCellAdministrator,
             new CellAdminRole($this->globaleCellAdministrator, $this->granularityGlobale->getCellByMembers([]))
         );
 
         // Ajout d'un manager de cellule zone marque.
         $this->europeaCellManager = $this->userService->createUser('europeaManager@example.com', 'europeaManager');
-        $this->aclManager->grant(
+        $this->acl->grant(
             $this->europeaCellManager,
             new CellManagerRole($this->europeaCellManager, $this->granularityZoneMarque->getCellByMembers(
                 [$this->memberZoneEurope, $this->memberMarqueA]
@@ -399,7 +399,7 @@ class Orga_Test_ACLTest extends TestCase
 
         // Ajout d'un contributeur de cellule zone marque.
         $this->europeaCellContributor = $this->userService->createUser('europeaContributor@example.com', 'europeaContributor');
-        $this->aclManager->grant(
+        $this->acl->grant(
             $this->europeaCellContributor,
             new CellContributorRole($this->europeaCellContributor, $this->granularityZoneMarque->getCellByMembers(
                 [$this->memberZoneEurope, $this->memberMarqueA]
@@ -408,7 +408,7 @@ class Orga_Test_ACLTest extends TestCase
 
         // Ajout d'un observatur de cellule zone marque.
         $this->sudameriquebCellObserver = $this->userService->createUser('sudameriquebObserver@example.com', 'sudameriquebObserver');
-        $this->aclManager->grant(
+        $this->acl->grant(
             $this->sudameriquebCellObserver,
             new CellObserverRole($this->sudameriquebCellObserver, $this->granularityZoneMarque->getCellByMembers(
                 [$this->memberZoneSudamerique, $this->memberMarqueB]
@@ -417,7 +417,7 @@ class Orga_Test_ACLTest extends TestCase
 
         // Ajout d'un administrateur de cellule site.
         $this->annecyCellAdministrator = $this->userService->createUser('annecyAdministrator@example.com', 'annecyAdministrator');
-        $this->aclManager->grant(
+        $this->acl->grant(
             $this->annecyCellAdministrator,
             new CellAdminRole($this->annecyCellAdministrator, $this->granularitySite->getCellByMembers(
                 [$this->memberSiteAnnecy]
@@ -426,7 +426,7 @@ class Orga_Test_ACLTest extends TestCase
 
         // Ajout d'un contributeur de cellule site.
         $this->limaCellContributor = $this->userService->createUser('limaContributor@example.com', 'limaContributor');
-        $this->aclManager->grant(
+        $this->acl->grant(
             $this->limaCellContributor,
             new CellContributorRole($this->limaCellContributor, $this->granularitySite->getCellByMembers(
                 [$this->memberSiteLima]
@@ -435,7 +435,7 @@ class Orga_Test_ACLTest extends TestCase
 
         // Ajout d'un observateur de cellule site.
         $this->berlinCellObserver = $this->userService->createUser('berlinObserver@example.com', 'berlinObserver');
-        $this->aclManager->grant(
+        $this->acl->grant(
             $this->berlinCellObserver,
             new CellObserverRole($this->berlinCellObserver, $this->granularitySite->getCellByMembers(
                 [$this->memberSiteBerlin]
@@ -2889,12 +2889,12 @@ class Orga_Test_ACLTest extends TestCase
 
     public function assertAllowed(User $user, $action, ResourceInterface $resource, $message = '')
     {
-        $this->assertTrue($this->aclManager->isAllowed($user, $action, $resource), $message);
+        $this->assertTrue($this->acl->isAllowed($user, $action, $resource), $message);
     }
 
     public function assertNotAllowed(User $user, $action, ResourceInterface $resource, $message = '')
     {
-        $this->assertFalse($this->aclManager->isAllowed($user, $action, $resource), $message);
+        $this->assertFalse($this->acl->isAllowed($user, $action, $resource), $message);
     }
 
     public function assertTraverseAccount(User $user, Account $account)

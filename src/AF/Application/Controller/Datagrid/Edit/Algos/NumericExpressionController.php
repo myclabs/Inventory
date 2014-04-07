@@ -146,6 +146,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
                                                   ['ERRORS' => implode("<br>", $e->getErrors())]);
                 }
+                $this->data = null;
                 break;
             case 'contextIndicator':
                 if ($newValue) {

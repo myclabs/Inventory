@@ -2,7 +2,7 @@
 
 namespace User\Application\ViewHelper;
 
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use MyCLabs\ACL\Model\ResourceInterface;
 use Zend_Auth;
 use Zend_View_Helper_Abstract;
@@ -15,13 +15,13 @@ use User\Domain\User;
 class IsAllowedHelper extends Zend_View_Helper_Abstract
 {
     /**
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
-    public function __construct(ACLManager $aclManager)
+    public function __construct(ACL $acl)
     {
-        $this->aclManager = $aclManager;
+        $this->acl = $acl;
     }
 
     /**
@@ -42,6 +42,6 @@ class IsAllowedHelper extends Zend_View_Helper_Abstract
         /** @var User $user */
         $user = User::load($auth->getIdentity());
 
-        return $this->aclManager->isAllowed($user, $action, $target);
+        return $this->acl->isAllowed($user, $action, $target);
     }
 }

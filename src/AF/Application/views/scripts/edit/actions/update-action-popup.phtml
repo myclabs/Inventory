@@ -12,73 +12,110 @@ $action = $this->action;
 $af = $action->getTargetComponent()->getAf();
 
 $locale = Core_Locale::loadDefault();
+?>
 
-$form = new UI_Form('updateAction');
-$form->setAjax(false);
-$form->setAction('af/edit_actions/update-action-submit/idAF/' . $af->getId() . '/idAction/' . $action->getId());
+<form class="form-horizontal" method="post"
+      action="af/edit_actions/update-action-submit?idAF=<?=$af->getId()?>&idAction=<?=$action->getId()?>">
 
-if ($action instanceof SetNumericFieldValue) {
-    /** @var $action \AF\Domain\Action\SetValue\SetNumericFieldValue */
-    // Valeur numerique
-    $numericValue = new UI_Form_Element_Text('numericValue');
-    $numericValue->setLabel(__('AF', 'configInteractionDatagrid', 'valueToBeAssignedLabel'));
-    $numericValue->setValue($locale->formatNumberForInput($action->getValue()->getDigitalValue()));
-    $form->addElement($numericValue);
-    // Incertitude
-    $numericUncertainty = new UI_Form_Element_Text('numericUncertainty');
-    $numericUncertainty->setLabel(__('AF', 'configInteractionDatagrid', 'uncertaintyToBeAssignedLabel'));
-    $numericUncertainty->setValue($action->getValue()->getRelativeUncertainty());
-    $form->addElement($numericUncertainty);
-}
 
-if ($action instanceof SetCheckboxValue) {
-    /** @var $action \AF\Domain\Action\SetValue\SetCheckboxValue */
-    // Boutons radios indiquant si l'action est coché ou décoché
-    $checkboxValue = new UI_Form_Element_Radio('checkboxValue');
-    $optionChecked = new UI_Form_Element_Option('checked', 1);
-    $optionChecked->label = __('UI', 'property', 'checked');
-    $checkboxValue->addOption($optionChecked);
-    $optionUnChecked = new UI_Form_Element_Option('uncheked', 0);
-    $optionUnChecked->label = __('UI', 'property', 'unchecked');
-    $checkboxValue->addOption($optionUnChecked);
-    $checkboxValue->setValue((int) $action->getChecked());
-    $form->addElement($checkboxValue);
-}
+    <?php if ($action instanceof SetNumericFieldValue) : ?>
+        <?php /** @var $action SetNumericFieldValue */ ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('AF', 'configInteractionDatagrid', 'valueToBeAssignedLabel')?>
+            </label>
+            <div class="col-sm-10">
+                <input name="numericValue" type="text" class="form-control"
+                    value="<?=$locale->formatNumberForInput($action->getValue()->getDigitalValue())?>">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('AF', 'configInteractionDatagrid', 'uncertaintyToBeAssignedLabel')?>
+            </label>
+            <div class="col-sm-10">
+                <input name="numericUncertainty" type="text" class="form-control"
+                       value="<?=$action->getValue()->getRelativeUncertainty()?>">
+            </div>
+        </div>
+    <?php endif; ?>
 
-if ($action instanceof SetSelectSingleValue) {
-    /** @var $action SetSelectSingleValue */
-    // Liste de selection de l'option à selectionner
-    $selectOptionValue = new UI_Form_Element_Select('selectOptionValue');
-    $selectOptionValue->setLabel(__('AF', 'configInteractionDatagrid', 'valueToBeAssignedLabel'));
-    $selectOptionValue->addNullOption('', null);
-    /** @var $selectField SelectSingle */
-    $selectField = $action->getTargetComponent();
-    foreach ($selectField->getOptions() as $option) {
-        $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getId(), $option->getLabel());
-        $selectOptionValue->addOption($uiOption);
-    }
-    if ($action->getOption()) {
-        $selectOptionValue->setValue($action->getOption()->getId());
-    }
-    $form->addElement($selectOptionValue);
-}
 
-if ($action instanceof SetAlgoValue) {
-    /** @var $action SetAlgoValue */
-    // Liste de selection de l'option à selectionner
-    $algoSelect = new UI_Form_Element_Select('algoSelect');
-    $algoSelect->setLabel(__('AF', 'configInteractionDatagrid', 'algorithmToBeAssignedLabel'));
-    foreach ($af->getAlgos() as $algo) {
-        if ($algo instanceof NumericAlgo) {
-            $uiOption = new UI_Form_Element_Option($algo->getRef(), $algo->getId(), $algo->getLabel());
-            $algoSelect->addOption($uiOption);
-        }
-    }
-    if ($action->getAlgo()) {
-        $algoSelect->setValue($action->getAlgo()->getId());
-    }
-    $form->addElement($algoSelect);
-}
+    <?php if ($action instanceof SetCheckboxValue) : ?>
+        <?php /** @var $action SetCheckboxValue */ ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+            </label>
+            <div class="col-sm-10">
+                <select name="checkboxValue" class="form-control">
+                    <option value="1" <?=$action->getChecked() ? 'selected' : ''?>>
+                        <?=__('UI', 'property', 'checked')?>
+                    </option>
+                    <option value="0" <?=!$action->getChecked() ? 'selected' : ''?>>
+                        <?=__('UI', 'property', 'unchecked')?>
+                    </option>
+                </select>
+            </div>
+        </div>
+    <?php endif; ?>
 
-$form->addSubmitButton();
-echo $form->render();
+
+    <?php if ($action instanceof SetSelectSingleValue) : ?>
+        <?php
+        /** @var $action SetSelectSingleValue */
+        /** @var $selectField SelectSingle */
+        $selectField = $action->getTargetComponent();
+        $selectedOption = $action->getOption() ? $action->getOption()->getId() : null;
+        ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('AF', 'configInteractionDatagrid', 'valueToBeAssignedLabel')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="selectOptionValue" class="form-control">
+                    <option value="" <?=$selectedOption == null ? 'selected' : ''?>></option>
+                    <?php foreach ($selectField->getOptions() as $option) : ?>
+                        <option value="<?=$option->getId()?>"
+                                <?=$selectedOption == $option->getId() ? 'selected' : ''?>>
+                            <?=$option->getLabel()?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+    <?php if ($action instanceof SetAlgoValue) : ?>
+        <?php
+        /** @var $action SetAlgoValue */
+        $selectedAlgo = $action->getAlgo() ? $action->getAlgo()->getId() : null;
+        ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">
+                <?=__('AF', 'configInteractionDatagrid', 'algorithmToBeAssignedLabel')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="algoSelect" class="form-control">
+                    <option value="" <?=$selectedAlgo == null ? 'selected' : ''?>></option>
+                    <?php foreach ($af->getAlgos() as $algo) : ?>
+                        <?php if ($algo instanceof NumericAlgo) : ?>
+                            <option value="<?=$algo->getId()?>"
+                                    <?=$selectedAlgo == $algo->getId() ? 'selected' : ''?>>
+                                <?=$algo->getLabel()?>
+                            </option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+        </div>
+    </div>
+
+</form>

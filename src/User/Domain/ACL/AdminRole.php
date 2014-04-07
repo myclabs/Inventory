@@ -3,8 +3,7 @@
 namespace User\Domain\ACL;
 
 use Account\Domain\Account;
-use User\Domain\ACL\Actions;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use MyCLabs\ACL\Model\ClassResource;
 use MyCLabs\ACL\Model\Role;
 use User\Domain\User;
@@ -14,13 +13,13 @@ use User\Domain\User;
  */
 class AdminRole extends Role
 {
-    public function createAuthorizations(ACLManager $aclManager)
+    public function createAuthorizations(ACL $acl)
     {
         // Admin all users
-        $aclManager->allow($this, Actions::all(), new ClassResource(User::class));
+        $acl->allow($this, Actions::all(), new ClassResource(User::class));
 
         // Admin all accounts
-        $aclManager->allow($this, Actions::all(), new ClassResource(Account::class));
+        $acl->allow($this, Actions::all(), new ClassResource(Account::class));
     }
 
     public static function getLabel()

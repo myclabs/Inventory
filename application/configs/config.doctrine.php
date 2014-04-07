@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use Gedmo\Loggable\LoggableListener;
 use Gedmo\Translatable\TranslatableListener;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use MyCLabs\ACL\Doctrine\ACLSetup;
 
 return [
@@ -131,7 +131,7 @@ return [
         /** @var ACLSetup $aclSetup */
         $aclSetup = $c->get(ACLSetup::class);
         $aclSetup->setUpEntityManager($em, function () use ($c) {
-            return $c->get(ACLManager::class);
+            return $c->get(ACL::class);
         });
 
         return $em;

@@ -130,15 +130,6 @@ class ListColumn extends GenericColumn
     public $multipleFilters;
 
     /**
-     * Nombre définissant la hauteur du champs select multiple.
-     *
-     * Par défaut auto.
-     *
-     * @var string
-     */
-    public $multipleListSize = 'auto';
-
-    /**
      * Permet de savoir si la liste aura un élément vide rajouté automatiquement.
      *  (ne sera pas pris en compte pour les filtres de type checkbox)
      *
@@ -548,7 +539,6 @@ class ListColumn extends GenericColumn
                 $filterFormElement = new UI_Form_Element_MultiSelect($this->getFilterFormId($datagrid));
                 $filterFormElement->addNullOption('');
                 $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
-                $filterFormElement->size = $this->multipleListSize;
             }
         } else {
             if ($this->getFilterFieldType() === self::FIELD_BOX) {
@@ -705,7 +695,7 @@ class ListColumn extends GenericColumn
                 $selectInput->addClass('form-control');
                 if ($this->multiple) {
                     $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid).'[]');
-                    $selectInput->setAttribute('multiple', $this->multipleListSize);
+                    $selectInput->setAttribute('multiple', 'multiple');
                 }
                 if (($this->multiple) && (is_array($this->defaultAddValue))) {
                     foreach ($this->defaultAddValue as $index => $defaultAddValue) {
@@ -749,7 +739,7 @@ class ListColumn extends GenericColumn
                     if ($this->fieldType !== self::FIELD_AUTOCOMPLETE) {
                         $selectInput->addClass('form-control');
                     }
-                    $selectInput->setAttribute('multiple', $this->multipleListSize);
+                    $selectInput->setAttribute('multiple', 'multiple');
 
                     if ($this->withEmptyElement === true) {
                         $elementOption = new GenericTag('option', '');
@@ -797,7 +787,6 @@ class ListColumn extends GenericColumn
                     if ($this->fieldType !== self::FIELD_AUTOCOMPLETE) {
                         $selectInput->addClass('form-control');
                     }
-                    $selectInput->setAttribute('multiple', $this->multipleListSize);
 
                     if ($this->withEmptyElement === true) {
                         $elementOption = new GenericTag('option', '');
