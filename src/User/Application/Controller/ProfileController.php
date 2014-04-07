@@ -1,7 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use User\Application\ForbiddenException;
@@ -23,9 +23,9 @@ class User_ProfileController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Inject("emails.noreply.name")
@@ -49,7 +49,7 @@ class User_ProfileController extends Core_Controller
     public function listAction()
     {
         $loggedInUser = $this->_helper->auth();
-        $this->view->canCreateUsers = $this->aclManager->isAllowed(
+        $this->view->canCreateUsers = $this->acl->isAllowed(
             $loggedInUser,
             Actions::CREATE,
             new ClassResource(User::class)
@@ -85,12 +85,12 @@ class User_ProfileController extends Core_Controller
         $this->view->canEditPassword = ($user === $loggedInUser);
 
         // Est-ce que l'utilisateur peut désactiver le compte
-        $this->view->canDisable = $this->aclManager->isAllowed(
+        $this->view->canDisable = $this->acl->isAllowed(
             $loggedInUser,
             Actions::DELETE,
             $user
         );
-        $this->view->canEnable = $this->aclManager->isAllowed(
+        $this->view->canEnable = $this->acl->isAllowed(
             $loggedInUser,
             Actions::UNDELETE,
             $user

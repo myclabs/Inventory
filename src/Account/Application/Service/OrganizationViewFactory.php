@@ -3,7 +3,7 @@
 namespace Account\Application\Service;
 
 use Account\Application\ViewModel\OrganizationView;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use Orga_Model_Organization;
 use Orga_Model_Cell;
@@ -19,17 +19,17 @@ use Core_Model_Query;
 class OrganizationViewFactory
 {
     /**
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
     /**
      * @var Orga_Service_ACLManager
      */
     private $orgaACLManager;
 
-    public function __construct(ACLManager $aclManager, Orga_Service_ACLManager $orgaACLManager)
+    public function __construct(ACL $acl, Orga_Service_ACLManager $orgaACLManager)
     {
-        $this->aclManager = $aclManager;
+        $this->acl = $acl;
         $this->orgaACLManager = $orgaACLManager;
     }
 
@@ -43,7 +43,7 @@ class OrganizationViewFactory
         }
 
         // Vérification d'accèr à l'édition.
-        $viewModel->canBeEdited = $this->aclManager->isAllowed(
+        $viewModel->canBeEdited = $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization
@@ -76,7 +76,7 @@ class OrganizationViewFactory
             }
         }
 
-        $viewModel->canBeDeleted = $this->aclManager->isAllowed(
+        $viewModel->canBeDeleted = $this->acl->isAllowed(
             $connectedUser,
             Actions::DELETE,
             $organization

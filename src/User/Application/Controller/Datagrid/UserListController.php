@@ -5,7 +5,7 @@
  */
 
 use Core\Annotation\Secure;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -24,9 +24,9 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Secure("viewAllUsers")
@@ -56,7 +56,7 @@ class User_Datagrid_UserListController extends UI_Controller_Datagrid
             $data['roles'] = implode(', ', $data['roles']);
 
             // Edit
-            if (($loggedInUser && $this->aclManager->isAllowed($loggedInUser, Actions::EDIT, $user))) {
+            if (($loggedInUser && $this->acl->isAllowed($loggedInUser, Actions::EDIT, $user))) {
                 $data['detailsUser'] = $this->cellLink('user/profile/edit/id/' . $user->getId(),
                                                        __('UI', 'verb', 'edit'), 'pencil');
             }

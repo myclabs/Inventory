@@ -2,7 +2,7 @@
 
 namespace Orga\Model\ACL;
 
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 
 /**
@@ -10,9 +10,9 @@ use User\Domain\ACL\Actions;
  */
 class CellAdminRole extends AbstractCellRole
 {
-    public function createAuthorizations(ACLManager $aclManager)
+    public function createAuthorizations(ACL $acl)
     {
-        $aclManager->allow(
+        $acl->allow(
             $this,
             new Actions([
                 Actions::TRAVERSE, // naviguer dans le compte
@@ -21,7 +21,7 @@ class CellAdminRole extends AbstractCellRole
             false // pas de cascade sinon on pourrait naviguer dans toutes les organisations
         );
 
-        $aclManager->allow(
+        $acl->allow(
             $this,
             new Actions([
                 Actions::TRAVERSE, // naviguer dans l'organisation
@@ -30,7 +30,7 @@ class CellAdminRole extends AbstractCellRole
             false // pas de cascade sinon on pourrait naviguer dans toutes les cellules
         );
 
-        $aclManager->allow(
+        $acl->allow(
             $this,
             new Actions([
                 Actions::TRAVERSE, // naviguer dans la cellule

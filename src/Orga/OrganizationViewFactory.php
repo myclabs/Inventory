@@ -2,7 +2,7 @@
 
 namespace Orga;
 
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use Orga\ViewModel\GranularityView;
 use Orga\ViewModel\OrganizationView;
 use User\Domain\ACL\Actions;
@@ -20,17 +20,17 @@ use Core_Model_Query;
 class OrganizationViewFactory
 {
     /**
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
     /**
      * @var Orga_Service_ACLManager
      */
     private $orgaACLManager;
 
-    public function __construct(ACLManager $aclManager, Orga_Service_ACLManager $orgaACLManager)
+    public function __construct(ACL $acl, Orga_Service_ACLManager $orgaACLManager)
     {
-        $this->aclManager = $aclManager;
+        $this->acl = $acl;
         $this->orgaACLManager = $orgaACLManager;
     }
 
@@ -44,7 +44,7 @@ class OrganizationViewFactory
         }
 
         // Vérification d'accèr à l'édition.
-        $organizationView->canBeEdited = $this->aclManager->isAllowed(
+        $organizationView->canBeEdited = $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization

@@ -10,7 +10,7 @@ use Account\Domain\Account;
 use AF\Domain\AFLibrary;
 use Classification\Domain\ClassificationLibrary;
 use Core_Model_Query;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use Orga_Model_Organization;
 use Parameter\Domain\ParameterLibrary;
@@ -29,14 +29,14 @@ class AccountViewFactory
     private $organizationViewFactory;
 
     /**
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
-    public function __construct(OrganizationViewFactory $organizationViewFactory, ACLManager $aclManager)
+    public function __construct(OrganizationViewFactory $organizationViewFactory, ACL $acl)
     {
         $this->organizationViewFactory = $organizationViewFactory;
-        $this->aclManager = $aclManager;
+        $this->acl = $acl;
     }
 
     /**
@@ -70,7 +70,7 @@ class AccountViewFactory
             /** @var AFLibrary $library */
 
             $libraryView = new AFLibraryView($library->getId(), $library->getLabel());
-            $libraryView->canDelete = $this->aclManager->isAllowed($user, Actions::DELETE, $library);
+            $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
             $accountView->afLibraries[] = $libraryView;
         }
@@ -82,7 +82,7 @@ class AccountViewFactory
             /** @var ParameterLibrary $library */
 
             $libraryView = new ParameterLibraryView($library->getId(), $library->getLabel());
-            $libraryView->canDelete = $this->aclManager->isAllowed($user, Actions::DELETE, $library);
+            $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
             $accountView->parameterLibraries[] = $libraryView;
         }
@@ -94,16 +94,16 @@ class AccountViewFactory
             /** @var ClassificationLibrary $library */
 
             $libraryView = new ClassificationLibraryView($library->getId(), $library->getLabel());
-            $libraryView->canDelete = $this->aclManager->isAllowed($user, Actions::DELETE, $library);
+            $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
             $accountView->classificationLibraries[] = $libraryView;
         }
 
         // Est-ce que l'utilisateur peut modifier le compte
-        $accountView->canEdit = $this->aclManager->isAllowed($user, Actions::EDIT, $account);
+        $accountView->canEdit = $this->acl->isAllowed($user, Actions::EDIT, $account);
 
         // Est-ce que l'utilisateur peut gérer les utilisateurs
-        $accountView->canAllow = $this->aclManager->isAllowed($user, Actions::ALLOW, $account);
+        $accountView->canAllow = $this->acl->isAllowed($user, Actions::ALLOW, $account);
 
         return $accountView;
     }

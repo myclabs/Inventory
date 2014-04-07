@@ -4,7 +4,7 @@ use AF\Domain\AF;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use MyCLabs\MUIH\Tab;
 use MyCLabs\MUIH\Tabs;
 use Orga\OrganizationViewFactory;
@@ -24,9 +24,9 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Inject
@@ -78,7 +78,7 @@ class Orga_OrganizationController extends Core_Controller
         /** @var User $connectedUser */
         $connectedUser = $this->_helper->auth();
 
-        $isConnectedUserAbleToCreateOrganizations = $this->aclManager->isAllowed(
+        $isConnectedUserAbleToCreateOrganizations = $this->acl->isAllowed(
             $connectedUser,
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
@@ -134,7 +134,7 @@ class Orga_OrganizationController extends Core_Controller
         }
         $this->view->assign('organizations', $organizationsViewModel);
 
-        $this->view->assign('canCreateOrganization', $this->aclManager->isAllowed(
+        $this->view->assign('canCreateOrganization', $this->acl->isAllowed(
             $connectedUser,
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
@@ -264,7 +264,7 @@ class Orga_OrganizationController extends Core_Controller
             'organization',
             $this->organizationVMFactory->createOrganizationView($organization, $connectedUser)
         );
-        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganization = $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization
@@ -654,7 +654,7 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign('organization', $organization);
 
-        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganization = $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization
@@ -1013,7 +1013,7 @@ class Orga_OrganizationController extends Core_Controller
             $topCells = [$globalCell];
         } else {
             /** @var Orga_Model_Cell[] $topCells */
-            $topCells = $this->aclManager->getTopCellsWithAccessForOrganization(
+            $topCells = $this->acl->getTopCellsWithAccessForOrganization(
                 $connectedUser,
                 $organization,
                 [CellAdminRole::class]
