@@ -8,8 +8,9 @@ use JMS\Serializer\Serializer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Techno\Domain\Category;
-use Techno\Domain\Family\Dimension;
+use Parameter\Domain\Category;
+use Parameter\Domain\Family\Dimension;
+use User\Domain\User;
 
 /**
  * Importe les données.
@@ -44,13 +45,37 @@ class ImportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $json = file_get_contents('test.json');
+        $root = PACKAGE_PATH . '/data/exports/migration-3.0';
+
+        $output->writeln('<comment>Importing users</comment>');
+        $count = $this->importUsers($root . '/users.json');
+        $output->writeln(sprintf('<info>%d users imported</info>', $count));
+    }
+
+    private function importUsers($file)
+    {
+        $json = file_get_contents($file);
+
+        /** @var User[] $users */
+        $users = $this->serializer->deserialize($json, 'ArrayCollection<User\Domain\User>', 'json');
+
+        foreach ($users as $user) {
+            $this->entityManager->persist($user);
+        }
+//        $this->entityManager->flush();
+
+        return count($users);
+    }
+
+    private function importParameters($file)
+    {
+        $json = file_get_contents($file);
 
         /** @var Category[] $rootCategories */
         $rootCategories = $this->serializer->deserialize($json, 'ArrayCollection<Techno\Domain\Category>', 'json');
 
         foreach ($rootCategories as $category) {
-            $this->browseCategory($category);
+            $this->browseParameterCategory($category);
 
             $this->entityManager->persist($category);
         }
@@ -60,7 +85,7 @@ class ImportCommand extends Command
     /**
      * Restaure les associations
      */
-    private function browseCategory(Category $category)
+    private function browseParameterCategory(Category $category)
     {
         foreach ($category->getFamilies() as $family) {
             $this->setPropertyValue($family, 'category', $category);
@@ -94,7 +119,7 @@ class ImportCommand extends Command
         foreach ($category->getChildCategories() as $childCategory) {
             $this->setPropertyValue($childCategory, 'parentCategory', $category);
 
-            $this->browseCategory($childCategory);
+            $this->browseParameterCategory($childCategory);
         }
     }
 
