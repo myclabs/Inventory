@@ -1,0 +1,14 @@
+Techno\Domain\Family\Member:
+
+  exclusion_policy: ALL
+
+  properties:
+    ref:
+      expose: true
+      type: string
+    label:
+      expose: true
+      type: string
+    position:
+      expose: true
+      type: integer

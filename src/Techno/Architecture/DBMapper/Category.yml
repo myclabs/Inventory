@@ -37,11 +37,13 @@ Techno\Domain\Category:
       mappedBy: parentCategory
       orderBy:
         position: ASC
+      cascade: [ persist ]
     families:
       targetEntity: Techno\Domain\Family\Family
       mappedBy: category
       orderBy:
         position: ASC
+      cascade: [ persist ]
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

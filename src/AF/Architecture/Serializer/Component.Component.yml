@@ -1,0 +1,37 @@
+AF\Domain\Component\Component:
+
+  discriminator:
+    field_name: type
+    map:
+      group: AF\Domain\Component\Group
+      subaf: AF\Domain\Component\SubAF
+      subaf_notrepeated: AF\Domain\Component\SubAF\NotRepeatedSubAF
+      subaf_repeated: AF\Domain\Component\SubAF\RepeatedSubAF
+      field: AF\Domain\Component\Field
+      checkbox: AF\Domain\Component\Checkbox
+      numeric: AF\Domain\Component\NumericField
+      text: AF\Domain\Component\TextField
+      select: AF\Domain\Component\Select
+      select_single: AF\Domain\Component\Select\SelectSingle
+      select_multi: AF\Domain\Component\Select\SelectMulti
+
+  properties:
+    entities:
+      exclude: true
+    id:
+      exclude: true
+    actions:
+      exclude: true
+    group:
+      exclude: true
+    af:
+      exclude: true
+
+    ref:
+      type: string
+    label:
+      type: string
+    help:
+      type: string
+    visible:
+      type: boolean

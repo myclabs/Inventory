@@ -1,0 +1,20 @@
+Techno\Domain\Family\Dimension:
+
+  exclusion_policy: ALL
+
+  properties:
+    ref:
+      expose: true
+      type: string
+    label:
+      expose: true
+      type: string
+    position:
+      expose: true
+      type: integer
+    orientation:
+      expose: true
+      type: integer
+    members:
+      expose: true
+      type: ArrayCollection<Techno\Domain\Family\Member>

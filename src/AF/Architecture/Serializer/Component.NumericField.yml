@@ -1,0 +1,18 @@
+AF\Domain\Component\NumericField:
+
+  properties:
+    unit:
+      expose: true
+      type: Unit\UnitAPI
+    unitSelection:
+      expose: true
+      type: boolean
+    withUncertainty:
+      expose: true
+      type: boolean
+    defaultValueReminder:
+      expose: true
+      type: boolean
+    required:
+      expose: true
+      type: boolean
