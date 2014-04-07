@@ -7,6 +7,9 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\ACL\ACLManager;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
+use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Tab;
 use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
@@ -292,29 +295,63 @@ class Orga_CellController extends Core_Controller
         $axesCanEdit = $this->orgaACLManager->getAxesCanEdit($connectedUser, $organization);
         $this->view->assign('canAddMembers', (count($axesCanEdit) > 0));
         if (count($axesCanEdit) > 0) {
-            $addMembersForm = new UI_Form('addMember');
-            $addMembersForm->setAction('orga/cell/add-member/idCell/'.$idCell);
-            $selectAxis = new UI_Form_Element_Select('axis');
-            $selectAxis->setLabel(__('UI', 'name', 'axis'));
-            $selectAxis->getElement()->help = __('Orga', 'view', 'addMembersAxisExplanations');
-            $selectAxis->addNullOption('');
-            $addMembersForm->addElement($selectAxis);
+            $addMemberForm = new GenericTag('form');
+            $addMemberForm->setAttribute('action', 'orga/cell/add-member/idCell/'.$idCell);
+            $addMemberForm->setAttribute('method', 'POST');
+            $addMemberForm->setAttribute('id', 'addMember');
+            $addMemberForm->addClass('form-horizontal');
+
+            $axisChoiceLabel = new GenericTag('label', __('UI', 'name', 'axis'));
+            $axisChoiceLabel->setAttribute('for', 'addMember_axis');
+            $axisChoiceLabel->addClass('control-label');
+            $axisChoiceLabel->addClass('col-xs-2');
+            $axisChoiceLabel->addClass('withTooltip');
+            $axisChoiceLabel->setAttribute('title', ___('Orga', 'view', 'addMembersAxisExplanations'));
+            $axisChoiceLabel->setAttribute('data-html', 'true');
+            $axisChoiceHelp = new Icon('question-circle');
+            $axisChoiceLabel->appendContent(' ');
+            $axisChoiceLabel->appendContent($axisChoiceHelp);
+            $axisChoiceInput = new GenericTag('select');
+            $axisChoiceInput->setAttribute('name', 'axis');
+            $axisChoiceInput->setAttribute('id', 'addMember_axis');
+            $axisChoiceInput->addClass('form-control');
+            $axisChoiceWrapper = new GenericTag('div', $axisChoiceInput);
+            $axisChoiceWrapper->addClass('col-xs-10');
+            $axisChoiceGroup = new GenericTag('div');
+            $axisChoiceGroup->addClass('form-group');
+            $axisChoiceGroup->appendContent($axisChoiceLabel);
+            $axisChoiceGroup->appendContent($axisChoiceWrapper);
+            $addMemberForm->appendContent($axisChoiceGroup);
+
+            $axisChoiceNullOption = new GenericTag('option');
+            $axisChoiceNullOption->setAttribute('value', '');
+            $axisChoiceInput->appendContent($axisChoiceNullOption);
             foreach ($axesCanEdit as $axis) {
-                $axisOption = new UI_Form_Element_Option($axis->getRef(), $axis->getRef(), $axis->getLabel());
-                $selectAxis->addOption($axisOption);
+                $axisOption = new GenericTag('option', $axis->getLabel());
+                $axisOption->setAttribute('value', $axis->getRef());
+                $axisChoiceInput->appendContent($axisOption);
 
-                $axisGroup = new UI_Form_Element_Group($axis->getRef().'_group');
-                $axisGroup->setLabel('');
-                $axisGroup->foldaway = false;
-                $axisGroup->getElement()->hidden = true;
-
-                $memberInput = new UI_Form_Element_Text($axis->getRef().'_member');
-                $memberInput->setLabel(__('UI', 'name', 'element'));
-                $memberInput->setAttrib('placeholder', __('UI', 'name', 'label'));
-                $axisGroup->addElement($memberInput);
                 foreach ($axis->getDirectBroaders() as $broaderAxis) {
-                    $selectParentMember = new UI_Form_Element_Select($axis->getRef().'_parentMember_'.$broaderAxis->getRef());
-                    $selectParentMember->setLabel($broaderAxis->getLabel());
+                    $parentMemberGroup = new GenericTag('div');
+                    $parentMemberGroup->addClass('form-group');
+                    $parentMemberGroup->addClass('hide');
+                    $parentMemberGroup->addClass('broader-axis');
+                    $parentMemberGroup->addClass($axis->getRef());
+                    $addMemberForm->appendContent($parentMemberGroup);
+
+                    $parentMemberChoiceLabel = new GenericTag('label', $broaderAxis->getLabel());
+                    $parentMemberChoiceLabel->setAttribute('for', 'addMember_axis_'.$broaderAxis->getId());
+                    $parentMemberChoiceLabel->addClass('control-label');
+                    $parentMemberChoiceLabel->addClass('col-xs-2');
+                    $parentMemberChoiceInput = new GenericTag('select');
+                    $parentMemberChoiceInput->setAttribute('name', $axis->getRef().'_parentMember_'.$broaderAxis->getRef());
+                    $parentMemberChoiceInput->setAttribute('id', 'addMember_axis_'.$broaderAxis->getId());
+                    $parentMemberChoiceInput->addClass('form-control');
+                    $parentMemberChoiceWrapper = new GenericTag('div', $parentMemberChoiceInput);
+                    $parentMemberChoiceWrapper->addClass('col-xs-10');
+                    $parentMemberGroup->appendContent($parentMemberChoiceLabel);
+                    $parentMemberGroup->appendContent($parentMemberChoiceWrapper);
+
                     if (!$isUserAllowToEditAllMembers) {
                         $members = [];
                         foreach ($topCellsWithEditAccess as $cell) {
@@ -336,20 +373,38 @@ class Orga_CellController extends Core_Controller
                         $members = $broaderAxis->getMembers();
                     }
                     foreach ($members as $parentMember) {
-                        $parentMemberOption = new UI_Form_Element_Option($parentMember->getId(), $parentMember->getId(), $parentMember->getLabel());
-                        $selectParentMember->addOption($parentMemberOption);
+                        $parentMemberOption = new GenericTag('option', $parentMember->getLabel());
+                        $parentMemberOption->setAttribute('value', $parentMember->getId());
+                        $parentMemberChoiceInput->appendContent($parentMemberOption);
                     }
-                    $axisGroup->addElement($selectParentMember);
                 }
-
-                $displayGroupAction = new UI_Form_Action_Show($axis->getRef().'_toggle');
-                $displayGroupAction->condition = new UI_Form_Condition_Elementary('', $selectAxis, UI_Form_Condition_Elementary::EQUAL, $axis->getRef());
-                $axisGroup->getElement()->addAction($displayGroupAction);
-
-                $addMembersForm->addElement($axisGroup);
             }
-            $addMembersForm->addSubmitButton('Ajouter');
-            $this->view->assign('addMembersForm', $addMembersForm);
+
+            $memberLabelLabel = new GenericTag('label', __('UI', 'name', 'element'));
+            $memberLabelLabel->addClass('control-label');
+            $memberLabelLabel->addClass('col-xs-2');
+            $memberLabelInput = new GenericVoidTag('input');
+            $memberLabelInput->setAttribute('name', 'label');
+            $memberLabelInput->setAttribute('type', 'text');
+            $memberLabelInput->setAttribute('placeholder', __('UI', 'name', 'label'));
+            $memberLabelInput->addClass('form-control');
+            $memberLabelWrapper = new GenericTag('div', $memberLabelInput);
+            $memberLabelWrapper->addClass('col-xs-10');
+            $memberLabelGroup = new GenericTag('div');
+            $memberLabelGroup->addClass('form-group');
+            $memberLabelGroup->addClass('hide');
+            $memberLabelGroup->appendContent($memberLabelLabel);
+            $memberLabelGroup->appendContent($memberLabelWrapper);
+            $addMemberForm->appendContent($memberLabelGroup);
+
+            $addMemberSubmitButton = new GenericVoidTag('input');
+            $addMemberSubmitButton->setAttribute('type', 'submit');
+            $addMemberSubmitButton->addClass('btn');
+            $addMemberSubmitButton->addClass('btn-primary');
+            $addMemberSubmitButton->addClass('pull-right');
+            $addMemberForm->appendContent($addMemberSubmitButton);
+
+            $this->view->assign('addMemberForm', $addMemberForm);
         }
     }
 
@@ -606,7 +661,7 @@ class Orga_CellController extends Core_Controller
 
         $formData = json_decode($this->getRequest()->getParam('addMember'), true);
 
-        $axisRef = $formData['axis']['value'];
+        $axisRef = $this->getParam('axis');
         if (empty($axisRef)) {
             $this->addFormError('axis', __('UI', 'formValidation', 'emptyRequiredField'));
             $this->sendFormResponse();
@@ -614,12 +669,11 @@ class Orga_CellController extends Core_Controller
         }
         $axis = $cell->getOrganization()->getAxisByRef($axisRef);
 
-        $axisData = $formData[$axis->getRef().'_group']['elements'];
         $parentMembers = [];
         $contextualizingParentMembers = [];
         foreach ($axis->getDirectBroaders() as $broaderAxis) {
             $parentAxisFieldRef = $axis->getRef() . '_parentMember_' . $broaderAxis->getRef();
-            $parentMember = Orga_Model_Member::load($axisData[$parentAxisFieldRef]['value']);
+            $parentMember = Orga_Model_Member::load($this->getParam($parentAxisFieldRef));
             $parentMembers[] = $parentMember;
             if ($parentMember->getAxis()->isContextualizing()) {
                 $contextualizingParentMembers[] = $parentMember;
@@ -631,9 +685,9 @@ class Orga_CellController extends Core_Controller
         }
         $parentMembersHashkey = Orga_Model_Member::buildParentMembersHashKey($contextualizingParentMembers);
 
-        $label = $axisData[$axis->getRef() . '_member']['value'];
+        $label = $this->getParam('label');
         if (empty($label)) {
-            $this->addFormError($axis->getRef() . '_member', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->addFormError('label', __('UI', 'formValidation', 'emptyRequiredField'));
             $this->sendFormResponse();
             return;
         }

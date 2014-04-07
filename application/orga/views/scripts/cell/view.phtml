@@ -125,14 +125,6 @@ if (count($file) > 0) {
     .history > div > div + div,
     .comments >div > div + div
     { margin-top: 5px;  }
-
-    #addMember { margin: 0; }
-    #addMember { margin-left: 0; float: right; }
-    #addMember .subGroup { margin-left: 0; }
-    #addMember label { text-align: left; width: auto; }
-    #addMember .input { width: auto; }
-    #addMember .form-actions { padding: 10px 0 0 0; margin: 0; background-color: inherit; text-align: center; border: none; }
-    #addMember .form-actions input { float: right; }
 </style>
 
 <div class="organization page-header">
@@ -451,7 +443,7 @@ if (count($file) > 0) {
             <?=___('Orga', 'view', 'addMember')?>
         </h3>
         <hr/>
-        <?=$this->addMembersForm->display()?>
+        <?=$this->addMemberForm->display()?>
     </div>
     <?php endif; ?>
 </div>
@@ -1140,9 +1132,26 @@ $('.collapse').on({
     }
 });
 
+<?php if ($this->canAddMembers) : ?>
+$('#addMember_axis').on('change', function() {
+    $('#addMember > div.form-group:not(:first)').addClass('hide');
+    if ($(this).val() !== '') {
+        $('#addMember > div.form-group.broader-axis.' + $(this).val()).removeClass('hide');
+        $('#addMember > div.form-group:not(:first):not(.broader-axis)').removeClass('hide');
+    }
+});
+$('#addMember').on('successSubmit', function() {
+    $('#addMember').first().get(0).reset();
+    $('#addMember_axis').trigger('change');
+});
+<?php endif; ?>
+
 $(document).ready(function() {
     $('.withTooltip').tooltip();
     $('.withPopover').popover();
+    <?php if ($this->canAddMembers) : ?>
+    new AjaxForm('#addMember');
+    <?php endif; ?>
     var resizeTimer;
     $(window).resize(function() {
         clearTimeout(resizeTimer);
