@@ -5,22 +5,15 @@ Techno\Domain\Family\Family:
   properties:
     ref:
       expose: true
-      type: string
     label:
       expose: true
-      type: string
     position:
       expose: true
-      type: integer
     refUnit:
       expose: true
-      type: string
     documentation:
       expose: true
-      type: string
     dimensions:
       expose: true
-      type: ArrayCollection<Techno\Domain\Family\Dimension>
     cells:
       expose: true
-      type: ArrayCollection<Techno\Domain\Family\Cell>

@@ -42,6 +42,10 @@ class ExportCommand extends Command
         $output->writeln('<comment>Exporting users</comment>');
         $users = $this->exportUsers();
         file_put_contents($root . '/users.json', $this->serializer->serialize($users, 'json'));
+
+        $output->writeln('<comment>Exporting parameters</comment>');
+        $parameters = $this->exportTechno();
+        file_put_contents($root . '/parameters.json', $this->serializer->serialize($parameters, 'json'));
     }
 
     private function exportTechno()

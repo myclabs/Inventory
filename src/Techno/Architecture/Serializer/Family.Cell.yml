@@ -5,7 +5,5 @@ Techno\Domain\Family\Cell:
   properties:
     membersHashKey:
       expose: true
-      type: string
     value:
       expose: true
-      type: Calc_Value

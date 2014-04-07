@@ -5,10 +5,7 @@ Techno\Domain\Family\Member:
   properties:
     ref:
       expose: true
-      type: string
     label:
       expose: true
-      type: string
     position:
       expose: true
-      type: integer
