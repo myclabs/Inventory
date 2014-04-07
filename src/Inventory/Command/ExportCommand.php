@@ -37,11 +37,11 @@ class ExportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//        $data = $this->exportAF();
-        $data = $this->exportUsers();
+        $root = PACKAGE_PATH . '/data/exports/migration-3.0';
 
-        echo $this->serializer->serialize($data, 'json') . PHP_EOL;
-        echo json_encode(json_decode($this->serializer->serialize($data, 'json')), JSON_PRETTY_PRINT);
+        $output->writeln('<comment>Exporting users</comment>');
+        $users = $this->exportUsers();
+        file_put_contents($root . '/users.json', $this->serializer->serialize($users, 'json'));
     }
 
     private function exportTechno()
