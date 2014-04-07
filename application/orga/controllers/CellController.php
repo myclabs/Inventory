@@ -194,6 +194,12 @@ class Orga_CellController extends Core_Controller
                 if (!$narrowerGranularityHasACLParent) {
                     foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
                         if ($broaderInventoryGranularity->getCellsWithACL()) {
+                            foreach ($narrowerGranularity->getAxes() as $narrowerGranularityAxis) {
+                                if (!$granularityForInventoryStatus->hasAxis($narrowerGranularityAxis)
+                                    && !$broaderInventoryGranularity->hasAxis($narrowerGranularityAxis)) {
+                                    continue 2;
+                                }
+                            }
                             $narrowerGranularityHasACLParent = true;
                             break;
                         }
@@ -420,6 +426,12 @@ class Orga_CellController extends Core_Controller
             if (!$narrowerGranularityHasACLParent) {
                 foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
                     if ($broaderInventoryGranularity->getCellsWithACL()) {
+                        foreach ($narrowerGranularity->getAxes() as $narrowerGranularityAxis) {
+                            if (!$granularityForInventoryStatus->hasAxis($narrowerGranularityAxis)
+                                && !$broaderInventoryGranularity->hasAxis($narrowerGranularityAxis)) {
+                                continue 2;
+                            }
+                        }
                         $narrowerGranularityHasACLParent = true;
                         break;
                     }
@@ -460,14 +472,16 @@ class Orga_CellController extends Core_Controller
         }
         $childCellsCriteria->setFirstResult($this->getParam('firstCell'));
         $childCellsCriteria->setMaxResults($this->getParam('showCells'));
-        $filters = $this->getParam('filters');
-        $filterPrefix = 'granularity' . $idNarrowerGranularity . '_';
-        foreach ($filters as $filter) {
-            if (!empty($filter['value'])) {
-                if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
-                    $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
-                } else {
-                    $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
+        if ($this->hasParam('filters')) {
+            $filters = $this->getParam('filters');
+            $filterPrefix = 'granularity' . $idNarrowerGranularity . '_';
+            foreach ($filters as $filter) {
+                if (!empty($filter['value'])) {
+                    if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
+                        $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
+                    } else {
+                        $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
+                    }
                 }
             }
         }
@@ -491,12 +505,14 @@ class Orga_CellController extends Core_Controller
         $childCellsQuery = new Core_Model_Query();
         $childCellsQuery->filter->addCondition(Orga_Model_Cell::QUERY_RELEVANT, true);
         $childCellsQuery->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
-        foreach ($filters as $filter) {
-            if (!empty($filter['value'])) {
-                if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
-                    $childCellsQuery->filter->addCondition('inventoryStatus', $filter['value']);
-                } else {
-                    $childCellsQuery->filter->addCondition('tag', $filter['value'], Core_Model_Filter::OPERATOR_CONTAINS);
+        if ($this->hasParam('filters')) {
+            foreach ($filters as $filter) {
+                if (!empty($filter['value'])) {
+                    if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
+                        $childCellsQuery->filter->addCondition('inventoryStatus', $filter['value']);
+                    } else {
+                        $childCellsQuery->filter->addCondition('tag', $filter['value'], Core_Model_Filter::OPERATOR_CONTAINS);
+                    }
                 }
             }
         }

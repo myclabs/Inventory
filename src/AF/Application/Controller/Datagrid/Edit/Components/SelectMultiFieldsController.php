@@ -160,13 +160,12 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
      */
     public function deleteelementAction()
     {
+        /** @var $af AF */
+        $af = AF::load($this->getParam('id'));
         /** @var $field SelectMulti */
         $field = SelectMulti::load($this->getParam('index'));
         // Vérifie qu'il n'y a pas d'Algo_Condition qui référence cet input
-        $query = new Core_Model_Query();
-        $query->filter->addCondition(ElementaryConditionAlgo::QUERY_INPUT_REF, $field->getRef());
-        $algoConditions = ElementaryConditionAlgo::loadList($query);
-        if (count($algoConditions) > 0) {
+        if ($af->hasAlgoConditionOnInput($field)) {
             throw new Core_Exception_User('AF', 'configComponentMessage', 'fieldUsedByAlgoConditionDeletionDenied');
         }
         // Supprime le champ
