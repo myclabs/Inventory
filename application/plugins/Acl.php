@@ -50,7 +50,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
     public function editOrganizationsRule(User $identity)
     {
-        $isIdentityAbleToCreateOrganizations = $this->aclManager->isAllowed(
+        $isIdentityAbleToCreateOrganizations = $this->acl->isAllowed(
             $identity,
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
@@ -73,7 +73,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
     public function createOrganizationRule(User $identity)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
@@ -87,7 +87,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function viewOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::VIEW,
             $this->getOrganization($request)
@@ -103,7 +103,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $organization = $this->getOrganization($request);
 
-        $isUserAllowedToEditOrganizationAndCells = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganizationAndCells = $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
             $organization
@@ -134,7 +134,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $organization = $this->getOrganization($request);
 
-        $isUserAllowedToEditOrganizationAndCells = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganizationAndCells = $this->acl->isAllowed(
             $identity,
             Actions::ALLOW,
             $organization
@@ -163,7 +163,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function allowOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
             $this->getOrganization($request)
@@ -177,7 +177,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
             $this->getOrganization($request)
@@ -191,7 +191,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     public function deleteOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::DELETE,
             $this->getOrganization($request)
@@ -244,7 +244,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return (
             $this->editOrganizationRule($identity, $request)
-            || $this->aclManager->isAllowed(
+            || $this->acl->isAllowed(
                 $identity,
                 Actions::EDIT,
                 Orga_Model_Cell::load($request->getParam('idCell'))
@@ -259,7 +259,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function viewCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::VIEW,
             $this->getCell($request)
@@ -273,7 +273,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
             $this->getCell($request)
@@ -287,7 +287,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function allowCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::ALLOW,
             Orga_Model_Cell::load($request->getParam('idCell'))
@@ -301,12 +301,12 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editInventoryStatusRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $canInput = $this->aclManager->isAllowed(
+        $canInput = $this->acl->isAllowed(
             $identity,
             Actions::INPUT,
             $this->getCell($request)
         );
-        $canViewReports = $this->aclManager->isAllowed(
+        $canViewReports = $this->acl->isAllowed(
             $identity,
             Actions::ANALYZE,
             $this->getCell($request)
@@ -322,7 +322,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function inputCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::INPUT,
             $this->getCell($request)
@@ -336,7 +336,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function commentCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::VIEW,
             $this->getCell($request)
@@ -350,7 +350,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function analyseCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::ANALYZE,
             $this->getCell($request)
@@ -492,7 +492,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     protected function deleteReportRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $idReport = $request->getParam('idReport');
-        return $this->aclManager->isAllowed($identity, Actions::DELETE, DW_Model_Report::load($idReport));
+        return $this->acl->isAllowed($identity, Actions::DELETE, DW_Model_Report::load($idReport));
     }
 
     /**
@@ -585,7 +585,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         } catch (Core_Exception_NotFound $e) {
             throw new HttpNotFoundException;
         }
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, $account);
+        return $this->acl->isAllowed($identity, Actions::EDIT, $account);
     }
 
     protected function allowAccountRule(User $identity, Zend_Controller_Request_Abstract $request)
@@ -595,82 +595,82 @@ class Inventory_Plugin_Acl extends ACLPlugin
         } catch (Core_Exception_NotFound $e) {
             throw new HttpNotFoundException;
         }
-        return $this->aclManager->isAllowed($identity, Actions::ALLOW, $account);
+        return $this->acl->isAllowed($identity, Actions::ALLOW, $account);
     }
 
     protected function editAFLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, AFLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::EDIT, AFLibrary::load($libraryId));
     }
 
     protected function deleteAFLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');
-        return $this->aclManager->isAllowed($identity, Actions::DELETE, AFLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::DELETE, AFLibrary::load($libraryId));
     }
 
     protected function editAFRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $afId = $request->getParam('idAF') ?: $request->getParam('id');
         $af = AF::load($afId);
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, $af->getLibrary());
+        return $this->acl->isAllowed($identity, Actions::EDIT, $af->getLibrary());
     }
 
     protected function viewParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');
-        return $this->aclManager->isAllowed($identity, Actions::VIEW, ParameterLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::VIEW, ParameterLibrary::load($libraryId));
     }
 
     protected function editParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, ParameterLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::EDIT, ParameterLibrary::load($libraryId));
     }
 
     protected function deleteParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');
-        return $this->aclManager->isAllowed($identity, Actions::DELETE, ParameterLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::DELETE, ParameterLibrary::load($libraryId));
     }
 
     protected function viewParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $id = $request->getParam('id') ?: $request->getParam('idFamily');
         $parameterFamily = Family::load($id);
-        return $this->aclManager->isAllowed($identity, Actions::VIEW, $parameterFamily->getLibrary());
+        return $this->acl->isAllowed($identity, Actions::VIEW, $parameterFamily->getLibrary());
     }
 
     protected function editParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $id = $request->getParam('id') ?: $request->getParam('idFamily');
         $parameterFamily = Family::load($id);
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, $parameterFamily->getLibrary());
+        return $this->acl->isAllowed($identity, Actions::EDIT, $parameterFamily->getLibrary());
     }
 
     protected function deleteParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $parameterFamily = Family::load($request->getParam('id'));
-        return $this->aclManager->isAllowed($identity, Actions::DELETE, $parameterFamily->getLibrary());
+        return $this->acl->isAllowed($identity, Actions::DELETE, $parameterFamily->getLibrary());
     }
 
     protected function viewClassificationLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('library') ?: $request->getParam('id');
-        return $this->aclManager->isAllowed($identity, Actions::VIEW, ClassificationLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::VIEW, ClassificationLibrary::load($libraryId));
     }
 
     protected function editClassificationLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('library') ?: $request->getParam('id');
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, ClassificationLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::EDIT, ClassificationLibrary::load($libraryId));
     }
 
     protected function deleteClassificationLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('library') ?: $request->getParam('id');
-        return $this->aclManager->isAllowed($identity, Actions::DELETE, ClassificationLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::DELETE, ClassificationLibrary::load($libraryId));
     }
 
     /**

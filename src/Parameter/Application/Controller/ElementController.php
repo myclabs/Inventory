@@ -39,16 +39,14 @@ class Parameter_ElementController extends Core_Controller
     {
         $locale = Core_Locale::loadDefault();
 
-        $formData = $this->getFormData('element_editForm');
+        $family = Family::load($this->getParam('id'));
 
-        $family = Family::load($formData->getValue('idFamily'));
-
-        $coordinates = json_decode($formData->getValue('coordinates'));
+        $coordinates = json_decode($this->getParam('coordinates'));
         $cell = $family->getCell($this->getMembersFromCoordinates($family, $coordinates));
 
         // Validation du formulaire
         try {
-            $digitalValue = $locale->readNumber($formData->getValue('digitalValue'));
+            $digitalValue = $locale->readNumber($this->getParam('digitalValue'));
             if (is_null($digitalValue)) {
                 $this->addFormError('digitalValue', __('UI', 'formValidation', 'emptyRequiredField'));
             }
@@ -56,7 +54,7 @@ class Parameter_ElementController extends Core_Controller
             $this->addFormError('digitalValue', __('UI', 'formValidation', 'invalidNumber'));
         }
         try {
-            $uncertainty = $locale->readInteger($formData->getValue('uncertainty'));
+            $uncertainty = $locale->readInteger($this->getParam('uncertainty'));
         } catch (Core_Exception_InvalidArgument $e) {
             $this->addFormError('uncertainty', __('UI', 'formValidation', 'invalidUncertainty'));
         }

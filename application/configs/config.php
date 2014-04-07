@@ -7,7 +7,7 @@ use MyCLabs\ACL\Doctrine\ACLSetup;
 use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use MyCLabs\ACL\CascadeStrategy\SimpleCascadeStrategy;
 use Orga\Model\ACL\CellAdminRole;
 use Orga\Model\ACL\CellContributorRole;
@@ -92,7 +92,7 @@ return [
             ->constructorParameter('locales', DI\link('translation.languages')),
 
     // ACL
-    ACLManager::class => DI\factory(function (Container $c) {
+    ACL::class => DI\factory(function (Container $c) {
         $em = $c->get(EntityManager::class);
 
         $cascadeStrategy = new SimpleCascadeStrategy($em);
@@ -105,7 +105,7 @@ return [
             $c->get(CellResourceGraphTraverser::class)
         );
 
-        return new ACLManager($em, $cascadeStrategy);
+        return new ACL($em, $cascadeStrategy);
     }),
     ACLSetup::class => DI\factory(function () {
         $setup = new ACLSetup();

@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\Role;
 use Orga\Model\ACL\OrganizationAdminRole;
@@ -26,9 +26,9 @@ class Orga_Service_ACLManager
     private $userService;
 
     /**
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @var EntityManager
@@ -37,13 +37,13 @@ class Orga_Service_ACLManager
 
     /**
      * @param UserService   $userService
-     * @param ACLManager    $aclManager
+     * @param ACL           $acl
      * @param EntityManager $entityManager
      */
-    public function __construct(UserService $userService, ACLManager $aclManager, EntityManager $entityManager)
+    public function __construct(UserService $userService, ACL $acl, EntityManager $entityManager)
     {
         $this->userService = $userService;
-        $this->aclManager = $aclManager;
+        $this->acl = $acl;
         $this->entityManager = $entityManager;
     }
 
@@ -60,7 +60,7 @@ class Orga_Service_ACLManager
         $user = $this->userService->getOrInvite($email);
         $this->entityManager->flush();
 
-        $this->aclManager->grant($user, new OrganizationAdminRole($user, $organization));
+        $this->acl->grant($user, new OrganizationAdminRole($user, $organization));
 
         if ($sendMail) {
             $this->userService->sendEmail(
@@ -84,7 +84,7 @@ class Orga_Service_ACLManager
     {
         /** @var User $user */
         $user = $role->getSecurityIdentity();
-        $this->aclManager->unGrant($user, $role);
+        $this->acl->unGrant($user, $role);
 
         if ($sendMail) {
             $this->userService->sendEmail(
@@ -116,7 +116,7 @@ class Orga_Service_ACLManager
 
         /** @var AbstractCellRole $role */
         $role = new $roleClass($user, $cell);
-        $this->aclManager->grant($user, $role);
+        $this->acl->grant($user, $role);
 
         if ($sendMail) {
             $this->userService->sendEmail(
@@ -137,7 +137,7 @@ class Orga_Service_ACLManager
      */
     public function removeCellRole(User $user, AbstractCellRole $role, $sendMail = true)
     {
-        $this->aclManager->unGrant($user, $role);
+        $this->acl->unGrant($user, $role);
 
         if ($sendMail) {
             $this->userService->sendEmail(
@@ -166,7 +166,7 @@ class Orga_Service_ACLManager
         Orga_Model_Organization $organization,
         $askedRoles = []
     ) {
-        if ($this->aclManager->isAllowed($user, Actions::EDIT, $organization)) {
+        if ($this->acl->isAllowed($user, Actions::EDIT, $organization)) {
             return [
                 'cells' => [$organization->getGranularityByRef('global')->getCellByMembers([])],
             ];

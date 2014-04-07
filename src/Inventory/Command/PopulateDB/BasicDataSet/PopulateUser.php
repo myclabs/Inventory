@@ -3,7 +3,7 @@
 namespace Inventory\Command\PopulateDB\BasicDataSet;
 
 use Doctrine\ORM\EntityManager;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use Symfony\Component\Console\Output\OutputInterface;
 use User\Domain\ACL\AdminRole;
 use User\Domain\UserService;
@@ -24,9 +24,9 @@ class PopulateUser
 
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     public function run(OutputInterface $output)
     {
@@ -39,6 +39,6 @@ class PopulateUser
         $admin->save();
         $this->entityManager->flush();
 
-        $this->aclManager->grant($admin, new AdminRole($admin));
+        $this->acl->grant($admin, new AdminRole($admin));
     }
 }

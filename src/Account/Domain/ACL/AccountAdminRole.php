@@ -3,7 +3,7 @@
 namespace Account\Domain\ACL;
 
 use Account\Domain\Account;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\Role;
 use User\Domain\User;
@@ -37,9 +37,9 @@ class AccountAdminRole extends Role
         return $this->account;
     }
 
-    public function createAuthorizations(ACLManager $aclManager)
+    public function createAuthorizations(ACL $acl)
     {
-        $aclManager->allow(
+        $acl->allow(
             $this,
             Actions::all(),
             $this->account

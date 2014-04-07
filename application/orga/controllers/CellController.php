@@ -4,12 +4,11 @@ use AF\Application\InputFormParser;
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
-use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use MyCLabs\ACL\ACLManager;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
 use MyCLabs\MUIH\Icon;
+use MyCLabs\ACL\ACL;
 use MyCLabs\MUIH\Tab;
 use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
@@ -33,9 +32,9 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Inject
@@ -150,12 +149,12 @@ class Orga_CellController extends Core_Controller
         $this->view->assign('currentCellPurpose', $currentCellPurpose);
         $this->setActiveMenuItemOrganization($organization->getId());
 
-        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganization = $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization
         );
-        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclManager->isAllowed(
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization->getGranularityByRef('global')->getCellByMembers([])
@@ -181,7 +180,7 @@ class Orga_CellController extends Core_Controller
             $purpose = '';
             // ACL purpose.
             $isNarrowerGranularityACL = ($narrowerGranularity->getCellsWithACL())
-                && ($this->aclManager->isAllowed($connectedUser, Actions::ALLOW, $cell));
+                && ($this->acl->isAllowed($connectedUser, Actions::ALLOW, $cell));
             if ($isNarrowerGranularityACL) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
@@ -240,7 +239,7 @@ class Orga_CellController extends Core_Controller
             }
             // Reports purpose.
             $isNarrowerGranularityAnalyses = ($narrowerGranularity->getCellsGenerateDWCubes())
-                && ($this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell));
+                && ($this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell));
             if ($isNarrowerGranularityAnalyses) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
@@ -454,14 +453,14 @@ class Orga_CellController extends Core_Controller
 
         // ACL.
         $showUsers = $narrowerGranularity->getCellsWithACL()
-            && $this->aclManager->isAllowed($connectedUser, Actions::ALLOW, $cell);
+            && $this->acl->isAllowed($connectedUser, Actions::ALLOW, $cell);
 
         // Reports.
         $showReports = $narrowerGranularity->getCellsGenerateDWCubes()
-            && $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell);
+            && $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell);
 
         // Exports
-        $showExports = $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell);
+        $showExports = $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell);
 
         // Inventory.
         try {
@@ -471,8 +470,8 @@ class Orga_CellController extends Core_Controller
             $granularityForInventoryStatus = null;
         }
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
-            && $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell)
-            && $this->aclManager->isAllowed($connectedUser, Actions::INPUT, $cell));
+            && $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell)
+            && $this->acl->isAllowed($connectedUser, Actions::INPUT, $cell));
         $showInventory = (($granularityForInventoryStatus !== null)
             && (($narrowerGranularity === $granularityForInventoryStatus)
                 || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
@@ -1072,7 +1071,7 @@ class Orga_CellController extends Core_Controller
         $exports = [];
 
         $displayOrgaExport = (count($cell->getGranularity()->getNarrowerGranularities()) > 0)
-            && $this->aclManager->isAllowed($connectedUser, Actions::EDIT, $cell);
+            && $this->acl->isAllowed($connectedUser, Actions::EDIT, $cell);
         if ($displayOrgaExport) {
             if (!$cell->getGranularity()->hasAxes()) {
                 // Orga Structure.
@@ -1090,11 +1089,11 @@ class Orga_CellController extends Core_Controller
         // Orga ACL.
         $displayACLExport = false;
         if ($cell->getGranularity()->getCellsWithACL()) {
-            $displayACLExport = $this->aclManager->isAllowed($connectedUser, Actions::ALLOW, $cell);
+            $displayACLExport = $this->acl->isAllowed($connectedUser, Actions::ALLOW, $cell);
         } else {
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getCellsWithACL()) {
-                    $displayACLExport = $this->aclManager->isAllowed(
+                    $displayACLExport = $this->acl->isAllowed(
                         $connectedUser,
                         Actions::ALLOW,
                         $cell
@@ -1112,7 +1111,7 @@ class Orga_CellController extends Core_Controller
         // Orga Inputs (droit d'analyser nécessaire).
         $displayInputsExport = false;
         if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
-            $displayInputsExport = $this->aclManager->isAllowed(
+            $displayInputsExport = $this->acl->isAllowed(
                 $connectedUser,
                 Actions::ANALYZE,
                 $cell
@@ -1120,7 +1119,7 @@ class Orga_CellController extends Core_Controller
         } else {
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getInputConfigGranularity() !== null) {
-                    $displayInputsExport = $this->aclManager->isAllowed(
+                    $displayInputsExport = $this->acl->isAllowed(
                         $connectedUser,
                         Actions::ANALYZE,
                         $cell
@@ -1138,7 +1137,7 @@ class Orga_CellController extends Core_Controller
         // Orga Outputs.
         $displayOutputsExport = false;
         if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
-            $displayOutputsExport = $this->aclManager->isAllowed(
+            $displayOutputsExport = $this->acl->isAllowed(
                 $connectedUser,
                 Actions::ANALYZE,
                 $cell
@@ -1146,7 +1145,7 @@ class Orga_CellController extends Core_Controller
         } else {
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getInputConfigGranularity() !== null) {
-                    $displayOutputsExport = $this->aclManager->isAllowed(
+                    $displayOutputsExport = $this->acl->isAllowed(
                         $connectedUser,
                         Actions::ANALYZE,
                         $cell
@@ -1300,7 +1299,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
         $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
-        $isUserAllowedToInputCell = $this->aclManager->isAllowed(
+        $isUserAllowedToInputCell = $this->acl->isAllowed(
             $this->_helper->auth(),
             Actions::INPUT,
             $cell
@@ -1331,7 +1330,7 @@ class Orga_CellController extends Core_Controller
         $commentView->assign('currentUser', $this->_helper->auth());
         $commentView->assign(
             'isUserAbleToComment',
-            $this->aclManager->isAllowed($this->_helper->auth(), Actions::INPUT, $cell)
+            $this->acl->isAllowed($this->_helper->auth(), Actions::INPUT, $cell)
         );
         $tabComments->setContent($commentView->render('cell/input-comments.phtml'));
         $aFViewConfiguration->addTab($tabComments);
@@ -1342,7 +1341,7 @@ class Orga_CellController extends Core_Controller
         $tabDocs->setAjax(true, true);
         $aFViewConfiguration->addTab($tabDocs);
 
-        $isUserAllowedToViewCellReports = $this->aclManager->isAllowed(
+        $isUserAllowedToViewCellReports = $this->acl->isAllowed(
             $this->_helper->auth(),
             Actions::ANALYZE,
             $cell

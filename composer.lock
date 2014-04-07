@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "deba605194c75c9a76d4208992c62a16",
+    "hash": "5426958f4dd2ef1547422990b1d060dc",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -961,16 +961,16 @@
         },
         {
             "name": "myclabs/acl",
-            "version": "0.3.1",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/ACL.git",
-                "reference": "52f9a2cb3ddae46fab6d7015c4ee5cd279514d21"
+                "reference": "dd34d0ebf0c34061697385eb8e8dcdd199dd1083"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/ACL/zipball/52f9a2cb3ddae46fab6d7015c4ee5cd279514d21",
-                "reference": "52f9a2cb3ddae46fab6d7015c4ee5cd279514d21",
+                "url": "https://api.github.com/repos/myclabs/ACL/zipball/dd34d0ebf0c34061697385eb8e8dcdd199dd1083",
+                "reference": "dd34d0ebf0c34061697385eb8e8dcdd199dd1083",
                 "shasum": ""
             },
             "require": {
@@ -995,7 +995,7 @@
                 "doctrine",
                 "permission"
             ],
-            "time": "2014-04-01 09:34:08"
+            "time": "2014-04-07 08:10:02"
         },
         {
             "name": "myclabs/array-comparator",
