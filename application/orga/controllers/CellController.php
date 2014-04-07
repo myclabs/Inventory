@@ -195,6 +195,12 @@ class Orga_CellController extends Core_Controller
                 if (!$narrowerGranularityHasACLParent) {
                     foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
                         if ($broaderInventoryGranularity->getCellsWithACL()) {
+                            foreach ($narrowerGranularity->getAxes() as $narrowerGranularityAxis) {
+                                if (!$granularityForInventoryStatus->hasAxis($narrowerGranularityAxis)
+                                    && !$broaderInventoryGranularity->hasAxis($narrowerGranularityAxis)) {
+                                    continue 2;
+                                }
+                            }
                             $narrowerGranularityHasACLParent = true;
                             break;
                         }
@@ -421,6 +427,12 @@ class Orga_CellController extends Core_Controller
             if (!$narrowerGranularityHasACLParent) {
                 foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
                     if ($broaderInventoryGranularity->getCellsWithACL()) {
+                        foreach ($narrowerGranularity->getAxes() as $narrowerGranularityAxis) {
+                            if (!$granularityForInventoryStatus->hasAxis($narrowerGranularityAxis)
+                                && !$broaderInventoryGranularity->hasAxis($narrowerGranularityAxis)) {
+                                continue 2;
+                            }
+                        }
                         $narrowerGranularityHasACLParent = true;
                         break;
                     }
