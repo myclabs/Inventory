@@ -1,5 +1,7 @@
 <?php
 use AF\Domain\AFLibrary;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
 
 /** @var AFLibrary $library */
 $library = $this->library;
@@ -10,12 +12,22 @@ $tree->addParam('library', $library->getId());
 $tree->addParam('mode', $this->mode);
 
 // Formulaire d'ajout
-$addForm = new UI_Form('addNode');
-$addForm->setAction('af/tree_af-tree/addnode');
-$addForm->setAjax(true);
-$label = new UI_Form_Element_Text('label');
-$label->setLabel(__('UI', 'name', 'label'));
-$addForm->addElement($label);
+$addLabelInput = new GenericVoidTag('input');
+$addLabelInput->setAttribute('name', 'label');
+$addLabelInput->setAttribute('type', 'text');
+$addLabelInput->setAttribute('id', 'addAxis_label');
+$addLabelInput->addClass('form-control');
+$addLabelWrapper = new GenericTag('div', $addLabelInput);
+$addLabelWrapper->addClass('col-xs-10');
+$addLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+$addLabelLabel->setAttribute('for', 'addAxis_label');
+$addLabelLabel->addClass('control-label');
+$addLabelLabel->addClass('col-xs-2');
+$addLabelGroup = new GenericTag('div');
+$addLabelGroup->addClass('form-group');
+$addLabelGroup->appendContent($addLabelLabel);
+$addLabelGroup->appendContent($addLabelWrapper);
+$addForm = new GenericTag('form', $addLabelGroup);
 
 // Ajout
 $tree->addNode = true;
