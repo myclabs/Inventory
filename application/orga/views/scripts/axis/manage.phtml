@@ -1,4 +1,7 @@
 <?php
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
+
 /**
  * @author valentin.claras
  * @author sidoine.tardieu
@@ -19,11 +22,37 @@ $editRefField->setLabel(___('UI', 'name', 'identifier'));
 // $editContextualizingField->addOption($optionNoneContextualizing);
 // $editContextualizingField->setValue('noneContextualizing');
 
-$addLabelField = new UI_Form_Element_Text('addAxis_label');
-$addLabelField->setLabel(___('UI', 'name', 'label'));
+$addLabelInput = new GenericVoidTag('input');
+$addLabelInput->setAttribute('name', 'addAxis_label');
+$addLabelInput->setAttribute('type', 'text');
+$addLabelInput->setAttribute('id', 'addAxis_label');
+$addLabelInput->addClass('form-control');
+$addLabelWrapper = new GenericTag('div', $addLabelInput);
+$addLabelWrapper->addClass('col-xs-10');
+$addLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+$addLabelLabel->setAttribute('for', 'addAxis_label');
+$addLabelLabel->addClass('control-label');
+$addLabelLabel->addClass('col-xs-2');
+$addLabelGroup = new GenericTag('div');
+$addLabelGroup->addClass('form-group');
+$addLabelGroup->appendContent($addLabelLabel);
+$addLabelGroup->appendContent($addLabelWrapper);
 
-$addRefField = new UI_Form_Element_Text('addAxis_ref');
-$addRefField->setLabel(___('UI', 'name', 'identifier'));
+$addRefInput = new GenericVoidTag('input');
+$addRefInput->setAttribute('name', 'addAxis_ref');
+$addRefInput->setAttribute('type', 'text');
+$addRefInput->setAttribute('id', 'addAxis_ref');
+$addRefInput->addClass('form-control');
+$addRefWrapper = new GenericTag('div', $addRefInput);
+$addRefWrapper->addClass('col-xs-10');
+$addRefLabel = new GenericTag('label', ___('UI', 'name', 'identifier'));
+$addRefLabel->setAttribute('for', 'addAxis_ref');
+$addRefLabel->addClass('control-label');
+$addRefLabel->addClass('col-xs-2');
+$addRefGroup = new GenericTag('div');
+$addRefGroup->addClass('form-group');
+$addRefGroup->appendContent($addRefLabel);
+$addRefGroup->appendContent($addRefWrapper);
 
 // $addContextualizingField = new UI_Form_Element_Radio('addAxis_contextualizing');
 // $addContextualizingField->setLabel(___('Orga', 'axis', 'contextualizingLabel'));
@@ -33,19 +62,36 @@ $addRefField->setLabel(___('UI', 'name', 'identifier'));
 // $addContextualizingField->addOption($optionNoneContextualizing);
 // $addContextualizingField->setValue('noneContextualizing');
 
-$addParentField = new UI_Form_Element_Select('addAxis_parent');
-$addParentField->setLabel(___('Orga', 'axis', 'parentAxisLabel'));
-$addParentField->addNullOption('');
+$addParentInput = new GenericTag('select');
+$addParentInput->setAttribute('name', 'addAxis_parent');
+$addParentInput->setAttribute('type', 'text');
+$addParentInput->setAttribute('id', 'addAxis_parent');
+$addParentInput->addClass('form-control');
+$optionParent = new GenericTag('option');
+$optionParent->setAttribute('value', '');
+$addParentInput->appendContent($optionParent);
 foreach ($this->eligibleParents as $parentAxis) {
-    $optionParent = new UI_Form_Element_Option($parentAxis->getRef(), $parentAxis->getRef(), $parentAxis->getLabel());
-    $addParentField->addOption($optionParent);
+    /** @var Orga_Model_Axis $parentAxis */
+    $optionParent = new GenericTag('option', $parentAxis->getLabel());
+    $optionParent->setAttribute('value', $parentAxis->getRef());
+    $addParentInput->appendContent($optionParent);
 }
+$addParentWrapper = new GenericTag('div', $addParentInput);
+$addParentWrapper->addClass('col-xs-10');
+$addParentLabel = new GenericTag('label', ___('Orga', 'axis', 'parentAxisLabel'));
+$addParentLabel->setAttribute('for', 'addAxis_parent');
+$addParentLabel->addClass('control-label');
+$addParentLabel->addClass('col-xs-2');
+$addParentGroup = new GenericTag('div');
+$addParentGroup->addClass('form-group');
+$addParentGroup->appendContent($addParentLabel);
+$addParentGroup->appendContent($addParentWrapper);
 
-$addForm = new UI_Form('editAxis_addForm');
-$addForm->addElement($addLabelField);
-$addForm->addElement($addRefField);
-// $addForm->addElement($addContextualizingField);
-$addForm->addElement($addParentField);
+$addForm = new GenericTag('form');
+$addForm->appendContent($addLabelGroup);
+$addForm->appendContent($addRefGroup);
+//$addForm->appendContent($addContextualizingGroup);
+$addForm->appendContent($addParentGroup);
 
 $treeManage = new UI_Tree('editAxis', 'tree_axis', 'orga');
 if ($this->idCell !== null) {
@@ -56,7 +102,7 @@ $treeManage->addNode = true;
 $treeManage->addPanelForm = $addForm;
 $treeManage->addPanelTitle = ___('Orga', 'axis', 'addPanelTitle');
 $treeManage->editPanelTitle = ___('Orga', 'axis', 'editPanelTitle');
-$treeManage->setEditNode(false, true, array($editLabelField, $editRefField));
+$treeManage->setEditNode(false, true, [$editLabelField, $editRefField]);
 $treeManage->deleteNode = true;
 $treeManage->expandAll = false;
 $treeManage->collapseAll = false;
