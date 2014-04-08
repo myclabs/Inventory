@@ -1,3 +1,7 @@
+<?php
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
+?>
 <div class="page-header">
     <h1><?=__('Classification', 'axis', 'pageTitle')?></h1>
 </div>
@@ -14,28 +18,68 @@ $editElements['ref'] = new UI_Form_Element_Text('editAxis_ref');
 $editElements['ref']->setLabel(__('UI', 'name', 'identifier'));
 $editElements['ref']->setAttrib('required', true);
 
-$addForm = new UI_Form('addAxis');
+$addForm = new GenericTag('form');
 
-$addLabelElement = new UI_Form_Element_Text('label');
-$addLabelElement->setLabel(__('UI', 'name', 'label'));
-$addForm->addElement($addLabelElement);
+$addLabelInput = new GenericVoidTag('input');
+$addLabelInput->setAttribute('name', 'label');
+$addLabelInput->setAttribute('type', 'text');
+$addLabelInput->setAttribute('id', 'addAxis_label');
+$addLabelInput->addClass('form-control');
+$addLabelWrapper = new GenericTag('div', $addLabelInput);
+$addLabelWrapper->addClass('col-xs-10');
+$addLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+$addLabelLabel->setAttribute('for', 'addAxis_label');
+$addLabelLabel->addClass('control-label');
+$addLabelLabel->addClass('col-xs-2');
+$addLabelGroup = new GenericTag('div');
+$addLabelGroup->addClass('form-group');
+$addLabelGroup->appendContent($addLabelLabel);
+$addLabelGroup->appendContent($addLabelWrapper);
+$addForm->appendContent($addLabelGroup);
 
-$addRefElement = new UI_Form_Element_Text('ref');
-$addRefElement->setLabel(__('UI', 'name', 'identifier'));
-$addRefElement->setAttrib('required', true);
-$addForm->addElement($addRefElement);
+$addRefInput = new GenericVoidTag('input');
+$addRefInput->setAttribute('name', 'ref');
+$addRefInput->setAttribute('type', 'text');
+$addRefInput->setAttribute('id', 'addAxis_ref');
+$addRefInput->setBooleanAttribute('required');
+$addRefInput->addClass('form-control');
+$addRefWrapper = new GenericTag('div', $addRefInput);
+$addRefWrapper->addClass('col-xs-10');
+$addRefLabel = new GenericTag('ref', ___('UI', 'name', 'identifier'));
+$addRefLabel->setAttribute('for', 'addAxis_ref');
+$addRefLabel->addClass('control-label');
+$addRefLabel->addClass('col-xs-2');
+$addRefGroup = new GenericTag('div');
+$addRefGroup->addClass('form-group');
+$addRefGroup->appendContent($addRefLabel);
+$addRefGroup->appendContent($addRefWrapper);
+$addForm->appendContent($addRefGroup);
 
-$addParentElement = new UI_Form_Element_Select('refParent');
-$addParentElement->setLabel(__('Classification', 'axis', 'parentAxisLabel'));
-$addParentElement->addNullOption('');
+$addParentInput = new GenericTag('select');
+$addParentInput->setAttribute('name', 'addAxis_parent');
+$addParentInput->setAttribute('type', 'text');
+$addParentInput->setAttribute('id', 'addAxis_parent');
+$addParentInput->addClass('form-control');
+$optionParent = new GenericTag('option');
+$optionParent->setAttribute('value', '');
+$addParentInput->appendContent($optionParent);
 foreach ($this->listParents as $parentAxis) {
-    /** @var \Classification\Domain\Axis $parentAxis */
-    $optionAxis = new UI_Form_Element_Option($parentAxis->getRef());
-    $optionAxis->value = $parentAxis->getRef();
-    $optionAxis->label = $parentAxis->getLabel();
-    $addParentElement->addOption($optionAxis);
+    /** @var Orga_Model_Axis $parentAxis */
+    $optionParent = new GenericTag('option', $parentAxis->getLabel());
+    $optionParent->setAttribute('value', $parentAxis->getRef());
+    $addParentInput->appendContent($optionParent);
 }
-$addForm->addElement($addParentElement);
+$addParentWrapper = new GenericTag('div', $addParentInput);
+$addParentWrapper->addClass('col-xs-10');
+$addParentLabel = new GenericTag('label', ___('Orga', 'axis', 'parentAxisLabel'));
+$addParentLabel->setAttribute('for', 'addAxis_parent');
+$addParentLabel->addClass('control-label');
+$addParentLabel->addClass('col-xs-2');
+$addParentGroup = new GenericTag('div');
+$addParentGroup->addClass('form-group');
+$addParentGroup->appendContent($addParentLabel);
+$addParentGroup->appendContent($addParentWrapper);
+$addForm->appendContent($addParentGroup);
 
 $tree->setEditNode(true, true, $editElements);
 $tree->addPanelTitle = __('Classification', 'axis', 'addPanelTitle');
@@ -65,11 +109,11 @@ $script .= '$(\'#editAxis_addPanel\').on(\'show.bs.modal\', function(e) {';
 $script .= '$.get(';
 $script .= '\'classification/tree_axis/getlistparents?idNode=\', ';
 $script .= 'function(o){';
-$script .= '$(\'#refParent\').formActionSetOptions(o);';
+$script .= '$(\'#addAxis_parent\').formActionSetOptions(o);';
 $script .= '}';
 $script .= ').error(function(o) {';
 $script .= 'errorHandler(o);';
 $script .= '});';
 $script .= '});';
-$script .= 'refFromLabel(\'label\', \'ref\');';
+$script .= 'refFromLabel(\'addAxis_label\', \'addAxis_ref\');';
 $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');

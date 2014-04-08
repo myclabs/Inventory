@@ -843,7 +843,6 @@ class UI_Tree extends UI_Generic
 
         $addPanel = new Modal($this->addPanelForm);
         $addPanel->setAttribute('id', $this->id.'_addPanel');
-        $addPanel->large();
         $addPanel->addTitle($this->addPanelTitle);
         $addPanel->addDefaultDismissButton();
         $addPanel->setFooterContent($buttonConfirmAddPanel->getHTML().$buttonCancelAddPanel->getHTML());
