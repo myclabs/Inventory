@@ -1,5 +1,3 @@
 AF\Domain\Component\Field:
 
   properties:
-    enabled:
-      type: boolean

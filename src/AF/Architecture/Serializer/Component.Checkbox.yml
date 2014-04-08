@@ -1,6 +1,3 @@
 AF\Domain\Component\Checkbox:
 
   properties:
-    defaultValue:
-      expose: true
-      type: boolean

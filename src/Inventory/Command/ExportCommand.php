@@ -40,12 +40,16 @@ class ExportCommand extends Command
         $root = PACKAGE_PATH . '/data/exports/migration-3.0';
 
         $output->writeln('<comment>Exporting users</comment>');
-        $users = $this->exportUsers();
-        file_put_contents($root . '/users.json', $this->serializer->serialize($users, 'json'));
+        $data = $this->exportUsers();
+        file_put_contents($root . '/users.json', $this->serializer->serialize($data, 'json'));
 
         $output->writeln('<comment>Exporting parameters</comment>');
-        $parameters = $this->exportTechno();
-        file_put_contents($root . '/parameters.json', $this->serializer->serialize($parameters, 'json'));
+        $data = $this->exportTechno();
+        file_put_contents($root . '/parameters.json', $this->serializer->serialize($data, 'json'));
+
+        $output->writeln('<comment>Exporting AF</comment>');
+        $data = $this->exportAF();
+        file_put_contents($root . '/af.json', $this->serializer->serialize($data, 'json'));
     }
 
     private function exportTechno()

@@ -1,7 +1,7 @@
 AF\Domain\Component\Component:
 
   discriminator:
-    field_name: type
+    field_name: type_component
     map:
       group: AF\Domain\Component\Group
       subaf: AF\Domain\Component\SubAF
@@ -26,12 +26,3 @@ AF\Domain\Component\Component:
       exclude: true
     af:
       exclude: true
-
-    ref:
-      type: string
-    label:
-      type: string
-    help:
-      type: string
-    visible:
-      type: boolean

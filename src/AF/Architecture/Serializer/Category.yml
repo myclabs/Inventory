@@ -7,12 +7,3 @@ AF\Domain\Category:
       exclude: true
     parentCategory:
       exclude: true
-
-    label:
-      type: string
-    position:
-      type: integer
-    childCategories:
-      type: ArrayCollection<AF\Domain\Category>
-    afs:
-      type: ArrayCollection<AF\Domain\AF>

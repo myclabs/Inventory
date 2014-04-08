@@ -15,14 +15,3 @@ AF\Domain\AF:
       exclude: true
     conditions:
       exclude: true
-
-    ref:
-      type: string
-    label:
-      type: string
-    position:
-      type: integer
-    documentation:
-      type: string
-    rootGroup:
-      type: AF\Domain\Component\Group
