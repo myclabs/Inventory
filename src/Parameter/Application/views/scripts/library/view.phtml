@@ -1,5 +1,6 @@
 <?php
-use Parameter\Application\Form\AddNodeForm;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
 use Parameter\Domain\Category;
 use Parameter\Domain\ParameterLibrary;
 
@@ -68,7 +69,23 @@ $tree->collapseAll = false;
 if ($this->edit) {
     // Ajout.
     $tree->addNode = true;
-    $addForm = new AddNodeForm('addNode');
+    $addLabelInput = new GenericVoidTag('input');
+    $addLabelInput->setAttribute('name', 'label');
+    $addLabelInput->setAttribute('type', 'text');
+    $addLabelInput->setAttribute('id', 'addAxis_label');
+    $addLabelInput->addClass('form-control');
+    $addLabelWrapper = new GenericTag('div', $addLabelInput);
+    $addLabelWrapper->addClass('col-xs-10');
+    $addLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+    $addLabelLabel->setAttribute('for', 'addAxis_label');
+    $addLabelLabel->addClass('control-label');
+    $addLabelLabel->addClass('col-xs-2');
+    $addLabelGroup = new GenericTag('div');
+    $addLabelGroup->addClass('form-group');
+    $addLabelGroup->appendContent($addLabelLabel);
+    $addLabelGroup->appendContent($addLabelWrapper);
+    $addForm = new GenericTag('form', $addLabelGroup);
+
     $tree->addPanelForm = $addForm;
     $tree->addPanelTitle = __('Parameter', 'familyTree', 'addCategoryPopupTitle');
     $tree->addButtonLabel = __('Parameter', 'familyTree', 'addCategoryButton');
