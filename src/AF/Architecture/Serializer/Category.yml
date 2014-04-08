@@ -1,9 +1,0 @@
-AF\Domain\Category:
-
-  properties:
-    entities:
-      exclude: true
-    id:
-      exclude: true
-    parentCategory:
-      exclude: true

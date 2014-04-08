@@ -1,9 +1,0 @@
-Techno\Domain\Family\Cell:
-
-  exclusion_policy: ALL
-
-  properties:
-    membersHashKey:
-      expose: true
-    value:
-      expose: true

@@ -1,19 +1,9 @@
 <?php
 
-use Core\ORM\ManagerRegistry;
 use DI\Container;
-use Doctrine\Common\Annotations\Reader;
 use Doctrine\ORM\EntityManager;
-use JMS\Serializer\Builder\CallbackDriverFactory;
-use JMS\Serializer\Metadata\Driver\AnnotationDriver;
-use JMS\Serializer\Metadata\Driver\DoctrineTypeDriver;
-use JMS\Serializer\Metadata\Driver\YamlDriver;
-use Metadata\Driver\DriverChain;
-use Metadata\Driver\FileLocator;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
-use JMS\Serializer\Serializer;
-use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 return [
@@ -86,23 +76,5 @@ return [
     Orga_Service_ETLStructure::class => DI\object()
             ->constructorParameter('defaultLocale', DI\link('translation.defaultLocale'))
             ->constructorParameter('locales', DI\link('translation.languages')),
-
-    Serializer::class => DI\factory(function (Container $c) {
-        $builder = SerializerBuilder::create();
-        $builder->addMetadataDir(PACKAGE_PATH . '/src/Inventory/Serializer')
-            ->addMetadataDir(PACKAGE_PATH . '/src/Techno/Architecture/Serializer', 'Techno\Domain')
-            ->addMetadataDir(PACKAGE_PATH . '/src/AF/Architecture/Serializer', 'AF\Domain')
-            ->addMetadataDir(PACKAGE_PATH . '/src/User/Architecture/Serializer', 'User\Domain');
-        $builder->setMetadataDriverFactory(new CallbackDriverFactory(function ($metadataDirs, Reader $reader) use ($c) {
-            $driver = new DriverChain([
-                new YamlDriver(new FileLocator($metadataDirs)),
-                new AnnotationDriver($reader),
-            ]);
-            /** @var ManagerRegistry $em */
-            $registry = $c->get(ManagerRegistry::class);
-            return new DoctrineTypeDriver($driver, $registry);
-        }));
-        return $builder->build();
-    }),
 
 ];
