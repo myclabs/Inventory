@@ -1,5 +1,6 @@
 <?php
 use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Modal;
 
@@ -187,7 +188,7 @@ class UI_Tree extends UI_Generic
     /**
      * Définition du formulaire affiché dans le popup d'ajout. Null = Error.
      *
-     * @var   UI_Form
+     * @var   GenericTag
      */
     public $addPanelForm = null;
 
@@ -775,12 +776,13 @@ class UI_Tree extends UI_Generic
      */
     protected function initAddForm()
     {
-        if (!($this->addPanelForm instanceof UI_Form)) {
+        if (!($this->addPanelForm instanceof GenericTag)) {
             throw new Core_Exception_UndefinedAttribute('You must specify an addPanelForm to enable the addition.');
         }
-        $this->addPanelForm->setRef($this->id.'_addForm');
-        $this->addPanelForm->setAction($this->getActionUrl('addnode'));
-        $this->addPanelForm->setAjax(null, 'parse'.$this->id.'AddFormValidation');
+        $this->addPanelForm->setAttribute('id', $this->id.'_addForm');
+        $this->addPanelForm->setAttribute('action', $this->getActionUrl('addnode'));
+        $this->addPanelForm->setAttribute('method', 'POST');
+        $this->addPanelForm->addClass('form-horizontal');
     }
 
     /**
@@ -794,16 +796,15 @@ class UI_Tree extends UI_Generic
         $addScript = '';
 
         // Ajout des scripts du formulaire.
-        $addScript .= $this->addPanelForm->getScript();
+        $addScript .= 'new AjaxForm(\'#'.$this->addPanelForm->getAttribute('id').'\');';
 
         // Ajout d'une fonction d'encapsulation de l'ajout.
-        $addScript .= '$.fn.parse'.$this->id.'AddFormValidation = function(response) {';
-        $addScript .= 'addMessage(response.message, response.type);';
-        $addScript .= 'this.get(0).reset();';
+        $addScript .= '$(\'#'.$this->addPanelForm->getAttribute('id').'\').on(\'successSubmit\', function(response) {';
+        $addScript .= 'this.reset();';
         $addScript .= $this->id.'.Tree.removeChildren('.$this->id.'.Tree.getRoot());';
         $addScript .= $this->id.'.init();';
         $addScript .= '$(\'#'.$this->id.'_addPanel\').modal(\'hide\');';
-        $addScript .= '};';
+        $addScript .= '});';
 
         return $addScript;
     }
@@ -840,13 +841,12 @@ class UI_Tree extends UI_Generic
         $resetAction = '$(\'#'.$this->id.'_addForm\').get(0).reset();$(\'#'.$this->id.'_addForm\').eraseFormErrors();';
         $buttonCancelAddPanel->setAttribute('onclick', $resetAction);
 
-        $addPanel = new Modal();
+        $addPanel = new Modal($this->addPanelForm);
         $addPanel->setAttribute('id', $this->id.'_addPanel');
         $addPanel->large();
         $addPanel->addTitle($this->addPanelTitle);
         $addPanel->addDefaultDismissButton();
         $addPanel->setFooterContent($buttonConfirmAddPanel->getHTML().$buttonCancelAddPanel->getHTML());
-        $addPanel->setContent($this->addPanelForm->getHTML());
         $addPanel->setBackdropStatic();
 
         $add .= $addPanel->getHTML();

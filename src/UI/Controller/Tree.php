@@ -229,10 +229,7 @@ abstract class UI_Controller_Tree extends Core_Controller
      */
     public function getAddElementValue($elementName)
     {
-        if (! array_key_exists($elementName, $this->_form)) {
-            return null;
-        }
-        return $this->_form[$elementName]['value'];
+        return $this->getParam($elementName);
     }
 
     /**
