@@ -268,10 +268,9 @@ class User_ProfileController extends Core_Controller
         }
 
         if ($this->getRequest()->isPost()) {
-            $formData = $this->getFormData('editPassword');
-            $oldPassword = $formData->getValue('oldPassword');
-            $password = $formData->getValue('password');
-            $password2 = $formData->getValue('password2');
+            $oldPassword = $this->getParam('oldPassword');
+            $password = $this->getParam('password');
+            $password2 = $this->getParam('password2');
 
             // Validation
             if (empty($oldPassword)) {
