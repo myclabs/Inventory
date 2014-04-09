@@ -7,8 +7,6 @@ use MyCLabs\ACL\Doctrine\ACLSetup;
 use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
-use JMS\Serializer\Serializer;
-use JMS\Serializer\SerializerBuilder;
 use MyCLabs\ACL\ACL;
 use MyCLabs\ACL\CascadeStrategy\SimpleCascadeStrategy;
 use Orga\Model\ACL\CellAdminRole;
@@ -121,15 +119,6 @@ return [
         $setup->registerRoleClass(CellContributorRole::class, 'cellContributor');
         $setup->registerRoleClass(CellObserverRole::class, 'cellObserver');
         return $setup;
-    }),
-
-    Serializer::class => DI\factory(function () {
-        return SerializerBuilder::create()
-            ->addMetadataDir(PACKAGE_PATH . '/src/Inventory/Serializer')
-            ->addMetadataDir(PACKAGE_PATH . '/src/Techno/Architecture/Serializer', 'Techno\Domain')
-            ->addMetadataDir(PACKAGE_PATH . '/src/AF/Architecture/Serializer', 'AF\Domain')
-            ->addMetadataDir(PACKAGE_PATH . '/src/User/Architecture/Serializer', 'User\Domain')
-            ->build();
     }),
 
 ];

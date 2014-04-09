@@ -19,6 +19,7 @@ class Parameter_Form_EditFamilyController extends Core_Controller
     {
         /** @var $family Family */
         $family = Family::load($this->getParam('id'));
+        $library = $family->getLibrary();
 
         // Label
         $label = $this->getParam('label');
@@ -31,7 +32,7 @@ class Parameter_Form_EditFamilyController extends Core_Controller
             $this->addFormError('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
             try {
-                if (Family::loadByRef($ref) !== $family) {
+                if ($library->getFamily($ref) !== $family) {
                     $this->addFormError('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 }
             } catch (Core_Exception_NotFound $e) {
