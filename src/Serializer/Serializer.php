@@ -147,6 +147,7 @@ class Serializer
                 continue;
             }
 
+            // Ignore property
             if (isset($config['properties'][$propertyName]['exclude'])
                 && $config['properties'][$propertyName]['exclude'] === true) {
                 continue;
@@ -176,6 +177,7 @@ class Serializer
             $config = [];
         }
 
+        // Class alias
         if (isset($config['class'])) {
             $className = $config['class'];
         }
@@ -189,7 +191,30 @@ class Serializer
             if (strpos($propertyName, '__') === 0) {
                 continue;
             }
-            $this->unserializePropertyValue($class->getProperty($propertyName), $object, $value);
+
+            // Ignore property
+            if (isset($config['properties'][$propertyName]['exclude'])
+                && $config['properties'][$propertyName]['exclude'] === true) {
+                continue;
+            }
+
+            try {
+                $property = $class->getProperty($propertyName);
+            } catch (\Exception $e) {
+                throw new \Exception("Unknown property $propertyName in $className");
+            }
+            $this->unserializePropertyValue($property, $object, $value);
+        }
+
+        // Callbacks
+        if (isset($config['callbacks'])) {
+            $callables = $config['callbacks'];
+            if (! is_array($callables)) {
+                $callables = [ $callables ];
+            }
+            foreach ($callables as $callable) {
+                $callable($object, $vars);
+            }
         }
     }
 
