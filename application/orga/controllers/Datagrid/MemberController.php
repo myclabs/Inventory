@@ -306,7 +306,8 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             Action::EDIT(),
             $organization
         );
-        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization || $this->aclService->isAllowed(
+        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization
+            || $this->aclService->isAllowed(
                 $connectedUser,
                 Action::EDIT(),
                 $organization->getGranularityByRef('global')->getCellByMembers([])
@@ -322,8 +323,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 $organization,
                 [CellAdminRole::class]
             )['cells'];
+            $isTransverseToAll = true;
             foreach ($topCellsWithEditAccess as $cell) {
                 if (!$broaderAxis->isTransverse($cell->getGranularity()->getAxes())) {
+                    $isTransverseToAll = false;
                     foreach ($cell->getMembers() as $cellMember) {
                         if ($broaderAxis->isBroaderThan($cellMember->getAxis())) {
                             continue 2;
@@ -335,8 +338,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     );
                 }
             }
-            $members = array_unique($members);
-            usort($members, [Orga_Model_Member::class, 'orderMembers']);
+            if (!$isTransverseToAll) {
+                $members = array_unique($members);
+                usort($members, [Orga_Model_Member::class, 'orderMembers']);
+            } else {
+                $members = $broaderAxis->getOrderedMembers()->toArray();
+            }
         } else {
             $members = $broaderAxis->getOrderedMembers()->toArray();
         }
