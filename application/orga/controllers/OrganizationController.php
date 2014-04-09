@@ -487,11 +487,9 @@ class Orga_OrganizationController extends Core_Controller
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        $formData = $this->getFormData('organizationDetails');
-
         $updated = false;
 
-        $label = (string) $formData->getValue('label');
+        $label = (string) $this->getParam('label');
         if (empty($label)) {
             $this->addFormError(
                 'label',
@@ -502,26 +500,27 @@ class Orga_OrganizationController extends Core_Controller
             $updated = true;
         }
 
-        $refGranularityForInventoryStatus = $formData->getValue('granularityForInventoryStatus');
-        if (!empty($refGranularityForInventoryStatus)) {
-            $newGranularityForInventoryStatus = $organization->getGranularityByRef($refGranularityForInventoryStatus);
-            try {
-                $currentGranularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
-            } catch (Core_Exception_UndefinedAttribute $e) {
-                $currentGranularityForInventoryStatus = null;
-            }
-            if ($currentGranularityForInventoryStatus !== $newGranularityForInventoryStatus) {
-                try {
-                    $organization->setGranularityForInventoryStatus($newGranularityForInventoryStatus);
-                    $updated = true;
-                } catch (Core_Exception_InvalidArgument $e) {
-                    $this->addFormError(
-                        'granularityForInventoryStatus',
-                        __('Orga', 'exception', 'broaderInputGranularity')
-                    );
-                }
-            }
-        }
+        //@todo Faire une action à part ?
+//        $refGranularityForInventoryStatus = $formData->getValue('granularityForInventoryStatus');
+//        if (!empty($refGranularityForInventoryStatus)) {
+//            $newGranularityForInventoryStatus = $organization->getGranularityByRef($refGranularityForInventoryStatus);
+//            try {
+//                $currentGranularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+//            } catch (Core_Exception_UndefinedAttribute $e) {
+//                $currentGranularityForInventoryStatus = null;
+//            }
+//            if ($currentGranularityForInventoryStatus !== $newGranularityForInventoryStatus) {
+//                try {
+//                    $organization->setGranularityForInventoryStatus($newGranularityForInventoryStatus);
+//                    $updated = true;
+//                } catch (Core_Exception_InvalidArgument $e) {
+//                    $this->addFormError(
+//                        'granularityForInventoryStatus',
+//                        __('Orga', 'exception', 'broaderInputGranularity')
+//                    );
+//                }
+//            }
+//        }
 
         if ($this->hasFormError() || !$updated) {
             $this->setFormMessage(__('UI', 'message', 'nullUpdated'));
