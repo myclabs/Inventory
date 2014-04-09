@@ -1946,23 +1946,25 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendCode.git",
-                "reference": "aaf820f205881563cc3c6708149e17364d1bb823"
+                "reference": "7eb108341ff6c9ec240764a11270f2d12934b733"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/aaf820f205881563cc3c6708149e17364d1bb823",
-                "reference": "aaf820f205881563cc3c6708149e17364d1bb823",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/7eb108341ff6c9ec240764a11270f2d12934b733",
+                "reference": "7eb108341ff6c9ec240764a11270f2d12934b733",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3",
+                "php": ">=5.3.23",
                 "zendframework/zend-eventmanager": "self.version"
             },
             "require-dev": {
-                "doctrine/common": ">=2.1"
+                "doctrine/common": ">=2.1",
+                "zendframework/zend-stdlib": "self.version"
             },
             "suggest": {
-                "doctrine/common": "Doctrine\\Common >=2.1 for annotation features"
+                "doctrine/common": "Doctrine\\Common >=2.1 for annotation features",
+                "zendframework/zend-stdlib": "Zend\\Stdlib component"
             },
             "type": "library",
             "extra": {
@@ -1985,7 +1987,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2014-02-15 15:00:07"
+            "time": "2014-03-14 16:20:47"
         },
         {
             "name": "zendframework/zend-eventmanager",
@@ -1994,16 +1996,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendEventManager.git",
-                "reference": "89368704bb37303fba64c3ddd6bce0506aa7187c"
+                "reference": "048164ee81854942667ffdda3030ce06caa79bb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/89368704bb37303fba64c3ddd6bce0506aa7187c",
-                "reference": "89368704bb37303fba64c3ddd6bce0506aa7187c",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/048164ee81854942667ffdda3030ce06caa79bb5",
+                "reference": "048164ee81854942667ffdda3030ce06caa79bb5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3",
+                "php": ">=5.3.23",
                 "zendframework/zend-stdlib": "self.version"
             },
             "type": "library",
@@ -2026,7 +2028,7 @@
                 "eventmanager",
                 "zf2"
             ],
-            "time": "2014-01-04 13:00:14"
+            "time": "2014-03-14 16:21:05"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -2035,12 +2037,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "b6913eb223fa0ba646905522d4dbe1b84cddcb1c"
+                "reference": "d1c481b8a43f2f079b16d3567960ba539e9dacaa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/b6913eb223fa0ba646905522d4dbe1b84cddcb1c",
-                "reference": "b6913eb223fa0ba646905522d4dbe1b84cddcb1c",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/d1c481b8a43f2f079b16d3567960ba539e9dacaa",
+                "reference": "d1c481b8a43f2f079b16d3567960ba539e9dacaa",
                 "shasum": ""
             },
             "require": {
@@ -2076,7 +2078,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2014-03-13 16:18:45"
+            "time": "2014-03-14 16:22:22"
         },
         {
             "name": "zendframework/zendframework1",
