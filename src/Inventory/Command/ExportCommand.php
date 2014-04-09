@@ -25,6 +25,8 @@ class ExportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        ini_set('xdebug.max_nesting_level', 1000);
+
         $root = PACKAGE_PATH . '/data/exports/migration-3.0';
 
         $serializer = new Serializer([
