@@ -35,11 +35,29 @@ $tree->addPanelForm = $addForm;
 $tree->addPanelTitle = __('AF', 'formTree', 'addPanelTitle');
 $tree->addButtonLabel = __('AF', 'formTree', 'addButton');
 // Édition
-$editLabel = new UI_Form_Element_Text('afTree_labelEdit');
-$editLabel->setLabel(__('UI', 'name', 'label'));
-$htmlComplement = new UI_Form_Element_HTML('afTree_htmlComplement');
-$htmlComplement->setLabel('');
-$tree->setEditNode(true, true, [$editLabel, $htmlComplement]);
+$editLabelInput = new GenericVoidTag('input');
+$editLabelInput->setAttribute('name', 'afTree_labelEdit');
+$editLabelInput->setAttribute('type', 'text');
+$editLabelInput->setAttribute('id', 'afTree_labelEdit');
+$editLabelInput->addClass('form-control');
+$editLabelWrapper = new GenericTag('div', $editLabelInput);
+$editLabelWrapper->addClass('col-xs-10');
+$editLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+$editLabelLabel->setAttribute('for', 'afTree_labelEdit');
+$editLabelLabel->addClass('control-label');
+$editLabelLabel->addClass('col-xs-2');
+$editLabelGroup = new GenericTag('div');
+$editLabelGroup->addClass('form-group');
+$editLabelGroup->appendContent($editLabelLabel);
+$editLabelGroup->appendContent($editLabelWrapper);
+
+$htmlComplementWrapper = new GenericTag('div');
+$htmlComplementWrapper->setAttribute('id', 'afTree_htmlComplement');
+$htmlComplementWrapper->addClass('col-xs-10 col-xs-offset-2');
+$htmlComplementGroup = new GenericTag('div', $htmlComplementWrapper);
+$htmlComplementGroup->addClass('form-group');
+
+$tree->setEditNode(true, true, [$editLabelGroup, $htmlComplementGroup]);
 // Suppression
 $tree->deleteNode = true;
 $tree->expandAll = false;
@@ -58,7 +76,7 @@ $('#afTree_element').change(function(e) {
         function(o) {
             $('#afTree_labelEdit').val(o.label);
             $('#afTree_htmlComplement').html(o.htmlComplement);
-            $('#afTree_editPanel .modal-header h3').html(o.title);
+            $('#afTree_editPanel .modal-header h4').html(o.title);
         }
     ).error(function(o) {
         errorHandler(o);

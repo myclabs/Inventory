@@ -107,9 +107,6 @@ if (count($file) > 0) {
     .history > h3 small,
     .comments > h3 small
     { margin-top: 15px; }
-    .history > hr,
-    .comments > hr
-    { margin: 0 0 5px; }
     .history h4,
     .comments h4
     { border-bottom: 1px solid #eeeeee; margin-bottom: 20px; margin-top: 0; }
@@ -442,7 +439,6 @@ if (count($file) > 0) {
             </div>
             <?=___('Orga', 'view', 'addMember')?>
         </h3>
-        <hr/>
         <?=$this->addMemberForm->display()?>
     </div>
     <?php endif; ?>

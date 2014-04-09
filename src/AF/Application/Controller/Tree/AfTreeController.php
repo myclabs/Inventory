@@ -186,9 +186,9 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     {
         $node = $this->fromTreeId($this->idNode);
 
-        $newParent = $this->_form[$this->id . '_changeParent']['value'];
-        $newPosition = $this->_form[$this->id . '_changeOrder']['value'];
-        $afterElement = $this->_form[$this->id . '_changeOrder']['children'][$this->id . '_selectAfter_child']['value'];
+        $newParent = $this->getEditElementValue('changeParent');
+        $newPosition = $this->getEditElementValue('changeOrder');
+        $afterElement = $this->getEditElementValue('selectAfter');
         $newLabel = $this->getEditElementValue('labelEdit');
 
         // Label

@@ -8,11 +8,37 @@ use MyCLabs\MUIH\GenericVoidTag;
  * @package Orga
  * Arbre des axes d'un organization.
  */
-$editLabelField = new UI_Form_Element_Text('editAxis_label');
-$editLabelField->setLabel(___('UI', 'name', 'label'));
+$editLabelInput = new GenericVoidTag('input');
+$editLabelInput->setAttribute('name', 'editAxis_label');
+$editLabelInput->setAttribute('type', 'text');
+$editLabelInput->setAttribute('id', 'editAxis_label');
+$editLabelInput->addClass('form-control');
+$editLabelWrapper = new GenericTag('div', $editLabelInput);
+$editLabelWrapper->addClass('col-xs-10');
+$editLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+$editLabelLabel->setAttribute('for', 'editAxis_label');
+$editLabelLabel->addClass('control-label');
+$editLabelLabel->addClass('col-xs-2');
+$editLabelGroup = new GenericTag('div');
+$editLabelGroup->addClass('form-group');
+$editLabelGroup->appendContent($editLabelLabel);
+$editLabelGroup->appendContent($editLabelWrapper);
 
-$editRefField = new UI_Form_Element_Text('editAxis_ref');
-$editRefField->setLabel(___('UI', 'name', 'identifier'));
+$editRefInput = new GenericVoidTag('input');
+$editRefInput->setAttribute('name', 'editAxis_ref');
+$editRefInput->setAttribute('type', 'text');
+$editRefInput->setAttribute('id', 'editAxis_ref');
+$editRefInput->addClass('form-control');
+$editRefWrapper = new GenericTag('div', $editRefInput);
+$editRefWrapper->addClass('col-xs-10');
+$editRefLabel = new GenericTag('label', ___('UI', 'name', 'identifier'));
+$editRefLabel->setAttribute('for', 'editAxis_ref');
+$editRefLabel->addClass('control-label');
+$editRefLabel->addClass('col-xs-2');
+$editRefGroup = new GenericTag('div');
+$editRefGroup->addClass('form-group');
+$editRefGroup->appendContent($editRefLabel);
+$editRefGroup->appendContent($editRefWrapper);
 
 // $editContextualizingField = new UI_Form_Element_Radio('editAxis_contextualizing');
 // $editContextualizingField->setLabel(___('Orga', 'axis', 'contextualizingLabel'));
@@ -102,7 +128,7 @@ $treeManage->addNode = true;
 $treeManage->addPanelForm = $addForm;
 $treeManage->addPanelTitle = ___('Orga', 'axis', 'addPanelTitle');
 $treeManage->editPanelTitle = ___('Orga', 'axis', 'editPanelTitle');
-$treeManage->setEditNode(false, true, [$editLabelField, $editRefField]);
+$treeManage->setEditNode(false, true, [$editLabelGroup, $editRefGroup]);
 $treeManage->deleteNode = true;
 $treeManage->expandAll = false;
 $treeManage->collapseAll = false;

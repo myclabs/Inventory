@@ -91,11 +91,29 @@ if ($this->edit) {
     $tree->addPanelTitle = __('Parameter', 'familyTree', 'addCategoryPopupTitle');
     $tree->addButtonLabel = __('Parameter', 'familyTree', 'addCategoryButton');
     // Édition.
-    $editLabel = new UI_Form_Element_Text('familyTree_labelEdit');
-    $editLabel->setLabel(__('UI', 'name', 'label'));
-    $htmlComplement = new UI_Form_Element_HTML('familyTree_htmlComplement');
-    $htmlComplement->setLabel('');
-    $tree->setEditNode(true, true, [$editLabel, $htmlComplement]);
+    $editLabelInput = new GenericVoidTag('input');
+    $editLabelInput->setAttribute('name', 'familyTree_labelEdit');
+    $editLabelInput->setAttribute('type', 'text');
+    $editLabelInput->setAttribute('id', 'familyTree_labelEdit');
+    $editLabelInput->addClass('form-control');
+    $editLabelWrapper = new GenericTag('div', $editLabelInput);
+    $editLabelWrapper->addClass('col-xs-10');
+    $editLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+    $editLabelLabel->setAttribute('for', 'familyTree_labelEdit');
+    $editLabelLabel->addClass('control-label');
+    $editLabelLabel->addClass('col-xs-2');
+    $editLabelGroup = new GenericTag('div');
+    $editLabelGroup->addClass('form-group');
+    $editLabelGroup->appendContent($editLabelLabel);
+    $editLabelGroup->appendContent($editLabelWrapper);
+
+    $htmlComplementWrapper = new GenericTag('div');
+    $htmlComplementWrapper->setAttribute('id', 'familyTree_htmlComplement');
+    $htmlComplementWrapper->addClass('col-xs-10 col-xs-offset-2');
+    $htmlComplementGroup = new GenericTag('div', $htmlComplementWrapper);
+    $htmlComplementGroup->addClass('form-group');
+
+    $tree->setEditNode(true, true, [$editLabelGroup, $htmlComplementGroup]);
     $tree->editPanelTitle = __('Parameter', 'familyTree', 'editCategoryPopupTitle');
     // Suppression.
     $tree->deleteNode = true;

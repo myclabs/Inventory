@@ -11,12 +11,38 @@ $tree = new UI_Tree('editAxis', 'tree_axis', 'classification');
 $tree->addParam('library', $this->library->getId());
 
 // Caractéristiques du popup d'édition
-$editElements = array();
-$editElements['label'] = new UI_Form_Element_Text('editAxis_label');
-$editElements['label']->setLabel(__('UI', 'name', 'label'));
-$editElements['ref'] = new UI_Form_Element_Text('editAxis_ref');
-$editElements['ref']->setLabel(__('UI', 'name', 'identifier'));
-$editElements['ref']->setAttrib('required', true);
+$editLabelInput = new GenericVoidTag('input');
+$editLabelInput->setAttribute('name', 'editAxis_label');
+$editLabelInput->setAttribute('type', 'text');
+$editLabelInput->setAttribute('id', 'editAxis_label');
+$editLabelInput->addClass('form-control');
+$editLabelWrapper = new GenericTag('div', $editLabelInput);
+$editLabelWrapper->addClass('col-xs-10');
+$editLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+$editLabelLabel->setAttribute('for', 'editAxis_label');
+$editLabelLabel->addClass('control-label');
+$editLabelLabel->addClass('col-xs-2');
+$editLabelGroup = new GenericTag('div');
+$editLabelGroup->addClass('form-group');
+$editLabelGroup->appendContent($editLabelLabel);
+$editLabelGroup->appendContent($editLabelWrapper);
+
+$editRefInput = new GenericVoidTag('input');
+$editRefInput->setAttribute('name', 'editAxis_ref');
+$editRefInput->setAttribute('type', 'text');
+$editRefInput->setAttribute('id', 'editAxis_ref');
+$editRefInput->setBooleanAttribute('required');
+$editRefInput->addClass('form-control');
+$editRefWrapper = new GenericTag('div', $editRefInput);
+$editRefWrapper->addClass('col-xs-10');
+$editRefLabel = new GenericTag('ref', ___('UI', 'name', 'identifier'));
+$editRefLabel->setAttribute('for', 'editAxis_ref');
+$editRefLabel->addClass('control-label');
+$editRefLabel->addClass('col-xs-2');
+$editRefGroup = new GenericTag('div');
+$editRefGroup->addClass('form-group');
+$editRefGroup->appendContent($editRefLabel);
+$editRefGroup->appendContent($editRefWrapper);
 
 $addForm = new GenericTag('form');
 
@@ -81,7 +107,7 @@ $addParentGroup->appendContent($addParentLabel);
 $addParentGroup->appendContent($addParentWrapper);
 $addForm->appendContent($addParentGroup);
 
-$tree->setEditNode(true, true, $editElements);
+$tree->setEditNode(true, true, [$editLabelGroup, $editRefGroup]);
 $tree->addPanelTitle = __('Classification', 'axis', 'addPanelTitle');
 $tree->editPanelTitle = __('Classification', 'axis', 'editPanelTitle');
 $tree->changeParentLabel = __('Classification', 'axis', 'parentAxisLabel');
@@ -96,7 +122,7 @@ $script = '';
 $script .= '$(\'#editAxis_element\').change(function(e) {';
 $script .= 'var idNode = $(this).val();';
 $script .= '$.get(';
-$script .= '\'classification/tree_axis/getinfoedit?idNode=\' + idNode, ';
+$script .= '\'classification/tree_axis/getinfoedit?library='.$this->library->getId().'&idNode=\' + idNode, ';
 $script .= 'function(o){';
 $script .= '$(\'#editAxis_ref\').val(o.ref);';
 $script .= '$(\'#editAxis_label\').val(o.label);';

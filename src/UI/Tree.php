@@ -1,6 +1,7 @@
 <?php
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
 use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Modal;
 
@@ -517,38 +518,80 @@ class UI_Tree extends UI_Generic
      */
     protected function initEditForm()
     {
-        $editForm = new UI_Form($this->id.'_editForm');
-        $editForm->setAction($this->getActionUrl('editnode'));
-        $editForm->setAjax(null, 'parse'.$this->id.'EditFormValidation');
+        $editForm = new GenericTag('form');
+        $editForm->setAttribute('action', $this->getActionUrl('editnode'));
+        $editForm->setAttribute('method', 'POST');
+        $editForm->setAttribute('id', $this->id.'_editForm');
+        $editForm->addClass('form-horizontal');
 
-        $hiddenValue = new UI_Form_Element_Hidden($this->id.'_element');
-        $editForm->addElement($hiddenValue);
+        $hiddenValue = new GenericVoidTag('input');
+        $hiddenValue->setAttribute('type', 'hidden');
+        $hiddenValue->setAttribute('name', $this->id.'_element');
+        $hiddenValue->setAttribute('id', $this->id.'_element');
+        $editForm->appendContent($hiddenValue);
 
         if ($this->_editNode['parent'] === true) {
-            $changeParentFormElement = new UI_Form_Element_Select($this->id.'_changeParent');
-            $changeParentFormElement->setLabel($this->changeParentLabel);
-            $optionLoading = new UI_Form_Element_Option($this->id.'_changeParent_load');
-            $optionLoading->label = $this->changeParentLoadingOption;
-            $changeParentFormElement->addOption($optionLoading);
-
-            $editForm->addElement($changeParentFormElement);
+            $changeParentLoadingOption = new GenericTag('option', $this->changeParentLoadingOption);
+            $changeParentInput = new GenericTag('select', $changeParentLoadingOption);
+            $changeParentInput->setAttribute('name', $this->id.'_changeParent');
+            $changeParentInput->setAttribute('id', $this->id.'_changeParent');
+            $changeParentInput->addClass('form-control');
+            $changeParentWrapper = new GenericTag('div', $changeParentInput);
+            $changeParentWrapper->addClass('col-xs-10');
+            $changeParentLabel = new GenericTag('label', $this->changeParentLabel);
+            $changeParentLabel->setAttribute('for', $this->id.'_changeParent');
+            $changeParentLabel->addClass('control-label');
+            $changeParentLabel->addClass('col-xs-2');
+            $changeParentGroup = new GenericTag('div');
+            $changeParentGroup->addClass('form-group');
+            $changeParentGroup->appendContent($changeParentLabel);
+            $changeParentGroup->appendContent($changeParentWrapper);
+            $editForm->appendContent($changeParentGroup);
         }
 
         if ($this->_editNode['order'] === true) {
-            $changeOrderFormElement = new UI_Form_Element_Radio($this->id.'_changeOrder');
-            $changeOrderFormElement->setLabel($this->changeOrderLabel);
+            $changeOrderFirstInput = new GenericVoidTag('input');
+            $changeOrderFirstInput->setAttribute('name', $this->id.'_changeOrder');
+            $changeOrderFirstInput->setAttribute('value', 'first');
+            $changeOrderFirstInput->setAttribute('type', 'radio');
+            $changeOrderFirstLabel = new GenericTag('label', $this->changeOrderFirstLabel);
+            $changeOrderFirstLabel->appendContent($changeOrderFirstInput);
+            $changeOrderFirstWrapper = new GenericTag('div', $changeOrderFirstLabel);
+            $changeOrderFirstWrapper->addClass('radio');
 
-            $optionFirst = new UI_Form_Element_Option($this->id.'_changeParent_first', 'first');
-            $optionFirst->label = $this->changeOrderFirstLabel;
-            $changeOrderFormElement->addOption($optionFirst);
+            $changeOrderLastInput = new GenericVoidTag('input');
+            $changeOrderLastInput->setAttribute('name', $this->id.'_changeOrder');
+            $changeOrderLastInput->setAttribute('value', 'last');
+            $changeOrderLastInput->setAttribute('type', 'radio');
+            $changeOrderLastLabel = new GenericTag('label', $this->changeOrderLastLabel);
+            $changeOrderLastLabel->appendContent($changeOrderLastInput);
+            $changeOrderLastWrapper = new GenericTag('div', $changeOrderLastLabel);
+            $changeOrderLastWrapper->addClass('radio');
 
-            $optionLast = new UI_Form_Element_Option($this->id.'_changeParent_last', 'last');
-            $optionLast->label = $this->changeOrderLastLabel;
-            $changeOrderFormElement->addOption($optionLast);
+            $changeOrderAfterInput = new GenericVoidTag('input');
+            $changeOrderAfterInput->setAttribute('name', $this->id.'_changeOrder');
+            $changeOrderAfterInput->setAttribute('value', 'after');
+            $changeOrderAfterInput->setAttribute('type', 'radio');
+            $changeOrderAfterLabel = new GenericTag('label', $this->changeOrderAfterLabel);
+            $changeOrderAfterLabel->appendContent($changeOrderAfterInput);
+            $changeOrderAfterWrapper = new GenericTag('div', $changeOrderAfterLabel);
+            $changeOrderAfterWrapper->addClass('radio');
 
-            $optionAfter = new UI_Form_Element_Option($this->id.'_changeParent_after', 'after');
-            $optionAfter->label = $this->changeOrderAfterLabel;
-            $changeOrderFormElement->addOption($optionAfter);
+            $changeOrderWrapper = new GenericTag('div');
+            $changeOrderWrapper->addClass('col-xs-10');
+            $changeOrderWrapper->appendContent($changeOrderFirstWrapper);
+            $changeOrderWrapper->appendContent($changeOrderLastWrapper);
+            $changeOrderWrapper->appendContent($changeOrderAfterWrapper);
+
+            $changeOrderLabel = new GenericTag('p', $this->changeOrderLabel);
+            $changeOrderLabel->addClass('form-control-static');
+            $changeOrderLabel->addClass('col-xs-2');
+
+            $changeOrderGroup = new GenericTag('div');
+            $changeOrderGroup->addClass('form-group');
+            $changeOrderGroup->appendContent($changeOrderLabel);
+            $changeOrderGroup->appendContent($changeOrderWrapper);
+            $editForm->appendContent($changeOrderGroup);
 
             $selectAfter = new UI_Form_Element_Select($this->id.'_selectAfter');
 
@@ -556,25 +599,23 @@ class UI_Tree extends UI_Generic
             $optionLoadingAfter->label = $this->changeOrderLoadingOption;
             $selectAfter->addOption($optionLoadingAfter);
             $selectAfter->getElement()->hidden = true;
-
-            $changeOrderFormElement->getElement()->addElement($selectAfter);
-
-            $conditionShowSelectAfter = new UI_Form_Condition_Elementary($this->id.'_equal');
-            $conditionShowSelectAfter->element = $changeOrderFormElement;
-            $conditionShowSelectAfter->relation = UI_Form_Condition::EQUAL;
-            $conditionShowSelectAfter->value = $optionAfter->value;
-
-            $actionShowSelectAfter = new UI_Form_Action_Show($this->id.'_show');
-            $actionShowSelectAfter->condition = $conditionShowSelectAfter;
-
-            $selectAfter->getElement()->addAction($actionShowSelectAfter);
-
-            $editForm->addElement($changeOrderFormElement);
+            
+            $changeOrderLoadingOption = new GenericTag('option', $this->changeOrderLoadingOption);
+            $changeOrderInput = new GenericTag('select', $changeOrderLoadingOption);
+            $changeOrderInput->setAttribute('name', $this->id.'_selectAfter');
+            $changeOrderInput->setAttribute('id', $this->id.'_selectAfter');
+            $changeOrderInput->addClass('form-control');
+            $changeOrderWrapper = new GenericTag('div', $changeOrderInput);
+            $changeOrderWrapper->addClass('col-xs-10 col-xs-offset-2');
+            $changeOrderGroup = new GenericTag('div', $changeOrderWrapper);
+            $changeOrderGroup->addClass('form-group');
+            $changeOrderGroup->addClass('hide');
+            $editForm->appendContent($changeOrderGroup);
         }
 
         if (is_array($this->_editNode['custom'])) {
             foreach ($this->_editNode['custom'] as $customFormElement) {
-                $editForm->addElement($customFormElement);
+                $editForm->appendContent($customFormElement);
             }
         }
 
@@ -592,13 +633,24 @@ class UI_Tree extends UI_Generic
 
         $editScript .= $this->initEditForm()->getScript();
 
+        // Action d'affichage du bloc de sélection de déplacement
+        if ($this->_editNode['order'] === true) {
+            $editScript .= '$(\'input[name="'.$this->id.'_changeOrder"]\').on(\'change\', function(e) {';
+            $editScript .= 'if ($(\'input[name="'.$this->id.'_changeOrder"]:checked\').val() === \'after\') {';
+            $editScript .= '$(\'#'.$this->id.'_selectAfter\').closest(\'.form-group\').removeClass(\'hide\');';
+            $editScript .= '} else {';
+            $editScript .= '$(\'#'.$this->id.'_selectAfter\').closest(\'.form-group\').addClass(\'hide\');';
+            $editScript .= '}';
+            $editScript .= '});';
+        }
+
         // Fonction de préparation du popup d'édition.
         $editScript .= '$(\'body\').on(\'click\', \'[data-target="#'.$this->id.'_editPanel"]\', function(e) {';
         $editScript .= 'var idNode = $(this).attr(\'id\').split(\''.$this->id.'_\').pop();';
         $editScript .= '$(\'#' . $this->id . '_element\').val(idNode).trigger(\'change\');';
         $editScript .= '});';
         // Initialisation du popup d'édition.
-        $editScript .= '$(\'#'.$this->id.'_editPanel\').on(\'shown\', function(e) {';
+        $editScript .= '$(\'#'.$this->id.'_editPanel\').on(\'shown.bs.modal\', function(e) {';
         $editScript .= 'var idNode = $(\'#' . $this->id . '_element\').val();';
         // Chargement de la liste des parents.
         if ($this->_editNode['parent'] === true) {
@@ -652,6 +704,7 @@ class UI_Tree extends UI_Generic
             $editScript .= '\''.$this->getActionUrl('deletenode').'idNode=\' + idNode, ';
             $editScript .= 'function(o){';
             $editScript .= '$(\'#'.$this->id.'_deletePanel\').modal(\'hide\');';
+            $editScript .= '$(\'#'.$this->id.'_editPanel\').modal(\'hide\');';
             $editScript .= 'var currentNode = $(\'#'.$this->id.'_\' + idNode);';
             $editScript .= 'var parentNode = '.$this->id.'.Tree.getNodeByElement(currentNode[0]).parent;';
             $editScript .= 'if (parentNode == \'RootNode\') {';
@@ -674,16 +727,17 @@ class UI_Tree extends UI_Generic
         }
 
         // Ajout d'une fonction d'encapsulation de l'édition.
-        $editScript .= '$.fn.parse'.$this->id.'EditFormValidation = function(response) {';
-        $editScript .= 'addMessage(response.message, response.type);';
-        $editScript .= 'this.get(0).reset();';
+        $editScript .= 'new AjaxForm(\'#'.$this->id.'_editForm\');';
+        $editScript .= '$(\'#'.$this->id.'_editForm\').on(\'successSubmit\', function(e, response) {';
+        $editScript .= 'this.reset();';
         $editScript .= $this->id.'.Tree.removeChildren('.$this->id.'.Tree.getRoot());';
         $editScript .= $this->id.'.init();';
         $editScript .= '$(\'#'.$this->id.'_editPanel\').modal(\'hide\');';
-        $editScript .= '};';
+        $editScript .= '});';
         // Ajout du fonction de reset du formulaire lors de la fermeture électrique.
-        $editScript .= '$(\'#'.$this->id.'_editPanel\').on(\'hide\', function() {';
-        $editScript .= '$(\'#'.$this->id.'_editForm\').get(0).reset();$(\'#'.$this->id.'_editForm\').eraseFormErrors();';
+        $editScript .= '$(\'#'.$this->id.'_editPanel\').on(\'hide.bs.modal\', function() {';
+        $editScript .= '$(\'#'.$this->id.'_editForm\').get(0).reset();';
+        $editScript .= '$(\'#'.$this->id.'_editForm\').eraseFormErrors();';
         $editScript .= '});';
 
         return $editScript;
@@ -711,8 +765,7 @@ class UI_Tree extends UI_Generic
             $buttonShowDeletePanel->prependContent(new Icon($this->deleteButtonIcon));
             $buttonShowDeletePanel->setAttribute('href', '#');
             $buttonShowDeletePanel->setAttribute('data-toggle', 'modal');
-            $buttonShowDeletePanel->setAttribute('data-remote', 'false');
-            $buttonShowDeletePanel->setAttribute('data-target', '#'.$this->id.'_deletePanel, #'.$this->id.'_editPanel');
+            $buttonShowDeletePanel->setAttribute('data-target', '#'.$this->id.'_deletePanel');
 
             // Placement du bouton dans le corps du popup si l'édition n'est pas possible.
             if ($this->_editNode['state'] === true) {
@@ -732,9 +785,8 @@ class UI_Tree extends UI_Generic
             $buttonCancelDelete->prependContent(' ');
             $buttonCancelDelete->prependContent(new Icon($this->deletePanelCancelIcon));
             $buttonCancelDelete->setAttribute('href', '#');
-            $buttonCancelDelete->setAttribute('data-toggle', 'modal');
-            $buttonCancelDelete->setAttribute('data-remote', 'false');
-            $buttonCancelDelete->setAttribute('data-target', '#'.$this->id.'_deletePanel, #'.$this->id.'_editPanel');
+            $buttonCancelDelete->setAttribute('data-dismiss', 'modal');
+            $buttonCancelDelete->setAttribute('data-target', '#'.$this->id.'_deletePanel');
 
             $deletePanel = new Modal();
             $deletePanel->setAttribute('id', $this->id.'_deletePanel');

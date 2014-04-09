@@ -32,7 +32,16 @@ $organizationForm->addSubmitButton();
 <fieldset class="wrapper">
     <legend style="cursor:default"><?=___('UI', 'name', 'general')?></legend>
     <div>
-        <?php if ($this->display) { $organizationForm->display(); } else { echo $organizationForm->render(); } ?>
+        <form class="form-horizontal" method="POST" action="orga/organization/edit-organization-submit/idOrganization/<?=$this->idOrganization?>">
+            <div class="form-group">
+                <label for="organization_label" class="control-label col-xs-2">
+                    <?=___('UI', 'name', 'label')?>
+                </label>
+                <div class="col-xs-10">
+                    <input name="label" id="organization_label" type="text" class="form-control">
+                </div>
+            </div>
+        </form>
     </div>
 </fieldset>
 

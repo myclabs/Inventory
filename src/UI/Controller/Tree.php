@@ -93,7 +93,7 @@ abstract class UI_Controller_Tree extends Core_Controller
             case 'editnode':
                 // Récupération des champs du formulaire.
                 $this->_form = Zend_Json::decode($this->_getParam($this->id . '_editForm'), Zend_Json::TYPE_ARRAY);
-                $this->idNode = $this->_form[$this->id . '_element']['hiddenValues'][$this->id . '_element'];
+                $this->idNode = $this->getParam($this->id . '_element');
                 break;
 
             case 'getelements':
@@ -252,7 +252,7 @@ abstract class UI_Controller_Tree extends Core_Controller
      */
     public function getEditElementValue($elementName)
     {
-        return $this->_form[$this->id . '_' . $elementName]['value'];
+        return $this->getParam($this->id . '_' . $elementName);
     }
 
     /**
