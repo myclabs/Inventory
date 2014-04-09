@@ -198,11 +198,27 @@ class Serializer
                 continue;
             }
 
+            // Property name
+            if (isset($config['properties'][$propertyName]['name'])) {
+                $propertyName = $config['properties'][$propertyName]['name'];
+            }
+
             try {
                 $property = $class->getProperty($propertyName);
             } catch (\Exception $e) {
                 throw new \Exception("Unknown property $propertyName in $className");
             }
+
+            // Callback
+            if (isset($config['properties'][$propertyName]['callback'])) {
+                $callback = $config['properties'][$propertyName]['callback'];
+
+                $value = $callback($value);
+                $property->setAccessible(true);
+                $property->setValue($object, $value);
+                continue;
+            }
+
             $this->unserializePropertyValue($property, $object, $value);
         }
 
