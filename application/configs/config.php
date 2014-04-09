@@ -5,8 +5,6 @@ use Doctrine\ORM\EntityManager;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use User\Application\ViewHelper\IsAllowedHelper;
-use User\Domain\UserService;
 
 return [
     // Nom de l'application installée

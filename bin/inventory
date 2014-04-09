@@ -5,6 +5,8 @@ use Inventory\Command\ClearCacheCommand;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\PopulateDBCommand;
 use Inventory\Command\UpdateDBCommand;
+use Inventory\Command\ExportCommand;
+use Inventory\Command\ImportCommand;
 use Orga\Command\RebuildExportsCommand;
 use User\Application\Command\RebuildACLCommand;
 use Symfony\Component\Console\Application;
@@ -22,5 +24,7 @@ $application->add($container->get(UpdateDBCommand::class));
 $application->add($container->get(PopulateDBCommand::class));
 $application->add($container->get(ClearCacheCommand::class));
 $application->add($container->get(RebuildExportsCommand::class));
+$application->add($container->get(ExportCommand::class));
+$application->add($container->get(ImportCommand::class));
 
 $application->run();
