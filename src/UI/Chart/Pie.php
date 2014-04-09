@@ -61,7 +61,7 @@ class UI_Chart_Pie extends UI_Chart_Generic
             $dataScript = 'data.addRows([';
             foreach ($this->_series as $serie) {
                 $value = is_array($serie->values) ? $serie->values[0] : $serie->values;
-                $dataScript .= '[\''.$serie->name.'\', {v:'.$value.',f:\''.$locale->formatNumber($value, 3).'\'}],';
+                $dataScript .= '[\''.addslashes($serie->name).'\', {v:'.$value.',f:\''.$locale->formatNumber($value, 3).'\'}],';
                 if ($serie->color !== null) {
                     $seriesColors[] = $serie->color;
                 }
