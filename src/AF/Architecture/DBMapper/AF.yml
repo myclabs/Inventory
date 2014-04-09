@@ -17,7 +17,6 @@ AF\Domain\AF:
     ref:
       type: string
       nullable: false
-      unique: true
     label:
       type: string
       nullable: true
@@ -79,6 +78,11 @@ AF\Domain\AF:
       mappedBy: af
       cascade: [ all ]
       orphanRemoval: true
+
+  uniqueConstraints:
+    # ref unique dans une bibliothèque
+    ref:
+      columns: [library_id, ref]
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

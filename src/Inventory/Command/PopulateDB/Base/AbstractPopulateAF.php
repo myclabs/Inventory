@@ -2,6 +2,7 @@
 
 namespace Inventory\Command\PopulateDB\Base;
 
+use Account\Domain\Account;
 use AF\Domain\Action\SetState;
 use AF\Domain\Action\SetAlgoValue;
 use AF\Domain\Action\SetValue\Select\SetSelectSingleValue;
@@ -50,15 +51,23 @@ use Classification\Domain\Axis;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\AxisMember;
 use Core_Exception;
-use Parameter\Domain\Family\Family;
+use Parameter\Domain\ParameterLibrary;
 use Unit\UnitAPI;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Remplissage de la base de données avec des données de test
+ *
+ * @Injectable(lazy=true)
  */
 abstract class AbstractPopulateAF
 {
+    /**
+     * @Inject("account.myc-sense")
+     * @var Account
+     */
+    protected $publicAccount;
+
     // Création des catégories.
     //  + createCategory : -
     // Params : ref
@@ -661,8 +670,11 @@ abstract class AbstractPopulateAF
      */
     protected function createAlgoNumericParameter(AF $aF, $ref, $label, $refFamily)
     {
+        // Moche : par du principe qu'il y'a 1 seule bibliothèque
+        $parameterLibrary = ParameterLibrary::loadByAccount($this->publicAccount)[0];
+
         $numericParameter = new NumericParameterAlgo();
-        $numericParameter->setFamily(Family::loadByRef($refFamily));
+        $numericParameter->setFamily($parameterLibrary->getFamily($refFamily));
         $this->createAlgoNumeric($aF, $numericParameter, $ref, $label);
     }
 

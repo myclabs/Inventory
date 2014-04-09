@@ -25,12 +25,6 @@ class PopulateAF extends AbstractPopulateAF
      */
     private $entityManager;
 
-    /**
-     * @Inject("account.myc-sense")
-     * @var Account
-     */
-    private $publicAccount;
-
     public function run(OutputInterface $output)
     {
         $output->writeln('  <info>Populating AF</info>');

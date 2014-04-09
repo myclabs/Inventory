@@ -373,6 +373,7 @@ class Family extends Core_Model_Entity
      * @param string $ref
      * @throws \Core_Exception_NotFound
      * @return Family
+     * @deprecated À supprimer pour la 3.0, il faut passer par la librarie
      */
     public static function loadByRef($ref)
     {

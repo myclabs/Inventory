@@ -16,7 +16,6 @@ Parameter\Domain\Family\Family:
   fields:
     ref:
       type: string
-      unique: true
     label:
       type: string
       nullable: true
@@ -59,6 +58,11 @@ Parameter\Domain\Family\Family:
     library:
       targetEntity: Parameter\Domain\ParameterLibrary
       inversedBy: families
+
+  uniqueConstraints:
+    # ref unique dans une bibliothèque
+    ref:
+      columns: [library_id, ref]
 
   lifecycleCallbacks:
     prePersist: [ preSave ]
