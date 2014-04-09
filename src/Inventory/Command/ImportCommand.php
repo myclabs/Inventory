@@ -2,14 +2,11 @@
 
 namespace Inventory\Command;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use JMS\Serializer\Serializer;
+use Serializer\Serializer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Parameter\Domain\Category;
-use Parameter\Domain\Family\Dimension;
 use User\Domain\User;
 
 /**
@@ -20,18 +17,12 @@ use User\Domain\User;
 class ImportCommand extends Command
 {
     /**
-     * @var Serializer
-     */
-    private $serializer;
-
-    /**
      * @var EntityManager
      */
     private $entityManager;
 
-    public function __construct(Serializer $serializer, EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->serializer = $serializer;
         $this->entityManager = $entityManager;
 
         parent::__construct();
@@ -47,86 +38,39 @@ class ImportCommand extends Command
     {
         $root = PACKAGE_PATH . '/data/exports/migration-3.0';
 
+        $serializer = new Serializer([]);
+
         $output->writeln('<comment>Importing users</comment>');
-        $count = $this->importUsers($root . '/users.json');
-        $output->writeln(sprintf('<info>%d users imported</info>', $count));
-    }
-
-    private function importUsers($file)
-    {
-        $json = file_get_contents($file);
-
-        /** @var User[] $users */
-        $users = $this->serializer->deserialize($json, 'ArrayCollection<User\Domain\User>', 'json');
-
-        foreach ($users as $user) {
-            $this->entityManager->persist($user);
+        $objects = $serializer->unserialize(file_get_contents($root . '/users.json'));
+        foreach ($objects as $user) {
+            if ($user instanceof User) {
+                $output->writeln(sprintf('<info>Imported user: %s</info>', $user->getName()));
+                $user->save();
+            }
         }
-//        $this->entityManager->flush();
 
-        return count($users);
-    }
-
-    private function importParameters($file)
-    {
-        $json = file_get_contents($file);
-
-        /** @var Category[] $rootCategories */
-        $rootCategories = $this->serializer->deserialize($json, 'ArrayCollection<Techno\Domain\Category>', 'json');
-
-        foreach ($rootCategories as $category) {
-            $this->browseParameterCategory($category);
-
-            $this->entityManager->persist($category);
+        $output->writeln('<comment>Importing parameters</comment>');
+        $objects = $serializer->unserialize(file_get_contents($root . '/parameters.json'));
+        foreach ($objects as $object) {
+            if ($object instanceof \Techno\Domain\Category) {
+                $output->writeln(sprintf('<info>Imported category: %s</info>', $object->getLabel()));
+            }
+            if ($object instanceof \Core_Model_Entity) {
+                $object->save();
+            }
         }
+
+        $output->writeln('<comment>Importing AF</comment>');
+        $objects = $serializer->unserialize(file_get_contents($root . '/af.json'));
+        foreach ($objects as $object) {
+            if ($object instanceof \AF\Domain\Category) {
+                $output->writeln(sprintf('<info>Imported category: %s</info>', $object->getLabel()));
+            }
+            if ($object instanceof \Core_Model_Entity) {
+                $object->save();
+            }
+        }
+
         $this->entityManager->flush();
-    }
-
-    /**
-     * Restaure les associations
-     */
-    private function browseParameterCategory(Category $category)
-    {
-        foreach ($category->getFamilies() as $family) {
-            $this->setPropertyValue($family, 'category', $category);
-
-            foreach ($family->getDimensions() as $dimension) {
-                $this->setPropertyValue($dimension, 'family', $family);
-
-                foreach ($dimension->getMembers() as $member) {
-                    $this->setPropertyValue($member, 'dimension', $dimension);
-                }
-            }
-
-            foreach ($family->getCells() as $cell) {
-                $this->setPropertyValue($cell, 'family', $family);
-
-                // Recrée l'association avec les membres (Many-To-Many bidirectionnelle)
-                /** @var Dimension[] $dimensionsOrdered */
-                $dimensionsOrdered = $family->getDimensions()->toArray();
-                usort($dimensionsOrdered, function (Dimension $d1, Dimension $d2) {
-                    return strcmp($d1->getRef(), $d2->getRef());
-                });
-                $members = new ArrayCollection();
-                foreach (explode('|', $cell->getMembersHashKey()) as $i => $memberRef) {
-                    $dimension = $dimensionsOrdered[$i];
-                    $members[] = $dimension->getMember($memberRef);
-                }
-                $this->setPropertyValue($cell, 'members', $members);
-            }
-        }
-
-        foreach ($category->getChildCategories() as $childCategory) {
-            $this->setPropertyValue($childCategory, 'parentCategory', $category);
-
-            $this->browseParameterCategory($childCategory);
-        }
-    }
-
-    private function setPropertyValue($object, $property, $value)
-    {
-        $refl = new \ReflectionProperty($object, $property);
-        $refl->setAccessible(true);
-        $refl->setValue($object, $value);
     }
 }

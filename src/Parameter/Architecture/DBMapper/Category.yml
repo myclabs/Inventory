@@ -40,11 +40,13 @@ Parameter\Domain\Category:
       mappedBy: parentCategory
       orderBy:
         position: ASC
+      cascade: [ persist ]
     families:
       targetEntity: Parameter\Domain\Family\Family
       mappedBy: category
       orderBy:
         position: ASC
+      cascade: [ persist ]
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

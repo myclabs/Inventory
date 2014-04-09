@@ -5,6 +5,7 @@ use DI\Container;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
 use Doctrine\ORM\EntityManager;
@@ -136,6 +137,7 @@ return [
 
         return $em;
     }),
+    ManagerRegistry::class => DI\object(Core\ORM\ManagerRegistry::class),
 
     // Extensions Doctrine
     TranslatableListener::class => DI\factory(function (Container $c) {
