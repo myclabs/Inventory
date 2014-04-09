@@ -121,6 +121,7 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
     {
         $criteria = Criteria::create();
         $criteria->where(Criteria::expr()->eq('directNarrower', null));
+        $criteria->orderBy(['position' => Criteria::ASC]);
 
         return $this->axes->matching($criteria)->toArray();
     }
