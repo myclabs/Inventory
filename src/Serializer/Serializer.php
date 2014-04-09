@@ -147,6 +147,7 @@ class Serializer
                 continue;
             }
 
+            // Ignore property
             if (isset($config['properties'][$propertyName]['exclude'])
                 && $config['properties'][$propertyName]['exclude'] === true) {
                 continue;
@@ -170,6 +171,17 @@ class Serializer
 
         $className = $vars['__objectClassName'];
 
+        if (isset($this->config[$className])) {
+            $config = $this->config[$className];
+        } else {
+            $config = [];
+        }
+
+        // Class alias
+        if (isset($config['class'])) {
+            $className = $config['class'];
+        }
+
         $class = new \ReflectionClass($className);
         $object = $class->newInstanceWithoutConstructor();
 
@@ -179,7 +191,46 @@ class Serializer
             if (strpos($propertyName, '__') === 0) {
                 continue;
             }
-            $this->unserializePropertyValue($class->getProperty($propertyName), $object, $value);
+
+            // Ignore property
+            if (isset($config['properties'][$propertyName]['exclude'])
+                && $config['properties'][$propertyName]['exclude'] === true) {
+                continue;
+            }
+
+            // Property name
+            if (isset($config['properties'][$propertyName]['name'])) {
+                $propertyName = $config['properties'][$propertyName]['name'];
+            }
+
+            try {
+                $property = $class->getProperty($propertyName);
+            } catch (\Exception $e) {
+                throw new \Exception("Unknown property $propertyName in $className");
+            }
+
+            // Callback
+            if (isset($config['properties'][$propertyName]['callback'])) {
+                $callback = $config['properties'][$propertyName]['callback'];
+
+                $value = $callback($value);
+                $property->setAccessible(true);
+                $property->setValue($object, $value);
+                continue;
+            }
+
+            $this->unserializePropertyValue($property, $object, $value);
+        }
+
+        // Callbacks
+        if (isset($config['callbacks'])) {
+            $callables = $config['callbacks'];
+            if (! is_array($callables)) {
+                $callables = [ $callables ];
+            }
+            foreach ($callables as $callable) {
+                $callable($object, $vars);
+            }
         }
     }
 
