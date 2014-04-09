@@ -114,7 +114,7 @@ class UI_Chart_Bar extends UI_Chart_Generic
             $locale = Core_Locale::loadDefault();
             $rowsScript = 'data.addRows([';
             $labelScript = '';
-            $rows = array();
+            $rows = [];
             foreach ($this->_series as $serie) {
                 $script .= 'data.addColumn(\''.$serie->type.'\', \''.addslashes($serie->name).'\');';
                 if (($this->displayUncertainty) && ($serie->uncertainties !== array())) {
@@ -129,7 +129,7 @@ class UI_Chart_Bar extends UI_Chart_Generic
                         $rows[$index] .= ',';
                     }
                     if (is_string($value)) {
-                        $rows[$index] .= '\''.$value.'\'';
+                        $rows[$index] .= '\''.addslashes($value).'\'';
                     } else {
                         $rows[$index] .= '{v:'.$value.',f:\''.$locale->formatNumber($value, 3).'\'}';
                         if (($this->displayUncertainty) && ($serie->uncertainties !== array())) {
