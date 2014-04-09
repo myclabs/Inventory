@@ -50,6 +50,15 @@ class ExportCommand extends Command
         $data = User::loadList();
         file_put_contents($root . '/users.json', $serializer->serialize($data));
 
+        $output->writeln('<comment>Exporting classification</comment>');
+        $data = [
+            \Classif_Model_Indicator::loadList(),
+            \Classif_Model_Axis::loadList(),
+            \Classif_Model_Context::loadList(),
+            \Classif_Model_ContextIndicator::loadList(),
+        ];
+        file_put_contents($root . '/classification.json', $serializer->serialize($data));
+
         $output->writeln('<comment>Exporting parameters</comment>');
         $data = TechnoCategory::loadRootCategories();
         file_put_contents($root . '/parameters.json', $serializer->serialize($data));
