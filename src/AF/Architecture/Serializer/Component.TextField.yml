@@ -1,7 +1,0 @@
-AF\Domain\Component\TextField:
-
-  properties:
-    type:
-      type: integer
-    required:
-      type: boolean

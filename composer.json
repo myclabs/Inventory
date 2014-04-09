@@ -41,8 +41,7 @@
         "behat/mink": "~1.5",
         "behat/mink-extension": "*",
         "behat/mink-selenium2-driver": "*",
-        "mnapoli/metaconsole": "dev-master",
-        "jms/serializer": "*"
+        "mnapoli/metaconsole": "dev-master"
     },
     "suggest": {
         "shvetsgroup/parallelrunner": "Run Behat scenarios in parallel"
