@@ -170,6 +170,16 @@ class Serializer
 
         $className = $vars['__objectClassName'];
 
+        if (isset($this->config[$className])) {
+            $config = $this->config[$className];
+        } else {
+            $config = [];
+        }
+
+        if (isset($config['class'])) {
+            $className = $config['class'];
+        }
+
         $class = new \ReflectionClass($className);
         $object = $class->newInstanceWithoutConstructor();
 

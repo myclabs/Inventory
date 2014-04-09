@@ -7,7 +7,7 @@ use Serializer\Serializer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Techno\Domain\Category as TechnoCategory;
+use Parameter\Domain\Category as TechnoCategory;
 use User\Domain\User;
 
 /**
