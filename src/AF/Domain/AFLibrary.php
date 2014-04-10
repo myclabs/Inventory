@@ -5,6 +5,7 @@ namespace AF\Domain;
 use Account\Domain\Account;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
+use Core_Model_Query;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -149,5 +150,17 @@ class AFLibrary extends Core_Model_Entity implements EntityResource, CascadingRe
     public function getSubResources(EntityManager $entityManager)
     {
         return [];
+    }
+
+    /**
+     * @param Account $account
+     * @return AFLibrary[]
+     */
+    public static function loadByAccount(Account $account)
+    {
+        $query = new Core_Model_Query();
+        $query->filter->addCondition('account', $account);
+
+        return self::getEntityRepository()->loadList($query);
     }
 }
