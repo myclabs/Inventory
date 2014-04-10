@@ -56,11 +56,7 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->addBaseTabs();
         $viewConfiguration->setPageTitle($af->getLabel());
         $viewConfiguration->setUseSession(true);
-        if ($this->hasParam('fromTree')) {
-            $viewConfiguration->setExitUrl($this->_helper->url('tree', 'af', 'af'));
-        } else {
-            $viewConfiguration->setExitUrl($this->_helper->url('list', 'af', 'af'));
-        }
+        $viewConfiguration->setExitUrl('af/library/view/id/' . $af->getLibrary()->getId());
 
         $this->setActiveMenuItemAFLibrary($af->getLibrary()->getId());
         $this->forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
