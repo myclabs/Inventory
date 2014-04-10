@@ -62,7 +62,7 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
                                                                           'edit_algos',
                                                                           'af',
                                                                           [
-                                                                          'idAf'   => $af->getId(),
+                                                                          'idAF'   => $af->getId(),
                                                                           'idAlgo' => $algo->getId()
                                                                           ]),
                                                       __('UI', 'verb', 'edit'),

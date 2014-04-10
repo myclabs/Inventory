@@ -42,11 +42,11 @@ $allRelations = [
         $relations[ElementaryConditionAlgo::RELATION_LE] = $allRelations[ElementaryConditionAlgo::RELATION_LE];
         ?>
         <div class="form-group">
-            <label class="col-sm-2 control-label">
+            <label class="col-sm-2 control-label" for="inputRelation">
                 <?=__('UI', 'name', 'relation')?>
             </label>
             <div class="col-sm-10">
-                <select name="relation" class="form-control">
+                <select name="relation" id="inputRelation" class="form-control">
                     <?php foreach ($relations as $relation => $label) : ?>
                         <option value="<?=$relation?>"
                             <?=$algo->getRelation() == $relation ? 'selected' : ''?>>
@@ -57,11 +57,11 @@ $allRelations = [
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">
+            <label class="col-sm-2 control-label" for="inputValue">
                 <?=__('UI', 'name', 'referenceValue')?>
             </label>
             <div class="col-sm-10">
-                <input name="value" type="text" class="form-control"
+                <input name="value" id="inputValue" type="text" class="form-control"
                        value="<?=$locale->formatNumberForInput($algo->getValue())?>">
             </div>
         </div>
@@ -75,11 +75,11 @@ $allRelations = [
         $relations[ElementaryConditionAlgo::RELATION_EQUAL] = $allRelations[ElementaryConditionAlgo::RELATION_EQUAL];
         ?>
         <div class="form-group">
-            <label class="col-sm-2 control-label">
+            <label class="col-sm-2 control-label" for="inputRelation">
                 <?=__('UI', 'name', 'relation')?>
             </label>
             <div class="col-sm-10">
-                <select name="relation" class="form-control">
+                <select name="relation" id="inputRelation" class="form-control">
                     <?php foreach ($relations as $relation => $label) : ?>
                         <option value="<?=$relation?>"
                             <?=$algo->getRelation() == $relation ? 'selected' : ''?>>
@@ -90,11 +90,11 @@ $allRelations = [
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">
+            <label class="col-sm-2 control-label" for="inputValue">
                 <?=__('UI', 'name', 'referenceValue')?>
             </label>
             <div class="col-sm-10">
-                <select name="value" class="form-control">
+                <select name="value" id="inputValue" class="form-control">
                     <option value="1" <?=$algo->getValue() ? 'selected' : ''?>>
                         <?=__('UI', 'property', 'checked')?>
                     </option>
@@ -115,11 +115,11 @@ $allRelations = [
         $relations[ElementaryConditionAlgo::RELATION_NOTEQUAL] = $allRelations[ElementaryConditionAlgo::RELATION_NOTEQUAL];
         ?>
         <div class="form-group">
-            <label class="col-sm-2 control-label">
+            <label class="col-sm-2 control-label" for="inputRelation">
                 <?=__('UI', 'name', 'relation')?>
             </label>
             <div class="col-sm-10">
-                <select name="relation" class="form-control">
+                <select name="relation" id="inputRelation" class="form-control">
                     <?php foreach ($relations as $relation => $label) : ?>
                         <option value="<?=$relation?>"
                             <?=$algo->getRelation() == $relation ? 'selected' : ''?>>
@@ -130,11 +130,11 @@ $allRelations = [
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">
+            <label class="col-sm-2 control-label" for="inputValue">
                 <?=__('UI', 'name', 'referenceValue')?>
             </label>
             <div class="col-sm-10">
-                <select name="value" class="form-control">
+                <select name="value" id="inputValue" class="form-control">
                     <?php
                     /** @var $field SelectSingle */
                     $field = SelectSingle::loadByRef($algo->getInputRef(), $af);
@@ -161,11 +161,11 @@ $allRelations = [
         $relations[ElementaryConditionAlgo::RELATION_NOTCONTAINS] = $allRelations[ElementaryConditionAlgo::RELATION_NOTCONTAINS];
         ?>
         <div class="form-group">
-            <label class="col-sm-2 control-label">
+            <label class="col-sm-2 control-label" for="inputRelation">
                 <?=__('UI', 'name', 'relation')?>
             </label>
             <div class="col-sm-10">
-                <select name="relation" class="form-control">
+                <select name="relation" id="inputRelation" class="form-control">
                     <?php foreach ($relations as $relation => $label) : ?>
                         <option value="<?=$relation?>"
                             <?=$algo->getRelation() == $relation ? 'selected' : ''?>>
@@ -176,11 +176,11 @@ $allRelations = [
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">
+            <label class="col-sm-2 control-label" for="inputValue">
                 <?=__('UI', 'name', 'referenceValue')?>
             </label>
             <div class="col-sm-10">
-                <select name="value" class="form-control">
+                <select name="value" id="inputValue" class="form-control">
                     <?php
                     /** @var $field SelectMulti */
                     $field = SelectMulti::loadByRef($algo->getInputRef(), $af);
