@@ -48,9 +48,13 @@ class Tec_ExpressionController extends Core_Controller
      */
     public function readAction()
     {
+        if (!$this->hasParam('typeExpression') && is_null($this->view->input)) {
+            $this->redirect('tec/expression/test');
+        }
+
         $this->view->displayResult = true;
 
-        if (!(in_array($this->view->typeExpression, array('numeric', 'logical', 'select')))) {
+        if (!(in_array($this->view->typeExpression, ['numeric', 'logical', 'select']))) {
             UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'));
         } else {
             $this->view->typeExpression = $this->view->typeExpression;

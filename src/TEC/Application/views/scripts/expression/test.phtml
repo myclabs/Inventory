@@ -4,96 +4,134 @@
  * @package TEC
  */
 
-ob_start()
 ?>
-    <div id="help">
-		<p><?=__('TEC', 'interpreter', 'authorizedCharactersInOperands')?></p>
-        <p><?=__('TEC', 'interpreter', 'arithmeticExpression')?></p>
-        <p><?=__('TEC', 'interpreter', 'booleanExpression')?></p>
-        <p><?=__('TEC', 'interpreter', 'selectionExpression')?></p>
+
+<div class="page-header">
+    <h1>
+        <?=__('TEC', 'interpreter', 'pageTitle')?>
+    </h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-7">
+        <form action="tec/expression/read" method="POST" class="form-horizontal">
+            <div class="form-group">
+                <span class="control-label form-control-static col-xs-3">
+                    <?=___('TEC', 'interpreter', 'expressionTypeLabel')?>
+                </span>
+                <div class="col-xs-9">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" value="numeric" name="typeExpression"
+                                <?=(($this->typeExpression === 'numeric') ? ' checked' : '')?> >
+                            <?=___('TEC', 'property', 'arithmetic')?>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" value="logical" name="typeExpression"
+                                <?=(($this->typeExpression === 'logical') ? ' checked' : '')?>>
+                            <?=___('TEC', 'property', 'booleanFem')?>
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" value="select" name="typeExpression"
+                                <?=(($this->typeExpression === 'select') ? ' checked' : '')?>>
+                            <?=___('TEC', 'name', 'selection')?>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-3" for="input">
+                    <?=___('TEC', 'name', 'expression')?>
+                </label>
+                <div class="col-xs-9">
+                    <textarea id="input" name="input" class="form-control"><?=$this->input?></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-9 col-xs-offset-3">
+                    <button type="submit" class="btn btn-primary">
+                        <?=___('UI', 'verb', 'interpret')?>
+                    </button>
+                    <button type="reset" class="btn btn-default">
+                        <?=___('UI', 'verb', 'reset')?>
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
-<?php
-    $helpContent = ob_get_contents();
-    ob_end_clean();
+    <blockquote class="col-xs-5 blockquote-reverse initialism" id="tecHelp">
+        <style>
+            #tecHelp p { margin: 9px 0 0; }
+            #tecHelp code { white-space: normal;}
+        </style>
+        <footer>
+            <?=__('UI', 'name', 'help')?>
+        </footer>
+        <p>
+            <?=__('TEC', 'interpreter', 'authorizedCharactersInOperands')?>
+        </p>
+        <code>
+            <?=__('TEC', 'interpreter', 'authorizedCharactersInOperandsExemple')?>
+        </code>
+        <p>
+            <?=__('TEC', 'interpreter', 'arithmeticExpression')?>
+        </p>
+        <code>
+            <?=__('TEC', 'interpreter', 'arithmeticExpressionExemple')?>
+        </code>
+        <p>
+            <?=__('TEC', 'interpreter', 'booleanExpression')?>
+        </p>
+        <code>
+            <?=__('TEC', 'interpreter', 'booleanExpressionExemple')?>
+        </code>
+        <p>
+            <?=__('TEC', 'interpreter', 'selectionExpression')?>
+        </p>
+        <code>
+            <?=__('TEC', 'interpreter', 'selectionExpressionExemple')?>
+        </code>
+    </blockquote>
+</div>
 
-    $formExpression = new UI_Form('expression');
-    $formExpression->setAction('tec/expression/read');
-    $formExpression->setAjax(false);
-
-
-    $selectType = new UI_Form_Element_Radio('typeExpression');
-    $selectType->setLabel(__('TEC', 'interpreter', 'expressionTypeLabel'));
-
-    $optionNumeric = new UI_Form_Element_Option('numeric', 'numeric', __('TEC', 'property', 'arithmetic'));
-    $selectType->addOption($optionNumeric);
-    $optionLogical = new UI_Form_Element_Option('logical', 'logical', __('TEC', 'property', 'booleanFem'));
-    $selectType->addOption($optionLogical);
-    $optionExecution = new UI_Form_Element_Option('select', 'select', __('TEC', 'name', 'selection'));
-    $selectType->addOption($optionExecution);
-    $selectType->setValue($this->typeExpression);
-
-    $formExpression->addElement($selectType);
-
-
-    $input = new UI_Form_Element_Textarea('input');
-    $input->setLabel(__('TEC', 'name', 'expression'));
-    $input->setValue($this->input);
-
-    $formExpression->addElement($input);
-
-
-    $formExpression->addSubmitButton(__('UI', 'verb', 'interpret'));
-    $formExpression->addResetButton(__('UI', 'verb', 'reset'));
-?>
-  	<h1><?=__('TEC', 'interpreter', 'pageTitle')?></h1>
-  	<?=$this->collapse('help', __('UI', 'name', 'help'), $helpContent);?>
-  	<hr />
-<?php
-    $formExpression->display();
-?>
-
-<?php if ($this->displayResult) { ?>
-    <?php if (count($this->errors) > 0) { ?>
+<?php if ($this->displayResult) : ?>
+    <?php if (count($this->errors) > 0) : ?>
 
     <div class="alert alert-danger">
-    	<button type="button" class="close" data-dismiss="alert">&times;</button>
     	<?=__('TEC', 'interpreter', 'incorrectExpressionMessage')?>
 	</div>
-	<fieldset>
-        <legend><?=__('UI', 'name', 'errors')?></legend>
-        <ul>
-        <?php foreach ($this->errors as $error) { ?>
-            <li><?=$error?></li>
-        <?php } ?>
-        </ul>
-    </fieldset>
+    <ul class="well">
+        <?php foreach ($this->errors as $error) : ?>
+        <li><?=$error?></li>
+        <?php endforeach; ?>
+    </ul>
 
-    <?php } else { ?>
+    <?php else : ?>
 
     <div class="alert alert-success">
-    	<button type="button" class="close" data-dismiss="alert">&times;</button>
     	<?=__('TEC', 'interpreter', 'correctExpressionMessage')?>
 	</div>
-	<fieldset>
-        <legend><?=__('TEC', 'interpreter', 'returnExpressionLabel')?></legend>
-    <p><?=$this->correctedExpression?></p>
+    <p class="well"><?=$this->correctedExpression?></p>
     <div id="chart"></div>
-        <script type='text/javascript' src='http://www.google.com/jsapi'></script>
-        <script type="text/javascript">
-            var table = [<?=$this->graphExpression?>];
-            google.load('visualization', '1', {packages:['orgchart']});
-            google.setOnLoadCallback(drawChart);
-            function drawChart() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Feuille');
-                data.addColumn('string', 'Noeud');
-                data.addColumn('string', 'Attribut');
-                data.addRows([<?=$this->graphExpression?>]);
-                var chart = new google.visualization.OrgChart(document.getElementById('chart'));
-                chart.draw(data, {allowHtml:true, allowCollapse:true});
-            }
-        </script>
-	</fieldset>
+    <script type='text/javascript' src='http://www.google.com/jsapi'></script>
+    <script type="text/javascript">
+        var table = [<?=$this->graphExpression?>];
+        google.load('visualization', '1', {packages:['orgchart']});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Feuille');
+            data.addColumn('string', 'Noeud');
+            data.addColumn('string', 'Attribut');
+            data.addRows([<?=$this->graphExpression?>]);
+            var chart = new google.visualization.OrgChart(document.getElementById('chart'));
+            chart.draw(data, {allowHtml:true, allowCollapse:true});
+        }
+    </script>
 
-    <?php } ?>
-<?php } ?>
+    <?php endif; ?>
+<?php endif; ?>
