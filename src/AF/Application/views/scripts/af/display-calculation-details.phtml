@@ -51,7 +51,7 @@ displayAF($af, $inputSet, __('AF', 'inputDocumentation', 'masterForm'));
  * @param string   $refPrefix
  * @return Collapse
  */
-function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
+function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = 'collapse_')
 {
     $collapse = new Collapse($refPrefix . $af->getRef(), $title);
 
