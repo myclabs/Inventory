@@ -42,9 +42,12 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
             $data['enabled'] = $selectField->isEnabled();
             $data['required'] = $selectField->getRequired();
             $data['type'] = $selectField->getType();
-            $data['options'] = $this->cellPopup('af/edit_components/popup-select-options/idSelect/'
-                                                    . $selectField->getId(),
-                                                __('UI', 'name', 'options'), 'zoom-in');
+            $data['options'] = $this->cellPopup(
+                'af/edit_components/popup-select-options?idSelect=' . $selectField->getId()
+                . '&idAF=' . $af->getId(),
+                __('UI', 'name', 'options'),
+                'zoom-in'
+            );
             $this->addLine($data);
         }
         $this->send();

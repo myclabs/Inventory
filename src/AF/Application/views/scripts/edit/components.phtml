@@ -80,9 +80,9 @@ $selectMultiFields->setContent($this->partial('edit/components/select-multi-fiel
 echo $selectMultiFields->render();
 
 $script .= <<<JS
-$('#selectSingleFields').on('show.bs.collapse', function(e) {
-    if ($(e.target).attr('id') == 'selectSingleFields') {
-        selectSingleFieldDatagrid.filter();
+$('#selectMultiFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'selectMultiFields') {
+        selectMultiFieldDatagrid.filter();
     }
 });
 JS;

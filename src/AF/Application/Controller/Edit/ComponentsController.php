@@ -1,10 +1,11 @@
 <?php
 
+use AF\Domain\AF;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\Select;
 use Core\Annotation\Secure;
-use Techno\Domain\Family\Dimension;
-use Techno\Domain\Category as TechnoCategory;
+use Parameter\Domain\Family\Dimension;
+use Parameter\Domain\ParameterLibrary;
 
 /**
  * @author matthieu.napoli
@@ -27,13 +28,17 @@ class AF_Edit_ComponentsController extends Core_Controller
      */
     public function popupSelectOptionsAction()
     {
+        $af = AF::load($this->getParam('idAF'));
+        $account = $af->getLibrary()->getAccount();
+
         $this->view->selectField = Select::load($this->getParam('idSelect'));
 
         $families = [];
-        foreach (TechnoCategory::loadRootCategories() as $rootCategory) {
-            $families = array_merge($families, $rootCategory->getAllFamilies());
+        foreach (ParameterLibrary::loadByAccount($account) as $parameterLibrary) {
+            $families = array_merge($families, $parameterLibrary->getFamilies()->toArray());
         }
         $this->view->families = $families;
+        $this->view->assign('af', $af);
         $this->_helper->layout()->disableLayout();
     }
 

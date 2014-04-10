@@ -24,7 +24,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function getelementsAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
@@ -49,9 +49,12 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
                 $data['defaultValue'] = $this->cellList($defaultValue->getId());
             }
             $data['type'] = $selectField->getType();
-            $data['options'] = $this->cellPopup('af/edit_components/popup-select-options/idSelect/'
-                                                    . $selectField->getId(),
-                                                __('UI', 'name', 'options'), 'zoom-in');
+            $data['options'] = $this->cellPopup(
+                'af/edit_components/popup-select-options?idSelect=' . $selectField->getId()
+                . '&idAF=' . $af->getId(),
+                __('UI', 'name', 'options'),
+                'zoom-in'
+            );
             $this->addLine($data);
         }
         $this->send();
@@ -64,7 +67,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function addelementAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
@@ -178,7 +181,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function deleteelementAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         /** @var $field SelectSingle */
         $field = SelectSingle::load($this->getParam('index'));

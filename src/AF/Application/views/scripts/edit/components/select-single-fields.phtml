@@ -2,11 +2,6 @@
 use AF\Domain\AF;
 use AF\Domain\Component\Select\SelectSingle;
 
-/**
- * @author  matthieu.napoli
- * @author  yoann.croizer
- * @package AF
- */
 /** @var $af AF */
 $af = $this->af;
 
@@ -80,7 +75,6 @@ $selectDatagrid->addCol($selectType);
 $selectOption = new UI_Datagrid_Col_Popup('options', __('UI', 'name', 'options'));
 $selectOption->addable = false;
 $selectOption->editable = true;
-$selectOption->popup->setHeaderContent(__('UI', 'name', 'options'));
 $selectOption->popup->large();
 $selectDatagrid->addCol($selectOption);
 
