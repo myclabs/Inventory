@@ -583,7 +583,8 @@ class UI_Tree extends UI_Generic
             $changeOrderWrapper->appendContent($changeOrderLastWrapper);
             $changeOrderWrapper->appendContent($changeOrderAfterWrapper);
 
-            $changeOrderLabel = new GenericTag('p', $this->changeOrderLabel);
+            $changeOrderLabel = new GenericTag('span', $this->changeOrderLabel);
+            $changeOrderLabel->addClass('control-label');
             $changeOrderLabel->addClass('form-control-static');
             $changeOrderLabel->addClass('col-xs-2');
 
