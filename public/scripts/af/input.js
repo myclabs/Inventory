@@ -146,16 +146,17 @@ AF.Input.prototype = {
     exit: function () {
         var that = this;
         if (this.hasChanges) {
-            bootbox.confirm(
-                __("AF", "inputInput", "confirmExitInput"),
-                __("UI", "verb", "cancel"),
-                __("UI", "verb", "confirm"),
-                function (choice) {
-                    if (choice == true) {
-                        window.location.href = that.exitURL;
-                    }
+            $.confirm({
+                text: __("AF", "inputInput", "confirmExitInput"),
+                confirmButton: __("UI", "verb", "confirm"),
+                cancelButton: __("UI", "verb", "cancel"),
+                confirm: function() {
+                    window.location.href = that.exitURL;
+                },
+                cancel: function() {
+                    // nothing to do
                 }
-            );
+            });
         } else {
             window.location.href = that.exitURL;
         }
