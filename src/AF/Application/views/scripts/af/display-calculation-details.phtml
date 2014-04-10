@@ -45,8 +45,8 @@ if ($outputSet && count($outputSet->getIndicators()) == 0) {
 displayAF($af, $inputSet, __('AF', 'inputDocumentation', 'masterForm'));
 
 /**
- * @param \AF\Domain\AF       $af
- * @param \AF\Domain\InputSet\InputSet $inputSet
+ * @param AF       $af
+ * @param InputSet $inputSet
  * @param string   $title
  * @param string   $refPrefix
  * @return Collapse
@@ -70,7 +70,7 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = 'collapse_')
 
     // Sub-AF
     foreach (getSubAFInputSets($inputSet) as $array) {
-        /** @var $subInputSet \AF\Domain\InputSet\SubInputSet */
+        /** @var $subInputSet SubInputSet */
         $subInputSet = $array['subInputSet'];
         $componentRef = $array['componentRef'];
 
@@ -86,7 +86,7 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = 'collapse_')
 
 
 /**
- * @param \AF\Domain\InputSet\InputSet $inputSet
+ * @param InputSet $inputSet
  * @return SubInputSet[]
  */
 function getSubAFInputSets(InputSet $inputSet)
@@ -128,7 +128,7 @@ function getSubAFInputSets(InputSet $inputSet)
 
 /**
  * @param Algo     $algo
- * @param \AF\Domain\InputSet\InputSet $inputSet
+ * @param InputSet $inputSet
  * @param string   $refPrefix
  * @return Collapse
  */
@@ -198,13 +198,10 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
 
     // Expression
     if ($algo instanceof NumericExpressionAlgo) {
-        $url = $view->url([
-                          'module' => 'af',
-                          'controller' => 'af',
-                          'action' => 'popup-expression-graph',
-                          'id' => $algo->getId(),
-                          ]);
+        $url = 'af/af/popup-expression-graph?id=' . $algo->getId() . '&idAF=' . $inputSet->getAF()->getId();
         $popup = new Modal();
+        $popup->addDefaultDismissButton();
+        $popup->ajax(true);
         $popup->setAttribute('id', 'graph_' . $algo->getId());
         $popup->addTitle($algo->getRef());
         if ($algo->getLabel()) {
