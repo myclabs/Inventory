@@ -80,7 +80,7 @@ foreach ($indicators as $indicator) {
             echo "<tr>";
             echo "<td>" . $outputElement->getLabel() . "</td>";
             echo "<td>" . $locale->formatNumber($outputElement->getValue()->getDigitalValue(), 3) . "</td>";
-            echo "<td>" . $locale->formatUncertainty($outputElement->getValue()->getRelativeUncertainty()) . "</td>";
+            echo "<td>" . $locale->formatInteger($outputElement->getValue()->getRelativeUncertainty()) . "</td>";
 
             // Indexation de l'élément
             foreach ($axes as $axis) {
