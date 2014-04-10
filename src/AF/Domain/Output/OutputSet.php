@@ -24,7 +24,7 @@ class OutputSet extends Core_Model_Entity
     protected $id;
 
     /**
-     * @var \AF\Domain\InputSet\PrimaryInputSet|null
+     * @var PrimaryInputSet|null
      */
     protected $inputSet;
 
@@ -46,7 +46,7 @@ class OutputSet extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\InputSet\InputSet $inputSet
+     * @param InputSet $inputSet
      * @param Output[] $algoOutputs
      */
     public function addAlgoOutputs(InputSet $inputSet, array $algoOutputs)

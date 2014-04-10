@@ -11,6 +11,7 @@ use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\AFCopyService;
 use AF\Domain\AFLibrary;
+use AF\Domain\InputService;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
@@ -18,11 +19,9 @@ use DI\Annotation\Inject;
 
 /**
  * Countroleur des AF
- * @package AF
  */
 class AF_AfController extends Core_Controller
 {
-
     /**
      * @Inject
      * @var InputSetSessionStorage
@@ -34,6 +33,12 @@ class AF_AfController extends Core_Controller
      * @var AFCopyService
      */
     private $afCopyService;
+
+    /**
+     * @Inject
+     * @var InputService
+     */
+    private $inputService;
 
     /**
      * Affichage d'un AF en mode test
@@ -168,6 +173,8 @@ class AF_AfController extends Core_Controller
         } else {
             // Récupère la saisie en session
             $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+            // Recalcule les résultats parce que sinon problème de serialisation de proxies en session
+            $this->inputService->updateResults($inputSet);
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
@@ -192,6 +199,8 @@ class AF_AfController extends Core_Controller
         } else {
             // Récupère la saisie en session
             $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+            // Recalcule les résultats parce que sinon problème de serialisation de proxies en session
+            $this->inputService->updateResults($inputSet);
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
