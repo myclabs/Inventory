@@ -64,7 +64,7 @@ class ContextIndicator extends Core_Model_Entity
 
     public function getLabel()
     {
-        return $this->context->getLabel() . ' - ' . $this->indicator->getLabel();
+        return $this->indicator->getLabel() . ' - ' . $this->context->getLabel();
     }
 
     /**
