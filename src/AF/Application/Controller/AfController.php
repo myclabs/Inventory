@@ -174,7 +174,9 @@ class AF_AfController extends Core_Controller
             // Récupère la saisie en session
             $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
             // Recalcule les résultats parce que sinon problème de serialisation de proxies en session
-            $this->inputService->updateResults($inputSet);
+            if ($inputSet) {
+                $this->inputService->updateResults($inputSet);
+            }
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
@@ -200,7 +202,9 @@ class AF_AfController extends Core_Controller
             // Récupère la saisie en session
             $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
             // Recalcule les résultats parce que sinon problème de serialisation de proxies en session
-            $this->inputService->updateResults($inputSet);
+            if ($inputSet) {
+                $this->inputService->updateResults($inputSet);
+            }
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
