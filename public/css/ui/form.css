@@ -38,7 +38,6 @@
 .form .repeatedGroup table.repeatedGroup { margin-left: 0px; }
 .form .repeatedGroup table.repeatedGroup > div { margin-right: 0px; }
 .form .repeatedGroup table.repeatedGroup > div:first-child { width: auto; }
-.form .repeatedGroup table.repeatedGroup .input:first-child input { width: 100px; }
 .form .repeatedGroup table.repeatedGroup .input:not(:first-child) { margin: 2px; }
 .form .repeatedGroup table.repeatedGroup .input:first-child select { width: 150px; }
 .form .repeatedGroup table.repeatedGroup .input:first-child textarea { width: 150px; }
