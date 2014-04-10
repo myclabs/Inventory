@@ -243,7 +243,7 @@ class User_ProfileController extends Core_Controller
                 } else {
                     $message = __('UI', 'message', 'updated') . __('User', 'editEmail', 'userInformedByEmail');
                 }
-                UI_Message::addMessageStatic($message, UI_Message::TYPE_SUCCESS);
+                $this->setFormMessage($message, UI_Message::TYPE_SUCCESS);
             }
             $this->sendFormResponse();
             return;
@@ -292,7 +292,7 @@ class User_ProfileController extends Core_Controller
             if (! $this->hasFormError()) {
                 $user->setPassword($password);
                 $this->entityManager->flush();
-                UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
+                $this->setFormMessage(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
             }
 
             $this->sendFormResponse();

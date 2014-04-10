@@ -24,21 +24,22 @@ if ($this->editSelfEmail) {
 
         <?php if ($this->editSelfEmail) : ?>
             <div class="form-group">
-                <label class="col-sm-2 control-label">
+                <label class="col-sm-2 control-label" for="inputPassword">
                     <?=__('User', 'editEmail', 'password')?>
                 </label>
                 <div class="col-sm-10">
-                    <input name="password" type="password" class="form-control" required autocomplete="off">
+                    <input name="password" id="inputPassword" type="password" class="form-control"
+                           required autocomplete="off">
                 </div>
             </div>
         <?php endif; ?>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">
+            <label class="col-sm-2 control-label" for="inputEmail">
                 <?=__('User', 'editEmail', 'newEmail')?>
             </label>
             <div class="col-sm-10">
-                <input name="email" type="email" class="form-control" required>
+                <input name="email" id="inputEmail" type="email" class="form-control" required>
             </div>
         </div>
 
