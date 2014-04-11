@@ -362,14 +362,14 @@ class ListColumn extends GenericColumn
             if ($this->multiple === true) {
                 $editorValue .= 'if (typeof(value) == "string") {';
                 $editorValue .= 'value = new Array(value.toString());';
-                $editorValue .= 'value = { id: value.toString(), text: value.toString()};';
                 $editorValue .= '}';
             } else {
                 $editorValue .= 'if (typeof(value) == "string") {';
-                $editorValue .= 'value = { id: value.toString(), text: value.toString()};';
+                $editorValue .= 'value = new Array(value.toString());';
                 $editorValue .= '}';
             }
             $editorValue .= '$(column.editor.textbox).val(\'\');';
+            $editorValue .= '$(column.editor.textbox).select2(\'val\', \'\');';
 
             $editorValue .= '$.get(';
             $editorValue .= '\''.$this->getUrlDynamicList($datagrid, 'edit').'\',';
@@ -389,13 +389,17 @@ class ListColumn extends GenericColumn
             $editorValue .= 'initSelection: function(element, callback){';
             $editorValue .= 'var selectedData = new Array();';
             $editorValue .= 'for (var i = 0; i < data.length; i++) {';
-            $editorValue .= 'for (var j = 0; j < data.length; j++) {';
-            $editorValue .= 'if (data[i].id === value[j]) {';
+            $editorValue .= 'for (var j = 0; j < value.length; j++) {';
+            $editorValue .= 'if (data[i].id === value[j].id) {';
             $editorValue .= 'selectedData.push(data[i])';
             $editorValue .= '}';
             $editorValue .= '}';
             $editorValue .= '}';
-            $editorValue .= 'callback(selectedData);';
+            if ($this->multiple === true) {
+                $editorValue .= 'callback(selectedData);';
+            } else {
+                $editorValue .= 'callback(selectedData[0]);';
+            }
             $editorValue .= '},';
             $editorValue .= 'ajax: {';
             $editorValue .= 'url: "'.$this->getUrlDynamicList($datagrid, 'edit').'",';
