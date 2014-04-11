@@ -7,6 +7,7 @@ use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\Modal;
+use UI\Datagrid\Column\GenericColumn;
 use UI\Datagrid\Column\ListColumn;
 use UI\Datagrid\Column\LongTextColumn;
 use UI_Generic;
@@ -634,10 +635,13 @@ class Datagrid extends UI_Generic
         $datagridSession = $this->getDatagridSession();
 
         // Création d'un formulaire contenant les champs du filtre.
-        $formFilter = new UI_Form($this->id.'_filterForm');
-        $filters = array_merge($this->columns, $this->customFilters);
-        /** @var Column\GenericColumn $column */
+        $formFilter = new GenericTag('form');
+        $formFilter->setAttribute('id', $this->id.'_filterForm');
+        $formFilter->addClass('form-horizontal');
+
+        $filters = array_merge($this->_cols, $this->_customFilters);
         foreach ($filters as $column) {
+            /** @var GenericColumn $column */
             if ($column->criteriaFilterAttribute !== null) {
                 if (isset($datagridSession['filters'][$column->getFullFilterName($this)])) {
                     $defaultValue = $datagridSession['filters'][$column->getFullFilterName($this)];
@@ -646,24 +650,26 @@ class Datagrid extends UI_Generic
                 }
                 $columnFilterElement = $column->getFilterFormElement($this, $defaultValue);
                 if ($columnFilterElement !== null) {
-                    $formFilter->addElement($columnFilterElement);
+                    $formFilter->appendContent($columnFilterElement);
                 }
             }
         }
-        $scriptHideWrapper = '$(\'#'.$this->id.'_filter_wrapper\').collapse(\'hide\');';
-        $filterElement = new UI_Form_Element_HTML($this->id.'-filter');
-        $this->filterConfirmButton->setAttribute('onclick', $this->id.'.filter();'.$scriptHideWrapper);
-        $filterElement->content = $this->filterConfirmButton->getHTML();
-        $formFilter->addActionElement($filterElement);
-        $resetElement = new UI_Form_Element_HTML($this->id . '-resetFilter');
-        $this->filterResetButton->setAttribute(
-            'onclick',
-            $this->id . '.resetFilter();' . $this->id . '.filter();' . $scriptHideWrapper
-        );
-        $resetElement->content = $this->filterResetButton->getHTML();
-        $formFilter->addActionElement($resetElement);
 
-        $this->filterCollapse->setContent($formFilter->getHTML());
+        $actionWrapper = new GenericTag('div');
+        $actionWrapper->addClass('col-xs-10');
+        $actionWrapper->addClass('col-xs-offset-2');
+        $actionGroup = new GenericTag('div', $actionWrapper);
+        $actionGroup->addClass('form-group');
+        $formFilter->appendContent($actionGroup);
+
+        $scriptHideWrapper = '$(\'#'.$this->id.'_filter\').collapse(\'hide\');';
+        $this->filterConfirmButton->setAttribute('onclick', $this->id.'.filter();'.$scriptHideWrapper);
+        $actionWrapper->appendContent($this->filterConfirmButton);
+        $actionWrapper->appendContent(' ');
+        $this->filterResetButton->setAttribute('onclick', $this->id.'.resetFilter();'.$this->id.'.filter();'.$scriptHideWrapper);
+        $actionWrapper->appendContent($this->filterResetButton);
+
+        $this->filterCollapse->setContent($formFilter);
 
         return $this->filterCollapse->getHTML();
     }
@@ -676,33 +682,37 @@ class Datagrid extends UI_Generic
     protected function getFilterScript()
     {
         $this->initFilterCollapse();
-        $datagridSession = $this->getDatagridSession();
 
         $filterScript = '';
 
         // Récupération des scripts des éléments du formulaire.
-        $filters = array_merge($this->columns, $this->customFilters);
-        /** @var Column\GenericColumn $column */
+        $filters = array_merge($this->_cols, $this->_customFilters);
         foreach ($filters as $column) {
-            if ($column->criteriaFilterAttribute !== null) {
-                if (isset($datagridSession['filters'][$column->getFullFilterName($this)])) {
-                    $defaultValue = $datagridSession['filters'][$column->getFullFilterName($this)];
-                } else {
-                    $defaultValue = null;
-                }
-                $columnFilterElement = $column->getFilterFormElement($this, $defaultValue);
-                if ($columnFilterElement !== null) {
-                    $filterScript .= $columnFilterElement->getElement()->getScript();
+            /** @var GenericColumn $column */
+            if ($column->filterName !== null) {
+                if (($column instanceof ListColumn)
+                    && ($column->fieldType === ListColumn::FIELD_AUTOCOMPLETE)) {
+                    $options = [
+                        'allowClear' => 'true',
+
+                    ];
+                    if ($column->multiple) {
+                        if ($column->dynamicList) {
+                            $options['multiple'] = 'true';
+                        }
+                    }
+                    $filterScript .= '$("#'.$column->getFilterFormId($this).'").select2('.
+                        Zend_Json::encode($options, false, ['enableJsonExprFinder' => true]).
+                        ');';
                 }
             }
         }
 
-        $filterScript .= $this->filterCollapse->getScript();
-
         // Ajout de la fonction Reinitialiser à la datagrid
         $filterScript .= $this->id.'.resetFilter = function() {';
         foreach ($filters as $column) {
-            if ($column->criteriaFilterAttribute !== null) {
+            /** @var GenericColumn $column */
+            if ($column->filterName !== null) {
                 $filterScript .= $column->getResettingFilter($this);
             }
         }

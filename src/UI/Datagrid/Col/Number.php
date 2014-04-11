@@ -138,48 +138,109 @@ class UI_Datagrid_Col_Number extends UI_Datagrid_Col_Generic
      */
     public function getFilterFormElement($datagrid, $defaultValue=null)
     {
-        $filterFormElement = new UI_Form_Element_Numeric($this->getFilterFormId($datagrid));
-        $filterFormElement->setLabel($this->getFilterFormLabel());
-        $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
+        $colWrapper = new GenericTag('div');
+        $colWrapper->addClass('form-group');
 
+        $colLabel = new GenericTag('label', $this->getFilterFormLabel());
+        $colLabel->setAttribute('for', $this->getFilterFormId($datagrid));
+        $colLabel->addClass('col-sm-2');
+        $colLabel->addClass('control-label');
+        $colWrapper->appendContent($colLabel);
+
+        $numberWrapper = new GenericTag('div');
+        $numberWrapper->addClass('col-sm-3');
+
+        $numberInput = new GenericVoidTag('input');
+        $numberInput->setAttribute('type', 'text');
+        $numberInput->setAttribute('name', $this->getFilterFormId($datagrid));
+        $numberInput->setAttribute('id', $this->getFilterFormId($datagrid));
         // Récupération des valeurs par défaut.
         if (isset($defaultValue[$this->filterOperator])) {
-            $filterFormElement->setValue($defaultValue[$this->filterOperator]);
+            $numberInput->setAttribute('value', $defaultValue[$this->filterOperator]);
+        }
+        $numberInput->addClass('form-control');
+
+        $inputGroupWrapper = new GenericTag('div', $numberInput);
+        $inputGroupWrapper->addClass('input-group');
+
+        if (!empty($this->keywordFilterEqual)) {
+            $keywordFilterPrefix = new GenericTag('span', $this->keywordFilterEqual);
+            $keywordFilterPrefix->addClass('input-group-addon');
+            $inputGroupWrapper->prependContent($keywordFilterPrefix);
         }
 
-        $filterFormElement->getElement()->addSuffix($this->getResetFieldFilterFormSuffix($datagrid));
+        $inputGroupWrapper->appendContent($this->getResetFieldFilterFormSuffix($datagrid));
 
-        // Champs pour le fitre <=.
-        $filterFormElementInferior = new UI_Form_Element_Text($this->getFilterFormId($datagrid).'_lower');
-        $filterFormElementInferior->getElement()->addPrefix($this->keywordFilterLower);
+        $numberWrapper->appendContent($inputGroupWrapper);
+
+        $colWrapper->appendContent($numberWrapper);
+
+
+        $numberInferiorWrapper = new GenericTag('div');
+        $numberInferiorWrapper->addClass('col-sm-3');
+        $numberInferiorWrapper->addClass('col-sm-offset-1');
+
+        $numberInferiorInput = new GenericVoidTag('input');
+        $numberInferiorInput->setAttribute('type', 'text');
+        $numberInferiorInput->setAttribute('name', $this->getFilterFormId($datagrid).'_lower');
+        $numberInferiorInput->setAttribute('id', $this->getFilterFormId($datagrid).'_lower');
+        // Récupération des valeurs par défaut.
         if (isset($defaultValue[$this->filterOperatorLower])) {
-            $filterFormElementInferior->setValue($defaultValue[$this->filterOperatorLower]);
+            $numberInferiorInput->setAttribute('value', $defaultValue[$this->filterOperatorLower]);
         }
-        $resetFieldInferior = '<i ';
-        $resetFieldInferior .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
-        $resetFieldInferior .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'_lower\').val(\'\');"';
-        $resetFieldInferior .= '>';
-        $resetFieldInferior .= '</i>';
-        $filterFormElementInferior->getElement()->addSuffix($resetFieldInferior);
+        $numberInferiorInput->addClass('form-control');
 
-        $filterFormElement->getElement()->addElement($filterFormElementInferior);
+        $inputGroupWrapper = new GenericTag('div', $numberInferiorInput);
+        $inputGroupWrapper->addClass('input-group');
 
-        // Champs pour le fitre >=.
-        $filterFormElementSuperior = new UI_Form_Element_Text($this->getFilterFormId($datagrid).'_higher');
-        $filterFormElementSuperior->getElement()->addPrefix($this->keywordFilterHigher);
+        if (!empty($this->keywordFilterLower)) {
+            $keywordFilterPrefix = new GenericTag('span', $this->keywordFilterLower);
+            $keywordFilterPrefix->addClass('input-group-addon');
+            $inputGroupWrapper->prependContent($keywordFilterPrefix);
+        }
+
+        $inputGroupWrapper->appendContent(
+            $this->getResetFieldFilterFormSuffix($datagrid)
+                ->setAttribute('onclick', '$(\'#'.$this->getFilterFormId($datagrid).'_lower\').val(\'\');')
+        );
+
+        $numberInferiorWrapper->appendContent($inputGroupWrapper);
+
+        $colWrapper->appendContent($numberInferiorWrapper);
+
+
+        $numberSuperiorWrapper = new GenericTag('div');
+        $numberSuperiorWrapper->addClass('col-sm-3');
+
+        $numberSuperiorInput = new GenericVoidTag('input');
+        $numberSuperiorInput->setAttribute('type', 'text');
+        $numberSuperiorInput->setAttribute('name', $this->getFilterFormId($datagrid).'_higher');
+        $numberSuperiorInput->setAttribute('id', $this->getFilterFormId($datagrid).'_higher');
+        // Récupération des valeurs par défaut.
         if (isset($defaultValue[$this->filterOperatorHigher])) {
-            $filterFormElementSuperior->setValue($defaultValue[$this->filterOperatorHigher]);
+            $numberSuperiorInput->setAttribute('value', $defaultValue[$this->filterOperatorHigher]);
         }
-        $resetFieldSuperior = '<i ';
-        $resetFieldSuperior .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
-        $resetFieldSuperior .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'_higher\').val(\'\');"';
-        $resetFieldSuperior .= '>';
-        $resetFieldSuperior .= '</i>';
-        $filterFormElementSuperior->getElement()->addSuffix($resetFieldSuperior);
+        $numberSuperiorInput->addClass('form-control');
 
-        $filterFormElement->getElement()->addElement($filterFormElementSuperior);
+        $inputGroupWrapper = new GenericTag('div', $numberSuperiorInput);
+        $inputGroupWrapper->addClass('input-group');
 
-        return $filterFormElement;
+        if (!empty($this->keywordFilterHigher)) {
+            $keywordFilterPrefix = new GenericTag('span', $this->keywordFilterHigher);
+            $keywordFilterPrefix->addClass('input-group-addon');
+            $inputGroupWrapper->prependContent($keywordFilterPrefix);
+        }
+
+        $inputGroupWrapper->appendContent(
+            $this->getResetFieldFilterFormSuffix($datagrid)
+                ->setAttribute('onclick', '$(\'#'.$this->getFilterFormId($datagrid).'_higher\').val(\'\');')
+        );
+
+        $numberSuperiorWrapper->appendContent($inputGroupWrapper);
+
+        $colWrapper->appendContent($numberSuperiorWrapper);
+
+        return $colWrapper;
     }
 
     /**

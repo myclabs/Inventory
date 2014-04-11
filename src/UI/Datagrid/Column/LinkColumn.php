@@ -108,21 +108,47 @@ class LinkColumn extends GenericColumn
     public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
         if ($this->linkValue !== true) {
-            $filterFormElement = new UI_Form_Element_Text($this->getFilterFormId($datagrid));
-            $filterFormElement->setLabel($this->getFilterFormLabel());
-            $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
+            $colWrapper = new GenericTag('div');
+            $colWrapper->addClass('form-group');
 
+            $colLabel = new GenericTag('label', $this->getFilterFormLabel());
+            $colLabel->setAttribute('for', $this->getFilterFormId($datagrid));
+            $colLabel->addClass('col-sm-2');
+            $colLabel->addClass('control-label');
+            $colWrapper->appendContent($colLabel);
+
+            $linkWrapper = new GenericTag('div');
+            $linkWrapper->addClass('col-sm-10');
+
+            $linkInput = new GenericVoidTag('input');
+            $linkInput->setAttribute('type', 'text');
+            $linkInput->setAttribute('name', $this->getFilterFormId($datagrid));
+            $linkInput->setAttribute('id', $this->getFilterFormId($datagrid));
             // Récupération des valeurs par défaut.
             if (isset($defaultValue[$this->criteriaFilterOperator])) {
-                $filterFormElement->setValue($defaultValue[$this->criteriaFilterOperator]);
+                $linkInput->setAttribute('value', $defaultValue[$this->criteriaFilterOperator]);
+            }
+            $linkInput->addClass('form-control');
+
+            $inputGroupWrapper = new GenericTag('div', $linkInput);
+            $inputGroupWrapper->addClass('input-group');
+
+            if (!empty($this->keywordFilterEqual)) {
+                $keywordFilterPrefix = new GenericTag('span', $this->keywordFilterEqual);
+                $keywordFilterPrefix->addClass('input-group-addon');
+                $inputGroupWrapper->prependContent($keywordFilterPrefix);
             }
 
-            $filterFormElement->getElement()->addSuffix($this->getResetFieldFilterFormSuffix($datagrid));
-        } else {
-            $filterFormElement = null;
+            $inputGroupWrapper->appendContent($this->getResetFieldFilterFormSuffix($datagrid));
+
+            $linkWrapper->appendContent($inputGroupWrapper);
+
+            $colWrapper->appendContent($linkWrapper);
+
+            return $colWrapper;
         }
 
-        return $filterFormElement;
+        return null;
     }
 
     /**

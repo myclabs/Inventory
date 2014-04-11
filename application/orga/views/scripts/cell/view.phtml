@@ -75,7 +75,7 @@ if (count($file) > 0) {
     .cell .inventory-status .inventory-progress { position: absolute; top: 0; left: 0; height: 100%; background-color: #bbbbbb; }
     .cell .inventory-status .inventory-informations { display: inline-block; position: relative; overflow: hidden; vertical-align: top; }
     .cell .inventory-status .inventory-informations .inventory-title { display: inline-block; margin-top: 15px; margin-bottom: 15px; margin-left: 10px; }
-    .cell .inventory-status .inventory-informations .inventory-completion { display: inline-block; margin-left: 5px; vertical-align: bottom; color: #222222; opacity: 0.15; font-size: 45px; font-weight: bold; }
+    .cell .inventory-status .inventory-informations .inventory-completion { display: inline-block; margin-left: 5px; vertical-align: bottom; color: #222222; opacity: 0.15; font-size: 35px; font-weight: bold; }
     .cell .inventory-status .inventory-actions { display: inline-block; position: relative; float:right; text-align: right; }
     .cell .inventory-status .inventory-actions > a { display: inline-block; margin-top: 10px; margin-right: 10px; text-align: left; }
     .cell .inventory-status .inventory-actions > .btn-group { display: inline-block; margin-top: 10px; margin-right: 5px; text-align: left; }
@@ -94,8 +94,7 @@ if (count($file) > 0) {
     .granularity-wrapper .granularity { margin-left: -2.5px; margin-right: -2.5px; }
     .granularity-wrapper .granularity .col-md-4 { padding-left: 2.5px; padding-right: 2.5px; }
     .granularity-wrapper .granularity .cell { margin-top: 5px; margin-bottom: 0; }
-    .granularity-wrapper .display-more-cells { padding-left: 2.5px; padding-right: 2.5px; }
-    .granularity-wrapper .display-more-cells button { display: block; width: 100%; margin-top: 5px; margin-bottom: 0; }
+    .granularity-wrapper .display-more-cells { text-align: center; }
     .granularity-wrapper .no-cell { margin-left: 0; text-align: center; vertical-align: middle; padding: 8px 12px; font-size: 14px; font-weight: normal; }
 
     .history,
@@ -361,7 +360,7 @@ if (count($file) > 0) {
              <?=$narrowerGranularityArray['isAnalyses'] ? ' data-analyses' : ''?>
              data-total-cells="<?=$narrowerGranularityArray['totalCells']?>"
              data-first-cell="0"
-             data-show-cells="6"
+             data-show-cells="15"
              class="collapse<?=(count($this->narrowerGranularities) === 1) ? ' in': $narrowerGranularityArray['isInput'] ? ' in' : ''?>"
              <?=(count($this->narrowerGranularities) === 1) ? ' ': $narrowerGranularityArray['isInput'] ? ' ' : ''?>">
             <?php if ($narrowerGranularity->hasAxes() || ($narrowerGranularity->getInputConfigGranularity() !== null)) : ?>
@@ -391,7 +390,7 @@ if (count($file) > 0) {
             </form>
             <?php endif; ?>
 
-            <div class="granularity row" data-total-cells="0"></div>
+            <table class="granularity table" data-total-cells="0"></table>
         </div>
     </fieldset>
     <?php endforeach; ?>
@@ -533,7 +532,10 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
             granularity.attr('data-total-cells', data.totalCells);
             granularityInfo.html(granularity.attr('data-total-cells') + ' / ' + granularity.parents('.collapse').attr('data-total-cells'));
             $(data.childCells).each(function() {
-                var cellTitle = this.extendedLabel;
+                var cellTitle = '';
+                for (member in this.members) {
+                    cellTitle += '<td>' + this.members[member] + '</td>';
+                }
                 var usersP = '';
                 var usersPopup = '';
                 if (this.showUsers) {
@@ -719,25 +721,25 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                         '</div>';
                 }
                 granularity.append(
-                    '<div class="col-md-4">' +
-                        '<div class="well cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
-                            '<h4>'+
-                                '<small class="btn-group cell-actions">' +
-                                    usersP +
-                                    reportsP +
-                                    exportsP +
-                                '</small>' +
-                                cellTitle +
-                            '</h4>' +
+                    '<tr class="cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
+                        cellTitle +
+                        '<td>'+
+                            usersP +
+                            reportsP +
+                            exportsP +
+                        '</td>'+
+                        '<td>'+
                             inventoryP +
+                        '</td>'+
+                        '<td>'+
                             inputStatusP +
-                            usersPopup +
-                            reportsPopup +
-                            exportsPopup +
-                            inventoryPopup +
-                        '</div>' +
-                    '</div>'
+                        '</td>'+
+                    '</tr>'
                 );
+                granularity.after(usersPopup)
+                granularity.after(reportsPopup)
+                granularity.after(exportsPopup)
+                granularity.after(inventoryPopup)
             });
             $('.withTooltip', granularity).tooltip();
             $('.withPopover', granularity).popover();
@@ -845,7 +847,7 @@ $('div.collapse[id^="granularity"]').on('showCells', function(e) {
     var granularity = $('.granularity', $(this));
     $('.display-more-cells', granularity).remove();
 
-    $(this).trigger('resizeCells');
+//    $(this).trigger('resizeCells');
 
     if ($('.cell', granularity).length == 0) {
         granularity.append('<div class="no-cell span"><?=___('Orga', 'view', 'filterNoResult')?></div>');
@@ -854,11 +856,13 @@ $('div.collapse[id^="granularity"]').on('showCells', function(e) {
         $(this).attr('data-show-cells', $('.cell', granularity).length);
         $(this).attr('data-first-cell', $(this).attr('data-show-cells'));
         granularity.append(
-            '<div class="display-more-cells col-md-12">' +
-                '<button class="btn btn-default">' +
-                    '<?=___('Orga', 'view', 'display-more-cells')?>' +
-                '</button>' +
-            '</div>'
+            '<tr class="display-more-cells">' +
+                '<td colspan="100%">' +
+                    '<button class="btn btn-default">' +
+                        '<?=___('Orga', 'view', 'display-more-cells')?>' +
+                    '</button>' +
+                '</td>' +
+            '</tr>'
         );
     }
 });
@@ -1104,7 +1108,7 @@ $('body').on('click', '.inventory-status .inventory-actions a.change-inventory-s
         complete: function () {
             mainButton.removeClass('hide');
             $('button.dropdown-toggle', buttonGroup).removeClass('hide');
-            buttonGroup.parents('div.collapse[id^="granularity"]').trigger('resizeCells');
+//            buttonGroup.parents('div.collapse[id^="granularity"]').trigger('resizeCells');
         }
     });
 });
@@ -1148,11 +1152,11 @@ $(document).ready(function() {
     <?php if ($this->canAddMembers) : ?>
     new AjaxForm('#addMember');
     <?php endif; ?>
-    var resizeTimer;
-    $(window).resize(function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() { $('div.collapse[id^="granularity"]:not(.current-granularity)').trigger('resizeCells'); }, 500);
-    });
+//    var resizeTimer;
+//    $(window).resize(function() {
+//        clearTimeout(resizeTimer);
+//        resizeTimer = setTimeout(function() { $('div.collapse[id^="granularity"]:not(.current-granularity)').trigger('resizeCells'); }, 500);
+//    });
     $('.history > h3 a').trigger('click');
     $('.comments > h3 a').trigger('click');
     $('div.collapse[id^="granularity"]').on('show.bs.collapse',

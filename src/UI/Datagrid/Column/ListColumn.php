@@ -532,63 +532,129 @@ class ListColumn extends GenericColumn
             return null;
         }
 
+        $colWrapper = new GenericTag('div');
+        $colWrapper->addClass('form-group');
+
+        $colLabel = new GenericTag('label', $this->getFilterFormLabel());
+        $colLabel->setAttribute('for', $this->getFilterFormId($datagrid));
+        $colLabel->addClass('col-sm-2');
+        $colLabel->addClass('control-label');
+        $colLabel->addClass('field-label');
+        $colWrapper->appendContent($colLabel);
+
+        $selectWrapper = new GenericTag('div');
+        $selectWrapper->addClass('col-sm-10');
+
+        // Valeur par défaut du filtre.
+        $defaultFilterValue = null;
+        if (isset($defaultValue[$this->criteriaFilterOperator])) {
+            $defaultFilterValue = $defaultValue[$this->criteriaFilterOperator];
+        }
+
         if ($this->isFilterFieldMultiple()) {
             if ($this->getFilterFieldType() === self::FIELD_BOX) {
-                $filterFormElement = new UI_Form_Element_MultiCheckbox($this->getFilterFormId($datagrid));
+                $selectWrapper->setAttribute('id', $this->getFilterFormId($datagrid));
+
+                foreach ($this->list as $idElement => $element) {
+                    $elementInput = new GenericVoidTag('input');
+                    $elementInput->setAttribute('type', 'checkbox');
+                    $elementInput->setAttribute('name', $this->getFilterFormId($datagrid));
+                    $elementInput->setAttribute('value', $idElement);
+                    $elementInput->setAttribute('id', $this->getFilterFormId($datagrid).'_'.$idElement);
+                    $elementOption = new GenericTag('label');
+                    $elementOption->addClass('checkbox-inline');
+                    $elementOption->appendContent($elementInput);
+                    $elementOption->appendContent($element);
+                    $selectWrapper->appendContent($elementOption);
+
+                    if (($defaultFilterValue === $idElement)
+                        || (is_array($defaultFilterValue) && (in_array($idElement, $defaultFilterValue)))) {
+                        $elementOption->setBooleanAttribute('checked');
+                    }
+                }
             } else {
-                $filterFormElement = new UI_Form_Element_MultiSelect($this->getFilterFormId($datagrid));
-                $filterFormElement->addNullOption('');
-                $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
+                $selectInput = new GenericTag('select');
+                $selectInput->setAttribute('name', $this->getFilterFormId($datagrid).'[]');
+                $selectInput->setAttribute('id', $this->getFilterFormId($datagrid));
+                if ($this->fieldType !== self::FIELD_AUTOCOMPLETE) {
+                    $selectInput->addClass('form-control');
+                }
+                $selectInput->setAttribute('multiple', 'multiple');
+
+                $elementOption = new GenericTag('option', '');
+                $elementOption->setAttribute('value', '');
+                $selectInput->appendContent($elementOption);
+                foreach ($this->list as $idElement => $element) {
+                    $elementOption = new GenericTag('option', $element);
+                    $elementOption->setAttribute('value', $idElement);
+                    $selectInput->appendContent($elementOption);
+
+                    if (($defaultFilterValue === $idElement)
+                        || (is_array($defaultFilterValue) && (in_array($idElement, $defaultFilterValue)))) {
+                        $elementOption->setBooleanAttribute('selected');
+                    }
+                }
+
+                $selectWrapper->appendContent($selectInput);
             }
         } else {
             if ($this->getFilterFieldType() === self::FIELD_BOX) {
-                $filterFormElement = new UI_Form_Element_Radio($this->getFilterFormId($datagrid));
+                $selectWrapper->setAttribute('id', $this->getFilterFormId($datagrid));
+
+                foreach ($this->list as $idElement => $element) {
+                    $elementInput = new GenericVoidTag('input');
+                    $elementInput->setAttribute('type', 'radio');
+                    $elementInput->setAttribute('name', $this->getFilterFormId($datagrid));
+                    $elementInput->setAttribute('value', $idElement);
+                    $elementInput->setAttribute('id', $this->getFilterFormId($datagrid).'_'.$idElement);
+                    $elementOption = new GenericTag('label');
+                    $elementOption->addClass('radio-inline');
+                    $elementOption->appendContent($elementInput);
+                    $elementOption->appendContent($element);
+                    $selectWrapper->appendContent($elementOption);
+
+                    if ($defaultFilterValue === $idElement) {
+                        $elementOption->setBooleanAttribute('checked');
+                    }
+                }
             } else {
-                $filterFormElement = new UI_Form_Element_Select($this->getFilterFormId($datagrid));
-                $filterFormElement->addNullOption('');
-                $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
+                $selectInput = new GenericTag('select');
+                $selectInput->setAttribute('name', $this->getFilterFormId($datagrid));
+                $selectInput->setAttribute('id', $this->getFilterFormId($datagrid));
+                if ($this->fieldType !== self::FIELD_AUTOCOMPLETE) {
+                    $selectInput->addClass('form-control');
+                }
+
+                $elementOption = new GenericTag('option', '');
+                $elementOption->setAttribute('value', '');
+                $selectInput->appendContent($elementOption);
+                foreach ($this->list as $idElement => $element) {
+                    $elementOption = new GenericTag('option', $element);
+                    $elementOption->setAttribute('value', $idElement);
+                    $selectInput->appendContent($elementOption);
+
+                    if ($defaultFilterValue === $idElement) {
+                        $elementOption->setBooleanAttribute('selected');
+                    }
+                }
+
+                $selectWrapper->appendContent($selectInput);
             }
         }
 
-        $filterFormElement->setLabel($this->getFilterFormLabel());
-        if ($this->getFilterFieldType() === self::FIELD_AUTOCOMPLETE) {
-            // Nécessaire pour éviter le bug de select2 miltiple avec des appnd/prepend.
-            if ($this->isFilterFieldMultiple() !== true) {
-                $filterFormElement->useAutocomplete = true;
-            }
-        }
-        foreach ($this->list as $idElement => $element) {
-            $filterFormElement->addOption(new UI_Form_Element_Option($idElement, $idElement, $element));
-        }
-
-        // Récupération des valeurs par défaut.
-        if (isset($defaultValue[$this->criteriaFilterOperator])) {
-            $filterFormElement->setValue($defaultValue[$this->criteriaFilterOperator]);
-        }
         if ($this->getFilterFieldType() === self::FIELD_BOX) {
-            $resetButton = new Button(new Icon($datagrid->filterIconResetFieldSuffix));
-            $resetAction = '$(\'#'.$this->getFilterFormId($datagrid).' :checked\')';
-            $resetAction .= '.removeAttr(\'checked\');';
-            $resetButton->setAttribute('onclick', $resetAction);
+            $resetFieldIcon = new Icon($datagrid->filterIconResetFieldSuffix);
+            $resetFieldIcon->addClass('reset');
 
-            $resetElement = new UI_Form_Element_HTML($this->getFilterFormId($datagrid).'_reset');
-            $resetElement->content = $resetButton->getHTML();
-
-            $filterFormElement->getElement()->addElement($resetElement);
-        } else {
-            if ($this->getFilterFieldType() === self::FIELD_AUTOCOMPLETE) {
-                $resetFieldSuffix = '<i ';
-                $resetFieldSuffix .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
-                $resetFieldSuffix .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\').trigger(\'change\');"';
-                $resetFieldSuffix .= '>';
-                $resetFieldSuffix .= '</i>';
-                $filterFormElement->getElement()->addSuffix($resetFieldSuffix);
-            } else {
-                $filterFormElement->getElement()->addSuffix($this->getResetFieldFilterFormSuffix($datagrid));
-            }
+            $resetFieldSuffix = new Button($resetFieldIcon);
+            $resetFieldSuffix->setAttribute('onclick', '$(\'input[name=\\\''.$this->getFilterFormId($datagrid).'\\\']:checked\').removeAttr(\'checked\');');
+            $selectWrapper->appendContent(' ');
+            $selectWrapper->appendContent($resetFieldSuffix);
         }
 
-        return $filterFormElement;
+        $colWrapper->appendContent($selectWrapper);
+
+        return $colWrapper;
     }
 
     /**
@@ -714,10 +780,6 @@ class ListColumn extends GenericColumn
                 if ($this->fieldType === self::FIELD_BOX) {
                     $selectWrapper->setAttribute('id', $this->getAddFormElementId($datagrid));
 
-                    $selectInput = new GenericTag('select');
-                    $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid));
-                    $selectInput->addClass('form-control');
-
                     foreach ($this->list as $idElement => $element) {
                         $elementInput = new GenericVoidTag('input');
                         $elementInput->setAttribute('type', 'checkbox');
@@ -729,9 +791,12 @@ class ListColumn extends GenericColumn
                         $elementOption->appendContent($elementInput);
                         $elementOption->appendContent($element);
                         $selectWrapper->appendContent($elementOption);
-                    }
 
-                    $selectWrapper->appendContent($selectInput);
+                        if (is_array($this->defaultAddValue) && in_array($idElement, $this->defaultAddValue)
+                            || ($idElement === $this->defaultAddValue)) {
+                            $elementOption->setBooleanAttribute('checked');
+                        }
+                    }
                 } else {
                     $selectInput = new GenericTag('select');
                     $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid).'[]');
@@ -762,10 +827,6 @@ class ListColumn extends GenericColumn
                 if ($this->fieldType === self::FIELD_BOX) {
                     $selectWrapper->setAttribute('id', $this->getAddFormElementId($datagrid));
 
-                    $selectInput = new GenericTag('select');
-                    $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid));
-                    $selectInput->addClass('form-control');
-
                     foreach ($this->list as $idElement => $element) {
                         $elementInput = new GenericVoidTag('input');
                         $elementInput->setAttribute('type', 'radio');
@@ -777,9 +838,11 @@ class ListColumn extends GenericColumn
                         $elementOption->appendContent($elementInput);
                         $elementOption->appendContent($element);
                         $selectWrapper->appendContent($elementOption);
-                    }
 
-                    $selectWrapper->appendContent($selectInput);
+                        if ($idElement === $this->defaultAddValue) {
+                            $elementOption->setBooleanAttribute('checked');
+                        }
+                    }
                 } else {
                     $selectInput = new GenericTag('select');
                     $selectInput->setAttribute('name', $this->getAddFormElementId($datagrid));

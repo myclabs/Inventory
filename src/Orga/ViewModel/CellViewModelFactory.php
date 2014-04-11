@@ -83,6 +83,10 @@ class CellViewModelFactory
         $cellViewModel->relevant = $cell->isRelevant();
         $cellViewModel->tag = $cell->getTag();
 
+        foreach ($cell->getMembers() as $member) {
+            $cellViewModel->members[] = $member->getLabel();
+        }
+
         // Administrateurs.
         if ($withAdministrators === true) {
             foreach ($cell->getAdminRoles() as $administrator) {

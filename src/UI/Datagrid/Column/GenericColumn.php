@@ -2,6 +2,8 @@
 
 namespace UI\Datagrid\Column;
 
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\Icon;
 use UI\Datagrid\Datagrid;
 use UI_Form_ZendElement;
 
@@ -370,7 +372,7 @@ abstract class GenericColumn
      * @param Datagrid   $datagrid
      * @param array|null $defaultValue Valeur par défaut du filtre (=null).
      *
-     * @return UI_Form_ZendElement
+     * @return GenericTag
      */
     abstract public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null);
 
@@ -405,19 +407,18 @@ abstract class GenericColumn
      *
      * @param Datagrid $datagrid
      *
-     * @return string
+     * @return GenericTag
      */
     protected function getResetFieldFilterFormSuffix(Datagrid $datagrid)
     {
-        $resetField = '';
+        $resetFieldIcon = new Icon($datagrid->filterIconResetFieldSuffix);
+        $resetFieldIcon->addClass('reset');
 
-        $resetField .= '<i ';
-        $resetField .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
-        $resetField .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\');"';
-        $resetField .= '>';
-        $resetField .= '</i>';
+        $resetFieldSuffix = new GenericTag('span', $resetFieldIcon);
+        $resetFieldSuffix->addClass('input-group-addon');
+        $resetFieldSuffix->setAttribute('onclick', '$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\');');
 
-        return $resetField;
+        return $resetFieldSuffix;
     }
 
     /**
@@ -461,7 +462,7 @@ abstract class GenericColumn
      *
      * @param Datagrid $datagrid
      *
-     * @return UI_Form_ZendElement
+     * @return GenericTag
      */
     abstract public function getAddFormElement(Datagrid $datagrid);
 

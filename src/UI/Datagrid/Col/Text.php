@@ -102,22 +102,48 @@ class UI_Datagrid_Col_Text extends UI_Datagrid_Col_Generic
      * @param UI_Datagrid $datagrid
      * @param array $defaultValue Valeur par défaut du filtre (=null).
      *
-     * @return Zend_Form_Element
+     * @return GenericTag
      */
     public function getFilterFormElement($datagrid, $defaultValue=null)
     {
-        $filterFormElement = new UI_Form_Element_Text($this->getFilterFormId($datagrid));
-        $filterFormElement->setLabel($this->getFilterFormLabel());
-        $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
+        $colWrapper = new GenericTag('div');
+        $colWrapper->addClass('form-group');
 
+        $colLabel = new GenericTag('label', $this->getFilterFormLabel());
+        $colLabel->setAttribute('for', $this->getFilterFormId($datagrid));
+        $colLabel->addClass('col-sm-2');
+        $colLabel->addClass('control-label');
+        $colWrapper->appendContent($colLabel);
+
+        $textWrapper = new GenericTag('div');
+        $textWrapper->addClass('col-sm-10');
+
+        $textInput = new GenericVoidTag('input');
+        $textInput->setAttribute('type', 'text');
+        $textInput->setAttribute('name', $this->getFilterFormId($datagrid));
+        $textInput->setAttribute('id', $this->getFilterFormId($datagrid));
         // Récupération des valeurs par défaut.
         if (isset($defaultValue[$this->filterOperator])) {
-            $filterFormElement->setValue($defaultValue[$this->filterOperator]);
+            $textInput->setAttribute('value', $defaultValue[$this->filterOperator]);
+        }
+        $textInput->addClass('form-control');
+
+        $inputGroupWrapper = new GenericTag('div', $textInput);
+        $inputGroupWrapper->addClass('input-group');
+
+        if (!empty($this->keywordFilterEqual)) {
+            $keywordFilterPrefix = new GenericTag('span', $this->keywordFilterEqual);
+            $keywordFilterPrefix->addClass('input-group-addon');
+            $inputGroupWrapper->prependContent($keywordFilterPrefix);
         }
 
-        $filterFormElement->getElement()->addSuffix($this->getResetFieldFilterFormSuffix($datagrid));
+        $inputGroupWrapper->appendContent($this->getResetFieldFilterFormSuffix($datagrid));
 
-        return $filterFormElement;
+        $textWrapper->appendContent($inputGroupWrapper);
+
+        $colWrapper->appendContent($textWrapper);
+
+        return $colWrapper;
     }
 
     /**
@@ -125,7 +151,7 @@ class UI_Datagrid_Col_Text extends UI_Datagrid_Col_Generic
      *
      * @param UI_Datagrid $datagrid
      *
-     * @return Zend_Form_Element
+     * @return GenericTag
      */
     public function getAddFormElement($datagrid)
     {

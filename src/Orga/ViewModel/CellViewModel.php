@@ -27,6 +27,11 @@ class CellViewModel
     public $extendedLabel;
 
     /**
+     * @var string[]
+     */
+    public $members;
+
+    /**
      * @var bool
      */
     public $relevant;
