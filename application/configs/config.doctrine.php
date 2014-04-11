@@ -38,7 +38,6 @@ return [
             APPLICATION_PATH . '/models/mappers',
             APPLICATION_PATH . '/dw/models/mappers',
             APPLICATION_PATH . '/orga/models/mappers',
-            APPLICATION_PATH . '/simulation/models/mappers',
         ];
         $doctrineYAMLDriver = new YamlDriver($paths, '.yml');
 

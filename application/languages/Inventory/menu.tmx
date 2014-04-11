@@ -12,14 +12,6 @@
                 <seg>My C-Tool</seg>
             </tuv>
         </tu>
-        <tu tuid="simulations">
-            <tuv xml:lang="fr">
-                <seg>Simulations</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Simulations</seg>
-            </tuv>
-        </tu>
         <tu tuid="referentials">
             <tuv xml:lang="fr">
                 <seg>Référentiels</seg>

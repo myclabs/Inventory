@@ -462,13 +462,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
             } catch (Core_Exception_NotFound $e) {
                 // Le cube n'appartient pas à un Cell.
             }
-            // Si le DWCube est d'un SimulationSet, vérification que le Set appartient à l'utilisateur.
-            try {
-                $simulationSet = Simulation_Model_Set::loadByDWCube($dWCube);
-                return ($simulationSet->getUser() === $identity);
-            } catch (Core_Exception_NotFound $e) {
-                // Le cube n'appartient pas à un SimulationSet.
-            }
         }
 
         return false;
@@ -563,13 +556,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function genericInputAF(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $idScenario = $request->getParam('idScenario');
-        if ($idScenario !== null) {
-            /* @var Simulation_Model_Scenario $scenario */
-            $scenario = Simulation_Model_Scenario::load($idScenario);
-            return ($scenario->getSet()->getUser() === $identity);
-        }
-
         return $this->editAFRule($identity, $request);
     }
 

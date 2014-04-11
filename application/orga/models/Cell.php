@@ -1072,7 +1072,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
-     * Créé le Organization pour la simulation.
+     * Créé le Cube de DW pour la Cell.
      *
      * @return int Identifiant unique du Organization.
      */
@@ -1095,7 +1095,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
-     * Créé le Organization pour la simulation.
+     * Supprime le Cube de DW pour la Cell.
      *
      * @return int Identifiant unique du Organization.
      */

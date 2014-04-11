@@ -19,7 +19,6 @@
             <directory>./tests/AF</directory>
             <directory>./tests/Social</directory>
             <directory>./tests/Orga</directory>
-            <directory>./tests/Simulation</directory>
             <directory>./tests/AuditTrail</directory>
             <exclude>./tests/Unit</exclude>
         </testsuite>
@@ -54,10 +53,6 @@
                 <!-- Orga -->
                 <directory suffix=".php">application/orga/controllers</directory>
                 <file>application/orga/Bootstrap.php</file>
-                <!-- Simulation -->
-                <directory suffix=".php">application/simulation/controllers</directory>
-                <!-- Simulation -->
-                <directory suffix=".php">application/social/controllers</directory>
                 <!-- TEC -->
                 <directory suffix=".php">application/tec/controllers</directory>
             </exclude>

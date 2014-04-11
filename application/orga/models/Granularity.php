@@ -777,7 +777,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Créé le Organization pour la simulation.
+     * Créé le Cube de DW pour la Granularity.
      *
      * @return int Identifiant unique du Organization.
      */
@@ -795,7 +795,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Créé le Organization pour la simulation.
+     * Supprime le Cube de DW pour la Granularity.
      *
      * @return int Identifiant unique du Organization.
      */

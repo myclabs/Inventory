@@ -209,7 +209,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'AF',
             'Social',
             'Orga',
-            'Simulation',
             'AuditTrail',
             'Account',
         ];

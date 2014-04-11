@@ -16,10 +16,6 @@ Feature: Connected user feature
     Then I should see "Vous ne disposez d'aucun droit d'accès à une unité organisationnelle."
   # Click sur "Accueil"
   # TODO…
-  # Click sur "Simulations"
-    When I am on "simulation/set/manage"
-    And I wait for the page to finish loading
-    Then I should see the "listSet" datagrid
   # Accès à l'arbre des familles en consultation
     When I am on "parameter/family/tree"
     And I wait for the page to finish loading
