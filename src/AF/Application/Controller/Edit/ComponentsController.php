@@ -34,9 +34,10 @@ class AF_Edit_ComponentsController extends Core_Controller
         $this->view->selectField = Select::load($this->getParam('idSelect'));
 
         $families = [];
-        foreach (ParameterLibrary::loadByAccount($account) as $parameterLibrary) {
+        foreach (ParameterLibrary::loadUsableInAccount($account) as $parameterLibrary) {
             $families = array_merge($families, $parameterLibrary->getFamilies()->toArray());
         }
+
         $this->view->families = $families;
         $this->view->assign('af', $af);
         $this->_helper->layout()->disableLayout();

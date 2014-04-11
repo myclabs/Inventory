@@ -18,6 +18,8 @@ Parameter\Domain\ParameterLibrary:
       type: string
       gedmo:
         - translatable
+    public:
+      type: boolean
 
   manyToOne:
     account:

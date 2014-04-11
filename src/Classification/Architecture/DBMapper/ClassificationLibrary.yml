@@ -20,6 +20,8 @@ Classification\Domain\ClassificationLibrary:
       nullable: false
       gedmo:
         - translatable
+    public:
+      type: boolean
 
   manyToOne:
     account:

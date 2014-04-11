@@ -9,7 +9,7 @@ $af = $this->af;
 // Récupère la liste de tous les sous-formulaires possibles
 $subAFList = [];
 $account = $af->getLibrary()->getAccount();
-foreach (AFLibrary::loadByAccount($account) as $library) {
+foreach (AFLibrary::loadUsableInAccount($account) as $library) {
     $subAFList = array_merge($subAFList, $library->getAFList()->toArray());
 }
 

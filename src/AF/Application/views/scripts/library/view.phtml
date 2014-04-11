@@ -27,7 +27,7 @@ $categoryColumn = new UI_Datagrid_Col_List('category', __('UI', 'name', 'categor
 $categoryColumn->editable = true;
 $categoryColumn->addable = true;
 /** @var $categories Category[] */
-$categories = Category::loadList();
+$categories = $library->getCategories();
 $categoryColumn->list = [];
 foreach ($categories as $category) {
     $categoryColumn->list[$category->getId()] = $category->getLabel();

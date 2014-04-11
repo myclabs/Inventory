@@ -29,7 +29,7 @@ class PopulateAF extends AbstractPopulateAF
     {
         $output->writeln('  <info>Populating AF</info>');
 
-        $library = new AFLibrary($this->publicAccount, 'Formulaires My C-Sense');
+        $library = new AFLibrary($this->publicAccount, 'Formulaires My C-Sense', true);
         $library->save();
 
         // Création des catégories.

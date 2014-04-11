@@ -220,13 +220,17 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
     {
         /** @var $af AF */
         $af = AF::load($this->getParam('id'));
-        $classificationLibraries = ClassificationLibrary::loadByAccount($af->getLibrary()->getAccount());
+
+        $classificationLibraries = ClassificationLibrary::loadUsableInAccount($af->getLibrary()->getAccount());
 
         $this->addElementList(null, '');
 
         foreach ($classificationLibraries as $library) {
             foreach ($library->getContextIndicators() as $contextIndicator) {
-                $this->addElementList($contextIndicator->getId(), $contextIndicator->getLabel());
+                $this->addElementList(
+                    $contextIndicator->getId(),
+                    $library->getLabel() . ' > ' . $contextIndicator->getLabel()
+                );
             }
         }
 

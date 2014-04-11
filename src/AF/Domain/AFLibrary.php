@@ -5,6 +5,7 @@ namespace AF\Domain;
 use Account\Domain\Account;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
+use Core_Model_Filter;
 use Core_Model_Query;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -48,13 +49,21 @@ class AFLibrary extends Core_Model_Entity implements EntityResource, CascadingRe
     protected $afList;
 
     /**
+     * @var bool
+     */
+    protected $public = false;
+
+    /**
      * @param Account $account
      * @param string  $label
+     * @param bool    $public
      */
-    public function __construct(Account $account, $label)
+    public function __construct(Account $account, $label, $public = false)
     {
         $this->account = $account;
         $this->label = $label;
+        $this->public = $public;
+
         $this->categories = new ArrayCollection();
         $this->afList = new ArrayCollection();
     }
@@ -137,6 +146,24 @@ class AFLibrary extends Core_Model_Entity implements EntityResource, CascadingRe
     }
 
     /**
+     * @return bool Est-ce que la bibliothèque est publique ?
+     */
+    public function isPublic()
+    {
+        return $this->public;
+    }
+
+    /**
+     * Rend publique (ou non) la bibliothèque.
+     *
+     * @param bool $public
+     */
+    public function setPublic($public)
+    {
+        $this->public = $public;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getParentResources(EntityManager $entityManager)
@@ -160,6 +187,22 @@ class AFLibrary extends Core_Model_Entity implements EntityResource, CascadingRe
     {
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
+
+        return self::getEntityRepository()->loadList($query);
+    }
+
+    /**
+     * Renvoie toutes les librairies utilisables dans le compte donné.
+     * Cela inclut les librairies du compte, mais également les librairies publiques.
+     * @param Account $account
+     * @return AFLibrary[]
+     */
+    public static function loadUsableInAccount(Account $account)
+    {
+        $query = new Core_Model_Query();
+        $query->filter->condition = Core_Model_Filter::CONDITION_OR;
+        $query->filter->addCondition('account', $account);
+        $query->filter->addCondition('public', true);
 
         return self::getEntityRepository()->loadList($query);
     }

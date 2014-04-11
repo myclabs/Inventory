@@ -19,6 +19,8 @@ AF\Domain\AFLibrary:
       nullable: false
       gedmo:
         - translatable
+    public:
+      type: boolean
 
   manyToOne:
     account:

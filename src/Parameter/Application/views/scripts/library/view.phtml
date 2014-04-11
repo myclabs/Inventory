@@ -25,7 +25,7 @@ $columns = [];
 $columns['category'] = new UI_Datagrid_Col_List('category', __('UI', 'name', 'category'));
 $list = [];
 /** @var $categories Category[] */
-$categories = Category::loadList();
+$categories = $library->getCategories();
 foreach ($categories as $category) {
     $list[$category->getId()] = $category->getLabel();
 }

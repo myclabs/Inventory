@@ -33,7 +33,7 @@ class PopulateClassification extends AbstractPopulateClassification
     {
         $output->writeln('  <info>Populating Classification</info>');
 
-        $library = new ClassificationLibrary($this->publicAccount, 'Classification My C-Sense');
+        $library = new ClassificationLibrary($this->publicAccount, 'Classification My C-Sense', true);
         $library->save();
 
         // Création des axes.

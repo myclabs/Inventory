@@ -150,7 +150,8 @@ class AF_EditController extends Core_Controller
     {
         $af = AF::load($this->getParam('id'));
 
-        $libraries = ParameterLibrary::loadByAccount($af->getLibrary()->getAccount());
+        // Récupère les familles que l'ont peut utiliser
+        $libraries = ParameterLibrary::loadUsableInAccount($af->getLibrary()->getAccount());
 
         $this->view->assign('parameterLibraries', $libraries);
         $this->view->assign('af', $af);
