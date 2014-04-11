@@ -198,8 +198,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         } elseif ($position == 'last') {
             $node->setPosition($node->getLastEligiblePosition());
         } elseif ($position == 'after') {
-            $previousNodeId = $this->_form[$this->id . '_changeOrder']['children']
-                [$this->id . '_selectAfter_child']['value'];
+            $previousNodeId = $this->getEditElementValue('selectAfter');
             if ($previousNodeId == null) {
                 $this->setEditFormElementErrorMessage('children', __('UI', 'formValidation', 'emptyRequiredField'));
                 $this->send();
