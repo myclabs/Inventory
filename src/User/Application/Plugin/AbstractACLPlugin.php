@@ -11,6 +11,7 @@ use MyCLabs\ACL\ACL;
 use Psr\Log\LoggerInterface;
 use UI_Message;
 use User\Application\ForbiddenException;
+use User\Application\HttpNotFoundException;
 use User\Domain\User;
 use User\Application\Service\ControllerSecurityService;
 use Zend_Auth;
@@ -150,6 +151,8 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
         $methodName = $securityRule . 'Rule';
         try {
             return $this->$methodName($user, $request);
+        } catch (HttpNotFoundException $e) {
+            throw $e;
         } catch (Exception $e) {
             // En cas d'erreur, on loggue et on refuse l'accès.
             $this->logger->error(
