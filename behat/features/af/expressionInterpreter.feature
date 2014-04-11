@@ -8,9 +8,6 @@ Feature: Expression interpreter feature
   Scenario: Arithmetic expression interpreter scenario
     # TODO : tester bouton "Réinitialiser"
     Given I am on "tec/expression/test"
-    And I wait for the page to finish loading
-  # Ouverture du popup d'aide
-    When I open collapse "Aide"
     Then I should see "Caractères autorisés pour les opérandes : \"a..z\", \"0..9\", et \"_\"."
   # Expression vide
     When I click "Interpréter"
