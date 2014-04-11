@@ -802,7 +802,7 @@ class UI_Datagrid extends UI_Generic
                     }
                     $addScript .= '$("#'.$column->getAddFormElementId($this).'").select2('.
                         Zend_Json::encode($options, false, ['enableJsonExprFinder' => true]).
-                        ');';
+                    ');';
                 }
             }
         }

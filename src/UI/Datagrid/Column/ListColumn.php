@@ -252,7 +252,7 @@ class ListColumn extends GenericColumn
         if (($this->addable === true) && ($this->dynamicList === true)
             && ($this->fieldType !== self::FIELD_AUTOCOMPLETE)) {
             // Chargement de la liste dynamique à l'ouverture du popup.
-            $complementaryScript .= '$(\'#'.$datagrid->id.'_addPanel\').on(\'show\', function() {';
+            $complementaryScript .= '$(\'#'.$datagrid->id.'_addPanel\').on(\'show.bs.modal\', function() {';
             $complementaryScript .= 'var listAddFormField = $(\'#'.$this->getAddFormElementId($datagrid).'\');';
             $complementaryScript .= 'var value = listAddFormField.val();';
             $complementaryScript .= '$.get(';
@@ -269,7 +269,7 @@ class ListColumn extends GenericColumn
             $complementaryScript .= '});';
             $complementaryScript .= '});';
             // Remise à zéro de la liste à la fermeture du popup.
-            $complementaryScript .= '$(\'#'.$datagrid->id.'_addPanel\').on(\'hide\', function() {';
+            $complementaryScript .= '$(\'#'.$datagrid->id.'_addPanel\').on(\'hide.bs.modal\', function() {';
             $complementaryScript .= 'var listAddFormField = $(\'#'.$this->getAddFormElementId($datagrid).'\');';
             $complementaryScript .= 'var loadingOptions = {};';
             if (($this->multiple) && (is_array($this->defaultAddValue))) {
@@ -774,6 +774,7 @@ class ListColumn extends GenericColumn
                     $elementOption->setAttribute('value', $this->defaultAddValue);
                     $selectInput->appendContent($elementOption);
                 }
+                $selectWrapper->appendContent($selectInput);
             }
         } else {
             if ($this->multiple) {
