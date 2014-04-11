@@ -369,24 +369,6 @@ class Family extends Core_Model_Entity
     }
 
     /**
-     * Retourne une famille par son référent textuel
-     * @param string $ref
-     * @throws \Core_Exception_NotFound
-     * @return Family
-     * @deprecated À supprimer pour la 3.0, il faut passer par la librarie
-     */
-    public static function loadByRef($ref)
-    {
-        $query = new Core_Model_Query();
-        $query->filter->addCondition(self::QUERY_REF, $ref);
-        $list = self::loadList($query);
-        if (count($list) == 0) {
-            throw new Core_Exception_NotFound("No family was found with the ref '$ref'");
-        }
-        return current($list);
-    }
-
-    /**
      * @return int
      */
     public function getId()
