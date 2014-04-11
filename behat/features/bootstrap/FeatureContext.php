@@ -442,12 +442,9 @@ class FeatureContext extends MinkContext
      */
     public function spin(callable $find, $timeout = 4)
     {
-        // Temps d'attente entre chaque boucle, en secondes
-        $sleepTime = 0.1;
+        $startTime = time();
 
-        $loops = (int) ((float) $timeout / $sleepTime);
-
-        for ($i = 0; $i < $loops; $i++) {
+        while (time() - $startTime < $timeout) {
             try {
                 $result = $find();
                 return $result;
@@ -455,7 +452,7 @@ class FeatureContext extends MinkContext
                 // keep looping
             }
 
-            usleep($sleepTime * 1000000);
+            usleep(100000);
         }
 
         // One last try to throw the exception
