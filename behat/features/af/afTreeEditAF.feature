@@ -109,25 +109,20 @@ Feature: AF tree edit AF feature
     Then I should see the popup "Demande de confirmation"
     And I click element "#afTree_deletePanel .btn:contains('Confirmer')"
     Then the following message is shown and closed: "Suppression effectuée."
-  # Vérification suppression effectuée
-    When I wait 4 seconds
-    Then I should not see "Formulaire vide"
-    And I should not see "Formulaire test"
-    And I should not see "Formulaire avec sous-formulaires"
 
   @javascript @readOnly
   Scenario: Link towards configuration view, from AF tree edit
     Given I am on "af/library/view/id/1"
     When I click "Combustion de combustible, mesuré en unité de masse"
-    And I click "Configuration"
+    And I click element "#afTree_editPanel a:contains('Configuration')"
   # Vérification qu'on est bien sur la page "Configuration"
     And I open tab "Contrôle"
     Then I should see "Combustion de combustible, mesuré en unité de masse"
 
   @javascript @readOnly
   Scenario: Link towards test view, from AF tree edit
-    Given I am on "af/af/tree"
+    Given I am on "af/library/view/id/1"
     When I click "Combustion de combustible, mesuré en unité de masse"
-    And I click "Test"
+    And I click element "#afTree_editPanel a:contains('Test')"
   # Vérification qu'on est bien sur la page "Test"
     Then I should see "Nature du combustible"
