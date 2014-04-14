@@ -5,7 +5,7 @@
     <body>
 
         <!-- Préfixes en fonction du type de message -->
-        
+
         <tu tuid="titleInfo">
             <tuv xml:lang="fr">
                 <seg>Info :</seg>
@@ -46,9 +46,9 @@
                 <seg>Are you sure?</seg>
             </tuv>
         </tu>
-        
+
         <!-- Messages génériques de confirmation suite à ajout, modification, suppression -->
-        
+
         <tu tuid="added">
             <tuv xml:lang="fr">
                 <seg>Ajout effectué.</seg>
@@ -81,9 +81,9 @@
                 <seg>Deletion performed.</seg>
             </tuv>
         </tu>
-        
+
         <!-- Messages en réponse au déclenchement d'une action traitée en tâche de fond -->
-        
+
         <tu tuid="addedLater">
             <tuv xml:lang="fr">
                 <seg>Ajout en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps ainsi qu'un rechargement de la page. Un email de notification vous sera envoyé une fois l'opération terminée.</seg>
@@ -125,6 +125,15 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>You are not allowed to access any organizational unit.</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="editTranslations">
+            <tuv xml:lang="fr">
+                <seg>Modifier les traductions</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Edit the translations</seg>
             </tuv>
         </tu>
 

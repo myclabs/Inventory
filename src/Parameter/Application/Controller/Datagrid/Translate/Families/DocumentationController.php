@@ -25,7 +25,7 @@ class Parameter_Datagrid_Translate_Families_DocumentationController extends UI_C
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function getelementsAction()
     {
@@ -60,7 +60,7 @@ class Parameter_Datagrid_Translate_Families_DocumentationController extends UI_C
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function updateelementAction()
     {
@@ -79,7 +79,7 @@ class Parameter_Datagrid_Translate_Families_DocumentationController extends UI_C
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function viewAction()
     {
@@ -96,7 +96,7 @@ class Parameter_Datagrid_Translate_Families_DocumentationController extends UI_C
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function editAction()
     {

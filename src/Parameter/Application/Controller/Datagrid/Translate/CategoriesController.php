@@ -25,7 +25,7 @@ class Parameter_Datagrid_Translate_CategoriesController extends UI_Controller_Da
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function getelementsAction()
     {
@@ -51,7 +51,7 @@ class Parameter_Datagrid_Translate_CategoriesController extends UI_Controller_Da
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function updateelementAction()
     {

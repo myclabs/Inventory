@@ -1,0 +1,47 @@
+<?php
+use Parameter\Domain\Category;
+use Parameter\Domain\Family\Family;
+use Parameter\Domain\ParameterLibrary;
+
+/** @var ParameterLibrary $library */
+$library = $this->library;
+?>
+
+<div class="page-header">
+    <h1>
+        <?=__('Parameter', 'translate', 'familyCategories')?>
+        <small><?=__('UI', 'name', 'translations')?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(Category::class, 'label', 'datagrid_translate_categories', 'parameter')
+    ->addParam('library', $library->getId())
+    ->simple();
+?>
+
+<div class="page-header">
+    <h1>
+        <?=__('Parameter', 'translate', 'familyLabels')?>
+        <small><?=__('UI', 'name', 'translations')?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(Family::class, 'label', 'datagrid_translate_families_label', 'parameter')
+    ->addParam('library', $library->getId())
+    ->simple();
+?>
+
+<div class="page-header">
+    <h1>
+        <?= __('Parameter', 'translate', 'familyDocumentations') ?>
+        <small><?=__('UI', 'name', 'translations')?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(Family::class, 'documentation', 'datagrid_translate_families_documentation', 'parameter')
+    ->addParam('library', $library->getId())
+    ->addIdentifierCol()
+    ->addLanguagesLongTextCols();

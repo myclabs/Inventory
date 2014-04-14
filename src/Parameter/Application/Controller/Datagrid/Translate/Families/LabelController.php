@@ -25,7 +25,7 @@ class Parameter_Datagrid_Translate_Families_LabelController extends UI_Controlle
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function getelementsAction()
     {
@@ -51,7 +51,7 @@ class Parameter_Datagrid_Translate_Families_LabelController extends UI_Controlle
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function updateelementAction()
     {
