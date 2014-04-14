@@ -493,7 +493,6 @@ $(document).ready(function() {
 
     <?php // Ecoute de la soumission du formulaire de sauvegarde. ?>
     $('#saveReport_<?=$this->hashReport?>').on('successSubmit', function(e, response) {
-        console.log(response);
         window.location.replace('<?=$this->viewConfiguration->getSaveURL()?>/idReport/' + response.idReport);
     });
 });

@@ -87,7 +87,6 @@ $file = reset($file);
             $(document).ready(function() {
                 // Début de l'upload
                 $("#editBanner<?=$this->idOrganization?>").on('submit', function() {
-                    console.log('Test');
                     $('#organization .uploading-banner').closest('.form-group').removeClass('hide');
                     $('#organization .uploading-banner-errors').closest('.form-group').addClass('hide');
                 });
