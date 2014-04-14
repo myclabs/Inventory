@@ -320,6 +320,15 @@ class Orga_OrganizationController extends Core_Controller
             $tabView->addTab($membersTab);
         }
 
+        // Tab Consistency.
+        if ($isUserAllowedToEditOrganization) {
+            $consistencyTab = new Tab('consistency');
+            $consistencyTab->setTitle(__('UI', 'name', 'control'));
+            $consistencyTab->setContent('orga/organization/consistency'.$parameters);
+            $consistencyTab->setAjax(true, true);
+            $tabView->addTab($consistencyTab);
+        }
+
         // Tab Relevant.
         $canUserEditRelevance = $isUserAllowedToEditCells;
         if (!$isUserAllowedToEditOrganization) {
@@ -357,23 +366,7 @@ class Orga_OrganizationController extends Core_Controller
             $tabView->addTab($aclTab);
         }
 
-        // Tab Granularities.
-        if ($isUserAllowedToEditOrganization) {
-            $granularityTab = new Tab('granularities');
-            $granularityTab->setTitle(__('Orga', 'granularity', 'granularities'));
-            $granularityTab->setContent('orga/granularity/manage'.$parameters);
-            $granularityTab->setAjax(true, false);
-            $tabView->addTab($granularityTab);
-        }
-
-        // Tab Consistency.
-        if ($isUserAllowedToEditOrganization) {
-            $consistencyTab = new Tab('consistency');
-            $consistencyTab->setTitle(__('UI', 'name', 'control'));
-            $consistencyTab->setContent('orga/organization/consistency'.$parameters);
-            $consistencyTab->setAjax(true, true);
-            $tabView->addTab($consistencyTab);
-        }
+        // Tab Inventory
 
         // Tab DW
         if ($isUserAllowedToEditOrganization) {
@@ -382,6 +375,15 @@ class Orga_OrganizationController extends Core_Controller
             $dwTab->setContent('orga/organization/edit-reports'.$parameters);
             $dwTab->setAjax(true, false);
             $tabView->addTab($dwTab);
+        }
+
+        // Tab Granularities.
+        if ($isUserAllowedToEditOrganization) {
+            $granularityTab = new Tab('granularities');
+            $granularityTab->setTitle(__('Orga', 'granularity', 'granularitiesSynthesis'));
+            $granularityTab->setContent('orga/granularity/manage'.$parameters);
+            $granularityTab->setAjax(true, false);
+            $tabView->addTab($granularityTab);
         }
 
         // Tab Rebuild

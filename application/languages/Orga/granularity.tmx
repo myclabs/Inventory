@@ -20,6 +20,14 @@
                 <seg>Levels</seg>
             </tuv>
         </tu>
+        <tu tuid="granularitiesSynthesis">
+            <tuv xml:lang="fr">
+                <seg>Niveaux (synthèse)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Levels (synthesis)</seg>
+            </tuv>
+        </tu>
         <tu tuid="aclGranularities">
             <tuv xml:lang="fr">
                 <seg>Niveaux contrôlant les accès utilisateurs</seg>
