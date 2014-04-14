@@ -7,6 +7,7 @@
  */
 
 use Classification\Domain\Axis;
+use Classification\Domain\ClassificationLibrary;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 
@@ -37,6 +38,10 @@ class Classification_Datagrid_Translate_AxesController extends UI_Controller_Dat
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
+
+        $library = ClassificationLibrary::load($this->getParam('library'));
+        $this->request->filter->addCondition('library', $library);
+
         foreach (Axis::loadList($this->request) as $axis) {
             $data = [];
             $data['index'] = $axis->getId();

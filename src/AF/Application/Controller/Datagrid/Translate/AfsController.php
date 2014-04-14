@@ -7,6 +7,7 @@
  */
 
 use AF\Domain\AF;
+use AF\Domain\AFLibrary;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 
@@ -37,6 +38,10 @@ class AF_Datagrid_Translate_AfsController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
+
+        $library = AFLibrary::load($this->getParam('library'));
+        $this->request->filter->addCondition('library', $library);
+
         foreach (AF::loadList($this->request) as $aF) {
             $data = array();
             $data['index'] = $aF->getId();

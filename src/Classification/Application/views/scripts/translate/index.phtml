@@ -1,9 +1,9 @@
 <?php
 use Classification\Domain\Axis;
-use Classification\Domain\AxisMember;
 use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Context;
 use Classification\Domain\Indicator;
+use Classification\Domain\Member;
 
 /** @var ClassificationLibrary $library */
 $library = $this->library;
@@ -43,8 +43,9 @@ echo $this->translateDatagrid(Axis::class, 'label', 'datagrid_translate_axes', '
 </div>
 
 <?php
-echo $this->translateDatagrid(AxisMember::class, 'label', 'datagrid_translate_members', 'classification')
+echo $this->translateDatagrid(Member::class, 'label', 'datagrid_translate_members', 'classification')
     ->addParam('library', $library->getId())
+    ->disablePagination()
     ->simple();
 ?>
 

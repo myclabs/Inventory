@@ -143,4 +143,11 @@ class UI_View_Helper_TranslateDatagrid extends Zend_View_Helper_Abstract
 
         return $this;
     }
+
+    public function disablePagination()
+    {
+        $this->datagrid->pagination = false;
+
+        return $this;
+    }
 }

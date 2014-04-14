@@ -3,6 +3,7 @@
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 use Parameter\Domain\Category;
+use Parameter\Domain\ParameterLibrary;
 
 /**
  * Classe du controller du datagrid des traductions des categories.
@@ -30,6 +31,10 @@ class Parameter_Datagrid_Translate_CategoriesController extends UI_Controller_Da
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
+
+        $library = ParameterLibrary::load($this->getParam('library'));
+        $this->request->filter->addCondition('library', $library);
+
         foreach (Category::loadList($this->request) as $category) {
             /** @var Category $category */
             $data = array();

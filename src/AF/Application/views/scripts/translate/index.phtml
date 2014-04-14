@@ -46,6 +46,7 @@ echo $this->translateDatagrid(AF::class, 'label', 'datagrid_translate_afs', 'af'
 <?php
 echo $this->translateDatagrid(Component::class, 'label', 'datagrid_translate_components_label', 'af')
     ->addParam('library', $library->getId())
+    ->disablePagination()
     ->simple();
 ?>
 
@@ -60,7 +61,8 @@ echo $this->translateDatagrid(Component::class, 'label', 'datagrid_translate_com
 echo $this->translateDatagrid(Component::class, 'help', 'datagrid_translate_components_help', 'af')
     ->addParam('library', $library->getId())
     ->addIdentifierCol()
-    ->addLanguagesLongTextCols();
+    ->addLanguagesLongTextCols()
+    ->disablePagination();
 ?>
 
 <div class="page-header">
@@ -73,6 +75,7 @@ echo $this->translateDatagrid(Component::class, 'help', 'datagrid_translate_comp
 <?php
 echo $this->translateDatagrid(SelectOption::class, 'label', 'datagrid_translate_options', 'af')
     ->addParam('library', $library->getId())
+    ->disablePagination()
     ->simple();
 ?>
 
@@ -86,5 +89,6 @@ echo $this->translateDatagrid(SelectOption::class, 'label', 'datagrid_translate_
 <?php
 echo $this->translateDatagrid(NumericAlgo::class, 'label', 'datagrid_translate_algos', 'af')
     ->addParam('library', $library->getId())
+    ->disablePagination()
     ->simple();
 ?>

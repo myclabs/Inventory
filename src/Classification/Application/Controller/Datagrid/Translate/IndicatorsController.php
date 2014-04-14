@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Indicator;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
@@ -37,6 +38,10 @@ class Classification_Datagrid_Translate_IndicatorsController extends UI_Controll
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
+
+        $library = ClassificationLibrary::load($this->getParam('library'));
+        $this->request->filter->addCondition('library', $library);
+
         foreach (Indicator::loadList($this->request) as $indicator) {
             $data = [];
             $data['index'] = $indicator->getId();

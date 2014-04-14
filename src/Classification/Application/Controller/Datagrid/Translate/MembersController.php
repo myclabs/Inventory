@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Member;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
@@ -37,19 +38,27 @@ class Classification_Datagrid_Translate_MembersController extends UI_Controller_
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        foreach (Member::loadList($this->request) as $member) {
-            $data = array();
-            $data['index'] = $member->getId();
-            $data['identifier'] = $member->getAxis()->getRef().' | '.$member->getRef();
 
-            foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $member->reloadWithLocale($locale);
-                $data[$language] = $member->getLabel();
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
+        $count = 0;
+        foreach ($library->getAxes() as $axis) {
+            foreach ($axis->getMembers() as $member) {
+                $data = array();
+                $data['index'] = $member->getId();
+                $data['identifier'] = $member->getAxis()->getRef().' | '.$member->getRef();
+
+                foreach ($this->languages as $language) {
+                    $locale = Core_Locale::load($language);
+                    $member->reloadWithLocale($locale);
+                    $data[$language] = $member->getLabel();
+                }
+                $this->addline($data);
+                $count++;
             }
-            $this->addline($data);
         }
-        $this->totalElements = Member::countTotal($this->request);
+
+        $this->totalElements = $count;
 
         $this->send();
     }

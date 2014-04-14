@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Context;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
@@ -37,6 +38,10 @@ class Classification_Datagrid_Translate_ContextsController extends UI_Controller
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
+
+        $library = ClassificationLibrary::load($this->getParam('library'));
+        $this->request->filter->addCondition('library', $library);
+
         foreach (Context::loadList($this->request) as $context) {
             $data = array();
             $data['index'] = $context->getId();

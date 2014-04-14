@@ -6,7 +6,9 @@
  * @subpackage Controller
  */
 
+use AF\Domain\AFLibrary;
 use AF\Domain\Component\Select\SelectOption;
+use AF\Domain\Component\Select;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 
@@ -37,19 +39,30 @@ class AF_Datagrid_Translate_OptionsController extends UI_Controller_Datagrid
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        foreach (SelectOption::loadList($this->request) as $option) {
-            $data = array();
-            $data['index'] = $option->getId();
-            $data['identifier'] = $option->getSelect()->getAF()->getRef().' | '.$option->getSelect()->getRef().' | '.$option->getRef();
 
-            foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $option->reloadWithLocale($locale);
-                $data[$language] = $option->getLabel();
+        $library = AFLibrary::load($this->getParam('library'));
+
+        foreach ($library->getAFList() as $af) {
+            foreach ($af->getRootGroup()->getSubComponentsRecursive() as $component) {
+                if (! $component instanceof Select) {
+                    continue;
+                }
+                foreach ($component->getOptions() as $option) {
+                    $data = array();
+                    $data['index'] = $option->getId();
+                    $data['identifier'] = $option->getSelect()->getAF()->getRef()
+                        .' | '.$option->getSelect()->getRef()
+                        .' | '.$option->getRef();
+
+                    foreach ($this->languages as $language) {
+                        $locale = Core_Locale::load($language);
+                        $option->reloadWithLocale($locale);
+                        $data[$language] = $option->getLabel();
+                    }
+                    $this->addline($data);
+                }
             }
-            $this->addline($data);
         }
-        $this->totalElements = SelectOption::countTotal($this->request);
 
         $this->send();
     }
