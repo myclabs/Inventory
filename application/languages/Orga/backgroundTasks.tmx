@@ -28,6 +28,14 @@
                 <seg>Creation of granularity: [LABEL]</seg>
             </tuv>
         </tu>
+        <tu tuid="removeGranularity">
+            <tuv xml:lang="fr">
+                <seg>Suppression de la granularité : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Deletion of granularity: [LABEL]</seg>
+            </tuv>
+        </tu>
         <tu tuid="addRoleToUser">
             <tuv xml:lang="fr">
                 <seg>Attribution du rôle : [ROLE] à l’utilisateur : [USER]</seg>
