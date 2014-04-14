@@ -33,7 +33,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getelementsAction()
     {
@@ -72,7 +72,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function updateelementAction()
     {
@@ -94,7 +94,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function viewAction()
     {
@@ -111,7 +111,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function editAction()
     {

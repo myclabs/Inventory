@@ -33,7 +33,7 @@ class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Dat
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getelementsAction()
     {
@@ -63,7 +63,7 @@ class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Dat
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function updateelementAction()
     {

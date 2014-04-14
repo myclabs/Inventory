@@ -1,72 +1,18 @@
 <?php
-/**
- * @author valentin.claras
- * @package AF
- * @subpackage Controller
- */
 
+use AF\Domain\AFLibrary;
 use Core\Annotation\Secure;
 
-/**
- * AF_TranslateController
- * @package AF
- * @subpackage Controller
- */
 class AF_TranslateController extends Core_Controller
 {
-
     /**
-     * Liste des libellés des Category en mode traduction.
-     *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
-    public function categoriesAction()
+    public function indexAction()
     {
-    }
+        $library = AFLibrary::load($this->getParam('library'));
 
-    /**
-     * Liste des libellés des AF en mode traduction.
-     *
-     * @Secure("editAF")
-     */
-    public function afsAction()
-    {
+        $this->view->assign('library', $library);
+        $this->setActiveMenuItemAFLibrary($library->getId());
     }
-
-    /**
-     * Liste des libellés des Component en mode traduction.
-     *
-     * @Secure("editAF")
-     */
-    public function componentsLabelAction()
-    {
-    }
-
-    /**
-     * Liste des aides des Component en mode traduction.
-     *
-     * @Secure("editAF")
-     */
-    public function componentsHelpAction()
-    {
-    }
-
-    /**
-     * Liste des libellés des SelectOption en mode traduction.
-     *
-     * @Secure("editAF")
-     */
-    public function optionsAction()
-    {
-    }
-
-    /**
-     * Liste des libellés des NumericAlgo en mode traduction.
-     *
-     * @Secure("editAF")
-     */
-    public function algosAction()
-    {
-    }
-
 }
