@@ -1073,8 +1073,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 
     /**
      * Créé le Cube de DW pour la Cell.
-     *
-     * @return int Identifiant unique du Organization.
      */
     public function createDWCube()
     {
@@ -1096,8 +1094,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 
     /**
      * Supprime le Cube de DW pour la Cell.
-     *
-     * @return int Identifiant unique du Organization.
      */
     public function deleteDWCube()
     {

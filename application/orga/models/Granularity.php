@@ -778,8 +778,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
     /**
      * Créé le Cube de DW pour la Granularity.
-     *
-     * @return int Identifiant unique du Organization.
      */
     protected function createDWCube()
     {
@@ -796,8 +794,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
 
     /**
      * Supprime le Cube de DW pour la Granularity.
-     *
-     * @return int Identifiant unique du Organization.
      */
     protected function deleteDWCube()
     {

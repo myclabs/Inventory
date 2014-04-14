@@ -61,3 +61,7 @@ Orga_Model_Organization:
       mappedBy: organization
       cascade: [ all ]
       orphanRemoval: true
+
+  manyToMany:
+    contextIndicators:
+      targetEntity: Classification\Domain\ContextIndicator

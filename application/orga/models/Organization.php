@@ -8,6 +8,7 @@
  */
 
 use Account\Domain\Account;
+use Classification\Domain\ContextIndicator;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -31,7 +32,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     const PATH_JOIN = '&';
 
     /**
-     * Identifiant unique du Organization.
+     * Identifiant unique de l'Organization.
      *
      * @var string
      */
@@ -45,21 +46,21 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     protected $account = null;
 
     /**
-     * Label du Organization.
+     * Label de l'Organization.
      *
      * @var string
      */
     protected $label = '';
 
     /**
-     * Collection des Axis du Organization.
+     * Collection des Axis de l'Organization.
      *
      * @var Collection|Orga_Model_Axis[]
      */
     protected $axes = null;
 
     /**
-     * Collection des Granularity du Organization.
+     * Collection des Granularity de l'Organization.
      *
      * @var Collection|Orga_Model_Granularity[]
      */
@@ -71,6 +72,13 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      * @var Orga_Model_Granularity
      */
     protected $granularityForInventoryStatus = null;
+
+    /**
+     * Collection des ContextIndicator utilisés par l'Organization
+     * 
+     * @var Collection|ContextIndicator[]
+     */
+    protected $contextIndicators;
 
     /**
      * Liste des roles administrateurs sur cette organisation.
@@ -87,13 +95,14 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     {
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
+        $this->contextIndicators = new ArrayCollection();
         $this->adminRoles = new ArrayCollection();
 
         $this->account = $account;
     }
 
     /**
-     * Renvoie l'id du Organization.
+     * Renvoie l'id de l'Organization.
      *
      * @return string
      */
@@ -113,7 +122,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Spécifie le label du Organization.
+     * Spécifie le label de l'Organization.
      *
      * @param string $label
      *
@@ -135,7 +144,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Ajoute un Axis à la collection du Organization.
+     * Ajoute un Axis à la collection de l'Organization.
      *
      * @param Orga_Model_Axis $axis
      *
@@ -153,7 +162,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Vérifie si l'Axis donné appartient à ceux du Organization.
+     * Vérifie si l'Axis donné appartient à ceux de l'Organization.
      *
      * @param Orga_Model_Axis $axis
      *
@@ -190,7 +199,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Retire un Axis de ceux du Organization.
+     * Retire un Axis de ceux de l'Organization.
      *
      * @param Orga_Model_Axis $axis
      */
@@ -235,7 +244,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Renvoie les Axis du Organization.
+     * Renvoie les Axis de l'Organization.
      *
      * @return Collection|Orga_Model_Axis[]
      */
@@ -245,7 +254,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Retourne un tableau contenant les Axis racines du Organization.
+     * Retourne un tableau contenant les Axis racines de l'Organization.
      *
      * @return Orga_Model_Axis[]
      */
@@ -258,7 +267,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Retourne un tableau contenant les Axis du Organization ordonnés par première exploration.
+     * Retourne un tableau contenant les Axis de l'Organization ordonnés par première exploration.
      *
      * @return Orga_Model_Axis[]
      */
@@ -270,7 +279,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Retourne un tableau contenant les Axis du Organization ordonnés par dernière exploration.
+     * Retourne un tableau contenant les Axis de l'Organization ordonnés par dernière exploration.
      *
      * @return Orga_Model_Axis[]
      */
@@ -334,7 +343,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Vérifie que la Granularity donnée appartient à celles du Organization.
+     * Vérifie que la Granularity donnée appartient à celles de l'Organization.
      *
      * @param Orga_Model_Granularity $granularity
      *
@@ -371,7 +380,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Retire la Granularity donnée de celles du Organization.
+     * Retire la Granularity donnée de celles de l'Organization.
      *
      * @param Orga_Model_Granularity $granularity
      */
@@ -458,6 +467,51 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
             throw new Core_Exception_UndefinedAttribute('Granularity for inventory status has not been chosen.');
         }
         return $this->granularityForInventoryStatus;
+    }
+
+    /**
+     * @param ContextIndicator $contextIndicator
+     */
+    public function addContextIndicator(ContextIndicator $contextIndicator)
+    {
+        if (!$this->hasContextIndicator($contextIndicator)) {
+            $this->contextIndicators->add($contextIndicator);
+        }
+    }
+
+    /**
+     * @param ContextIndicator $contextIndicator
+     * @return bool
+     */
+    public function hasContextIndicator(ContextIndicator $contextIndicator)
+    {
+        return $this->contextIndicators->contains($contextIndicator);
+    }
+
+    /**
+     * @param ContextIndicator $contextIndicator
+     */
+    public function removeContextIndicator(ContextIndicator $contextIndicator)
+    {
+        if ($this->hasContextIndicator($contextIndicator)) {
+            $this->contextIndicators->removeElement($contextIndicator);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasContextIndicators()
+    {
+        return !$this->contextIndicators->isEmpty();
+    }
+
+    /**
+     * @return Collection|ContextIndicator[]
+     */
+    public function getContextIndicators()
+    {
+        return $this->contextIndicators;
     }
 
     /**

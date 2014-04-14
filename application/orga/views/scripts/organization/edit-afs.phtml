@@ -25,6 +25,7 @@ foreach ($this->granularities as $inputGranularity) :
     $columnAf = new UI_Datagrid_Col_List('af', ___('AF', 'name', 'accountingForm'));
     $columnAf->list = $this->afs;
     $columnAf->editable = true;
+    $columnAf->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
     $datagridGranularityAfs->addCol($columnAf);
 
     $datagridGranularityAfs->addParam('idOrganization', $this->organization->getId());

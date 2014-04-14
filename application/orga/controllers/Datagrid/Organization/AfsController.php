@@ -32,7 +32,7 @@ class Orga_Datagrid_Organization_AfsController extends UI_Controller_Datagrid
             }
             try {
                 $cellsGroupDataProvider = $configCell->getCellsGroupForInputGranularity($inputGranularity);
-                $data['af'] = $this->cellList($cellsGroupDataProvider->getAF()->getRef());
+                $data['af'] = $this->cellList($cellsGroupDataProvider->getAF()->getId());
             } catch (Core_Exception_UndefinedAttribute $e) {
                 // Aucun AF n'a encore été spécifié pour cette cellule et granularité.
             }
@@ -57,18 +57,18 @@ class Orga_Datagrid_Organization_AfsController extends UI_Controller_Datagrid
 
         $configCell = Orga_Model_Cell::load($this->update['index']);
 
-        $aFRef = $this->update['value'];
-        if (empty($aFRef)) {
+        $idAF = $this->update['value'];
+        if (empty($idAF)) {
             $aF = null;
         } else {
-            $aF = AF::loadByRef($aFRef);
+            $aF = AF::load($idAF);
         }
 
         $cellsGroupDataProvider = $configCell->getCellsGroupForInputGranularity($inputGranularity);
         $cellsGroupDataProvider->setAF($aF);
 
         if ($aF !== null) {
-            $this->data = $this->cellList($aF->getRef());
+            $this->data = $this->cellList($aF->getId());
         } else {
             $this->data = $this->cellList(null);
         }

@@ -28,6 +28,40 @@
     </div>
 </fieldset>
 
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=___('Orga', 'organization', 'contextIndicators')?></legend>
+    <div>
+        <form id="organizationContextIndicators<?=$this->idOrganization?>" class="form-horizontal" method="POST" action="orga/organization/edit-context-indicators/idOrganization/<?=$this->idOrganization?>">
+            <div class="form-group">
+                <label for="contextIndicators" class="control-label col-xs-2">
+                    <?=___('Classification', 'contextIndicator', 'contextIndicators')?>
+                </label>
+                <div class="col-xs-10">
+                    <select name="contextIndicators[]" multiple id="contextIndicators">
+                        <?php foreach ($this->potentialContextIndicators as $contextIndicator) : ?>
+                            <option value="<?=$contextIndicator->getId()?>"<?=(in_array($contextIndicator, $this->selectedContextIndicators) ? ' selected' : '')?>>
+                                <?=$contextIndicator->getLabel()?> (<?=$contextIndicator->getLibrary()->getLabel()?>)
+                            </option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#contextIndicators').select2();
+                new AjaxForm('#organizationContextIndicators<?=$this->idOrganization?>');
+            });
+        </script>
+    </div>
+</fieldset>
+
 
 <?php
 $file = glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $this->idOrganization . '.*');

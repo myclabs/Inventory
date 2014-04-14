@@ -1,6 +1,10 @@
 <?php
 
+use AF\Domain\AFLibrary;
 use AF\Domain\AF;
+use Classification\Domain\ClassificationLibrary;
+use Classification\Domain\ContextIndicator;
+use Parameter\Domain\ParameterLibrary;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
@@ -458,18 +462,15 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign('idOrganization', $idOrganization);
         $this->view->assign('organizationLabel', $organization->getLabel());
-        $this->view->assign('granularities', $organization->getOrderedGranularities());
-        try {
-            $this->view->granularityRefForInventoryStatus = $organization->getGranularityForInventoryStatus()->getRef();
-        } catch (Core_Exception_UndefinedAttribute $e) {
-            $this->view->granularityRefForInventoryStatus = null;
-        }
-        $this->view->granularitiesWithDWCube = array();
-        foreach ($organization->getOrderedGranularities() as $granularity) {
-            if ($granularity->getCellsGenerateDWCubes()) {
-                $this->view->granularitiesWithDWCube[] = $granularity;
+
+        $potentialContextIndicators = [];
+        foreach (ClassificationLibrary::loadUsableInAccount($organization->getAccount()) as $classificationLibrary) {
+            foreach ($classificationLibrary->getContextIndicators() as $contextIndicator) {
+                $potentialContextIndicators[] = $contextIndicator;
             }
         }
+        $this->view->assign('potentialContextIndicators', $potentialContextIndicators);
+        $this->view->assign('selectedContextIndicators', $organization->getContextIndicators()->toArray());
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
@@ -525,6 +526,43 @@ class Orga_OrganizationController extends Core_Controller
 //        }
 
         if ($this->hasFormError() || !$updated) {
+            $this->setFormMessage(__('UI', 'message', 'nullUpdated'));
+        } else {
+            $this->setFormMessage(__('UI', 'message', 'updated'));
+        }
+
+        $this->sendFormResponse();
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
+    public function editContextIndicatorsAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $updated = false;
+
+        $contextIndicators = [];
+        foreach ($this->getParam('contextIndicators') as $idContextIndicator) {
+            $contextIndicator = ContextIndicator::load($idContextIndicator);
+            $contextIndicators[] = $contextIndicator;
+            if (!$organization->hasContextIndicator($contextIndicator)) {
+                $updated = true;
+                $organization->addContextIndicator($contextIndicator);
+            }
+        }
+
+        foreach ($organization->getContextIndicators() as $oldContextIndicator) {
+            if (!in_array($oldContextIndicator, $contextIndicators)) {
+                $updated = true;
+                $organization->removeContextIndicator($oldContextIndicator);
+            }
+        }
+
+        if (!$updated) {
             $this->setFormMessage(__('UI', 'message', 'nullUpdated'));
         } else {
             $this->setFormMessage(__('UI', 'message', 'updated'));
@@ -733,8 +771,10 @@ class Orga_OrganizationController extends Core_Controller
 
         $afs = [];
         /** @var \AF\Domain\AF $af */
-        foreach (AF::loadList() as $af) {
-            $afs[$af->getRef()] = $af->getLabel();
+        foreach (AFLibrary::loadUsableInAccount($organization->getAccount()) as $afLibrary) {
+            foreach ($afLibrary->getAFList() as $af) {
+                $afs[$af->getId()] = $af->getLabel() . ' (' . $afLibrary->getLabel() . ')';
+            }
         }
         $this->view->assign('afs', $afs);
 
