@@ -10,7 +10,7 @@ $.fn.parseFormErrors = function (request)
     var response = $.parseJSON(request.responseText);
     if (typeof(response.errorMessages) !== 'undefined') {
         for (var x in response.errorMessages) {
-            var xElementLine = $('#' + $(this).attr('id') + ' #' + x + '-line .controls');
+            var xElementLine = $('#' + $(this).attr('id') + ' #' + x + '-line');
             xElementLine.append('<span class="help-block errorMessage">' + response.errorMessages[x] + '</span>');
             if (!(xElementLine.parent().hasClass('error'))) {
                 xElementLine.parent().addClass('error');
@@ -108,16 +108,16 @@ $.fn.parseFormLine = function ()
 
 	element += '"name": "' + $(this).attr('id').replace('-line', '') + '", ';
 	element += '"hidden": ' + ($(this).hasClass('hide') ? 'true' : 'false') + ', ';
-	element += $(this).children('div.controls').children('div:first').getFormElementValue() + ', ';
+	element += $(this).children('div:first').getFormElementValue() + ', ';
 
-	var childElements = $(this).children('div.controls').children('div:not(:first)');
+	var childElements = $(this).children('div:not(:first)');
 	for(var key = 0; key < childElements.length; key++) {
 		children += '"' + $(childElements[key]).attr('id') + '": {' + $(childElements[key]).getFormElementValue() + '}, ';
 	}
 	if (children !== '{') {
 		children = children.slice(0, -2);
 	}
-	
+
 	children += '}';
 	element += '"children": ' + children;
 	element += '}';
