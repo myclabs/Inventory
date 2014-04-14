@@ -2,6 +2,7 @@
 
 namespace Classification\Application\Service;
 
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Member;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Axis;
@@ -23,7 +24,7 @@ class ClassificationExportService
     /**
      * @param string $format
      */
-    public function stream($format)
+    public function stream(ClassificationLibrary $classificationLibrary, $format)
     {
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
@@ -34,20 +35,20 @@ class ClassificationExportService
         $modelBuilder->bind('contextTableLabel', __('Classification', 'context', 'contexts'));
         $modelBuilder->bind('contextColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('contextColumnRef', __('UI', 'name', 'identifier'));
-        $modelBuilder->bind('contexts', Context::loadList());
+        $modelBuilder->bind('contexts', $classificationLibrary->getContexts());
 
         $modelBuilder->bind('indicatorTableLabel', __('Classification', 'indicator', 'indicators'));
         $modelBuilder->bind('indicatorColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('indicatorColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bind('indicatorColumnUnit', __('Unit', 'name', 'unit'));
         $modelBuilder->bind('indicatorColumnRatioUnit', __('Unit', 'name', 'ratioUnit'));
-        $modelBuilder->bind('indicators', Indicator::loadList());
+        $modelBuilder->bind('indicators', $classificationLibrary->getIndicators());
 
         $modelBuilder->bind('contextindicatorTableLabel', __('Classification', 'contextIndicator', 'contextIndicators'));
         $modelBuilder->bind('contextindicatorColumnContext', __('Classification', 'context', 'context'));
         $modelBuilder->bind('contextindicatorColumnIndicator', __('Classification', 'indicator', 'indicator'));
         $modelBuilder->bind('contextindicatorColumnAxes', __('UI', 'name', 'axes'));
-        $modelBuilder->bind('contextindicators', ContextIndicator::loadList());
+        $modelBuilder->bind('contextindicators', $classificationLibrary->getContextIndicators());
         $modelBuilder->bindFunction(
             'displayContextIndicatorAxes',
             function (ContextIndicator $contextIndicator) {
@@ -65,7 +66,7 @@ class ClassificationExportService
         $modelBuilder->bind('axisColumnLabel', __('UI', 'name', 'label'));
         $modelBuilder->bind('axisColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bind('axisColumnNarrower', __('Classification', 'export', 'axisColumnNarrower'));
-        $modelBuilder->bind('axes', Axis::loadListOrderedAsAscendantTree());
+        $modelBuilder->bind('axes', $classificationLibrary->getAxesOrderedAsAscendantTree());
         $modelBuilder->bindFunction(
             'displayAxisDirectNarrower',
             function (Axis $axis) {

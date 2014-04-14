@@ -551,7 +551,11 @@ class Orga_Service_Export
         $modelBuilder->bind('cell', $cell);
         $modelBuilder->bind('populatingCells', $cell->getPopulatingCells());
 
-        $modelBuilder->bind('indicators', Indicator::loadList());
+        $indicators = [];
+        foreach ($cell->getOrganization()->getContextIndicators() as $contextIndicator) {
+            $indicators[] = $contextIndicator->getIndicator();
+        }
+        $modelBuilder->bind('indicators', $indicators);
 
         $queryOrganizationAxes = new Core_Model_Query();
         $queryOrganizationAxes->filter->addCondition(Orga_Model_Axis::QUERY_ORGANIZATION, $cell->getGranularity()->getOrganization());
@@ -570,7 +574,13 @@ class Orga_Service_Export
         }
         $modelBuilder->bind('orgaAxes', $orgaAxes);
 
-        $modelBuilder->bind('classifAxes', Axis::loadListOrderedAsAscendantTree());
+        $classifAxes = [];
+        foreach ($cell->getOrganization()->getContextIndicators() as $contextIndicator) {
+            foreach ($contextIndicator->getAxes() as $axis) {
+                $classifAxes[] = $axis;
+            }
+        }
+        $modelBuilder->bind('classifAxes', $classifAxes);
 
         $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
         $modelBuilder->bind('resultLabel', __('UI', 'name', 'label'));

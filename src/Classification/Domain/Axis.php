@@ -83,26 +83,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * @return Axis[]
-     */
-    public static function loadListOrderedAsAscendantTree()
-    {
-        $axes = [];
-
-        $queryRoots = new Core_Model_Query();
-        $queryRoots->filter->addCondition(self::QUERY_NARROWER, null, Core_Model_Filter::OPERATOR_NULL);
-        foreach (Axis::loadList($queryRoots) as $rootAxis) {
-            /** @var Axis $rootAxis */
-            foreach ($rootAxis->getAllBroaders() as $recursiveBroader) {
-                $axes[] = $recursiveBroader;
-            }
-            $axes[] = $rootAxis;
-        }
-
-        return $axes;
-    }
-
-    /**
      * @return int
      */
     public function getId()
