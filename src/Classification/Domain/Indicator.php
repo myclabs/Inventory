@@ -57,15 +57,6 @@ class Indicator extends Core_Model_Entity
 
 
     /**
-     * @param string $ref
-     * @return Indicator $indicator
-     */
-    public static function loadByRef($ref)
-    {
-        return self::getEntityRepository()->loadBy(['ref' => $ref]);
-    }
-
-    /**
      * @param ClassificationLibrary $library
      * @param string           $ref       Identifiant textuel
      * @param string           $label     Libellé
