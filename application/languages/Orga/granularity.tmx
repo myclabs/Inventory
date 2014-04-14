@@ -194,10 +194,10 @@
         </tu>
         <tu tuid="granularityAlreadyConfigured">
             <tuv xml:lang="fr">
-                <seg>Ce niveau est déjà configurée</seg>
+                <seg>Ce niveau est déjà présent.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>This level is already configured</seg>
+                <seg>This level is already configured.</seg>
             </tuv>
         </tu>
 
