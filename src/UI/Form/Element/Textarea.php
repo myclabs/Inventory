@@ -44,6 +44,8 @@ class UI_Form_Element_Textarea extends Zend_Form_Element_Textarea implements UI_
         $this->_element = new UI_Form_Element($this);
         $this->setAttrib('rows', 4);
         $this->setAttrib('cols', 55);
+
+        $this->setAttrib('class', 'form-control');
     }
 
     /**

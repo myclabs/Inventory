@@ -23,7 +23,7 @@ class UI_Form_Decorator_HelpBlock extends Zend_Form_Decorator_Abstract
 
         $helpBlockOptions = array(
                 'tag'      => 'span',
-                'class'    => 'help-block'
+                'class'    => 'col-sm-offset-3 help-block'
             );
 
         $description = $this->getElement()->getDescription();

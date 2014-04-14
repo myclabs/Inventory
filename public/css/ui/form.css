@@ -3,12 +3,16 @@
 .form > div:first-child { width: 380px; margin-right: 0px; }
 .form .input { display: inline-block; margin-right: 5px; }
 .form .input.hide { display: none; }
-.form .incertitude { width: 30px; }
-.form .subGroup { margin-left: 40px; }
-.form .form-actions { padding-left: 426px; }
+.form .incertitude {
+    width: 50px;
+    display: inline-block;
+    margin: 0 4px;
+}
+/*.form .subGroup { margin-left: 40px; }*/
+/*.form .form-actions { padding-left: 426px; }*/
 .form .form-actions > * { margin: 0px 5px; }
 
-.form .subGroup .form-group > label { width: 360px; }
+/*.form .subGroup .form-group > label { width: 360px; }
 .form .subGroup .form-group { margin-left: 390px; }
 .form .subGroup .subGroup .form-group > label { width: 320px; }
 .form .subGroup .subGroup .form-group { margin-left: 350px; }
@@ -23,7 +27,7 @@
 .form .subGroup .subGroup .subGroup .subGroup .subGroup .subGroup .form-group .subGroup > label { width: 280px; }
 .form .subGroup .subGroup .subGroup .subGroup .subGroup .subGroup .form-group .subGroup { margin-left: 310px; }
 .form .subGroup .subGroup .subGroup .subGroup .subGroup .subGroup .form-group .subGroup .subGroup > label { width: 280px; }
-.form .subGroup .subGroup .subGroup .subGroup .subGroup .subGroup .form-group .subGroup .subGroup { margin-left: 310px; }
+.form .subGroup .subGroup .subGroup .subGroup .subGroup .subGroup .form-group .subGroup .subGroup { margin-left: 310px; }*/
 .form input + .help-block, .form select + .help-block, .form textarea + .help-block,
 .form .uneditable-input + .help-block, .form .input-prepend + .help-block, .form .input-append + .help-block {
     margin-top: 0px;

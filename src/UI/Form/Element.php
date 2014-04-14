@@ -302,7 +302,7 @@ class UI_Form_Element
             }
 
             // Controls.
-            $this->_zendFormElement->addDecorator('Controls');
+//            $this->_zendFormElement->addDecorator('Controls');
 
             // Help.
             if ($this->help) {
@@ -316,6 +316,9 @@ class UI_Form_Element
                 $labelDecorator->setTag('');
                 if (preg_match('#control-label#', $labelDecorator->getOption('class')) == 0) {
                     $labelDecorator->setOption('class', $labelDecorator->getOption('class').' control-label');
+                }
+                if (preg_match('#col-sm-3#', $labelDecorator->getOption('class')) == 0) {
+                    $labelDecorator->setOption('class', $labelDecorator->getOption('class').' col-sm-3');
                 }
             }
 
