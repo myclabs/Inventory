@@ -32,7 +32,7 @@ class Classification_Datagrid_Translate_ContextsController extends UI_Controller
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function getelementsAction()
     {
@@ -57,7 +57,7 @@ class Classification_Datagrid_Translate_ContextsController extends UI_Controller
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function updateelementAction()
     {

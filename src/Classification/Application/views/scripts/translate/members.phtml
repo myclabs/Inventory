@@ -1,8 +1,0 @@
-<?php
-use Classification\Domain\Member;
-?>
-    <div class="page-header">
-        <h1><?=__('Classification', 'member', 'pageTitle')?> <small><?=__('UI', 'name', 'translations')?></small></h1>
-    </div>
-<?php
-echo $this->translateDatagrid(Member::class, 'label', 'datagrid_translate_members', 'classification')->simple();

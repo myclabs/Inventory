@@ -1,54 +1,18 @@
 <?php
-/**
- * @author valentin.claras
- * @package Classification
- * @subpackage Controller
- */
 
+use Classification\Domain\ClassificationLibrary;
 use Core\Annotation\Secure;
 
-/**
- * Classification_TranslateController
- * @package Classification
- * @subpackage Controller
- */
 class Classification_TranslateController extends Core_Controller
 {
-
     /**
-     * Liste des libellés des Axis en mode traduction.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
-    public function axesAction()
+    public function indexAction()
     {
-    }
+        $library = ClassificationLibrary::load($this->getParam('library'));
 
-    /**
-     * Liste des libellés des Classification_Model_Members en mode traduction.
-     *
-     * @Secure("editClassification")
-     */
-    public function membersAction()
-    {
+        $this->view->assign('library', $library);
+        $this->setActiveMenuItemClassificationLibrary($library->getId());
     }
-
-    /**
-     * Liste des libellés des Indicator en mode traduction.
-     *
-     * @Secure("editClassification")
-     */
-    public function indicatorsAction()
-    {
-    }
-
-    /**
-     * Liste des libellés des Context en mode traduction.
-     *
-     * @Secure("editClassification")
-     */
-    public function contextsAction()
-    {
-    }
-
 }
