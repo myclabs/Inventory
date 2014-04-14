@@ -731,6 +731,7 @@ class UI_Tree extends UI_Generic
         $editScript .= 'new AjaxForm(\'#'.$this->id.'_editForm\');';
         $editScript .= '$(\'#'.$this->id.'_editForm\').on(\'successSubmit\', function(e, response) {';
         $editScript .= 'this.reset();';
+        $editScript .= '$(\'#'.$this->id.'_selectAfter\').closest(\'.form-group\').addClass(\'hide\');';
         $editScript .= $this->id.'.Tree.removeChildren('.$this->id.'.Tree.getRoot());';
         $editScript .= $this->id.'.init();';
         $editScript .= '$(\'#'.$this->id.'_editPanel\').modal(\'hide\');';
