@@ -234,7 +234,7 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
      * @param $ref
      * @throws \Core_Exception_NotFound
      * @throws \Core_Exception_TooMany
-     * @return Axis
+     * @return Context
      */
     public function getContextByRef($ref)
     {
@@ -281,6 +281,29 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
     public function getContextIndicators()
     {
         return $this->contextIndicators->toArray();
+    }
+
+    /**
+     * @param $refContext
+     * @param $refIndicator
+     * @throws \Core_Exception_NotFound
+     * @return ContextIndicator
+     */
+    public function getContextIndicatorByRef($refContext, $refIndicator)
+    {
+        $context = $this->getContextByRef($refContext);
+        $indicator = $this->getIndicatorByRef($refIndicator);
+
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('context', $context));
+        $criteria->where($criteria->expr()->eq('indicator', $indicator));
+        $context = $this->contextIndicators->matching($criteria);
+
+        if ($context->isEmpty()) {
+            throw new Core_Exception_NotFound;
+        }
+
+        return $context->first();
     }
 
     /**

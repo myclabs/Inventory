@@ -54,7 +54,7 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
             $context = Context::load($idContext);
             $indicator = Indicator::load($idIndicator);
             try {
-                ContextIndicator::loadByRef($context->getRef(), $indicator->getRef());
+                $library->getContextIndicatorByRef($context->getRef(), $indicator->getRef());
                 $this->setAddElementErrorMessage('context', __('Classification', 'contextIndicator', 'ContextIndicatorAlreadyExists'));
                 $this->setAddElementErrorMessage('indicator', __('Classification', 'contextIndicator', 'ContextIndicatorAlreadyExists'));
             } catch (Core_Exception_NotFound $e) {

@@ -147,32 +147,4 @@ class ContextIndicator extends Core_Model_Entity
     {
         return $this->axes->toArray();
     }
-
-    /**
-     * Charge un indicateur contextualisé par les refs.
-     *
-     * @param string $refContext
-     * @param string $refIndicator
-     *
-     * @throws Core_Exception_NotFound
-     * @return ContextIndicator
-     */
-    public static function loadByRef($refContext, $refIndicator)
-    {
-        $query = self::getEntityManager()->createQuery(
-            "SELECT ci FROM Classification\\Domain\\ContextIndicator ci
-            LEFT JOIN ci.context c
-            LEFT JOIN ci.indicator i
-            WHERE c.ref = ?1 AND i.ref = ?2"
-        );
-        $query->setParameters([1 => $refContext, 2 => $refIndicator]);
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            throw new Core_Exception_NotFound(
-                "ContextIndicator not found matching context=$refContext and indicator=$refIndicator"
-            );
-        }
-    }
 }

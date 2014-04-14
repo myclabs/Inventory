@@ -83,13 +83,13 @@ class ImportCommand extends Command
         $afLibrary->save();
 
 
-        $fixAlgoIndexation = function (NumericAlgo $algo, array $data) {
+        $fixAlgoIndexation = function (NumericAlgo $algo, array $data) use ($classificationLibrary) {
             $refContext = $data['refContext'];
             $refIndicator = $data['refIndicator'];
             if ($refContext && $refIndicator) {
-                // TODO use the classification library!
-                $contextIndicator = ContextIndicator::loadByRef($refContext, $refIndicator);
-                $algo->setContextIndicator($contextIndicator);
+                $algo->setContextIndicator(
+                    $classificationLibrary->getContextIndicatorByRef($refContext, $refIndicator)
+                );
             }
         };
 

@@ -48,6 +48,7 @@ use AF\Domain\Algorithm\Selection\TextKey\ContextValueSelectionAlgo;
 use Calc_UnitValue;
 use Calc_Value;
 use Classification\Domain\Axis;
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
 use Core_Exception;
 use Parameter\Domain\ParameterLibrary;
@@ -634,10 +635,16 @@ abstract class AbstractPopulateAF
      */
     protected function createFixedIndexForAlgoNumeric(NumericAlgo $numeric, $refContext, $refIndicator, $indexes)
     {
-        $numeric->setContextIndicator(ContextIndicator::loadByRef($refContext, $refIndicator));
+        // Moche : par du principe qu'il y'a 1 seule bibliothèque
+        $classificationLibrary = ClassificationLibrary::loadByAccount($this->publicAccount)[0];
+
+        $numeric->setContextIndicator(
+            $classificationLibrary->getContextIndicatorByRef($refContext, $refIndicator)
+        );
+
         foreach ($indexes as $refAxis => $refMember) {
-            $classificationAxis = Axis::loadByRef($refAxis);
-            $index = new FixedIndex(Axis::loadByRef($refAxis));
+            $classificationAxis = $classificationLibrary->getAxisByRef($refAxis);
+            $index = new FixedIndex($classificationAxis);
             $index->setClassificationMember($classificationAxis->getMemberByRef($refMember));
             $index->setAlgoNumeric($numeric);
             $index->save();
@@ -652,9 +659,16 @@ abstract class AbstractPopulateAF
      */
     protected function createAlgoIndexForAlgoNumeric(NumericAlgo $numeric, $refContext, $refIndicator, $indexes)
     {
-        $numeric->setContextIndicator(ContextIndicator::loadByRef($refContext, $refIndicator));
+        // Moche : par du principe qu'il y'a 1 seule bibliothèque
+        $classificationLibrary = ClassificationLibrary::loadByAccount($this->publicAccount)[0];
+
+        $numeric->setContextIndicator(
+            $classificationLibrary->getContextIndicatorByRef($refContext, $refIndicator)
+        );
+
         foreach ($indexes as $refAxis => $algo) {
-            $index = new AlgoResultIndex(Axis::loadByRef($refAxis));
+            $classificationAxis = $classificationLibrary->getAxisByRef($refAxis);
+            $index = new AlgoResultIndex($classificationAxis);
             $index->setAlgo($algo);
             $index->setAlgoNumeric($numeric);
             $index->save();
