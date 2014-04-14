@@ -2,11 +2,11 @@
 
 namespace Tests\Classification;
 
-use Classification\Domain\AxisMember;
+use Classification\Domain\Member;
 use Core\Test\TestCase;
 
 /**
- * @covers \Classification\Domain\AxisMember
+ * @covers \Classification\Domain\Member
  */
 class MemberTest extends TestCase
 {
@@ -15,12 +15,12 @@ class MemberTest extends TestCase
      */
     public function testManageChild()
     {
-        $member = new AxisMember();
+        $member = new Member();
 
-        $child1 = new AxisMember();
-        $child11 = new AxisMember();
-        $child2 = new AxisMember();
-        $child3 = new AxisMember();
+        $child1 = new Member();
+        $child11 = new Member();
+        $child2 = new Member();
+        $child3 = new Member();
 
         $this->assertFalse($member->hasDirectChildren());
         $this->assertFalse($member->hasDirectChild($child1));
@@ -67,12 +67,12 @@ class MemberTest extends TestCase
      */
     public function testManageParents()
     {
-        $member = new AxisMember();
+        $member = new Member();
 
-        $parent1 = new AxisMember();
-        $parent11 = new AxisMember();
-        $parent2 = new AxisMember();
-        $parent3 = new AxisMember();
+        $parent1 = new Member();
+        $parent11 = new Member();
+        $parent2 = new Member();
+        $parent3 = new Member();
 
         $this->assertFalse($member->hasDirectParents());
         $this->assertFalse($member->hasDirectParent($parent1));

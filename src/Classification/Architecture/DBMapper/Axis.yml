@@ -49,7 +49,7 @@ Classification\Domain\Axis:
       orderBy:
         position: ASC
     members:
-      targetEntity: AxisMember
+      targetEntity: Member
       mappedBy: axis
       cascade: [ remove ]
       orderBy:

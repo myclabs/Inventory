@@ -2,10 +2,11 @@
 
 namespace Classification\Application\Service;
 
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Axis;
+use Core_Exception_NotFound;
 use Core_Exception_User;
-use Core_Model_Query;
 use Core_Tools;
 
 /**
@@ -13,30 +14,31 @@ use Core_Tools;
  *
  * @author valentin.claras
  */
-class IndicatorAxisService
+class AxisService
 {
     /**
      * Ajoute un Axis et le renvoie.
      *
+     * @param \Classification\Domain\ClassificationLibrary $library
      * @param string $ref
      * @param string $label
-     * @param string $refParent
+     * @param string $idParent
      *
      * @return Axis
      */
-    public function add($ref, $label, $refParent = null)
+    public function add(ClassificationLibrary $library, $ref, $label, $idParent = null)
     {
-        $axis = new Axis();
+        $axis = new Axis($library);
 
         if (empty($ref)) {
             $ref = $label;
         }
-        $this->checkAxisRef($ref);
+        $this->checkAxisRef($axis->getLibrary(), $ref);
 
         $axis->setRef($ref);
         $axis->setLabel($label);
-        if ($refParent != null) {
-            $axis->setDirectNarrower(Axis::loadByRef($refParent));
+        if ($idParent != null) {
+            $axis->setDirectNarrower(Axis::load($idParent));
         }
 
         $axis->save();
@@ -47,16 +49,16 @@ class IndicatorAxisService
     /**
      * Change la ref d'un Axis puis renvoie le label de ce dernier.
      *
-     * @param string $axisRef
+     * @param string $axisId
      * @param string $newRef
      *
      * @return string
      */
-    public function updateRef($axisRef, $newRef)
+    public function updateRef($axisId, $newRef)
     {
-        $axis = Axis::loadByRef($axisRef);
+        $axis = Axis::load($axisId);
 
-        $this->checkAxisRef($newRef);
+        $this->checkAxisRef($axis->getLibrary(), $newRef);
 
         $axis->setRef($newRef);
 
@@ -66,14 +68,14 @@ class IndicatorAxisService
     /**
      * Change le label d'un Axis puis renvoie ce dernier.
      *
-     * @param string $axisRef
+     * @param string $axisId
      * @param string $newLabel
      *
      * @return string
      */
-    public function updateLabel($axisRef, $newLabel)
+    public function updateLabel($axisId, $newLabel)
     {
-        $axis = Axis::loadByRef($axisRef);
+        $axis = Axis::load($axisId);
 
         $axis->setLabel($newLabel);
 
@@ -83,17 +85,17 @@ class IndicatorAxisService
     /**
      * Change le label d'un Axis puis renvoie ce dernier.
      *
-     * @param string $axisRef
+     * @param string $axisId
      * @param string $newRef
      * @param string $newLabel
      *
      * @return string
      */
-    public function updateRefAndLabel($axisRef, $newRef, $newLabel)
+    public function updateRefAndLabel($axisId, $newRef, $newLabel)
     {
-        $axis = Axis::loadByRef($axisRef);
+        $axis = Axis::load($axisId);
 
-        $this->checkAxisRef($newRef);
+        $this->checkAxisRef($axis->getLibrary(), $newRef);
 
         $axis->setRef($newRef);
         $axis->setLabel($newLabel);
@@ -104,20 +106,20 @@ class IndicatorAxisService
     /**
      * Change le DirectNarrower d'un Axis puis renvoie ce dernier.
      *
-     * @param string $axisRef
+     * @param string $axisId
      * @param string $newParentRef
      * @param string $newPosition
      *
      * @return string
      */
-    public function updateParent($axisRef, $newParentRef, $newPosition = null)
+    public function updateParent($axisId, $newParentRef, $newPosition = null)
     {
-        $axis = Axis::loadByRef($axisRef);
+        $axis = Axis::load($axisId);
 
         if ($newParentRef === null) {
             $axis->setDirectNarrower();
         } else {
-            $axis->setDirectNarrower(Axis::loadByRef($newParentRef));
+            $axis->setDirectNarrower(Axis::load($newParentRef));
         }
         if ($newPosition !== null) {
             $axis->setPosition($newPosition);
@@ -129,14 +131,14 @@ class IndicatorAxisService
     /**
      * Change la position d'un Axis puis renvoie ce dernier.
      *
-     * @param string $axisRef
+     * @param string $axisId
      * @param int    $newPosition
      *
      * @return string
      */
-    public function updatePosition($axisRef, $newPosition)
+    public function updatePosition($axisId, $newPosition)
     {
-        $axis = Axis::loadByRef($axisRef);
+        $axis = Axis::load($axisId);
 
         $axis->setPosition($newPosition);
 
@@ -146,14 +148,14 @@ class IndicatorAxisService
     /**
      * Supprime un Axis.
      *
-     * @param string $axisRef Ref du axis
+     * @param string $axisId
      *
      * @throws Core_Exception_User
      * @return string Le label du Axis.
      */
-    public function delete($axisRef)
+    public function delete($axisId)
     {
-        $axis = Axis::loadByRef($axisRef);
+        $axis = Axis::load($axisId);
 
         if ($axis->hasDirectBroaders()) {
             throw new Core_Exception_User('Classification', 'axis', 'axisHasDirectBroaders');
@@ -176,21 +178,24 @@ class IndicatorAxisService
     /**
      * Renoie les messages d'erreur concernant la validation d'une ref.
      *
+     * @param string $libraryId
      * @param string $ref
      *
      * @return mixed string null
      */
-    public function getErrorMessageForNewRef($ref)
+    public function getErrorMessageForNewRef($libraryId, $ref)
     {
         try {
             Core_Tools::checkRef($ref);
         } catch (Core_Exception_User $e) {
             return $e->getMessage();
         }
-        $queryRefUsed = new Core_Model_Query();
-        $queryRefUsed->filter->addCondition(Axis::QUERY_REF, $ref);
-        if (Axis::countTotal($queryRefUsed) > 0) {
+        try {
+            $library = ClassificationLibrary::load($libraryId);
+            $library->getAxisByRef($ref);
             return __('UI', 'formValidation', 'alreadyUsedIdentifier');
+        } catch (Core_Exception_NotFound $e) {
+            // Ref utilisable
         }
 
         return null;
@@ -199,17 +204,20 @@ class IndicatorAxisService
     /**
      * Vérifie la disponibilité d'une référence pour un Axis.
      *
+     * @param string $libraryId
      * @param string $ref
      *
      * @throws Core_Exception_User
      */
-    private function checkAxisRef($ref)
+    private function checkAxisRef($libraryId, $ref)
     {
         Core_Tools::checkRef($ref);
-        $queryRefUsed = new Core_Model_Query();
-        $queryRefUsed->filter->addCondition(Axis::QUERY_REF, $ref);
-        if (Axis::countTotal($queryRefUsed) > 0) {
+        try {
+            $library = ClassificationLibrary::load($libraryId);
+            $library->getAxisByRef($ref);
             throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
+        } catch (Core_Exception_NotFound $e) {
+            // Ref utilisable
         }
     }
 }

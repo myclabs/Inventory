@@ -49,7 +49,6 @@ use Calc_UnitValue;
 use Calc_Value;
 use Classification\Domain\Axis;
 use Classification\Domain\ContextIndicator;
-use Classification\Domain\AxisMember;
 use Core_Exception;
 use Parameter\Domain\ParameterLibrary;
 use Unit\UnitAPI;
@@ -639,7 +638,7 @@ abstract class AbstractPopulateAF
         foreach ($indexes as $refAxis => $refMember) {
             $classificationAxis = Axis::loadByRef($refAxis);
             $index = new FixedIndex(Axis::loadByRef($refAxis));
-            $index->setClassificationMember(AxisMember::loadByRefAndAxis($refMember, $classificationAxis));
+            $index->setClassificationMember($classificationAxis->getMemberByRef($refMember));
             $index->setAlgoNumeric($numeric);
             $index->save();
         }

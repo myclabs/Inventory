@@ -5,7 +5,7 @@ namespace AF\Domain\Algorithm\Index;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use Classification\Domain\Axis;
-use Classification\Domain\AxisMember;
+use Classification\Domain\Member;
 use Core_Exception_NotFound;
 use Core_Model_Entity;
 
@@ -48,7 +48,7 @@ abstract class Index extends Core_Model_Entity
     /**
      * Return the Classification member associated with the Result index
      * @param InputSet $inputSet
-     * @return AxisMember|null
+     * @return Member|null
      */
     abstract public function getClassificationMember(InputSet $inputSet = null);
 

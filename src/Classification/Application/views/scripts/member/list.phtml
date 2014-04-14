@@ -5,7 +5,7 @@
  * @package Classification
  * Contenu de l'onglet des membres
  */
-use Classification\Domain\AxisMember;
+use Classification\Domain\Member;
 
 ?>
 <div class="page-header">
@@ -30,8 +30,8 @@ foreach ($this->listAxes as $axis) {
     // Membres broaders pour chaque axe broader.
     foreach ($axis->getDirectBroaders() as $broaderAxis) {
         // Construction de la liste de membres.
-        $columnBroader = new UI_Datagrid_Col_List('broader'.$broaderAxis->getRef(), $broaderAxis->getLabel());
-        $columnBroader->list = 'classification/datagrid_member/getparents/refParentAxis/'.$broaderAxis->getRef();
+        $columnBroader = new UI_Datagrid_Col_List('broader'.$broaderAxis->getId(), $broaderAxis->getLabel());
+        $columnBroader->list = 'classification/datagrid_member/getparents/parentAxis/'.$broaderAxis->getId();
         $columnBroader->dynamicList = true;
         $columnBroader->editable = true;
         $datagridAxis->addCol($columnBroader);
@@ -41,11 +41,12 @@ foreach ($this->listAxes as $axis) {
     $columnPosition = new UI_Datagrid_Col_Order('position');
     $columnPosition->editable = true;
     $columnPosition->addable = false;
-    $columnPosition->sortName = AxisMember::QUERY_POSITION;
+    $columnPosition->sortName = Member::QUERY_POSITION;
     $datagridAxis->addCol($columnPosition);
 
     $datagridAxis->deleteElements = true;
-    $datagridAxis->addParam('refAxis', $axis->getRef());
+    $datagridAxis->addParam('axis', $axis->getId());
+    $datagridAxis->addParam('library', $this->library->getId());
     $datagridAxis->initialLoading = false;
     $datagridAxis->setDefaultSorting($columnPosition->id);
     $datagridAxis->addElements = true;

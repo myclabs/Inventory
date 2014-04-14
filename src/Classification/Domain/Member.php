@@ -10,12 +10,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * Un membre d'un axe relié à d'autres membres.
+ * Member d'un Axis de Classification.
  *
  * @author valentin.claras
- * @author simon.rieu
  */
-class AxisMember extends Core_Model_Entity
+class Member extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
     use Core_Model_Entity_Translatable;
@@ -32,57 +31,35 @@ class AxisMember extends Core_Model_Entity
     protected $id;
 
     /**
-     * Ref unique du membre.
-     *
      * @var string
      */
     protected $ref;
 
     /**
-     * Libellé.
-     *
      * @var string
      */
     protected $label;
 
     /**
-     * Axe auquel appartien le membre.
-     *
      * @var Axis
      */
     protected $axis;
 
     /**
-     * Enfants directs du membre.
-     *
-     * @var Collection|AxisMember[]
+     * @var Collection|Member[]
      */
     protected $directChildren;
 
     /**
-     * Parents directs du membre.
-     *
-     * @var Collection|AxisMember[]
+     * @var Collection|Member[]
      */
     protected $directParents;
+
 
     public function __construct()
     {
         $this->directChildren = new ArrayCollection();
         $this->directParents = new ArrayCollection();
-    }
-
-    /**
-     * Charge un Member par son ref et son Axis.
-     *
-     * @param string        $ref
-     * @param Axis $axis
-     *
-     * @return AxisMember
-     */
-    public static function loadByRefAndAxis($ref, Axis $axis)
-    {
-        return self::getEntityRepository()->loadBy(['ref' => $ref, 'axis' => $axis]);
     }
 
     /**
@@ -102,7 +79,7 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Retourne la ref du membre
+     * @return string
      */
     public function getRef()
     {
@@ -126,8 +103,6 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Modifie l'axe du membre.
-     *
      * @param Axis|null $axis
      */
     public function setAxis(Axis $axis = null)
@@ -146,8 +121,6 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Retourne l'axe du membre.
-     *
      * @throws Core_Exception_UndefinedAttribute
      * @return Axis
      */
@@ -160,11 +133,9 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Ajoute un membre donné aux parents directs du membre.
-     *
-     * @param AxisMember $parentMember
+     * @param Member $parentMember
      */
-    public function addDirectParent(AxisMember $parentMember)
+    public function addDirectParent(Member $parentMember)
     {
         if (!($this->hasDirectParent($parentMember))) {
             $this->directParents->add($parentMember);
@@ -173,21 +144,16 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Vérifie si le membre donné est bien parent direct du membre.
-     *
-     * @param AxisMember $parentMember
-     *
+     * @param Member $parentMember
      * @return boolean
      */
-    public function hasDirectParent(AxisMember $parentMember)
+    public function hasDirectParent(Member $parentMember)
     {
         return $this->directParents->contains($parentMember);
     }
 
     /**
-     * Supprime le membre donné des parents directs du membre.
-     *
-     * @param AxisMember $parentMember
+     * @param Member $parentMember
      */
     public function removeDirectParent($parentMember)
     {
@@ -198,8 +164,6 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Indique si le membre possède des parents directs.
-     *
      * @return bool
      */
     public function hasDirectParents()
@@ -208,9 +172,7 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Retourne l'ensemble des parents directs du membre.
-     *
-     * @return AxisMember[]
+     * @return Member[]
      */
     public function getDirectParents()
     {
@@ -218,9 +180,7 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Retourne récursivement, tous les parents du membre.
-     *
-     * @return AxisMember[]
+     * @return Member[]
      */
     public function getAllParents()
     {
@@ -232,11 +192,9 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Ajoute un membre donné aux enfants directs du membre.
-     *
-     * @param AxisMember $childMember
+     * @param Member $childMember
      */
-    public function addDirectChild(AxisMember $childMember)
+    public function addDirectChild(Member $childMember)
     {
         if (!($this->hasDirectChild($childMember))) {
             $this->directChildren->add($childMember);
@@ -245,21 +203,16 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Vérifie si le membre donné est bien enfant direct du membre.
-     *
-     * @param AxisMember $childMember
-     *
+     * @param Member $childMember
      * @return boolean
      */
-    public function hasDirectChild(AxisMember $childMember)
+    public function hasDirectChild(Member $childMember)
     {
         return $this->directChildren->contains($childMember);
     }
 
     /**
-     * Supprime le membre donné des enfants directs du membre.
-     *
-     * @param AxisMember $childMember
+     * @param Member $childMember
      */
     public function removeDirectChild($childMember)
     {
@@ -270,8 +223,6 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Indique si le membre possède des enfants directs.
-     *
      * @return bool
      */
     public function hasDirectChildren()
@@ -280,9 +231,7 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Retourne l'ensemble des enfants directs du membre.
-     *
-     * @return AxisMember[]
+     * @return Member[]
      */
     public function getDirectChildren()
     {
@@ -290,9 +239,7 @@ class AxisMember extends Core_Model_Entity
     }
 
     /**
-     * Retourne récursivement tous les enfants du membre.
-     *
-     * @return AxisMember[]
+     * @return Member[]
      */
     public function getAllChildren()
     {

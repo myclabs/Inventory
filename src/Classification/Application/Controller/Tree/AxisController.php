@@ -1,6 +1,6 @@
 <?php
 
-use Classification\Application\Service\IndicatorAxisService;
+use Classification\Application\Service\AxisService;
 use Classification\Domain\Axis;
 use Classification\Domain\ClassificationLibrary;
 use Core\Annotation\Secure;
@@ -10,7 +10,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
 {
     /**
      * @Inject
-     * @var IndicatorAxisService
+     * @var AxisService
      */
     private $axisService;
 
@@ -25,11 +25,11 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
         if ($this->idNode === null) {
             $axes = $library->getRootAxes();
         } else {
-            $axes = Axis::loadByRef($this->idNode)->getDirectBroaders();
+            $axes = Axis::load($this->idNode)->getDirectBroaders();
         }
         foreach ($axes as $axis) {
             $axisLabel = '<b>' . $axis->getLabel() . '</b> <i>('.$axis->getRef().')</i>';
-            $this->addNode($axis->getRef(), $axisLabel, (!$axis->hasdirectBroaders()), null, false, true, true);
+            $this->addNode($axis->getId(), $axisLabel, (!$axis->hasdirectBroaders()), null, false, true, true);
         }
 
         $this->send();
@@ -40,17 +40,20 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      */
     public function addnodeAction()
     {
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
-        $refParent = $this->getAddElementValue('refParent');
+        $idParent = $this->getAddElementValue('parent');
 
-        $refErrors = $this->axisService->getErrorMessageForNewRef($ref);
+        $refErrors = $this->axisService->getErrorMessageForNewRef($library, $ref);
         if ($refErrors != null) {
             $this->setAddFormElementErrorMessage('ref', $refErrors);
         }
 
         if (empty($this->_formErrorMessages)) {
-            $this->axisService->add($ref, $label, $refParent);
+            $this->axisService->add($library, $ref, $label, $idParent);
             $this->message = __('UI', 'message', 'added');
         }
 
@@ -62,34 +65,37 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      */
     public function editnodeAction()
     {
-        $axis = Axis::loadByRef($this->idNode);
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
+        $axis = Axis::load($this->idNode);
         $newLabel = $this->getEditElementValue('label');
         $newRef = $this->getEditElementValue('ref');
-        $newParentRef = $this->getEditElementValue('changeParent');
-        if ($newParentRef !== '') {
-            $newParentRef = ($newParentRef === ($this->id.'_root')) ? null : $newParentRef;
+        $newParentId = $this->getEditElementValue('changeParent');
+        if ($newParentId != 0) {
+            $newParentId = ($newParentId === ($this->id.'_root')) ? null : $newParentId;
         }
         switch ($this->getEditElementValue('changeOrder')) {
             case 'first':
                 $newPosition = 1;
                 break;
             case 'last':
-                if ($newParentRef === '') {
+                if ($newParentId == 0) {
                     $newPosition = $axis->getLastEligiblePosition();
-                } elseif ($newParentRef === null) {
+                } elseif ($newParentId === null) {
                     $queryRootAxis = new Core_Model_Query();
                     $queryRootAxis->filter->addCondition(Axis::QUERY_NARROWER, null,
                         Core_Model_Filter::OPERATOR_NULL);
                     $newPosition = Axis::countTotal($queryRootAxis) + 1;
                 } else {
-                    $newPosition = count(Axis::loadByRef($this->idNode)->getDirectBroaders()) + 1;
+                    $newPosition = count($axis->getDirectBroaders()) + 1;
                 }
                 break;
             case 'after':
-                $refAfter = $this->_form[$this->id.'_changeOrder']['children'][$this->id.'_selectAfter_child']['value'];
-                $currentAxisPosition = Axis::loadByRef($this->idNode)->getPosition();
-                $newPosition = Axis::loadByRef($refAfter)->getPosition();
-                if (($newParentRef !== '') || ($currentAxisPosition > $newPosition)) {
+                $refAfter = $this->getEditElementValue('selectAfter');
+                $currentAxisPosition = $axis->getPosition();
+                $newPosition = Axis::load($refAfter)->getPosition();
+                if (($newParentId != 0) || ($currentAxisPosition > $newPosition)) {
                     $newPosition += 1;
                 }
                 break;
@@ -98,8 +104,8 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
                 break;
         }
 
-        if ($newRef !== $this->idNode) {
-            $refErrors = $this->axisService->getErrorMessageForNewRef($newRef);
+        if ($newRef !== $axis->getRef()) {
+            $refErrors = $this->axisService->getErrorMessageForNewRef($library, $newRef);
             if ($refErrors != null) {
                 $this->setEditFormElementErrorMessage('ref', $refErrors);
             }
@@ -108,16 +114,16 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
         if (empty($this->_formErrorMessages)) {
             $label = null;
             if (($axis->getRef() !== $newRef) && ($axis->getLabel() !== $newLabel)) {
-                $label = $this->axisService->updateRefAndLabel($this->idNode, $newRef, $newLabel);
+                $label = $this->axisService->updateRefAndLabel($axis->getId(), $newRef, $newLabel);
             } elseif ($axis->getLabel() !== $newLabel) {
-                $label = $this->axisService->updateLabel($this->idNode, $newLabel);
+                $label = $this->axisService->updateLabel($axis->getId(), $newLabel);
             } elseif ($axis->getRef() !== $newRef) {
-                $label = $this->axisService->updateRef($this->idNode, $newRef);
+                $label = $this->axisService->updateRef($axis->getId(), $newRef);
             }
-            if ($newParentRef !== '') {
-                $label = $this->axisService->updateParent($this->idNode, $newParentRef, $newPosition);
+            if ($newParentId != 0) {
+                $label = $this->axisService->updateParent($axis->getId(), $newParentId, $newPosition);
             } elseif (($newPosition !== null) && ($axis->getPosition() !== $newPosition)) {
-                $label = $this->axisService->updatePosition($this->idNode, $newPosition);
+                $label = $this->axisService->updatePosition($axis->getId(), $newPosition);
             }
             if ($label !== null) {
                 $this->message = __('UI', 'message', 'updated');
@@ -134,23 +140,19 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      */
     public function getlistparentsAction()
     {
-        $this->addElementList(null, '');
-        if (($this->idNode != null) && (Axis::loadByRef($this->idNode)->getDirectNarrower() !== null)) {
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
+        $this->addElementList(0, '');
+        if (($this->idNode !== null) && (Axis::load($this->idNode)->getDirectNarrower() !== null)) {
             $this->addElementList($this->id.'_root', __('Classification', 'axis', 'rootParentAxisLabel'));
         }
-        $queryOrdered = new Core_Model_Query();
-        if (!empty($this->idNode)) {
-            $queryOrdered->filter->addCondition(
-                Axis::QUERY_REF,
-                $this->idNode,
-                Core_Model_Filter::OPERATOR_NOT_EQUAL
-            );
-        }
-        $queryOrdered->order->addOrder(Axis::QUERY_NARROWER);
-        $queryOrdered->order->addOrder(Axis::QUERY_POSITION);
-        foreach (Axis::loadList($queryOrdered) as $axis) {
+
+        foreach ($library->getAxes()->toArray() as $axis) {
             /** @var Axis $axis */
-            $this->addElementList($axis->getRef(), $axis->getLabel());
+            if ($axis->getId() != $this->idNode) {
+                $this->addElementList($axis->getId(), $axis->getLabel());
+            }
         }
         $this->send();
     }
@@ -160,23 +162,22 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      */
     public function getlistsiblingsAction()
     {
-        $axis = Axis::loadByRef($this->idNode);
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
+        $axis = Axis::load($this->idNode);
         if (($this->getParam('idParent') != null) && ($this->getParam('idParent') !== $this->id.'_root')) {
-            $axisParent = Axis::loadByRef($this->getParam('idParent'));
+            $axisParent = Axis::load($this->getParam('idParent'));
             $siblingAxes = $axisParent->getDirectBroaders();
         } elseif (($axis->getDirectNarrower() === null) || ($this->getParam('idParent') === $this->id.'_root')) {
-            $queryRootAxes = new Core_Model_Query();
-            $queryRootAxes->filter->addCondition(Axis::QUERY_NARROWER, null,
-                Core_Model_Filter::OPERATOR_NULL);
-            $queryRootAxes->order->addOrder(Axis::QUERY_POSITION);
-            $siblingAxes = Axis::loadList($queryRootAxes);
+            $siblingAxes = $library->getRootAxes();
         } else {
             $siblingAxes = $axis->getDirectNarrower()->getDirectBroaders();
         }
 
         foreach ($siblingAxes as $siblingAxis) {
-            if ($siblingAxis->getRef() !== $this->idNode) {
-                $this->addElementList($siblingAxis->getRef(), $siblingAxis->getLabel());
+            if ($siblingAxis->getId() != $this->idNode) {
+                $this->addElementList($siblingAxis->getId(), $siblingAxis->getLabel());
             }
         }
 
@@ -188,7 +189,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
      */
     public function getinfoeditAction()
     {
-        $axis = Axis::loadByRef($this->idNode);
+        $axis = Axis::load($this->idNode);
         $this->data['ref'] = $axis->getRef();
         $this->data['label'] = $axis->getLabel();
         $this->send();

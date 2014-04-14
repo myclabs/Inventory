@@ -15,9 +15,9 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
         /** @var ClassificationLibrary $library */
         $library = ClassificationLibrary::load($this->getParam('library'));
 
-        foreach ($library->getContexts() as $context) {
+        foreach ($library->getContexts()->toArray() as $context) {
             $data = array();
-            $data['index'] = $context->getRef();
+            $data['index'] = $context->getId();
             $data['label'] = $this->cellText($context->getLabel());
             $data['ref'] = $this->cellText($context->getRef());
             $canUp = !($context->getPosition() === 1);
@@ -25,7 +25,6 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
             $data['position'] = $this->cellPosition($context->getPosition(), $canUp, $canDown);
             $this->addline($data);
         }
-        $this->totalElements = Context::countTotal($this->request);
 
         $this->send();
     }
@@ -44,7 +43,7 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
         try {
             Core_Tools::checkRef($ref);
             try {
-                Context::loadByRef($ref);
+                $library->getContextByRef($ref);
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
                 $context = new Context($library);
@@ -65,7 +64,7 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $context = Context::loadByRef($this->delete);
+        $context = Context::load($this->delete);
 
         $queryContextIndicator = new Core_Model_Query();
         $queryContextIndicator->filter->addCondition(ContextIndicator::QUERY_CONTEXT, $context);
@@ -83,7 +82,10 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $context = Context::loadByRef($this->update['index']);
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
+        $context = Context::load($this->update['index']);
         switch ($this->update['column']) {
             case 'label':
                 $context->setLabel($this->update['value']);
@@ -92,7 +94,7 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
             case 'ref':
                 Core_Tools::checkRef($this->update['value']);
                 try {
-                    if (Context::loadByRef($this->update['value']) !== $context) {
+                    if ($library->getContextByRef($this->update['value']) !== $context) {
                         throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
                     }
                 } catch (Core_Exception_NotFound $e) {

@@ -119,7 +119,7 @@ class ImportCommand extends Command
                 },
             ],
             'Classif_Model_Member' => [
-                'class' => \Classification\Domain\AxisMember::class,
+                'class' => \Classification\Domain\Member::class,
                 'properties' => [
                     '_directChildren' => [ 'name' => 'directChildren' ],
                     '_directParents' => [ 'name' => 'directParents' ],

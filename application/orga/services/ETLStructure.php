@@ -1,6 +1,6 @@
 <?php
 
-use Classification\Domain\AxisMember;
+use Classification\Domain\Member;
 use Classification\Domain\Axis;
 use Classification\Domain\Indicator;
 use Doctrine\ORM\EntityManager;
@@ -67,7 +67,7 @@ class Orga_Service_ETLStructure
     /**
      * Traduit les labels des objets originaux dans DW.
      *
-     * @param Indicator|Axis|AxisMember|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param Indicator|Axis|Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
      * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
      */
     protected function translateEntity($originalEntity, $dWEntity)
@@ -98,7 +98,7 @@ class Orga_Service_ETLStructure
     /**
      * Vérifie que les traductions sont à jour entre les objets originaux et ceux de DW.
      *
-     * @param Indicator|Axis|AxisMember|Orga_Model_Axis|Orga_Model_Member $originalEntity
+     * @param Indicator|Axis|Member|Orga_Model_Axis|Orga_Model_Member $originalEntity
      * @param DW_Model_Indicator|DW_Model_Axis|DW_Model_Member $dWEntity
      *
      * @return bool
@@ -779,7 +779,7 @@ class Orga_Service_ETLStructure
      * Compare un membre de DW et un de Classification.
      *
      * @param DW_Model_Member $dWMember
-     * @param AxisMember $classifMember
+     * @param Member $classifMember
      *
      * @return bool
      */

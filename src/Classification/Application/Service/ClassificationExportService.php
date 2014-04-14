@@ -2,7 +2,7 @@
 
 namespace Classification\Application\Service;
 
-use Classification\Domain\AxisMember;
+use Classification\Domain\Member;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Axis;
 use Classification\Domain\Context;
@@ -83,7 +83,7 @@ class ClassificationExportService
         $modelBuilder->bind('memberColumnRef', __('UI', 'name', 'identifier'));
         $modelBuilder->bindFunction(
             'displayParentMemberForAxis',
-            function (AxisMember $member, Axis $broaderAxis) {
+            function (Member $member, Axis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
                         return $directParent->getLabel();

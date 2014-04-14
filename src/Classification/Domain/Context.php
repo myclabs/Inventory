@@ -8,10 +8,9 @@ use Core_Model_Entity_Translatable;
 use Core_Exception_UndefinedAttribute;
 
 /**
- * Contexte de classification.
+ * Context de Classification.
  *
  * @author valentin.claras
- * @author cyril.perraud
  */
 class Context extends Core_Model_Entity
 {
@@ -34,30 +33,15 @@ class Context extends Core_Model_Entity
     protected $library;
 
     /**
-     * Référence unique.
-     *
      * @var string
      */
     protected $ref;
 
     /**
-     * Libellé.
-     *
      * @var string
      */
     protected $label;
 
-    /**
-     * Charge un Context à partir de son ref.
-     *
-     * @param string $ref
-     *
-     * @return Context
-     */
-    public static function loadByRef($ref = null)
-    {
-        return self::getEntityRepository()->loadBy(['ref' => $ref]);
-    }
 
     public function __construct(ClassificationLibrary $library)
     {
@@ -81,8 +65,6 @@ class Context extends Core_Model_Entity
     }
 
     /**
-     * Modifie la référence du Context.
-     *
      * @param string $ref
      */
     public function setRef($ref)
@@ -91,7 +73,7 @@ class Context extends Core_Model_Entity
     }
 
     /**
-     * Retourne la référence unique du Context.
+     * @return string
      */
     public function getRef()
     {
@@ -99,8 +81,6 @@ class Context extends Core_Model_Entity
     }
 
     /**
-     * Modifie le label du Context.
-     *
      * @param string $value
      */
     public function setLabel($value)
@@ -109,8 +89,6 @@ class Context extends Core_Model_Entity
     }
 
     /**
-     * Retourne le label du Context.
-     *
      * @return string
      */
     public function getLabel()
@@ -119,8 +97,6 @@ class Context extends Core_Model_Entity
     }
 
     /**
-     * Représentation de l'instance.
-     *
      * @return string
      */
     public function __toString()
@@ -162,5 +138,13 @@ class Context extends Core_Model_Entity
     public function postLoad()
     {
         $this->updateCachePosition();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getContext()
+    {
+        return ['library' => $this->library];
     }
 }

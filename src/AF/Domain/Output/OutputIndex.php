@@ -3,7 +3,7 @@
 namespace AF\Domain\Output;
 
 use Classification\Domain\Axis;
-use Classification\Domain\AxisMember;
+use Classification\Domain\Member;
 use Core_Model_Entity;
 
 /**
@@ -38,9 +38,9 @@ class OutputIndex extends Core_Model_Entity
 
     /**
      * @param Axis $axis
-     * @param AxisMember    $member
+     * @param Member    $member
      */
-    public function __construct(Axis $axis, AxisMember $member)
+    public function __construct(Axis $axis, Member $member)
     {
         $this->setAxis($axis);
         $this->setMember($member);
@@ -63,17 +63,17 @@ class OutputIndex extends Core_Model_Entity
     }
 
     /**
-     * @return AxisMember
+     * @return Member
      */
     public function getMember()
     {
-        return AxisMember::loadByRefAndAxis($this->refMember, $this->getAxis());
+        return $this->getAxis()->getMemberByRef($this->refMember);
     }
 
     /**
-     * @param AxisMember $member
+     * @param Member $member
      */
-    public function setMember(AxisMember $member)
+    public function setMember(Member $member)
     {
         $this->refMember = $member->getRef();
     }

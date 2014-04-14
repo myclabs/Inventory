@@ -2,6 +2,8 @@
 
 namespace Classification\Domain;
 
+use Core_Exception_NotFound;
+use Core_Exception_TooMany;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
@@ -10,12 +12,12 @@ use Core_Model_Query;
 use Core_Strategy_Ordered;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
- * Un axe de classification.
+ * Axis de Classification.
  *
  * @author valentin.claras
- * @author simon.rieu
  */
 class Axis extends Core_Model_Entity
 {
@@ -39,37 +41,27 @@ class Axis extends Core_Model_Entity
     protected $library;
 
     /**
-     * Ref unique de l'Axis.
-     *
      * @var int
      */
     protected $ref;
 
     /**
-     * Libellé.
-     *
      * @var string
      */
     protected $label;
 
     /**
-     * Axe plus fins.
-     *
      * @var Axis
      */
     protected $directNarrower;
 
     /**
-     * Axes plus grossiers.
-     *
      * @var Collection|Axis[]
      */
     protected $directBroaders;
 
     /**
-     * Membres de l'axe.
-     *
-     * @var Collection|AxisMember[]
+     * @var Collection|Member[]
      */
     protected $members;
 
@@ -82,10 +74,7 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Permet de charger un axe par son ref.
-     *
      * @param string $ref
-     *
      * @return Axis $axis
      */
     public static function loadByRef($ref)
@@ -94,8 +83,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Charge l'ensemble des axes dans l'ordre de parcours récursif dernière visite.
-     *
      * @return Axis[]
      */
     public static function loadListOrderedAsAscendantTree()
@@ -116,8 +103,22 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Modifie la référence de l'axe.
-     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return ClassificationLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
+    }
+
+    /**
      * @param String $ref
      */
     public function setRef($ref)
@@ -126,8 +127,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Retourne la référence de l'axe.
-     *
      * @return String
      */
     public function getRef()
@@ -136,8 +135,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Modifie le label de l'axe.
-     *
      * @param string $label
      */
     public function setLabel($label)
@@ -146,8 +143,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Retourne le label de l'axe.
-     *
      * @return string
      */
     public function getLabel()
@@ -156,8 +151,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Modifie l'axe plus fin que cet axe.
-     *
      * @param Axis|null $narrowerAxis
      */
     public function setDirectNarrower(Axis $narrowerAxis = null)
@@ -183,8 +176,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Retourne l'axe plus fin que cet axe si il en existe un.
-     *
      * @return Axis|null
      */
     public function getDirectNarrower()
@@ -193,8 +184,14 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Ajoute un axe donné aux axes plus grossiers directs.
-     *
+     * @return bool
+     */
+    public function isRoot()
+    {
+        return $this->directNarrower === null;
+    }
+
+    /**
      * @param Axis $broaderAxis
      */
     public function addDirectBroader(Axis $broaderAxis)
@@ -206,10 +203,7 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Vérifie si l'axe donné est bien un axe plus grossier direct.
-     *
      * @param Axis $broaderAxis
-     *
      * @return boolean
      */
     public function hasDirectBroader(Axis $broaderAxis)
@@ -218,8 +212,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Supprime l'axe donné des axes plus grossiers directs.
-     *
      * @param Axis $broaderAxis
      */
     public function removeDirectBroader(Axis $broaderAxis)
@@ -231,8 +223,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Indique si l'axe possède des axes grossiers directs.
-     *
      * @return bool
      */
     public function hasDirectBroaders()
@@ -241,8 +231,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Retourne l'ensemble des axes grossiers directs.
-     *
      * @return Axis[]
      */
     public function getDirectBroaders()
@@ -251,8 +239,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Retourne récursivement, tous les axes plus grossiers.
-     *
      * @return Axis[]
      */
     public function getAllBroaders()
@@ -268,10 +254,7 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Vérifie si l'axe courant est plus fin que l'axe donné.
-     *
      * @param Axis $axis
-     *
      * @return bool
      */
     public function isNarrowerThan($axis)
@@ -281,10 +264,7 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Vérifie si l'axe courant est plus grossier que l'axe donné.
-     *
      * @param Axis $axis
-     *
      * @return bool
      */
     public function isBroaderThan($axis)
@@ -293,11 +273,9 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Ajoute un membre à l'axe.
-     *
-     * @param AxisMember $member
+     * @param Member $member
      */
-    public function addMember(AxisMember $member)
+    public function addMember(Member $member)
     {
         if (!($this->hasMember($member))) {
             $this->members->add($member);
@@ -306,21 +284,16 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Vérifie si le membre passé fait partie de l'axe.
-     *
-     * @param AxisMember $member
-     *
+     * @param Member $member
      * @return boolean
      */
-    public function hasMember(AxisMember $member)
+    public function hasMember(Member $member)
     {
         return $this->members->contains($member);
     }
 
     /**
-     * Supprime le membre donné.
-     *
-     * @param AxisMember $member
+     * @param Member $member
      */
     public function removeMember($member)
     {
@@ -331,8 +304,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * Indique si l'axe possède des membres.
-     *
      * @return bool
      */
     public function hasMembers()
@@ -341,31 +312,34 @@ class Axis extends Core_Model_Entity
     }
 
     /**
+     * @param string $ref
+     * @throws \Core_Exception_NotFound
+     * @throws \Core_Exception_TooMany
+     * @return Member
+     */
+    public function getMemberByRef($ref)
+    {
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('ref', $ref));
+        $member = $this->members->matching($criteria)->toArray();
+
+        if (count($member) === 0) {
+            throw new Core_Exception_NotFound('No Axis in Organization matching ref "'.$ref.'".');
+        } elseif (count($member) > 1) {
+            throw new Core_Exception_TooMany('Too many Axis in Organization matching "'.$ref.'".');
+        }
+
+        return array_pop($member);
+    }
+
+    /**
      * Retourne les membres de l'axe.
      *
-     * @return AxisMember[]
+     * @return Member[]
      */
     public function getMembers()
     {
         return $this->members->toArray();
-    }
-
-    /**
-     * Indique si l'axe est racine, c'est à dire si il n'a pas d'axe plus fin.
-     *
-     * @return bool
-     */
-    public function isRoot()
-    {
-        return $this->directNarrower === null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -405,18 +379,10 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * @return ClassificationLibrary
-     */
-    public function getLibrary()
-    {
-        return $this->library;
-    }
-
-    /**
      * @return array
      */
     protected function getContext()
     {
-        return ['directNarrower' => $this->directNarrower];
+        return ['library' => $this->library, 'directNarrower' => $this->directNarrower];
     }
 }

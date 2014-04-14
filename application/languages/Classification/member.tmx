@@ -2,6 +2,15 @@
 <tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
+
+        <tu tuid="members">
+            <tuv xml:lang="fr">
+                <seg>Membres</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Members</seg>
+            </tuv>
+        </tu>
     
           <tu tuid="pageTitle">
             <tuv xml:lang="fr">

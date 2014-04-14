@@ -1,4 +1,4 @@
-Classification\Domain\AxisMember:
+Classification\Domain\Member:
   type: entity
   repositoryClass: \Core_Model_Repository_Ordered
   table: Classification_Member
@@ -37,7 +37,7 @@ Classification\Domain\AxisMember:
 
   manyToMany:
     directChildren:
-      targetEntity: Classification\Domain\AxisMember
+      targetEntity: Classification\Domain\Member
       inversedBy: directParents
       joinTable:
         name: Classification_Member_Association
@@ -48,7 +48,7 @@ Classification\Domain\AxisMember:
           idChild:
             referencedColumnName: id
     directParents:
-      targetEntity: Classification\Domain\AxisMember
+      targetEntity: Classification\Domain\Member
       mappedBy: directChildren
       orderBy:
         position: ASC

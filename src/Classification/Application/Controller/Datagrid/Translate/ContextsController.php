@@ -39,7 +39,7 @@ class Classification_Datagrid_Translate_ContextsController extends UI_Controller
         $this->translatableListener->setTranslationFallback(false);
         foreach (Context::loadList($this->request) as $context) {
             $data = array();
-            $data['index'] = $context->getRef();
+            $data['index'] = $context->getId();
             $data['identifier'] = $context->getRef();
 
             foreach ($this->languages as $language) {
@@ -62,7 +62,7 @@ class Classification_Datagrid_Translate_ContextsController extends UI_Controller
     public function updateelementAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $context = Context::loadByRef($this->update['index']);
+        $context = Context::load($this->update['index']);
         $context->reloadWithLocale(Core_Locale::load($this->update['column']));
         $context->setLabel($this->update['value']);
         $this->data = $context->getLabel();

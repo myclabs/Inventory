@@ -44,10 +44,10 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
                                 function($a, $b){return (($a === $b) ? 0 : 1);}
                             );
                         if (count($intersectMemberNarrowerMembers) < 1) {
-                            if (!isset($listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getRef()])) {
-                                $listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getRef()] = array();
+                            if (!isset($listAxisWithMemberNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()])) {
+                                $listAxisWithMemberNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()] = array();
                             }
-                            $listAxisWithMemberNotLinkedToNarrower[$axis->getRef()][$narrowerAxis->getRef()][] = $member->getLabel();
+                            $listAxisWithMemberNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()][] = $member->getLabel();
                         }
                     }
                     foreach ($broaderAxes as $broaderAxis) {
@@ -57,10 +57,10 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
                                 function($a, $b){return (($a === $b) ? 0 : 1);}
                             );
                         if (count($intersectMemberBroaderMembers) !== 1) {
-                            if (!isset($listAxisWithMemberNotLinkedToBroader[$axis->getRef()][$broaderAxis->getRef()])) {
-                                $listAxisWithMemberNotLinkedToBroader[$axis->getRef()][$broaderAxis->getRef()] = array();
+                            if (!isset($listAxisWithMemberNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()])) {
+                                $listAxisWithMemberNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()] = array();
                             }
-                            $listAxisWithMemberNotLinkedToBroader[$axis->getRef()][$broaderAxis->getRef()][] = $member->getLabel();
+                            $listAxisWithMemberNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()][] = $member->getLabel();
                         }
                     }
                 }
@@ -117,11 +117,11 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
         $data['control'] = __('Classification', 'control', 'memberWithNoDirectChild');
         $data['diag'] = empty($listAxisWithMemberNotLinkedToNarrower);
         $data['fail'] = '';
-        foreach ($listAxisWithMemberNotLinkedToNarrower as $refAxis => $members) {
-            $axis = Axis::loadByRef($refAxis);
+        foreach ($listAxisWithMemberNotLinkedToNarrower as $axisId => $members) {
+            $axis = Axis::load($axisId);
             $data['fail'] .= $axis->getLabel() . ' : { ';
-            foreach ($members as $refNarrowerAxis => $refMember) {
-                $narrowerAxis = Axis::loadByRef($refNarrowerAxis);
+            foreach ($members as $narrowerAxisId => $refMember) {
+                $narrowerAxis = Axis::load($narrowerAxisId);
                 $data['fail'] .= $narrowerAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);
@@ -136,11 +136,11 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
         $data['control'] = __('Classification', 'control', 'memberWithMissingDirectParent');
         $data['diag'] = empty($listAxisWithMemberNotLinkedToBroader);
         $data['fail'] = '';
-        foreach ($listAxisWithMemberNotLinkedToBroader as $refAxis => $members) {
-            $axis = Axis::loadByRef($refAxis);
+        foreach ($listAxisWithMemberNotLinkedToBroader as $axisId => $members) {
+            $axis = Axis::load($axisId);
             $data['fail'] .= $axis->getLabel() . ' : { ';
-            foreach ($members as $refBroaderAxis => $refMember) {
-                $broaderAxis = Axis::loadByRef($refBroaderAxis);
+            foreach ($members as $broaderAxisId => $refMember) {
+                $broaderAxis = Axis::load($broaderAxisId);
                 $data['fail'] .= $broaderAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);

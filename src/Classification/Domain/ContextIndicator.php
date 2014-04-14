@@ -14,7 +14,6 @@ use Doctrine\ORM\NoResultException;
  * Indicateur de classification contextualisé.
  *
  * @author valentin.claras
- * @author cyril.perraud
  */
 class ContextIndicator extends Core_Model_Entity
 {
@@ -28,22 +27,16 @@ class ContextIndicator extends Core_Model_Entity
     protected $id;
 
     /**
-     * Contexte de l'indicateur.
-     *
      * @var Context
      */
     protected $context;
 
     /**
-     * Indicateur.
-     *
      * @var Indicator
      */
     protected $indicator;
 
     /**
-     * Collection d'axes regroupé dans l'indicateur contextualisé.
-     *
      * @var Collection|Axis[]
      */
     protected $axes;
@@ -52,6 +45,7 @@ class ContextIndicator extends Core_Model_Entity
      * @var ClassificationLibrary
      */
     protected $library;
+
 
     public function __construct(ClassificationLibrary $library, Context $context, Indicator $indicator)
     {
@@ -62,17 +56,20 @@ class ContextIndicator extends Core_Model_Entity
         $this->axes = new ArrayCollection();
     }
 
-    public function getLabel()
-    {
-        return $this->indicator->getLabel() . ' - ' . $this->context->getLabel();
-    }
-
     /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return ClassificationLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
     }
 
     /**
@@ -89,6 +86,14 @@ class ContextIndicator extends Core_Model_Entity
     public function getIndicator()
     {
         return $this->indicator;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->indicator->getLabel() . ' - ' . $this->context->getLabel();
     }
 
     /**
@@ -141,14 +146,6 @@ class ContextIndicator extends Core_Model_Entity
     public function getAxes()
     {
         return $this->axes->toArray();
-    }
-
-    /**
-     * @return ClassificationLibrary
-     */
-    public function getLibrary()
-    {
-        return $this->library;
     }
 
     /**

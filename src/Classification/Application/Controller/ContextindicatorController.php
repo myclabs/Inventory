@@ -17,16 +17,16 @@ class Classification_ContextindicatorController extends Core_Controller
         $library = ClassificationLibrary::load($this->getParam('library'));
 
         $this->view->listContexts = [];
-        foreach ($library->getContexts() as $context) {
-            $this->view->listContexts[$context->getRef()] = $context->getLabel();
+        foreach ($library->getContexts()->toArray() as $context) {
+            $this->view->listContexts[$context->getId()] = $context->getLabel();
         }
         $this->view->listIndicators = [];
-        foreach ($library->getIndicators() as $indicator) {
-            $this->view->listIndicators[$indicator->getRef()] = $indicator->getLabel();
+        foreach ($library->getIndicators()->toArray() as $indicator) {
+            $this->view->listIndicators[$indicator->getId()] = $indicator->getLabel();
         }
         $this->view->listAxes = array();
-        foreach ($library->getAxes() as $axis) {
-            $this->view->listAxes[$axis->getRef()] = $axis->getLabel();
+        foreach ($library->getAxes()->toArray() as $axis) {
+            $this->view->listAxes[$axis->getId()] = $axis->getLabel();
         }
 
         $this->view->assign('library', $library);

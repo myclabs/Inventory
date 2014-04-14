@@ -6,7 +6,7 @@ use Classification\Domain\Axis;
 use Classification\Domain\Context;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
-use Classification\Domain\AxisMember;
+use Classification\Domain\Member;
 use Classification\Domain\ClassificationLibrary;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
@@ -56,7 +56,7 @@ abstract class AbstractPopulateClassification
 
     protected function createMember(Axis $axis, $ref, $label, array $parents = [])
     {
-        $member = new AxisMember();
+        $member = new Member();
         $member->setAxis($axis);
         $member->setRef($ref);
         $member->setLabel($label);

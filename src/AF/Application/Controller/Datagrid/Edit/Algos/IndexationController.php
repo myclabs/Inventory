@@ -5,7 +5,7 @@ use AF\Domain\Algorithm\Index\AlgoResultIndex;
 use AF\Domain\Algorithm\Index\FixedIndex;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
-use Classification\Domain\AxisMember;
+use Classification\Domain\Member;
 use Classification\Domain\Axis;
 use Core\Annotation\Secure;
 
@@ -104,7 +104,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                     }
                     // Modification de la valeur d'un index
                     if ($index instanceof FixedIndex) {
-                        $newMember = AxisMember::loadByRefAndAxis($newValue, $axis);
+                        $newMember = $axis->getMemberByRef($newValue);
                         $index->setClassificationMember($newMember);
                     } elseif ($index instanceof AlgoResultIndex) {
                         /** @var $newAlgo TextKeySelectionAlgo */
@@ -121,7 +121,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                     $algo->save();
                     // Définition de la valeur de l'index
                     if ($index instanceof FixedIndex) {
-                        $newMember = AxisMember::loadByRefAndAxis($newValue, $axis);
+                        $newMember = $axis->getMemberByRef($newValue);
                         $index->setClassificationMember($newMember);
                     } elseif ($index instanceof AlgoResultIndex) {
                         /** @var $newAlgo TextKeySelectionAlgo */

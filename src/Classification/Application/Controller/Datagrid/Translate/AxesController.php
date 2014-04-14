@@ -38,8 +38,8 @@ class Classification_Datagrid_Translate_AxesController extends UI_Controller_Dat
     {
         $this->translatableListener->setTranslationFallback(false);
         foreach (Axis::loadList($this->request) as $axis) {
-            $data = array();
-            $data['index'] = $axis->getRef();
+            $data = [];
+            $data['index'] = $axis->getId();
             $data['identifier'] = $axis->getRef();
 
             foreach ($this->languages as $language) {
@@ -62,7 +62,7 @@ class Classification_Datagrid_Translate_AxesController extends UI_Controller_Dat
     public function updateelementAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $axis = Axis::loadByRef($this->update['index']);
+        $axis = Axis::load($this->update['index']);
         $axis->reloadWithLocale(Core_Locale::load($this->update['column']));
         $axis->setLabel($this->update['value']);
         $this->data = $axis->getLabel();

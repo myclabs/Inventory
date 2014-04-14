@@ -3,6 +3,8 @@
 namespace Classification\Domain;
 
 use Account\Domain\Account;
+use Core_Exception_NotFound;
+use Core_Exception_TooMany;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Core_Model_Filter;
@@ -63,6 +65,7 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
      */
     protected $public = false;
 
+
     /**
      * @param Account $account
      * @param string  $label
@@ -97,29 +100,85 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
     }
 
     /**
-     * @return Indicator[]
+     * @param Indicator $indicator
      */
-    public function getIndicators()
-    {
-        return $this->indicators->toArray();
-    }
-
     public function addIndicator(Indicator $indicator)
     {
         $this->indicators->add($indicator);
     }
 
+    /**
+     * @param Indicator $indicator
+     */
     public function removeIndicator(Indicator $indicator)
     {
         $this->indicators->removeElement($indicator);
     }
 
     /**
-     * @return Axis[]
+     * @param $ref
+     * @throws \Core_Exception_NotFound
+     * @throws \Core_Exception_TooMany
+     * @return Axis
      */
-    public function getAxes()
+    public function getIndicatorByRef($ref)
     {
-        return $this->axes->toArray();
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('ref', $ref));
+        $indicator = $this->indicators->matching($criteria)->toArray();
+
+        if (count($indicator) === 0) {
+            throw new Core_Exception_NotFound('No Indicator in ClassificationLibrary matching ref "'.$ref.'".');
+        } elseif (count($indicator) > 1) {
+            throw new Core_Exception_TooMany('Too many Indicator in ClassificationLibrary matching "'.$ref.'".');
+        }
+
+        return array_pop($indicator);
+    }
+
+    /**
+     * @return Indicator[]|Collection
+     */
+    public function getIndicators()
+    {
+        return $this->indicators;
+    }
+
+    /**
+     * @param Axis $axis
+     */
+    public function addAxis(Axis $axis)
+    {
+        $this->axes[] = $axis;
+    }
+
+    /**
+     * @param Axis $axis
+     */
+    public function removeAxis(Axis $axis)
+    {
+        $this->axes->removeElement($axis);
+    }
+
+    /**
+     * @param $ref
+     * @throws \Core_Exception_NotFound
+     * @throws \Core_Exception_TooMany
+     * @return Axis
+     */
+    public function getAxisByRef($ref)
+    {
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('ref', $ref));
+        $axis = $this->axes->matching($criteria)->toArray();
+
+        if (count($axis) === 0) {
+            throw new Core_Exception_NotFound('No Axis in ClassificationLibrary matching ref "'.$ref.'".');
+        } elseif (count($axis) > 1) {
+            throw new Core_Exception_TooMany('Too many Axis in ClassificationLibrary matching "'.$ref.'".');
+        }
+
+        return array_pop($axis);
     }
 
     /**
@@ -134,32 +193,86 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
         return $this->axes->matching($criteria)->toArray();
     }
 
-    public function addAxis(Axis $axis)
+    /**
+     * @return Axis[]
+     */
+    public function getAxesOrderedAsAscendantTree()
     {
-        $this->axes[] = $axis;
-    }
-
-    public function removeAxis(Axis $axis)
-    {
-        $this->axes->removeElement($axis);
+        $axes = [];
+        foreach ($this->getRootAxes() as $rootAxis) {
+            $axes = array_merge($axes, $rootAxis->getDirectBroaders());
+            $axes[] = $rootAxis;
+        }
+        return $axes;
     }
 
     /**
-     * @return Context[]
+     * @return Axis[]|Collection
      */
-    public function getContexts()
+    public function getAxes()
     {
-        return $this->contexts->toArray();
+        return $this->axes;
     }
 
+    /**
+     * @param Context $context
+     */
     public function addContext(Context $context)
     {
         $this->contexts[] = $context;
     }
 
+    /**
+     * @param Context $context
+     */
     public function removeContext(Context $context)
     {
         $this->contexts->removeElement($context);
+    }
+
+    /**
+     * @param $ref
+     * @throws \Core_Exception_NotFound
+     * @throws \Core_Exception_TooMany
+     * @return Axis
+     */
+    public function getContextByRef($ref)
+    {
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->eq('ref', $ref));
+        $context = $this->contexts->matching($criteria)->toArray();
+
+        if (count($context) === 0) {
+            throw new Core_Exception_NotFound('No Context in ClassificationLibrary matching ref "'.$ref.'".');
+        } elseif (count($context) > 1) {
+            throw new Core_Exception_TooMany('Too many Context in ClassificationLibrary matching "'.$ref.'".');
+        }
+
+        return array_pop($context);
+    }
+
+    /**
+     * @return Context[]|Collection
+     */
+    public function getContexts()
+    {
+        return $this->contexts;
+    }
+
+    /**
+     * @param ContextIndicator $contextIndicator
+     */
+    public function addContextIndicator(ContextIndicator $contextIndicator)
+    {
+        $this->contextIndicators[] = $contextIndicator;
+    }
+
+    /**
+     * @param ContextIndicator $contextIndicator
+     */
+    public function removeContextIndicator(ContextIndicator $contextIndicator)
+    {
+        $this->contextIndicators->removeElement($contextIndicator);
     }
 
     /**
@@ -168,16 +281,6 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
     public function getContextIndicators()
     {
         return $this->contextIndicators->toArray();
-    }
-
-    public function addContextIndicator(ContextIndicator $contextIndicator)
-    {
-        $this->contextIndicators[] = $contextIndicator;
-    }
-
-    public function removeContextIndicator(ContextIndicator $contextIndicator)
-    {
-        $this->contextIndicators->removeElement($contextIndicator);
     }
 
     /**

@@ -17,9 +17,9 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
         /** @var ClassificationLibrary $library */
         $library = ClassificationLibrary::load($this->getParam('library'));
 
-        foreach ($library->getIndicators() as $indicator) {
+        foreach ($library->getIndicators()->toArray() as $indicator) {
             $data = array();
-            $data['index'] = $indicator->getRef();
+            $data['index'] = $indicator->getId();
             $data['label'] = $this->cellText($indicator->getLabel());
             $data['ref'] = $this->cellText($indicator->getRef());
             $data['unit'] = $this->cellText($indicator->getUnit()->getRef(), $indicator->getUnit()->getSymbol());
@@ -29,7 +29,6 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
             $data['position'] = $this->cellPosition($indicator->getPosition(), $canUp, $canDown);
             $this->addline($data);
         }
-        $this->totalElements = Indicator::countTotal($this->request);
 
         $this->send();
     }
@@ -58,7 +57,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
         try {
             Core_Tools::checkRef($ref);
             try {
-                Indicator::loadByRef($ref);
+                $library->getIndicatorByRef($ref);
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
                 $indicator = new Indicator($library, $ref, $label, $unit, $ratioUnit);
@@ -80,7 +79,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
      */
     public function deleteelementAction()
     {
-        $indicator = Indicator::loadByRef($this->delete);
+        $indicator = Indicator::load($this->delete);
 
         $queryContextIndicator = new Core_Model_Query();
         $queryContextIndicator->filter->addCondition(ContextIndicator::QUERY_INDICATOR, $indicator);
@@ -98,7 +97,9 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $indicator = Indicator::loadByRef($this->update['index']);
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
+        $indicator = Indicator::load($this->update['index']);
         switch ($this->update['column']) {
             case 'label':
                 $indicator->setLabel($this->update['value']);
@@ -107,7 +108,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
             case 'ref':
                 Core_Tools::checkRef($this->update['value']);
                 try {
-                    if (Indicator::loadByRef($this->update['value']) !== $indicator) {
+                    if ($library->getIndicatorByRef($this->update['value']) !== $indicator) {
                         throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
                     }
                 } catch (Core_Exception_NotFound $e) {

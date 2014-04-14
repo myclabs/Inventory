@@ -20,16 +20,15 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
         foreach ($library->getContextIndicators() as $contextIndicator) {
             $data = array();
             $data['index'] = $contextIndicator->getId();
-            $data['context'] = $this->cellList($contextIndicator->getContext()->getRef());
-            $data['indicator'] = $this->cellList($contextIndicator->getIndicator()->getRef());
+            $data['context'] = $this->cellList($contextIndicator->getContext()->getId());
+            $data['indicator'] = $this->cellList($contextIndicator->getIndicator()->getId());
             $refAxes = array();
             foreach ($contextIndicator->getAxes() as $axis) {
-                $refAxes[] = $axis->getRef();
+                $refAxes[] = $axis->getId();
             }
             $data['axes'] = $this->cellList($refAxes);
             $this->addline($data);
         }
-        $this->totalElements = ContextIndicator::countTotal($this->request);
 
         $this->send();
     }
@@ -42,23 +41,20 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
         /** @var ClassificationLibrary $library */
         $library = ClassificationLibrary::load($this->getParam('library'));
 
-        $refContext = $this->getAddElementValue('context');
-        if (empty($refContext)) {
+        $idContext = $this->getAddElementValue('context');
+        if (empty($idContext)) {
             $this->setAddElementErrorMessage('context', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        $refIndicator = $this->getAddElementValue('indicator');
-        if (empty($refIndicator)) {
+        $idIndicator = $this->getAddElementValue('indicator');
+        if (empty($idIndicator)) {
             $this->setAddElementErrorMessage('indicator', __('UI', 'formValidation', 'emptyRequiredField'));
         }
 
         if (empty($this->_addErrorMessages)) {
-            $context = Context::loadByRef($refContext);
-            $indicator = Indicator::loadByRef($refIndicator);
+            $context = Context::load($idContext);
+            $indicator = Indicator::load($idIndicator);
             try {
-                ContextIndicator::load(array(
-                        'context' => $context,
-                        'indicator' => $indicator
-                ));
+                ContextIndicator::loadByRef($context->getRef(), $indicator->getRef());
                 $this->setAddElementErrorMessage('context', __('Classification', 'contextIndicator', 'ContextIndicatorAlreadyExists'));
                 $this->setAddElementErrorMessage('indicator', __('Classification', 'contextIndicator', 'ContextIndicatorAlreadyExists'));
             } catch (Core_Exception_NotFound $e) {
@@ -66,9 +62,8 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
 
                 try {
                     if ($this->getAddElementValue('axes') != null) {
-                        foreach ($this->getAddElementValue('axes') as $refAxis) {
-                            $axis = Axis::loadByRef($refAxis);
-                            $contextIndicator->addAxis($axis);
+                        foreach ($this->getAddElementValue('axes') as $idAxis) {
+                            $contextIndicator->addAxis(Axis::load($idAxis));
                         }
                     }
 
@@ -105,7 +100,7 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
         switch ($this->update['column']) {
             case 'axes':
                 if (empty($this->update['value'])) {
-                    $listRefAxes = array();
+                    $listRefAxes = [];
                 } else {
                     $listRefAxes = explode(',', $this->update['value']);
                 }
@@ -116,8 +111,8 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
                         $contextIndicator->removeAxis($axis);
                     }
                 }
-                foreach ($listRefAxes as $refAxis) {
-                    $axis = Axis::loadByRef($refAxis);
+                foreach ($listRefAxes as $axisId) {
+                    $axis = Axis::load($axisId);
                     try {
                         $contextIndicator->addAxis($axis);
                     } catch (Core_Exception_InvalidArgument $e) {
