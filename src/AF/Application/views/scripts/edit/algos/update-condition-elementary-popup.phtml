@@ -28,7 +28,7 @@ $allRelations = [
 ?>
 
 <form class="form-horizontal" method="post"
-      action="af/edit_conditions/update-condition-submit?idAF=<?=$af->getId()?>&idCondition=<?=$algo->getId()?>">
+      action="af/edit_algos/update-condition-elementary-submit?idAF=<?=$af->getId()?>&idAlgo=<?=$algo->getId()?>">
 
     <?php if ($algo instanceof NumericConditionAlgo) : ?>
         <?php
