@@ -51,7 +51,8 @@ Feature: Family tree edit of families feature
     When I click "Combustion de combustible, mesuré en unité de masse"
     And I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    And I click "Confirmer"
+    And I click element "#familyTree_deletePanel button:contains('Confirmer')"
     Then the following message is shown and closed: "Suppression effectuée."
   # Vérification suppression effectuée
+    Given I am on "parameter/library/view/id/1"
     Then I should not see "Combustion de combustible, mesuré en unité de masse"
