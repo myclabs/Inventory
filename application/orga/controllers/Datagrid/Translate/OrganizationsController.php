@@ -36,28 +36,21 @@ class Orga_Datagrid_Translate_OrganizationsController extends UI_Controller_Data
      */
     public function getelementsAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
-        $this->request->aclFilter->enabled = true;
-        $this->request->aclFilter->user = $this->_helper->auth();
-        $this->request->aclFilter->action = Actions::VIEW;
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
 
-        foreach (Orga_Model_Organization::loadList($this->request) as $organization) {
-            $data = array();
-            $data['index'] = $organization->getId();
-            $data['identifier'] = $organization->getId();
+        $data = [];
+        $data['index'] = $organization->getId();
+        $data['identifier'] = $organization->getId();
 
-            foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $organization->reloadWithLocale($locale);
-                $data[$language] = $organization->getLabel();
-            }
-
-            $data['axes'] = $this->cellLink('orga/translate/axes/idOrganization/'.$organization->getId());
-            $data['members'] = $this->cellLink('orga/translate/members/idOrganization/'.$organization->getId());
-            $data['granularityReports'] = $this->cellLink('orga/translate/granularityreports/idOrganization/'.$organization->getId());
-            $this->addline($data);
+        foreach ($this->languages as $language) {
+            $locale = Core_Locale::load($language);
+            $organization->reloadWithLocale($locale);
+            $data[$language] = $organization->getLabel();
         }
-        $this->totalElements = Orga_Model_Organization::countTotal($this->request);
+
+        $this->addline($data);
 
         $this->send();
     }

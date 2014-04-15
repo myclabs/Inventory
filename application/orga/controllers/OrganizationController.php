@@ -399,6 +399,15 @@ class Orga_OrganizationController extends Core_Controller
             $tabView->addTab($rebuildTab);
         }
 
+        // Tab Translate
+        if ($isUserAllowedToEditOrganization) {
+            $translateTab = new Tab('translate');
+            $translateTab->setTitle(__('UI', 'name', 'translations'));
+            $translateTab->setContent('orga/organization/translate'.$parameters);
+            $translateTab->setAjax(true);
+            $tabView->addTab($translateTab);
+        }
+
         $activeTab = $this->hasParam('tab') ? $this->getParam('tab') : 'organization';
         $editOrganizationTabs = ['organization', 'axes', 'granularities', 'consistency'];
         if (!$isUserAllowedToEditOrganization && in_array($activeTab, $editOrganizationTabs)) {
@@ -440,6 +449,9 @@ class Orga_OrganizationController extends Core_Controller
                 break;
             case 'rebuild':
                 $tabView->activeTab($rebuildTab);
+                break;
+            case 'translate':
+                $tabView->activeTab($translateTab);
                 break;
         }
 
@@ -1155,6 +1167,23 @@ class Orga_OrganizationController extends Core_Controller
             __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
         );
         $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
+    public function translateAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+
+        $this->view->assign('idOrganization', $idOrganization);
+
+        if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
+            $this->_helper->layout()->disableLayout();
+            $this->view->assign('display', false);
+        } else {
+            $this->view->assign('display', true);
+        }
     }
 
     /**
