@@ -164,6 +164,10 @@ class UI_Datagrid_Col_LongText extends UI_Datagrid_Col_Popup
             $editorValue .= 'if (column.editor.textarea.className != \'markItUpEditor\') {';
             $editorValue .= '$(column.editor.textarea).markItUp(mySettings);';
             $editorValue .= '}';
+            $editorValue .= 'if (($(column.editor.getContainerEl()).offset().left + $(column.editor.getContainerEl()).outerWidth()) > $(window).width()) {';
+            $editorValue .= '$(column.editor.getContainerEl()).css(\'left\', \'auto\', \'important\');';
+            $editorValue .= '$(column.editor.getContainerEl()).css(\'right\', \'0px\', \'important\');';
+            $editorValue .= '}';
         }
 
         return $editorValue;
