@@ -135,51 +135,51 @@ $.fn.getFormElementValue = function ()
 		var child = $(children[key]);
 		switch (child.attr('type'))
 		{
-		case 'radio':
-			if (child.attr('checked') == 'checked') {
-				element = element.slice(0, -2) + '"' + child.encodeVal() + '"';
-			}
-			break;
-		case 'checkbox':
-			if ($(this).children('input[type=checkbox]').length == 1) {
-				element = element.slice(0, -2);
-				if (child.attr('checked') == 'checked') {
-					element += '1';
-				} else {
-					element += '0';
-				}
-			} else {
-				if (element == '"value": ""') {
-					element = element.slice(0, -2) + '[]';
-				}
-				if (child.attr('checked') == 'checked') {
-                    element = element.slice(0, -1);
-					if (element != '"value": [') {
-						element += ', ';
-					}
-					element += '"' + child.encodeVal() + '"]';
-				}
-			}
-			break;
-		case 'hidden':
-			hidden.push('"' + child.attr('id') + '": "' + child.encodeVal() + '"');
-			break;
-		default:
-            element = element.slice(0, -2);
-			if (typeof child.val() === 'object') {
-                element += '[';
-                if (child.val() != null) {
-                    element += '"';
-                    element += child.val().join('", "');
-                    element += '"';
+            case 'radio':
+                if (child.is(':checked')) {
+                    element = element.slice(0, -2) + '"' + child.encodeVal() + '"';
                 }
-                element += '], ';
-            } else if (child.val() != null) {
-                element += '"' + child.encodeVal() + '", ';
-			} else {
-				element += 'null, ';
-			}
-			element += '"disabled": ' + ((child.attr('disabled') == 'disabled') ? 'true' : 'false');
+                break;
+            case 'checkbox':
+                if ($(this).children('input[type=checkbox]').length == 1) {
+                    element = element.slice(0, -2);
+                    if (child.attr('checked') == 'checked') {
+                        element += '1';
+                    } else {
+                        element += '0';
+                    }
+                } else {
+                    if (element == '"value": ""') {
+                        element = element.slice(0, -2) + '[]';
+                    }
+                    if (child.is(':checked')) {
+                        element = element.slice(0, -1);
+                        if (element != '"value": [') {
+                            element += ', ';
+                        }
+                        element += '"' + child.encodeVal() + '"]';
+                    }
+                }
+                break;
+            case 'hidden':
+                hidden.push('"' + child.attr('id') + '": "' + child.encodeVal() + '"');
+                break;
+            default:
+                element = element.slice(0, -2);
+                if (typeof child.val() === 'object') {
+                    element += '[';
+                    if (child.val() != null) {
+                        element += '"';
+                        element += child.val().join('", "');
+                        element += '"';
+                    }
+                    element += '], ';
+                } else if (child.val() != null) {
+                    element += '"' + child.encodeVal() + '", ';
+                } else {
+                    element += 'null, ';
+                }
+                element += '"disabled": ' + ((child.attr('disabled') == 'disabled') ? 'true' : 'false');
 		}
 	}
 
