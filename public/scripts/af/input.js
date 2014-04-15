@@ -191,20 +191,20 @@ AF.Input.prototype = {
                 this.form.attr("action", currentUrl + "?idInputSet=" + this.idInputSet);
             }
             // URL d'aperçu des résultats
-            currentUrl = $("#tabs_tabResult").attr("data-remote");
+            currentUrl = $("[href='#tabs_tabResult']").attr("data-src");
             if ((typeof currentUrl !== "undefined")
                 && (currentUrl.indexOf("/idInputSet/") === -1)
                 && (currentUrl.indexOf("?idInputSet=") === -1)
             ) {
-                $("#tabs_tabResult").attr("data-remote", currentUrl + "?idInputSet=" + this.idInputSet);
+                $("[href='#tabs_tabResult']").attr("data-src", currentUrl + "?idInputSet=" + this.idInputSet);
             }
             // URL du détails des calculs
-            currentUrl = $("#tabs_tabCalculationDetails").attr("data-remote");
+            currentUrl = $("[href='#tabs_tabCalculationDetails']").attr("data-src");
             if ((typeof currentUrl !== "undefined")
                 && (currentUrl.indexOf("/idInputSet/") === -1)
                 && (currentUrl.indexOf("?idInputSet=") === -1)
             ) {
-                $("#tabs_tabCalculationDetails").attr("data-remote", currentUrl + "?idInputSet=" + this.idInputSet);
+                $("[href='#tabs_tabCalculationDetails']").attr("data-src", currentUrl + "?idInputSet=" + this.idInputSet);
             }
         }
 
