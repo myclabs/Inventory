@@ -40,6 +40,76 @@ $library = $this->library;
 </ul>
 
 
+<?php if ($this->edit) : ?>
+    <h2><?=__('Classification', 'control', 'pageTitle')?></h2>
+    <p>
+        <button class="btn btn-default check-consistency" type="button">
+            <?=__('Classification', 'control', 'seekIssue')?>
+        </button>
+    </p>
+    <div class="alert alert-info checking-consistency hide">
+        <?=$this->icon('refresh fa-spin')?>
+        <?=__('Classification', 'control', 'seekingIssue')?>
+    </div>
+    <script type="text/javascript" >
+        $(document).ready(function() {
+            $('.check-consistency').on('click', function(e) {
+                var button = $(this);
+                if (!$('.checking-consistency').hasClass('hide')) {
+                    return false;
+                }
+                $('.consistency-result').remove();
+                button.addClass('disabled');
+                $('.checking-consistency').removeClass('hide');
+                $.ajax({
+                    url: 'classification/library/check-consistency/id/<?=$library->getId()?>',
+                    type: 'GET',
+                    success: function (data) {
+                        if (data.messages.length > 0) {
+                            button.closest('p').after(
+                                '<div class="alert alert-warning alert-dismissable consistency-result">' +
+                                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                    '<ul></ul>' +
+                                '</div>'
+                            );
+                            for (var message in data.messages) {
+                                $('ul', button.closest('p').next()).append(
+                                    '<li>' +
+                                        '<strong>' + data.messages[message].control + '</strong>' +
+                                        ' : ' +
+                                        data.messages[message].occurences +
+                                    '</li>'
+                                );
+                            }
+                        } else {
+                            button.closest('p').after(
+                                '<div class="alert alert-success alert-dismissable consistency-result">' +
+                                    '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                    '<?=___('Classification', 'control', 'noIssue')?>' +
+                                '</div>'
+                            );
+                        }
+                    },
+                    error: function (jqXHR) {
+                        button.closest('p').after(
+
+                            '<div class="alert alert-error alert-dismissable consistency-result">' +
+                                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                '<?=___('Core', 'exception', 'applicationError')?>' +
+                            '</div>'
+                        );
+                    },
+                    complete: function (jqXHR) {
+                        button.removeClass('disabled');
+                        $('.checking-consistency').addClass('hide');
+                    }
+                });
+            });
+        });
+    </script>
+<?php endif; ?>
+
+
 <h2><?=__('UI', 'name', 'translations')?></h2>
 
 <p>
