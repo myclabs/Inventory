@@ -331,7 +331,7 @@ abstract class Component extends Core_Model_Entity
      * Permet de charger un Component par son ref et son AF
      * @param string $ref
      * @param AF     $af
-     * @return Component
+     * @return static
      */
     public static function loadByRef($ref, AF $af)
     {

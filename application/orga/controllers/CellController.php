@@ -1360,14 +1360,12 @@ class Orga_CellController extends Core_Controller
     public function inputPreviewAction()
     {
         $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
 
-        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
 
         // Form data
-        $formContent = json_decode($this->getParam($af->getRef()), true);
+        $formContent = json_decode($this->getParam('af' . $af->getId()), true);
         $errorMessages = [];
 
         // Remplit l'InputSet

@@ -53,14 +53,14 @@ displayAF($af, $inputSet, __('AF', 'inputDocumentation', 'masterForm'));
  */
 function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = 'collapse_')
 {
-    $collapse = new Collapse($refPrefix . $af->getRef(), $title);
+    $collapse = new Collapse($refPrefix . $af->getId(), $title);
 
     /** @var $mainAlgo MainSelectionAlgo */
     $mainAlgo = $af->getAlgoByRef(AF::ALGO_MAIN_REF);
     $subAlgos = $mainAlgo->getSelectedNumericAlgos($inputSet);
 
     foreach ($subAlgos as $subAlgo) {
-        $algoCollapse = displayAlgo($subAlgo, $inputSet, $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR);
+        $algoCollapse = displayAlgo($subAlgo, $inputSet, $refPrefix . $af->getId() . UI_Generic::REF_SEPARATOR);
         $collapse->appendContent($algoCollapse->render());
     }
 
@@ -74,7 +74,7 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = 'collapse_')
         $subInputSet = $array['subInputSet'];
         $componentRef = $array['componentRef'];
 
-        $newRefPrefix = $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR
+        $newRefPrefix = $refPrefix . $af->getId() . UI_Generic::REF_SEPARATOR
             . $componentRef . UI_Generic::REF_SEPARATOR;
         if (isset($array['number'])) {
             $newRefPrefix .= $array['number'] . UI_Generic::REF_SEPARATOR;

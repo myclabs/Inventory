@@ -15,6 +15,8 @@ use Unit\UnitAPI;
 
 /**
  * Remplissage de la base de données avec des données de test
+ *
+ * @Injectable(lazy=true)
  */
 class PopulateOrga extends AbstractPopulateOrga
 {
@@ -84,20 +86,20 @@ class PopulateOrga extends AbstractPopulateOrga
 
         // Sélection des formulaires
         // Données générales pour la cellule globale
-        $this->setAFForChildCells($granularityGlobal, [], $granularityGlobal, 'donnees_generales');
+        $this->setAFForChildCells($granularityGlobal, [], $granularityGlobal, 'Données générales');
         // Données générales pour Europe marque A et Europe marque B
-        $this->setAFForChildCells($granularity_zone_marque, [$member_zone_europe, $member_marque_marque_a], $granularity_zone_marque, 'donnees_generales');
-        $this->setAFForChildCells($granularity_zone_marque, [$member_zone_europe, $member_marque_marque_b], $granularity_zone_marque, 'donnees_generales');
+        $this->setAFForChildCells($granularity_zone_marque, [$member_zone_europe, $member_marque_marque_a], $granularity_zone_marque, 'Données générales');
+        $this->setAFForChildCells($granularity_zone_marque, [$member_zone_europe, $member_marque_marque_b], $granularity_zone_marque, 'Données générales');
         // Données générales pour toutes les cellules de granularié "Année | Site"
-        $this->setAFForChildCells($granularityGlobal, [], $granularity_annee_site, 'donnees_generales');
+        $this->setAFForChildCells($granularityGlobal, [], $granularity_annee_site, 'Données générales');
         // Combustion pour toutes les cellules de granularité "Année | Site | Catégorie" incluses dans "2012|énergie"
-        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_energie], $granularity_annee_site_categorie, 'combustion_combustible_unite_masse');
+        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_energie], $granularity_annee_site_categorie, 'Combustion de combustible, mesuré en unité de masse');
         // Test affichage
-        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_test_affichage], $granularity_annee_site_categorie, 'formulaire_tous_types_champ');
+        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_test_affichage], $granularity_annee_site_categorie, 'Formulaire avec tout type de champ');
         // Forfait marque
-        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_forfait_marque], $granularity_annee_site_categorie, 'formulaire_forfait_marque');
+        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2012, $member_categorie_forfait_marque], $granularity_annee_site_categorie, 'Forfait émissions en fonction de la marque');
         // Test affichage sous-formulaire répété tout type de champ
-        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2013, $member_categorie_test_affichage], $granularity_annee_site_categorie, 'formulaire_s_f_r_tous_types_champ');
+        $this->setAFForChildCells($granularity_annee_categorie, [$member_annee_2013, $member_categorie_test_affichage], $granularity_annee_site_categorie, 'Formulaire avec sous-formulaire répété contenant tout type de champ');
 
         // Renseignement des saisies
         // Cellule globale, saisie terminée
@@ -113,7 +115,7 @@ class PopulateOrga extends AbstractPopulateOrga
             'chiffre_affaire' => new Calc_UnitValue(new UnitAPI('kiloeuro'), 10, 15)
         ], false);
         // Annecy | 2012 | Test affichage (inventaire en cours), saisie terminée
-        $aF_combustion = AF::loadByRef('combustion_combustible_unite_masse');
+        $aF_combustion = $this->getAF('Combustion de combustible, mesuré en unité de masse');
         $select = Select::loadByRef('nature_combustible', $aF_combustion);
         $this->setInput($granularity_annee_site_categorie, [$member_annee_2012, $member_site_annecy, $member_categorie_energie], [
             'nature_combustible' => $select->getOptionByRef('charbon'),
@@ -124,7 +126,7 @@ class PopulateOrga extends AbstractPopulateOrga
             'c_n' => new Calc_UnitValue(new UnitAPI('kg_co2e.m3^-1'), 10, 15),
         ], false);
         // Chambéry | 2012 | Test affichage (inventaire en cours), saisie complète (pour tester affichage historique)
-        $aF_tous_types_champs = AF::loadByRef('formulaire_tous_types_champ');
+        $aF_tous_types_champs = $this->getAF('Formulaire avec tout type de champ');
         $c_s_s_liste = Select::loadByRef('c_s_s_liste', $aF_tous_types_champs);
         $c_s_s_bouton = Select::loadByRef('c_s_s_bouton', $aF_tous_types_champs);
         $c_s_m_checkbox = Select::loadByRef('c_s_m_checkbox', $aF_tous_types_champs);

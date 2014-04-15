@@ -22,11 +22,10 @@ class AFCopyService
 {
     /**
      * @param AF     $af
-     * @param string $newRef
      * @param string $newLabel
      * @return AF
      */
-    public function copyAF(AF $af, $newRef, $newLabel)
+    public function copyAF(AF $af, $newLabel)
     {
         $deepCopy = new DeepCopy();
 
@@ -48,7 +47,6 @@ class AFCopyService
         /** @var AF $newAF */
         $newAF = $deepCopy->copy($af);
 
-        $newAF->setRef($newRef);
         $newAF->setLabel($newLabel);
 
         return $newAF;

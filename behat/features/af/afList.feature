@@ -10,19 +10,18 @@ Feature: AF list edit feature
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the row 1 of the "listAF" datagrid should contain:
-      | category                          | label                                               | ref                                |
-      | Catégorie contenant un formulaire | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse |
+      | category                          | label                                               |
+      | Catégorie contenant un formulaire | Combustion de combustible, mesuré en unité de masse |
   # Ajout, saisie correcte
     When I click "Ajouter un formulaire"
     Then I should see the popup "Ajout d'un formulaire"
     When I select "Catégorie contenant un formulaire" from "listAF_category_addForm"
     And I fill in "listAF_label_addForm" with "Test"
-    And I fill in "listAF_ref_addForm" with "test"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the "listAF" datagrid should contain a row:
-      | category                          | label | ref  |
-      | Catégorie contenant un formulaire | Test  | test |
+      | category                          | label |
+      | Catégorie contenant un formulaire | Test  |
 
   @javascript @readOnly
   Scenario: Creation of an AF, incorrect input
@@ -32,20 +31,7 @@ Feature: AF list edit feature
     Then I should see the popup "Ajout d'un formulaire"
   # Aucun champ rempli
     When I click "Valider"
-  # La catégorie est remplie par défaut
-  # Then the field "listAF_category_addForm" should have error: "Merci de renseigner ce champ."
     Then the field "listAF_label_addForm" should have error: "Merci de renseigner ce champ."
-    And the field "listAF_ref_addForm" should have error: "Merci de renseigner ce champ."
-  # Ajout, identifiant caractères non autorisés
-    When I select "Catégorie contenant un formulaire" from "listAF_category_addForm"
-    And I fill in "listAF_label_addForm" with "Test"
-    And I fill in "listAF_ref_addForm" with "bépo"
-    And I click "Valider"
-    Then the field "listAF_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Ajout, identifiant déjà utilisé
-    When I fill in "listAF_ref_addForm" with "combustion_combustible_unite_masse"
-    And I click "Valider"
-    Then the field "listAF_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
   Scenario: Edition of an AF in AF list, correct input
@@ -53,15 +39,14 @@ Feature: AF list edit feature
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the row 1 of the "listAF" datagrid should contain:
-      | category                          | label                                               | ref                                |
-      | Catégorie contenant un formulaire | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse |
+      | category                          | label                                               |
+      | Catégorie contenant un formulaire | Combustion de combustible, mesuré en unité de masse |
   # Modifications (catégorie, libellé, identifiant)
     When I set "Catégorie vide" for column "category" of row 1 of the "listAF" datagrid with a confirmation message
     And I set "Libellé modifié" for column "label" of row 1 of the "listAF" datagrid with a confirmation message
-    And I set "identifiant_modifie" for column "ref" of row 1 of the "listAF" datagrid with a confirmation message
     Then the row 1 of the "listAF" datagrid should contain:
-      | category       | label           | ref                 |
-      | Catégorie vide | Libellé modifié | identifiant_modifie |
+      | category       | label           |
+      | Catégorie vide | Libellé modifié |
 
   @javascript @readOnly
   Scenario: Edition of an AF in AF list, incorrect input
@@ -71,18 +56,9 @@ Feature: AF list edit feature
   # Modification du libellé, libellé vide
     When I set "" for column "label" of row 1 of the "listAF" datagrid
     Then the following message is shown and closed: "Merci de renseigner ce champ."
-  # Modification de l'identifiant, identifiant vide
-    When I set "" for column "ref" of row 1 of the "listAF" datagrid
-    Then the following message is shown and closed: "Merci de renseigner ce champ."
-  # Modification de l'identifiant, identifiant avec caractères non autorisés
-    When I set "bépo" for column "ref" of row 1 of the "listAF" datagrid
-    Then the following message is shown and closed: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
-  # Modification de l'identifiant, identifiant déjà utilisé
-    When I set "formulaire_test" for column "ref" of row 1 of the "listAF" datagrid
-    Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
     And the row 1 of the "listAF" datagrid should contain:
-      | label                                               | ref                                |
-      | Combustion de combustible, mesuré en unité de masse | combustion_combustible_unite_masse |
+      | label                                               |
+      | Combustion de combustible, mesuré en unité de masse |
 
   @javascript @readOnly
   Scenario: Links towards configuration and test views, from AF list
@@ -116,31 +92,12 @@ Feature: AF list edit feature
     And I click "Filtrer"
     Then the "listAF" datagrid should contain 1 row
     And the row 1 of the "listAF" datagrid should contain:
-      | label           | ref             |
-      | Formulaire vide | formulaire_vide |
+      | label           |
+      | Formulaire vide |
   # Clic sur "Réinitialiser"
     And I open collapse "Filtres"
     And I click "Réinitialiser"
     Then the "listAF" datagrid should contain 8 row
-  # Filtre sur l'identifiant
-    And I open collapse "Filtres"
-    And I fill in "listAF_ref_filterForm" with "_test"
-    And I click "Filtrer"
-    Then the "listAF" datagrid should contain 1 row
-    And the row 1 of the "listAF" datagrid should contain:
-      | label           | ref             |
-      | Formulaire test | formulaire_test |
-  # Filtre sur les deux combinés
-    And I open collapse "Filtres"
-    And I click "Réinitialiser"
-    And I open collapse "Filtres"
-    And I fill in "listAF_label_filterForm" with "Formulaire"
-    And I fill in "listAF_ref_filterForm" with "_vide"
-    And I click "Filtrer"
-    Then the "listAF" datagrid should contain 1 row
-  # Alors que…
-    And I open collapse "Filtres"
-    And I click "Réinitialiser"
     And I open collapse "Filtres"
     And I fill in "listAF_label_filterForm" with "Formulaire"
     And I click "Filtrer"
@@ -148,7 +105,7 @@ Feature: AF list edit feature
 
   @javascript
   Scenario: Deletion of an AF form from AF list
-    #6193 	Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
+    #6193 Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
     Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid

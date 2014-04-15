@@ -66,20 +66,6 @@ class AF_EditController extends Core_Controller
         /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         if ($this->getRequest()->isPost()) {
-            $ref = $this->getParam('ref');
-            if (empty($ref)) {
-                $this->addFormError('ref', __('UI', 'formValidation', 'emptyRequiredField'));
-                $this->sendFormResponse();
-                return;
-            } else {
-                try {
-                    $af->setRef($ref);
-                } catch (Core_Exception_User $e) {
-                    $this->addFormError('ref', __('Core', 'exception', 'unauthorizedRef'));
-                    $this->sendFormResponse();
-                    return;
-                }
-            }
             $label = $this->getParam('label');
             if (empty($label)) {
                 $this->addFormError('label', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -89,12 +75,8 @@ class AF_EditController extends Core_Controller
             $af->setLabel($label);
             $af->setDocumentation($this->getParam('documentation'));
             $af->save();
-            try {
-                $this->entityManager->flush();
-                $this->setFormMessage(__('UI', 'message', 'updated'));
-            } catch (Core_ORM_DuplicateEntryException $e) {
-                $this->addFormError('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
-            }
+            $this->entityManager->flush();
+            $this->setFormMessage(__('UI', 'message', 'updated'));
         }
 
         $this->sendFormResponse();

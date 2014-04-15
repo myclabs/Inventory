@@ -42,13 +42,6 @@ $labelColumn->sortName = AF::QUERY_LABEL;
 $labelColumn->filterName = AF::QUERY_LABEL;
 $datagrid->addCol($labelColumn);
 
-$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
-$refColumn->editable = true;
-$refColumn->addable = true;
-$refColumn->sortName = AF::QUERY_REF;
-$refColumn->filterName = AF::QUERY_REF;
-$datagrid->addCol($refColumn);
-
 $configurationColumn = new UI_Datagrid_Col_Link('configuration', __('UI', 'name', 'configuration'));
 $datagrid->addCol($configurationColumn);
 
@@ -64,12 +57,6 @@ $datagrid->addCol($duplicateColumn);
 
 $datagrid->display();
 ?>
-
-<script>
-    $(function() {
-        refFromLabel('listAF_label_addForm', 'listAF_ref_addForm');
-    });
-</script>
 
 
 <h2><?=__('UI', 'name', 'tree')?></h2>

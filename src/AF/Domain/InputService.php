@@ -94,8 +94,8 @@ class InputService
             $inputSet->setCalculationComplete(false, $message);
             $inputSet->clearOutputSet();
         } catch (Exception $e) {
-            $ref = $inputSet->getAF()->getRef();
-            $this->logger->warning("Error while calculating AF '$ref' results", ['exception' => $e]);
+            $id = $inputSet->getAF()->getId();
+            $this->logger->warning("Error while calculating AF '$id' results", ['exception' => $e]);
 
             $inputSet->setCalculationComplete(false);
             $inputSet->clearOutputSet();
