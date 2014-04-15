@@ -319,7 +319,12 @@ class Orga_Service_ETLStructure
      */
     protected function populateDWCubeWithClassification(DW_Model_Cube $dWCube, Orga_Model_Organization $orgaOrganization)
     {
-        foreach ($orgaOrganization->getContextIndicators() as $classificationContextIndicator) {
+        $classificationIndicators = array_map(
+            function ($contextIndicator) { return $contextIndicator->getIndicator(); },
+            $orgaOrganization->getContextIndicators()
+        );
+        $classificationIndicators = array_unique($classificationIndicators);
+        foreach ($classificationIndicators as $classificationContextIndicator) {
             /** @var ContextIndicator $classificationContextIndicator */
             $this->copyIndicatorFromClassificationToDWCube($classificationContextIndicator->getIndicator(), $dWCube);
         }
@@ -598,7 +603,7 @@ class Orga_Service_ETLStructure
      */
     protected function isDWCubeUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
-        return $this->areDWIndicatorsUpToDate($dWCube)
+        return $this->areDWIndicatorsUpToDate($dWCube, $orgaOrganization)
             && $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters);
     }
 
@@ -606,15 +611,21 @@ class Orga_Service_ETLStructure
      * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
      * @param DW_Model_Cube $dWCube
+     * @param Orga_Model_Organization $orgaOrganization
      *
      * @return bool
      */
-    protected function areDWIndicatorsUpToDate($dWCube)
+    protected function areDWIndicatorsUpToDate($dWCube, $orgaOrganization)
     {
-        $classificationIndicators = Indicator::loadList();
+        $classificationIndicators = [];
+        foreach ($orgaOrganization->getContextIndicators() as $classificationContextIndicator) {
+            if (!in_array($classificationContextIndicator->getIndicator(), $classificationIndicators)) {
+                $classificationIndicators[] = $classificationContextIndicator->getIndicator();
+            }
+        }
         $dWIndicators = $dWCube->getIndicators();
 
-        foreach (Indicator::loadList() as $classificationIndex => $classificationIndicator) {
+        foreach ($classificationIndicators as $classificationIndex => $classificationIndicator) {
             /** @var Indicator $classificationIndicator */
             foreach ($dWCube->getIndicators() as $dWIndex => $dWIndicator) {
                 if (! $this->isDWIndicatorDifferentFromClassification($dWIndicator, $classificationIndicator)) {
@@ -663,17 +674,11 @@ class Orga_Service_ETLStructure
      */
     protected function areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters)
     {
-        $queryClassificationRootAxes = new Core_Model_Query();
-        $queryClassificationRootAxes->filter->addCondition(
-            Axis::QUERY_NARROWER,
-            null,
-            Core_Model_Filter::OPERATOR_NULL
-        );
         $dWRootAxes = $dWCube->getRootAxes();
 
         // Classification.
         $classificationRootAxes = $orgaOrganization->getClassificationAxes();
-        foreach ($classificationRootAxes as $classificationIndex => $classificationAxis) {
+        foreach ($orgaOrganization->getClassificationAxes() as $classificationIndex => $classificationAxis) {
             /** @var Axis $classificationAxis */
             foreach ($dWCube->getRootAxes() as $dWIndex => $dWAxis) {
                 if (!($this->isDWAxisDifferentFromClassification($dWAxis, $classificationAxis))) {
