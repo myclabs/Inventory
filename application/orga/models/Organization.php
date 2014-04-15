@@ -515,6 +515,55 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
+     * @return Classification\Domain\Axis[]
+     */
+    public function getClassificationAxes()
+    {
+        /** @var Classification\Domain\Axis[] $classificationAxes */
+        $classificationAxes = [];
+
+        foreach ($this->getContextIndicators() as $classificationContextIndicator) {
+            foreach ($classificationContextIndicator->getAxes() as $classificationAxis) {
+                $classificationAxes[] = $classificationAxis;
+            }
+        }
+
+        if (!empty($classificationAxes)) {
+            $classificationAxes = array_unique($classificationAxes);
+            foreach ($classificationAxes as $indexClassificationAxis => $classificationAxis) {
+                foreach ($classificationAxes as $checkClassificationAxis) {
+                    if ($classificationAxis->isBroaderThan($checkClassificationAxis)) {
+                        unset($classificationAxes[$indexClassificationAxis]);
+                        continue 2;
+                    }
+                }
+            }
+            usort(
+                $classificationAxes,
+                function($a, $b) {
+                    /** @var Classification\Domain\Axis $a */
+                    /** @var Classification\Domain\Axis $b */
+                    if ($a->getLibrary()->getId() < $b->getLibrary()->getId()) {
+                        return -1;
+                    }
+                    if ($a->getLibrary()->getId() > $b->getLibrary()->getId()) {
+                        return 1;
+                    }
+                    if ($a->getPosition() < $b->getPosition()) {
+                        return -1;
+                    }
+                    if ($a->getPosition() > $b->getPosition()) {
+                        return 1;
+                    }
+                    return strcasecmp($a->getRef(), $b->getRef());
+                }
+            );
+        }
+
+        return $classificationAxes;
+    }
+
+    /**
      * Renvoie les Granularity de saisie.
      *
      * @return Orga_Model_Granularity[]

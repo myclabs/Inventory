@@ -3,10 +3,10 @@
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
 use Account\Domain\Account;
-use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use AF\Domain\Component\Select;
 use Calc_UnitValue;
+use Classification\Domain\ClassificationLibrary;
 use DW_Model_Report;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateOrga;
 use Orga_Model_Cell;
@@ -22,12 +22,17 @@ class PopulateOrga extends AbstractPopulateOrga
     {
         $output->writeln('  <info>Populating Orga</info>');
 
+        $library = ClassificationLibrary::load(1);
+
         // Création d'un compte client
         $account = new Account('Pizza Forever Inc.');
         $this->accountRepository->add($account);
 
         // Création d'une organisation.
         $organization = $this->createOrganization($account, 'Workspace avec données');
+        $organization->addContextIndicator($library->getContextIndicatorByRef('general', 'chiffre_affaire'));
+        $organization->addContextIndicator($library->getContextIndicatorByRef('general', 'ges'));
+        $organization->addContextIndicator($library->getContextIndicatorByRef('deplacement', 'ges'));
         $organization_vide = $this->createOrganization($account, 'Workspace vide');
 
         // Création des axes.
@@ -157,9 +162,9 @@ qui officia deserunt mollit anim id est laborum.',
         $this->entityManager->flush();
 
         // Création d'analyses préconfigurées
-        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire, par année', 'chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
-        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire 2012, marques A et B, par site', 'chiffre_affaire', 'o_site', ['o_annee' => ['2012'], 'o_marque' => ['marque_a', 'marque_b']], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
-        $this->createSimpleGranularityReport($granularity_site, 'Chiffre d\'affaire, par année', 'chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
+        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire, par année', '1_chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
+        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire 2012, marques A et B, par site', '1_chiffre_affaire', 'o_site', ['o_annee' => ['2012'], 'o_marque' => ['marque_a', 'marque_b']], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
+        $this->createSimpleGranularityReport($granularity_site, 'Chiffre d\'affaire, par année', '1_chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
 
         // Création des utilisateurs orga.
         $this->createUser('administrateur.workspace@toto.com');

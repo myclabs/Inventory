@@ -574,13 +574,7 @@ class Orga_Service_Export
         }
         $modelBuilder->bind('orgaAxes', $orgaAxes);
 
-        $classifAxes = [];
-        foreach ($cell->getOrganization()->getContextIndicators() as $contextIndicator) {
-            foreach ($contextIndicator->getAxes() as $axis) {
-                $classifAxes[] = $axis;
-            }
-        }
-        $modelBuilder->bind('classifAxes', $classifAxes);
+        $modelBuilder->bind('classifAxes', $cell->getOrganization()->getClassificationAxes());
 
         $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
         $modelBuilder->bind('resultLabel', __('UI', 'name', 'label'));

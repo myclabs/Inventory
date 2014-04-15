@@ -1034,7 +1034,7 @@ class Orga_OrganizationController extends Core_Controller
 
         $cellsData = [];
 
-        $userCanEditOrganization = $this->aclService->isAllowed($connectedUser, Action::EDIT(), $organization);
+        $userCanEditOrganization = $this->acl->isAllowed($connectedUser, Actions::EDIT, $organization);
         $this->view->assign('canEditOrganization', $userCanEditOrganization);
         if ($userCanEditOrganization) {
             $cellsData[] = $organization;

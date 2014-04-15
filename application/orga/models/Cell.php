@@ -1195,7 +1195,8 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
         }
 
         foreach ($this->getAFInputSetPrimary()->getOutputSet()->getElements() as $outputElement) {
-            $refClassifIndicator = $outputElement->getContextIndicator()->getIndicator()->getRef();
+            $refClassifIndicator = $outputElement->getContextIndicator()->getIndicator()->getLibrary()
+                . '_' . $outputElement->getContextIndicator()->getIndicator()->getRef();
             try {
                 $dWIndicator = DW_Model_Indicator::loadByRefAndCube($refClassifIndicator, $dWCube);
             } catch (Core_Exception_NotFound $e) {
@@ -1208,7 +1209,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 
             foreach ($outputElement->getIndexes() as $outputIndex) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndCube('c_'.$outputIndex->getRefAxis(), $dWCube);
+                    $classificationLibrary = $outputIndex->getAxis()->getLibrary();
+                    $dWAxis = DW_Model_Axis::loadByRefAndCube(
+                        'c_'.$classificationLibrary->getId().'_'.$outputIndex->getRefAxis(),
+                        $dWCube
+                    );
                     $dWMember = DW_Model_Member::loadByRefAndAxis($outputIndex->getRefMember(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
@@ -1217,7 +1222,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 
                 foreach ($outputIndex->getMember()->getAllParents() as $classifParentMember) {
                     try {
-                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube('c_'.$classifParentMember->getAxis()->getRef(), $dWCube);
+                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube(
+                            'c_'.$classificationLibrary->getId().'_'.$classifParentMember->getAxis()->getRef(),
+                            $dWCube
+                        );
                         $dWParentMember = DW_Model_Member::loadByRefAndAxis($classifParentMember->getRef(), $dWBroaderAxis);
                         $dWResult->addMember($dWParentMember);
                     } catch (Core_Exception_NotFound $e) {
