@@ -33,11 +33,11 @@ class AxisService
         if (empty($ref)) {
             $ref = $label;
         }
-        $this->checkAxisRef($axis->getLibrary(), $ref);
+        $this->checkAxisRef($library, $ref);
 
         $axis->setRef($ref);
         $axis->setLabel($label);
-        if ($idParent != null) {
+        if (!empty($idParent)) {
             $axis->setDirectNarrower(Axis::load($idParent));
         }
 

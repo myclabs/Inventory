@@ -114,10 +114,9 @@ class Classification_LibraryController extends Core_Controller
 
                 foreach ($axis->getMembers() as $member) {
                     if ($narrowerAxis !== null) {
-                        $intersectMemberNarrowerMembers = array_uintersect(
+                        $intersectMemberNarrowerMembers = array_intersect(
                             $member->getDirectChildren(),
-                            $narrowerAxis->getMembers(),
-                            function($a, $b){return (($a === $b) ? 0 : 1);}
+                            $narrowerAxis->getMembers()
                         );
                         if (count($intersectMemberNarrowerMembers) < 1) {
                             if (!isset($listAxesWithMembersNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()])) {
@@ -127,10 +126,9 @@ class Classification_LibraryController extends Core_Controller
                         }
                     }
                     foreach ($broaderAxes as $broaderAxis) {
-                        $intersectMemberBroaderMembers = array_uintersect(
+                        $intersectMemberBroaderMembers = array_intersect(
                             $member->getDirectParents(),
-                            $broaderAxis->getMembers(),
-                            function($a, $b){return (($a === $b) ? 0 : 1);}
+                            $broaderAxis->getMembers()
                         );
                         if (count($intersectMemberBroaderMembers) !== 1) {
                             if (!isset($listAxesWithMembersNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()])) {
