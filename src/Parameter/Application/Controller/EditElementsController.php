@@ -26,7 +26,7 @@ class Parameter_EditElementsController extends Core_Controller
         $number = 0;
 
         foreach ($lines as $line) {
-            $array = explode("\t", $line);
+            $array = preg_split('/[\t;]/', $line);
 
             if (count($array) !== (count($dimensions) + 2)) {
                 UI_Message::addMessageStatic(__('Parameter', 'import', 'invalidElementsInput'));
