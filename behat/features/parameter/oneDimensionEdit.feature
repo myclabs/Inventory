@@ -27,7 +27,7 @@ Feature: Family one dimension edit feature
 
   @javascript
   Scenario: Add member to a family dimension with label only
-    Given I am on "techno/family/edit/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
   # Affichage famille et en-tête
     Then I should see "Famille test non vide"
