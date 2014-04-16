@@ -324,9 +324,9 @@ class Orga_Service_ETLStructure
             $orgaOrganization->getContextIndicators()->toArray()
         );
         $classificationIndicators = array_unique($classificationIndicators);
-        foreach ($classificationIndicators as $classificationContextIndicator) {
+        foreach ($classificationIndicators as $classificationIndicator) {
             /** @var ContextIndicator $classificationContextIndicator */
-            $this->copyIndicatorFromClassificationToDWCube($classificationContextIndicator->getIndicator(), $dWCube);
+            $this->copyIndicatorFromClassificationToDWCube($classificationIndicator, $dWCube);
         }
 
         foreach ($orgaOrganization->getClassificationAxes() as $classificationAxis) {
