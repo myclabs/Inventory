@@ -126,16 +126,18 @@ AF.Input = function (id, ref, mode, idInputSet, exitURL, urlParams, resultsPrevi
         title: __('UI', 'history', 'valueHistory'),
         html: true,
         content: popoverDefaultContent
-    }).click(function () {
-            var button = $(this);
-            // Si visible (merci Bootstrap pour cette merde)
-            if (button.data('popover').tip().hasClass('in')) {
-                that.loadInputHistory(button.data('input-id'), button);
-            } else {
-                // Rétablit le chargement ajax
-                button.data('popover').options.content = popoverDefaultContent;
-            }
-        });
+    })
+    .on('show.bs.popover', function () {
+        // Failsafe parce qu'on ré-appelle "show" quand AJAX a finit de charger
+        if ($(this).hasClass('active')) {
+            return;
+        }
+        that.loadInputHistory($(this).data('input-id'), $(this));
+    })
+    .on('hidden.bs.popover', function () {
+        // Rétablit le contenu par défaut
+        $(this).data('bs.popover').options.content = popoverDefaultContent;
+    })
 };
 
 AF.Input.prototype = {
@@ -324,15 +326,10 @@ AF.Input.prototype = {
             }
         }
 
-        $.get(url,
-            function (html) {
-                // Si visible (merci Bootstrap pour cette merde)
-                if (button.data('popover').tip().hasClass('in')) {
-                    button.data('popover').options.content = html;
-                    button.popover('show');
-                }
-            }
-        );
+        $.get(url, function (html) {
+            button.data('bs.popover').options.content = html;
+            button.popover('show');
+        });
     }
 
 };
