@@ -17,6 +17,7 @@ use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Context;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
+use Core_Exception_NotFound;
 use Doctrine\ORM\EntityManager;
 use Parameter\Domain\Family\Cell;
 use Parameter\Domain\Family\Dimension;
@@ -219,6 +220,13 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/users.json'));
         foreach ($objects as $user) {
             if ($user instanceof User) {
+                // Vérifie si l'utilisateur n'existe pas déjà (par ex. le super admin)
+                try {
+                    User::loadByEmail($user->getEmail());
+                    continue;
+                } catch (Core_Exception_NotFound $e) {
+                }
+
                 $output->writeln(sprintf('<info>Imported user: %s</info>', $user->getName()));
                 $user->save();
             }

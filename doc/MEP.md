@@ -3,13 +3,53 @@
 
 ## 3.0
 
-- Migration des traductions (noms des classes) suite au renommage en namespaces de Classif : TODO
+- Exporter les données en 2.12
 
-- Renommage des tables de Classif en Classification : TODO
+```
+sudo chmod 777 data/exports/migration-3.0/
+echo 'flush_all' | nc localhost 11211
+bin/inventory export -v
+```
 
-- Migration des unités des indicateurs (colonne string to unit_api) : TODO
+Les données sont exportées dans `data/exports/migration-3.0/`.
 
-- Renommage des tables de Techno en Parameter : TODO
+- Déployer l'application en v3.0 **sans build update** (mais redémarrer le worker) :
+
+```
+sudo deploy --no-update-db 3.0.?
+```
+
+- Reconstruire la BDD from scratch :
+
+```
+bin/inventory db:populate
+```
+
+- Créer un nouveau compte client si besoin
+
+```
+bin/inventory account:create "Nom du compte"
+```
+
+- Réimporter les données
+
+Les bibliothèques seront créées en utilisant les noms donnés en ligne de commande, et ajoutées au compte donné.
+
+Les données seront importées des fichiers contenus dans `data/exports/migration-3.0/`.
+
+```
+bin/inventory import <id-account> "Bibliothèque de classification" "Bibliothèque de paramètres" "Bibliothèque de formulaires" -v
+```
+
+- Reconstruire les ACL
+
+```
+bin/inventory acl:rebuild
+```
+
+- Migration des traductions : TODO
+
+Attention au renommage des classes de classif.
 
 
 ## 2.11
