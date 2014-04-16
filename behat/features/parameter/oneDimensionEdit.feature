@@ -48,16 +48,16 @@ Feature: Family one dimension edit feature
 
   @javascript
   Scenario: Add member to a family dimension, incorrect input
-    Given I am on "parameter/dimension/details/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
-    And I click "combustibleAddMemberButton"
+    When I click element "#combustibleAddMemberButton"
     Then I should see the popup "Ajout d'une liste d'éléments"
     And I fill in "inputMemberList" with " "
     Then I should see "Saisie non reconnue, merci de respecter le format précisé."
 
   @javascript
   Scenario: Delete member
-    Given I am on "parameter/dimension/details/id/5"
+    Given I am on "parameter/family/edit/id/5"
     And I wait for the page to finish loading
     When I click "Supprimer" in the row 1 of the "combustibleMembersDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
