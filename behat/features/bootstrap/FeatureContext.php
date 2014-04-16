@@ -229,6 +229,13 @@ class FeatureContext extends MinkContext
             'legend:contains("' . $label . '")'
         );
 
+        /** @var NodeElement[] $nodes */
+        $nodes = $this->getSession()->getPage()->findAll('css', 'legend:contains("' . $label . '")');
+        $nodes = array_filter($nodes, function (NodeElement $node) {
+            return $this->isElementVisible($node);
+        });
+        $node = (count($nodes) !== 0) ? reset($nodes) : null;
+
         if (! $node) {
             $node = $this->getSession()->getPage()->find(
                 'css',
@@ -238,7 +245,7 @@ class FeatureContext extends MinkContext
 
         if (! $node) {
             throw new ExpectationException(
-                "No collapse with lable $label was found.",
+                "No collapse with label $label was found.",
                 $this->getSession()
             );
         }
