@@ -40,10 +40,10 @@ class AFDeletionService
         $this->entityManager->clear();
         $af = AF::load($af->getId());
 
-        $this->deleteGroupContent($af->getRootGroup());
+        $this->deleteAlgos($af);
         $this->entityManager->flush();
 
-        $this->deleteAlgos($af);
+        $this->deleteGroupContent($af->getRootGroup());
         $this->entityManager->flush();
 
         $this->entityManager->clear();

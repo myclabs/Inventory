@@ -5,6 +5,7 @@ use AF\Domain\AFDeletionService;
 use AF\Domain\AFLibrary;
 use AF\Domain\Category;
 use AF\Domain\Component\SubAF;
+use AF\Domain\InputSet\InputSet;
 use AF\Domain\Output\OutputElement;
 use DI\Annotation\Inject;
 use Core\Annotation\Secure;
@@ -150,6 +151,9 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByOrga');
             }
             if ($e->isSourceEntityInstanceOf(OutputElement::class)) {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
+            }
+            if ($e->isSourceEntityInstanceOf(InputSet::class)) {
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
             }
             throw $e;
