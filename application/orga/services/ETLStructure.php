@@ -321,7 +321,7 @@ class Orga_Service_ETLStructure
     {
         $classificationIndicators = array_map(
             function ($contextIndicator) { return $contextIndicator->getIndicator(); },
-            $orgaOrganization->getContextIndicators()
+            $orgaOrganization->getContextIndicators()->toArray()
         );
         $classificationIndicators = array_unique($classificationIndicators);
         foreach ($classificationIndicators as $classificationContextIndicator) {
