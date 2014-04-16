@@ -11,9 +11,9 @@ $.fn.parseFormErrors = function (request)
     if (typeof(response.errorMessages) !== 'undefined') {
         for (var x in response.errorMessages) {
             var xElementLine = $('#' + $(this).attr('id') + ' #' + x + '-line');
-            xElementLine.append('<span class="help-block errorMessage">' + response.errorMessages[x] + '</span>');
-            if (!(xElementLine.parent().hasClass('error'))) {
-                xElementLine.parent().addClass('error');
+            xElementLine.append('<span class="help-block col-md-offset-3 errorMessage">' + response.errorMessages[x] + '</span>');
+            if (!(xElementLine.hasClass('has-error'))) {
+                xElementLine.addClass('has-error');
             }
         }
     } else {
