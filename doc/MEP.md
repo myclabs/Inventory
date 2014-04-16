@@ -7,7 +7,6 @@
 
 ```
 sudo chmod 777 data/exports/migration-3.0/
-echo 'flush_all' | nc localhost 11211
 bin/inventory export -v
 ```
 
@@ -16,6 +15,7 @@ Les données sont exportées dans `data/exports/migration-3.0/`.
 - Déployer l'application en v3.0 **sans build update** (mais redémarrer le worker) :
 
 ```
+echo 'flush_all' | nc localhost 11211
 sudo deploy --no-update-db 3.0.?
 ```
 
