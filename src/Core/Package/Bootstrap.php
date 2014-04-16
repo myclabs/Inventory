@@ -1,23 +1,14 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Bootstrap
- */
 
-use DI\Container;
+use Interop\Container\ContainerInterface;
 
 /**
  * Classe de bootstrap : initialisation de l'application.
- *
- * @package    Core
- * @subpackage Bootstrap
  */
 abstract class Core_Package_Bootstrap extends Zend_Application_Module_Bootstrap
 {
-
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     public $container;
 
@@ -38,5 +29,4 @@ abstract class Core_Package_Bootstrap extends Zend_Application_Module_Bootstrap
     {
         $this->_run = $run;
     }
-
 }

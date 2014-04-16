@@ -1,7 +1,6 @@
 <?php
 
 use Core\Log\QueryLogger;
-use DI\Container;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
@@ -14,6 +13,7 @@ use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use Gedmo\Loggable\LoggableListener;
 use Gedmo\Translatable\TranslatableListener;
+use Interop\Container\ContainerInterface;
 use MyCLabs\ACL\ACL;
 use MyCLabs\ACL\Doctrine\ACLSetup;
 
@@ -29,7 +29,7 @@ return [
 
     // Configuration Doctrine
     'doctrine.proxies.mode' => AbstractProxyFactory::AUTOGENERATE_FILE_NOT_EXISTS,
-    'doctrine.configuration' => DI\factory(function (Container $c) {
+    'doctrine.configuration' => DI\factory(function (ContainerInterface $c) {
         $doctrineConfig = new Doctrine\ORM\Configuration();
 
         $cache = $c->get(Cache::class);
@@ -102,7 +102,7 @@ return [
     }),
 
     // Entity manager
-    EntityManager::class => DI\factory(function (Container $c) {
+    EntityManager::class => DI\factory(function (ContainerInterface $c) {
         $connectionArray = [
             'driver'        => $c->get('db.driver'),
             'user'          => $c->get('db.user'),
@@ -137,7 +137,7 @@ return [
     }),
 
     // Extensions Doctrine
-    TranslatableListener::class => DI\factory(function (Container $c) {
+    TranslatableListener::class => DI\factory(function (ContainerInterface $c) {
         $listener = new TranslatableListener();
         $listener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
         $listener->setDefaultLocale($c->get('translation.defaultLocale'));

@@ -1,6 +1,5 @@
 <?php
 
-use DI\Container;
 use Doctrine\Common\Cache\Cache;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Translator;

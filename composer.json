@@ -27,7 +27,7 @@
         "myclabs/muih": "0.1.*",
         "myclabs/work": "~0.2.0",
         "mnapoli/number-two": "~0.2.0",
-        "mnapoli/php-di": "~4.1@dev",
+        "mnapoli/php-di": "4.1.x-dev",
         "mnapoli/php-di-zf1": "*",
         "psr/log": "~1.0",
         "monolog/monolog": "~1.6",

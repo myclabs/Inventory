@@ -3,8 +3,35 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "5426958f4dd2ef1547422990b1d060dc",
+    "hash": "96d044a53c9631e629fb3a813b79adb7",
     "packages": [
+        {
+            "name": "container-interop/container-interop",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/container-interop/container-interop.git",
+                "reference": "b4274c871bfd1ae8d8e527ba11734f4df1573e48"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/container-interop/container-interop/zipball/b4274c871bfd1ae8d8e527ba11734f4df1573e48",
+                "reference": "b4274c871bfd1ae8d8e527ba11734f4df1573e48",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Interop\\Container\\": "src/Interop/Container/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
+            "time": "2014-03-16 14:50:05"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.1.2",
@@ -779,19 +806,20 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "4.1.0-beta1",
+            "version": "4.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "4b30cb1f079f68e2c674a07bba74cb90561d7e8b"
+                "reference": "dbb74593a414f1bb19199f68e996373702c447d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/4b30cb1f079f68e2c674a07bba74cb90561d7e8b",
-                "reference": "4b30cb1f079f68e2c674a07bba74cb90561d7e8b",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/dbb74593a414f1bb19199f68e996373702c447d0",
+                "reference": "dbb74593a414f1bb19199f68e996373702c447d0",
                 "shasum": ""
             },
             "require": {
+                "container-interop/container-interop": "~1.0",
                 "doctrine/annotations": "1.*",
                 "doctrine/cache": "1.*",
                 "mnapoli/phpdocreader": "~1.2",
@@ -822,7 +850,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2014-03-22 20:20:04"
+            "time": "2014-04-15 16:23:49"
         },
         {
             "name": "mnapoli/php-di-zf1",

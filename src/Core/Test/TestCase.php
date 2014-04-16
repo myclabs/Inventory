@@ -2,8 +2,8 @@
 
 namespace Core\Test;
 
-use DI\Container;
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -20,7 +20,7 @@ abstract class TestCase extends PHPUnit_Framework_TestCase
     protected $entityManager;
 
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     private $container;
 

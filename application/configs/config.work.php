@@ -5,7 +5,7 @@ use Core\Work\EventListener\SimpleEventListener;
 use Core\Work\Notification\EmailTaskNotifier;
 use Core\Work\Notification\TaskNotifier;
 use Core\Work\ServiceCall\ServiceCallTask;
-use DI\Container;
+use Interop\Container\ContainerInterface;
 use MyCLabs\Work\Dispatcher\RabbitMQWorkDispatcher;
 use MyCLabs\Work\Dispatcher\SimpleWorkDispatcher;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
@@ -24,7 +24,7 @@ return [
     'rabbitmq.port'     => 5672,
     'rabbitmq.user'     => 'myc-sense',
     'rabbitmq.password' => '',
-    'rabbitmq.queue'    => DI\factory(function (Container $c) {
+    'rabbitmq.queue'    => DI\factory(function (ContainerInterface $c) {
         return $c->get('application.name') . '-work';
     }),
 
@@ -37,7 +37,7 @@ return [
                 DI\link('rabbitmq.user'),
                 DI\link('rabbitmq.password')
             ),
-    AMQPChannel::class => DI\factory(function (Container $c) {
+    AMQPChannel::class => DI\factory(function (ContainerInterface $c) {
         /** @var AMQPConnection $connection */
         $connection = $c->get(AMQPConnection::class);
         $channel = $connection->channel();
@@ -49,7 +49,7 @@ return [
     }),
 
     // Work dispatcher
-    WorkDispatcher::class => DI\factory(function (Container $c) {
+    WorkDispatcher::class => DI\factory(function (ContainerInterface $c) {
         if ($c->get('rabbitmq.enabled')) {
             $channel = $c->get(AMQPChannel::class);
             $workDispatcher = new RabbitMQWorkDispatcher($channel, $c->get('rabbitmq.queue'));
@@ -63,7 +63,7 @@ return [
     }),
 
     // Worker
-    Worker::class => DI\factory(function (Container $c) {
+    Worker::class => DI\factory(function (ContainerInterface $c) {
         if ($c->get('rabbitmq.enabled')) {
             $channel = $c->get(AMQPChannel::class);
             $worker = new RabbitMQWorker($channel, $c->get('rabbitmq.queue'));

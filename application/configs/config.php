@@ -1,8 +1,8 @@
 <?php
 
 use Account\Domain\ACL\AccountAdminRole;
-use DI\Container;
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use MyCLabs\ACL\Doctrine\ACLSetup;
 use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
@@ -59,7 +59,7 @@ return [
     'locale.minSignificantFigures' => null,
 
     // Event manager
-    EventDispatcher::class => DI\factory(function (Container $c) {
+    EventDispatcher::class => DI\factory(function (ContainerInterface $c) {
         $dispatcher = new EventDispatcher();
 
         // User events (plus prioritaire)
@@ -92,7 +92,7 @@ return [
             ->constructorParameter('locales', DI\link('translation.languages')),
 
     // ACL
-    ACL::class => DI\factory(function (Container $c) {
+    ACL::class => DI\factory(function (ContainerInterface $c) {
         $em = $c->get(EntityManager::class);
 
         $cascadeStrategy = new SimpleCascadeStrategy($em);
