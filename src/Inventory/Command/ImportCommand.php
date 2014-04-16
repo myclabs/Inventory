@@ -110,12 +110,14 @@ class ImportCommand extends Command
                 ],
                 'callbacks' => function (Indicator $object) use ($classificationLibrary) {
                     $this->setProperty($object, 'library', $classificationLibrary);
+                    $classificationLibrary->addIndicator($object);
                 },
             ],
             'Classif_Model_Axis' => [
                 'class' => Axis::class,
                 'callbacks' => function (Axis $object) use ($classificationLibrary) {
                     $this->setProperty($object, 'library', $classificationLibrary);
+                    $classificationLibrary->addAxis($object);
                 },
             ],
             'Classif_Model_Member' => [
@@ -129,12 +131,14 @@ class ImportCommand extends Command
                 'class' => Context::class,
                 'callbacks' => function (Context $object) use ($classificationLibrary) {
                     $this->setProperty($object, 'library', $classificationLibrary);
+                    $classificationLibrary->addContext($object);
                 },
             ],
             'Classif_Model_ContextIndicator' => [
                 'class' => ContextIndicator::class,
                 'callbacks' => function (ContextIndicator $object) use ($classificationLibrary) {
                     $this->setProperty($object, 'library', $classificationLibrary);
+                    $classificationLibrary->addContextIndicator($object);
                 },
             ],
             'Techno\Domain\Category' => [

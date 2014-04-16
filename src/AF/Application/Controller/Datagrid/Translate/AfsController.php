@@ -45,7 +45,6 @@ class AF_Datagrid_Translate_AfsController extends UI_Controller_Datagrid
         foreach (AF::loadList($this->request) as $aF) {
             $data = array();
             $data['index'] = $aF->getId();
-            $data['identifier'] = $aF->getRef();
 
             foreach ($this->languages as $language) {
                 $locale = Core_Locale::load($language);

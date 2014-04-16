@@ -39,7 +39,6 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             $data = [];
             $data['index'] = $af->getId();
             $data['category'] = $this->cellList($af->getCategory()->getId());
-            $data['ref'] = $af->getRef();
             $data['label'] = $af->getLabel();
             $data['configuration'] = $this->cellLink($this->view->url([
                 'module'     => 'af',
@@ -75,10 +74,6 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
         $library = AFLibrary::load($this->getParam('library'));
 
         // Validation du formulaire
-        $ref = $this->getAddElementValue('ref');
-        if (empty($ref)) {
-            $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
         $idCategory = $this->getAddElementValue('category');
         if (empty($idCategory)) {
             $this->setAddElementErrorMessage('category', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -93,25 +88,12 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             /** @var $category Category */
             $category = Category::load($idCategory);
 
-            try {
-                $af = new AF($library, $ref);
-                $library->addAF($af);
-            } catch (Core_Exception_User $e) {
-                $this->setAddElementErrorMessage('ref', $e->getMessage());
-                $this->send();
-                return;
-            }
-            $af->setLabel($label);
+            $af = new AF($library, $label);
+            $library->addAF($af);
             $af->setCategory($category);
             $af->save();
 
-            try {
-                $this->entityManager->flush();
-            } catch (Core_ORM_DuplicateEntryException $e) {
-                $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
-                $this->send();
-                return;
-            }
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'added');
         }
         $this->send();
@@ -138,10 +120,6 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 }
                 $af->setLabel($newValue);
                 $this->data = $af->getLabel();
-                break;
-            case 'ref':
-                $af->setRef($newValue);
-                $this->data = $af->getRef();
                 break;
         }
         $af->save();

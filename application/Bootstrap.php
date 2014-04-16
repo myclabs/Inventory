@@ -162,15 +162,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Session namespace
-     */
-    protected function _initSessionNamespace()
-    {
-        $auth = Zend_Auth::getInstance();
-        $auth->setStorage(new Zend_Auth_Storage_Session($this->container->get('application.name')));
-    }
-
-    /**
      * Enregistre les plugins de Core.
      */
     protected function _initPluginCore()
@@ -317,6 +308,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         Type::addType(Calc_TypeMapping_Value::TYPE_NAME, Calc_TypeMapping_Value::class);
         Type::addType(Calc_TypeMapping_UnitValue::TYPE_NAME, Calc_TypeMapping_UnitValue::class);
+    }
+
+    /**
+     * Session namespace
+     */
+    protected function _initSessionNamespace()
+    {
+        $auth = Zend_Auth::getInstance();
+        $auth->setStorage(new Zend_Auth_Storage_Session($this->container->get('application.name')));
     }
 
     /**

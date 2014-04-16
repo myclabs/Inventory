@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\PersistentCollection;
+use Serializable;
 
 /**
  * @author matthieu.napoli
@@ -19,7 +20,7 @@ use Doctrine\ORM\PersistentCollection;
  * @author hugo.charbonnier
  * @author yoann.croizer
  */
-abstract class InputSet extends Core_Model_Entity implements \AF\Domain\Algorithm\InputSet
+abstract class InputSet extends Core_Model_Entity implements \AF\Domain\Algorithm\InputSet, Serializable
 {
     const QUERY_COMPLETION = 'completion';
 
@@ -29,10 +30,9 @@ abstract class InputSet extends Core_Model_Entity implements \AF\Domain\Algorith
     protected $id;
 
     /**
-     * Identifiant de l'AF
-     * @var string
+     * @var AF
      */
-    protected $refAF;
+    protected $af;
 
     /**
      * @var Input[]|Collection|PersistentCollection
@@ -58,7 +58,7 @@ abstract class InputSet extends Core_Model_Entity implements \AF\Domain\Algorith
     public function __construct(AF $af)
     {
         $this->inputs = new ArrayCollection();
-        $this->setAF($af);
+        $this->af = $af;
     }
 
     /**
@@ -253,7 +253,7 @@ abstract class InputSet extends Core_Model_Entity implements \AF\Domain\Algorith
      */
     public function getAF()
     {
-        return AF::loadByRef($this->refAF);
+        return $this->af;
     }
 
     /**
@@ -261,7 +261,7 @@ abstract class InputSet extends Core_Model_Entity implements \AF\Domain\Algorith
      */
     public function setAF(AF $af)
     {
-        $this->refAF = $af->getRef();
+        $this->af = $af;
     }
 
     /**
@@ -287,5 +287,33 @@ abstract class InputSet extends Core_Model_Entity implements \AF\Domain\Algorith
         }
 
         return $subInputSets;
+    }
+
+    /**
+     * Serialization en session
+     */
+    public function serialize()
+    {
+        $data = get_object_vars($this);
+
+        unset($data['af']);
+        $data['idAF'] = $this->af->getId();
+
+        return serialize($data);
+    }
+
+    public function unserialize($data)
+    {
+        $data = unserialize($data);
+
+        foreach ($data as $property => $value) {
+            if ($property === 'id') {
+                continue;
+            }
+            $this->$property = $value;
+        }
+
+        $entityManager = \Core\ContainerSingleton::getEntityManager();
+        $this->af = $entityManager->find(AF::class, $data['idAF']);
     }
 }

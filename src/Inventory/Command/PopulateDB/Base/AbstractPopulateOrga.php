@@ -5,6 +5,7 @@ namespace Inventory\Command\PopulateDB\Base;
 use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use AF\Domain\AF;
+use AF\Domain\AFLibrary;
 use AF\Domain\InputService;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\Group;
@@ -51,39 +52,52 @@ use User\Domain\UserService;
 abstract class AbstractPopulateOrga
 {
     /**
+     * @Inject
      * @var EntityManager
      */
     protected $entityManager;
 
     /**
+     * @Inject
      * @var ACL
      */
     protected $acl;
 
     /**
+     * @Inject
      * @var Orga_Service_OrganizationService
      */
     protected $organizationService;
 
     /**
+     * @Inject
      * @var InputService
      */
     protected $inputService;
 
     /**
+     * @Inject
      * @var Orga_Service_ETLData
      */
     protected $etlDataService;
 
     /**
+     * @Inject
      * @var UserService
      */
     protected $userService;
 
     /**
+     * @Inject
      * @var AccountRepository
      */
     protected $accountRepository;
+
+    /**
+     * @Inject("account.myc-sense")
+     * @var Account
+     */
+    protected $publicAccount;
 
     // Création d'une organisation.
     //  + createOrganization : -
@@ -142,24 +156,6 @@ abstract class AbstractPopulateOrga
     // Params : email, Granularity, [Member]
 
     abstract public function run(OutputInterface $output);
-
-    public function __construct(
-        EntityManager $entityManager,
-        Orga_Service_OrganizationService $organizationService,
-        ACL $acl,
-        InputService $inputService,
-        Orga_Service_ETLData $etlDataService,
-        UserService $userService,
-        AccountRepository $accountRepository
-    ) {
-        $this->entityManager = $entityManager;
-        $this->organizationService = $organizationService;
-        $this->acl = $acl;
-        $this->inputService = $inputService;
-        $this->etlDataService = $etlDataService;
-        $this->userService = $userService;
-        $this->accountRepository = $accountRepository;
-    }
 
     /**
      * @param Account $account
@@ -242,19 +238,18 @@ abstract class AbstractPopulateOrga
 
     /**
      * @param Orga_Model_Granularity $granularity
-     * @param Orga_Model_Member[] $members
+     * @param Orga_Model_Member[]    $members
      * @param Orga_Model_Granularity $inputGranularity
-     * @param string                 $refAF
+     * @param string                 $afLabel
      */
     protected function setAFForChildCells(
         Orga_Model_Granularity $granularity,
         array $members,
         Orga_Model_Granularity $inputGranularity,
-        $refAF
+        $afLabel
     ) {
-        $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)->setAF(
-            AF::loadByRef($refAF)
-        );
+        $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)
+            ->setAF($this->getAF($afLabel));
     }
 
     /**
@@ -527,5 +522,21 @@ abstract class AbstractPopulateOrga
     {
         $user = User::loadByEmail($email);
         $this->acl->grant($user, new CellObserverRole($user, $granularity->getCellByMembers($members)));
+    }
+
+    /**
+     * @param string $label
+     * @return AF
+     */
+    protected function getAF($label)
+    {
+        // Moche : par du principe qu'il y'a 1 seule bibliothèque
+        $afLibrary = AFLibrary::loadByAccount($this->publicAccount)[0];
+
+        $query = new \Core_Model_Query();
+        $query->filter->addCondition('library', $afLibrary);
+        $query->filter->addCondition('label', $label);
+
+        return AF::loadList($query)[0];
     }
 }

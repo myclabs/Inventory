@@ -109,7 +109,7 @@ echo $form->render();
     var resultsPreviewUrl = "<?=$this->resultsPreviewUrl?>";
     var urlParams = <?=json_encode($this->urlParams)?>;
     // Saisie en cours
-    var input = new AF.Input(afId, "<?=$af->getRef()?>", "<?=$this->mode?>", inputSetId, exitURL, urlParams, resultsPreviewUrl);
+    var input = new AF.Input(afId, "af<?=$af->getId()?>", "<?=$this->mode?>", inputSetId, exitURL, urlParams, resultsPreviewUrl);
 
     // Traductions
     // Statut avancement saisie

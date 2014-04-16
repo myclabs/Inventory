@@ -43,7 +43,7 @@ abstract class Core_Model_Entity
      *
      * @param Core_Model_Query $queryParameters Paramètres de la requête
      *
-     * @return Core_Model_Entity[]
+     * @return static[]
      */
     public static function loadList(Core_Model_Query $queryParameters = null)
     {

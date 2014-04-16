@@ -151,14 +151,12 @@ abstract class AbstractPopulateAF
     /**
      * @param AFLibrary $library
      * @param Category  $category
-     * @param string    $ref
      * @param string    $label
      * @return AF
      */
-    protected function createAF(AFLibrary $library, Category $category, $ref, $label)
+    protected function createAF(AFLibrary $library, Category $category, $label)
     {
-        $af = new AF($library, $ref);
-        $af->setLabel($label);
+        $af = new AF($library, $label);
         $af->save();
         $category->addAF($af);
         $library->addAF($af);
@@ -243,7 +241,7 @@ abstract class AbstractPopulateAF
         $subAF->setCalledAF($calledAF);
         $subAF->setMinInputNumber($minimumRepetition);
         $subAF->setFoldaway($foldaway);
-        return $this->createComponent($subAF, $aF,$parentGroup ,$ref, $label, $help, $visible, $foldaway);
+        return $this->createComponent($subAF, $aF,$parentGroup, $ref, $label, $help, $visible, $foldaway);
     }
 
     /**

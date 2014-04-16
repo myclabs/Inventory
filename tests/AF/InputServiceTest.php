@@ -129,6 +129,9 @@ class InputServiceTest extends TestCase
         parent::tearDown();
 
         if ($this->af) {
+            $this->comp1->delete();
+            $this->comp2->delete();
+            $this->comp3->delete();
             $this->af->delete();
             $this->af->getLibrary()->delete();
             $this->accountRepository->remove($this->af->getLibrary()->getAccount());
