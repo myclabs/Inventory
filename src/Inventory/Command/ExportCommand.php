@@ -68,5 +68,9 @@ class ExportCommand extends Command
         $output->writeln('<comment>Exporting AF</comment>');
         $data = AFCategory::loadRootCategories();
         file_put_contents($root . '/af.json', $serializer->serialize($data));
+
+        $output->writeln('<comment>Exporting Orga</comment>');
+        $data = \Orga_Model_Organization::loadList();
+        file_put_contents($root . '/orga.json', $serializer->serialize($data));
     }
 }
