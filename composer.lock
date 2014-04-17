@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "96d044a53c9631e629fb3a813b79adb7",
+    "hash": "760192f9a12de2556e9f01950b03694a",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -511,12 +511,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "73e5bbecbef311194085e30d8b7fd6516bc50425"
+                "reference": "841bdd5ca52d2849b8091c56f99e201d169e1639"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/73e5bbecbef311194085e30d8b7fd6516bc50425",
-                "reference": "73e5bbecbef311194085e30d8b7fd6516bc50425",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/841bdd5ca52d2849b8091c56f99e201d169e1639",
+                "reference": "841bdd5ca52d2849b8091c56f99e201d169e1639",
                 "shasum": ""
             },
             "require": {
@@ -527,7 +527,7 @@
                 "symfony/console": "2.*"
             },
             "require-dev": {
-                "phpunit/phpunit": "~3.7",
+                "phpunit/phpunit": "~4.0",
                 "satooshi/php-coveralls": "dev-master",
                 "symfony/yaml": "~2.1"
             },
@@ -555,7 +555,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -580,7 +580,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-04-07 13:38:39"
+            "time": "2014-04-17 04:39:26"
         },
         {
             "name": "dompdf/dompdf",
@@ -806,16 +806,16 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "4.1.x-dev",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "dbb74593a414f1bb19199f68e996373702c447d0"
+                "reference": "f6eb3e51406dfad1a9a5b2a5d0847def7b5d13b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/dbb74593a414f1bb19199f68e996373702c447d0",
-                "reference": "dbb74593a414f1bb19199f68e996373702c447d0",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/f6eb3e51406dfad1a9a5b2a5d0847def7b5d13b6",
+                "reference": "f6eb3e51406dfad1a9a5b2a5d0847def7b5d13b6",
                 "shasum": ""
             },
             "require": {
@@ -850,7 +850,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2014-04-15 16:23:49"
+            "time": "2014-04-17 07:12:22"
         },
         {
             "name": "mnapoli/php-di-zf1",
@@ -2110,16 +2110,16 @@
         },
         {
             "name": "zendframework/zendframework1",
-            "version": "1.12.5",
+            "version": "1.12.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zf1.git",
-                "reference": "828191781995123e2a5888a386ed827a4cd7695a"
+                "reference": "9adf10d1c5875a98047ea99613061a944ad17083"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zf1/zipball/828191781995123e2a5888a386ed827a4cd7695a",
-                "reference": "828191781995123e2a5888a386ed827a4cd7695a",
+                "url": "https://api.github.com/repos/zendframework/zf1/zipball/9adf10d1c5875a98047ea99613061a944ad17083",
+                "reference": "9adf10d1c5875a98047ea99613061a944ad17083",
                 "shasum": ""
             },
             "require": {
@@ -2153,7 +2153,7 @@
                 "ZF1",
                 "framework"
             ],
-            "time": "2014-03-07 16:13:40"
+            "time": "2014-04-15 16:50:58"
         }
     ],
     "packages-dev": [
@@ -2766,7 +2766,6 @@
     "stability-flags": {
         "doctrine/orm": 20,
         "gedmo/doctrine-extensions": 20,
-        "mnapoli/php-di": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "mnapoli/metaconsole": 20
