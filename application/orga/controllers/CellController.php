@@ -141,6 +141,11 @@ class Orga_CellController extends Core_Controller
             $currentCellPurpose .= __('DW', 'name', 'analyses');
         }
         $this->view->assign('currentCellPurpose', $currentCellPurpose);
+        $currentAxes = $granularity->getAxes();
+        $this->view->assign(
+            'refAxes',
+            json_encode(array_map(function ($axis) { return $axis->getRef(); }, $currentAxes))
+        );
         $this->setActiveMenuItemOrganization($organization->getId());
 
         $isUserAllowedToEditOrganization = $this->acl->isAllowed(

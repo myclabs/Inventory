@@ -99,7 +99,7 @@ class CellViewModel
     /**
      * @var int
      */
-    public $inventoryCompletedInputsNumber = 0;
+    public $inventoryFinishedInputsNumber = 0;
 
     /**
      * @var int

@@ -84,7 +84,7 @@ class CellViewModelFactory
         $cellViewModel->tag = $cell->getTag();
 
         foreach ($cell->getMembers() as $member) {
-            $cellViewModel->members[] = $member->getLabel();
+            $cellViewModel->members[$member->getAxis()->getRef()] = $member->getLabel();
         }
 
         // Administrateurs.
@@ -133,6 +133,7 @@ class CellViewModelFactory
 
         // Inventory
         $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
+        $cellViewModel->inventoryStatusTitle = $this->inventoryStatusList[$cellViewModel->inventoryStatus];
         if (($withInventory === true)
             || (($withInventory !== false)
                 && (($this->acl->isAllowed($user, Actions::ANALYZE, $cell))))
@@ -151,23 +152,19 @@ class CellViewModelFactory
                 ) {
                     $cellViewModel->showInventory = true;
 
-                    $cellViewModel->inventoryStatusTitle = $this->inventoryStatusList[$cellViewModel->inventoryStatus];
-
-                    $cellViewModel->inventoryCompletion = 0;
                     $cellViewModel->inventoryNotStartedInputsNumber = 0;
                     $cellViewModel->inventoryStartedInputsNumber = 0;
-                    $cellViewModel->inventoryCompletedInputsNumber = 0;
+                    $cellViewModel->inventoryFinishedInputsNumber = 0;
                     if (($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)
                         || ($cell->getGranularity() === $granularityForInventoryStatus))
                         && ($cell->getGranularity()->getInputConfigGranularity() !== null)) {
                         if ($cell->getAFInputSetPrimary() !== null) {
-                            $cellViewModel->inventoryCompletion += $cell->getAFInputSetPrimary()->getCompletion();
-                            if ($cell->getAFInputSetPrimary()->getCompletion() == 0) {
+                            if ($cell->getAFInputSetPrimary()->isFinished()) {
+                                $cellViewModel->inventoryFinishedInputsNumber ++;
+                            } else if ($cell->getAFInputSetPrimary()->getCompletion() == 0) {
                                 $cellViewModel->inventoryNotStartedInputsNumber ++;
-                            } else if ($cell->getAFInputSetPrimary()->getCompletion() < 100) {
-                                $cellViewModel->inventoryStartedInputsNumber ++;
                             } else {
-                                $cellViewModel->inventoryCompletedInputsNumber ++;
+                                $cellViewModel->inventoryStartedInputsNumber ++;
                             }
                         } else {
                             $cellViewModel->inventoryNotStartedInputsNumber ++;
@@ -184,13 +181,12 @@ class CellViewModelFactory
                             foreach ($relevantChildInputCells as $childInputCell) {
                                 $childAFInputSetPrimary = $childInputCell->getAFInputSetPrimary();
                                 if ($childAFInputSetPrimary !== null) {
-                                    $cellViewModel->inventoryCompletion += $childInputCell->getAFInputSetPrimary()->getCompletion();
-                                    if ($childInputCell->getAFInputSetPrimary()->getCompletion() == 0) {
+                                    if ($childInputCell->getAFInputSetPrimary()->isFinished()) {
+                                        $cellViewModel->inventoryFinishedInputsNumber ++;
+                                    } else if ($childInputCell->getAFInputSetPrimary()->getCompletion() == 0) {
                                         $cellViewModel->inventoryNotStartedInputsNumber ++;
-                                    } else if ($childInputCell->getAFInputSetPrimary()->getCompletion() < 100) {
-                                        $cellViewModel->inventoryStartedInputsNumber ++;
                                     } else {
-                                        $cellViewModel->inventoryCompletedInputsNumber ++;
+                                        $cellViewModel->inventoryStartedInputsNumber ++;
                                     }
                                 } else {
                                     $cellViewModel->inventoryNotStartedInputsNumber ++;
@@ -198,9 +194,11 @@ class CellViewModelFactory
                             }
                         }
                     }
-                    $totalInventoryInputs = $cellViewModel->inventoryNotStartedInputsNumber + $cellViewModel->inventoryStartedInputsNumber + $cellViewModel->inventoryCompletedInputsNumber;
+                    $totalInventoryInputs = $cellViewModel->inventoryNotStartedInputsNumber + $cellViewModel->inventoryStartedInputsNumber + $cellViewModel->inventoryFinishedInputsNumber;
                     if ($totalInventoryInputs > 0) {
-                        $cellViewModel->inventoryCompletion /= $totalInventoryInputs;
+                        $cellViewModel->inventoryCompletion = $cellViewModel->inventoryFinishedInputsNumber / $totalInventoryInputs * 100;
+                    } else {
+                        $cellViewModel->inventoryCompletion = 0;
                     }
                     $cellViewModel->inventoryCompletion = round($cellViewModel->inventoryCompletion);
                 }
