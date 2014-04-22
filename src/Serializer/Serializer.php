@@ -24,13 +24,19 @@ class Serializer
     private $config;
 
     /**
+     * @var bool
+     */
+    private $ignoreObjectsWithoutConfig;
+
+    /**
      * @var \Closure[]
      */
     private $callbacks = [];
 
-    public function __construct(array $config)
+    public function __construct(array $config, $ignoreObjectsWithoutConfig=false)
     {
         $this->config = $config;
+        $this->ignoreObjectsWithoutConfig = $ignoreObjectsWithoutConfig;
     }
 
     public function serialize($data)
@@ -120,6 +126,9 @@ class Serializer
         if (isset($this->config[$serialized->__objectClassName])) {
             $config = $this->config[$serialized->__objectClassName];
         } else {
+            if ($this->ignoreObjectsWithoutConfig) {
+                return $objectHash;
+            }
             $config = [];
         }
 
@@ -174,7 +183,25 @@ class Serializer
         if (isset($this->config[$className])) {
             $config = $this->config[$className];
         } else {
+            if ($this->ignoreObjectsWithoutConfig) {
+                return;
+            }
             $config = [];
+        }
+
+        // Ignore class
+        if (isset($config['exclude']) && $config['exclude'] === true) {
+            // Callbacks
+            if (isset($config['callbacks'])) {
+                $callables = $config['callbacks'];
+                if (! is_array($callables)) {
+                    $callables = [ $callables ];
+                }
+                foreach ($callables as $callable) {
+                    $callable($vars);
+                }
+            }
+            return;
         }
 
         // Class alias
@@ -238,7 +265,7 @@ class Serializer
     {
         $property->setAccessible(true);
 
-        if (is_array($value)) {
+        if (is_array($value) && (strpos(reset($value), '@@@') === 0)) {
             $collection = new ArrayCollection();
             $property->setValue($object, $collection);
 
@@ -250,12 +277,13 @@ class Serializer
             return;
         }
 
-        if (strpos($value, '@@@') === 0) {
+        if (!is_array($value) && strpos($value, '@@@') === 0) {
             $this->callbacks[] = function () use ($property, $object, $value) {
                 $property->setValue($object, $this->objectMap[$value]);
             };
-        } else {
-            $property->setValue($object, $value);
+            return;
         }
+
+        $property->setValue($object, $value);
     }
 }

@@ -133,6 +133,16 @@ class AF extends Core_Model_Entity
     }
 
     /**
+     * Get the ref attribute.
+     * @deprecated Sera supprimée dans la 3.1
+     * @return string
+     */
+    public function getRef()
+    {
+        return $this->ref;
+    }
+
+    /**
      * Retourne les algos de l'AF
      * @return Algo[]
      */

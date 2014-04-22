@@ -12,6 +12,9 @@ use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
+use AF\Domain\InputSet\InputSet;
+use AF\Domain\InputSet\PrimaryInputSet;
+use AF\Domain\Output\OutputTotal;
 use Classification\Domain\Axis;
 use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Context;
@@ -19,6 +22,8 @@ use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
 use Core_Exception_NotFound;
 use Doctrine\ORM\EntityManager;
+use Exception;
+use Orga\Model\ACL\CellAdminRole;
 use Parameter\Domain\Family\Cell;
 use Parameter\Domain\Family\Dimension;
 use Parameter\Domain\Family\Family;
@@ -31,6 +36,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
+use User\Domain\ACL\AdminRole;
 use User\Domain\User;
 
 /**
@@ -88,7 +94,9 @@ class ImportCommand extends Command
             $refContext = $data['refContext'];
             $refIndicator = $data['refIndicator'];
             if ($refContext && $refIndicator) {
-                $algo->setContextIndicator(
+                $this->setProperty(
+                    $algo,
+                    'contextIndicator',
                     $classificationLibrary->getContextIndicatorByRef($refContext, $refIndicator)
                 );
             }
@@ -160,11 +168,13 @@ class ImportCommand extends Command
             \AF\Domain\Category::class => [
                 'callbacks' => function (\AF\Domain\Category $category) use ($afLibrary) {
                     $this->setProperty($category, 'library', $afLibrary);
+                    $afLibrary->addCategory($category);
                 },
             ],
             AF::class => [
                 'callbacks' => function (AF $af) use ($afLibrary) {
                     $this->setProperty($af, 'library', $afLibrary);
+                    $afLibrary->addAF($af);
                 },
             ],
             FixedIndex::class => [
@@ -213,6 +223,118 @@ class ImportCommand extends Command
                     },
                 ],
             ],
+            \Orga_Model_Organization::class => [
+                'callbacks' => function (\Orga_Model_Organization $object) use ($account) {
+                        $this->setProperty($object, 'account', $account);
+                    },
+                'properties' => [
+                    'acl' => [ 'exclude' => true ],
+                    'adminRoles' => [ 'exclude' => true ],
+                ],
+            ],
+            \Orga_Model_Axis::class => [],
+            \Orga_Model_Member::class => [],
+            \Orga_Model_Granularity::class => [
+                'properties' => [
+                    'dWCube' => [ 'exclude' => true ],
+                ],
+            ],
+            \Orga_Model_Cell::class => [
+                'properties' => [
+                    'dWCube' => [ 'exclude' => true ],
+                    'dWResults' => [ 'exclude' => true ],
+                    'socialCommentsForAFInputSetPrimary' => [ 'exclude' => true ],
+                    'socialGenericActions' => [ 'exclude' => true ],
+                    'docLibraryForSocialGenericActions' => [ 'exclude' => true ],
+                    'socialContextActions' => [ 'exclude' => true ],
+                    'docLibraryForSocialContextActions' => [ 'exclude' => true ],
+                    'acl' => [ 'exclude' => true ],
+                    'adminRoles' => [ 'exclude' => true ],
+                    'managerRoles' => [ 'exclude' => true ],
+                    'contributorRoles' => [ 'exclude' => true ],
+                    'observerRoles' => [ 'exclude' => true ],
+                ],
+            ],
+            PrimaryInputSet::class => [
+                'properties' => [
+                    'refAF' => [ 'name' => 'af' ],
+                    'af' => [
+                        'callback' => function ($var) use ($afLibrary) {
+                                foreach ($afLibrary->getAFList() as $af) {
+                                    if ($af->getRef() == $var) {
+                                        return $af;
+                                    }
+                                }
+                                throw new Exception('AF "' . $var . '" NOT FOUND !');
+                            },
+                    ]
+                ],
+            ],
+            InputSet::class => [
+                'properties' => [
+                    'refAF' => [ 'name' => 'af' ],
+                    'af' => [
+                        'callback' => function ($var) use ($afLibrary) {
+                                foreach ($afLibrary->getAFList() as $af) {
+                                    if ($af->getRef() == $var) {
+                                        return $af;
+                                    }
+                                }
+                            },
+                    ]
+                ],
+            ],
+            OutputTotal::class => [
+                'properties' => [
+                    'refIndicator' => [ 'name' => 'indicator' ],
+                    'indicator' => [
+                        'callback' => function ($var) use ($classificationLibrary) {
+                                $queryIndicator = new \Core_Model_Query();
+                                $queryIndicator->filter->addCondition('library', $classificationLibrary);
+                                $queryIndicator->filter->addCondition('ref', $var);
+                                $indicatorList = Indicator::loadList($queryIndicator);
+                                return reset($indicatorList);
+                            },
+                    ]
+                ],
+            ],
+            \Orga_Model_GranularityReport::class => [ 'exclude' => true ],
+            \Orga_Model_CellReport::class => [ 'exclude' => true ],
+            \DW_Model_Cube::class => [
+                'properties' => [
+                    'axes' => [ 'exclude' => true ],
+                    'indicators' => [ 'exclude' => true ],
+                    'reports' => [ 'exclude' => true ],
+                ],
+            ],
+            \DW_Model_Axis::class => [ 'exclude' => true ],
+            \DW_Model_Member::class => [ 'exclude' => true ],
+            \DW_Model_Indicator::class => [ 'exclude' => true ],
+            \DW_Model_Result::class => [ 'exclude' => true ],
+            \DW_Model_Report::class => [
+                'exclude' => true
+            ],
+            \DW_Model_Filter::class => [
+                'exclude' => true
+            ],
+            'User\Domain\ACL\Role\AdminRole' => [
+                'exclude' => true,
+                'callbacks' => [
+                    function ($vars) {
+                    }
+                ]
+            ],
+            'User\Domain\ACL\Authorization\NamedResourceAuthorization' => [ 'exclude' => true ],
+            'User\Domain\ACL\Resource\NamedResource' => [ 'exclude' => true ],
+            'User\Domain\ACL\Role\UserRole' => [ 'exclude' => true ],
+            'User\Domain\ACL\Authorization\UserAuthorization' => [ 'exclude' => true ],
+            'Orga\Model\ACL\OrganizationAuthorization' => [ 'exclude' => true ],
+            'Orga\Model\ACL\Role\OrganizationAdminRole' => [ 'exclude' => true ],
+            'Orga\Model\ACL\CellAuthorization' => [ 'exclude' => true ],
+            'Orga\Model\ACL\Role\CellAdminRole' => [ 'exclude' => true ],
+            'Orga\Model\ACL\Role\CellManagerRole' => [ 'exclude' => true ],
+            'Orga\Model\ACL\Role\CellContributorRole' => [ 'exclude' => true ],
+            'Orga\Model\ACL\Role\CellObserverRole' => [ 'exclude' => true ],
         ]);
 
         // Import users
@@ -265,9 +387,25 @@ class ImportCommand extends Command
                 $object->save();
             }
         }
+        $this->entityManager->flush();
+
+        // Import Orga
+        $output->writeln('<comment>Importing Orga</comment>');
+        $objects = $serializer->unserialize(file_get_contents($root . '/orga.json'));
+        foreach ($objects as $object) {
+            if (($object instanceof \Core_Model_Entity) && !($object instanceof User)) {
+                $object->save();
+            }
+        }
 
         $this->entityManager->flush();
         $this->entityManager->commit();
+
+        // Regenerate DW cubes.
+        $queryOrgaAccount = new \Core_Model_Query();
+        $queryOrgaAccount->filter->addCondition('account', $account);
+
+        // Import DW reports and filter
     }
 
     private function setProperty($object, $property, $value)
