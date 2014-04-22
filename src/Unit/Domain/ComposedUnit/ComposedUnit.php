@@ -3,6 +3,7 @@
 namespace Unit\Domain\ComposedUnit;
 
 use Core_Tools;
+use Doctrine\Common\Util\ClassUtils;
 use Unit\Domain\Unit\Unit;
 use Unit\Domain\Unit\ExtendedUnit;
 use Unit\Domain\PhysicalQuantity;
@@ -271,7 +272,7 @@ class ComposedUnit
                     $normalizedUnit->components[] = $unitArray;
                 }
             }
-            usort($normalizedUnit->components, array('Unit\Domain\ComposedUnit\ComposedUnit', 'orderComponents'));
+            usort($normalizedUnit->components, [$this, 'orderComponents']);
             $normalizedUnit->setRef();
             return $normalizedUnit;
         }
@@ -353,9 +354,10 @@ class ComposedUnit
             if ($unitArrayA['exponent'] < $unitArrayB['exponent']) {
                 return 1;
             }
+            return 0;
         } else {
-            $classA = get_class($unitArrayA['unit']);
-            $classB = get_class($unitArrayB['unit']);
+            $classA = ClassUtils::getClass($unitArrayA['unit']);
+            $classB = ClassUtils::getClass($unitArrayB['unit']);
 
             if ($classA == $classB) {
                 $idA = $unitArrayA['unit']->getKey();
@@ -369,16 +371,16 @@ class ComposedUnit
                 return 0;
             }
 
-            if ($classA == 'Unit\Domain\DiscreteUnit') {
+            if ($classA == DiscreteUnit::class) {
                 return -1;
             }
-            if ($classA == 'Unit\Domain\StandardUnit') {
+            if ($classA == StandardUnit::class) {
                 return 1;
             }
-            if ($classB == 'Unit\Domain\StandardUnit') {
+            if ($classB == StandardUnit::class) {
                 return -1;
             }
-            if ($classB == 'Unit\Domain\DiscreteUnit') {
+            if ($classB == DiscreteUnit::class) {
                 return 1;
             }
             return 0;
