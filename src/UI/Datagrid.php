@@ -1,7 +1,9 @@
 <?php
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Collapse;
+use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Modal;
 
 /**
  * Fichier de la classe Datagrid.
@@ -124,7 +126,7 @@ class UI_Datagrid extends UI_Generic
     /**
      * Définition du formulaire affiché dans le popup d'ajout. Null = UI_Form par défaut.
      *
-     * @var   UI_Form
+     * @var   GenericTag
      */
     public $addPanelForm = null;
 
@@ -468,8 +470,10 @@ class UI_Datagrid extends UI_Generic
         $this->filterCollapse = new Collapse();
         $this->filterCollapse->setTitleContent($this->filterCollapseTitle);
         $this->filterConfirmButton = new Button(__('UI', 'verb', 'filter'));
+        $this->filterConfirmButton->prependContent(' ');
         $this->filterConfirmButton->prependContent(new Icon('search-plus'));
         $this->filterResetButton = new Button(__('UI', 'verb', 'reset'));
+        $this->filterResetButton->prependContent(' ');
         $this->filterResetButton->prependContent(new Icon('search-minus'));
         $this->filterIconResetFieldSuffix = 'times';
         $this->_defaultSortting['state'] = false;
@@ -624,7 +628,7 @@ class UI_Datagrid extends UI_Generic
      */
     protected function initFilterCollapse()
     {
-        $this->filterCollapse->setAttribute('id', $this->id.'_filter');
+        $this->filterCollapse->getCollapse()->setAttribute('id', $this->id.'_filter');
 
         $datagridSession = $this->getDatagridSession();
         // Vérification de la présence de valeur par défaut nécéssitant l'affichage du l'indicateur.
@@ -647,9 +651,13 @@ class UI_Datagrid extends UI_Generic
         $datagridSession = $this->getDatagridSession();
 
         // Création d'un formulaire contenant les champs du filtre.
-        $formFilter = new UI_Form($this->id.'_filterForm');
+        $formFilter = new GenericTag('form');
+        $formFilter->setAttribute('id', $this->id.'_filterForm');
+        $formFilter->addClass('form-horizontal');
+
         $filters = array_merge($this->_cols, $this->_customFilters);
         foreach ($filters as $column) {
+            /** @var UI_Datagrid_Col_Generic $column */
             if ($column->filterName !== null) {
                 if (isset($datagridSession['filters'][$column->getFullFilterName($this)])) {
                     $defaultValue = $datagridSession['filters'][$column->getFullFilterName($this)];
@@ -658,21 +666,26 @@ class UI_Datagrid extends UI_Generic
                 }
                 $columnFilterElement = $column->getFilterFormElement($this, $defaultValue);
                 if ($columnFilterElement !== null) {
-                    $formFilter->addElement($columnFilterElement);
+                    $formFilter->appendContent($columnFilterElement);
                 }
             }
         }
-        $scriptHideWrapper = '$(\'#'.$this->id.'_filter_wrapper\').collapse(\'hide\');';
-        $filterElement = new UI_Form_Element_HTML($this->id.'-filter');
-        $this->filterConfirmButton->setAttribute('onclick', $this->id.'.filter();'.$scriptHideWrapper);
-        $filterElement->content = $this->filterConfirmButton->getHTML();
-        $formFilter->addActionElement($filterElement);
-        $resetElement = new UI_Form_Element_HTML($this->id.'-resetFilter');
-        $this->filterResetButton->setAttribute('onclick', $this->id.'.resetFilter();'.$this->id.'.filter();'.$scriptHideWrapper);
-        $resetElement->content = $this->filterResetButton->getHTML();
-        $formFilter->addActionElement($resetElement);
 
-        $this->filterCollapse->setContent($formFilter->getHTML());
+        $actionWrapper = new GenericTag('div');
+        $actionWrapper->addClass('col-xs-10');
+        $actionWrapper->addClass('col-xs-offset-2');
+        $actionGroup = new GenericTag('div', $actionWrapper);
+        $actionGroup->addClass('form-group');
+        $formFilter->appendContent($actionGroup);
+
+        $scriptHideWrapper = '$(\'#'.$this->id.'_filter\').collapse(\'hide\');';
+        $this->filterConfirmButton->setAttribute('onclick', $this->id.'.filter();'.$scriptHideWrapper);
+        $actionWrapper->appendContent($this->filterConfirmButton);
+        $actionWrapper->appendContent(' ');
+        $this->filterResetButton->setAttribute('onclick', $this->id.'.resetFilter();'.$this->id.'.filter();'.$scriptHideWrapper);
+        $actionWrapper->appendContent($this->filterResetButton);
+
+        $this->filterCollapse->setContent($formFilter);
 
         return $this->filterCollapse->getHTML();
     }
@@ -685,31 +698,36 @@ class UI_Datagrid extends UI_Generic
     protected function getFilterScript()
     {
         $this->initFilterCollapse();
-        $datagridSession = $this->getDatagridSession();
 
         $filterScript = '';
 
         // Récupération des scripts des éléments du formulaire.
         $filters = array_merge($this->_cols, $this->_customFilters);
         foreach ($filters as $column) {
+            /** @var UI_Datagrid_Col_Generic $column */
             if ($column->filterName !== null) {
-                if (isset($datagridSession['script'][$column->getFullFilterName($this)])) {
-                    $defaultValue = $datagridSession['script'][$column->getFullFilterName($this)];
-                } else {
-                    $defaultValue = null;
-                }
-                $columnFilterElement = $column->getFilterFormElement($this, $defaultValue);
-                if ($columnFilterElement !== null) {
-                    $filterScript .= $columnFilterElement->getElement()->getScript();
+                if (($column instanceof UI_Datagrid_Col_List)
+                    && ($column->fieldType === UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE)) {
+                    $options = [
+                        'allowClear' => 'true',
+
+                    ];
+                    if ($column->multiple) {
+                        if ($column->dynamicList) {
+                            $options['multiple'] = 'true';
+                        }
+                    }
+                    $filterScript .= '$("#'.$column->getFilterFormId($this).'").select2('.
+                        Zend_Json::encode($options, false, ['enableJsonExprFinder' => true]).
+                    ');';
                 }
             }
         }
 
-        $filterScript .= $this->filterCollapse->getScript();
-
         // Ajout de la fonction Reinitialiser à la datagrid
         $filterScript .= $this->id.'.resetFilter = function() {';
         foreach ($filters as $column) {
+            /** @var UI_Datagrid_Col_Generic $column */
             if ($column->filterName !== null) {
                 $filterScript .= $column->getResettingFilter($this);
             }
@@ -725,20 +743,22 @@ class UI_Datagrid extends UI_Generic
     protected function initAddForm()
     {
         if ($this->addPanelForm !== null) {
-            $this->addPanelForm->setRef($this->id.'_addForm');
+            $this->addPanelForm->setAttribute('id', $this->id.'_addForm');
         } else {
-            $this->addPanelForm = new UI_Form($this->id.'_addForm');
+            $this->addPanelForm = new GenericTag('form');
+            $this->addPanelForm->setAttribute('id', $this->id.'_addForm');
+            $this->addPanelForm->setAttribute('method', 'POST');
+            $this->addPanelForm->addClass('form-horizontal');
             foreach ($this->_cols as $column) {
                 if ($column->addable == true) {
                     $columnAddElement = $column->getAddFormElement($this);
                     if ($columnAddElement !== null) {
-                        $this->addPanelForm->addElement($columnAddElement);
+                        $this->addPanelForm->appendContent($columnAddElement);
                     }
                 }
             }
         }
-        $this->addPanelForm->setAction($this->getActionUrl('addelement'));
-        $this->addPanelForm->setAjax(null, 'parse'.$this->id.'AddFormValidation');
+        $this->addPanelForm->setAttribute('action', $this->getActionUrl('addelement'));
     }
 
     /**
@@ -754,11 +774,43 @@ class UI_Datagrid extends UI_Generic
 
         // Ajout des scripts du formulaire.
         $addScript .= $this->addPanelForm->getScript();
+        foreach ($this->_cols as $column) {
+            if ($column->addable === true) {
+                if (($column instanceof UI_Datagrid_Col_LongText)
+                    && ($column->textileEditor)) {
+                    $addScript .= '$("#'.$column->getAddFormElementId($this).'").markItUp(mySettings);';
+                }
+                if (($column instanceof UI_Datagrid_Col_List)
+                    && ($column->fieldType === UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE)) {
+                    $options = [
+                        'allowClear' => 'true',
+
+                    ];
+                    if ($column->multiple) {
+                        if ($column->dynamicList) {
+                            $options['multiple'] = 'true';
+                        }
+                    }
+                    if ($column->dynamicList) {
+                        $options['ajax'] = [
+                                'url' => $column->getUrlDynamicList($this, 'add'),
+                                'dataType' => "json",
+                                'quietMillis' => 200,
+                                'data' => new Zend_Json_Expr('function(term, page) { return {q: term} }'),
+                                'results' => new Zend_Json_Expr('function(data, page) { return {results: data} }')
+                            ];
+                    }
+                    $addScript .= '$("#'.$column->getAddFormElementId($this).'").select2('.
+                        Zend_Json::encode($options, false, ['enableJsonExprFinder' => true]).
+                    ');';
+                }
+            }
+        }
 
         // Ajout d'une fonction d'encapsulation de l'ajout.
-        $addScript .= '$.fn.parse'.$this->id.'AddFormValidation = function(response) {';
-        $addScript .= 'addMessage(response.message, response.type);';
-        $addScript .= 'this.get(0).reset();';
+        $addScript .= 'new AjaxForm(\'#'.$this->id.'_addForm\');';
+        $addScript .= '$(\'#'.$this->id.'_addForm\').on(\'successSubmit\', function () {';
+        $addScript .= 'this.reset();';
         if ($this->automaticFiltering === true) {
             if ($this->pagination === true) {
                 $addScript .= 'var paginator = '.$this->id.'.Datagrid.getState().pagination.paginator;';
@@ -769,7 +821,7 @@ class UI_Datagrid extends UI_Generic
             }
         }
         $addScript .= '$(\'#'.$this->id.'_addPanel\').modal(\'hide\');';
-        $addScript .= '};';
+        $addScript .= '});';
 
         return $addScript;
     }
@@ -786,6 +838,7 @@ class UI_Datagrid extends UI_Generic
         $add = '<div>';
 
         $addButton = new Button($this->addButtonLabel);
+        $addButton->prependContent(' ');
         $addButton->prependContent(new Icon($this->addButtonIcon));
         $addButton->showModal($this->id.'_addPanel');
         $add .= $addButton->getHTML();
@@ -794,21 +847,25 @@ class UI_Datagrid extends UI_Generic
 
         // Ajout du popup d'ajout.
         $buttonConfirmAddPanel = new Button($this->addPanelConfirmLabel, Button::TYPE_PRIMARY);
+        $buttonConfirmAddPanel->prependContent(' ');
         $buttonConfirmAddPanel->prependContent(new Icon($this->addPanelConfirmIcon));
         $buttonConfirmAddPanel->setAttribute('onclick', '$(\'#'.$this->id.'_addForm\').submit();');
 
         $buttonCancelAddPanel = new Button($this->addPanelCancelLabel);
+        $buttonCancelAddPanel->prependContent(' ');
         $buttonCancelAddPanel->prependContent(new Icon($this->addPanelCancelIcon));
         $buttonCancelAddPanel->closeModal($this->id.'_addPanel');
         $resetAction = '$(\'#'.$this->id.'_addForm\').get(0).reset();$(\'#'.$this->id.'_addForm\').eraseFormErrors();';
         $buttonCancelAddPanel->setAttribute('onclick', $resetAction);
 
-        $addPanel = new UI_Popup_Static($this->id.'_addPanel');
-        $addPanel->addAttribute('class', 'large');
-        $addPanel->title = $this->addPanelTitle;
-        $addPanel->footer = $buttonConfirmAddPanel->getHTML().$buttonCancelAddPanel->getHTML();
-        $addPanel->body = $this->addPanelForm->getHTML();
-        $addPanel->closeWithClick = false;
+        $addPanel = new Modal();
+        $addPanel->setAttribute('id', $this->id.'_addPanel');
+        $addPanel->large();
+        $addPanel->addTitle($this->addPanelTitle);
+        $addPanel->addDefaultDismissButton();
+        $addPanel->setFooterContent($buttonConfirmAddPanel->getHTML().$buttonCancelAddPanel->getHTML());
+        $addPanel->setContent($this->addPanelForm->getHTML());
+        $addPanel->setBackdropStatic();
 
         $add .= $addPanel->getHTML();
 
@@ -848,17 +905,21 @@ class UI_Datagrid extends UI_Generic
 
         // Ajout du popup de supppression.
         $buttonConfirmDeletePanel = new Button($this->deletePanelConfirmLabel, Button::TYPE_PRIMARY);
+        $buttonConfirmDeletePanel->prependContent(' ');
         $buttonConfirmDeletePanel->prependContent(new Icon($this->deletePanelConfirmIcon));
         $buttonConfirmDeletePanel->closeModal($this->id.'_deletePanel');
 
         $buttonCancelDeletePanel = new Button($this->deletePanelCancelLabel);
+        $buttonCancelDeletePanel->prependContent(' ');
         $buttonCancelDeletePanel->prependContent(new Icon($this->deletePanelCancelIcon));
         $buttonCancelDeletePanel->closeModal($this->id.'_deletePanel');
 
-        $deletePanel = new UI_Popup_Static($this->id.'_deletePanel');
-        $deletePanel->title = $this->deletePanelTitle;
-        $deletePanel->footer = $buttonConfirmDeletePanel->getHTML().$buttonCancelDeletePanel->getHTML();
-        $deletePanel->body = $this->deletePanelText;
+        $deletePanel = new Modal();
+        $deletePanel->setAttribute('id', $this->id.'_deletePanel');
+        $deletePanel->addTitle($this->deletePanelTitle);
+        $deletePanel->addDefaultDismissButton();
+        $deletePanel->setFooterContent($buttonConfirmDeletePanel->getHTML().$buttonCancelDeletePanel->getHTML());
+        $deletePanel->setContent($this->deletePanelText);
 
         $delete .= $deletePanel->getHTML();
 

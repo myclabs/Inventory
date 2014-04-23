@@ -14,10 +14,6 @@ AF\Domain\AF:
         strategy: AUTO
 
   fields:
-    ref:
-      type: string
-      nullable: false
-      unique: true
     label:
       type: string
       nullable: true

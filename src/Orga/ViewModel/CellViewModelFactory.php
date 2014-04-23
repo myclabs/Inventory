@@ -4,7 +4,7 @@ namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
 use Doctrine\Common\Collections\Criteria;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use Orga_Model_Cell;
 use User\Domain\User;
@@ -16,9 +16,9 @@ use AF\Domain\InputSet\PrimaryInputSet;
 class CellViewModelFactory
 {
     /**
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @var array
@@ -31,12 +31,9 @@ class CellViewModelFactory
     public $inputStatusList;
 
 
-    /**
-     * @param ACLManager $aclManager
-     */
-    public function __construct(ACLManager $aclManager)
+    public function __construct(ACL $acl)
     {
-        $this->aclManager = $aclManager;
+        $this->acl = $acl;
 
         $this->inventoryStatusList = [
             Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'view', 'inventoryNotLaunched'),
@@ -86,6 +83,10 @@ class CellViewModelFactory
         $cellViewModel->relevant = $cell->isRelevant();
         $cellViewModel->tag = $cell->getTag();
 
+        foreach ($cell->getMembers() as $member) {
+            $cellViewModel->members[$member->getAxis()->getRef()] = $member->getLabel();
+        }
+
         // Administrateurs.
         if ($withAdministrators === true) {
             foreach ($cell->getAdminRoles() as $administrator) {
@@ -106,7 +107,7 @@ class CellViewModelFactory
         if (($withACL === true)
             || (($withACL !== false)
                 && ($cell->getGranularity()->getCellsWithACL())
-                && ($this->aclManager->isAllowed($user, Actions::ALLOW, $cell)))
+                && ($this->acl->isAllowed($user, Actions::ALLOW, $cell)))
         ) {
             $cellViewModel->showUsers = true;
             $cellViewModel->numberUsers = $cell->getAdminRoles()->count() + $cell->getManagerRoles()->count()
@@ -117,7 +118,7 @@ class CellViewModelFactory
         if (($withReports === true)
             || (($withReports !== false)
                 && ($cell->getGranularity()->getCellsGenerateDWCubes())
-                && ($this->aclManager->isAllowed($user, Actions::ANALYZE, $cell)))
+                && ($this->acl->isAllowed($user, Actions::ANALYZE, $cell)))
         ) {
             $cellViewModel->showReports = true;
         }
@@ -125,23 +126,24 @@ class CellViewModelFactory
         // Exports.
         if (($withExports === true)
             || (($withExports !== false)
-                && ($this->aclManager->isAllowed($user, Actions::ANALYZE, $cell)))
+                && ($this->acl->isAllowed($user, Actions::ANALYZE, $cell)))
         ) {
             $cellViewModel->showExports = true;
         }
 
         // Inventory
         $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
+        $cellViewModel->inventoryStatusTitle = $this->inventoryStatusList[$cellViewModel->inventoryStatus];
         if (($withInventory === true)
             || (($withInventory !== false)
-                && (($this->aclManager->isAllowed($user, Actions::ANALYZE, $cell))))
+                && (($this->acl->isAllowed($user, Actions::ANALYZE, $cell))))
         ) {
             try {
                 $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
 
                 if (($editInventory)
                     || (($cell->getGranularity() === $granularityForInventoryStatus)
-                        && ($this->aclManager->isAllowed($user, Actions::INPUT, $cell)))) {
+                        && ($this->acl->isAllowed($user, Actions::INPUT, $cell)))) {
                     $cellViewModel->canEditInventory = true;
                 }
 
@@ -150,23 +152,19 @@ class CellViewModelFactory
                 ) {
                     $cellViewModel->showInventory = true;
 
-                    $cellViewModel->inventoryStatusTitle = $this->inventoryStatusList[$cellViewModel->inventoryStatus];
-
-                    $cellViewModel->inventoryCompletion = 0;
                     $cellViewModel->inventoryNotStartedInputsNumber = 0;
                     $cellViewModel->inventoryStartedInputsNumber = 0;
-                    $cellViewModel->inventoryCompletedInputsNumber = 0;
+                    $cellViewModel->inventoryFinishedInputsNumber = 0;
                     if (($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)
                         || ($cell->getGranularity() === $granularityForInventoryStatus))
                         && ($cell->getGranularity()->getInputConfigGranularity() !== null)) {
                         if ($cell->getAFInputSetPrimary() !== null) {
-                            $cellViewModel->inventoryCompletion += $cell->getAFInputSetPrimary()->getCompletion();
-                            if ($cell->getAFInputSetPrimary()->getCompletion() == 0) {
+                            if ($cell->getAFInputSetPrimary()->isFinished()) {
+                                $cellViewModel->inventoryFinishedInputsNumber ++;
+                            } else if ($cell->getAFInputSetPrimary()->getCompletion() == 0) {
                                 $cellViewModel->inventoryNotStartedInputsNumber ++;
-                            } else if ($cell->getAFInputSetPrimary()->getCompletion() < 100) {
-                                $cellViewModel->inventoryStartedInputsNumber ++;
                             } else {
-                                $cellViewModel->inventoryCompletedInputsNumber ++;
+                                $cellViewModel->inventoryStartedInputsNumber ++;
                             }
                         } else {
                             $cellViewModel->inventoryNotStartedInputsNumber ++;
@@ -183,13 +181,12 @@ class CellViewModelFactory
                             foreach ($relevantChildInputCells as $childInputCell) {
                                 $childAFInputSetPrimary = $childInputCell->getAFInputSetPrimary();
                                 if ($childAFInputSetPrimary !== null) {
-                                    $cellViewModel->inventoryCompletion += $childInputCell->getAFInputSetPrimary()->getCompletion();
-                                    if ($childInputCell->getAFInputSetPrimary()->getCompletion() == 0) {
+                                    if ($childInputCell->getAFInputSetPrimary()->isFinished()) {
+                                        $cellViewModel->inventoryFinishedInputsNumber ++;
+                                    } else if ($childInputCell->getAFInputSetPrimary()->getCompletion() == 0) {
                                         $cellViewModel->inventoryNotStartedInputsNumber ++;
-                                    } else if ($childInputCell->getAFInputSetPrimary()->getCompletion() < 100) {
-                                        $cellViewModel->inventoryStartedInputsNumber ++;
                                     } else {
-                                        $cellViewModel->inventoryCompletedInputsNumber ++;
+                                        $cellViewModel->inventoryStartedInputsNumber ++;
                                     }
                                 } else {
                                     $cellViewModel->inventoryNotStartedInputsNumber ++;
@@ -197,9 +194,11 @@ class CellViewModelFactory
                             }
                         }
                     }
-                    $totalInventoryInputs = $cellViewModel->inventoryNotStartedInputsNumber + $cellViewModel->inventoryStartedInputsNumber + $cellViewModel->inventoryCompletedInputsNumber;
+                    $totalInventoryInputs = $cellViewModel->inventoryNotStartedInputsNumber + $cellViewModel->inventoryStartedInputsNumber + $cellViewModel->inventoryFinishedInputsNumber;
                     if ($totalInventoryInputs > 0) {
-                        $cellViewModel->inventoryCompletion /= $totalInventoryInputs;
+                        $cellViewModel->inventoryCompletion = $cellViewModel->inventoryFinishedInputsNumber / $totalInventoryInputs * 100;
+                    } else {
+                        $cellViewModel->inventoryCompletion = 0;
                     }
                     $cellViewModel->inventoryCompletion = round($cellViewModel->inventoryCompletion);
                 }
@@ -212,7 +211,7 @@ class CellViewModelFactory
         if (($withInput === true)
             || (($withInput !== false)
                 && ($cell->getGranularity()->getInputConfigGranularity() !== null)
-                && (($this->aclManager->isAllowed($user, Actions::INPUT, $cell))))
+                && (($this->acl->isAllowed($user, Actions::INPUT, $cell))))
         ) {
             $cellViewModel->showInput = true;
             $cellViewModel->showInputLink = (($withInputLink !== true) && ($withInputLink !== false)) ? true : $withInputLink;

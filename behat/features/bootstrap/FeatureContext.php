@@ -100,11 +100,18 @@ class FeatureContext extends MinkContext
         $error = $this->fixStepArgument($error);
 
         $node = $this->assertSession()->fieldExists($field);
+
+        // Anciens formulaires Bootstrap 2
         $fieldId = $node->getAttribute('id');
-
         $expression = '$("#' . $fieldId . '").parents(".controls").children(".errorMessage").text()';
-
         $errorMessage = $this->getSession()->evaluateScript("return $expression;");
+
+        // Nouveaux formulaires
+        if ($errorMessage == '') {
+            $fieldName = $node->getAttribute('name');
+            $expression = '$(\'[name="' . $fieldName . '"]\').parents(".form-group").find(".errorMessage").text()';
+            $errorMessage = $this->getSession()->evaluateScript("return $expression;");
+        }
 
         if (strpos($errorMessage, $error) === false) {
             throw new ExpectationException(sprintf(
@@ -216,7 +223,27 @@ class FeatureContext extends MinkContext
     public function toggleCollapse($label)
     {
         $label = $this->fixStepArgument($label);
-        $node = $this->findElement('//legend[text()[normalize-space(.)="' . $label . '"]]', 'xpath');
+
+        /** @var NodeElement[] $nodes */
+        $nodes = $this->getSession()->getPage()->findAll('css', 'legend:contains("' . $label . '")');
+        $nodes = array_filter($nodes, function (NodeElement $node) {
+            return $this->isElementVisible($node);
+        });
+        $node = (count($nodes) !== 0) ? reset($nodes) : null;
+
+        if (! $node) {
+            $node = $this->getSession()->getPage()->find(
+                'css',
+                '.jarviswidget header:contains("' . $label . '") a'
+            );
+        }
+
+        if (! $node) {
+            throw new ExpectationException(
+                "No collapse with label $label was found.",
+                $this->getSession()
+            );
+        }
 
         $node->click();
 
@@ -415,14 +442,11 @@ class FeatureContext extends MinkContext
      * @param int      $timeout Timeout en secondes.
      * @return mixed
      */
-    public function spin(callable $find, $timeout = 5)
+    public function spin(callable $find, $timeout = 4)
     {
-        // Temps d'attente entre chaque boucle, en secondes
-        $sleepTime = 0.1;
+        $startTime = time();
 
-        $loops = (int) ((float) $timeout / $sleepTime);
-
-        for ($i = 0; $i < $loops; $i++) {
+        while (time() - $startTime < $timeout) {
             try {
                 $result = $find();
                 return $result;
@@ -430,7 +454,7 @@ class FeatureContext extends MinkContext
                 // keep looping
             }
 
-            usleep($sleepTime * 1000000);
+            usleep(100000);
         }
 
         // One last try to throw the exception

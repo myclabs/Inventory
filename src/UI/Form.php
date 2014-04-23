@@ -278,9 +278,6 @@ class UI_Form extends Zend_Form
         $broker->view->headScript()->appendFile('markitup/jquery.markitup.js', 'text/javascript');
         $broker->view->headScript()->appendFile('markitup/sets/textile/set.js', 'text/javascript');
 
-        $broker->view->headLink()->appendStylesheet('bootstrap/css/datepicker.css');
-        $broker->view->headScript()->appendFile('bootstrap/js/bootstrap-datepicker.js', 'text/javascript');
-
         UI_JS_AutoComplete::addHeader();
 
         if ($instance !== null) {

@@ -4,7 +4,6 @@ namespace Classification\Domain;
 
 use Core_Exception_InvalidArgument;
 use Core_Exception_NotFound;
-use Core_Exception_TooMany;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,7 +14,6 @@ use Doctrine\ORM\NoResultException;
  * Indicateur de classification contextualisé.
  *
  * @author valentin.claras
- * @author cyril.perraud
  */
 class ContextIndicator extends Core_Model_Entity
 {
@@ -24,40 +22,54 @@ class ContextIndicator extends Core_Model_Entity
     const QUERY_INDICATOR = 'indicator';
 
     /**
-     * Contexte de l'indicateur.
-     *
+     * @var int
+     */
+    protected $id;
+
+    /**
      * @var Context
      */
     protected $context;
 
     /**
-     * Indicateur.
-     *
      * @var Indicator
      */
     protected $indicator;
 
     /**
-     * Collection d'axes regroupé dans l'indicateur contextualisé.
-     *
-     * @var Collection|IndicatorAxis[]
+     * @var Collection|Axis[]
      */
     protected $axes;
 
-    public function __construct()
+    /**
+     * @var ClassificationLibrary
+     */
+    protected $library;
+
+
+    public function __construct(ClassificationLibrary $library, Context $context, Indicator $indicator)
     {
+        $this->library = $library;
+        $this->context = $context;
+        $this->indicator = $indicator;
+
         $this->axes = new ArrayCollection();
     }
 
     /**
-     * @param Context $context
+     * @return int
      */
-    public function setContext($context)
+    public function getId()
     {
-        if ($this->context !== null) {
-            throw new Core_Exception_TooMany('The Context has already been defined');
-        }
-        $this->context = $context;
+        return $this->id;
+    }
+
+    /**
+     * @return ClassificationLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
     }
 
     /**
@@ -69,17 +81,6 @@ class ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * @param Indicator $indicator
-     */
-    public function setIndicator($indicator)
-    {
-        if ($this->indicator !== null) {
-            throw new Core_Exception_TooMany('The Indicator has already been defined');
-        }
-        $this->indicator = $indicator;
-    }
-
-    /**
      * @return Indicator
      */
     public function getIndicator()
@@ -88,15 +89,23 @@ class ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * @param IndicatorAxis $axis
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->indicator->getLabel() . ' - ' . $this->context->getLabel();
+    }
+
+    /**
+     * @param Axis $axis
      * @throws Core_Exception_InvalidArgument
      */
-    public function addAxis(IndicatorAxis $axis)
+    public function addAxis(Axis $axis)
     {
         if (!($this->hasAxis($axis))) {
             foreach ($this->getAxes() as $existentAxis) {
                 if ($existentAxis->isBroaderThan($axis) || $existentAxis->isNarrowerThan($axis)) {
-                    throw new Core_Exception_InvalidArgument('Axes must be transverse');
+                    throw new Core_Exception_InvalidArgument('Axis must be transverse');
                 }
             }
 
@@ -105,16 +114,16 @@ class ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      * @return boolean
      */
-    public function hasAxis(IndicatorAxis $axis)
+    public function hasAxis(Axis $axis)
     {
         return $this->axes->contains($axis);
     }
 
     /**
-     * @param IndicatorAxis $axis
+     * @param Axis $axis
      */
     public function removeAxis($axis)
     {
@@ -132,38 +141,10 @@ class ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * @return IndicatorAxis[]
+     * @return Axis[]
      */
     public function getAxes()
     {
         return $this->axes->toArray();
-    }
-
-    /**
-     * Charge un indicateur contextualisé par les refs.
-     *
-     * @param string $refContext
-     * @param string $refIndicator
-     *
-     * @throws Core_Exception_NotFound
-     * @return ContextIndicator
-     */
-    public static function loadByRef($refContext, $refIndicator)
-    {
-        $query = self::getEntityManager()->createQuery(
-            "SELECT ci FROM Classification\\Domain\\ContextIndicator ci
-            LEFT JOIN ci.context c
-            LEFT JOIN ci.indicator i
-            WHERE c.ref = ?1 AND i.ref = ?2"
-        );
-        $query->setParameters([1 => $refContext, 2 => $refIndicator]);
-
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            throw new Core_Exception_NotFound(
-                "ContextIndicator not found matching context=$refContext and indicator=$refIndicator"
-            );
-        }
     }
 }

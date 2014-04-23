@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Context;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
@@ -32,14 +33,18 @@ class Classification_Datagrid_Translate_ContextsController extends UI_Controller
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
+
+        $library = ClassificationLibrary::load($this->getParam('library'));
+        $this->request->filter->addCondition('library', $library);
+
         foreach (Context::loadList($this->request) as $context) {
             $data = array();
-            $data['index'] = $context->getRef();
+            $data['index'] = $context->getId();
             $data['identifier'] = $context->getRef();
 
             foreach ($this->languages as $language) {
@@ -57,12 +62,12 @@ class Classification_Datagrid_Translate_ContextsController extends UI_Controller
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function updateelementAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $context = Context::loadByRef($this->update['index']);
+        $context = Context::load($this->update['index']);
         $context->reloadWithLocale(Core_Locale::load($this->update['column']));
         $context->setLabel($this->update['value']);
         $this->data = $context->getLabel();

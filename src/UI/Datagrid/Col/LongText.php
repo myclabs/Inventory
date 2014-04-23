@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\GenericTag;
+
 /**
  * Fichier de la classe Colonne de Texte Long.
  *
@@ -162,6 +164,10 @@ class UI_Datagrid_Col_LongText extends UI_Datagrid_Col_Popup
             $editorValue .= 'if (column.editor.textarea.className != \'markItUpEditor\') {';
             $editorValue .= '$(column.editor.textarea).markItUp(mySettings);';
             $editorValue .= '}';
+            $editorValue .= 'if (($(column.editor.getContainerEl()).offset().left + $(column.editor.getContainerEl()).outerWidth()) > $(window).width()) {';
+            $editorValue .= '$(column.editor.getContainerEl()).css(\'left\', \'auto\', \'important\');';
+            $editorValue .= '$(column.editor.getContainerEl()).css(\'right\', \'0px\', \'important\');';
+            $editorValue .= '}';
         }
 
         return $editorValue;
@@ -176,13 +182,30 @@ class UI_Datagrid_Col_LongText extends UI_Datagrid_Col_Popup
      */
     public function getAddFormElement($datagrid)
     {
-        $addFormElement = new UI_Form_Element_Textarea($this->getAddFormElementId($datagrid));
-        $addFormElement->setLabel($this->getAddFormElementLabel());
-        $addFormElement->setValue($this->defaultAddValue);
+        $colWrapper = new GenericTag('div');
+        $colWrapper->addClass('form-group');
 
-        $addFormElement->setWithMarkItUp($this->textileEditor);
+        $colLabel = new GenericTag('label', $this->getAddFormElementLabel());
+        $colLabel->setAttribute('for', $this->getAddFormElementId($datagrid));
+        $colLabel->addClass('col-sm-2');
+        $colLabel->addClass('control-label');
+        $colLabel->addClass('field-label');
+        $colWrapper->appendContent($colLabel);
 
-        return $addFormElement;
+        $longTextWrapper = new GenericTag('div');
+        $longTextWrapper->addClass('col-sm-10');
+
+        $longTextInput = new GenericTag('textarea');
+        $longTextInput->setAttribute('rows', '4');
+        $longTextInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+        $longTextInput->setAttribute('id', $this->getAddFormElementId($datagrid));
+        $longTextInput->setContent($this->defaultAddValue);
+        $longTextInput->addClass('form-control');
+        $longTextWrapper->appendContent($longTextInput);
+
+        $colWrapper->appendContent($longTextWrapper);
+
+        return $colWrapper;
     }
 
 }

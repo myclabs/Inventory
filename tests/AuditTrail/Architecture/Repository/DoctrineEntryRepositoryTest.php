@@ -142,14 +142,13 @@ class DoctrineEntryRepositoryTest extends TestCase
         parent::setUp();
 
         $this->entryRepository = $this->get(EntryRepository::class);
+        $this->accountRepository = $this->entityManager->getRepository(Account::class);
 
         // Vide la table si elle contient d'anciennes entrées
         foreach ($this->entryRepository->findAll() as $entry) {
             $this->entryRepository->remove($entry);
         }
         $this->entityManager->flush();
-
-        $this->accountRepository = $this->entityManager->getRepository(Account::class);
     }
 
 

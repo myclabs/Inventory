@@ -5,6 +5,7 @@ use AF\Domain\AFDeletionService;
 use AF\Domain\AFLibrary;
 use AF\Domain\Category;
 use AF\Domain\Component\SubAF;
+use AF\Domain\InputSet\InputSet;
 use AF\Domain\Output\OutputElement;
 use DI\Annotation\Inject;
 use Core\Annotation\Secure;
@@ -30,14 +31,15 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
         /** @var $library AFLibrary */
         $library = AFLibrary::load($this->getParam('library'));
 
-        $this->totalElements = count($library->getAFList());
-        $afList = $library->getAFList($this->request->totalElements, $this->request->startIndex);
+        $this->request->filter->addCondition('library', $library);
+
+        $this->totalElements = AF::countTotal($this->request);
+        $afList = AF::loadList($this->request);
 
         foreach ($afList as $af) {
             $data = [];
             $data['index'] = $af->getId();
             $data['category'] = $this->cellList($af->getCategory()->getId());
-            $data['ref'] = $af->getRef();
             $data['label'] = $af->getLabel();
             $data['configuration'] = $this->cellLink($this->view->url([
                 'module'     => 'af',
@@ -55,7 +57,8 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 'module'     => 'af',
                 'controller' => 'af',
                 'action'     => 'duplicate-popup',
-                'id'         => $af->getId(),
+                'idAF'       => $af->getId(),
+                'library'    => $library->getId(),
             ]), __('UI', 'verb', 'duplicate'), 'plus-circle');
             $this->addLine($data);
         }
@@ -72,10 +75,6 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
         $library = AFLibrary::load($this->getParam('library'));
 
         // Validation du formulaire
-        $ref = $this->getAddElementValue('ref');
-        if (empty($ref)) {
-            $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
         $idCategory = $this->getAddElementValue('category');
         if (empty($idCategory)) {
             $this->setAddElementErrorMessage('category', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -90,25 +89,12 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             /** @var $category Category */
             $category = Category::load($idCategory);
 
-            try {
-                $af = new AF($library, $ref);
-                $library->addAF($af);
-            } catch (Core_Exception_User $e) {
-                $this->setAddElementErrorMessage('ref', $e->getMessage());
-                $this->send();
-                return;
-            }
-            $af->setLabel($label);
+            $af = new AF($library, $label);
+            $library->addAF($af);
             $af->setCategory($category);
             $af->save();
 
-            try {
-                $this->entityManager->flush();
-            } catch (Core_ORM_DuplicateEntryException $e) {
-                $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
-                $this->send();
-                return;
-            }
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'added');
         }
         $this->send();
@@ -135,10 +121,6 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 }
                 $af->setLabel($newValue);
                 $this->data = $af->getLabel();
-                break;
-            case 'ref':
-                $af->setRef($newValue);
-                $this->data = $af->getRef();
                 break;
         }
         $af->save();
@@ -169,6 +151,9 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByOrga');
             }
             if ($e->isSourceEntityInstanceOf(OutputElement::class)) {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
+            }
+            if ($e->isSourceEntityInstanceOf(InputSet::class)) {
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
             }
             throw $e;

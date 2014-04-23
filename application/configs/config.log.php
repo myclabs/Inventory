@@ -4,7 +4,7 @@ use Core\Log\ChromePHPFormatter;
 use Core\Log\ExtendedLineFormatter;
 use Core\Log\QueryLogger;
 use Core\Log\UserInfoProcessor;
-use DI\Container;
+use Interop\Container\ContainerInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\ChromePHPHandler;
 use Monolog\Handler\FirePHPHandler;
@@ -26,7 +26,7 @@ return [
     'log.queries' => false,
 
     // Logger
-    LoggerInterface::class => DI\factory(function (Container $c) {
+    LoggerInterface::class => DI\factory(function (ContainerInterface $c) {
         $cli = (PHP_SAPI == 'cli');
 
         $logger = new Logger('log');
@@ -62,7 +62,7 @@ return [
     }),
 
     // Log des requetes
-    'log.query.logger' => DI\factory(function (Container $c) {
+    'log.query.logger' => DI\factory(function (ContainerInterface $c) {
         if (! $c->get('log.queries')) {
             return null;
         }

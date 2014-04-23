@@ -1,5 +1,4 @@
 <?php
-use MyCLabs\MUIH\Button;
 use User\Domain\User;
 
 /** @var $user User */
@@ -19,7 +18,7 @@ if ($this->editSelf) {
 </div>
 
 <div class="well">
-    <form class="form-horizontal" action="user/profile/edit-submit/id/<?=$user->getId()?>">
+    <form id="editProfile" class="form-horizontal" action="user/profile/edit-submit/id/<?=$user->getId()?>">
 
         <fieldset>
             <div class="form-group">
@@ -102,11 +101,14 @@ if ($this->editSelf) {
 
 <script>
     $(function() {
+        new AjaxForm('#editProfile');
+
         $(".disableButton").confirm({
             text: "<?=__('User', 'editProfile', 'confirmDisableUser')?>",
             cancelButton: "<?=__('UI', 'verb', 'cancel')?>",
             confirmButton: "<?=__('UI', 'verb', 'confirm')?>"
         });
+
         $(".enableButton").confirm({
             text: "<?=__('User', 'editProfile', 'confirmEnableUser')?>",
             cancelButton: "<?=__('UI', 'verb', 'cancel')?>",

@@ -1,18 +1,13 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  thibaud.rolland
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
-use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use Parameter\Application\Service\ParameterService;
+use Parameter\Domain\Family\FamilyReference;
 
 /**
  * @author matthieu.napoli
@@ -43,7 +38,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 $data['label'] = $algo->getLabel();
 
                 try {
-                    $data['family'] = $algo->getFamily()->getRef();
+                    $data['family'] = (string) $algo->getFamilyReference();
                 } catch (Core_Exception_NotFound $e) {
                     // Si la famille n'existe plus
                     $data['family'] = $this->cellText(null, __('AF', 'configTreatmentInvalidRef', 'family'));
@@ -58,16 +53,15 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
 
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
-                    $ref = $contextIndicator->getContext()->getRef()
-                        . "#" . $contextIndicator->getIndicator()->getRef();
-                    $data['contextIndicator'] = $this->cellList($ref);
+                    $data['contextIndicator'] = $this->cellList($contextIndicator->getId());
                 }
-                $data['resultIndex'] = $this->cellPopup($this->_helper->url(
-                    'popup-indexation',
-                    'edit_algos',
-                    'af',
-                    ['id' => $algo->getId()]
-                ), __('Algo', 'name', 'indexation'), 'search');
+                $data['resultIndex'] = $this->cellPopup(
+                    $this->_helper->url('popup-indexation', 'edit_algos', 'af', [
+                        'idAF' => $af->getId(),
+                        'algo' => $algo->getId(),
+                    ]),
+                    '<i class="fa fa-search-plus"></i> ' . __('Algo', 'name', 'indexation')
+                );
                 $this->addLine($data);
             }
         }
@@ -85,14 +79,15 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        $familyRef = $this->getAddElementValue('family');
-        if (empty($familyRef)) {
+        if (empty($this->getAddElementValue('family'))) {
             $this->setAddElementErrorMessage('family', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
-        try {
-            $family = $this->parameterService->getFamily($familyRef);
-        } catch (Core_Exception_NotFound $e) {
-            $this->setAddElementErrorMessage('family', __('UI', 'formValidation', 'emptyRequiredField'));
+        } else {
+            try {
+                $familyReference = FamilyReference::fromString($this->getAddElementValue('family'));
+                $family = $this->parameterService->getFamily($familyReference);
+            } catch (Core_Exception_NotFound $e) {
+                $this->setAddElementErrorMessage('family', __('UI', 'formValidation', 'emptyRequiredField'));
+            }
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
@@ -141,7 +136,8 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 break;
             case 'family':
                 try {
-                    $family = $this->parameterService->getFamily($newValue);
+                    $familyReference = FamilyReference::fromString($newValue);
+                    $family = $this->parameterService->getFamily($familyReference);
                 } catch (Core_Exception_NotFound $e) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
@@ -150,8 +146,9 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 break;
             case 'contextIndicator':
                 if ($newValue) {
-                    $contextIndicator = $this->getContextIndicatorByRef($newValue);
+                    $contextIndicator = ContextIndicator::load($newValue);
                     $algo->setContextIndicator($contextIndicator);
+                    $this->data = $this->cellList($contextIndicator->getId());
                 } else {
                     $algo->setContextIndicator(null);
                 }
@@ -183,62 +180,26 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
     }
 
     /**
-     * Fonction permettant de récupérer la forme brute de l'expression
-     * @Secure("editAF")
-     */
-    public function getExpressionAction()
-    {
-        /** @var $algo NumericExpressionAlgo */
-        $algo = NumericExpressionAlgo::load($this->getParam('id'));
-        $this->data = $algo->getExpression();
-        $this->send();
-    }
-
-    /**
      * Renvoie la liste des contextIndicator
      * @Secure("editAF")
      */
     public function getContextIndicatorListAction()
     {
+        /** @var $af AF */
+        $af = AF::load($this->getParam('id'));
+        $classificationLibraries = ClassificationLibrary::loadUsableInAccount($af->getLibrary()->getAccount());
+
         $this->addElementList(null, '');
-        /** @var $contextIndicators ContextIndicator[] */
-        $contextIndicators = ContextIndicator::loadList();
-        foreach ($contextIndicators as $contextIndicator) {
-            $this->addElementList($this->getContextIndicatorRef($contextIndicator),
-                                  $this->getContextIndicatorLabel($contextIndicator));
+
+        foreach ($classificationLibraries as $library) {
+            foreach ($library->getContextIndicators() as $contextIndicator) {
+                $this->addElementList(
+                    $contextIndicator->getId(),
+                    $library->getLabel() . ' > ' . $contextIndicator->getLabel()
+                );
+            }
         }
+
         $this->send();
-    }
-
-    /**
-     * @param ContextIndicator $contextIndicator
-     * @return string
-     */
-    private function getContextIndicatorRef(ContextIndicator $contextIndicator)
-    {
-        return $contextIndicator->getContext()->getRef()
-            . '#' . $contextIndicator->getIndicator()->getRef();
-    }
-
-    /**
-     * @param string $ref
-     * @return ContextIndicator
-     */
-    private function getContextIndicatorByRef($ref)
-    {
-        if (empty($ref)) {
-            return null;
-        }
-        list($refContext, $refIndicator) = explode('#', $ref);
-        return ContextIndicator::loadByRef($refContext, $refIndicator);
-    }
-
-    /**
-     * @param ContextIndicator $contextIndicator
-     * @return string
-     */
-    private function getContextIndicatorLabel(ContextIndicator $contextIndicator)
-    {
-        return $contextIndicator->getIndicator()->getLabel() . ' - ' . $contextIndicator->getContext()->getLabel();
     }
 }

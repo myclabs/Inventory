@@ -3,10 +3,9 @@ AF\Domain\Algorithm\Numeric\NumericParameterAlgo:
   repositoryClass: \Core_Model_Repository_Ordered
   table: Algo_Numeric_Parameter
 
-  fields:
-    familyRef:
-      type: string
-      nullable: false
+  embedded:
+    familyReference:
+      class: Parameter\Domain\Family\FamilyReference
 
   oneToMany:
     parameterCoordinates:

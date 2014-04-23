@@ -66,12 +66,12 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
                     $data['value'] = $condition->getOption()->getLabel();
                 }
             }
-            $data['editValue'] = $this->cellPopup($this->_helper->url('update-condition-popup',
-                                                                      'edit_conditions',
-                                                                      'af',
-                                                                      ['idCondition' => $condition->getId()]),
-                                                  __('UI', 'verb', 'edit'),
-                                                  'pencil');
+            $data['editValue'] = $this->cellPopup($this->_helper->url(
+                'update-condition-popup',
+                'edit_conditions',
+                'af',
+                ['idCondition' => $condition->getId(), 'idAF' => $af->getId()]
+            ), __('UI', 'verb', 'edit'), 'pencil');
             $this->addLine($data);
         }
         $this->send();

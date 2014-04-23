@@ -28,6 +28,13 @@ Classification\Domain\Context:
       type: integer
       nullable: false
 
+  manyToOne:
+    library:
+      targetEntity: ClassificationLibrary
+      inversedBy: contexts
+      joinColumn:
+        nullable: false
+
   lifecycleCallbacks:
     prePersist: [ preSave ]
     preUpdate: [ preUpdate ]

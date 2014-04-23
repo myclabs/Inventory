@@ -86,6 +86,11 @@ abstract class Core_Controller extends Zend_Controller_Action
         $this->setActiveMenuItem('parameter-' . $libraryId);
     }
 
+    protected function setActiveMenuItemClassificationLibrary($libraryId)
+    {
+        $this->setActiveMenuItem('classification-' . $libraryId);
+    }
+
     /**
      * Ajoute un niveau au "breadcrumb".
      * @param string $text

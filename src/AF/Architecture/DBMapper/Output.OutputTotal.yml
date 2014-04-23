@@ -13,9 +13,6 @@ AF\Domain\Output\OutputTotal:
     value:
       type: calc_value
       nullable: false
-    refIndicator:
-      type: string
-      nullable: true
 
   manyToOne:
     outputSet:
@@ -25,3 +22,5 @@ AF\Domain\Output\OutputTotal:
         name: idOutputSet
         referencedColumnName: id
         nullable: false
+    indicator:
+      targetEntity: Classification\Domain\Indicator

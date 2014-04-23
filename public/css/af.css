@@ -1,0 +1,8 @@
+.inputProgress .progress {
+    height: 30px;
+}
+.inputProgress .progress .progress-bar {
+    line-height: 30px;
+    font-size: 13px;
+    font-weight: 300;
+}

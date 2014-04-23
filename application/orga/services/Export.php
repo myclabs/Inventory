@@ -18,7 +18,7 @@ use AF\Domain\Input\SubAF\NotRepeatedSubAFInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputSet\SubInputSet;
 use AF\Domain\Output\OutputElement;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\Indicator;
 use Orga\Model\ACL\AbstractCellRole;
 use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
@@ -553,7 +553,11 @@ class Orga_Service_Export
         $modelBuilder->bind('cell', $cell);
         $modelBuilder->bind('populatingCells', $cell->getPopulatingCells());
 
-        $modelBuilder->bind('indicators', Indicator::loadList());
+        $indicators = [];
+        foreach ($cell->getOrganization()->getContextIndicators() as $contextIndicator) {
+            $indicators[] = $contextIndicator->getIndicator();
+        }
+        $modelBuilder->bind('indicators', $indicators);
 
         $queryOrganizationAxes = new Core_Model_Query();
         $queryOrganizationAxes->filter->addCondition(Orga_Model_Axis::QUERY_ORGANIZATION, $cell->getGranularity()->getOrganization());
@@ -572,7 +576,7 @@ class Orga_Service_Export
         }
         $modelBuilder->bind('orgaAxes', $orgaAxes);
 
-        $modelBuilder->bind('classifAxes', IndicatorAxis::loadListOrderedAsAscendantTree());
+        $modelBuilder->bind('classifAxes', $cell->getOrganization()->getClassificationAxes());
 
         $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
         $modelBuilder->bind('resultLabel', __('UI', 'name', 'label'));
@@ -616,7 +620,7 @@ class Orga_Service_Export
 
         $modelBuilder->bindFunction(
             'displayMemberForClassifAxis',
-            function (OutputElement $output, IndicatorAxis $axis) {
+            function (OutputElement $output, Axis $axis) {
                 try {
                     $member = $output->getIndexForAxis($axis)->getMember();
                     if ($member->getAxis() !== $axis) {

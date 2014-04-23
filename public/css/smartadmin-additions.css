@@ -11,6 +11,11 @@
     text-decoration: none;
 }
 
+/* Textes des sous-menus en plus petit */
+nav ul ul li a {
+    font-size: 13px;
+}
+
 /* Pas de breadcrumb */
 .fixed-ribbon #content {
     padding-top: 10px;
@@ -25,4 +30,18 @@
 /* Correction de l'affichage des messages d'erreur en haut de page */
 #messageZone .alert {
     margin: 0;
+}
+
+/* Page du dashboard (tableaux) */
+.table-forum {
+    margin-bottom: 25px;
+}
+/* une class spéciale pour ces colonnes pour éviter d'avoir du style dans la vue */
+.table-forum .col-icon {
+    text-align: center;
+    width: 40px;
+}
+.table-forum .col-button {
+    /*width: 100px;*/
+    position: relative;
 }

@@ -24,7 +24,7 @@ class OutputTotal extends Core_Model_Entity
     /**
      * @var string
      */
-    protected $refIndicator;
+    protected $indicator;
 
     /**
      * @var Calc_Value
@@ -49,15 +49,15 @@ class OutputTotal extends Core_Model_Entity
      */
     public function getClassifIndicator()
     {
-        return Indicator::loadByRef($this->refIndicator);
+        return $this->indicator;
     }
 
     /**
-     * @param \Classification\Domain\Indicator $classifIndicator
+     * @param Indicator $indicator
      */
-    public function setClassifIndicator(Indicator $classifIndicator)
+    public function setClassifIndicator(Indicator $indicator)
     {
-        $this->refIndicator = $classifIndicator->getRef();
+        $this->indicator = $indicator;
     }
 
     /**

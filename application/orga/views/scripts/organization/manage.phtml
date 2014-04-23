@@ -30,7 +30,7 @@ $organizations = $this->organizations;
             <?php endif; ?>
             <?php if ($organization->canBeEdited) : ?>
                 <div class="pull-right">
-                    <a class="editOrganization btn btn-sm btn-primary"
+                    <a class="editOrganization btn btn-sm btn-default"
                        href="orga/organization/edit/idOrganization/<?=$organization->id?>">
                         <i class="fa fa-wrench"></i>
                         <?=___('UI', 'name', 'configurationOrga')?>
@@ -53,7 +53,7 @@ $organizations = $this->organizations;
 
     <?php if ($this->canCreateOrganization) : ?>
         <p>
-            <a href="orga/organization/add" class="btn btn-default">
+            <a href="orga/organization/add" class="btn btn-primary">
                 <i class="fa fa-plus"></i>
                 <?=___('UI', 'verb', 'add')?>
             </a>

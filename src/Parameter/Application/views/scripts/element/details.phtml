@@ -6,46 +6,46 @@ $coordinates = $this->coordinates;
 
 /** @var $value Calc_Value */
 $value = $this->value;
-
-$title = __('Parameter', 'element', 'element');
 ?>
 
-<script type="text/javascript">
-    $('#element_edit').children('div.modal-header').children('h3').html(<?=json_encode($title)?>);
+<form id="editElement" class="form-horizontal" method="post"
+      action="parameter/element/edit-submit?id=<?=$this->family->getId()?>">
+
+    <div class="form-group">
+        <label for="digitalValue" class="col-sm-2 control-label"><?=__('UI', 'name', 'value')?></label>
+        <div class="col-sm-10">
+            <input id="digitalValue" name="digitalValue" type="text" class="form-control" required
+                   value="<?=$locale->formatNumberForInput($value->getDigitalValue())?>">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label"><?=__('Unit', 'name', 'unit')?></label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" disabled
+                   value="<?=$this->family->getUnit()->getSymbol()?>">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="uncertainty" class="col-sm-2 control-label"><?=__('UI', 'name', 'uncertainty')?></label>
+        <div class="col-sm-10">
+            <input id="uncertainty" name="uncertainty" type="text" class="form-control"
+                   value="<?=$locale->formatNumberForInput($value->getRelativeUncertainty())?>">
+        </div>
+    </div>
+
+    <input type="hidden" name="coordinates" value="<?=htmlspecialchars(json_encode($coordinates))?>">
+
+</form>
+
+<script>
+    var form = new AjaxForm('#editElement');
+    form.onSuccess = function(response) {
+        addMessage(response.message, response.type);
+        $('#elements tbody tr td a[data-element="' + response.data.elementId + '"]').html(
+            response.data.value + ' ± ' + response.data.uncertainty
+        );
+        $('#element_edit').modal('hide');
+    };
 </script>
-
-<?php
-$editForm = new UI_Form('element_editForm');
-$editForm->setAction('parameter/element/edit-submit');
-$editForm->setAjax(true, 'elementEditSuccess');
-
-// Valeur
-$digitalValueField = new UI_Form_Element_Text('digitalValue');
-$digitalValueField->setLabel(__('UI', 'name', 'value'));
-$digitalValueField->setValue($locale->formatNumberForInput($value->getDigitalValue()));
-$digitalValueField->setRequired(true);
-$editForm->addElement($digitalValueField);
-
-// Unité
-$unitField = new UI_Form_Element_HTML('unit');
-$unitField->setLabel(__('Unit', 'name', 'unit'));
-$unitField->content = $this->family->getUnit()->getSymbol();
-$editForm->addElement($unitField);
-
-// Incertitude
-$uncertaintyField = new UI_Form_Element_Text('uncertainty');
-$uncertaintyField->setLabel(__('UI', 'name', 'uncertainty'));
-$uncertaintyField->setValue($locale->formatNumberForInput($value->getRelativeUncertainty()));
-$editForm->addElement($uncertaintyField);
-
-// Famille
-$familyField = new UI_Form_Element_Hidden('idFamily');
-$familyField->setValue($this->family->getId());
-$editForm->addElement($familyField);
-
-// Coordonnées
-$coordinatesField = new UI_Form_Element_Hidden('coordinates');
-$coordinatesField->setValue(json_encode($coordinates));
-$editForm->addElement($coordinatesField);
-
-echo $editForm->render();

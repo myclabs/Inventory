@@ -4,12 +4,6 @@ use AF\Domain\AF;
 use MyCLabs\MUIH\Tab;
 use MyCLabs\MUIH\Tabs;
 
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @package AF
- */
-
 /** @var $af AF */
 $af = $this->af;
 /** @var $viewConfiguration AFViewConfiguration */
@@ -17,8 +11,6 @@ $viewConfiguration = $this->viewConfiguration;
 
 // Ajout des headers
 UI_Datagrid::addHeader();
-UI_Form::addHeader();
-UI_Popup_Ajax::addHeader();
 $this->headScript()->appendFile('scripts/af/input.js', 'text/javascript');
 $this->headScript()->appendFile('scripts/af/input-progress.js', 'text/javascript');
 // API Google pour les charts
@@ -26,6 +18,7 @@ $this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules
 
 // Création d'un TabView.
 $tabView = new Tabs();
+/** @var Tab[] $baseTabs */
 $baseTabs = [];
 
 // ONGLET DE SAISIE
@@ -49,7 +42,7 @@ if ($viewConfiguration->getIdInputSet()) {
 }
 $url = $this->url($urlArray, null, true);
 $url .= '?actionStack=' . urlencode(json_encode($viewConfiguration->getActionStack()));
-$baseTabs[AFViewConfiguration::TAB_INPUT]->dataSource = $url;
+$baseTabs[AFViewConfiguration::TAB_INPUT]->setContent($url);
 
 // ONGLET DE RESULTAT
 if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_RESULT)) {
@@ -67,7 +60,7 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_RESULT)) {
     if ($viewConfiguration->getIdInputSet()) {
         $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
     }
-    $baseTabs[AFViewConfiguration::TAB_RESULT]->dataSource = $this->url($urlArray, null, true);
+    $baseTabs[AFViewConfiguration::TAB_RESULT]->setContent($this->url($urlArray, null, true));
 }
 
 // ONGLET DETAIL CALCUL
@@ -86,7 +79,7 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS)
     if ($viewConfiguration->getIdInputSet()) {
         $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
     }
-    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->dataSource = $this->url($urlArray, null, true);
+    $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->setContent($this->url($urlArray, null, true));
 }
 
 // ONGLET DOCUMENTATION
@@ -100,7 +93,7 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_DOCUMENTATION)) {
         'idAF'       => $af->getId(),
     );
     $urlArray += $viewConfiguration->getUrlParams();
-    $documentationTab->dataSource = $this->url($urlArray, null, true);
+    $documentationTab->setContent($this->url($urlArray, null, true));
     $baseTabs[AFViewConfiguration::TAB_DOCUMENTATION] = $documentationTab;
 }
 

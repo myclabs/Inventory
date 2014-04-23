@@ -1,9 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\Component\Component;
@@ -14,14 +9,12 @@ use Core\Annotation\Secure;
 
 /**
  * Checkbox fields datagrid Controller
- * @package AF
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
  */
 class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -37,11 +30,12 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
             $data['index'] = $checkboxField->getId();
             $data['label'] = $checkboxField->getLabel();
             $data['ref'] = $checkboxField->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $checkboxField->getId(),
-                                                ' af/datagrid_edit_components_checkbox-fields/get-raw-help/id/'
-                                                    . $checkboxField->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $checkboxField->getId(),
+                'af/datagrid_edit_components_checkbox-fields/get-raw-help?id=' . $af->getId()
+                . '&component=' . $checkboxField->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $checkboxField->isVisible();
             $data['enabled'] = $checkboxField->isEnabled();
             $data['defaultValue'] = $checkboxField->getDefaultValue();
@@ -51,8 +45,6 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
@@ -104,12 +96,12 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
      * @Secure("editAF")
      */
     public function updateelementAction()
     {
+        /** @var $af \AF\Domain\AF */
+        $af = AF::load($this->getParam('id'));
         /** @var $checkboxField Checkbox */
         $checkboxField = Checkbox::load($this->update['index']);
         $newValue = $this->update['value'];
@@ -124,11 +116,7 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
                 break;
             case 'help':
                 $checkboxField->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $checkboxField->getId(),
-                                                  ' af/datagrid_edit_components_checkbox-fields/get-raw-help/id/'
-                                                      . $checkboxField->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
+                $this->data = null;
                 break;
             case 'isVisible':
                 $checkboxField->setVisible($newValue);
@@ -154,19 +142,16 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
     {
+        /** @var $af AF */
+        $af = AF::load($this->getParam('id'));
         /** @var $field Checkbox */
         $field = Checkbox::load($this->getParam('index'));
         // Vérifie qu'il n'y a pas d'Algo_Condition qui référence cet input
-        $query = new Core_Model_Query();
-        $query->filter->addCondition(ElementaryConditionAlgo::QUERY_INPUT_REF, $field->getRef());
-        $algoConditions = ElementaryConditionAlgo::loadList($query);
-        if (count($algoConditions) > 0) {
+        if ($af->hasAlgoConditionOnInput($field)) {
             throw new Core_Exception_User('AF', 'configComponentMessage', 'fieldUsedByAlgoConditionDeletionDenied');
         }
         // Supprime le champ
@@ -191,9 +176,8 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     public function getRawHelpAction()
     {
         /** @var $checkboxField Checkbox */
-        $checkboxField = Checkbox::load($this->getParam('id'));
+        $checkboxField = Checkbox::load($this->getParam('component'));
         $this->data = $checkboxField->getHelp();
         $this->send();
     }
-
 }

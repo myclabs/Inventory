@@ -1,5 +1,7 @@
 <?php
 
+use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Modal;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Family\Dimension;
 
@@ -17,13 +19,17 @@ $tmd = new UI_TMD('elements');
 if ($this->edit) {
     $tmd->formatCells = '<a href="{url}" data-target="#element_edit" data-remote="false" data-toggle="modal" data-element="{elementId}">{value}</a>';
 
-    $editPopup = new UI_Popup_Ajax('element_edit');
-    $editPopup->title = __('UI', 'loading', 'loading');
-    $editPopup->addAttribute('class', 'large');
-    $editPopup->footer .= '<button class="btn btn-primary" onclick="$(\'#element_editForm\').submit();">'
-        .'<i class="fa fa-check"></i> '.__('UI', 'verb', 'save').'</button>';
-    $editPopup->footer .= '<button class="btn btn-default" data-dismiss="modal">'
-        .'<i class="fa fa-times"></i> '.__('UI', 'verb', 'close').'</button>';
+    $editPopup = new Modal();
+    $editPopup->setAttribute('id', 'element_edit');
+    $editPopup->addTitle(__('Parameter', 'element', 'element'));
+    $editPopup->addDefaultDismissButton();
+    $editPopup->large();
+    $editPopup->ajax(true);
+    $editPopup->setContent(new Icon('spinner fa-spin fa-3x'));
+    $editPopup->setFooterContent('<button class="btn btn-primary" onclick="$(\'#editElement\').submit();">'
+        .'<i class="fa fa-check"></i> '.__('UI', 'verb', 'save').'</button>'
+        .'<button class="btn btn-default" data-dismiss="modal">'
+        .'<i class="fa fa-times"></i> '.__('UI', 'verb', 'close').'</button>');
     echo $editPopup->render();
 } else {
     $tmd->formatCells = '{value}';
@@ -74,20 +80,20 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
     $value = $cell->getValue();
     if ($value !== null && $value->getDigitalValue() !== null) {
         return [
-            'url'         => 'parameter/element/details/idFamily/' . $family->getId()
+            'url'       => 'parameter/element/details/idFamily/' . $family->getId()
                 . '?coordinates=' . urlencode(json_encode($membersCoordinates)),
-            'elementId'   => implode('-', $membersCoordinates),
-            'value'       => $locale->formatNumber($value->getDigitalValue(), 3)
+            'elementId' => implode('-', $membersCoordinates),
+            'value'     => $locale->formatNumber($value->getDigitalValue(), 3)
                 . ' ± ' . $locale->formatUncertainty($value->getRelativeUncertainty()),
-            'unit'        => $family->getValueUnit()->getSymbol(),
+            'unit'      => $family->getValueUnit()->getSymbol(),
         ];
     }
     return [
-        'url'         => 'parameter/element/details/idFamily/' . $family->getId()
+        'url'       => 'parameter/element/details/idFamily/' . $family->getId()
             . '?coordinates=' . urlencode(json_encode($membersCoordinates)),
-        'elementId'   => implode('-', $membersCoordinates),
-        'value'       => '-',
-        'unit'        => $family->getValueUnit()->getSymbol(),
+        'elementId' => implode('-', $membersCoordinates),
+        'value'     => '-',
+        'unit'      => $family->getValueUnit()->getSymbol(),
     ];
 };
 
@@ -97,15 +103,5 @@ echo $tmd->render();
 <?php if ($this->edit) : ?>
 
     <?=$this->partial('family/details/tmd-edit-elements.phtml', ['family' => $family])?>
-
-    <script>
-        $.fn.elementEditSuccess = function (response) {
-            addMessage(response.message, response.type);
-            $('#elements tbody tr td a[data-element="' + response.data.elementId + '"]').html(
-                response.data.value + ' ± ' + response.data.uncertainty
-            );
-            $('#element_edit').modal('hide');
-        };
-    </script>
 
 <?php endif; ?>

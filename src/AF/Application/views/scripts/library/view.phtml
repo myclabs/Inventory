@@ -21,12 +21,13 @@ $datagrid->addParam('library', $library->getId());
 $datagrid->deleteElements = true;
 $datagrid->addElements = true;
 $datagrid->addPanelTitle = __('AF', 'formList', 'addPanelTitle');
+$datagrid->addButtonLabel = __('AF', 'formList', 'addAFButton');
 
 $categoryColumn = new UI_Datagrid_Col_List('category', __('UI', 'name', 'category'));
 $categoryColumn->editable = true;
 $categoryColumn->addable = true;
 /** @var $categories Category[] */
-$categories = Category::loadList();
+$categories = $library->getCategories();
 $categoryColumn->list = [];
 foreach ($categories as $category) {
     $categoryColumn->list[$category->getId()] = $category->getLabel();
@@ -41,36 +42,32 @@ $labelColumn->sortName = AF::QUERY_LABEL;
 $labelColumn->filterName = AF::QUERY_LABEL;
 $datagrid->addCol($labelColumn);
 
-$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
-$refColumn->editable = true;
-$refColumn->addable = true;
-$refColumn->sortName = AF::QUERY_REF;
-$refColumn->filterName = AF::QUERY_REF;
-$datagrid->addCol($refColumn);
-
 $configurationColumn = new UI_Datagrid_Col_Link('configuration', __('UI', 'name', 'configuration'));
 $datagrid->addCol($configurationColumn);
 
 $testColumn = new UI_Datagrid_Col_Link('test', __('UI', 'name', 'test'));
 $datagrid->addCol($testColumn);
 
-$duplicateColumn = new UI_Datagrid_Col_Popup('duplicate', __('UI', 'verb', 'duplicate'));
-$duplicateColumn->popup->title = __('AF', 'formList', 'duplicatePanelTitle');
+$duplicateColumn = new UI_Datagrid_Col_Popup('duplicate');
+$duplicateColumn->popup->addTitle(__('AF', 'formList', 'duplicatePanelTitle'));
 $button = new Button(__('UI', 'verb', 'duplicate'), Button::TYPE_PRIMARY);
 $button->setAttribute('id', 'submit');
-$duplicateColumn->popup->footer = $button->render();
+$duplicateColumn->popup->setFooterContent($button->render());
 $datagrid->addCol($duplicateColumn);
 
 $datagrid->display();
 ?>
 
-<script type="text/javascript">
-    $(document).ready(function() { refFromLabel('listAF_label_addForm', 'listAF_ref_addForm') });
-    $("#submit").click(function () {
-        $("#duplicateAF").submit();
-    });
-</script>
 
 <h2><?=__('UI', 'name', 'tree')?></h2>
 
 <?=$this->partial('library/view-tree.phtml', ['library' => $library])?>
+
+
+<h2><?=__('UI', 'name', 'translations')?></h2>
+
+<p>
+    <a href="af/translate?library=<?=$library->getId()?>">
+        <?=__('UI', 'message', 'editTranslations')?>
+    </a>
+</p>

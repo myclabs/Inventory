@@ -18,16 +18,19 @@ Parameter\Domain\ParameterLibrary:
       type: string
       gedmo:
         - translatable
+    public:
+      type: boolean
 
   manyToOne:
     account:
       targetEntity: Account\Domain\Account
+      joinColumn:
+        nullable: false
 
   oneToMany:
     families:
       targetEntity: Parameter\Domain\Family\Family
       mappedBy: library
-      cascade: [ all ]
       orphanRemoval: true
     categories:
       targetEntity: Category

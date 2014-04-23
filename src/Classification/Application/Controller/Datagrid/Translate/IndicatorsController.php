@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Indicator;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
@@ -32,14 +33,18 @@ class Classification_Datagrid_Translate_IndicatorsController extends UI_Controll
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
+
+        $library = ClassificationLibrary::load($this->getParam('library'));
+        $this->request->filter->addCondition('library', $library);
+
         foreach (Indicator::loadList($this->request) as $indicator) {
-            $data = array();
-            $data['index'] = $indicator->getRef();
+            $data = [];
+            $data['index'] = $indicator->getId();
             $data['identifier'] = $indicator->getRef();
 
             foreach ($this->languages as $language) {
@@ -57,12 +62,12 @@ class Classification_Datagrid_Translate_IndicatorsController extends UI_Controll
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function updateelementAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $indicator = Indicator::loadByRef($this->update['index']);
+        $indicator = Indicator::load($this->update['index']);
         $indicator->reloadWithLocale(Core_Locale::load($this->update['column']));
         $indicator->setLabel($this->update['value']);
         $this->data = $indicator->getLabel();

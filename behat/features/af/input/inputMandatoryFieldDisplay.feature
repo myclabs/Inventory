@@ -39,8 +39,6 @@ Feature: Input mandatory field display feature
   # Accès interface de test
     Given I am on "af/af/test/id/6"
     And I wait for the page to finish loading
-  # Attente pour voir si ça débloque instabilité
-    And I wait 5 seconds
   # Ajout d'un bloc de répétition
     And I click "Ajouter"
   # Affichage des messages des champs au clic sur "Aperçu des résultats"

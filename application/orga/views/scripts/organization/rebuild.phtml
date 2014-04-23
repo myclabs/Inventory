@@ -3,7 +3,7 @@
 <p><?=___('DW', 'rebuild', 'analysisDataRebuildWarningMessageOrganization')?></p>
 <div>
     <form action="orga/organization/rebuild-data/idOrganization/<?=$this->organization->getId()?>/" class="rebuild-data">
-        <div class="input-append">
+        <div class="input-group">
             <?php if (count($this->cellsData) > 1) : ?>
                 <select name="cell" class="form-control">
                     <?php foreach ($this->cellsData as $cellIndex => $cellData) : ?>
@@ -14,18 +14,18 @@
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
-                <span class="addon">
             <?php else : ?>
                 <input type="text" name="cell" class="disabled" disabled value="<?=reset($this->cellsData)->getLabel()?>" class="form-control">
             <?php endif; ?>
-                <button type="submit" class="btn btn-primary dw-action">
-                    <i class="fa fa-refresh"></i>
-                    <span>
-                        <?=___('DW', 'rebuild', 'analysisDataRebuildButton')?>
-                    </span>
-                </button>
-            <?php if (count($this->cellsData) > 1) : ?>
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary dw-action">
+                        <i class="fa fa-refresh"></i>
+                        <span>
+                            <?=___('DW', 'rebuild', 'analysisDataRebuildButton')?>
+                        </span>
+                    </button>
                 </span>
+            <?php if (count($this->cellsData) > 1) : ?>
             <?php endif; ?>
         </div>
     </form>
@@ -76,25 +76,25 @@
     <legend style="cursor: default"><?=___('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
     <p><?=___('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
     <form action="orga/organization/rebuild-results/idOrganization/<?=$this->organization->getId()?>/" class="rebuild-results">
-        <div class="input-append">
+        <div class="input-group">
             <?php if (count($this->cellsResults) > 1) : ?>
                 <select name="cell" class="form-control">
                     <?php foreach ($this->cellsResults as $cellResults) : ?>
                         <option value="<?=$cellResults->getId()?>"><?=$cellResults->getLabel()?></option>
                     <?php endforeach; ?>
                 </select>
-                <span class="addon">
             <?php else : ?>
                 <input type="text" name="cell" class="disabled" disabled value="<?=reset($this->cellsResults)->getLabel()?>" class="form-control">
             <?php endif; ?>
-                <button type="submit" class="btn btn-primary dw-action">
-                    <i class="fa fa-refresh"></i>
-                    <span>
-                        <?=___('DW', 'rebuild', 'outputDataRebuildButton')?>
-                    </span>
-                </button>
-            <?php if (count($this->cellsResults) > 1) : ?>
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary dw-action">
+                        <i class="fa fa-refresh"></i>
+                        <span>
+                            <?=___('DW', 'rebuild', 'outputDataRebuildButton')?>
+                        </span>
+                    </button>
                 </span>
+            <?php if (count($this->cellsResults) > 1) : ?>
             <?php endif; ?>
         </div>
     </form>

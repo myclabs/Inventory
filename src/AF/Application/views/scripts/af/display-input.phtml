@@ -16,17 +16,12 @@ if ($inputSet) {
 }
 ?>
 
-<style type="text/css">
-    .alertFinishInput {
-        margin-top: -20px;
-        margin-bottom: 10px;
-    }
-</style>
-
 <div class="inputProgress row">
 
-    <div class="progress col-md-9">
-        <div class="progress-bar"></div>
+    <div class="col-md-9">
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
     </div>
 
     <div class="col-md-3">
@@ -61,7 +56,7 @@ HTML;
     }
 
     $actionGroup->content = <<<HTML
-        <div class="alert alert-success alertFinishInput hide">
+        <div class="alert alert-success alertFinishInput">
             $inputCompleteMessage
         </div>
         $resultsPreviewButton
@@ -114,7 +109,7 @@ echo $form->render();
     var resultsPreviewUrl = "<?=$this->resultsPreviewUrl?>";
     var urlParams = <?=json_encode($this->urlParams)?>;
     // Saisie en cours
-    var input = new AF.Input(afId, "<?=$af->getRef()?>", "<?=$this->mode?>", inputSetId, exitURL, urlParams, resultsPreviewUrl);
+    var input = new AF.Input(afId, "af<?=$af->getId()?>", "<?=$this->mode?>", inputSetId, exitURL, urlParams, resultsPreviewUrl);
 
     // Traductions
     // Statut avancement saisie

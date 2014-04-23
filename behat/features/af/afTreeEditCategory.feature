@@ -6,7 +6,7 @@ Feature: AF tree edit category feature
 
   @javascript
   Scenario: Creation of an AF category
-    Given I am on "af/af/tree"
+    Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
   # Ajout d'une catégorie, libellé vide
     When I click "Ajouter une catégorie"
@@ -23,7 +23,7 @@ Feature: AF tree edit category feature
 
   @javascript
   Scenario: Edition of label of an AF category
-    Given I am on "af/af/tree"
+    Given I am on "af/library/view/id/1"
   # Ouverture popup modification
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
@@ -39,7 +39,7 @@ Feature: AF tree edit category feature
 
   @javascript
   Scenario: Edition of position an parent of an AF category
-    Given I am on "af/af/tree"
+    Given I am on "af/library/view/id/1"
   # Déplacement dans une autre catégorie
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
@@ -70,28 +70,30 @@ Feature: AF tree edit category feature
 
   @javascript
   Scenario:  Deletion of an AF category
-    Given I am on "af/af/tree"
+    Given I am on "af/library/view/id/1"
   # Catégorie contenant une sous-catégorie
     And I click "Catégorie contenant une sous-catégorie"
     Then I should see the popup "Édition d'une catégorie"
-    When I click "Supprimer"
+    And I click element "#afTree_editPanel .btn:contains('Supprimer')"
     Then I should see the popup "Demande de confirmation"
-    And I click "Confirmer"
+    And I click element "#afTree_deletePanel .btn:contains('Confirmer')"
+    And I click element "#afTree_editPanel .btn:contains('Annuler')"
     Then the following message is shown and closed: "Cette catégorie ne peut pas être supprimée, car elle n'est pas vide (elle contient au moins un formulaire ou une autre catégorie)."
     And I should see "Catégorie contenant une sous-catégorie"
   # Catégorie contenant un formulaire
     When I click "Catégorie contenant un formulaire"
     Then I should see the popup "Édition d'une catégorie"
-    When I click "Supprimer"
+    And I click element "#afTree_editPanel .btn:contains('Supprimer')"
     Then I should see the popup "Demande de confirmation"
-    And I click "Confirmer"
+    And I click element "#afTree_deletePanel .btn:contains('Confirmer')"
+    And I click element "#afTree_editPanel .btn:contains('Annuler')"
     Then the following message is shown and closed: "Cette catégorie ne peut pas être supprimée, car elle n'est pas vide (elle contient au moins un formulaire ou une autre catégorie)."
     And I should see "Catégorie contenant un formulaire"
   # Catégorie vide
     When I click "Catégorie vide"
     Then I should see the popup "Édition d'une catégorie"
-    When I click "Supprimer"
+    And I click element "#afTree_editPanel .btn:contains('Supprimer')"
     Then I should see the popup "Demande de confirmation"
-    And I click "Confirmer"
+    And I click element "#afTree_deletePanel .btn:contains('Confirmer')"
     Then the following message is shown and closed: "Suppression effectuée."
     And I should not see "Catégorie vide"

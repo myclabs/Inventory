@@ -2,12 +2,12 @@
 
 namespace Inventory\Command\PopulateDB\Base;
 
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\Context;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
-use Classification\Domain\AxisMember;
-use Classification\Domain\IndicatorLibrary;
+use Classification\Domain\Member;
+use Classification\Domain\ClassificationLibrary;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
 
@@ -42,15 +42,9 @@ abstract class AbstractPopulateClassification
 
     abstract public function run(OutputInterface $output);
 
-    /**
-     * @param string $ref
-     * @param string $label
-     * @param \Classification\Domain\IndicatorAxis|null $narrower
-     * @return \Classification\Domain\IndicatorAxis
-     */
-    protected function createAxis($ref, $label, IndicatorAxis $narrower = null)
+    protected function createAxis(ClassificationLibrary $library, $ref, $label, Axis $narrower = null)
     {
-        $axis = new IndicatorAxis();
+        $axis = new Axis($library);
         $axis->setRef($ref);
         $axis->setLabel($label);
         if ($narrower !== null) {
@@ -60,16 +54,9 @@ abstract class AbstractPopulateClassification
         return $axis;
     }
 
-    /**
-     * @param \Classification\Domain\IndicatorAxis $axis
-     * @param string $ref
-     * @param string $label
-     * @param array $parents
-     * @return \Classification\Domain\AxisMember
-     */
-    protected function createMember(IndicatorAxis $axis, $ref, $label, array $parents = [])
+    protected function createMember(Axis $axis, $ref, $label, array $parents = [])
     {
-        $member = new AxisMember();
+        $member = new Member();
         $member->setAxis($axis);
         $member->setRef($ref);
         $member->setLabel($label);
@@ -81,14 +68,14 @@ abstract class AbstractPopulateClassification
     }
 
     /**
-     * @param IndicatorLibrary $library
+     * @param ClassificationLibrary $library
      * @param string           $ref
      * @param string           $label
      * @param string           $unitRef
      * @param string|null      $ratioUnitRef
      * @return Indicator
      */
-    protected function createIndicator(IndicatorLibrary $library, $ref, $label, $unitRef, $ratioUnitRef = null)
+    protected function createIndicator(ClassificationLibrary $library, $ref, $label, $unitRef, $ratioUnitRef = null)
     {
         $ratioUnit = $ratioUnitRef ? new UnitAPI($ratioUnitRef) : null;
 
@@ -100,34 +87,22 @@ abstract class AbstractPopulateClassification
         return $indicator;
     }
 
-    /**
-     * @param string $ref
-     * @param string $label
-     * @return \Classification\Domain\Context
-     */
-    protected function createContext($ref, $label)
+    protected function createContext(ClassificationLibrary $library, $ref, $label)
     {
-        $context = new Context();
+        $context = new Context($library);
         $context->setRef($ref);
         $context->setLabel($label);
         $context->save();
         return $context;
     }
 
-    /**
-     * @param Context $context
-     * @param Indicator $indicator
-     * @param \Classification\Domain\IndicatorAxis[] $axes
-     * @return \Classification\Domain\ContextIndicator
-     */
     protected function createContextIndicator(
+        ClassificationLibrary $library,
         Context $context,
         Indicator $indicator,
         array $axes = []
     ) {
-        $contextIndicator = new ContextIndicator();
-        $contextIndicator->setContext($context);
-        $contextIndicator->setIndicator($indicator);
+        $contextIndicator = new ContextIndicator($library, $context, $indicator);
         foreach ($axes as $axis) {
             $contextIndicator->addAxis($axis);
         }

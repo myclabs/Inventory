@@ -10,10 +10,9 @@ use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 /**
- * Indicateur de classification.
+ * Indicator de Classification.
  *
  * @author valentin.claras
- * @author cyril.perraud
  */
 class Indicator extends Core_Model_Entity
 {
@@ -32,59 +31,40 @@ class Indicator extends Core_Model_Entity
     protected $id;
 
     /**
-     * @var IndicatorLibrary
+     * @var ClassificationLibrary
      */
     protected $library;
 
     /**
-     * Référent textuel de l'indicateur.
-     *
      * @var string
      */
     protected $ref;
 
     /**
-     * Label de l'indicateur.
-     *
      * @var string
      */
     protected $label;
 
     /**
-     * Unité de l'indicateur.
-     *
      * @var UnitAPI
      */
     protected $unit;
 
     /**
-     * Unité utilisé pour les ratios.
-     *
      * @var UnitAPI
      */
     protected $ratioUnit;
 
 
     /**
-     * Retourne un indicateur à partir de son ref
-     * @param string $ref
-     * @return Indicator $indicator
-     */
-    public static function loadByRef($ref)
-    {
-        return self::getEntityRepository()->loadBy(['ref' => $ref]);
-    }
-
-    /**
-     * @param IndicatorLibrary $library
+     * @param ClassificationLibrary $library
      * @param string           $ref       Identifiant textuel
      * @param string           $label     Libellé
      * @param UnitAPI          $unit      Unité de l'indicateur.
      * @param UnitAPI|null     $ratioUnit Unité utilisé pour les ratios. Si null, l'unité de l'indicateur est utilisée.
-     *
      * @throws IncompatibleUnitsException Unit ant RatioUnit should be compatible
      */
-    public function __construct(IndicatorLibrary $library, $ref, $label, UnitAPI $unit, UnitAPI $ratioUnit = null)
+    public function __construct(ClassificationLibrary $library, $ref, $label, UnitAPI $unit, UnitAPI $ratioUnit = null)
     {
         $this->library = $library;
         $this->ref = $ref;
@@ -102,8 +82,14 @@ class Indicator extends Core_Model_Entity
     }
 
     /**
-     * Modifie le ref de l'indicateur.
-     *
+     * @return ClassificationLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
+    }
+
+    /**
      * @param string $ref
      */
     public function setRef($ref)
@@ -112,8 +98,6 @@ class Indicator extends Core_Model_Entity
     }
 
     /**
-     * Retourne le ref de l'indicateur.
-     *
      * @return string
      */
     public function getRef()
@@ -122,8 +106,6 @@ class Indicator extends Core_Model_Entity
     }
 
     /**
-     * Modifie le label de l'indicateur.
-     *
      * @param string $label
      */
     public function setLabel($label)
@@ -132,8 +114,6 @@ class Indicator extends Core_Model_Entity
     }
 
     /**
-     * Retourne le label de l'indicateur.
-     *
      * @return string
      */
     public function getLabel()
@@ -142,8 +122,6 @@ class Indicator extends Core_Model_Entity
     }
 
     /**
-     * Modifie l'unit de l'indicateur.
-     *
      * @param UnitAPI $unit
      * @throws IncompatibleUnitsException
      */
@@ -157,8 +135,6 @@ class Indicator extends Core_Model_Entity
     }
 
     /**
-     * Retourne l'unit de l'indicateur.
-     *
      * @return UnitAPI
      */
     public function getUnit()
@@ -167,8 +143,6 @@ class Indicator extends Core_Model_Entity
     }
 
     /**
-     * Modifie l'unité de ratio de l'indicateur.
-     *
      * @param UnitAPI $ratioUnit
      * @throws IncompatibleUnitsException
      */
@@ -188,8 +162,6 @@ class Indicator extends Core_Model_Entity
     }
 
     /**
-     * Retourne l'unité de ratio de l'indicateur
-     *
      * @return UnitAPI
      */
     public function getRatioUnit()
@@ -239,5 +211,13 @@ class Indicator extends Core_Model_Entity
     public function postLoad()
     {
         $this->updateCachePosition();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getContext()
+    {
+        return ['library' => $this->library];
     }
 }

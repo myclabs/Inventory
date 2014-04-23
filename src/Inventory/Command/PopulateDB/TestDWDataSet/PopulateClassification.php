@@ -2,20 +2,30 @@
 
 namespace Inventory\Command\PopulateDB\TestDWDataSet;
 
-use Classification\Domain\IndicatorLibrary;
+use Account\Domain\Account;
+use Classification\Domain\ClassificationLibrary;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateClassification;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Remplissage de la base de données avec des données de test
+ *
+ * @Injectable(lazy=true)
  */
 class PopulateClassification extends AbstractPopulateClassification
 {
     /**
+     * @Inject
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     * @Inject("account.myc-sense")
+     * @var Account
+     */
+    private $publicAccount;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -26,15 +36,15 @@ class PopulateClassification extends AbstractPopulateClassification
     {
         $output->writeln('  <info>Populating Classification</info>');
 
-        $library = new IndicatorLibrary('Défaut');
+        $library = new ClassificationLibrary($this->publicAccount, 'Classification My C-Sense');
         $library->save();
 
         // Création des axes.
         // Params : ref, label
         // OptionalParams : Axis parent=null
 
-        $axis_poste_article_75 = $this->createAxis('poste_article_75', 'Poste article 75');
-        $axis_scope = $this->createAxis('scope', 'Scope', $axis_poste_article_75);
+        $axis_poste_article_75 = $this->createAxis($library, 'poste_article_75', 'Poste article 75');
+        $axis_scope = $this->createAxis($library, 'scope', 'Scope', $axis_poste_article_75);
 
         // Création des membres.
         // Params : Axis, ref, label

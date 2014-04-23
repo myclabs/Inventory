@@ -2,39 +2,46 @@
 
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
-use Classification\Domain\IndicatorLibrary;
+use Account\Domain\Account;
+use Classification\Domain\ClassificationLibrary;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateClassification;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Remplissage de la base de données avec des données de test
+ *
+ * Ce service est lazy car on veut injecter "account.myc-sense" après que ça ait été créé.
+ *
+ * @Injectable(lazy=true)
  */
 class PopulateClassification extends AbstractPopulateClassification
 {
     /**
+     * @Inject
      * @var EntityManager
      */
     private $entityManager;
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    /**
+     * @Inject("account.myc-sense")
+     * @var Account
+     */
+    private $publicAccount;
 
     public function run(OutputInterface $output)
     {
         $output->writeln('  <info>Populating Classification</info>');
 
-        $library = new IndicatorLibrary('Défaut');
+        $library = new ClassificationLibrary($this->publicAccount, 'Classification My C-Sense', true);
         $library->save();
 
         // Création des axes.
-        $axis_gaz = $this->createAxis('gaz', 'Gaz');
-        $axis_poste_article_75 = $this->createAxis('poste_article_75', 'Poste article 75');
-        $axis_scope = $this->createAxis('scope', 'Scope', $axis_poste_article_75);
-        $axis_type_deplacement = $this->createAxis('type_deplacement', 'Type de déplacement');
-        $axis_axe_vide = $this->createAxis('axe_vide', 'Axe vide');
+        $axis_gaz = $this->createAxis($library, 'gaz', 'Gaz');
+        $axis_poste_article_75 = $this->createAxis($library, 'poste_article_75', 'Poste article 75');
+        $axis_scope = $this->createAxis($library, 'scope', 'Scope', $axis_poste_article_75);
+        $axis_type_deplacement = $this->createAxis($library, 'type_deplacement', 'Type de déplacement');
+        $axis_axe_vide = $this->createAxis($library, 'axe_vide', 'Axe vide');
 
         // Création des éléments.
         $member_gaz_co2 = $this->createMember($axis_gaz, 'co2', 'CO2');
@@ -57,18 +64,18 @@ class PopulateClassification extends AbstractPopulateClassification
         $indicator_related_axes = $this->createIndicator($library, 'axes_relies', 'Axes hiérarchiquement reliés', 't', 't');
 
         // Création des contextes.
-        $context_general = $this->createContext('general', 'Général');
-        $context_deplacement = $this->createContext('deplacement', 'Déplacements');
-        $context_no_context_indicator = $this->createContext('sans_indicateur_contextualise', 'Sans indicateur contextualisé');
+        $context_general = $this->createContext($library, 'general', 'Général');
+        $context_deplacement = $this->createContext($library, 'deplacement', 'Déplacements');
+        $context_no_context_indicator = $this->createContext($library, 'sans_indicateur_contextualise', 'Sans indicateur contextualisé');
 
 
         $this->entityManager->flush();
 
 
         // Création des contexte-indicateurs.
-        $contextIndicator_ges_general = $this->createContextIndicator($context_general, $indicator_ges, [$axis_gaz, $axis_poste_article_75]);
-        $contextIndicator_ges_deplacement = $this->createContextIndicator($context_deplacement, $indicator_ges, [$axis_gaz, $axis_poste_article_75, $axis_type_deplacement]);
-        $contextIndicator_chiffre_affaire_general = $this->createContextIndicator($context_general, $indicator_chiffre_affaire);
+        $contextIndicator_ges_general = $this->createContextIndicator($library, $context_general, $indicator_ges, [$axis_gaz, $axis_poste_article_75]);
+        $contextIndicator_ges_deplacement = $this->createContextIndicator($library, $context_deplacement, $indicator_ges, [$axis_gaz, $axis_poste_article_75, $axis_type_deplacement]);
+        $contextIndicator_chiffre_affaire_general = $this->createContextIndicator($library, $context_general, $indicator_chiffre_affaire);
 
 
         $this->entityManager->flush();

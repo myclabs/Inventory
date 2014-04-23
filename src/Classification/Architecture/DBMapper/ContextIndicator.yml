@@ -1,36 +1,28 @@
 Classification\Domain\ContextIndicator:
   type: entity
-  repositoryClass: \Classification\Architecture\Repository\ContextIndicatorRepository
+  repositoryClass: Classification\Architecture\Repository\ContextIndicatorRepository
   table: Classification_ContextIndicator
 
   id:
-    context:
-      associationKey: true
-    indicator:
-      associationKey: true
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
 
   manyToOne:
+    library:
+      targetEntity: ClassificationLibrary
+      inversedBy: contextIndicators
+      joinColumn:
+        nullable: false
     context:
-      targetEntity: Classification\Domain\Context
-      joinColumn:
-        name: idContext
-        referencedColumnName: id
+      targetEntity: Context
     indicator:
-      targetEntity: Classification\Domain\Indicator
-      joinColumn:
-        name: idIndicator
-        referencedColumnName: id
-#
-#  manyToMany:
-#    axes:
-#      targetEntity: Classification\Domain\IndicatorAxis
-#      joinTable:
-#        name: Classification_ContextIndicator_Axes
-#        joinColumns:
-#          idContext:
-#            referencedColumnName: idContext
-#          idIndicator:
-#            referencedColumnName: idIndicator
-#        inverseJoinColumns:
-#          idAxis:
-#            referencedColumnName: id
+      targetEntity: Indicator
+
+  manyToMany:
+    axes:
+      targetEntity: Axis
+      joinTable:
+        name: Classification_ContextIndicator_Axes

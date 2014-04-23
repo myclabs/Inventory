@@ -1,52 +1,35 @@
 <?php
-/**
- * Classe Classification_ContextController
- * @author valentin.claras
- * @package    Classification
- * @subpackage Controller
- */
 
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Context;
 use Classification\Domain\Indicator;
 use Core\Annotation\Secure;
 
-
-/**
- * Classe du controller gérant les Context.
- * @package    Classification
- * @subpackage Controller
- */
 class Classification_ContextindicatorController extends Core_Controller
 {
     /**
-     * Action appelé à l'affichage des ContextIndicator.
-     *
-     * @Secure("viewClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function listAction()
     {
-    }
+        /** @var $library ClassificationLibrary */
+        $library = ClassificationLibrary::load($this->getParam('library'));
 
-    /**
-     * Action appelé à la gestion des ContextIndicator.
-     *
-     * @Secure("editClassification")
-     */
-    public function manageAction()
-    {
-        $this->view->listContexts = array();
-        foreach (Context::loadList() as $context) {
-            $this->view->listContexts[$context->getRef()] = $context->getLabel();
+        $this->view->listContexts = [];
+        foreach ($library->getContexts()->toArray() as $context) {
+            $this->view->listContexts[$context->getId()] = $context->getLabel();
         }
-        $this->view->listIndicators = array();
-        foreach (Indicator::loadList() as $indicator) {
-            $this->view->listIndicators[$indicator->getRef()] = $indicator->getLabel();
+        $this->view->listIndicators = [];
+        foreach ($library->getIndicators()->toArray() as $indicator) {
+            $this->view->listIndicators[$indicator->getId()] = $indicator->getLabel();
         }
         $this->view->listAxes = array();
-        foreach (IndicatorAxis::loadList() as $axis) {
-            $this->view->listAxes[$axis->getRef()] = $axis->getLabel();
+        foreach ($library->getAxes()->toArray() as $axis) {
+            $this->view->listAxes[$axis->getId()] = $axis->getLabel();
         }
-    }
 
+        $this->view->assign('library', $library);
+        $this->setActiveMenuItemClassificationLibrary($library->getId());
+    }
 }

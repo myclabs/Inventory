@@ -5,7 +5,7 @@ namespace Account\Application\Service;
 use Account\Domain\AccountRepository;
 use Account\Domain\ACL\AccountAdminRole;
 use Doctrine\ORM\EntityManager;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use MyCLabs\ACL\Model\Role;
 use User\Domain\UserService;
 
@@ -27,9 +27,9 @@ class AccountRoleManager
     private $accountRepository;
 
     /**
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @var UserService
@@ -39,12 +39,12 @@ class AccountRoleManager
     public function __construct(
         EntityManager $entityManager,
         AccountRepository $accountRepository,
-        ACLManager $aclManager,
+        ACL $acl,
         UserService $userService
     ) {
         $this->entityManager = $entityManager;
         $this->accountRepository = $accountRepository;
-        $this->aclManager = $aclManager;
+        $this->acl = $acl;
         $this->userService = $userService;
     }
 
@@ -54,7 +54,7 @@ class AccountRoleManager
         $user = $this->userService->getOrInvite($email);
         $this->entityManager->flush();
 
-        $this->aclManager->grant($user, new AccountAdminRole($user, $account));
+        $this->acl->grant($user, new AccountAdminRole($user, $account));
     }
 
     public function removeRole($roleId)
@@ -62,6 +62,6 @@ class AccountRoleManager
         /** @var Role $role */
         $role = $this->entityManager->find(Role::class, $roleId);
 
-        $this->aclManager->unGrant($role->getSecurityIdentity(), $role);
+        $this->acl->unGrant($role->getSecurityIdentity(), $role);
     }
 }

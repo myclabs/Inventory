@@ -1,20 +1,27 @@
-<?php
+<form id="duplicateAF" class="form-horizontal" method="post"
+      action="af/af/duplicate?idAF=<?=$this->id?>&library=<?=$this->library->getId()?>">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">
+            <?=__('UI', 'name', 'label')?>
+        </label>
+        <div class="col-sm-10">
+            <input name="label" type="text" class="form-control">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">
+            <?=__('UI', 'name', 'identifier')?>
+        </label>
+        <div class="col-sm-10">
+            <input name="ref" type="text" class="form-control">
+        </div>
+    </div>
+</form>
 
-$form = new UI_Form('duplicateAF');
-$form->setAjax(false);
-$form->setAction($this->url(array(
-    'module'     => 'af',
-    'controller' => 'af',
-    'action'     => 'duplicate',
-    'id'         => $this->id,
-)));
-
-$label = new UI_Form_Element_Text('label');
-$label->setLabel(__('UI', 'name', 'label'));
-$form->addElement($label);
-
-$ref = new UI_Form_Element_Text('ref');
-$ref->setLabel(__('UI', 'name', 'identifier'));
-$form->addElement($ref);
-
-echo $form->render();
+<script>
+    $(function() {
+        $("#submit").click(function () {
+            $("#duplicateAF").submit();
+        });
+    });
+</script>

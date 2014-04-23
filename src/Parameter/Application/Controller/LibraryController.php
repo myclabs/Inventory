@@ -3,7 +3,7 @@
 use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use Core\Annotation\Secure;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use Parameter\Domain\ParameterLibrary;
 use User\Domain\ACL\Actions;
 
@@ -14,9 +14,9 @@ class Parameter_LibraryController extends Core_Controller
 {
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Inject
@@ -33,7 +33,7 @@ class Parameter_LibraryController extends Core_Controller
         $library = ParameterLibrary::load($this->getParam('id'));
 
         $this->view->assign('library', $library);
-        $canEdit = $this->aclManager->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
+        $canEdit = $this->acl->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
         $this->view->assign('edit', $canEdit);
         $this->setActiveMenuItemParameterLibrary($library->getId());
     }
@@ -63,6 +63,24 @@ class Parameter_LibraryController extends Core_Controller
         }
 
         $this->view->assign('account', $account);
-        $this->setActiveMenuItem('parameter-new');
+    }
+
+    /**
+     * @Secure("deleteParameterLibrary")
+     */
+    public function deleteAction()
+    {
+        /** @var $library ParameterLibrary */
+        $library = ParameterLibrary::load($this->getParam('id'));
+
+        $library->delete();
+        try {
+            $this->entityManager->flush();
+            UI_Message::addMessageStatic(__('UI', 'message', 'deleted'), UI_Message::TYPE_SUCCESS);
+        } catch (Core_ORM_ForeignKeyViolationException $e) {
+            UI_Message::addMessageStatic(__('Parameter', 'library', 'libraryDeletionError'), UI_Message::TYPE_ERROR);
+        }
+
+        $this->redirect('account/dashboard');
     }
 }

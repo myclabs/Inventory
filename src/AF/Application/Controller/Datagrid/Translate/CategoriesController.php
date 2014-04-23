@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use AF\Domain\AFLibrary;
 use AF\Domain\Category;
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
@@ -32,11 +33,15 @@ class AF_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
+
+        $library = AFLibrary::load($this->getParam('library'));
+        $this->request->filter->addCondition('library', $library);
+
         foreach (Category::loadList($this->request) as $category) {
             $data = array();
             $data['index'] = $category->getId();
@@ -57,7 +62,7 @@ class AF_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function updateelementAction()
     {

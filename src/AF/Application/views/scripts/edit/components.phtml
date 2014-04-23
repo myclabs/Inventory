@@ -10,8 +10,8 @@ $groups->setContent($this->partial('edit/components/groups.phtml', ['af' => $thi
 echo $groups->render();
 
 $script .= <<<JS
-$('#groups').on('show', function(e) {
-    if ($(e.target).attr('id') == 'groups_wrapper') {
+$('#groups').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'groups') {
         groupDatagrid.filter();
     }
 });
@@ -24,8 +24,8 @@ $subAFNotRepeated->setContent($this->partial('edit/components/sub-af-not-repeate
 echo $subAFNotRepeated->render();
 
 $script .= <<<JS
-$('#subAFNotRepeated').on('show', function(e) {
-    if ($(e.target).attr('id') == 'subAFNotRepeated_wrapper') {
+$('#subAFNotRepeated').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'subAFNotRepeated') {
         subAfNotRepeatedDatagrid.filter();
     }
 });
@@ -38,8 +38,8 @@ $subAFRepeated->setContent($this->partial('edit/components/sub-af-repeated.phtml
 echo $subAFRepeated->render();
 
 $script .= <<<JS
-$('#subAFRepeated').on('show', function(e) {
-    if ($(e.target).attr('id') == 'subAFRepeated_wrapper') {
+$('#subAFRepeated').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'subAFRepeated') {
         subAfRepeatedDatagrid.filter();
     }
 });
@@ -52,8 +52,8 @@ $numericFields->setContent($this->partial('edit/components/numeric-fields.phtml'
 echo $numericFields->render();
 
 $script .= <<<JS
-$('#numericFields').on('show', function(e) {
-    if ($(e.target).attr('id') == 'numericFields_wrapper') {
+$('#numericFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'numericFields') {
         numericFieldDatagrid.filter();
     }
 });
@@ -66,8 +66,8 @@ $selectSingleFields->setContent($this->partial('edit/components/select-single-fi
 echo $selectSingleFields->render();
 
 $script .= <<<JS
-$('#selectSingleFields').on('show', function(e) {
-    if ($(e.target).attr('id') == 'selectSingleFields_wrapper') {
+$('#selectSingleFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'selectSingleFields') {
         selectSingleFieldDatagrid.filter();
     }
 });
@@ -80,9 +80,9 @@ $selectMultiFields->setContent($this->partial('edit/components/select-multi-fiel
 echo $selectMultiFields->render();
 
 $script .= <<<JS
-$('#selectSingleFields').on('show', function(e) {
-    if ($(e.target).attr('id') == 'selectSingleFields_wrapper') {
-        selectSingleFieldDatagrid.filter();
+$('#selectMultiFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'selectMultiFields') {
+        selectMultiFieldDatagrid.filter();
     }
 });
 JS;
@@ -94,8 +94,8 @@ $checkboxFields->setContent($this->partial('edit/components/checkbox-fields.phtm
 echo $checkboxFields->render();
 
 $script .= <<<JS
-$('#checkboxFields').on('show', function(e) {
-    if ($(e.target).attr('id') == 'checkboxFields_wrapper') {
+$('#checkboxFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'checkboxFields') {
         checkboxFieldDatagrid.filter();
     }
 });
@@ -108,8 +108,8 @@ $textFields->setContent($this->partial('edit/components/text-fields.phtml', ['af
 echo $textFields->render();
 
 $script .= <<<JS
-$('#textFields').on('show', function(e) {
-    if ($(e.target).attr('id') == 'textFields_wrapper') {
+$('#textFields').on('show.bs.collapse', function(e) {
+    if ($(e.target).attr('id') == 'textFields') {
         textFieldDatagrid.filter();
     }
 });

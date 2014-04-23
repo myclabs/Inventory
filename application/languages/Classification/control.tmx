@@ -7,10 +7,44 @@
 
         <tu tuid="pageTitle">
             <tuv xml:lang="fr">
-                <seg>Contrôle de validité du paramétrage - classification</seg>
+                <seg>Contrôle de validité du paramétrage</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Control of configuration validity - classification</seg>
+                <seg>Control of configuration validity</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="seekIssue">
+            <tuv xml:lang="fr">
+                <seg>Rechercher des anomalies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Seek issue</seg>
+            </tuv>
+        </tu>
+        <tu tuid="seekingIssue">
+            <tuv xml:lang="fr">
+                <seg>Recherche des anomalies en cours…</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Seeking issue…</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noIssue">
+            <tuv xml:lang="fr">
+                <seg>Aucune anomalies trouvée.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No issue found</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="seekedIssue">
+            <tuv xml:lang="fr">
+                <seg>Anomalie recherchée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Seeked issue</seg>
             </tuv>
         </tu>
 
@@ -32,6 +66,7 @@
                 <seg>Abnormal items</seg>
             </tuv>
         </tu>
+
         <tu tuid="axisWithNoMember">
             <tuv xml:lang="fr">
                 <seg>Axe ne contenant aucun élément</seg>

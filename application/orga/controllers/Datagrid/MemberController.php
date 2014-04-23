@@ -2,7 +2,7 @@
 
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Core\Work\ServiceCall\ServiceCallTask;
@@ -16,9 +16,9 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Inject
@@ -61,12 +61,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($idOrganization);
         $axis = $organization->getAxisByRef($this->getParam('refAxis'));
 
-        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganization = $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization
         );
-        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclManager->isAllowed(
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization->getGranularityByRef('global')->getCellByMembers([])
@@ -94,7 +94,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             usort($members, [Orga_Model_Member::class, 'orderMembers']);
         } else {
             $this->request->filter->addCondition(Orga_Model_Member::QUERY_AXIS, $axis);
-            $this->request->order->addOrder(Orga_Model_Member::QUERY_REF);
+            $this->request->order->addOrder(Orga_Model_Member::QUERY_LABEL);
             /** @var Orga_Model_Member[] $members */
             $members = Orga_Model_Member::loadList($this->request);
         }
@@ -301,12 +301,13 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($idOrganization);
         $broaderAxis = $organization->getAxisByRef($this->getParam('refParentAxis'));
 
-        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganization = $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization
         );
-        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization || $this->aclManager->isAllowed(
+        $isUserAllowedToEditGlobalCell = $isUserAllowedToEditOrganization
+            || $this->acl->isAllowed(
                 $connectedUser,
                 Actions::EDIT,
                 $organization->getGranularityByRef('global')->getCellByMembers([])
@@ -322,8 +323,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 $organization,
                 [CellAdminRole::class]
             )['cells'];
+            $isTransverseToAll = true;
             foreach ($topCellsWithEditAccess as $cell) {
                 if (!$broaderAxis->isTransverse($cell->getGranularity()->getAxes())) {
+                    $isTransverseToAll = false;
                     foreach ($cell->getMembers() as $cellMember) {
                         if ($broaderAxis->isBroaderThan($cellMember->getAxis())) {
                             continue 2;
@@ -335,8 +338,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     );
                 }
             }
-            $members = array_unique($members);
-            usort($members, [Orga_Model_Member::class, 'orderMembers']);
+            if (!$isTransverseToAll) {
+                $members = array_unique($members);
+                usort($members, [Orga_Model_Member::class, 'orderMembers']);
+            } else {
+                $members = $broaderAxis->getOrderedMembers()->toArray();
+            }
         } else {
             $members = $broaderAxis->getOrderedMembers()->toArray();
         }

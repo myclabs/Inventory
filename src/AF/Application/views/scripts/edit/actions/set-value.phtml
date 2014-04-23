@@ -1,16 +1,11 @@
 <?php
 use AF\Domain\AF;
+use AF\Domain\Component\Component;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\Select\SelectSingle;
-use AF\Domain\Condition\Condition;
-use AF\Domain\Component\Component;
 
-/**
- * @author  matthieu.napoli
- * @package AF
- */
-/** @var $af \AF\Domain\AF */
+/** @var $af AF */
 $af = $this->af;
 
 // Creation du datagrid
@@ -23,8 +18,10 @@ $actionsDatagrid->addPanelTitle = __('AF', 'configInteractionDatagrid', 'valueAs
 $actionsDatagrid->deleteElements = true;
 
 // Element de formulaire cible de l'action
-$targetComponentColumn = new UI_Datagrid_Col_List('targetComponent',
-                                                  __('AF', 'configInteractionDatagrid', 'targetComponentHeader'));
+$targetComponentColumn = new UI_Datagrid_Col_List(
+    'targetComponent',
+    __('AF', 'configInteractionDatagrid', 'targetComponentHeader')
+);
 $targetComponentColumn->withEmptyElement = false;
 $targetComponentColumn->editable = false;
 $list = [];
@@ -33,7 +30,7 @@ foreach ($this->componentList as $component) {
         || $component instanceof SelectSingle
         || $component instanceof Checkbox
     ) {
-        /** @var $component \AF\Domain\AF\Component\\AF\Domain\Component\Component */
+        /** @var $component Component */
         $list[$component->getId()] = $component->getLabel();
     }
 }
@@ -57,8 +54,7 @@ $valueColumn->editable = false;
 $actionsDatagrid->addCol($valueColumn);
 
 // Condition déclenchant l'action
-$conditionColumn = new UI_Datagrid_Col_List('condition',
-                                            __('UI', 'name', 'condition'));
+$conditionColumn = new UI_Datagrid_Col_List('condition', __('UI', 'name', 'condition'));
 $conditionColumn->editable = true;
 $conditionColumn->withEmptyElement = true;
 $list = [];
@@ -70,9 +66,8 @@ $conditionColumn->list = $list;
 $actionsDatagrid->addCol($conditionColumn);
 
 $editValueColumn = new UI_Datagrid_Col_Popup('editValue', __('UI', 'name', 'edition'));
-$editValueColumn->popup->title = __('AF', 'configInteractionDatagrid', 'valueAssignmentActionEditPanelTitle');
-$editValueColumn->popup->source = '';
-$editValueColumn->popup->addAttribute('class', 'large');
+$editValueColumn->popup->addTitle(__('AF', 'configInteractionDatagrid', 'valueAssignmentActionEditPanelTitle'));
+$editValueColumn->popup->large();
 $actionsDatagrid->addCol($editValueColumn);
 
 echo $actionsDatagrid->render();

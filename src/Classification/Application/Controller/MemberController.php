@@ -6,7 +6,8 @@
  * @subpackage Controller
  */
 
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
+use Classification\Domain\ClassificationLibrary;
 use Core\Annotation\Secure;
 
 
@@ -20,21 +21,15 @@ class Classification_MemberController extends Core_Controller
     /**
      * Action appelé à l'affichage des Member.
      *
-     * @Secure("viewClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function listAction()
     {
-    }
+        /** @var $library ClassificationLibrary */
+        $library = ClassificationLibrary::load($this->getParam('library'));
 
-    /**
-     * Action appelé à la gestion des Member.
-     *
-     * @Secure("editClassification")
-     */
-    public function manageAction()
-    {
-        $this->view->listAxes = IndicatorAxis::loadListOrderedAsAscendantTree();
+        $this->view->assign('library', $library);
+        $this->view->assign('listAxes', $library->getAxesOrderedAsAscendantTree());
         $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     }
-
 }

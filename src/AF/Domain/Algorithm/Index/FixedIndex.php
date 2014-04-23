@@ -3,7 +3,7 @@
 namespace AF\Domain\Algorithm\Index;
 
 use AF\Domain\Algorithm\InputSet;
-use Classification\Domain\AxisMember;
+use Classification\Domain\Member;
 use Core_Exception_NotFound;
 
 /**
@@ -21,7 +21,7 @@ class FixedIndex extends Index
 
     /**
      * @param InputSet $inputSet
-     * @return AxisMember|null
+     * @return Member|null
      */
     public function getClassificationMember(InputSet $inputSet = null)
     {
@@ -29,16 +29,16 @@ class FixedIndex extends Index
             return null;
         }
         try {
-            return AxisMember::loadByRefAndAxis($this->refClassificationMember, $this->getClassificationAxis());
+            return $this->getClassificationAxis()->getMemberByRef($this->refClassificationMember);
         } catch (Core_Exception_NotFound $e) {
             return null;
         }
     }
 
     /**
-     * @param AxisMember $member
+     * @param Member $member
      */
-    public function setClassificationMember(AxisMember $member)
+    public function setClassificationMember(Member $member)
     {
         $this->refClassificationMember = $member->getRef();
     }
@@ -53,7 +53,7 @@ class FixedIndex extends Index
             return false;
         }
         try {
-            AxisMember::loadByRefAndAxis($this->refClassificationMember, $this->getClassificationAxis());
+            $this->getClassificationAxis()->getMemberByRef($this->refClassificationMember);
             return true;
         } catch (Core_Exception_NotFound $e) {
             return false;

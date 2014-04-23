@@ -1,14 +1,14 @@
 <?php
 
 use Account\Domain\ACL\AccountAdminRole;
-use DI\Container;
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
+use MyCLabs\ACL\Doctrine\ACLSetup;
 use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use MyCLabs\ACL\CascadeStrategy\SimpleCascadeStrategy;
-use MyCLabs\ACL\MetadataLoader;
 use Orga\Model\ACL\CellAdminRole;
 use Orga\Model\ACL\CellContributorRole;
 use Orga\Model\ACL\CellManagerRole;
@@ -22,6 +22,7 @@ use MyCLabs\UnitAPI\UnitService;
 use MyCLabs\UnitAPI\WebService\UnitOperationWebService;
 use MyCLabs\UnitAPI\WebService\UnitWebService;
 use User\Domain\ACL\AdminRole;
+use User\Domain\User;
 
 return [
     // Nom de l'application installée
@@ -62,7 +63,7 @@ return [
     'locale.minSignificantFigures' => null,
 
     // Event manager
-    EventDispatcher::class => DI\factory(function (Container $c) {
+    EventDispatcher::class => DI\factory(function (ContainerInterface $c) {
         $dispatcher = new EventDispatcher();
 
         // User events (plus prioritaire)
@@ -95,7 +96,7 @@ return [
             ->constructorParameter('locales', DI\link('translation.languages')),
 
     // ACL
-    ACLManager::class => DI\factory(function (Container $c) {
+    ACL::class => DI\factory(function (ContainerInterface $c) {
         $em = $c->get(EntityManager::class);
 
         $cascadeStrategy = new SimpleCascadeStrategy($em);
@@ -108,19 +109,20 @@ return [
             $c->get(CellResourceGraphTraverser::class)
         );
 
-        return new ACLManager($em, $cascadeStrategy);
+        return new ACL($em, $cascadeStrategy);
     }),
-    MetadataLoader::class => DI\factory(function () {
-        $loader = new MetadataLoader();
-        $loader->registerActionsClass(Actions::class);
-        $loader->registerRoleClass(AdminRole::class, 'superadmin');
-        $loader->registerRoleClass(AccountAdminRole::class, 'accountAdmin');
-        $loader->registerRoleClass(OrganizationAdminRole::class, 'organizationAdmin');
-        $loader->registerRoleClass(CellAdminRole::class, 'cellAdmin');
-        $loader->registerRoleClass(CellManagerRole::class, 'cellManager');
-        $loader->registerRoleClass(CellContributorRole::class, 'cellContributor');
-        $loader->registerRoleClass(CellObserverRole::class, 'cellObserver');
-        return $loader;
+    ACLSetup::class => DI\factory(function () {
+        $setup = new ACLSetup();
+        $setup->setSecurityIdentityClass(User::class);
+        $setup->setActionsClass(Actions::class);
+        $setup->registerRoleClass(AdminRole::class, 'superadmin');
+        $setup->registerRoleClass(AccountAdminRole::class, 'accountAdmin');
+        $setup->registerRoleClass(OrganizationAdminRole::class, 'organizationAdmin');
+        $setup->registerRoleClass(CellAdminRole::class, 'cellAdmin');
+        $setup->registerRoleClass(CellManagerRole::class, 'cellManager');
+        $setup->registerRoleClass(CellContributorRole::class, 'cellContributor');
+        $setup->registerRoleClass(CellObserverRole::class, 'cellObserver');
+        return $setup;
     }),
 
 

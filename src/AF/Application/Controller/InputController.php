@@ -56,7 +56,7 @@ class AF_InputController extends Core_Controller
         $this->setParam('af', $af);
 
         // Form data
-        $formData = json_decode($this->getParam($af->getRef()), true);
+        $formData = json_decode($this->getParam('af' . $af->getId()), true);
         $errorMessages = [];
 
         $inputSet = $this->inputFormParser->parseForm($formData, $af, $errorMessages);
@@ -158,7 +158,7 @@ class AF_InputController extends Core_Controller
         $af = AF::load($this->getParam('id'));
 
         // Form data
-        $formContent = json_decode($this->getParam($af->getRef()), true);
+        $formContent = json_decode($this->getParam('af' . $af->getId()), true);
         $errorMessages = [];
 
         // Remplit l'InputSet

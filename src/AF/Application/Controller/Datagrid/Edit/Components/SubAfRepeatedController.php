@@ -17,10 +17,7 @@ use Core\Annotation\Secure;
  */
 class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -29,18 +26,19 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $subAFList \AF\Domain\Component\SubAF\RepeatedSubAF[] */
+        /** @var $subAFList RepeatedSubAF[] */
         $subAFList = RepeatedSubAF::loadList($this->request);
         foreach ($subAFList as $subAF) {
             $data = [];
             $data['index'] = $subAF->getId();
             $data['label'] = $subAF->getLabel();
             $data['ref'] = $subAF->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $subAF->getId(),
-                                                ' af/datagrid_edit_components_sub-af-repeated/get-raw-help/id/'
-                                                    . $subAF->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $subAF->getId(),
+                'af/datagrid_edit_components_sub-af-repeated/get-raw-help?id=' . $af->getId()
+                . '&component=' . $subAF->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $subAF->isVisible();
             $data['targetAF'] = $subAF->getCalledAF()->getId();
             $data['foldaway'] = $subAF->getFoldaway();
@@ -106,7 +104,7 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
      */
     public function updateelementAction()
     {
-        /** @var $subAF \AF\Domain\Component\SubAF\RepeatedSubAF */
+        /** @var $subAF RepeatedSubAF */
         $subAF = RepeatedSubAF::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
@@ -120,11 +118,7 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
                 break;
             case 'help':
                 $subAF->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $subAF->getId(),
-                                                  ' af/datagrid_edit_components_sub-af/get-raw-help/id/'
-                                                      . $subAF->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
+                $this->data = null;
                 break;
             case 'isVisible':
                 $subAF->setVisible($newValue);
@@ -154,8 +148,6 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -175,9 +167,8 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
     public function getRawHelpAction()
     {
         /** @var $subAF RepeatedSubAF */
-        $subAF = RepeatedSubAF::load($this->getParam('id'));
+        $subAF = RepeatedSubAF::load($this->getParam('component'));
         $this->data = $subAF->getHelp();
         $this->send();
     }
-
 }

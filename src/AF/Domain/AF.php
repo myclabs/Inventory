@@ -21,12 +21,10 @@ use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\Algorithm\AlgoSet;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
-use Core_Exception_User;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Core_Model_Query;
 use Core_Strategy_Ordered;
-use Core_Tools;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use UI_Form;
@@ -47,7 +45,6 @@ class AF extends Core_Model_Entity
 
     const ALGO_MAIN_REF = 'main';
 
-    const QUERY_REF = 'ref';
     const QUERY_LABEL = 'label';
 
     /**
@@ -61,9 +58,10 @@ class AF extends Core_Model_Entity
     protected $library;
 
     /**
+     * @deprecated Sera supprimée dans la 3.1
      * @var string
      */
-    protected $ref;
+    private $ref;
 
     /**
      * @var string
@@ -110,15 +108,14 @@ class AF extends Core_Model_Entity
 
     /**
      * @param AFLibrary $library
-     * @param string    $ref
-     * @throws Core_Exception_User Ref invalide
+     * @param string    $label
      */
-    public function __construct(AFLibrary $library, $ref)
+    public function __construct(AFLibrary $library, $label)
     {
         $this->components = new ArrayCollection();
         $this->conditions = new ArrayCollection();
-        $this->setRef($ref);
         $this->library = $library;
+        $this->label = $label;
 
         // Crée un nouveau set d'algos
         $this->algoSet = new AlgoSet();
@@ -206,16 +203,6 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param string $ref
-     * @throws Core_Exception_User Ref invalide
-     */
-    public function setRef($ref)
-    {
-        Core_Tools::checkRef($ref);
-        $this->ref = (string) $ref;
-    }
-
-    /**
      * @param Group $rootGroup
      */
     public function setRootGroup(Group $rootGroup)
@@ -245,7 +232,7 @@ class AF extends Core_Model_Entity
         PrimaryInputSet $inputSet = null,
         $mode = AFViewConfiguration::MODE_WRITE
     ) {
-        $form = new UI_Form($this->ref);
+        $form = new UI_Form('af' . $this->id);
         $form->addClass('af');
 
         $generationHelper = new AFGenerationHelper($inputSet, $mode);
@@ -353,36 +340,19 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * Retourne un module par son référent textuel
-     * @param string $ref
-     * @throws Core_Exception_NotFound
-     * @return AF
-     */
-    public static function loadByRef($ref)
-    {
-        $query = new Core_Model_Query();
-        $query->filter->addCondition(self::QUERY_REF, $ref);
-        $afList = AF::loadList($query);
-        if (count($afList) == 0) {
-            throw new Core_Exception_NotFound("No AF matching ref='$ref' was found");
-        }
-        return current($afList);
-    }
-
-    /**
      * Cette méthode vérifie que les sous formulaire ne forment pas une boucle.
      * @param array $exploredSubAf
      * @return boolean
      */
     public function checkClosedLoop(array $exploredSubAf = [])
     {
-        if (!in_array($this->ref, $exploredSubAf)) {
-            $exploredSubAf[] = $this->ref;
+        if (!in_array($this->id, $exploredSubAf)) {
+            $exploredSubAf[] = $this->id;
         }
         foreach ($this->getSubAfList() as $subAf) {
             $af = $subAf->getCalledAF();
-            if (!in_array($af->getRef(), $exploredSubAf)) {
-                $exploredSubAf[] = $af->getRef();
+            if (!in_array($af->getId(), $exploredSubAf)) {
+                $exploredSubAf[] = $af->getId();
                 if ($af->checkClosedLoop($exploredSubAf)) {
                     return true;
                 }
@@ -408,14 +378,6 @@ class AF extends Core_Model_Entity
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRef()
-    {
-        return $this->ref;
     }
 
     /**

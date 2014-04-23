@@ -4,6 +4,7 @@ namespace Account\Domain;
 
 use Account\Domain\ACL\AccountAdminRole;
 use AF\Domain\AFLibrary;
+use Classification\Domain\ClassificationLibrary;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
@@ -103,7 +104,8 @@ class Account implements EntityResource, CascadingResource
         return array_merge(
             \Orga_Model_Organization::loadList($query),
             AFLibrary::loadList($query),
-            ParameterLibrary::loadList($query)
+            ParameterLibrary::loadList($query),
+            ClassificationLibrary::loadList($query)
         );
     }
 

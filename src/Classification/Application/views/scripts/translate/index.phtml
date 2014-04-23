@@ -1,0 +1,63 @@
+<?php
+use Classification\Domain\Axis;
+use Classification\Domain\ClassificationLibrary;
+use Classification\Domain\Context;
+use Classification\Domain\Indicator;
+use Classification\Domain\Member;
+
+/** @var ClassificationLibrary $library */
+$library = $this->library;
+?>
+
+<div class="page-header">
+    <h1>
+        <?= __('Classification', 'indicator', 'indicators') ?>
+        <small><?= __('UI', 'name', 'translations') ?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(Indicator::class, 'label', 'datagrid_translate_indicators', 'classification')
+    ->addParam('library', $library->getId())
+    ->simple();
+?>
+
+<div class="page-header">
+    <h1>
+        <?= __('Classification', 'axis', 'pageTitle') ?>
+        <small><?= __('UI', 'name', 'translations') ?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(Axis::class, 'label', 'datagrid_translate_axes', 'classification')
+    ->addParam('library', $library->getId())
+    ->simple();
+?>
+
+<div class="page-header">
+    <h1>
+        <?= __('Classification', 'member', 'pageTitle') ?>
+        <small><?= __('UI', 'name', 'translations') ?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(Member::class, 'label', 'datagrid_translate_members', 'classification')
+    ->addParam('library', $library->getId())
+    ->disablePagination()
+    ->simple();
+?>
+
+<div class="page-header">
+    <h1>
+        <?= __('Classification', 'context', 'contexts') ?>
+        <small><?= __('UI', 'name', 'translations') ?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(Context::class, 'label', 'datagrid_translate_contexts', 'classification')
+    ->addParam('library', $library->getId())
+    ->simple();
+?>

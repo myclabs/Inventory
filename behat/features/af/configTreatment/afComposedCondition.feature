@@ -94,7 +94,6 @@ Feature: AF composed condition for treatment feature
     Then I should see the "algoConditionExpression" datagrid
   # Modification de l'identifiant, identifiant vide
     When I set "" for column "ref" of row 1 of the "algoConditionExpression" datagrid
-    And I wait 2 seconds
     Then the following message is shown and closed: "Merci de renseigner ce champ."
   # Modification de l'identifiant, identifiant avec caractères non autorisés
     When I set "bépo" for column "ref" of row 1 of the "algoConditionExpression" datagrid

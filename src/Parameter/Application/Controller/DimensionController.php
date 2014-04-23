@@ -99,9 +99,9 @@ class Parameter_DimensionController extends Core_Controller
         $number = 0;
 
         foreach ($lines as $line) {
-            $array = explode("\t", $line);
+            $array = preg_split('/[\t;]/', $line);
 
-            if (count($array) !== 2) {
+            if (count($array) > 2) {
                 UI_Message::addMessageStatic(__('Parameter', 'import', 'invalidMembersInput'));
                 $this->redirect('parameter/family/edit/id/' . $family->getId());
                 return;

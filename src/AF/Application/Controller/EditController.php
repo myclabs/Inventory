@@ -15,6 +15,7 @@ use AF\Domain\Condition\Condition;
 use AF\Domain\Component\Component;
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
+use Parameter\Domain\ParameterLibrary;
 use TEC\Exception\InvalidExpressionException;
 
 /**
@@ -62,40 +63,20 @@ class AF_EditController extends Core_Controller
      */
     public function generalSubmitAction()
     {
-        $formData = $this->getFormData('generalForm');
-
         /** @var $af AF */
-        $af = AF::load($formData->getValue('id'));
+        $af = AF::load($this->getParam('id'));
         if ($this->getRequest()->isPost()) {
-            $ref = $formData->getValue('ref');
-            if (empty($ref)) {
-                $this->addFormError('ref', __('UI', 'formValidation', 'emptyRequiredField'));
-                $this->sendFormResponse();
-                return;
-            } else {
-                try {
-                    $af->setRef($ref);
-                } catch (Core_Exception_User $e) {
-                    $this->addFormError('ref', __('Core', 'exception', 'unauthorizedRef'));
-                    $this->sendFormResponse();
-                    return;
-                }
-            }
-            $label = $formData->getValue('label');
+            $label = $this->getParam('label');
             if (empty($label)) {
                 $this->addFormError('label', __('UI', 'formValidation', 'emptyRequiredField'));
                 $this->sendFormResponse();
                 return;
             }
             $af->setLabel($label);
-            $af->setDocumentation($formData->getValue('documentation'));
+            $af->setDocumentation($this->getParam('documentation'));
             $af->save();
-            try {
-                $this->entityManager->flush();
-                $this->setFormMessage(__('UI', 'message', 'updated'));
-            } catch (Core_ORM_DuplicateEntryException $e) {
-                $this->addFormError('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
-            }
+            $this->entityManager->flush();
+            $this->setFormMessage(__('UI', 'message', 'updated'));
         }
 
         $this->sendFormResponse();
@@ -149,11 +130,19 @@ class AF_EditController extends Core_Controller
      */
     public function traitementAction()
     {
-        $this->view->af = AF::load($this->getParam('id'));
+        $af = AF::load($this->getParam('id'));
+
+        // Récupère les familles que l'ont peut utiliser
+        $libraries = ParameterLibrary::loadUsableInAccount($af->getLibrary()->getAccount());
+
+        $this->view->assign('parameterLibraries', $libraries);
+        $this->view->assign('af', $af);
+
         // Composants
         $query = new Core_Model_Query();
         $query->filter->addCondition(Field::QUERY_AF, $this->view->af);
         $this->view->fieldList = Field::loadList($query);
+
         // Composants numériques
         $query = new Core_Model_Query();
         $query->filter->addCondition(NumericField::QUERY_AF, $this->view->af);
@@ -167,13 +156,12 @@ class AF_EditController extends Core_Controller
      */
     public function algoMainSubmitAction()
     {
-        $formData = $this->getFormData("mainAlgo");
         /** @var $af AF */
-        $af = AF::load($formData->getValue('id'));
+        $af = AF::load($this->getParam('id'));
 
         if ($this->getRequest()->isPost()) {
             try {
-                $af->getMainAlgo()->setExpression(trim($formData->getValue('expression')));
+                $af->getMainAlgo()->setExpression(trim($this->getParam('expression')));
             } catch (InvalidExpressionException $e) {
                 $message = __('AF', 'configTreatmentMessage', 'invalidExpression')
                     . "<br>" . implode("<br>", $e->getErrors());

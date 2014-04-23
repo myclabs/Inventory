@@ -93,7 +93,7 @@ abstract class Component extends Core_Model_Entity
 
     /**
      * Retourne le nombre de champs requis dans le composant pour la saisie de l'AF
-     * @param \AF\Domain\InputSet\InputSet|null $inputSet
+     * @param InputSet|null $inputSet
      * @return int
      */
     abstract public function getNbRequiredFields(InputSet $inputSet = null);
@@ -331,7 +331,7 @@ abstract class Component extends Core_Model_Entity
      * Permet de charger un Component par son ref et son AF
      * @param string $ref
      * @param AF     $af
-     * @return Component
+     * @return static
      */
     public static function loadByRef($ref, AF $af)
     {

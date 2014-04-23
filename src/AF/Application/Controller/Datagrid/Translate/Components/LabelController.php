@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use AF\Domain\AFLibrary;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\Group;
 use Core\Annotation\Secure;
@@ -33,29 +34,28 @@ class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Dat
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $this->request->filter->addCondition(
-            Component::QUERY_REF,
-            Group::ROOT_GROUP_REF,
-            Core_Model_Filter::OPERATOR_NOT_EQUAL
-        );
-        foreach (Component::loadList($this->request) as $component) {
-            $data = array();
-            $data['index'] = $component->getId();
-            $data['identifier'] = $component->getAF()->getRef().' | '.$component->getRef();
 
-            foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $component->reloadWithLocale($locale);
-                $data[$language] = $component->getLabel();
+        $library = AFLibrary::load($this->getParam('library'));
+
+        foreach ($library->getAFList() as $af) {
+            foreach ($af->getRootGroup()->getSubComponentsRecursive() as $component) {
+                $data = array();
+                $data['index'] = $component->getId();
+                $data['identifier'] = $component->getAF()->getLabel().' | '.$component->getRef();
+
+                foreach ($this->languages as $language) {
+                    $locale = Core_Locale::load($language);
+                    $component->reloadWithLocale($locale);
+                    $data[$language] = $component->getLabel();
+                }
+                $this->addline($data);
             }
-            $this->addline($data);
         }
-        $this->totalElements = Component::countTotal($this->request);
 
         $this->send();
     }
@@ -63,7 +63,7 @@ class AF_Datagrid_Translate_Components_LabelController extends UI_Controller_Dat
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function updateelementAction()
     {

@@ -25,6 +25,7 @@ foreach ($this->granularities as $inputGranularity) :
     $columnAf = new UI_Datagrid_Col_List('af', ___('AF', 'name', 'accountingForm'));
     $columnAf->list = $this->afs;
     $columnAf->editable = true;
+    $columnAf->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
     $datagridGranularityAfs->addCol($columnAf);
 
     $datagridGranularityAfs->addParam('idOrganization', $this->organization->getId());
@@ -40,8 +41,8 @@ foreach ($this->granularities as $inputGranularity) :
     );
 
     $script = '';
-    $script .= '$(\'#cellAfs'.$inputGranularity->getId().'\').on(\'show\', function(e) {';
-    $script .= 'if ($(e.target).attr(\'id\') == \'cellAfs'.$inputGranularity->getId().'_wrapper\') {';
+    $script .= '$(\'#cellAfs'.$inputGranularity->getId().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'cellAfs'.$inputGranularity->getId().'\') {';
     $script .= 'datagridCellAfs'.$inputGranularity->getId().'.filter();';
     $script .= '}';
     $script .= '});';
@@ -58,7 +59,7 @@ endforeach;
 if (count($this->granularities) > 0) :
     echo '<hr>';
 endif;
-$complementaryFields = '<select multiple name="inputConfigAxes[]" class="inputConfigAxes form-control" style="min-width: 250px;">';
+$complementaryFields = '<select multiple name="inputConfigAxes[]" class="inputConfigAxes" style="min-width: 250px;">';
 foreach ($this->organization->getFirstOrderedAxes() as $axis) :
     $complementaryFields .= '<option value="' . $axis->getRef() . '">' . $axis->getLabel() . '</option>';
 endforeach;

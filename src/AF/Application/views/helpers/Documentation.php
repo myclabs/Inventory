@@ -41,7 +41,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
      */
     protected function renderAf(AF $af, $title, $repeatedSubAf = false)
     {
-        $collapse = new Collapse($af->getRef(), $title);
+        $collapse = new Collapse($af->getId(), $title);
 
         // Lien vers la saisie en test
         $html = __('AF', 'inputDocumentation', 'calledForm') . ' ' . $af->getLabel();

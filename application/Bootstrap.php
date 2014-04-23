@@ -12,6 +12,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\DBAL\Types\Type;
+use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Tab;
@@ -161,15 +162,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Session namespace
-     */
-    protected function _initSessionNamespace()
-    {
-        $auth = Zend_Auth::getInstance();
-        $auth->setStorage(new Zend_Auth_Storage_Session($this->container->get('application.name')));
-    }
-
-    /**
      * Enregistre les plugins de Core.
      */
     protected function _initPluginCore()
@@ -208,7 +200,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'AF',
             'Social',
             'Orga',
-            'Simulation',
             'AuditTrail',
             'Account',
         ];
@@ -306,6 +297,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Tab::$defaultAjaxTabLoadingText = new GenericTag('p', __('UI', 'loading', 'loading'));
         Tab::$defaultAjaxTabLoadingText->prependContent(' ');
         Tab::$defaultAjaxTabLoadingText->prependContent(new Icon('spinner fa-spin'));
+        Collapse::$defaultOpenedIndicator = new Icon('chevron-down');
+        Collapse::$defaultClosedIndicator = new Icon('chevron-right');
     }
 
     /**
@@ -315,6 +308,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         Type::addType(Calc_TypeMapping_Value::TYPE_NAME, Calc_TypeMapping_Value::class);
         Type::addType(Calc_TypeMapping_UnitValue::TYPE_NAME, Calc_TypeMapping_UnitValue::class);
+    }
+
+    /**
+     * Session namespace
+     */
+    protected function _initSessionNamespace()
+    {
+        $auth = Zend_Auth::getInstance();
+        $auth->setStorage(new Zend_Auth_Storage_Session($this->container->get('application.name')));
     }
 
     /**

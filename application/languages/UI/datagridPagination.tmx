@@ -52,6 +52,16 @@
                 <seg>Par page</seg>
             </tuv>
         </tu>
+
+        <!-- Utilisé dans Orga View -->
+        <tu tuid="lineNumber">
+            <tuv xml:lang="fr">
+                <seg>Nombre de lignes affichées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Number of lines displayed</seg>
+            </tuv>
+        </tu>
     
     </body>
 </tmx>

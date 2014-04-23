@@ -9,7 +9,7 @@ class Parameter_FamilyController extends Core_Controller
 
     /**
      * Détails d'une famille
-     * @Secure("viewParameterFamily")
+     * @Secure("public")
      */
     public function detailsAction()
     {

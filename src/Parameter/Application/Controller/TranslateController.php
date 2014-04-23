@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use Parameter\Domain\ParameterLibrary;
 
 /**
  * @author valentin.claras
@@ -8,29 +9,13 @@ use Core\Annotation\Secure;
 class Parameter_TranslateController extends Core_Controller
 {
     /**
-     * Liste des libellés des catégories en mode traduction.
-     *
      * @Secure("editParameterLibrary")
      */
-    public function categoriesAction()
+    public function indexAction()
     {
-    }
+        $library = ParameterLibrary::load($this->getParam('library'));
 
-    /**
-     * Liste des libellés des familles en mode traduction.
-     *
-     * @Secure("editParameterLibrary")
-     */
-    public function familiesLabelAction()
-    {
-    }
-
-    /**
-     * Liste des documentation des familles en mode traduction.
-     *
-     * @Secure("editParameterLibrary")
-     */
-    public function familiesDocumentationAction()
-    {
+        $this->view->assign('library', $library);
+        $this->setActiveMenuItemParameterLibrary($library->getId());
     }
 }

@@ -3,7 +3,7 @@
 namespace User\Application\Command;
 
 use Doctrine\ORM\EntityManager;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,14 +21,14 @@ class RebuildACLCommand extends Command
     private $entityManager;
 
     /**
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
-    public function __construct(EntityManager $entityManager, ACLManager $aclManager)
+    public function __construct(EntityManager $entityManager, ACL $acl)
     {
         $this->entityManager = $entityManager;
-        $this->aclManager = $aclManager;
+        $this->acl = $acl;
 
         parent::__construct();
     }
@@ -44,7 +44,7 @@ class RebuildACLCommand extends Command
         $this->entityManager->beginTransaction();
 
         try {
-            $this->aclManager->rebuildAuthorizations();
+            $this->acl->rebuildAuthorizations();
         } catch (\Exception $e) {
             $this->entityManager->rollback();
             throw $e;

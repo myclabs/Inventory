@@ -1,32 +1,23 @@
 <?php
-/**
- * Classe du controller du datagrid des contexts
- * @author cyril.perraud
- * @package Classification
- * @subpackage Controller
- */
 
+use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Context;
 use Core\Annotation\Secure;
 
-/**
- * Classe du controller du datagrid des contexts
- * @package Classification
- * @subpackage Controller
- */
 class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
 {
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * @Secure("viewClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function getelementsAction()
     {
-        foreach (Context::loadList($this->request) as $context) {
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
+        foreach ($library->getContexts()->toArray() as $context) {
             $data = array();
-            $data['index'] = $context->getRef();
+            $data['index'] = $context->getId();
             $data['label'] = $this->cellText($context->getLabel());
             $data['ref'] = $this->cellText($context->getRef());
             $canUp = !($context->getPosition() === 1);
@@ -34,28 +25,28 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
             $data['position'] = $this->cellPosition($context->getPosition(), $canUp, $canDown);
             $this->addline($data);
         }
-        $this->totalElements = Context::countTotal($this->request);
 
         $this->send();
     }
 
     /**
-     * Fonction permettant d'ajouter un élément.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function addelementAction()
     {
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
         $ref = $this->getAddElementValue('ref');
         $label = $this->getAddElementValue('label');
 
         try {
             Core_Tools::checkRef($ref);
             try {
-                Context::loadByRef($ref);
+                $library->getContextByRef($ref);
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
-                $context = new Context();
+                $context = new Context($library);
                 $context->setRef($ref);
                 $context->setLabel($label);
                 $context->save();
@@ -69,13 +60,11 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction supprimant un élément.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function deleteelementAction()
     {
-        $context = Context::loadByRef($this->delete);
+        $context = Context::load($this->delete);
 
         $queryContextIndicator = new Core_Model_Query();
         $queryContextIndicator->filter->addCondition(ContextIndicator::QUERY_CONTEXT, $context);
@@ -89,13 +78,14 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
     }
 
     /**
-     * Fonction modifiant la valeur d'un élément.
-     *
-     * @Secure("editClassification")
+     * @Secure("editClassificationLibrary")
      */
     public function updateelementAction()
     {
-        $context = Context::loadByRef($this->update['index']);
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load($this->getParam('library'));
+
+        $context = Context::load($this->update['index']);
         switch ($this->update['column']) {
             case 'label':
                 $context->setLabel($this->update['value']);
@@ -104,7 +94,7 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
             case 'ref':
                 Core_Tools::checkRef($this->update['value']);
                 try {
-                    if (Context::loadByRef($this->update['value']) !== $context) {
+                    if ($library->getContextByRef($this->update['value']) !== $context) {
                         throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
                     }
                 } catch (Core_Exception_NotFound $e) {
@@ -112,7 +102,7 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
                     $this->message = __('UI', 'message', 'updated');
                 }
                 break;
-            case 'position' :
+            case 'position':
                 switch ($this->update['value']) {
                     case 'goFirst':
                         $context->setPosition(1);
@@ -126,7 +116,7 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
                     case 'goLast':
                         $context->setPosition($context->getLastEligiblePosition());
                         break;
-                    default :
+                    default:
                         if ($this->update['value'] > $context->getLastEligiblePosition()) {
                             $this->update['value'] = $context->getLastEligiblePosition();
                         }

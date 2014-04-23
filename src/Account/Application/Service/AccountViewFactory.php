@@ -4,10 +4,13 @@ namespace Account\Application\Service;
 
 use Account\Application\ViewModel\AccountView;
 use Account\Application\ViewModel\AFLibraryView;
+use Account\Application\ViewModel\ClassificationLibraryView;
 use Account\Application\ViewModel\ParameterLibraryView;
 use Account\Domain\Account;
 use AF\Domain\AFLibrary;
+use Classification\Domain\ClassificationLibrary;
 use Core_Model_Query;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use Orga_Model_Organization;
 use Parameter\Domain\ParameterLibrary;
@@ -25,9 +28,15 @@ class AccountViewFactory
      */
     private $organizationViewFactory;
 
-    public function __construct(OrganizationViewFactory $organizationViewFactory)
+    /**
+     * @var ACL
+     */
+    private $acl;
+
+    public function __construct(OrganizationViewFactory $organizationViewFactory, ACL $acl)
     {
         $this->organizationViewFactory = $organizationViewFactory;
+        $this->acl = $acl;
     }
 
     /**
@@ -59,7 +68,11 @@ class AccountViewFactory
         $query->filter->addCondition('account', $account);
         foreach (AFLibrary::loadList($query) as $library) {
             /** @var AFLibrary $library */
-            $accountView->afLibraries[] = new AFLibraryView($library->getId(), $library->getLabel());
+
+            $libraryView = new AFLibraryView($library->getId(), $library->getLabel());
+            $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
+
+            $accountView->afLibraries[] = $libraryView;
         }
 
         // Bibliothèques de paramètres
@@ -67,10 +80,30 @@ class AccountViewFactory
         $query->filter->addCondition('account', $account);
         foreach (ParameterLibrary::loadList($query) as $library) {
             /** @var ParameterLibrary $library */
-            $accountView->parameterLibraries[] = new ParameterLibraryView($library->getId(), $library->getLabel());
+
+            $libraryView = new ParameterLibraryView($library->getId(), $library->getLabel());
+            $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
+
+            $accountView->parameterLibraries[] = $libraryView;
         }
 
-        // TODO Bibliothèques d'indicateurs
+        // Bibliothèques de classification
+        $query = new Core_Model_Query();
+        $query->filter->addCondition('account', $account);
+        foreach (ClassificationLibrary::loadList($query) as $library) {
+            /** @var ClassificationLibrary $library */
+
+            $libraryView = new ClassificationLibraryView($library->getId(), $library->getLabel());
+            $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
+
+            $accountView->classificationLibraries[] = $libraryView;
+        }
+
+        // Est-ce que l'utilisateur peut modifier le compte
+        $accountView->canEdit = $this->acl->isAllowed($user, Actions::EDIT, $account);
+
+        // Est-ce que l'utilisateur peut gérer les utilisateurs
+        $accountView->canAllow = $this->acl->isAllowed($user, Actions::ALLOW, $account);
 
         return $accountView;
     }

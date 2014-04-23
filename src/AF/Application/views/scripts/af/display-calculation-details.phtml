@@ -16,6 +16,7 @@ use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Modal;
 
 /** @var $af AF */
 $af = $this->af;
@@ -44,22 +45,22 @@ if ($outputSet && count($outputSet->getIndicators()) == 0) {
 displayAF($af, $inputSet, __('AF', 'inputDocumentation', 'masterForm'));
 
 /**
- * @param \AF\Domain\AF       $af
- * @param \AF\Domain\InputSet\InputSet $inputSet
+ * @param AF       $af
+ * @param InputSet $inputSet
  * @param string   $title
  * @param string   $refPrefix
  * @return Collapse
  */
-function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
+function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = 'collapse_')
 {
-    $collapse = new Collapse($refPrefix . $af->getRef(), $title);
+    $collapse = new Collapse($refPrefix . $af->getId(), $title);
 
     /** @var $mainAlgo MainSelectionAlgo */
     $mainAlgo = $af->getAlgoByRef(AF::ALGO_MAIN_REF);
     $subAlgos = $mainAlgo->getSelectedNumericAlgos($inputSet);
 
     foreach ($subAlgos as $subAlgo) {
-        $algoCollapse = displayAlgo($subAlgo, $inputSet, $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR);
+        $algoCollapse = displayAlgo($subAlgo, $inputSet, $refPrefix . $af->getId() . UI_Generic::REF_SEPARATOR);
         $collapse->appendContent($algoCollapse->render());
     }
 
@@ -69,11 +70,11 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
 
     // Sub-AF
     foreach (getSubAFInputSets($inputSet) as $array) {
-        /** @var $subInputSet \AF\Domain\InputSet\SubInputSet */
+        /** @var $subInputSet SubInputSet */
         $subInputSet = $array['subInputSet'];
         $componentRef = $array['componentRef'];
 
-        $newRefPrefix = $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR
+        $newRefPrefix = $refPrefix . $af->getId() . UI_Generic::REF_SEPARATOR
             . $componentRef . UI_Generic::REF_SEPARATOR;
         if (isset($array['number'])) {
             $newRefPrefix .= $array['number'] . UI_Generic::REF_SEPARATOR;
@@ -85,7 +86,7 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
 
 
 /**
- * @param \AF\Domain\InputSet\InputSet $inputSet
+ * @param InputSet $inputSet
  * @return SubInputSet[]
  */
 function getSubAFInputSets(InputSet $inputSet)
@@ -127,7 +128,7 @@ function getSubAFInputSets(InputSet $inputSet)
 
 /**
  * @param Algo     $algo
- * @param \AF\Domain\InputSet\InputSet $inputSet
+ * @param InputSet $inputSet
  * @param string   $refPrefix
  * @return Collapse
  */
@@ -197,22 +198,20 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
 
     // Expression
     if ($algo instanceof NumericExpressionAlgo) {
-        $url = $view->url([
-                          'module' => 'af',
-                          'controller' => 'af',
-                          'action' => 'popup-expression-graph',
-                          'id' => $algo->getId(),
-                          ]);
-        $popup = new UI_Popup_Ajax('graph_' . $algo->getId(), $url);
-        $popup->title = $algo->getRef();
+        $url = 'af/af/popup-expression-graph?id=' . $algo->getId() . '&idAF=' . $inputSet->getAF()->getId();
+        $popup = new Modal();
+        $popup->addDefaultDismissButton();
+        $popup->ajax(true);
+        $popup->setAttribute('id', 'graph_' . $algo->getId());
+        $popup->addTitle($algo->getRef());
         if ($algo->getLabel()) {
-            $popup->title .= ' (' . $algo->getLabel() . ')';
+            $popup->getHeader()->appendContent(' (' . $algo->getLabel() . ')');
         }
-        $popup->addAttribute('class', 'large');
+        $popup->large();
         $collapse->appendContent($popup->render());
         $buttonHTML = new Button(new Icon('search'));
         $buttonHTML->addClass('btn-xs');
-        $buttonHTML->showModal('graph_' . $algo->getId());
+        $buttonHTML->showAjaxModal('graph_' . $algo->getId(), $url);
         $expression = $algo->getExpression();
         $collapse->appendContent("<p><strong>" . __('TEC', 'name', 'expression') . __('UI', 'other', ':')
             . "</strong> $buttonHTML <code>$expression</code></p>");

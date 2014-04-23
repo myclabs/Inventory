@@ -1,16 +1,18 @@
 /* Redéfinition de la largeur des label dans les formulaires */
-.form .control-label { width: 400px; }
-.form { margin-left: 430px; }
 .form > div { margin-right: 25px; vertical-align: top; }
 .form > div:first-child { width: 380px; margin-right: 0px; }
 .form .input { display: inline-block; margin-right: 5px; }
 .form .input.hide { display: none; }
-.form .incertitude { width: 30px; }
-.form .subGroup { margin-left: 40px; }
-.form .form-actions { padding-left: 426px; }
+.form .incertitude {
+    width: 50px;
+    display: inline-block;
+    margin: 0 4px;
+}
+/*.form .subGroup { margin-left: 40px; }*/
+/*.form .form-actions { padding-left: 426px; }*/
 .form .form-actions > * { margin: 0px 5px; }
 
-.form .subGroup .form-group > label { width: 360px; }
+/*.form .subGroup .form-group > label { width: 360px; }
 .form .subGroup .form-group { margin-left: 390px; }
 .form .subGroup .subGroup .form-group > label { width: 320px; }
 .form .subGroup .subGroup .form-group { margin-left: 350px; }
@@ -25,7 +27,7 @@
 .form .subGroup .subGroup .subGroup .subGroup .subGroup .subGroup .form-group .subGroup > label { width: 280px; }
 .form .subGroup .subGroup .subGroup .subGroup .subGroup .subGroup .form-group .subGroup { margin-left: 310px; }
 .form .subGroup .subGroup .subGroup .subGroup .subGroup .subGroup .form-group .subGroup .subGroup > label { width: 280px; }
-.form .subGroup .subGroup .subGroup .subGroup .subGroup .subGroup .form-group .subGroup .subGroup { margin-left: 310px; }
+.form .subGroup .subGroup .subGroup .subGroup .subGroup .subGroup .form-group .subGroup .subGroup { margin-left: 310px; }*/
 .form input + .help-block, .form select + .help-block, .form textarea + .help-block,
 .form .uneditable-input + .help-block, .form .input-prepend + .help-block, .form .input-append + .help-block {
     margin-top: 0px;
@@ -40,7 +42,6 @@
 .form .repeatedGroup table.repeatedGroup { margin-left: 0px; }
 .form .repeatedGroup table.repeatedGroup > div { margin-right: 0px; }
 .form .repeatedGroup table.repeatedGroup > div:first-child { width: auto; }
-.form .repeatedGroup table.repeatedGroup .input:first-child input { width: 100px; }
 .form .repeatedGroup table.repeatedGroup .input:not(:first-child) { margin: 2px; }
 .form .repeatedGroup table.repeatedGroup .input:first-child select { width: 150px; }
 .form .repeatedGroup table.repeatedGroup .input:first-child textarea { width: 150px; }
@@ -238,13 +239,16 @@
 .modal .form { margin-left: 165px; }
 .modal .form .markItUp .markItUpContainer { width: 500px; }
 
-/* Fix temporaires pour select2 et les append/prepend de Bootstrap */
-.select2-dropdown-open .select2-choice, .select2-container .select2-choice {
-    font-size:initial;
-}
+/* Select2 */
 .input-append .select2-offscreen,
 .input-prepend .select2-offscreen {
     position: absolute;
+}
+.form-horizontal .select2-container {
+    width: 100%;
+}
+.form-horizontal .select2-choice {
+    padding-left: 12px;
 }
 
 /* Form dans un popup : correction d'un margin en trop */

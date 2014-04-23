@@ -1,7 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Category;
 use Parameter\Domain\ParameterLibrary;
@@ -15,9 +15,9 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Secure("viewParameterLibrary")
@@ -38,7 +38,7 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             $data['ref'] = $family->getRef();
             $data['unit'] = $family->getValueUnit()->getSymbol();
             // Test des droits (consultation/édition)
-            $canEdit = $this->aclManager->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
+            $canEdit = $this->acl->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
             if ($canEdit) {
                 $data['detail'] = $this->cellLink(
                     $this->_helper->url('edit', 'family', 'parameter', ['id' => $family->getId()])

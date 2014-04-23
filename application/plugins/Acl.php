@@ -4,6 +4,7 @@ use Account\Domain\AccountRepository;
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
 use AF\Domain\AFLibrary;
+use Classification\Domain\ClassificationLibrary;
 use Doc\Domain\Library;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\ParameterLibrary;
@@ -49,7 +50,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
     public function editOrganizationsRule(User $identity)
     {
-        $isIdentityAbleToCreateOrganizations = $this->aclManager->isAllowed(
+        $isIdentityAbleToCreateOrganizations = $this->acl->isAllowed(
             $identity,
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
@@ -72,7 +73,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
     public function createOrganizationRule(User $identity)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::CREATE,
             new ClassResource(Orga_Model_Organization::class)
@@ -86,7 +87,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function viewOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::VIEW,
             $this->getOrganization($request)
@@ -102,7 +103,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $organization = $this->getOrganization($request);
 
-        $isUserAllowedToEditOrganizationAndCells = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganizationAndCells = $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
             $organization
@@ -133,7 +134,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         $organization = $this->getOrganization($request);
 
-        $isUserAllowedToEditOrganizationAndCells = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganizationAndCells = $this->acl->isAllowed(
             $identity,
             Actions::ALLOW,
             $organization
@@ -162,7 +163,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function allowOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
             $this->getOrganization($request)
@@ -176,7 +177,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
             $this->getOrganization($request)
@@ -190,7 +191,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     public function deleteOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::DELETE,
             $this->getOrganization($request)
@@ -243,7 +244,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     {
         return (
             $this->editOrganizationRule($identity, $request)
-            || $this->aclManager->isAllowed(
+            || $this->acl->isAllowed(
                 $identity,
                 Actions::EDIT,
                 Orga_Model_Cell::load($request->getParam('idCell'))
@@ -258,7 +259,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function viewCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::VIEW,
             $this->getCell($request)
@@ -272,7 +273,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
             $this->getCell($request)
@@ -286,7 +287,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function allowCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::ALLOW,
             Orga_Model_Cell::load($request->getParam('idCell'))
@@ -300,12 +301,12 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editInventoryStatusRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $canInput = $this->aclManager->isAllowed(
+        $canInput = $this->acl->isAllowed(
             $identity,
             Actions::INPUT,
             $this->getCell($request)
         );
-        $canViewReports = $this->aclManager->isAllowed(
+        $canViewReports = $this->acl->isAllowed(
             $identity,
             Actions::ANALYZE,
             $this->getCell($request)
@@ -321,7 +322,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function inputCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::INPUT,
             $this->getCell($request)
@@ -335,7 +336,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function commentCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::VIEW,
             $this->getCell($request)
@@ -349,7 +350,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function analyseCellRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::ANALYZE,
             $this->getCell($request)
@@ -363,7 +364,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function editCommentRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $comment = Social_Model_Comment::load($request->getParam('id'));
+        $comment = Orga_Model_Cell_InputComment::load($request->getParam('id'));
 
         return $identity === $comment->getAuthor();
     }
@@ -375,7 +376,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function deleteCommentRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $comment = Social_Model_Comment::load($request->getParam('id'));
+        $comment = Orga_Model_Cell_InputComment::load($request->getParam('id'));
 
         return $identity === $comment->getAuthor();
     }
@@ -461,13 +462,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
             } catch (Core_Exception_NotFound $e) {
                 // Le cube n'appartient pas à un Cell.
             }
-            // Si le DWCube est d'un SimulationSet, vérification que le Set appartient à l'utilisateur.
-            try {
-                $simulationSet = Simulation_Model_Set::loadByDWCube($dWCube);
-                return ($simulationSet->getUser() === $identity);
-            } catch (Core_Exception_NotFound $e) {
-                // Le cube n'appartient pas à un SimulationSet.
-            }
         }
 
         return false;
@@ -491,7 +485,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
     protected function deleteReportRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $idReport = $request->getParam('idReport');
-        return $this->aclManager->isAllowed($identity, Actions::DELETE, DW_Model_Report::load($idReport));
+        return $this->acl->isAllowed($identity, Actions::DELETE, DW_Model_Report::load($idReport));
     }
 
     /**
@@ -562,29 +556,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
      */
     protected function genericInputAF(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $idScenario = $request->getParam('idScenario');
-        if ($idScenario !== null) {
-            /* @var Simulation_Model_Scenario $scenario */
-            $scenario = Simulation_Model_Scenario::load($idScenario);
-            return ($scenario->getSet()->getUser() === $identity);
-        }
-
         return $this->editAFRule($identity, $request);
-    }
-
-    protected function viewTECRule(User $identity)
-    {
-        return $this->editRepository($identity);
-    }
-
-    protected function viewClassificationRule(User $identity)
-    {
-        return $this->viewReferential($identity);
-    }
-
-    protected function editClassificationRule(User $identity)
-    {
-        return $this->editRepository($identity);
     }
 
     protected function viewUnitRule(User $identity, Zend_Controller_Request_Abstract $request)
@@ -599,7 +571,7 @@ class Inventory_Plugin_Acl extends ACLPlugin
         } catch (Core_Exception_NotFound $e) {
             throw new HttpNotFoundException;
         }
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, $account);
+        return $this->acl->isAllowed($identity, Actions::EDIT, $account);
     }
 
     protected function allowAccountRule(User $identity, Zend_Controller_Request_Abstract $request)
@@ -609,52 +581,86 @@ class Inventory_Plugin_Acl extends ACLPlugin
         } catch (Core_Exception_NotFound $e) {
             throw new HttpNotFoundException;
         }
-        return $this->aclManager->isAllowed($identity, Actions::ALLOW, $account);
+        return $this->acl->isAllowed($identity, Actions::ALLOW, $account);
     }
 
     protected function editAFLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, AFLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::EDIT, AFLibrary::load($libraryId));
+    }
+
+    protected function deleteAFLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('id') ?: $request->getParam('library');
+        return $this->acl->isAllowed($identity, Actions::DELETE, AFLibrary::load($libraryId));
     }
 
     protected function editAFRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $afId = $request->getParam('id') ?: $request->getParam('idAF');
-        $af = AF::load($afId);
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, $af->getLibrary());
+        $afId = $request->getParam('idAF') ?: $request->getParam('id');
+        try {
+            $af = AF::load($afId);
+        } catch (Core_Exception_NotFound $e) {
+            throw new HttpNotFoundException;
+        }
+        return $this->acl->isAllowed($identity, Actions::EDIT, $af->getLibrary());
     }
 
     protected function viewParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');
-        return $this->aclManager->isAllowed($identity, Actions::VIEW, ParameterLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::VIEW, ParameterLibrary::load($libraryId));
     }
 
     protected function editParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $libraryId = $request->getParam('id') ?: $request->getParam('library');
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, ParameterLibrary::load($libraryId));
+        return $this->acl->isAllowed($identity, Actions::EDIT, ParameterLibrary::load($libraryId));
+    }
+
+    protected function deleteParameterLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('id') ?: $request->getParam('library');
+        return $this->acl->isAllowed($identity, Actions::DELETE, ParameterLibrary::load($libraryId));
     }
 
     protected function viewParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $id = $request->getParam('id') ?: $request->getParam('idFamily');
         $parameterFamily = Family::load($id);
-        return $this->aclManager->isAllowed($identity, Actions::VIEW, $parameterFamily->getLibrary());
+        return $this->acl->isAllowed($identity, Actions::VIEW, $parameterFamily->getLibrary());
     }
 
     protected function editParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $id = $request->getParam('id') ?: $request->getParam('idFamily');
         $parameterFamily = Family::load($id);
-        return $this->aclManager->isAllowed($identity, Actions::EDIT, $parameterFamily->getLibrary());
+        return $this->acl->isAllowed($identity, Actions::EDIT, $parameterFamily->getLibrary());
     }
 
     protected function deleteParameterFamilyRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $parameterFamily = Family::load($request->getParam('id'));
-        return $this->aclManager->isAllowed($identity, Actions::DELETE, $parameterFamily->getLibrary());
+        return $this->acl->isAllowed($identity, Actions::DELETE, $parameterFamily->getLibrary());
+    }
+
+    protected function viewClassificationLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('library') ?: $request->getParam('id');
+        return $this->acl->isAllowed($identity, Actions::VIEW, ClassificationLibrary::load($libraryId));
+    }
+
+    protected function editClassificationLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('library') ?: $request->getParam('id');
+        return $this->acl->isAllowed($identity, Actions::EDIT, ClassificationLibrary::load($libraryId));
+    }
+
+    protected function deleteClassificationLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $libraryId = $request->getParam('library') ?: $request->getParam('id');
+        return $this->acl->isAllowed($identity, Actions::DELETE, ClassificationLibrary::load($libraryId));
     }
 
     /**
@@ -669,16 +675,6 @@ class Inventory_Plugin_Acl extends ACLPlugin
 
         try {
             return Orga_Model_Cell::loadByDocLibraryForAFInputSetsPrimary($library);
-        } catch (Core_Exception_NotFound $e) {
-            // Pas de Cell
-        }
-        try {
-            return Orga_Model_Cell::loadByDocLibraryForSocialGenericAction($library);
-        } catch (Core_Exception_NotFound $e) {
-            // Pas de Cell
-        }
-        try {
-            return Orga_Model_Cell::loadByDocLibraryForSocialContextAction($library);
         } catch (Core_Exception_NotFound $e) {
             // Pas de Cell
         }

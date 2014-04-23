@@ -13,6 +13,5 @@ Feature: Feedback feature
     And I check "Le contenu de cette page n'est pas clair"
     And I check "Je constate un dysfonctionnement"
     And I check "J'ai une amélioration à proposer"
-    And I fill in "details" with "Test automatique behat."
     And I click "Envoyer"
     Then I should see "Votre retour a été enregistré, merci."

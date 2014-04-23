@@ -6,6 +6,7 @@
  * @subpackage Controller
  */
 
+use AF\Domain\AFLibrary;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\Group;
 use Core\Annotation\Secure;
@@ -33,38 +34,37 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
-        $this->request->filter->addCondition(
-            Component::QUERY_REF,
-            Group::ROOT_GROUP_REF,
-            Core_Model_Filter::OPERATOR_NOT_EQUAL
-        );
-        foreach (Component::loadList($this->request) as $component) {
-            $data = array();
-            $data['index'] = $component->getId();
-            $data['identifier'] = $component->getAF()->getRef().' | '.$component->getRef();
 
-            foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $component->reloadWithLocale($locale);
-                $brutText = Core_Tools::removeTextileMarkUp($component->getHelp());
-                if (empty($brutText)) {
-                    $brutText = __('UI', 'translate', 'empty');
+        $library = AFLibrary::load($this->getParam('library'));
+
+        foreach ($library->getAFList() as $af) {
+            foreach ($af->getRootGroup()->getSubComponentsRecursive() as $component) {
+                $data = array();
+                $data['index'] = $component->getId();
+                $data['identifier'] = $component->getAF()->getLabel().' | '.$component->getRef();
+
+                foreach ($this->languages as $language) {
+                    $locale = Core_Locale::load($language);
+                    $component->reloadWithLocale($locale);
+                    $brutText = Core_Tools::removeTextileMarkUp($component->getHelp());
+                    if (empty($brutText)) {
+                        $brutText = __('UI', 'translate', 'empty');
+                    }
+                    $data[$language] = $this->cellLongText(
+                        'af/datagrid_translate_components_help/view/id/'.$component->getId().'/locale/'.$language,
+                        'af/datagrid_translate_components_help/edit/id/'.$component->getId().'/locale/'.$language,
+                        substr($brutText, 0, 50).((strlen($brutText) > 50) ? __('UI', 'translate', '…') : ''),
+                        'zoom-in'
+                    );
                 }
-                $data[$language] = $this->cellLongText(
-                    'af/datagrid_translate_components_help/view/id/'.$component->getId().'/locale/'.$language,
-                    'af/datagrid_translate_components_help/edit/id/'.$component->getId().'/locale/'.$language,
-                    substr($brutText, 0, 50).((strlen($brutText) > 50) ? __('UI', 'translate', '…') : ''),
-                    'zoom-in'
-                );
+                $this->addline($data);
             }
-            $this->addline($data);
         }
-        $this->totalElements = Component::countTotal($this->request);
 
         $this->send();
     }
@@ -72,7 +72,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function updateelementAction()
     {
@@ -94,7 +94,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function viewAction()
     {
@@ -111,7 +111,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function editAction()
     {

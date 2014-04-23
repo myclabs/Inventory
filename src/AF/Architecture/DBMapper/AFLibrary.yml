@@ -19,6 +19,8 @@ AF\Domain\AFLibrary:
       nullable: false
       gedmo:
         - translatable
+    public:
+      type: boolean
 
   manyToOne:
     account:
@@ -28,7 +30,6 @@ AF\Domain\AFLibrary:
     afList:
       targetEntity: AF
       mappedBy: library
-      cascade: [ all ]
       orphanRemoval: true
     categories:
       targetEntity: Category

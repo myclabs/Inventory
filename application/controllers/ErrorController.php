@@ -84,6 +84,11 @@ class ErrorController extends Core_Controller
             $this->view->assign('exception', $exception);
             $this->view->assign('requestParams', $error->request->getParams());
         }
+
+        // Si l'utilisateur n'est pas connecté
+        if ($this->_helper->auth() === null) {
+            $this->_helper->_layout->setLayout('layout-public');
+        }
     }
 
 }

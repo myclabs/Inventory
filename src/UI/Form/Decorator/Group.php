@@ -29,7 +29,9 @@ class UI_Form_Decorator_Group extends Zend_Form_Decorator_Abstract
 
         if ($this->getElement()->foldaway == true) {
             $collapse = new Collapse($this->getElement()->getId(), $this->getElement()->getLabel(), $content);
-            $collapse->foldedByDefault = $this->getElement()->folded;
+            if (!$this->getElement()->folded) {
+                $collapse->show();
+            }
             $collapse->addClass('subGroup');
             if ($this->getElement() instanceof UI_Form_Element_GroupRepeated) {
                 $collapse->addClass('repeatedGroup');

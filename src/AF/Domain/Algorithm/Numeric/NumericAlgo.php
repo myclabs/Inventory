@@ -6,9 +6,8 @@ use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Index\Index;
 use AF\Domain\Algorithm\Output;
-use Classification\Domain\IndicatorAxis;
+use Classification\Domain\Axis;
 use Classification\Domain\ContextIndicator;
-use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\Collection;
@@ -32,24 +31,15 @@ abstract class NumericAlgo extends Algo
     protected $label;
 
     /**
-     * @var string
+     * @var ContextIndicator
      */
-    protected $refContext;
-
-    /**
-     * @var string
-     */
-    protected $refIndicator;
+    protected $contextIndicator;
 
     /**
      * @var Collection|Index[]
      */
     protected $indexes;
 
-
-    /**
-     * Constructeur
-     */
     public function __construct()
     {
         $this->indexes = new ArrayCollection();
@@ -100,18 +90,11 @@ abstract class NumericAlgo extends Algo
     }
 
     /**
-     * @return \Classification\Domain\ContextIndicator
+     * @return ContextIndicator
      */
     public function getContextIndicator()
     {
-        if (!$this->refContext || !$this->refIndicator) {
-            return null;
-        }
-        try {
-            return ContextIndicator::loadByRef($this->refContext, $this->refIndicator);
-        } catch (Core_Exception_NotFound $e) {
-            return null;
-        }
+        return $this->contextIndicator;
     }
 
     /**
@@ -119,13 +102,7 @@ abstract class NumericAlgo extends Algo
      */
     public function setContextIndicator(ContextIndicator $contextIndicator = null)
     {
-        if ($contextIndicator) {
-            $this->refContext = $contextIndicator->getContext()->getRef();
-            $this->refIndicator = $contextIndicator->getIndicator()->getRef();
-        } else {
-            $this->refContext = null;
-            $this->refIndicator = null;
-        }
+        $this->contextIndicator = $contextIndicator;
         // Supprime l'indexation dans l'ancien indicateur
         $this->indexes->clear();
     }
@@ -140,10 +117,10 @@ abstract class NumericAlgo extends Algo
 
     /**
      * Retourne l'index correspondant à l'axe passé en paramètre
-     * @param \Classification\Domain\IndicatorAxis $axis
+     * @param Axis $axis
      * @return Index|null
      */
-    public function getIndexForAxis(IndicatorAxis $axis)
+    public function getIndexForAxis(Axis $axis)
     {
         foreach ($this->indexes as $index) {
             if ($index->getClassificationAxis() === $axis) {
@@ -196,6 +173,6 @@ abstract class NumericAlgo extends Algo
      */
     public function isIndexed()
     {
-        return ($this->getContextIndicator() !== null);
+        return ($this->contextIndicator !== null);
     }
 }

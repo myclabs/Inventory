@@ -10,8 +10,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Jeu de données basique pour faire tourner l'application.
  *
  * @Injectable(lazy=true)
- *
- * @author matthieu.napoli
  */
 class BasicDataSet
 {

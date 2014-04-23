@@ -40,7 +40,7 @@ Feature: AF numeric field feature
     And I fill in "numericFieldDatagrid_label_addForm" with "AAA"
     And I fill in "numericFieldDatagrid_ref_addForm" with "aaa"
     And I fill in "numericFieldDatagrid_help_addForm" with "h1. Blabla"
-    And I check "numericFieldDatagrid_isVisible_addForm_0"
+    And I check "numericFieldDatagrid_isVisible_addForm_false"
     And I check "Désactivé"
     And I check "Obligatoire"
     And I fill in "numericFieldDatagrid_unit_addForm" with "kg_co2e.m3^-1"
@@ -48,7 +48,7 @@ Feature: AF numeric field feature
     And I check "Masquée"
     And I fill in "numericFieldDatagrid_digitalValue_addForm" with "1000,5"
     And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "10,9"
-    And I check "numericFieldDatagrid_defaultValueReminder_addForm_1"
+    And I check "numericFieldDatagrid_defaultValueReminder_addForm_true"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Vérification ligne bien ajoutée

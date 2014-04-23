@@ -4,9 +4,11 @@ use AF\Application\InputFormParser;
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
-use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
+use MyCLabs\MUIH\Icon;
+use MyCLabs\ACL\ACL;
 use MyCLabs\MUIH\Tab;
 use User\Domain\ACL\Actions;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
@@ -30,9 +32,9 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Inject
@@ -81,12 +83,6 @@ class Orga_CellController extends Core_Controller
      * @var EntryRepository
      */
     private $auditTrailRepository;
-
-    /**
-     * @Inject
-     * @var Social_Service_CommentService
-     */
-    private $commentService;
 
     /**
      * Redirection sur la liste.
@@ -145,14 +141,19 @@ class Orga_CellController extends Core_Controller
             $currentCellPurpose .= __('DW', 'name', 'analyses');
         }
         $this->view->assign('currentCellPurpose', $currentCellPurpose);
+        $currentAxes = $granularity->getAxes();
+        $this->view->assign(
+            'refAxes',
+            json_encode(array_map(function ($axis) { return $axis->getRef(); }, $currentAxes))
+        );
         $this->setActiveMenuItemOrganization($organization->getId());
 
-        $isUserAllowedToEditOrganization = $this->aclManager->isAllowed(
+        $isUserAllowedToEditOrganization = $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization
         );
-        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->aclManager->isAllowed(
+        $isUserAllowToEditAllMembers = $isUserAllowedToEditOrganization || $this->acl->isAllowed(
             $connectedUser,
             Actions::EDIT,
             $organization->getGranularityByRef('global')->getCellByMembers([])
@@ -178,7 +179,7 @@ class Orga_CellController extends Core_Controller
             $purpose = '';
             // ACL purpose.
             $isNarrowerGranularityACL = ($narrowerGranularity->getCellsWithACL())
-                && ($this->aclManager->isAllowed($connectedUser, Actions::ALLOW, $cell));
+                && ($this->acl->isAllowed($connectedUser, Actions::ALLOW, $cell));
             if ($isNarrowerGranularityACL) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
@@ -194,6 +195,12 @@ class Orga_CellController extends Core_Controller
                 if (!$narrowerGranularityHasACLParent) {
                     foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
                         if ($broaderInventoryGranularity->getCellsWithACL()) {
+                            foreach ($narrowerGranularity->getAxes() as $narrowerGranularityAxis) {
+                                if (!$granularityForInventoryStatus->hasAxis($narrowerGranularityAxis)
+                                    && !$broaderInventoryGranularity->hasAxis($narrowerGranularityAxis)) {
+                                    continue 2;
+                                }
+                            }
                             $narrowerGranularityHasACLParent = true;
                             break;
                         }
@@ -231,7 +238,7 @@ class Orga_CellController extends Core_Controller
             }
             // Reports purpose.
             $isNarrowerGranularityAnalyses = ($narrowerGranularity->getCellsGenerateDWCubes())
-                && ($this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell));
+                && ($this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell));
             if ($isNarrowerGranularityAnalyses) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
@@ -286,29 +293,63 @@ class Orga_CellController extends Core_Controller
         $axesCanEdit = $this->orgaACLManager->getAxesCanEdit($connectedUser, $organization);
         $this->view->assign('canAddMembers', (count($axesCanEdit) > 0));
         if (count($axesCanEdit) > 0) {
-            $addMembersForm = new UI_Form('addMember');
-            $addMembersForm->setAction('orga/cell/add-member/idCell/'.$idCell);
-            $selectAxis = new UI_Form_Element_Select('axis');
-            $selectAxis->setLabel(__('UI', 'name', 'axis'));
-            $selectAxis->getElement()->help = __('Orga', 'view', 'addMembersAxisExplanations');
-            $selectAxis->addNullOption('');
-            $addMembersForm->addElement($selectAxis);
+            $addMemberForm = new GenericTag('form');
+            $addMemberForm->setAttribute('action', 'orga/cell/add-member/idCell/'.$idCell);
+            $addMemberForm->setAttribute('method', 'POST');
+            $addMemberForm->setAttribute('id', 'addMember');
+            $addMemberForm->addClass('form-horizontal');
+
+            $axisChoiceLabel = new GenericTag('label', __('UI', 'name', 'axis'));
+            $axisChoiceLabel->setAttribute('for', 'addMember_axis');
+            $axisChoiceLabel->addClass('control-label');
+            $axisChoiceLabel->addClass('col-xs-2');
+            $axisChoiceLabel->addClass('withTooltip');
+            $axisChoiceLabel->setAttribute('title', ___('Orga', 'view', 'addMembersAxisExplanations'));
+            $axisChoiceLabel->setAttribute('data-html', 'true');
+            $axisChoiceHelp = new Icon('question-circle');
+            $axisChoiceLabel->appendContent(' ');
+            $axisChoiceLabel->appendContent($axisChoiceHelp);
+            $axisChoiceInput = new GenericTag('select');
+            $axisChoiceInput->setAttribute('name', 'axis');
+            $axisChoiceInput->setAttribute('id', 'addMember_axis');
+            $axisChoiceInput->addClass('form-control');
+            $axisChoiceWrapper = new GenericTag('div', $axisChoiceInput);
+            $axisChoiceWrapper->addClass('col-xs-10');
+            $axisChoiceGroup = new GenericTag('div');
+            $axisChoiceGroup->addClass('form-group');
+            $axisChoiceGroup->appendContent($axisChoiceLabel);
+            $axisChoiceGroup->appendContent($axisChoiceWrapper);
+            $addMemberForm->appendContent($axisChoiceGroup);
+
+            $axisChoiceNullOption = new GenericTag('option');
+            $axisChoiceNullOption->setAttribute('value', '');
+            $axisChoiceInput->appendContent($axisChoiceNullOption);
             foreach ($axesCanEdit as $axis) {
-                $axisOption = new UI_Form_Element_Option($axis->getRef(), $axis->getRef(), $axis->getLabel());
-                $selectAxis->addOption($axisOption);
+                $axisOption = new GenericTag('option', $axis->getLabel());
+                $axisOption->setAttribute('value', $axis->getRef());
+                $axisChoiceInput->appendContent($axisOption);
 
-                $axisGroup = new UI_Form_Element_Group($axis->getRef().'_group');
-                $axisGroup->setLabel('');
-                $axisGroup->foldaway = false;
-                $axisGroup->getElement()->hidden = true;
-
-                $memberInput = new UI_Form_Element_Text($axis->getRef().'_member');
-                $memberInput->setLabel(__('UI', 'name', 'element'));
-                $memberInput->setAttrib('placeholder', __('UI', 'name', 'label'));
-                $axisGroup->addElement($memberInput);
                 foreach ($axis->getDirectBroaders() as $broaderAxis) {
-                    $selectParentMember = new UI_Form_Element_Select($axis->getRef().'_parentMember_'.$broaderAxis->getRef());
-                    $selectParentMember->setLabel($broaderAxis->getLabel());
+                    $parentMemberGroup = new GenericTag('div');
+                    $parentMemberGroup->addClass('form-group');
+                    $parentMemberGroup->addClass('hide');
+                    $parentMemberGroup->addClass('broader-axis');
+                    $parentMemberGroup->addClass($axis->getRef());
+                    $addMemberForm->appendContent($parentMemberGroup);
+
+                    $parentMemberChoiceLabel = new GenericTag('label', $broaderAxis->getLabel());
+                    $parentMemberChoiceLabel->setAttribute('for', 'addMember_axis_'.$broaderAxis->getId());
+                    $parentMemberChoiceLabel->addClass('control-label');
+                    $parentMemberChoiceLabel->addClass('col-xs-2');
+                    $parentMemberChoiceInput = new GenericTag('select');
+                    $parentMemberChoiceInput->setAttribute('name', $axis->getRef().'_parentMember_'.$broaderAxis->getRef());
+                    $parentMemberChoiceInput->setAttribute('id', 'addMember_axis_'.$broaderAxis->getId());
+                    $parentMemberChoiceInput->addClass('form-control');
+                    $parentMemberChoiceWrapper = new GenericTag('div', $parentMemberChoiceInput);
+                    $parentMemberChoiceWrapper->addClass('col-xs-10');
+                    $parentMemberGroup->appendContent($parentMemberChoiceLabel);
+                    $parentMemberGroup->appendContent($parentMemberChoiceWrapper);
+
                     if (!$isUserAllowToEditAllMembers) {
                         $members = [];
                         foreach ($topCellsWithEditAccess as $cell) {
@@ -330,20 +371,38 @@ class Orga_CellController extends Core_Controller
                         $members = $broaderAxis->getMembers();
                     }
                     foreach ($members as $parentMember) {
-                        $parentMemberOption = new UI_Form_Element_Option($parentMember->getId(), $parentMember->getId(), $parentMember->getLabel());
-                        $selectParentMember->addOption($parentMemberOption);
+                        $parentMemberOption = new GenericTag('option', $parentMember->getLabel());
+                        $parentMemberOption->setAttribute('value', $parentMember->getId());
+                        $parentMemberChoiceInput->appendContent($parentMemberOption);
                     }
-                    $axisGroup->addElement($selectParentMember);
                 }
-
-                $displayGroupAction = new UI_Form_Action_Show($axis->getRef().'_toggle');
-                $displayGroupAction->condition = new UI_Form_Condition_Elementary('', $selectAxis, UI_Form_Condition_Elementary::EQUAL, $axis->getRef());
-                $axisGroup->getElement()->addAction($displayGroupAction);
-
-                $addMembersForm->addElement($axisGroup);
             }
-            $addMembersForm->addSubmitButton('Ajouter');
-            $this->view->assign('addMembersForm', $addMembersForm);
+
+            $memberLabelLabel = new GenericTag('label', __('UI', 'name', 'element'));
+            $memberLabelLabel->addClass('control-label');
+            $memberLabelLabel->addClass('col-xs-2');
+            $memberLabelInput = new GenericVoidTag('input');
+            $memberLabelInput->setAttribute('name', 'label');
+            $memberLabelInput->setAttribute('type', 'text');
+            $memberLabelInput->setAttribute('placeholder', __('UI', 'name', 'label'));
+            $memberLabelInput->addClass('form-control');
+            $memberLabelWrapper = new GenericTag('div', $memberLabelInput);
+            $memberLabelWrapper->addClass('col-xs-10');
+            $memberLabelGroup = new GenericTag('div');
+            $memberLabelGroup->addClass('form-group');
+            $memberLabelGroup->addClass('hide');
+            $memberLabelGroup->appendContent($memberLabelLabel);
+            $memberLabelGroup->appendContent($memberLabelWrapper);
+            $addMemberForm->appendContent($memberLabelGroup);
+
+            $addMemberSubmitButton = new GenericVoidTag('input');
+            $addMemberSubmitButton->setAttribute('type', 'submit');
+            $addMemberSubmitButton->addClass('btn');
+            $addMemberSubmitButton->addClass('btn-primary');
+            $addMemberSubmitButton->addClass('pull-right');
+            $addMemberForm->appendContent($addMemberSubmitButton);
+
+            $this->view->assign('addMemberForm', $addMemberForm);
         }
     }
 
@@ -393,14 +452,14 @@ class Orga_CellController extends Core_Controller
 
         // ACL.
         $showUsers = $narrowerGranularity->getCellsWithACL()
-            && $this->aclManager->isAllowed($connectedUser, Actions::ALLOW, $cell);
+            && $this->acl->isAllowed($connectedUser, Actions::ALLOW, $cell);
 
         // Reports.
         $showReports = $narrowerGranularity->getCellsGenerateDWCubes()
-            && $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell);
+            && $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell);
 
         // Exports
-        $showExports = $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE, $cell);
+        $showExports = $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell);
 
         // Inventory.
         try {
@@ -410,8 +469,8 @@ class Orga_CellController extends Core_Controller
             $granularityForInventoryStatus = null;
         }
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
-            && $this->aclManager->isAllowed($connectedUser, Actions::ANALYZE(), $cell)
-            && $this->aclManager->isAllowed($connectedUser, Actions::INPUT(), $cell));
+            && $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell)
+            && $this->acl->isAllowed($connectedUser, Actions::INPUT, $cell));
         $showInventory = (($granularityForInventoryStatus !== null)
             && (($narrowerGranularity === $granularityForInventoryStatus)
                 || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
@@ -420,6 +479,12 @@ class Orga_CellController extends Core_Controller
             if (!$narrowerGranularityHasACLParent) {
                 foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
                     if ($broaderInventoryGranularity->getCellsWithACL()) {
+                        foreach ($narrowerGranularity->getAxes() as $narrowerGranularityAxis) {
+                            if (!$granularityForInventoryStatus->hasAxis($narrowerGranularityAxis)
+                                && !$broaderInventoryGranularity->hasAxis($narrowerGranularityAxis)) {
+                                continue 2;
+                            }
+                        }
                         $narrowerGranularityHasACLParent = true;
                         break;
                     }
@@ -460,14 +525,16 @@ class Orga_CellController extends Core_Controller
         }
         $childCellsCriteria->setFirstResult($this->getParam('firstCell'));
         $childCellsCriteria->setMaxResults($this->getParam('showCells'));
-        $filters = $this->getParam('filters');
-        $filterPrefix = 'granularity' . $idNarrowerGranularity . '_';
-        foreach ($filters as $filter) {
-            if (!empty($filter['value'])) {
-                if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
-                    $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
-                } else {
-                    $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
+        if ($this->hasParam('filters')) {
+            $filters = $this->getParam('filters');
+            $filterPrefix = 'granularity' . $idNarrowerGranularity . '_';
+            foreach ($filters as $filter) {
+                if (!empty($filter['value'])) {
+                    if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
+                        $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
+                    } else {
+                        $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
+                    }
                 }
             }
         }
@@ -491,12 +558,14 @@ class Orga_CellController extends Core_Controller
         $childCellsQuery = new Core_Model_Query();
         $childCellsQuery->filter->addCondition(Orga_Model_Cell::QUERY_RELEVANT, true);
         $childCellsQuery->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
-        foreach ($filters as $filter) {
-            if (!empty($filter['value'])) {
-                if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
-                    $childCellsQuery->filter->addCondition('inventoryStatus', $filter['value']);
-                } else {
-                    $childCellsQuery->filter->addCondition('tag', $filter['value'], Core_Model_Filter::OPERATOR_CONTAINS);
+        if ($this->hasParam('filters')) {
+            foreach ($filters as $filter) {
+                if (!empty($filter['value'])) {
+                    if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
+                        $childCellsQuery->filter->addCondition('inventoryStatus', $filter['value']);
+                    } else {
+                        $childCellsQuery->filter->addCondition('tag', $filter['value'], Core_Model_Filter::OPERATOR_CONTAINS);
+                    }
                 }
             }
         }
@@ -557,7 +626,7 @@ class Orga_CellController extends Core_Controller
         $locale = Core_Locale::loadDefault();
 
         $comments = [];
-        /** @var Orga_Model_InputComment|Social_Model_Comment $comment */
+        /** @var Orga_Model_Cell_InputComment $comment */
         foreach ($cellRepository->getLatestComments($cell, 10) as $comment) {
             $commentText = __('Social', 'comment', 'by') . ' <b>' . $comment->getAuthor()->getName() . '</b> '
                 . __('Orga', 'input', 'aboutInput')
@@ -590,7 +659,7 @@ class Orga_CellController extends Core_Controller
 
         $formData = json_decode($this->getRequest()->getParam('addMember'), true);
 
-        $axisRef = $formData['axis']['value'];
+        $axisRef = $this->getParam('axis');
         if (empty($axisRef)) {
             $this->addFormError('axis', __('UI', 'formValidation', 'emptyRequiredField'));
             $this->sendFormResponse();
@@ -598,12 +667,11 @@ class Orga_CellController extends Core_Controller
         }
         $axis = $cell->getOrganization()->getAxisByRef($axisRef);
 
-        $axisData = $formData[$axis->getRef().'_group']['elements'];
         $parentMembers = [];
         $contextualizingParentMembers = [];
         foreach ($axis->getDirectBroaders() as $broaderAxis) {
             $parentAxisFieldRef = $axis->getRef() . '_parentMember_' . $broaderAxis->getRef();
-            $parentMember = Orga_Model_Member::load($axisData[$parentAxisFieldRef]['value']);
+            $parentMember = Orga_Model_Member::load($this->getParam($parentAxisFieldRef));
             $parentMembers[] = $parentMember;
             if ($parentMember->getAxis()->isContextualizing()) {
                 $contextualizingParentMembers[] = $parentMember;
@@ -615,9 +683,9 @@ class Orga_CellController extends Core_Controller
         }
         $parentMembersHashkey = Orga_Model_Member::buildParentMembersHashKey($contextualizingParentMembers);
 
-        $label = $axisData[$axis->getRef() . '_member']['value'];
+        $label = $this->getParam('label');
         if (empty($label)) {
-            $this->addFormError($axis->getRef() . '_member', __('UI', 'formValidation', 'emptyRequiredField'));
+            $this->addFormError('label', __('UI', 'formValidation', 'emptyRequiredField'));
             $this->sendFormResponse();
             return;
         }
@@ -1002,7 +1070,7 @@ class Orga_CellController extends Core_Controller
         $exports = [];
 
         $displayOrgaExport = (count($cell->getGranularity()->getNarrowerGranularities()) > 0)
-            && $this->aclManager->isAllowed($connectedUser, Actions::EDIT, $cell);
+            && $this->acl->isAllowed($connectedUser, Actions::EDIT, $cell);
         if ($displayOrgaExport) {
             if (!$cell->getGranularity()->hasAxes()) {
                 // Orga Structure.
@@ -1020,11 +1088,11 @@ class Orga_CellController extends Core_Controller
         // Orga ACL.
         $displayACLExport = false;
         if ($cell->getGranularity()->getCellsWithACL()) {
-            $displayACLExport = $this->aclManager->isAllowed($connectedUser, Actions::ALLOW, $cell);
+            $displayACLExport = $this->acl->isAllowed($connectedUser, Actions::ALLOW, $cell);
         } else {
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getCellsWithACL()) {
-                    $displayACLExport = $this->aclManager->isAllowed(
+                    $displayACLExport = $this->acl->isAllowed(
                         $connectedUser,
                         Actions::ALLOW,
                         $cell
@@ -1042,7 +1110,7 @@ class Orga_CellController extends Core_Controller
         // Orga Inputs (droit d'analyser nécessaire).
         $displayInputsExport = false;
         if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
-            $displayInputsExport = $this->aclManager->isAllowed(
+            $displayInputsExport = $this->acl->isAllowed(
                 $connectedUser,
                 Actions::ANALYZE,
                 $cell
@@ -1050,7 +1118,7 @@ class Orga_CellController extends Core_Controller
         } else {
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getInputConfigGranularity() !== null) {
-                    $displayInputsExport = $this->aclManager->isAllowed(
+                    $displayInputsExport = $this->acl->isAllowed(
                         $connectedUser,
                         Actions::ANALYZE,
                         $cell
@@ -1068,7 +1136,7 @@ class Orga_CellController extends Core_Controller
         // Orga Outputs.
         $displayOutputsExport = false;
         if ($cell->getGranularity()->getInputConfigGranularity() !== null) {
-            $displayOutputsExport = $this->aclManager->isAllowed(
+            $displayOutputsExport = $this->acl->isAllowed(
                 $connectedUser,
                 Actions::ANALYZE,
                 $cell
@@ -1076,7 +1144,7 @@ class Orga_CellController extends Core_Controller
         } else {
             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getInputConfigGranularity() !== null) {
-                    $displayOutputsExport = $this->aclManager->isAllowed(
+                    $displayOutputsExport = $this->acl->isAllowed(
                         $connectedUser,
                         Actions::ANALYZE,
                         $cell
@@ -1230,7 +1298,7 @@ class Orga_CellController extends Core_Controller
         $cell = Orga_Model_Cell::load($idCell);
         $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
-        $isUserAllowedToInputCell = $this->aclManager->isAllowed(
+        $isUserAllowedToInputCell = $this->acl->isAllowed(
             $this->_helper->auth(),
             Actions::INPUT,
             $cell
@@ -1255,8 +1323,14 @@ class Orga_CellController extends Core_Controller
 
         $tabComments = new Tab('inputComments');
         $tabComments->setTitle(__('Social', 'comment', 'comments'));
-        $tabComments->setContent('orga/cell/input-comments/idCell/'.$idCell);
-        $tabComments->setAjax(true, true);
+        $commentView = new Zend_View();
+        $commentView->setScriptPath(__DIR__ . '/../views/scripts');
+        $commentView->assign('idCell', $idCell);
+        $commentView->assign(
+            'isUserAbleToComment',
+            $this->acl->isAllowed($this->_helper->auth(), Actions::INPUT, $cell)
+        );
+        $tabComments->setContent($commentView->render('cell/input-comments.phtml'));
         $aFViewConfiguration->addTab($tabComments);
 
         $tabDocs = new Tab('inputDocs');
@@ -1265,7 +1339,7 @@ class Orga_CellController extends Core_Controller
         $tabDocs->setAjax(true, true);
         $aFViewConfiguration->addTab($tabDocs);
 
-        $isUserAllowedToViewCellReports = $this->aclManager->isAllowed(
+        $isUserAllowedToViewCellReports = $this->acl->isAllowed(
             $this->_helper->auth(),
             Actions::ANALYZE,
             $cell
@@ -1291,14 +1365,12 @@ class Orga_CellController extends Core_Controller
     public function inputPreviewAction()
     {
         $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
 
-        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
 
         // Form data
-        $formContent = json_decode($this->getParam($af->getRef()), true);
+        $formContent = json_decode($this->getParam('af' . $af->getId()), true);
         $errorMessages = [];
 
         // Remplit l'InputSet
@@ -1340,90 +1412,6 @@ class Orga_CellController extends Core_Controller
         $inputSetContainer->inputSet = $cell->getAFInputSetPrimary();
 
         $this->_helper->viewRenderer->setNoRender(true);
-    }
-
-    /**
-     * @Secure("viewCell")
-     */
-    public function inputCommentsAction()
-    {
-        /** @var User $connectedUser */
-        $connectedUser = $this->_helper->auth();
-
-        $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
-
-        $this->view->assign('idCell', $idCell);
-
-        $this->view->assign('idCell', $idCell);
-        $this->view->assign('comments', $cell->getSocialCommentsForInputSetPrimary());
-        $this->view->assign('currentUser', $connectedUser);
-        $this->view->assign(
-            'isUserAbleToComment',
-            $this->aclManager->isAllowed($connectedUser, Actions::INPUT, $cell)
-        );
-
-        // Désactivation du layout.
-        $this->_helper->layout()->disableLayout();
-    }
-
-    /**
-     * @Secure("inputCell")
-     */
-    public function inputCommentAddAction()
-    {
-        /** @var User $connectedUser */
-        $connectedUser = $this->_helper->auth();
-
-        $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
-
-        $this->view->assign('idCell', $idCell);
-
-        $formData = $this->getFormData('addCommentForm');
-
-        $content = $formData->getValue('addContent');
-        if (empty($content)) {
-            $this->addFormError('addContent', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
-        if (!$this->hasFormError()) {
-            // Ajoute le commentaire
-            $comment = $this->commentService->addComment($connectedUser, $content);
-            $cell->addSocialCommentForInputSetPrimary($comment);
-            $cell->save();
-            $this->entityManager->flush();
-
-            // Retourne la vue du commentaire
-            $this->forward('comment-added', 'comment', 'social', [
-                'comment' => $comment,
-                'currentUser' => $connectedUser
-            ]);
-            return;
-        }
-
-        // Désactivation du layout.
-        $this->_helper->layout()->disableLayout();
-
-        $this->sendFormResponse();
-    }
-
-    /**
-     * @Secure("deleteComment")
-     */
-    public function inputCommentDeleteAction()
-    {
-        $idCell = $this->getParam('idCell');
-        /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
-
-        $comment = Social_Model_Comment::load($this->getParam('id'));
-
-        $cell->removeSocialCommentForInputSetPrimary($comment);
-        $this->commentService->deleteComment($comment->getId());
-
-        $this->sendFormResponse();
     }
 
     /**

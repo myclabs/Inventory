@@ -21,7 +21,7 @@ class AF_Edit_AlgosController extends Core_Controller
      */
     public function popupExpressionAction()
     {
-        $this->view->algo = Algo::load($this->getParam('id'));
+        $this->view->algo = Algo::load($this->getParam('algo'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -31,7 +31,8 @@ class AF_Edit_AlgosController extends Core_Controller
      */
     public function popupIndexationAction()
     {
-        $this->view->algo = Algo::load($this->getParam('id'));
+        $this->view->af = AF::load($this->getParam('idAF'));
+        $this->view->algo = Algo::load($this->getParam('algo'));
         $this->_helper->layout()->disableLayout();
     }
 
@@ -41,7 +42,7 @@ class AF_Edit_AlgosController extends Core_Controller
      */
     public function updateConditionElementaryPopupAction()
     {
-        $this->view->af = AF::load($this->getParam('idAf'));
+        $this->view->af = AF::load($this->getParam('idAF'));
         $this->view->algo = ElementaryConditionAlgo::load($this->getParam('idAlgo'));
         $this->_helper->layout()->disableLayout();
     }
@@ -57,7 +58,7 @@ class AF_Edit_AlgosController extends Core_Controller
             throw new Core_Exception_NotFound("Page invalide");
         }
         /** @var $af AF */
-        $af = AF::load($this->getParam('idAf'));
+        $af = AF::load($this->getParam('idAF'));
         $algo = ElementaryConditionAlgo::load($this->getParam('idAlgo'));
 
         switch (get_class($algo)) {
@@ -87,7 +88,7 @@ class AF_Edit_AlgosController extends Core_Controller
         }
         $algo->save();
         $this->entityManager->flush();
-        $this->redirect('/af/edit/menu/id/' . $af->getId() . '/onglet/traitement');
+        $this->redirect('af/edit/menu/id/' . $af->getId() . '/onglet/traitement');
     }
 
     /**

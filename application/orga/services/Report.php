@@ -25,12 +25,6 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
         /** @var Orga_Service_ETLStructure $etlStructureService */
         $etlStructureService = \Core\ContainerSingleton::getContainer()->get('Orga_Service_ETLStructure');
 
-        try {
-            Simulation_Model_Set::loadByDWCube($subject->getCube()->getId());
-            return;
-        } catch (Core_Exception_NotFound $e) {
-            // Le Report n'est pas issue d'une simulation.
-        }
         switch ($event) {
             case DW_Model_Report::EVENT_SAVE:
                 if ($subject->getCube()->getId() == null) {

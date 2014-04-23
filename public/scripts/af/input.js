@@ -126,16 +126,18 @@ AF.Input = function (id, ref, mode, idInputSet, exitURL, urlParams, resultsPrevi
         title: __('UI', 'history', 'valueHistory'),
         html: true,
         content: popoverDefaultContent
-    }).click(function () {
-            var button = $(this);
-            // Si visible (merci Bootstrap pour cette merde)
-            if (button.data('popover').tip().hasClass('in')) {
-                that.loadInputHistory(button.data('input-id'), button);
-            } else {
-                // Rétablit le chargement ajax
-                button.data('popover').options.content = popoverDefaultContent;
-            }
-        });
+    })
+    .on('show.bs.popover', function () {
+        // Failsafe parce qu'on ré-appelle "show" quand AJAX a finit de charger
+        if ($(this).hasClass('active')) {
+            return;
+        }
+        that.loadInputHistory($(this).data('input-id'), $(this));
+    })
+    .on('hidden.bs.popover', function () {
+        // Rétablit le contenu par défaut
+        $(this).data('bs.popover').options.content = popoverDefaultContent;
+    })
 };
 
 AF.Input.prototype = {
@@ -146,16 +148,17 @@ AF.Input.prototype = {
     exit: function () {
         var that = this;
         if (this.hasChanges) {
-            bootbox.confirm(
-                __("AF", "inputInput", "confirmExitInput"),
-                __("UI", "verb", "cancel"),
-                __("UI", "verb", "confirm"),
-                function (choice) {
-                    if (choice == true) {
-                        window.location.href = that.exitURL;
-                    }
+            $.confirm({
+                text: __("AF", "inputInput", "confirmExitInput"),
+                confirmButton: __("UI", "verb", "confirm"),
+                cancelButton: __("UI", "verb", "cancel"),
+                confirm: function() {
+                    window.location.href = that.exitURL;
+                },
+                cancel: function() {
+                    // nothing to do
                 }
-            );
+            });
         } else {
             window.location.href = that.exitURL;
         }
@@ -190,20 +193,20 @@ AF.Input.prototype = {
                 this.form.attr("action", currentUrl + "?idInputSet=" + this.idInputSet);
             }
             // URL d'aperçu des résultats
-            currentUrl = $("#tabs_tabResult").attr("data-remote");
+            currentUrl = $("[href='#tabs_tabResult']").attr("data-src");
             if ((typeof currentUrl !== "undefined")
                 && (currentUrl.indexOf("/idInputSet/") === -1)
                 && (currentUrl.indexOf("?idInputSet=") === -1)
             ) {
-                $("#tabs_tabResult").attr("data-remote", currentUrl + "?idInputSet=" + this.idInputSet);
+                $("[href='#tabs_tabResult']").attr("data-src", currentUrl + "?idInputSet=" + this.idInputSet);
             }
             // URL du détails des calculs
-            currentUrl = $("#tabs_tabCalculationDetails").attr("data-remote");
+            currentUrl = $("[href='#tabs_tabCalculationDetails']").attr("data-src");
             if ((typeof currentUrl !== "undefined")
                 && (currentUrl.indexOf("/idInputSet/") === -1)
                 && (currentUrl.indexOf("?idInputSet=") === -1)
             ) {
-                $("#tabs_tabCalculationDetails").attr("data-remote", currentUrl + "?idInputSet=" + this.idInputSet);
+                $("[href='#tabs_tabCalculationDetails']").attr("data-src", currentUrl + "?idInputSet=" + this.idInputSet);
             }
         }
 
@@ -216,7 +219,7 @@ AF.Input.prototype = {
         }, 0);
 
         // Cache l'aperçu des résultats
-        $(".resultsPreview").hide();
+        $(".resultsPreview").addClass('hide');
 
         // Met à jour la complétion de la saisie
         this.inputProgress.setStatus(response.data.status, response.data.completion);
@@ -262,7 +265,7 @@ AF.Input.prototype = {
     onResultsPreviewHandler: function (response, textStatus, jqXHR) {
         this.form.find(".inputPreview").button("reset");
         $(".resultsPreviewContent").html(response.data);
-        $(".resultsPreview").show();
+        $(".resultsPreview").removeClass('hide');
         // Restaure l'URL de submit par défaut
         this.form.prop("action", this.defaultFormAction);
         // Restaure le handler par défaut
@@ -323,15 +326,10 @@ AF.Input.prototype = {
             }
         }
 
-        $.get(url,
-            function (html) {
-                // Si visible (merci Bootstrap pour cette merde)
-                if (button.data('popover').tip().hasClass('in')) {
-                    button.data('popover').options.content = html;
-                    button.popover('show');
-                }
-            }
-        );
+        $.get(url, function (html) {
+            button.data('bs.popover').options.content = html;
+            button.popover('show');
+        });
     }
 
 };

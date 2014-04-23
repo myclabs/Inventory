@@ -21,7 +21,7 @@ class ACLPlugin extends AbstractACLPlugin
      */
     public function createUserRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::CREATE,
             new ClassResource(User::class)
@@ -40,9 +40,14 @@ class ACLPlugin extends AbstractACLPlugin
             return true;
         }
 
+        $user = User::load($request->getParam('id'));
+        if ($user === $identity) {
+            return true;
+        }
+
         // Si on peut modifier tous les utilisateurs
         // Pas d'ACL directe entre utilisateurs, c'est overkill
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
             new ClassResource(User::class)
@@ -58,7 +63,7 @@ class ACLPlugin extends AbstractACLPlugin
     {
         // Si on peut supprimer tous les utilisateurs
         // Pas d'ACL directe entre utilisateurs, c'est overkill
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::DELETE,
             new ClassResource(User::class)
@@ -74,7 +79,7 @@ class ACLPlugin extends AbstractACLPlugin
     {
         // Si on peut réactiver tous les utilisateurs
         // Pas d'ACL directe entre utilisateurs, c'est overkill
-        return $this->aclManager->isAllowed(
+        return $this->acl->isAllowed(
             $identity,
             Actions::UNDELETE,
             new ClassResource(User::class)
@@ -88,6 +93,6 @@ class ACLPlugin extends AbstractACLPlugin
      */
     public function viewAllUsersRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return $this->aclManager->isAllowed($identity, Actions::VIEW, new ClassResource(User::class));
+        return $this->acl->isAllowed($identity, Actions::VIEW, new ClassResource(User::class));
     }
 }

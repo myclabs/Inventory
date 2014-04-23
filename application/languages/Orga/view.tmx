@@ -380,7 +380,7 @@
         </tu>
         <tu tuid="statusNotStarted">
             <tuv xml:lang="fr">
-                <seg>Saisie non démarrée</seg>
+                <seg>Non démarrée</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Input not started</seg>
@@ -412,7 +412,7 @@
         </tu>
         <tu tuid="inputsNotStartedSingle">
             <tuv xml:lang="fr">
-                <seg>non démarrée</seg>
+                <seg>Non démarrée</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>not started</seg>
@@ -420,7 +420,7 @@
         </tu>
         <tu tuid="inputsNotStartedMany">
             <tuv xml:lang="fr">
-                <seg>non démarrées</seg>
+                <seg>Non démarrées</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>not started</seg>
@@ -428,7 +428,7 @@
         </tu>
         <tu tuid="inputsStartedSingle">
             <tuv xml:lang="fr">
-                <seg>non terminée</seg>
+                <seg>Non terminée</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>not finished</seg>
@@ -436,7 +436,7 @@
         </tu>
         <tu tuid="inputsStartedMany">
             <tuv xml:lang="fr">
-                <seg>non terminées</seg>
+                <seg>Non terminées</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>not finished</seg>
@@ -461,12 +461,21 @@
 
         <!-- Boutons pour afficher davantage de cellules -->
 
-        <tu tuid="display-more-cells">
+        <tu tuid="displayNextCells">
             <tuv xml:lang="fr">
-                <seg>Afficher davantage d'éléments</seg>
+                <seg>Afficher les éléments suivants</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Display more elements</seg>
+                <seg>Display next elements</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="displayPrevCells">
+            <tuv xml:lang="fr">
+                <seg>Afficher les éléments précédent</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Display previous elements</seg>
             </tuv>
         </tu>
 

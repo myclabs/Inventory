@@ -17,35 +17,30 @@ use AF\Domain\Algorithm\Index\AlgoResultIndex;
 use AF\Domain\Algorithm\ParameterCoordinate\AlgoParameterCoordinate;
 use Core\Annotation\Secure;
 
-/**
- * @package AF
- */
 class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
-        /** @var $selectFields \AF\Domain\Component\Select\SelectSingle[] */
+        /** @var $selectFields SelectSingle[] */
         $selectFields = SelectSingle::loadList($this->request);
         foreach ($selectFields as $selectField) {
             $data = [];
             $data['index'] = $selectField->getId();
             $data['label'] = $selectField->getLabel();
             $data['ref'] = $selectField->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $selectField->getId(),
-                                                ' af/datagrid_edit_components_select-single-fields/get-raw-help/id/'
-                                                    . $selectField->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $selectField->getId(),
+                'af/datagrid_edit_components_select-single-fields/get-raw-help?id=' . $af->getId()
+                . '&component=' . $selectField->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $selectField->isVisible();
             $data['enabled'] = $selectField->isEnabled();
             $data['required'] = $selectField->getRequired();
@@ -54,9 +49,12 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
                 $data['defaultValue'] = $this->cellList($defaultValue->getId());
             }
             $data['type'] = $selectField->getType();
-            $data['options'] = $this->cellPopup('af/edit_components/popup-select-options/idSelect/'
-                                                    . $selectField->getId(),
-                                                __('UI', 'name', 'options'), 'zoom-in');
+            $data['options'] = $this->cellPopup(
+                'af/edit_components/popup-select-options?idSelect=' . $selectField->getId()
+                . '&idAF=' . $af->getId(),
+                __('UI', 'name', 'options'),
+                'zoom-in'
+            );
             $this->addLine($data);
         }
         $this->send();
@@ -69,7 +67,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function addelementAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
@@ -123,7 +121,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function updateelementAction()
     {
-        /** @var $selectField \AF\Domain\Component\Select\SelectSingle */
+        /** @var $selectField SelectSingle */
         $selectField = SelectSingle::load($this->update['index']);
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
@@ -137,11 +135,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
                 break;
             case 'help':
                 $selectField->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $selectField->getId(),
-                                                  ' af/datagrid_edit_components_select-single-fields/get-raw-help/id/'
-                                                      . $selectField->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
+                $this->data = null;
                 break;
             case 'isVisible':
                 $selectField->setVisible($newValue);
@@ -157,7 +151,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
                 break;
             case 'defaultValue':
                 if ($newValue) {
-                    /** @var $option \AF\Domain\Component\Select\SelectOption */
+                    /** @var $option SelectOption */
                     $option = SelectOption::load($newValue);
                     $selectField->setDefaultValue($option);
                     $this->data = $this->cellList($selectField->getDefaultValue()->getId());
@@ -187,15 +181,12 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function deleteelementAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
-        /** @var $field \AF\Domain\Component\Select\SelectSingle */
+        /** @var $field SelectSingle */
         $field = SelectSingle::load($this->getParam('index'));
         // Vérifie qu'il n'y a pas d'Algo_Condition qui référence cet input
-        $query = new Core_Model_Query();
-        $query->filter->addCondition(ElementaryConditionAlgo::QUERY_INPUT_REF, $field->getRef());
-        $algoConditions = ElementaryConditionAlgo::loadList($query);
-        if (count($algoConditions) > 0) {
+        if ($af->hasAlgoConditionOnInput($field)) {
             throw new Core_Exception_User('AF', 'configComponentMessage', 'fieldUsedByAlgoConditionDeletionDenied');
         }
         // Supprime le champ
@@ -226,7 +217,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
     public function getOptionListAction()
     {
         $this->addElementList(null, '');
-        /** @var $select \AF\Domain\Component\Select */
+        /** @var $select Select */
         $select = Select::load($this->getParam('index'));
         foreach ($select->getOptions() as $option) {
             $this->addElementList($option->getId(), $option->getLabel());
@@ -240,10 +231,9 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
      */
     public function getRawHelpAction()
     {
-        /** @var $select \AF\Domain\Component\Select */
-        $select = Select::load($this->getParam('id'));
+        /** @var $select Select */
+        $select = Select::load($this->getParam('component'));
         $this->data = $select->getHelp();
         $this->send();
     }
-
 }

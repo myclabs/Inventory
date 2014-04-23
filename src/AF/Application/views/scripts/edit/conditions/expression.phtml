@@ -1,5 +1,4 @@
 <?php
-use AF\Domain\AF;
 
 /**
  * @author  matthieu.napoli
@@ -25,8 +24,7 @@ $datagrid->addCol($refColumn);
 $expressionColumn = new UI_Datagrid_Col_LongText('expression', __('TEC', 'name', 'expression'));
 $expressionColumn->editable = true;
 $expressionColumn->textileEditor = false;
-$expressionColumn->popup->addAttribute('class', 'large');
-$expressionColumn->popup->title = __('TEC', 'name', 'expression');
+$expressionColumn->popup->large();
 $datagrid->addCol($expressionColumn);
 
 echo $datagrid->render();

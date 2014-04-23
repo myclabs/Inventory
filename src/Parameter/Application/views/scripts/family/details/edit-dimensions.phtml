@@ -239,24 +239,15 @@ $family = $this->family;
 
         for (var i = 0; i < lines.length; ++i) {
             var line = lines[i];
-            var array = line.split(/;/);
+            var array = line.split(/[;\t]/);
 
-            if (array.length != 2) {
+            if (array.length > 2) {
                 message = <?=json_encode(__('Parameter', 'import', 'errorOneSeparatorPerLine'))?>;
                 valid = false;
                 break;
             }
 
             var label = $.trim(array[0]);
-            var ref = $.trim(array[1]);
-
-            // Validate ref
-            if ((ref.length == 0) || (! /^[a-z0-9_]+$/.test(ref))) {
-                message = <?=json_encode(__('Parameter', 'import', 'errorInvalidRef'))?>;
-                message = message.replace('{line}', (i + 1).toString());
-                valid = false;
-                break;
-            }
 
             // Validate label
             if (label.length == 0) {
@@ -264,6 +255,18 @@ $family = $this->family;
                 message = message.replace('{line}', (i + 1).toString());
                 valid = false;
                 break;
+            }
+
+            // L'identifiant peut être omis
+            if (array.length == 2) {
+                var ref = $.trim(array[1]);
+                // Validate ref
+                if ((ref.length == 0) || (! /^[a-z0-9_]+$/.test(ref))) {
+                    message = <?=json_encode(__('Parameter', 'import', 'errorInvalidRef'))?>;
+                    message = message.replace('{line}', (i + 1).toString());
+                    valid = false;
+                    break;
+                }
             }
         }
 

@@ -1,7 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Category;
 use Parameter\Domain\ParameterLibrary;
@@ -15,9 +15,9 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
 {
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Secure("viewParameterLibrary")
@@ -28,7 +28,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         $library = ParameterLibrary::load($this->getParam('library'));
 
         // Test des droits (consultation/édition)
-        $isEditable = $this->aclManager->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
+        $isEditable = $this->acl->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
 
         // Chargement des catégories racine
         if ($this->idNode === null) {
@@ -134,6 +134,9 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
      */
     public function addnodeAction()
     {
+        /** @var $library ParameterLibrary */
+        $library = ParameterLibrary::load($this->getParam('library'));
+
         // Validate the form
         $label = $this->getAddElementValue('label');
         if ($label == '') {
@@ -142,7 +145,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
             return;
         }
 
-        $category = new Category($label);
+        $category = new Category($library, $label);
         $category->save();
         $this->entityManager->flush();
 
@@ -195,8 +198,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         } elseif ($position == 'last') {
             $node->setPosition($node->getLastEligiblePosition());
         } elseif ($position == 'after') {
-            $previousNodeId = $this->_form[$this->id . '_changeOrder']['children']
-                [$this->id . '_selectAfter_child']['value'];
+            $previousNodeId = $this->getEditElementValue('selectAfter');
             if ($previousNodeId == null) {
                 $this->setEditFormElementErrorMessage('children', __('UI', 'formValidation', 'emptyRequiredField'));
                 $this->send();

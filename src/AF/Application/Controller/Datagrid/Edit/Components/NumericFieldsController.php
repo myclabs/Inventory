@@ -1,9 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\Component\Component;
@@ -14,14 +9,12 @@ use Unit\UnitAPI;
 
 /**
  * Numeric fields datagrid Controller
- * @package AF
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
  */
 class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -37,11 +30,12 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $data['index'] = $numericField->getId();
             $data['label'] = $numericField->getLabel();
             $data['ref'] = $numericField->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $numericField->getId(),
-                                                ' af/datagrid_edit_components_numeric-fields/get-raw-help/id/'
-                                                    . $numericField->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $numericField->getId(),
+                'af/datagrid_edit_components_numeric-fields/get-raw-help?id=' . $af->getId()
+                . '&component=' . $numericField->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $numericField->isVisible();
             $data['enabled'] = $numericField->isEnabled();
             $data['required'] = $numericField->getRequired();
@@ -147,11 +141,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 break;
             case 'help':
                 $numericField->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $numericField->getId(),
-                                                  ' af/datagrid_edit_components_numeric-fields/get-raw-help/id/'
-                                                      . $numericField->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
+                $this->data = null;
                 break;
             case 'isVisible':
                 $numericField->setVisible($newValue);
@@ -217,8 +207,6 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -239,8 +227,11 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf(ElementaryCondition::class)) {
-                throw new Core_Exception_User('AF', 'configComponentMessage',
-                                              'fieldUsedByInteractionConditionDeletionDenied');
+                throw new Core_Exception_User(
+                    'AF',
+                    'configComponentMessage',
+                    'fieldUsedByInteractionConditionDeletionDenied'
+                );
             }
             throw $e;
         }
@@ -254,10 +245,9 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
      */
     public function getRawHelpAction()
     {
-        /** @var $numeric \AF\Domain\Component\NumericField */
-        $numeric = NumericField::load($this->getParam('id'));
+        /** @var $numeric NumericField */
+        $numeric = NumericField::load($this->getParam('component'));
         $this->data = $numeric->getHelp();
         $this->send();
     }
-
 }

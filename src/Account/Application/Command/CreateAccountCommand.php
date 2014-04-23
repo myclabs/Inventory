@@ -48,5 +48,9 @@ class CreateAccountCommand extends Command
         $this->accountRepository->add($account);
 
         $this->entityManager->flush();
+
+        $id = $account->getId();
+
+        $output->writeln("<info>Account created with ID $id</info>");
     }
 }

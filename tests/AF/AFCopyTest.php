@@ -41,13 +41,12 @@ class AFCopyTest extends TestCase
 
         $afCopyService = new AFCopyService();
         /** @var AF $newAF */
-        $newAF = $afCopyService->copyAF($oldAF, 'new_ref', 'new label');
+        $newAF = $afCopyService->copyAF($oldAF, 'new label');
 
         $this->assertInstanceOf(get_class($oldAF), $newAF);
 
         $this->assertNull($newAF->getId());
         $this->assertNull($newAF->getPosition());
-        $this->assertEquals('new_ref', $newAF->getRef());
         $this->assertEquals('new label', $newAF->getLabel());
         $this->assertEquals($oldAF->getDocumentation(), $newAF->getDocumentation());
         $this->assertNull($newAF->getCategory());

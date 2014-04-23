@@ -3,6 +3,7 @@
 use Core\Annotation\Secure;
 use Gedmo\Translatable\TranslatableListener;
 use Parameter\Domain\Family\Family;
+use Parameter\Domain\ParameterLibrary;
 
 /**
  * Classe du controller du datagrid des traductions des families.
@@ -25,11 +26,15 @@ class Parameter_Datagrid_Translate_Families_LabelController extends UI_Controlle
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function getelementsAction()
     {
         $this->translatableListener->setTranslationFallback(false);
+
+        $library = ParameterLibrary::load($this->getParam('library'));
+        $this->request->filter->addCondition('library', $library);
+
         foreach (Family::loadList($this->request) as $family) {
             /** @var Family $family */
             $data = array();
@@ -51,7 +56,7 @@ class Parameter_Datagrid_Translate_Families_LabelController extends UI_Controlle
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editParameter")
+     * @Secure("editParameterLibrary")
      */
     public function updateelementAction()
     {

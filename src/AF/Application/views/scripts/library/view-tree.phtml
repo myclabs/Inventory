@@ -1,5 +1,7 @@
 <?php
 use AF\Domain\AFLibrary;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
 
 /** @var AFLibrary $library */
 $library = $this->library;
@@ -10,12 +12,22 @@ $tree->addParam('library', $library->getId());
 $tree->addParam('mode', $this->mode);
 
 // Formulaire d'ajout
-$addForm = new UI_Form('addNode');
-$addForm->setAction('af/tree_af-tree/addnode');
-$addForm->setAjax(true);
-$label = new UI_Form_Element_Text('label');
-$label->setLabel(__('UI', 'name', 'label'));
-$addForm->addElement($label);
+$addLabelInput = new GenericVoidTag('input');
+$addLabelInput->setAttribute('name', 'label');
+$addLabelInput->setAttribute('type', 'text');
+$addLabelInput->setAttribute('id', 'addAxis_label');
+$addLabelInput->addClass('form-control');
+$addLabelWrapper = new GenericTag('div', $addLabelInput);
+$addLabelWrapper->addClass('col-xs-10');
+$addLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+$addLabelLabel->setAttribute('for', 'addAxis_label');
+$addLabelLabel->addClass('control-label');
+$addLabelLabel->addClass('col-xs-2');
+$addLabelGroup = new GenericTag('div');
+$addLabelGroup->addClass('form-group');
+$addLabelGroup->appendContent($addLabelLabel);
+$addLabelGroup->appendContent($addLabelWrapper);
+$addForm = new GenericTag('form', $addLabelGroup);
 
 // Ajout
 $tree->addNode = true;
@@ -23,11 +35,29 @@ $tree->addPanelForm = $addForm;
 $tree->addPanelTitle = __('AF', 'formTree', 'addPanelTitle');
 $tree->addButtonLabel = __('AF', 'formTree', 'addButton');
 // Édition
-$editLabel = new UI_Form_Element_Text('afTree_labelEdit');
-$editLabel->setLabel(__('UI', 'name', 'label'));
-$htmlComplement = new UI_Form_Element_HTML('afTree_htmlComplement');
-$htmlComplement->setLabel('');
-$tree->setEditNode(true, true, [$editLabel, $htmlComplement]);
+$editLabelInput = new GenericVoidTag('input');
+$editLabelInput->setAttribute('name', 'afTree_labelEdit');
+$editLabelInput->setAttribute('type', 'text');
+$editLabelInput->setAttribute('id', 'afTree_labelEdit');
+$editLabelInput->addClass('form-control');
+$editLabelWrapper = new GenericTag('div', $editLabelInput);
+$editLabelWrapper->addClass('col-xs-10');
+$editLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+$editLabelLabel->setAttribute('for', 'afTree_labelEdit');
+$editLabelLabel->addClass('control-label');
+$editLabelLabel->addClass('col-xs-2');
+$editLabelGroup = new GenericTag('div');
+$editLabelGroup->addClass('form-group');
+$editLabelGroup->appendContent($editLabelLabel);
+$editLabelGroup->appendContent($editLabelWrapper);
+
+$htmlComplementWrapper = new GenericTag('div');
+$htmlComplementWrapper->setAttribute('id', 'afTree_htmlComplement');
+$htmlComplementWrapper->addClass('col-xs-10 col-xs-offset-2');
+$htmlComplementGroup = new GenericTag('div', $htmlComplementWrapper);
+$htmlComplementGroup->addClass('form-group');
+
+$tree->setEditNode(true, true, [$editLabelGroup, $htmlComplementGroup]);
 // Suppression
 $tree->deleteNode = true;
 $tree->expandAll = false;
@@ -37,15 +67,16 @@ $tree->display();
 
 
 // TODO ça sert à quoi ce caca ?
+$idLibrary = $library->getId();
 $script = <<<JS
 $('#afTree_element').change(function(e) {
     var idNode = $(this).val();
     $.get(
-        'af/tree_af-tree/getinfoedit?idNode=' + idNode,
+        'af/tree_af-tree/getinfoedit?idNode=' + idNode + '&library=$idLibrary',
         function(o) {
             $('#afTree_labelEdit').val(o.label);
             $('#afTree_htmlComplement').html(o.htmlComplement);
-            $('#afTree_editPanel .modal-header h3').html(o.title);
+            $('#afTree_editPanel .modal-header h4').html(o.title);
         }
     ).error(function(o) {
         errorHandler(o);

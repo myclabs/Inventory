@@ -2,7 +2,6 @@
 
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
-use Account\Domain\Account;
 use AF\Domain\Action\Action;
 use AF\Domain\AFLibrary;
 use Calc_Value;
@@ -25,17 +24,11 @@ class PopulateAF extends AbstractPopulateAF
      */
     private $entityManager;
 
-    /**
-     * @Inject("account.myc-sense")
-     * @var Account
-     */
-    private $publicAccount;
-
     public function run(OutputInterface $output)
     {
         $output->writeln('  <info>Populating AF</info>');
 
-        $library = new AFLibrary($this->publicAccount, 'Formulaires My C-Sense');
+        $library = new AFLibrary($this->publicAccount, 'Formulaires My C-Sense', true);
         $library->save();
 
         // Création des catégories.
@@ -45,42 +38,42 @@ class PopulateAF extends AbstractPopulateAF
         $category_vide = $this->createCategory($library, 'Catégorie vide');
 
         // Combustion de combustible, mesuré en unité de masse
-        $aF_combustion = $this->createAF($library, $category_cont_formulaire, 'combustion_combustible_unite_masse', 'Combustion de combustible, mesuré en unité de masse');
+        $af_combustion = $this->createAF($library, $category_cont_formulaire, 'Combustion de combustible, mesuré en unité de masse');
         // Composants
-        $nature_combustible = $this->createSelectInputList($aF_combustion, $aF_combustion->getRootGroup(), 'nature_combustible', 'Nature du combustible', ['charbon' => 'Charbon', 'gaz_naturel' => 'Gaz naturel']);
-        $quantite_combustible = $this->createNumericInput($aF_combustion, $aF_combustion->getRootGroup(), 'quantite_combustible', 'Quantité', 't');
+        $nature_combustible = $this->createSelectInputList($af_combustion, $af_combustion->getRootGroup(), 'nature_combustible', 'Nature du combustible', ['charbon' => 'Charbon', 'gaz_naturel' => 'Gaz naturel']);
+        $quantite_combustible = $this->createNumericInput($af_combustion, $af_combustion->getRootGroup(), 'quantite_combustible', 'Quantité', 't');
         // Algos
-        $aF_combustion->getMainAlgo()->setExpression(':emissions_combustion;:emissions_amont;');
+        $af_combustion->getMainAlgo()->setExpression(':emissions_combustion;:emissions_amont;');
         // Paramètres
-        $this->createAlgoNumericParameter($aF_combustion, 'fe_combustion', 'Facteur d\'émission pour la combustion', 'combustion_combustible_unite_masse');
-        $this->createAlgoNumericParameter($aF_combustion, 'fe_amont', 'Facteur d\'émission pour l\'amont de la combustion', 'combustion_combustible_unite_masse');
-        $this->createFixedCoordinateForAlgoParameter($aF_combustion->getAlgoByRef('fe_amont'), ['processus' => 'amont_combustion']);
-        $this->createFixedCoordinateForAlgoParameter($aF_combustion->getAlgoByRef('fe_combustion'), ['processus' => 'combustion']);
-        $this->createAlgoCoordinateForAlgoParameter($aF_combustion->getAlgoByRef('fe_amont'), ['combustible' => $aF_combustion->getAlgoByRef('nature_combustible')]);
-        $this->createAlgoCoordinateForAlgoParameter($aF_combustion->getAlgoByRef('fe_combustion'), ['combustible' => $aF_combustion->getAlgoByRef('nature_combustible')]);
+        $this->createAlgoNumericParameter($af_combustion, 'fe_combustion', 'Facteur d\'émission pour la combustion', 'combustion_combustible_unite_masse');
+        $this->createAlgoNumericParameter($af_combustion, 'fe_amont', 'Facteur d\'émission pour l\'amont de la combustion', 'combustion_combustible_unite_masse');
+        $this->createFixedCoordinateForAlgoParameter($af_combustion->getAlgoByRef('fe_amont'), ['processus' => 'amont_combustion']);
+        $this->createFixedCoordinateForAlgoParameter($af_combustion->getAlgoByRef('fe_combustion'), ['processus' => 'combustion']);
+        $this->createAlgoCoordinateForAlgoParameter($af_combustion->getAlgoByRef('fe_amont'), ['combustible' => $af_combustion->getAlgoByRef('nature_combustible')]);
+        $this->createAlgoCoordinateForAlgoParameter($af_combustion->getAlgoByRef('fe_combustion'), ['combustible' => $af_combustion->getAlgoByRef('nature_combustible')]);
         // Expressions et leur indexation
-        $this->createAlgoNumericExpression($aF_combustion, 'emissions_combustion', 'Émissions liées à la combustion', 'quantite_combustible * fe_combustion', 't_co2e');
-        $this->createAlgoNumericExpression($aF_combustion, 'emissions_amont', 'Émissions liées aux processus amont de la combustion', 'quantite_combustible * fe_amont', 't_co2e');
-        $this->createFixedIndexForAlgoNumeric($aF_combustion->getAlgoByRef('emissions_combustion'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
-        $this->createFixedIndexForAlgoNumeric($aF_combustion->getAlgoByRef('emissions_amont'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
+        $this->createAlgoNumericExpression($af_combustion, 'emissions_combustion', 'Émissions liées à la combustion', 'quantite_combustible * fe_combustion', 't_co2e');
+        $this->createAlgoNumericExpression($af_combustion, 'emissions_amont', 'Émissions liées aux processus amont de la combustion', 'quantite_combustible * fe_amont', 't_co2e');
+        $this->createFixedIndexForAlgoNumeric($af_combustion->getAlgoByRef('emissions_combustion'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
+        $this->createFixedIndexForAlgoNumeric($af_combustion->getAlgoByRef('emissions_amont'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
 
         // Données générales
-        $aF_d_g = $this->createAF($library, $category_cont_formulaire, 'donnees_generales', 'Données générales');
+        $af_d_g = $this->createAF($library, $category_cont_formulaire, 'Données générales');
         // Composants
-        $numericInput_chiffre_affaire = $this->createNumericInput($aF_d_g, $aF_d_g->getRootGroup(), 'chiffre_affaire', 'Chiffre d\'affaire', 'kiloeuro');
+        $numericInput_chiffre_affaire = $this->createNumericInput($af_d_g, $af_d_g->getRootGroup(), 'chiffre_affaire', 'Chiffre d\'affaire', 'kiloeuro');
         // Algos
-        $this->createFixedIndexForAlgoNumeric($aF_d_g->getAlgoByRef($numericInput_chiffre_affaire->getRef()), 'general', 'chiffre_affaire', []);
-        $aF_d_g->getMainAlgo()->setExpression(':chiffre_affaire;');
+        $this->createFixedIndexForAlgoNumeric($af_d_g->getAlgoByRef($numericInput_chiffre_affaire->getRef()), 'general', 'chiffre_affaire', []);
+        $af_d_g->getMainAlgo()->setExpression(':chiffre_affaire;');
 
         // Formulaire avec sous-formulaires
-        $aF_sous_af = $this->createAF($library, $category_cont_formulaire, 'af_avec_sous_af', 'Formulaire avec sous-formulaires');
+        $aF_sous_af = $this->createAF($library, $category_cont_formulaire, 'Formulaire avec sous-formulaires');
         // Composants
-        $s_f_n_r = $this->createSubAF($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_n_r', 'Sous-formulaire non répété', $aF_d_g);
-        $s_f_r = $this->createSubAFRepeated($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_r', 'Sous-formulaire répété', $aF_combustion);
+        $s_f_n_r = $this->createSubAF($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_n_r', 'Sous-formulaire non répété', $af_d_g);
+        $s_f_r = $this->createSubAFRepeated($aF_sous_af, $aF_sous_af->getRootGroup(), 's_f_r', 'Sous-formulaire répété', $af_combustion);
 
 
         // Formulaire de test
-        $aF_test = $this->createAF($library, $category_cont_formulaire, 'formulaire_test', 'Formulaire test');
+        $aF_test = $this->createAF($library, $category_cont_formulaire, 'Formulaire test');
 
         // Composants
         $g_test_vide = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'g_vide', 'Groupe vide');
@@ -88,9 +81,9 @@ class PopulateAF extends AbstractPopulateAF
         $g_test_cont_sous_g = $this->createGroup($aF_test, $aF_test->getRootGroup(), 'g_cont_sous_g', 'Groupe contenant un sous-groupe');
         $sous_g_test = $this->createGroup($aF_test, $g_test_cont_sous_g, 'sous_g', 'Sous-groupe');
 
-        $s_f_n_r_test = $this->createSubAF($aF_test, $aF_test->getRootGroup(), 's_f_n_r', 'Sous-formulaire non répété', $aF_d_g);
+        $s_f_n_r_test = $this->createSubAF($aF_test, $aF_test->getRootGroup(), 's_f_n_r', 'Sous-formulaire non répété', $af_d_g);
 
-        $s_f_r_test = $this->createSubAFRepeated($aF_test, $aF_test->getRootGroup(), 's_f_r', 'Sous-formulaire répété', $aF_combustion);
+        $s_f_r_test = $this->createSubAFRepeated($aF_test, $aF_test->getRootGroup(), 's_f_r', 'Sous-formulaire répété', $af_combustion);
 
         $c_n_test = $this->createNumericInput($aF_test, $g_test_cont_champ, 'c_n', 'Champ numérique', 'kg_co2e.m3^-1', '1000.5', '10');
         $c_n_test_cible_activation = $this->createNumericInput($aF_test, $g_test_cont_champ, 'c_n_cible_activation', 'Champ numérique cible activation', 'kg_co2e.m3^-1', '1000.5', '10', false, false, true);
@@ -148,39 +141,39 @@ class PopulateAF extends AbstractPopulateAF
 
 
         // Formulaire avec tous types de champs
-        $aF_tous_types_champs = $this->createAF($library, $category_cont_formulaire, 'formulaire_tous_types_champ', 'Formulaire avec tout type de champ');
+        $af_tous_types_champs = $this->createAF($library, $category_cont_formulaire, 'Formulaire avec tout type de champ');
 
         // Composants
-        $c_n = $this->createNumericInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_n', 'Champ numérique', 'kg_co2e.m3^-1', null, null, true, true, true, null, true);
-        $c_s_s_liste = $this->createSelectInputList($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_s_liste', 'Champ sélection simple (liste déroulante)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
-        $c_s_s_bouton = $this->createSelectInputRadio($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_s_bouton', 'Champ sélection simple (boutons radio)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
-        $c_s_m_checkbox = $this->createSelectInputBoxes($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_m_checkbox', 'Champ sélection multiple (checkboxes)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
-        $c_s_m_liste = $this->createSelectInputMulti($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_s_m_liste', 'Champ sélection multiple (liste)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
-        $c_b_test = $this->createBooleanInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_b', 'Champ booléen', false, true, null, true);
-        $c_t_c = $this->createShortTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_t_c', 'Champ texte court', true, true, null, true);
-        $c_t_l = $this->createLongTextInput($aF_tous_types_champs, $aF_tous_types_champs->getRootGroup(), 'c_t_l', 'Champ texte long', true, true, null, true);
+        $c_n = $this->createNumericInput($af_tous_types_champs, $af_tous_types_champs->getRootGroup(), 'c_n', 'Champ numérique', 'kg_co2e.m3^-1', null, null, true, true, true, null, true);
+        $c_s_s_liste = $this->createSelectInputList($af_tous_types_champs, $af_tous_types_champs->getRootGroup(), 'c_s_s_liste', 'Champ sélection simple (liste déroulante)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
+        $c_s_s_bouton = $this->createSelectInputRadio($af_tous_types_champs, $af_tous_types_champs->getRootGroup(), 'c_s_s_bouton', 'Champ sélection simple (boutons radio)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
+        $c_s_m_checkbox = $this->createSelectInputBoxes($af_tous_types_champs, $af_tous_types_champs->getRootGroup(), 'c_s_m_checkbox', 'Champ sélection multiple (checkboxes)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
+        $c_s_m_liste = $this->createSelectInputMulti($af_tous_types_champs, $af_tous_types_champs->getRootGroup(), 'c_s_m_liste', 'Champ sélection multiple (liste)', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2', 'opt_3' => 'Option 3', 'opt_4' => 'Option 4', 'opt_5' => 'Option 5']);
+        $c_b_test = $this->createBooleanInput($af_tous_types_champs, $af_tous_types_champs->getRootGroup(), 'c_b', 'Champ booléen', false, true, null, true);
+        $c_t_c = $this->createShortTextInput($af_tous_types_champs, $af_tous_types_champs->getRootGroup(), 'c_t_c', 'Champ texte court', true, true, null, true);
+        $c_t_l = $this->createLongTextInput($af_tous_types_champs, $af_tous_types_champs->getRootGroup(), 'c_t_l', 'Champ texte long', true, true, null, true);
 
         // Formulaire avec sous-formulaire répété contenant tous types de champs
-        $aF_sous_AF_tous_types_champs = $this->createAF($library, $category_cont_formulaire, 'formulaire_s_f_r_tous_types_champ', 'Formulaire avec sous-formulaire répété contenant tout type de champ');
+        $aF_sous_AF_tous_types_champs = $this->createAF($library, $category_cont_formulaire, 'Formulaire avec sous-formulaire répété contenant tout type de champ');
 
         // Composants
-        $s_f_r_t_t_c = $this->createSubAFRepeated($aF_sous_AF_tous_types_champs, $aF_sous_AF_tous_types_champs->getRootGroup(), 's_f_r_t_t_c', 'Sous-formulaire répété tout type de champ', $aF_tous_types_champs);
+        $s_f_r_t_t_c = $this->createSubAFRepeated($aF_sous_AF_tous_types_champs, $aF_sous_AF_tous_types_champs->getRootGroup(), 's_f_r_t_t_c', 'Sous-formulaire répété tout type de champ', $af_tous_types_champs);
 
         // Formulaire vide
-        $aF_vide = $this->createAF($library, $category_cont_formulaire, 'formulaire_vide', 'Formulaire vide');
+        $this->createAF($library, $category_cont_formulaire, 'Formulaire vide');
 
         // Forfait émissions en fonction de la marque
-        $aF_forfait_marque = $this->createAF($library, $category_cont_formulaire, 'formulaire_forfait_marque', 'Forfait émissions en fonction de la marque');
+        $af_forfait_marque = $this->createAF($library, $category_cont_formulaire, 'Forfait émissions en fonction de la marque');
         // Composants
-        $numericInput_sans_effet = $this->createNumericInput($aF_forfait_marque, $aF_forfait_marque->getRootGroup(), 'sans_effet', 'Champ sans effet', 'kiloeuro', null, null, true, false);
+        $numericInput_sans_effet = $this->createNumericInput($af_forfait_marque, $af_forfait_marque->getRootGroup(), 'sans_effet', 'Champ sans effet', 'kiloeuro', null, null, true, false);
         // Algos
-        $aF_forfait_marque->getMainAlgo()->setExpression(':algo_numerique_forfait_marque;');
-        $this->createAlgoNumericParameter($aF_forfait_marque, 'algo_numerique_forfait_marque', 'Algo forfait émissions fonction marque', 'forfait_emissions_fonction_marque');
-        $this->createAlgoSelectTextkeyContextValue($aF_forfait_marque, 'algo_determination_marque', 'marque', 'marque_a');
+        $af_forfait_marque->getMainAlgo()->setExpression(':algo_numerique_forfait_marque;');
+        $this->createAlgoNumericParameter($af_forfait_marque, 'algo_numerique_forfait_marque', 'Algo forfait émissions fonction marque', 'forfait_emissions_fonction_marque');
+        $this->createAlgoSelectTextkeyContextValue($af_forfait_marque, 'algo_determination_marque', 'marque', 'marque_a');
         // Coordonnées des algorithmes numériques de type paramètre
-        $this->createAlgoCoordinateForAlgoParameter($aF_forfait_marque->getAlgoByRef('algo_numerique_forfait_marque'), ['marque' => $aF_forfait_marque->getAlgoByRef('algo_determination_marque')]);
+        $this->createAlgoCoordinateForAlgoParameter($af_forfait_marque->getAlgoByRef('algo_numerique_forfait_marque'), ['marque' => $af_forfait_marque->getAlgoByRef('algo_determination_marque')]);
         // Indexation
-        $this->createFixedIndexForAlgoNumeric($aF_forfait_marque->getAlgoByRef('algo_numerique_forfait_marque'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
+        $this->createFixedIndexForAlgoNumeric($af_forfait_marque->getAlgoByRef('algo_numerique_forfait_marque'), 'general', 'ges', ['gaz' => 'co2', 'poste_article_75' => 'source_fixe_combustion']);
 
         $this->entityManager->flush();
     }

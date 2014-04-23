@@ -4,6 +4,14 @@
             creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
+        <tu tuid="createNewLibrary">
+            <tuv xml:lang="fr">
+                <seg>Créer une nouvelle bibliothèque de formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Create a new form library</seg>
+            </tuv>
+        </tu>
         <tu tuid="libraryCreationTitle">
             <tuv xml:lang="fr">
                 <seg>Création d'une nouvelle bibliothèque de formulaires</seg>
@@ -27,6 +35,15 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>The library has been created.</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="libraryDeletionError">
+            <tuv xml:lang="fr">
+                <seg>La bibliothèque ne peut pas être supprimée car elle n'est pas vide.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The library can't be deleted because it isn't empty.</seg>
             </tuv>
         </tu>
 

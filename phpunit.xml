@@ -19,7 +19,6 @@
             <directory>./tests/AF</directory>
             <directory>./tests/Social</directory>
             <directory>./tests/Orga</directory>
-            <directory>./tests/Simulation</directory>
             <directory>./tests/AuditTrail</directory>
             <directory>./tests/Account</directory>
         </testsuite>

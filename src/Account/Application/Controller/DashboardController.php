@@ -4,9 +4,8 @@ use Account\Application\Service\AccountViewFactory;
 use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use Core\Annotation\Secure;
-use MyCLabs\ACL\ACLManager;
+use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
-use MyCLabs\ACL\Model\ClassResource;
 use User\Domain\User;
 
 /**
@@ -22,9 +21,9 @@ class Account_DashboardController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLManager
+     * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     /**
      * @Inject
@@ -76,11 +75,7 @@ class Account_DashboardController extends Core_Controller
 
         $this->view->assign('accountList', $accounts);
         $this->view->assign('account', $accountView);
-        $this->view->assign('canCreateOrganization', $this->aclManager->isAllowed(
-            $user,
-            Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
-        ));
+        $this->view->assign('canEditAccount', $this->acl->isAllowed($user, Actions::EDIT, $account));
         $this->addBreadcrumb(__('Account', 'name', 'dashboard'));
         $this->setActiveMenuItem('dashboard');
     }

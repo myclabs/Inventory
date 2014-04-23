@@ -161,7 +161,7 @@ Feature: AF change component value interaction feature
   # Popup d'édition
     When I click "Éditer" in the row 1 of the "actionsSetValue" datagrid
     Then I should see the popup "Édition de la valeur ou de l'algorithme à assigner"
-    When I check "Décoché"
+    When I select "Décoché" from "checkboxValue"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Modification effectuée."
   # Édition pas en Ajax, donc on doit rouvrir le collapse
