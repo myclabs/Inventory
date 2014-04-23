@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b65d97c10fefa0785f894e2d599a69f4",
+    "hash": "9a29790e2742bd85716f1bdceab1010a",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -1168,16 +1168,16 @@
         },
         {
             "name": "myclabs/work",
-            "version": "0.3.x-dev",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Work.git",
-                "reference": "41c98d3a08ed0286deb670729bf21a5773932f2e"
+                "reference": "8de316de0ccc1f84dd939d41d92201c4084c9bed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Work/zipball/41c98d3a08ed0286deb670729bf21a5773932f2e",
-                "reference": "41c98d3a08ed0286deb670729bf21a5773932f2e",
+                "url": "https://api.github.com/repos/myclabs/Work/zipball/8de316de0ccc1f84dd939d41d92201c4084c9bed",
+                "reference": "8de316de0ccc1f84dd939d41d92201c4084c9bed",
                 "shasum": ""
             },
             "require": {
@@ -1209,7 +1209,7 @@
                 "work",
                 "work queue"
             ],
-            "time": "2014-04-17 07:43:52"
+            "time": "2014-04-23 10:30:49"
         },
         {
             "name": "myclabs/xport",
@@ -2771,7 +2771,6 @@
     "stability-flags": {
         "doctrine/orm": 20,
         "gedmo/doctrine-extensions": 20,
-        "myclabs/work": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "mnapoli/metaconsole": 20
