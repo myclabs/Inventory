@@ -165,6 +165,12 @@ class Serializer
 
             $property->setAccessible(true);
 
+            if (isset($config['properties'][$propertyName]['transform'])) {
+                $callable = $config['properties'][$propertyName]['transform'];
+                $serialized->$propertyName = $callable($property->getValue($object));
+                continue;
+            }
+
             $serialized->$propertyName = $this->recursiveSerialization($property->getValue($object));
         }
 
