@@ -82,11 +82,12 @@ class ExportCommand extends Command
                 $organizationAdmins[] = $adminRoles->getUser()->getEmail();
             }
 
-            $cellsACL = [];
+            $granularitiesACL = [];
             $granularitiesReports = [];
 
             foreach ($organization->getGranularities() as $granularity) {
                 if ($granularity->getCellsWithACL()) {
+                    $cellsACL = [];
                     foreach ($granularity->getCells() as $cell) {
                         $cellAdmins = [];
                         foreach ($cell->getAdminRoles() as $cellAdmin) {
@@ -120,6 +121,18 @@ class ExportCommand extends Command
                             $cellsACL[] = $cellDataObject;
                         }
                     }
+
+                    if (count($cellsACL) > 0) {
+                        $granularityAxes = $granularity->getAxes();
+                        $granularityDataObject = new \StdClass();
+                        $granularityDataObject->type = 'granularity';
+                        $granularityDataObject->granularityAxes = array_map(
+                            function ($a) { return $a->getRef(); },
+                            $granularityAxes
+                        );
+                        $granularityDataObject->cellsACL = $cellsACL;
+                        $granularitiesACL[] = $granularityDataObject;
+                    }
                 }
 
                 if ($granularity->getCellsGenerateDWCubes()) {
@@ -142,12 +155,12 @@ class ExportCommand extends Command
                     $granularitiesReports[] = $granularityDataObject;
                 }
             }
-            if ((count($organizationAdmins) > 0) || (count($cellsACL) > 0)) {
+            if ((count($organizationAdmins) > 0) || (count($granularitiesACL) > 0)) {
                 $organizationDataObject = new \StdClass();
                 $organizationDataObject->type = 'organization';
                 $organizationDataObject->label = $organization->getLabel();
                 $organizationDataObject->admins = $organizationAdmins;
-                $organizationDataObject->cellsACL = $cellsACL;
+                $organizationDataObject->granularitiesACL = $granularitiesACL;
                 $aclData[] = $organizationDataObject;
             }
             if (count($granularitiesReports) > 0) {
