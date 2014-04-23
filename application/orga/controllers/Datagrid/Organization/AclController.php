@@ -2,7 +2,7 @@
 
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 use Orga\Model\ACL\OrganizationAdminRole;
 use User\Domain\User;
 
@@ -13,7 +13,7 @@ class Orga_Datagrid_Organization_AclController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var SynchronousWorkDispatcher
      */
     private $workDispatcher;
 
@@ -33,7 +33,8 @@ class Orga_Datagrid_Organization_AclController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($idOrganization);
 
         foreach ($organization->getAdminRoles() as $role) {
-            $user = $role->getUser();
+            /** @var User $user */
+            $user = $role->getSecurityIdentity();
             $data = array();
             $data['index'] = $role->getId();
             $data['firstName'] = $user->getFirstName();
@@ -96,7 +97,7 @@ class Orga_Datagrid_Organization_AclController extends UI_Controller_Datagrid
             [$organization, $userEmail, false],
             $taskLabel
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
@@ -123,14 +124,12 @@ class Orga_Datagrid_Organization_AclController extends UI_Controller_Datagrid
             Orga_Service_ACLManager::class,
             'removeOrganizationAdministrator',
             [$organization, $role, false],
-            __(
-                'Orga',
-                'backgroundTasks',
-                'removeRoleFromUser',
-                ['ROLE' => $role->getLabel(), 'USER' => $role->getUser()->getEmail()]
-            )
+            __('Orga', 'backgroundTasks', 'removeRoleFromUser', [
+                'ROLE' => $role->getLabel(),
+                'USER' => $role->getUser()->getEmail(),
+            ])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }

@@ -25,7 +25,7 @@
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
         "myclabs/muih": "0.1.*",
-        "myclabs/work": "~0.2.0",
+        "myclabs/work": "0.3.x-dev",
         "mnapoli/number-two": "~0.2.0",
         "mnapoli/php-di": "~4.1",
         "mnapoli/php-di-zf1": "*",

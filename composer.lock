@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "760192f9a12de2556e9f01950b03694a",
+    "hash": "b65d97c10fefa0785f894e2d599a69f4",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -511,12 +511,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "841bdd5ca52d2849b8091c56f99e201d169e1639"
+                "reference": "9ebce31a4650f55fa02cf8a103160d4019274403"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/841bdd5ca52d2849b8091c56f99e201d169e1639",
-                "reference": "841bdd5ca52d2849b8091c56f99e201d169e1639",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/9ebce31a4650f55fa02cf8a103160d4019274403",
+                "reference": "9ebce31a4650f55fa02cf8a103160d4019274403",
                 "shasum": ""
             },
             "require": {
@@ -555,7 +555,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -580,7 +580,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-04-17 04:39:26"
+            "time": "2014-04-23 06:08:18"
         },
         {
             "name": "dompdf/dompdf",
@@ -806,16 +806,16 @@
         },
         {
             "name": "mnapoli/php-di",
-            "version": "4.1.0",
+            "version": "4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PHP-DI.git",
-                "reference": "f6eb3e51406dfad1a9a5b2a5d0847def7b5d13b6"
+                "reference": "54d13efe55fdc3de46f56df4b591c6b21f9a3b97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/f6eb3e51406dfad1a9a5b2a5d0847def7b5d13b6",
-                "reference": "f6eb3e51406dfad1a9a5b2a5d0847def7b5d13b6",
+                "url": "https://api.github.com/repos/mnapoli/PHP-DI/zipball/54d13efe55fdc3de46f56df4b591c6b21f9a3b97",
+                "reference": "54d13efe55fdc3de46f56df4b591c6b21f9a3b97",
                 "shasum": ""
             },
             "require": {
@@ -850,7 +850,7 @@
                 "dependency injection",
                 "di"
             ],
-            "time": "2014-04-17 07:12:22"
+            "time": "2014-04-17 11:22:29"
         },
         {
             "name": "mnapoli/php-di-zf1",
@@ -921,16 +921,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.8.0",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "392ef35fd470638e08d0160d6b1cbab63cb23174"
+                "reference": "1afc39690e7414412face1f8cbf67b73db34485c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/392ef35fd470638e08d0160d6b1cbab63cb23174",
-                "reference": "392ef35fd470638e08d0160d6b1cbab63cb23174",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1afc39690e7414412face1f8cbf67b73db34485c",
+                "reference": "1afc39690e7414412face1f8cbf67b73db34485c",
                 "shasum": ""
             },
             "require": {
@@ -958,7 +958,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.8.x-dev"
+                    "dev-master": "1.9.x-dev"
                 }
             },
             "autoload": {
@@ -985,7 +985,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-03-23 19:50:26"
+            "time": "2014-04-20 16:41:26"
         },
         {
             "name": "myclabs/acl",
@@ -1168,28 +1168,33 @@
         },
         {
             "name": "myclabs/work",
-            "version": "0.2.0",
+            "version": "0.3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Work.git",
-                "reference": "52605e123352daf195debfdf8e517b9fa5e1926e"
+                "reference": "41c98d3a08ed0286deb670729bf21a5773932f2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Work/zipball/52605e123352daf195debfdf8e517b9fa5e1926e",
-                "reference": "52605e123352daf195debfdf8e517b9fa5e1926e",
+                "url": "https://api.github.com/repos/myclabs/Work/zipball/41c98d3a08ed0286deb670729bf21a5773932f2e",
+                "reference": "41c98d3a08ed0286deb670729bf21a5773932f2e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
                 "videlalvaro/php-amqplib": "~2.0"
+            },
+            "suggest": {
+                "videlalvaro/php-amqplib": "Driver for RabbitMQ"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "MyCLabs": "src/",
-                    "FunctionalTest": "tests/",
-                    "UnitTest": "tests/"
+                "psr-4": {
+                    "MyCLabs\\Work\\": "src/",
+                    "Test\\MyCLabs\\Work\\FunctionalTest\\": "tests/FunctionalTest",
+                    "Test\\MyCLabs\\Work\\UnitTest\\": "tests/UnitTest"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1204,7 +1209,7 @@
                 "work",
                 "work queue"
             ],
-            "time": "2013-10-21 09:01:28"
+            "time": "2014-04-17 07:43:52"
         },
         {
             "name": "myclabs/xport",
@@ -2766,6 +2771,7 @@
     "stability-flags": {
         "doctrine/orm": 20,
         "gedmo/doctrine-extensions": 20,
+        "myclabs/work": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "mnapoli/metaconsole": 20

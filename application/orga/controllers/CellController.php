@@ -1,5 +1,6 @@
 <?php
 
+use Account\Application\Service\OrganizationViewFactory;
 use AF\Application\InputFormParser;
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
@@ -10,8 +11,8 @@ use MyCLabs\MUIH\GenericVoidTag;
 use MyCLabs\MUIH\Icon;
 use MyCLabs\ACL\ACL;
 use MyCLabs\MUIH\Tab;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 use User\Domain\ACL\Actions;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\ViewModel\CellViewModelFactory;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
@@ -44,13 +45,13 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var SynchronousWorkDispatcher
      */
     private $workDispatcher;
 
     /**
      * @Inject
-     * @var \Account\Application\Service\OrganizationViewFactory
+     * @var OrganizationViewFactory
      */
     private $organizationVMFactory;
 
@@ -723,7 +724,7 @@ class Orga_CellController extends Core_Controller
             [$axis, $ref, $label, $parentMembers],
             __('Orga', 'backgroundTasks', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -740,7 +741,9 @@ class Orga_CellController extends Core_Controller
         usort(
             $usersLinked,
             function (AbstractCellRole $a, AbstractCellRole $b) {
+                /** @var User $aUser */
                 $aUser = $a->getSecurityIdentity();
+                /** @var User $bUser */
                 $bUser = $b->getSecurityIdentity();
                 if (get_class($a) === get_class($b)) {
                     if ($aUser->getFirstName() === $bUser->getFirstName()) {
@@ -845,7 +848,7 @@ class Orga_CellController extends Core_Controller
             [$cell, $role, $userEmail, false],
             __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role::getLabel(), 'USER' => $userEmail])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -878,7 +881,7 @@ class Orga_CellController extends Core_Controller
                 ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()]
             )
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**

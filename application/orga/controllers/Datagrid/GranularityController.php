@@ -1,7 +1,8 @@
 <?php
 
 use Core\Annotation\Secure;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use Core\Work\ServiceCall\ServiceCallTask;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 
 /**
  * @author valentin.claras
@@ -10,7 +11,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var SynchronousWorkDispatcher
      */
     private $workDispatcher;
 
@@ -108,7 +109,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             };
 
             // Lance la tache en arrière plan
-            $task = new \Core\Work\ServiceCall\ServiceCallTask(
+            $task = new ServiceCallTask(
                 'Orga_Service_OrganizationService',
                 'addGranularity',
                 [
@@ -122,7 +123,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
             );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
 
         $this->send();
@@ -158,15 +159,13 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             throw $e;
         };
         // Lance la tache en arrière plan
-        $task = new \Core\Work\ServiceCall\ServiceCallTask(
+        $task = new ServiceCallTask(
             'Orga_Service_OrganizationService',
             'removeGranularity',
-            [
-                $granularity,
-            ],
+            [$granularity],
             __('Orga', 'backgroundTasks', 'removeGranularity', ['LABEL' => $granularity->getLabel()])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }

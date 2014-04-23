@@ -3,8 +3,8 @@
 use Core\Annotation\Secure;
 use DI\Annotation\Inject;
 use MyCLabs\ACL\ACL;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 use User\Domain\ACL\Actions;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Orga\Model\ACL\CellAdminRole;
 use User\Domain\User;
@@ -28,7 +28,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var SynchronousWorkDispatcher
      */
     private $workDispatcher;
 
@@ -39,16 +39,6 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
     private $waitDelay;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
      * @Secure("editOrganizationAndCells")
      */
     public function getelementsAction()
@@ -188,7 +178,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     [$axis, $ref, $label, $broaderMembers],
                     __('Orga', 'backgroundTasks', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
                 );
-                $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+                $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
             }
         }
 
@@ -230,7 +220,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             [$member],
             __('Orga', 'backgroundTasks', 'deleteMember', ['MEMBER' => $member->getLabel(), 'AXIS' => $member->getAxis()->getLabel()])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }

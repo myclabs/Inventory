@@ -1,17 +1,19 @@
 <?php
 
-use Core\Work\EventListener\RabbitMQEventListener;
-use Core\Work\EventListener\SimpleEventListener;
+use Core\Work\EventListener\RabbitMQDispatcherEventListener;
+use Core\Work\EventListener\InMemoryWorkerEventListener;
+use Core\Work\EventListener\RabbitMQWorkerEventListener;
 use Core\Work\Notification\EmailTaskNotifier;
 use Core\Work\Notification\TaskNotifier;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Interop\Container\ContainerInterface;
-use MyCLabs\Work\Dispatcher\RabbitMQWorkDispatcher;
-use MyCLabs\Work\Dispatcher\SimpleWorkDispatcher;
+use MyCLabs\Work\Adapter\InMemory\InMemoryWorkDispatcher;
+use MyCLabs\Work\Adapter\InMemory\InMemoryWorker;
+use MyCLabs\Work\Adapter\RabbitMQ\RabbitMQWorkDispatcher;
+use MyCLabs\Work\Adapter\RabbitMQ\RabbitMQWorker;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use MyCLabs\Work\TaskExecutor\ServiceCallExecutor;
-use MyCLabs\Work\Worker\RabbitMQWorker;
-use MyCLabs\Work\Worker\SimpleWorker;
 use MyCLabs\Work\Worker\Worker;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPConnection;
@@ -49,28 +51,29 @@ return [
     }),
 
     // Work dispatcher
-    WorkDispatcher::class => DI\factory(function (ContainerInterface $c) {
+    SynchronousWorkDispatcher::class => DI\factory(function (ContainerInterface $c) {
         if ($c->get('rabbitmq.enabled')) {
             $channel = $c->get(AMQPChannel::class);
             $workDispatcher = new RabbitMQWorkDispatcher($channel, $c->get('rabbitmq.queue'));
-            $workDispatcher->addEventListener($c->get(RabbitMQEventListener::class));
+            $workDispatcher->registerEventListener($c->get(RabbitMQDispatcherEventListener::class));
         } else {
-            $workDispatcher = new SimpleWorkDispatcher($c->get(Worker::class));
-            $workDispatcher->addEventListener($c->get(SimpleEventListener::class));
+            $workDispatcher = new InMemoryWorkDispatcher($c->get(Worker::class));
         }
 
         return $workDispatcher;
     }),
+    WorkDispatcher::class => DI\link(SynchronousWorkDispatcher::class),
 
     // Worker
     Worker::class => DI\factory(function (ContainerInterface $c) {
         if ($c->get('rabbitmq.enabled')) {
             $channel = $c->get(AMQPChannel::class);
             $worker = new RabbitMQWorker($channel, $c->get('rabbitmq.queue'));
-            $worker->addEventListener($c->get(RabbitMQEventListener::class));
+            $worker->registerEventListener($c->get(RabbitMQWorkerEventListener::class));
         } else {
-            $worker = $c->get(SimpleWorker::class);
-            $worker->addEventListener($c->get(SimpleEventListener::class));
+            /** @var InMemoryWorker $worker */
+            $worker = $c->get(InMemoryWorker::class);
+            $worker->registerEventListener($c->get(InMemoryWorkerEventListener::class));
         }
 
         $worker->registerTaskExecutor(ServiceCallTask::class, new ServiceCallExecutor($c));
@@ -80,6 +83,6 @@ return [
 
     // Notifications
     TaskNotifier::class => DI\object(EmailTaskNotifier::class)
-            ->methodParameter('__construct', 'applicationName', DI\link('emails.noreply.name')),
+            ->constructorParameter('applicationName', DI\link('emails.noreply.name')),
 
 ];

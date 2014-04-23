@@ -1,10 +1,9 @@
 <?php
 
 use AF\Domain\AFLibrary;
-use AF\Domain\AF;
 use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
-use Parameter\Domain\ParameterLibrary;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
@@ -14,7 +13,6 @@ use MyCLabs\MUIH\Tabs;
 use Orga\OrganizationViewFactory;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\Model\ACL\CellAdminRole;
 use Orga\ViewModel\CellViewModelFactory;
 use User\Domain\User;
@@ -58,13 +56,7 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var Orga_Service_ETLStructure
-     */
-    private $etlStructureService;
-
-    /**
-     * @Inject
-     * @var WorkDispatcher
+     * @var SynchronousWorkDispatcher
      */
     private $workDispatcher;
 
@@ -192,7 +184,7 @@ class Orga_OrganizationController extends Core_Controller
             [$user, $formData],
             __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -218,7 +210,7 @@ class Orga_OrganizationController extends Core_Controller
             'deleteOrganization',
             [$organization]
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->redirect('orga/organization/manage');
     }
@@ -765,7 +757,7 @@ class Orga_OrganizationController extends Core_Controller
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
             );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
     }
 
@@ -876,7 +868,7 @@ class Orga_OrganizationController extends Core_Controller
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $inputAxes)])
             );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
     }
 
@@ -944,7 +936,7 @@ class Orga_OrganizationController extends Core_Controller
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
             );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
     }
 
@@ -1026,7 +1018,7 @@ class Orga_OrganizationController extends Core_Controller
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
             );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
     }
 
@@ -1132,7 +1124,7 @@ class Orga_OrganizationController extends Core_Controller
             $taskParameters,
             __('Orga', 'backgroundTasks', 'resetDWOrga', ['FOR_ORGANIZATIONAL_UNIT' => $organizationalUnit])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -1140,13 +1132,6 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function rebuildResultsAction()
     {
-        /** @var User $connectedUser */
-        $connectedUser = $this->_helper->auth();
-
-        $idOrganization = $this->getParam('idOrganization');
-        /** @var Orga_Model_Organization $organization */
-        $organization = Orga_Model_Organization::load($idOrganization);
-
         $cell = Orga_Model_Cell::load($this->getParam('cell'));
 
         $success = function () {
@@ -1166,7 +1151,7 @@ class Orga_OrganizationController extends Core_Controller
             [$cell],
             __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
