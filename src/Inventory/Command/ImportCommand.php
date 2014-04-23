@@ -27,6 +27,7 @@ use Exception;
 use Orga\Model\ACL\CellAdminRole;
 use Orga\Model\ACL\CellContributorRole;
 use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellObserverRole;
 use Orga\Model\ACL\OrganizationAdminRole;
 use Parameter\Domain\Family\Cell;
 use Parameter\Domain\Family\Dimension;
@@ -42,6 +43,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
 use User\Domain\ACL\AdminRole;
 use User\Domain\User;
+use MyCLabs\ACL\ACL;
 
 /**
  * Importe les données.
@@ -55,6 +57,12 @@ class ImportCommand extends Command
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     * @Inject
+     * @var ACL
+     */
+    private $aclManager;
 
     protected function configure()
     {
@@ -447,9 +455,6 @@ class ImportCommand extends Command
                     foreach ($granularityObject->granularityReports as $reportObject) {
                         $report = new \DW_Model_Report($dwCube);
 
-                        // Import DW reports and filter
-                        $output->writeln('<comment>'.$reportObject->getLabel().'</comment>');
-
                         $report->setLabel($reportObject->getLabel());
                         $report->setChartType($reportObject->getChartType());
                         $report->setSortType($reportObject->getSortType());
@@ -537,7 +542,11 @@ class ImportCommand extends Command
                 $organization = $this->getOrganizationByLabel($object->label);
 
                 foreach ($object->admins as $adminEmail) {
-                    $organization->addAdminRole(
+                    $output->writeln(
+                        '<comment>'.$adminEmail.' admin of organization '.$organization->getLabel().'</comment>'
+                    );
+                    $this->aclManager->grant(
+                        User::loadByEmail($adminEmail),
                         new OrganizationAdminRole(
                             User::loadByEmail($adminEmail),
                             $organization
@@ -548,7 +557,7 @@ class ImportCommand extends Command
                 foreach ($object->granularitiesACL as $granularityObject) {
                     $granularityAxes = [];
                     foreach ($granularityObject->granularityAxes as $refAxis) {
-                        $granularityAxes = $organization->getAxisByRef($refAxis);
+                        $granularityAxes[] = $organization->getAxisByRef($refAxis);
                     }
                     $granularity = $organization->getGranularityByRef(
                         \Orga_Model_Granularity::buildRefFromAxes($granularityAxes)
@@ -559,51 +568,50 @@ class ImportCommand extends Command
                         foreach ($cellObject->members as $refAxisMember) {
                             list($refAxis, $refMember) = explode(';', $refAxisMember);
                             $axis = $organization->getAxisByRef($refAxis);
-                            $members[] = $axis->getMemberByCompleteRef($refAxisMember);
+                            $members[] = $axis->getMemberByCompleteRef($refMember);
                         }
                         $cell = $granularity->getCellByMembers($members);
 
                         foreach ($cellObject->admins as $adminEmail) {
-                            $output->writeln('<comment>'.$adminEmail.' admin of '.$cell->getLabel().'</comment>');
-                            $cell->addRole(
-                                new CellAdminRole(
-                                    User::loadByEmail($adminEmail),
-                                    $cell
-                                )
+                            $output->writeln(
+                                '<comment>'.$adminEmail.' admin of cell '.$cell->getLabel().'</comment>'
+                            );
+                            $this->aclManager->grant(
+                                User::loadByEmail($adminEmail),
+                                new CellAdminRole(User::loadByEmail($adminEmail), $cell)
                             );
                         }
                         foreach ($cellObject->managers as $managerEmail) {
-                            $output->writeln('<comment>'.$managerEmail.' manager of '.$cell->getLabel().'</comment>');
-                            $cell->addRole(
-                                new CellManagerRole(
-                                    User::loadByEmail($managerEmail),
-                                    $cell
-                                )
+                            $output->writeln(
+                                '<comment>'.$managerEmail.' manager of cell '.$cell->getLabel().'</comment>'
+                            );
+                            $this->aclManager->grant(
+                                User::loadByEmail($managerEmail),
+                                new CellManagerRole(User::loadByEmail($managerEmail), $cell)
                             );
                         }
-                        foreach ($cellObject->contrbutors as $contributorEmail) {
-                            $output->writeln('<comment>'.$contributorEmail.' contributor of '.$cell->getLabel().'</comment>');
-                            $cell->addRole(
-                                new CellContributorRole(
-                                    User::loadByEmail($contributorEmail),
-                                    $cell
-                                )
+                        foreach ($cellObject->contributors as $contributorEmail) {
+                            $output->writeln(
+                                '<comment>'.$contributorEmail.' contributor of cell '.$cell->getLabel().'</comment>'
+                            );
+                            $this->aclManager->grant(
+                                User::loadByEmail($contributorEmail),
+                                new CellContributorRole(User::loadByEmail($contributorEmail), $cell)
                             );
                         }
                         foreach ($cellObject->observers as $observerEmail) {
-                            $output->writeln('<comment>'.$observerEmail.' observer of '.$cell->getLabel().'</comment>');
-                            $cell->addRole(
-                                new CellAdminRole(
-                                    User::loadByEmail($observerEmail),
-                                    $cell
-                                )
+                            $output->writeln(
+                                '<comment>'.$observerEmail.' observer of cell '.$cell->getLabel().'</comment>'
+                            );
+                            $this->aclManager->grant(
+                                User::loadByEmail($observerEmail),
+                                new CellObserverRole(User::loadByEmail($observerEmail), $cell)
                             );
                         }
                     }
                 }
             }
         }
-        $this->entityManager->flush();
 
         $this->entityManager->commit();
     }

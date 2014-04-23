@@ -973,7 +973,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
                     $granularity->getInputConfigGranularity()
                 )->getCellsGroupForInputGranularity($granularity)->getAF();
             }
-        } catch (Core_Exception_UndefinedAttribute $e) {
+        } catch (Core_Exception_NotFound $e) {
             // Pas d'AF spécifié.
         }
         return null;
