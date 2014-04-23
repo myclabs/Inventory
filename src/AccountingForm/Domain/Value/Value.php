@@ -1,6 +1,6 @@
 <?php
 
-namespace Calculation\Domain\Value;
+namespace AccountingForm\Domain\Value;
 
 /**
  * Value.

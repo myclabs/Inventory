@@ -1,8 +1,8 @@
 <?php
 
-namespace Calculation\Domain;
+namespace AccountingForm\Domain;
 
-use Calculation\Domain\Value\Value;
+use AccountingForm\Domain\Value\Value;
 
 /**
  * A set of values implemented with an array.
