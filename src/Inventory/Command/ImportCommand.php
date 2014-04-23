@@ -25,6 +25,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellManagerRole;
 use Orga\Model\ACL\OrganizationAdminRole;
 use Parameter\Domain\Family\Cell;
 use Parameter\Domain\Family\Dimension;
@@ -543,21 +545,62 @@ class ImportCommand extends Command
                     );
                 }
 
-//                foreach ($object->granularitiesACL as $granularityObject) {
-//                    $granularityAxes = [];
-//                    foreach ($granularityObject->granularityAxes as $refAxis) {
-//                        $granularityAxes = $organization->getAxisByRef($refAxis);
-//                    }
-//                    $granularity = $organization->getGranularityByRef(
-//                        \Orga_Model_Granularity::buildRefFromAxes($granularityAxes)
-//                    );
-//
-//                    foreach ($granularityObject->cellsACL as $cellObject) {
-//                        foreach ($cellObject->admins as $admin) {
-//
-//                        }
-//                    }
-//                }
+                foreach ($object->granularitiesACL as $granularityObject) {
+                    $granularityAxes = [];
+                    foreach ($granularityObject->granularityAxes as $refAxis) {
+                        $granularityAxes = $organization->getAxisByRef($refAxis);
+                    }
+                    $granularity = $organization->getGranularityByRef(
+                        \Orga_Model_Granularity::buildRefFromAxes($granularityAxes)
+                    );
+
+                    foreach ($granularityObject->cellsACL as $cellObject) {
+                        $members = [];
+                        foreach ($cellObject->members as $refAxisMember) {
+                            list($refAxis, $refMember) = explode(';', $refAxisMember);
+                            $axis = $organization->getAxisByRef($refAxis);
+                            $members[] = $axis->getMemberByCompleteRef($refAxisMember);
+                        }
+                        $cell = $granularity->getCellByMembers($members);
+
+                        foreach ($cellObject->admins as $adminEmail) {
+                            $output->writeln('<comment>'.$adminEmail.' admin of '.$cell->getLabel().'</comment>');
+                            $cell->addRole(
+                                new CellAdminRole(
+                                    User::loadByEmail($adminEmail),
+                                    $cell
+                                )
+                            );
+                        }
+                        foreach ($cellObject->managers as $managerEmail) {
+                            $output->writeln('<comment>'.$managerEmail.' manager of '.$cell->getLabel().'</comment>');
+                            $cell->addRole(
+                                new CellManagerRole(
+                                    User::loadByEmail($managerEmail),
+                                    $cell
+                                )
+                            );
+                        }
+                        foreach ($cellObject->contrbutors as $contributorEmail) {
+                            $output->writeln('<comment>'.$contributorEmail.' contributor of '.$cell->getLabel().'</comment>');
+                            $cell->addRole(
+                                new CellContributorRole(
+                                    User::loadByEmail($contributorEmail),
+                                    $cell
+                                )
+                            );
+                        }
+                        foreach ($cellObject->observers as $observerEmail) {
+                            $output->writeln('<comment>'.$observerEmail.' observer of '.$cell->getLabel().'</comment>');
+                            $cell->addRole(
+                                new CellAdminRole(
+                                    User::loadByEmail($observerEmail),
+                                    $cell
+                                )
+                            );
+                        }
+                    }
+                }
             }
         }
         $this->entityManager->flush();
