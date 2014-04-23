@@ -233,7 +233,7 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                     $subSelectAxisFilter->getDQL()
                 )
             );
-            $queryBuilder->setParameter('members_'.$subMembersAlias, $filter->getMembers());
+            $queryBuilder->setParameter('members_'.$subMembersAlias, $filter->getMembers()->toArray());
         }
 
         return $this->getQueryFromQueryBuilder($queryBuilder)->getResult();

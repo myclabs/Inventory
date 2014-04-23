@@ -431,7 +431,7 @@ class DW_Form_configuration extends GenericTag
 
             $reportFilterForAxis = $report->getFilterForAxis($axis);
             if ($reportFilterForAxis !== null) {
-                $reportMembersFilteredForAxis = $reportFilterForAxis->getMembers();
+                $reportMembersFilteredForAxis = $reportFilterForAxis->getMembers()->toArray();
                 if (count($reportMembersFilteredForAxis) > 1) {
                     $membersSelect->setBooleanAttribute('multiple');
                     $severalMembersChoiceInput->setBooleanAttribute('checked');

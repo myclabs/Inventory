@@ -5,6 +5,7 @@ namespace Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Proxy\Proxy;
 use Doctrine\Common\Util\ClassUtils;
+use stdClass;
 
 class Serializer
 {
@@ -230,6 +231,20 @@ class Serializer
                 $propertyName = $config['properties'][$propertyName]['name'];
             }
 
+            if ($className === stdClass::class) {
+                // Callback
+                if (isset($config['properties'][$propertyName]['callback'])) {
+                    $callback = $config['properties'][$propertyName]['callback'];
+
+                    $value = $callback($value);
+                    $object->$propertyName = $value;
+                    continue;
+                }
+
+                $this->unserializeStdClassValue($object, $propertyName, $value);
+                continue;
+            }
+
             try {
                 $property = $class->getProperty($propertyName);
             } catch (\Exception $e) {
@@ -265,7 +280,7 @@ class Serializer
     {
         $property->setAccessible(true);
 
-        if (is_array($value) && (strpos(reset($value), '@@@') === 0)) {
+        if (is_array($value) && ((strpos(reset($value), '@@@') === 0) || empty($value))) {
             $collection = new ArrayCollection();
             $property->setValue($object, $collection);
 
@@ -285,5 +300,29 @@ class Serializer
         }
 
         $property->setValue($object, $value);
+    }
+
+    private function unserializeStdClassValue(stdClass $object, $propertyName, $value)
+    {
+        if (is_array($value) && (strpos(reset($value), '@@@') === 0)) {
+            $collection = new ArrayCollection();
+            $object->$propertyName = $collection;
+
+            foreach ($value as $valueItem) {
+                $this->callbacks[] = function () use ($collection, $valueItem) {
+                    $collection->add($this->objectMap[$valueItem]);
+                };
+            }
+            return;
+        }
+
+        if (!is_array($value) && strpos($value, '@@@') === 0) {
+            $this->callbacks[] = function () use ($object, $propertyName, $value) {
+                $object->$propertyName = $this->objectMap[$value];
+            };
+            return;
+        }
+
+        $object->$propertyName = $value;
     }
 }

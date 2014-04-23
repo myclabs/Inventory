@@ -21,9 +21,11 @@ use Classification\Domain\Context;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
 use Core_Exception_NotFound;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\OrganizationAdminRole;
 use Parameter\Domain\Family\Cell;
 use Parameter\Domain\Family\Dimension;
 use Parameter\Domain\Family\Family;
@@ -224,8 +226,12 @@ class ImportCommand extends Command
                 ],
             ],
             \Orga_Model_Organization::class => [
-                'callbacks' => function (\Orga_Model_Organization $object) use ($account) {
+                'callbacks' => function (\Orga_Model_Organization $object) use ($account, $classificationLibrary) {
                         $this->setProperty($object, 'account', $account);
+                        $this->setProperty($object, 'contextIndicators', new ArrayCollection());
+                        foreach ($classificationLibrary->getContextIndicators() as $contextIndicator) {
+                            $object->addContextIndicator($contextIndicator);
+                        }
                     },
                 'properties' => [
                     'acl' => [ 'exclude' => true ],
@@ -399,13 +405,164 @@ class ImportCommand extends Command
         }
 
         $this->entityManager->flush();
-        $this->entityManager->commit();
+        $this->entityManager->clear();
+
+
+        // Managing Orga.
+        /** @var \Orga_Model_Organization $organization */
+        $account = $this->entityManager->find(Account::class, $input->getArgument('account'));
 
         // Regenerate DW cubes.
+        $output->writeln('<comment>Regenerating DW Cubes</comment>');
         $queryOrgaAccount = new \Core_Model_Query();
         $queryOrgaAccount->filter->addCondition('account', $account);
+        /** @var \Orga_Model_Organization $organization */
+        foreach (\Orga_Model_Organization::loadList($queryOrgaAccount) as $organization) {
+            foreach ($organization->getGranularities() as $granularity) {
+                $granularity->setCellsGenerateDWCubes($granularity->getCellsGenerateDWCubes());
+            }
+        }
+        $this->entityManager->flush();
 
         // Import DW reports and filter
+        $serializer = new Serializer([]);
+        $output->writeln('<comment>Importing Reports</comment>');
+        $objects = $serializer->unserialize(file_get_contents($root . '/reports.json'));
+        foreach ($objects as $object) {
+            if (($object instanceof \StdClass) && ($object->type === "organization")) {
+                $organization = $this->getOrganizationByLabel($object->label);
+                foreach ($object->granularitiesReports as $granularityObject) {
+                    $granularityAxes = [];
+                    foreach ($granularityObject->granularityAxes as $refAxis) {
+                        $granularityAxes = $organization->getAxisByRef($refAxis);
+                    }
+                    $granularity = $organization->getGranularityByRef(
+                        \Orga_Model_Granularity::buildRefFromAxes($granularityAxes)
+                    );
+
+                    $dwCube = $granularity->getDWCube();
+                    /** @var \DW_Model_Report $reportObject */
+                    foreach ($granularityObject->granularityReports as $reportObject) {
+                        $report = new \DW_Model_Report($dwCube);
+
+                        // Import DW reports and filter
+                        $output->writeln('<comment>'.$reportObject->getLabel().'</comment>');
+
+                        $report->setLabel($reportObject->getLabel());
+                        $report->setChartType($reportObject->getChartType());
+                        $report->setSortType($reportObject->getSortType());
+                        $report->setWithUncertainty($reportObject->getWithUncertainty());
+                        if ($reportObject->getNumerator() != null) {
+                            $report->setNumerator(
+                                $dwCube->getIndicatorByRef(
+                                    $classificationLibrary->getId() . '_' . $reportObject->getNumerator()
+                                )
+                            );
+                        }
+                        if ($reportObject->getNumeratorAxis1() != null) {
+                            $numeratorAxisRef = $reportObject->getNumeratorAxis1();
+                            if (strstr($numeratorAxisRef, 'c_') === 0) {
+                                $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                    . substr($reportObject->getNumeratorAxis1(), 2);
+                            }
+                            $report->setNumeratorAxis1(
+                                $dwCube->getAxisByRef(
+                                    $numeratorAxisRef
+                                )
+                            );
+                        }
+                        if ($reportObject->getNumeratorAxis2() != null) {
+                            $numeratorAxisRef = $reportObject->getNumeratorAxis2();
+                            if (strstr($numeratorAxisRef, 'c_') === 0) {
+                                $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                    . substr($reportObject->getNumeratorAxis2(), 2);
+                            }
+                            $report->setNumeratorAxis2(
+                                $dwCube->getAxisByRef(
+                                    $numeratorAxisRef
+                                )
+                            );
+                        }
+                        if ($reportObject->getDenominatorAxis1() != null) {
+                            $denominatorAxisRef = $reportObject->getDenominatorAxis1();
+                            if (strstr($denominatorAxisRef, 'c_') === 0) {
+                                $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                    . substr($reportObject->getDenominatorAxis1(), 2);
+                            }
+                            $report->setDenominatorAxis1(
+                                $dwCube->getAxisByRef(
+                                    $denominatorAxisRef
+                                )
+                            );
+                        }
+                        if ($reportObject->getDenominatorAxis2() != null) {
+                            $denominatorAxisRef = $reportObject->getDenominatorAxis2();
+                            if (strstr($denominatorAxisRef, 'c_') === 0) {
+                                $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                    . substr($reportObject->getDenominatorAxis2(), 2);
+                            }
+                            $report->setDenominatorAxis2(
+                                $dwCube->getAxisByRef(
+                                    $denominatorAxisRef
+                                )
+                            );
+                        }
+                        foreach ($reportObject->getFilters() as $filterObject) {
+                            $filterAxisRef = $filterObject->getAxis();
+                            if (strstr($filterAxisRef, 'c_') === 0) {
+                                $filterAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                    . substr($filterObject->getAxis(), 2);
+                            }
+                            $axis = $dwCube->getAxisByRef($filterAxisRef);
+                            $filter = new \DW_Model_Filter($report, $axis);
+                            foreach ($filterObject->getMembers() as $refMember) {
+                                $filter->addMember(
+                                    $axis->getMemberByRef($refMember)
+                                );
+                            }
+                        }
+                        $report->save();
+                    }
+                }
+            }
+        }
+        $this->entityManager->flush();
+
+        $output->writeln('<comment>Importing ACL</comment>');
+        $objects = $serializer->unserialize(file_get_contents($root . '/acl.json'));
+        foreach ($objects as $object) {
+            if (($object instanceof \StdClass) && ($object->type === "organization")) {
+                $organization = $this->getOrganizationByLabel($object->label);
+
+                foreach ($object->admins as $adminEmail) {
+                    $organization->addAdminRole(
+                        new OrganizationAdminRole(
+                            User::loadByEmail($adminEmail),
+                            $organization
+                        )
+                    );
+                }
+
+//                foreach ($object->granularitiesACL as $granularityObject) {
+//                    $granularityAxes = [];
+//                    foreach ($granularityObject->granularityAxes as $refAxis) {
+//                        $granularityAxes = $organization->getAxisByRef($refAxis);
+//                    }
+//                    $granularity = $organization->getGranularityByRef(
+//                        \Orga_Model_Granularity::buildRefFromAxes($granularityAxes)
+//                    );
+//
+//                    foreach ($granularityObject->cellsACL as $cellObject) {
+//                        foreach ($cellObject->admins as $admin) {
+//
+//                        }
+//                    }
+//                }
+            }
+        }
+        $this->entityManager->flush();
+
+        $this->entityManager->commit();
     }
 
     private function setProperty($object, $property, $value)
@@ -413,5 +570,18 @@ class ImportCommand extends Command
         $refl = new \ReflectionProperty($object, $property);
         $refl->setAccessible(true);
         $refl->setValue($object, $value);
+    }
+
+    /**
+     * @param string $label
+     * @return \Orga_Model_Organization
+     */
+    private function getOrganizationByLabel($label)
+    {
+        foreach (\Orga_Model_Organization::loadList() as $organization) {
+            if ($organization->getLabel() === $label) {
+                return $organization;
+            }
+        }
     }
 }

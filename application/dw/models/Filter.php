@@ -144,11 +144,11 @@ class DW_Model_Filter extends Core_Model_Entity
     /**
      * Renvoie un tableau contenant tous les Member du Report.
      *
-     * @return DW_Model_Member[]
+     * @return Collection|DW_Model_Member[]
      */
     public function getMembers()
     {
-        return $this->members->toArray();
+        return $this->members;
     }
 
 }
