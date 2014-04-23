@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "7262913b932f92f69d75477c676df0ae",
+    "hash": "9a29790e2742bd85716f1bdceab1010a",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -247,22 +247,17 @@
         },
         {
             "name": "doctrine/common",
-            "version": "dev-ProxyStaticProperties",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
-                "url": "git://github.com/myclabs/common.git",
-                "reference": "0d908b594e12bf4600ffb50b931c7ad9fabce396"
+                "url": "https://github.com/doctrine/common.git",
+                "reference": "ceb18cf9b0230f3ea208b6238130fd415abda0a7"
             },
-            "archive": {
-                "exclude": [
-                    "!vendor",
-                    "tests",
-                    "*phpunit.xml",
-                    ".travis.yml",
-                    "build.xml",
-                    "build.properties",
-                    "composer.phar"
-                ]
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/ceb18cf9b0230f3ea208b6238130fd415abda0a7",
+                "reference": "ceb18cf9b0230f3ea208b6238130fd415abda0a7",
+                "shasum": ""
             },
             "require": {
                 "doctrine/annotations": "1.*",
@@ -275,7 +270,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5.x-dev"
+                    "dev-master": "2.4.x-dev"
                 }
             },
             "autoload": {
@@ -283,13 +278,21 @@
                     "Doctrine\\Common\\": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
+                },
+                {
                     "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
                 },
                 {
                     "name": "Roman Borschel",
@@ -300,12 +303,10 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
                     "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "http://jmsyst.com",
+                    "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
             "description": "Common Library for Doctrine projects",
@@ -317,7 +318,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2013-09-11 09:17:46"
+            "time": "2013-09-07 10:20:34"
         },
         {
             "name": "doctrine/dbal",
@@ -507,26 +508,17 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "dev-master-myclabs",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git://github.com/myclabs/doctrine2.git",
-                "reference": "1899bcf00012712ba1326e740e6b1746845c9f1b"
+                "url": "https://github.com/doctrine/doctrine2.git",
+                "reference": "9ec54b8fedc9d1b926b33af066ac9f263cadccc2"
             },
-            "archive": {
-                "exclude": [
-                    "!vendor",
-                    "tests",
-                    "*phpunit.xml",
-                    ".travis.yml",
-                    "build.xml",
-                    "build.properties",
-                    "composer.phar",
-                    "vendor/satooshi",
-                    "lib/vendor",
-                    "*.swp",
-                    "*coveralls.yml"
-                ]
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/9ec54b8fedc9d1b926b33af066ac9f263cadccc2",
+                "reference": "9ec54b8fedc9d1b926b33af066ac9f263cadccc2",
+                "shasum": ""
             },
             "require": {
                 "doctrine/collections": "~1.1",
@@ -536,8 +528,9 @@
                 "symfony/console": "2.*"
             },
             "require-dev": {
+                "phpunit/phpunit": "~4.0",
                 "satooshi/php-coveralls": "dev-master",
-                "symfony/yaml": "2.1"
+                "symfony/yaml": "~2.1"
             },
             "suggest": {
                 "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
@@ -557,13 +550,21 @@
                     "Doctrine\\ORM\\": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
+                },
+                {
                     "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
                 },
                 {
                     "name": "Roman Borschel",
@@ -572,10 +573,6 @@
                 {
                     "name": "Benjamin Eberlei",
                     "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
                 }
             ],
             "description": "Object-Relational-Mapper for PHP",
@@ -584,7 +581,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2013-11-04 15:01:05"
+            "time": "2014-04-23 13:58:06"
         },
         {
             "name": "dompdf/dompdf",
@@ -992,6 +989,44 @@
             "time": "2014-04-20 16:41:26"
         },
         {
+            "name": "myclabs/acl",
+            "version": "0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/ACL.git",
+                "reference": "8bd377f25bea43bec1201f4938fae8225240c624"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/ACL/zipball/8bd377f25bea43bec1201f4938fae8225240c624",
+                "reference": "8bd377f25bea43bec1201f4938fae8225240c624",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "2.5.*@dev",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyCLabs\\ACL\\": "src/",
+                    "Tests\\MyCLabs\\ACL\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "ACL library for Doctrine",
+            "homepage": "https://github.com/myclabs/ACL",
+            "keywords": [
+                "acl",
+                "doctrine",
+                "permission"
+            ],
+            "time": "2014-04-15 08:55:31"
+        },
+        {
             "name": "myclabs/array-comparator",
             "version": "1.0.0",
             "source": {
@@ -1069,6 +1104,39 @@
             "time": "2014-03-21 12:53:08"
         },
         {
+            "name": "myclabs/muih",
+            "version": "0.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/MUIH.git",
+                "reference": "6952d0a8ebcad97e5673a137b98b2f4c9a6b295a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/MUIH/zipball/6952d0a8ebcad97e5673a137b98b2f4c9a6b295a",
+                "reference": "6952d0a8ebcad97e5673a137b98b2f4c9a6b295a",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "MyCLabs": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP and Javascrcipt helpers for creation of Bootstrap 3 UI elements",
+            "homepage": "http://github.com/myclabs/muih",
+            "keywords": [
+                "bootstrap3",
+                "helper",
+                "ui"
+            ],
+            "time": "2014-03-31 13:59:47"
+        },
+        {
             "name": "myclabs/php-enum",
             "version": "1.2.1",
             "source": {
@@ -1101,28 +1169,33 @@
         },
         {
             "name": "myclabs/work",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/Work.git",
-                "reference": "52605e123352daf195debfdf8e517b9fa5e1926e"
+                "reference": "8de316de0ccc1f84dd939d41d92201c4084c9bed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/Work/zipball/52605e123352daf195debfdf8e517b9fa5e1926e",
-                "reference": "52605e123352daf195debfdf8e517b9fa5e1926e",
+                "url": "https://api.github.com/repos/myclabs/Work/zipball/8de316de0ccc1f84dd939d41d92201c4084c9bed",
+                "reference": "8de316de0ccc1f84dd939d41d92201c4084c9bed",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
                 "videlalvaro/php-amqplib": "~2.0"
+            },
+            "suggest": {
+                "videlalvaro/php-amqplib": "Driver for RabbitMQ"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "MyCLabs": "src/",
-                    "FunctionalTest": "tests/",
-                    "UnitTest": "tests/"
+                "psr-4": {
+                    "MyCLabs\\Work\\": "src/",
+                    "Test\\MyCLabs\\Work\\FunctionalTest\\": "tests/FunctionalTest",
+                    "Test\\MyCLabs\\Work\\UnitTest\\": "tests/UnitTest"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1137,7 +1210,7 @@
                 "work",
                 "work queue"
             ],
-            "time": "2013-10-21 09:01:28"
+            "time": "2014-04-23 10:30:49"
         },
         {
             "name": "myclabs/xport",
@@ -1301,113 +1374,6 @@
                 "service proxies"
             ],
             "time": "2014-03-12 14:00:19"
-        },
-        {
-            "name": "pear/console_commandline",
-            "version": "dev-trunk",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pear/Console_CommandLine.git",
-                "reference": "f139acf31e60743ba3ebafbde287ec8658a27591"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pear/Console_CommandLine/zipball/f139acf31e60743ba3ebafbde287ec8658a27591",
-                "reference": "f139acf31e60743ba3ebafbde287ec8658a27591",
-                "shasum": ""
-            },
-            "require": {
-                "pear/pear_exception": "*",
-                "php": ">=5.1.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Console": "./"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                ""
-            ],
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Richard Quadling",
-                    "email": "rquadling@gmail.com"
-                },
-                {
-                    "name": "David Jean Louis",
-                    "email": "izimobil@gmail.com"
-                }
-            ],
-            "description": "A full featured command line options and arguments parser.",
-            "homepage": "https://github.com/pear/Console_CommandLine",
-            "keywords": [
-                "console"
-            ],
-            "time": "2014-04-12 16:57:03"
-        },
-        {
-            "name": "pear/pear_exception",
-            "version": "1.0-beta1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pear/PEAR_Exception.git",
-                "reference": "f053615c7cbdfaba5a3b7021ee58a48523b8576c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/f053615c7cbdfaba5a3b7021ee58a48523b8576c",
-                "reference": "f053615c7cbdfaba5a3b7021ee58a48523b8576c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=4.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "*"
-            },
-            "type": "class",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "PEAR": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                "."
-            ],
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Helgi Thormar",
-                    "email": "dufuz@php.net"
-                },
-                {
-                    "name": "Greg Beaver",
-                    "email": "cellog@php.net",
-                    "role": "lead"
-                }
-            ],
-            "description": "The PEAR Exception base class.",
-            "homepage": "https://github.com/pear/PEAR_Exception",
-            "keywords": [
-                "exception"
-            ],
-            "time": "2014-02-21 17:29:07"
         },
         {
             "name": "phenx/php-font-lib",
@@ -2788,18 +2754,6 @@
     ],
     "aliases": [
         {
-            "alias": "2.4.99",
-            "alias_normalized": "2.4.99.0",
-            "version": "dev-master-myclabs",
-            "package": "doctrine/orm"
-        },
-        {
-            "alias": "2.4.1",
-            "alias_normalized": "2.4.1.0",
-            "version": "dev-ProxyStaticProperties",
-            "package": "doctrine/common"
-        },
-        {
             "alias": "2.99",
             "alias_normalized": "2.99.0.0",
             "version": "dev-OptimizedTranslatable",
@@ -2815,9 +2769,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "doctrine/orm": 20,
-        "doctrine/common": 20,
         "gedmo/doctrine-extensions": 20,
-        "pear/console_commandline": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "mnapoli/metaconsole": 20
