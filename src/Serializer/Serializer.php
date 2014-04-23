@@ -108,8 +108,6 @@ class Serializer
 
         $serialized = new \stdClass();
 
-        $this->objectMap[$objectHash] = $serialized;
-
         $serialized->__objectClassName = ClassUtils::getClass($object);
 
         // If it's a proxy, we trigger it to load it
@@ -122,6 +120,13 @@ class Serializer
         } else {
             $config = [];
         }
+
+        // Ignore class
+        if (isset($config['exclude']) && $config['exclude'] === true) {
+            return;
+        }
+
+        $this->objectMap[$objectHash] = $serialized;
 
         // Serialization de l'objet via PHP
         if (isset($config['serialize']) && $config['serialize'] === true) {
