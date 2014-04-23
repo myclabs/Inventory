@@ -82,12 +82,11 @@ class ExportCommand extends Command
                 $organizationAdmins[] = $adminRoles->getUser()->getEmail();
             }
 
-            $granularitiesACL = [];
+            $cellsACL = [];
             $granularitiesReports = [];
 
             foreach ($organization->getGranularities() as $granularity) {
                 if ($granularity->getCellsWithACL()) {
-                    $cellsACL = [];
                     foreach ($granularity->getCells() as $cell) {
                         $cellAdmins = [];
                         foreach ($cell->getAdminRoles() as $cellAdmin) {
@@ -111,7 +110,7 @@ class ExportCommand extends Command
                             $cellDataObject = new \StdClass();
                             $cellDataObject->type = 'cell';
                             $cellDataObject->members = array_map(
-                                function ($m) { return $m->getRef(); },
+                                function ($m) { return $m->getAxis()->getRef() . ';' . $m->getRef(); },
                                 $cellMembers
                             );
                             $cellDataObject->admins = $cellAdmins;
@@ -120,18 +119,6 @@ class ExportCommand extends Command
                             $cellDataObject->admins = $cellObservers;
                             $cellsACL[] = $cellDataObject;
                         }
-                    }
-
-                    if (count($cellsACL) > 0) {
-                        $granularityAxes = $granularity->getAxes();
-                        $granularityDataObject = new \StdClass();
-                        $granularityDataObject->type = 'granularity';
-                        $granularityDataObject->granularityAxes = array_map(
-                            function ($a) { return $a->getRef(); },
-                            $granularityAxes
-                        );
-                        $granularityDataObject->cellsACL = $cellsACL;
-                        $granularitiesACL[] = $granularityDataObject;
                     }
                 }
 
@@ -143,20 +130,6 @@ class ExportCommand extends Command
                     // Les rapports personnalisés ne fonctionnent pas dans la version actuelle.
                     //@see http://tasks.myc-sense.com/issues/7077
                     $cellsReports = [];
-//                    foreach ($granularity->getCells() as $cell) {
-//                        $cellReports = [];
-//                        foreach ($cell->getDWCube()->getReports() as $cellReport) {
-//                            try {
-//                                \Orga_Model_CellReport::loadByCellDWReport($cellReport);
-//                                $cellReports[] = $report;
-//                            } catch (\Core_Exception_NotFound $e) {
-//                                //
-//                            }
-//                        }
-//                        if (count($cellReports) > 0) {
-//                            $cellsReports[$cell->getTag()] = $cellReports;
-//                        }
-//                    }
                     $granularityAxes = $granularity->getAxes();
                     $granularityDataObject = new \StdClass();
                     $granularityDataObject->type = 'granularity';
@@ -169,12 +142,12 @@ class ExportCommand extends Command
                     $granularitiesReports[] = $granularityDataObject;
                 }
             }
-            if ((count($organizationAdmins) > 0) || (count($granularitiesACL) > 0)) {
+            if ((count($organizationAdmins) > 0) || (count($cellsACL) > 0)) {
                 $organizationDataObject = new \StdClass();
                 $organizationDataObject->type = 'organization';
                 $organizationDataObject->label = $organization->getLabel();
                 $organizationDataObject->admins = $organizationAdmins;
-                $organizationDataObject->granularitiesACL = $granularitiesACL;
+                $organizationDataObject->cellsACL = $cellsACL;
                 $aclData[] = $organizationDataObject;
             }
             if (count($granularitiesReports) > 0) {
