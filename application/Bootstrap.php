@@ -326,7 +326,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         if ($this->container->get('enable.acl')) {
             $front = Zend_Controller_Front::getInstance();
-            $front->registerPlugin($this->container->get(Inventory_Plugin_Acl::class));
+            $front->registerPlugin($this->container->get(Inventory_Plugin_ACL::class));
         }
     }
 

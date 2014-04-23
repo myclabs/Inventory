@@ -9,19 +9,18 @@ use Doc\Domain\Library;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\ParameterLibrary;
 use User\Application\HttpNotFoundException;
+use User\Application\Plugin\AbstractACLPlugin;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use User\Application\ForbiddenException;
-use User\Application\Plugin\ACLPlugin;
 use User\Domain\User;
 
 /**
  * Plugin pour la vérification des ACL
  *
  * @author valentin.claras
- * @uses AbstractACLPlugin
  */
-class Inventory_Plugin_Acl extends ACLPlugin
+class Inventory_Plugin_ACL extends AbstractACLPlugin
 {
     /**
      * @Inject
@@ -850,5 +849,86 @@ class Inventory_Plugin_Acl extends ACLPlugin
     protected function deleteContextActionRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->problemToSolveRule($identity, $request);
+    }
+    /**
+     * @param User                 $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function createUserRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return $this->acl->isAllowed(
+            $identity,
+            Actions::CREATE,
+            new ClassResource(User::class)
+        );
+    }
+
+    /**
+     * @param User                 $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function editUserRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        if ($request->getParam('id') === null) {
+            // Éditer son propre compte
+            return true;
+        }
+
+        $user = User::load($request->getParam('id'));
+        if ($user === $identity) {
+            return true;
+        }
+
+        // Si on peut modifier tous les utilisateurs
+        // Pas d'ACL directe entre utilisateurs, c'est overkill
+        return $this->acl->isAllowed(
+            $identity,
+            Actions::EDIT,
+            new ClassResource(User::class)
+        );
+    }
+
+    /**
+     * @param User                 $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function disableUserRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        // Si on peut supprimer tous les utilisateurs
+        // Pas d'ACL directe entre utilisateurs, c'est overkill
+        return $this->acl->isAllowed(
+            $identity,
+            Actions::DELETE,
+            new ClassResource(User::class)
+        );
+    }
+
+    /**
+     * @param User                 $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function enableUserRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        // Si on peut réactiver tous les utilisateurs
+        // Pas d'ACL directe entre utilisateurs, c'est overkill
+        return $this->acl->isAllowed(
+            $identity,
+            Actions::UNDELETE,
+            new ClassResource(User::class)
+        );
+    }
+
+    /**
+     * @param User                 $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    public function viewAllUsersRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        return $this->acl->isAllowed($identity, Actions::VIEW, new ClassResource(User::class));
     }
 }
