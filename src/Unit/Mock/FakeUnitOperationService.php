@@ -53,7 +53,7 @@ class FakeUnitOperationService implements UnitOperationService
             return new AdditionResult('kg');
         }
         if ((string) $operation == 'j.animal + animal.m^2.kg^1.s^-2') {
-            return new AdditionResult('m^2.animal.kg.s^-2');
+            return new AdditionResult('animal.m^2.kg.s^-2');
         }
         if ((string) $operation == 'g.animal + g^2.animal') {
             throw new IncompatibleUnitsException();
