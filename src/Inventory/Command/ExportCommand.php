@@ -111,7 +111,7 @@ class ExportCommand extends Command
                             $cellDataObject = new \StdClass();
                             $cellDataObject->type = 'cell';
                             $cellDataObject->members = array_map(
-                                function ($m) { return $m->getAxis()->getRef() . ';' . $m->getRef(); },
+                                function ($m) { return $m->getAxis()->getRef() . ';' . $m->getCompleteRef(); },
                                 $cellMembers
                             );
                             $cellDataObject->admins = $cellAdmins;
