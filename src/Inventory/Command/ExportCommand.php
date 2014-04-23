@@ -30,6 +30,20 @@ class ExportCommand extends Command
         $root = PACKAGE_PATH . '/data/exports/migration-3.0';
 
         $serializer = new Serializer([
+            \Orga\Model\ACL\Role\OrganizationAdminRole::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\Role\CellAdminRole::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\Role\CellManagerRole::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\Role\CellContributorRole::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\Role\CellObserverRole::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\OrganizationAuthorization::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\CellAuthorization::class => [ 'exclude' => true ],
+            \DW_Model_Cube::class => [ 'exclude' => true ],
+            \DW_Model_Axis::class => [ 'exclude' => true ],
+            \DW_Model_Member::class => [ 'exclude' => true ],
+            \DW_Model_Indicator::class => [ 'exclude' => true ],
+            \DW_Model_Result::class => [ 'exclude' => true ],
+            \DW_Model_Report::class => [ 'exclude' => true ],
+            \DW_Model_Filter::class => [ 'exclude' => true ],
             \DateTime::class => [
                 'serialize' => true,
             ],

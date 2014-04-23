@@ -114,7 +114,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      *
      * @var Collection|Orga_Model_CellsGroup[]
      */
-    private $cellsGroups = null;
+    protected $cellsGroups = null;
 
     /**
      * Tableau d'état des saisies de la cellule.
