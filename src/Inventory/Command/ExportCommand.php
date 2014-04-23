@@ -115,9 +115,9 @@ class ExportCommand extends Command
                                 $cellMembers
                             );
                             $cellDataObject->admins = $cellAdmins;
-                            $cellDataObject->admins = $cellManagers;
-                            $cellDataObject->admins = $cellContributors;
-                            $cellDataObject->admins = $cellObservers;
+                            $cellDataObject->managers = $cellManagers;
+                            $cellDataObject->contributors = $cellContributors;
+                            $cellDataObject->observers = $cellObservers;
                             $cellsACL[] = $cellDataObject;
                         }
                     }
