@@ -444,7 +444,7 @@ class ImportCommand extends Command
                 foreach ($object->granularitiesReports as $granularityObject) {
                     $granularityAxes = [];
                     foreach ($granularityObject->granularityAxes as $refAxis) {
-                        $granularityAxes = $organization->getAxisByRef($refAxis);
+                        $granularityAxes[] = $organization->getAxisByRef($refAxis);
                     }
                     $granularity = $organization->getGranularityByRef(
                         \Orga_Model_Granularity::buildRefFromAxes($granularityAxes)
