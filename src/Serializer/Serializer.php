@@ -284,7 +284,9 @@ class Serializer
                 $callables = [ $callables ];
             }
             foreach ($callables as $callable) {
-                $callable($object, $vars);
+                $this->callbacks[] = function () use ($callable, $object, $vars) {
+                    $callable($object, $vars);
+                };
             }
         }
     }

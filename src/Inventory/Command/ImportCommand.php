@@ -427,7 +427,6 @@ class ImportCommand extends Command
         $output->writeln('<info>unserialization done</info>');
         foreach ($objects as $object) {
             if (($object instanceof \Core_Model_Entity) && !($object instanceof User)) {
-                $output->writeln(sprintf('<info>persisting object of type %s</info>', get_class($object)));
                 $object->save();
             }
         }
@@ -458,6 +457,7 @@ class ImportCommand extends Command
         $output->writeln('<comment>Importing Reports</comment>');
         $objects = $serializer->unserialize(file_get_contents($root . '/reports.json'));
         foreach ($objects as $object) {
+            continue;
             if (($object instanceof \StdClass) && ($object->type === "organization")) {
                 $organization = $this->getOrganizationByLabel($object->label);
                 foreach ($object->granularitiesReports as $granularityObject) {
