@@ -12,8 +12,8 @@ use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
-use AF\Domain\InputSet\InputSet;
 use AF\Domain\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\SubInputSet;
 use AF\Domain\Output\OutputTotal;
 use Classification\Domain\Axis;
 use Classification\Domain\ClassificationLibrary;
@@ -259,7 +259,7 @@ class ImportCommand extends Command
                 'properties' => [
                     'dWCube' => [ 'exclude' => true ],
                     'dWResults' => [ 'exclude' => true ],
-                    'socialCommentsForAFInputSetPrimary' => [ 'exclude' => true ],
+                    'socialCommentsForAFInputSetPrimary' => [ 'name' => 'commentsForAFInputSetPrimary' ],
                     'socialGenericActions' => [ 'exclude' => true ],
                     'docLibraryForSocialGenericActions' => [ 'exclude' => true ],
                     'socialContextActions' => [ 'exclude' => true ],
@@ -270,33 +270,39 @@ class ImportCommand extends Command
                     'contributorRoles' => [ 'exclude' => true ],
                     'observerRoles' => [ 'exclude' => true ],
                 ],
+                'callbacks' => function (\Orga_Model_Cell $object) {
+                    foreach ($object->getCommentsForInputSetPrimary() as $comment) {
+                        $this->setProperty($comment, 'cell', $object);
+                    }
+                },
             ],
             PrimaryInputSet::class => [
                 'properties' => [
                     'refAF' => [ 'name' => 'af' ],
                     'af' => [
                         'callback' => function ($var) use ($afLibrary) {
-                                foreach ($afLibrary->getAFList() as $af) {
-                                    if ($af->getRef() == $var) {
-                                        return $af;
-                                    }
+                            foreach ($afLibrary->getAFList() as $af) {
+                                if ($af->getRef() == $var) {
+                                    return $af;
                                 }
-                                throw new Exception('AF "' . $var . '" NOT FOUND !');
-                            },
+                            }
+                            throw new Exception('AF "' . $var . '" NOT FOUND !');
+                        },
                     ]
                 ],
             ],
-            InputSet::class => [
+            SubInputSet::class => [
                 'properties' => [
                     'refAF' => [ 'name' => 'af' ],
                     'af' => [
                         'callback' => function ($var) use ($afLibrary) {
-                                foreach ($afLibrary->getAFList() as $af) {
-                                    if ($af->getRef() == $var) {
-                                        return $af;
-                                    }
+                            foreach ($afLibrary->getAFList() as $af) {
+                                if ($af->getRef() == $var) {
+                                    return $af;
                                 }
-                            },
+                            }
+                            throw new Exception('AF "' . $var . '" NOT FOUND !');
+                        },
                     ]
                 ],
             ],
@@ -313,6 +319,9 @@ class ImportCommand extends Command
                             },
                     ]
                 ],
+            ],
+            'Social_Model_Comment' => [
+                'class' => \Orga_Model_Cell_InputComment::class,
             ],
             \Orga_Model_GranularityReport::class => [ 'exclude' => true ],
             \Orga_Model_CellReport::class => [ 'exclude' => true ],
