@@ -14,7 +14,7 @@ class AlgoConfigurationError
      * Flag permettant de préciser si l'error est fatale ( = bloquante) ou non.
      * @var boolean
      */
-    protected $fatal;
+    protected $fatal = true;
 
     /**
      * Le message décrivant l'erreur.
@@ -26,7 +26,7 @@ class AlgoConfigurationError
      * @param string $message Message de l'erreur
      * @param bool   $isFatal Flag permettant de préciser si l'error est fatale (bloquante) ou non.
      */
-    public function __construct($message = null, $isFatal = null)
+    public function __construct($message = null, $isFatal = true)
     {
         $this->message = $message;
         $this->fatal = $isFatal;

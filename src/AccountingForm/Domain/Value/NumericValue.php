@@ -3,6 +3,7 @@
 namespace AccountingForm\Domain\Value;
 
 use Calc_UnitValue;
+use Unit\UnitAPI;
 
 /**
  * Numeric value.
@@ -27,5 +28,38 @@ class NumericValue implements Value
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getNumericValue()
+    {
+        return $this->value->getDigitalValue();
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getRelativeUncertainty()
+    {
+        return $this->value->getRelativeUncertainty();
+    }
+
+    /**
+     * @return UnitAPI
+     */
+    public function getUnit()
+    {
+        return $this->value->getUnit();
+    }
+
+    /**
+     * @param UnitAPI $unit
+     * @return NumericValue
+     */
+    public function convertTo(UnitAPI $unit)
+    {
+        return new self($this->value->convertTo($unit));
     }
 }

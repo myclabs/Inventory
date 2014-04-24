@@ -17,7 +17,7 @@ class ArrayValueSet implements ValueSet
     private $values = [];
 
     /**
-     * @param Value[] $values
+     * @param Value[] $values The array must be indexed with strings.
      */
     public function __construct(array $values = [])
     {
