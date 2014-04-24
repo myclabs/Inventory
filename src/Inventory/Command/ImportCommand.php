@@ -322,6 +322,13 @@ class ImportCommand extends Command
             ],
             'Social_Model_Comment' => [
                 'class' => \Orga_Model_Cell_InputComment::class,
+                'properties' => [
+                    'author' => [
+                        'callback' => function ($var) {
+                            return User::loadByEmail($var);
+                        },
+                    ]
+                ],
             ],
             \Orga_Model_GranularityReport::class => [ 'exclude' => true ],
             \Orga_Model_CellReport::class => [ 'exclude' => true ],
