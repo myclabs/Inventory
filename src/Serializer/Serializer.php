@@ -70,8 +70,8 @@ class Serializer
         }
 
         foreach ($objects as $id => $object) {
-            if ($output && isset($vars['__objectClassName'])) {
-                $output->writeln(sprintf('<info>Unserializing object of type %s</info>', $vars['__objectClassName']));
+            if ($output && isset($object['__objectClassName'])) {
+                $output->writeln(sprintf('<info>Unserializing object of type %s</info>', $object['__objectClassName']));
             }
 
             $this->unserializeObject($id, $object);
