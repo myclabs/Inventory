@@ -177,12 +177,8 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     {
         $granularity = Orga_Model_Granularity::load($this->update['index']);
 
-        switch ($this->update['column']) {
-            case 'relevance':
-                $granularity->setCellsControlRelevance((bool) $this->update['value']);
-                $this->data = $granularity->getCellsControlRelevance();
-                break;
-            case 'acl':
+        if ($this->update['column'] !== 'input') {
+            if ($this->update['column'] === 'acl') {
                 if (!$this->update['value']) {
                     foreach ($granularity->getCells() as $cell) {
                         if (count($cell->getAllRoles()) > 0) {
@@ -190,23 +186,30 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                         }
                     }
                 }
-                $granularity->setCellsWithACL((bool) $this->update['value']);
-                $this->data = $granularity->getCellsWithACL();
-                break;
-            case 'input':
-                $granularity->setInputConfigGranularity();
-                $this->data = ['value' => $granularity->isInput(), 'editable' => false];
-                break;
-            case 'reports':
-                $granularity->setCellsGenerateDWCubes((bool) $this->update['value']);
-                $this->data = $granularity->getCellsGenerateDWCubes();
-                break;
-            default:
-                parent::updateelementAction();
-                break;
+            }
+
+            $success = function () {
+                $this->message = __('UI', 'message', 'updated');
+            };
+            $timeout = function () {
+                $this->message = __('UI', 'message', 'updatedLater');
+            };
+            $error = function (Exception $e) {
+                throw $e;
+            };
+            // Lance la tache en arrière plan
+            $task = new ServiceCallTask(
+                'Orga_Service_OrganizationService',
+                'editGranularity',
+                [$granularity, [ $this->update['column'] => (bool) $this->update['value'] ]],
+                __('Orga', 'backgroundTasks', 'editGranularity', ['LABEL' => $granularity->getLabel()])
+            );
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
+        } else {
+            $granularity->setInputConfigGranularity();
+            $granularity->save();
+            $this->data = ['value' => $granularity->isInput(), 'editable' => false];
         }
-        $granularity->save();
-        $this->message = __('UI', 'message', 'updated', array('GRANULARITY' => $granularity->getLabel()));
 
         $this->send();
     }

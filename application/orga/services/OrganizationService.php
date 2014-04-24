@@ -189,7 +189,7 @@ class Orga_Service_OrganizationService
     /**
      * @param Orga_Model_Organization $organization
      * @param Orga_Model_Axis[] $axes
-     * @param array $configuration [$attribute => $value] : relevance(bool), dWCube(bool)
+     * @param array $configuration [$attribute => $value] : relevance(bool), reports(bool), acl(bool)
      *
      * @throws Exception
      *
@@ -243,6 +243,53 @@ class Orga_Service_OrganizationService
         }
 
         return $granularity;
+    }
+
+    /**
+     * @param Orga_Model_Granularity $granularity
+     * @param array $changes [$attribute => $value] : relevance(bool), reports(bool), acl(bool)
+     * @throws Exception
+     */
+    public function editGranularity(Orga_Model_Granularity $granularity, $changes)
+    {
+        foreach ($changes as $attribute => $value) {
+            switch ($attribute) {
+                case 'relevance':
+                    $granularity->setCellsControlRelevance($value);
+                    break;
+                case 'afs':
+                    try {
+                        $inputConfigGranularity = $granularity->getOrganization()->getGranularityByRef(
+                            Orga_Model_Granularity::buildRefFromAxes($value)
+                        );
+                    } catch (Core_Exception_NotFound $e) {
+                        $inputConfigGranularity = new Orga_Model_Granularity($granularity->getOrganization(), $value);
+                        $inputConfigGranularity->save();
+                    }
+                    $granularity->setInputConfigGranularity($inputConfigGranularity);
+                    break;
+                case 'reports':
+                    $granularity->setCellsGenerateDWCubes($value);
+                    break;
+                case 'acl':
+                    $granularity->setCellsWithACL($value);
+                    break;
+            }
+        }
+
+        try {
+            $this->entityManager->beginTransaction();
+
+            $granularity->save();
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Exception $e) {
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
+
+            throw $e;
+        }
     }
 
     /**
