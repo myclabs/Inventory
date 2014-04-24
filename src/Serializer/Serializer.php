@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Proxy\Proxy;
 use Doctrine\Common\Util\ClassUtils;
 use stdClass;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class Serializer
 {
@@ -35,7 +34,7 @@ class Serializer
      */
     private $callbacks = [];
 
-    public function __construct(array $config, $ignoreObjectsWithoutConfig=false)
+    public function __construct(array $config, $ignoreObjectsWithoutConfig = false)
     {
         $this->config = $config;
         $this->ignoreObjectsWithoutConfig = $ignoreObjectsWithoutConfig;
@@ -59,28 +58,18 @@ class Serializer
         return json_encode($this->objectMap, JSON_PRETTY_PRINT);
     }
 
-    public function unserialize($json, OutputInterface $output = null)
+    public function unserialize($json)
     {
         $this->objectMap = [];
         $this->callbacks = [];
 
         $objects = json_decode($json, true);
-        if ($output) {
-            $output->writeln('<info>JSON decoded</info>');
-        }
 
         foreach ($objects as $id => $object) {
-            if ($output && isset($object['__objectClassName'])) {
-                $output->writeln(sprintf('<info>Unserializing object of type %s</info>', $object['__objectClassName']));
-            }
-
             $this->unserializeObject($id, $object);
         }
 
         // Run the callbacks
-        if ($output) {
-            $output->writeln('<info>Running the callbacks</info>');
-        }
         foreach ($this->callbacks as $callback) {
             $callback();
         }
@@ -146,7 +135,7 @@ class Serializer
 
         // Ignore class
         if (isset($config['exclude']) && $config['exclude'] === true) {
-            return;
+            return null;
         }
 
         $this->objectMap[$objectHash] = $serialized;
