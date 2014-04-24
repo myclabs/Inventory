@@ -39,7 +39,7 @@ if (count($file) > 0) {
 }
 ?>
 
-<style>
+<style xmlns="http://www.w3.org/1999/html">
     .organization h1 img { max-height: 125px; }
     .organization h1 .pull-right small a { letter-spacing: normal; }
 
@@ -73,7 +73,7 @@ if (count($file) > 0) {
 
     .cell .cell-member { padding: 7px; font-size: 12px; }
     .cell h2, .cell h4 { margin: 10px; overflow: hidden; }
-    .cell .cell-actions, .cell .cell-inventory-status, .cell .cell-inventory-informations, .cell .cell-inventory-actions, .cell .cell-input { padding: 0 0 0 5px; }
+    .cell .cell-actions, .cell .cell-inventory-status, .cell .cell-inventory-informations, .cell .cell-inventory-actions, .cell .cell-input { padding: 0 0 0 0px; text-align: center; }
     .cell .inventory-status { color: #ffffff; background-color: #bbbbbb; margin-right: 5px; border: 1px solid rgba(0, 0, 0, 0); border-radius: 2px; box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.05) inset; padding: 6px 10px 5px; font-size: 12px; line-height: 1.5; border-color: #cccccc; display: inline-block; font-weight: normal; margin-bottom: 0; text-align: center; vertical-align: middle; white-space: nowrap; }
     .cell[data-inventory-status="<?=Orga_Model_Cell::STATUS_ACTIVE?>"] .inventory-status { background-color: #49afcd; }
     .cell[data-inventory-status="<?=Orga_Model_Cell::STATUS_CLOSED?>"] .inventory-status { background-color: #a4e3f0; }
@@ -81,6 +81,7 @@ if (count($file) > 0) {
     .cell .inventory-progress .inventory-progress-bar { position: absolute; top: 0; left: 0; height: 100%; background-color: #888888; }
     .cell .inventory-completion { position: relative; display: inline-block; width: 100%; overflow: hidden; text-align: center; font-size: 18px; font-weight: bold; }
     .cell .inventory-actions { float: right; }
+    .cell .inventory-actions .change-inventory-status { min-width:75px; }
     .cell .input-status { color: #ffffff; background-color: #dd514c; }
     .cell .input-status .input-actions { display: inline-block; position: relative; float:right; text-align: right; }
     .cell .input-status .input-actions > a { display: inline-block; text-align: left; }
@@ -102,6 +103,8 @@ if (count($file) > 0) {
     .granularity-wrapper legend { margin-bottom: 5px; }
     .granularity-wrapper .cells-filter { margin-bottom: 15px; }
     .granularity-wrapper .cells-filter .granularity-info { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
+    .granularity-wrapper .granularity tr.change-cells-display { background: none; }
+    .granularity-wrapper .granularity th { text-align: center; }
     .granularity-wrapper .granularity { margin-left: -2.5px; margin-right: -2.5px; }
     .granularity-wrapper .granularity .col-md-4 { padding-left: 2.5px; padding-right: 2.5px; }
     .granularity-wrapper .granularity .cell { margin-top: 5px; margin-bottom: 0; }
@@ -404,7 +407,32 @@ if (count($file) > 0) {
             </form>
             <?php endif; ?>
 
-            <table class="granularity table table-hover" data-filtered-cells="0"></table>
+            <table class="granularity table table-condensed table-hover table-bordered" data-filtered-cells="0">
+                <thead>
+                    <?php foreach ($narrowerGranularity->getAxes() as $axis) : ?>
+                        <?php if (!in_array($axis->getRef(), $this->refAxes)) : ?>
+                            <th>
+                                <?=$axis->getLabel()?>
+                            </th>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <th>
+                        <?=___('Orga', 'view', 'actionsColumn')?>
+                    </th>
+                    <?php if ($narrowerGranularityArray['isInventory'] || $narrowerGranularityArray['isInput']) : ?>
+                        <th<?php if ($narrowerGranularityArray['isGranularityForInventoryStatus']) : ?> colspan="3"<?php elseif ($narrowerGranularityArray['isInventory']) : ?> colspan="2"<?php endif; ?>>
+                            <?=___('Orga', 'view', 'inventoryColumn')?>
+                        </th>
+                    <?php endif; ?>
+                    <?php if ($narrowerGranularityArray['isInput']) : ?>
+                        <th>
+                            <?=___('Orga', 'view', 'inputColumn')?>
+                        </th>
+                    <?php endif; ?>
+                </thead>
+                <tbody></tbody>
+                <tfoot></tfoot>
+            </table>
         </div>
     </fieldset>
     <?php endforeach; ?>
@@ -532,8 +560,8 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
     if (e.target != this) {
         return;
     }
-    var granularity = $('.granularity', $(this));
-    var granularityInfo = $('.granularity-info', granularity.parent());
+    var granularity = $('.granularity tbody', $(this));
+    var granularityInfo = $('.granularity-info', granularity.parent().parent());
     granularityInfo[0].className = granularityInfo[0].className.replace(/\bbadge-.*?\b/g, '');
     granularityInfo.addClass('badge-info');
     granularityInfo.html('<i class="fa fa-spinner fa-fw fa-spin"></i> <?=___('UI', 'loading', 'loading')?>');
@@ -556,7 +584,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
             $(data.childCells).each(function() {
                 var cellTitle = '';
                 for (var refAxis in this.members) {
-                    if ($.inArray(refAxis, <?=$this->refAxes?>) < 0){
+                    if ($.inArray(refAxis, <?=json_encode($this->refAxes)?>) < 0){
                         cellTitle += '<td class="cell-member">' + this.members[refAxis] + '</td>';
                     }
                 }
@@ -681,6 +709,10 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                     ' <br> ' +
                                     this.inventoryFinishedInputsNumber + ' ' +
                                     ((this.inventoryFinishedInputsNumber > 1) ? '<?=___('Orga', 'view', 'inputsCompletedMany')?>' : '<?=___('Orga', 'view', 'inputsCompletedSingle')?>') +
+                                    ' <hr> ' +
+                                    ' <strong> ' +
+                                    ((this.inventoryCompletion > 0) ? (this.inventoryCompletion + '% <?=___('Orga', 'view', 'percentInputsCompleted')?>') : '<?=___('Orga', 'view', 'noInputsCompleted')?>') +
+                                    ' </strong> ' +
                                     '">' +
                                     '<div class="inventory-progress-bar" style="width: ' + this.inventoryCompletion + '%;">' +
                                     '</div>' +
@@ -801,7 +833,7 @@ $('.cells-filter button.reset').on('click', function(e) {
 $('.cells-filter select').on('keyup change', function(e) {
     var collapse = $(this).parents('.collapse');
     collapse.attr('data-first-cell', <?=$defaultDataFirstCell?>);
-    $('.granularity', collapse).html('');
+    $('.granularity tbody', collapse).html('');
     collapse.trigger('loadCells');
 });
 $('.cells-filter').on('resetCellsFilter', function(e) {
@@ -809,59 +841,62 @@ $('.cells-filter').on('resetCellsFilter', function(e) {
     $('select[name!="show-cells"]', $(this)).val('');
     var collapse = $(this).parents('.collapse');
     collapse.attr('data-first-cell', <?=$defaultDataFirstCell?>);
-    $('.granularity', collapse).html('');
+    $('.granularity tbody', collapse).html('');
     collapse.trigger('loadCells');
 });
 $('div.collapse[id^="granularity"]').on('showCells', function(e) {
-    var granularity = $('.granularity', $(this));
-    $('.change-cells-display', granularity).remove();
+    var granularity = $('.granularity tbody', $(this));
+    $('.change-cells-display', $(this)).remove();
 
     if (granularity.attr('data-filtered-cells') == '0') {
         granularity.append('<div class="no-cell span"><?=___('Orga', 'view', 'filterNoResult')?></div>');
     } else {
-        granularity.append('<tr class="change-cells-display"><td colspan="100%"></td></tr>');
+        $('.granularity thead', $(this)).prepend('<tr class="change-cells-display"><td colspan="100%"></td></tr>');
+        $('.granularity tfoot', $(this)).append('<tr class="change-cells-display"><td colspan="100%"></td></tr>');
         var firstLineDisplayed = $(this).attr('data-first-cell') * 1;
         var linesDisplayed = $(':input[name="show-cells"]', this).val() * 1;
         if (firstLineDisplayed > 0) {
-            $('.change-cells-display td', granularity).append(
-                '<button class="btn btn-default display-prev-cells withTooltip" title="<?=___('Orga', 'view', 'displayPrevCells')?>" data-placement="left">' +
+            $('.change-cells-display td', $(this)).append(
+                '<button class="btn btn-default btn-xs display-prev-cells withTooltip" title="<?=___('Orga', 'view', 'displayPrevCells')?>" data-placement="left">' +
                     '<i class="fa fa-angle-double-left fa-fw"></i>' +
                 '</button> '
             );
         }
-        $('.change-cells-display td', granularity).append(
+        $('.change-cells-display td', $(this)).append(
             ($(this).attr('data-first-cell') * 1 + 1) +
             ' - ' +
             (((firstLineDisplayed + linesDisplayed) < granularity.attr('data-filtered-cells'))
-                ? (firstLineDisplayed + linesDisplayed) : granularity.attr('data-filtered-cells'))
+                ? (firstLineDisplayed + linesDisplayed) : granularity.attr('data-filtered-cells')) +
+            ' / ' +
+            granularity.attr('data-filtered-cells')
         );
         if ((firstLineDisplayed + linesDisplayed) < granularity.attr('data-filtered-cells')) {
-            $('.change-cells-display td', granularity).append(
-                ' <button class="btn btn-default display-next-cells withTooltip" title="<?=___('Orga', 'view', 'displayNextCells')?>" data-placement="right">' +
+            $('.change-cells-display td', $(this)).append(
+                ' <button class="btn btn-default btn-xs display-next-cells withTooltip" title="<?=___('Orga', 'view', 'displayNextCells')?>" data-placement="right">' +
                     '<i class="fa fa-angle-double-right fa-fw"></i>' +
                 '</button>'
             );
         }
-        $('.change-cells-display td .withTooltip', granularity).tooltip();
+        $('.change-cells-display td .withTooltip', $(this)).tooltip();
     }
 });
 $('body').on('click', '.display-next-cells', function (e) {
-    var granularity = $(this).closest('.granularity');
-    granularity.parent().attr(
+    var granularity = $('tbody', $(this).closest('.granularity'));
+    granularity.parent().parent().attr(
         'data-first-cell',
-        (granularity.parent().attr('data-first-cell') * 1 + $(':input[name="show-cells"]', granularity.parent()).val() * 1)
+        (granularity.parent().parent().attr('data-first-cell') * 1 + $(':input[name="show-cells"]', granularity.parent().parent()).val() * 1)
     );
     granularity.html('');
-    granularity.parent().trigger('loadCells');
+    granularity.parent().parent().trigger('loadCells');
 });
 $('body').on('click', '.display-prev-cells', function (e) {
-    var granularity = $(this).closest('.granularity');
-    granularity.parent().attr(
+    var granularity = $('tbody', $(this).closest('.granularity'));
+    granularity.parent().parent().attr(
         'data-first-cell',
-        (granularity.parent().attr('data-first-cell') * 1 - $(':input[name="show-cells"]', granularity.parent()).val() * 1)
+        (granularity.parent().parent().attr('data-first-cell') * 1 - $(':input[name="show-cells"]', granularity.parent().parent()).val() * 1)
     );
     granularity.html('');
-    granularity.parent().trigger('loadCells');
+    granularity.parent().parent().trigger('loadCells');
 });
 
 $('body').on('click', '.delete-user', function(e) {
@@ -1079,7 +1114,7 @@ $('body').on('click', '.inventory-actions a.change-inventory-status', function(e
             otherButton.attr('href', otherButton.attr('href').replace(/inventoryStatus\/[a-zA-Z]+/, 'inventoryStatus/' + data.otherActionStatus));
             var collapse = buttonGroup.parents('.collapse[data-inventory]');
             $('.collapse[data-inventory]').attr('data-first-cell', <?=$defaultDataFirstCell?>);
-            $('.collapse[data-inventory] .granularity').html('');
+            $('.collapse[data-inventory] .granularity tbody').html('');
             $('.collapse[data-inventory]').trigger('loadCells');
             $('button.dropdown-toggle', buttonGroup).removeClass('hide');
             loadingButton.remove();
@@ -1147,12 +1182,12 @@ $(document).ready(function() {
     $('.comments > h3 a').trigger('click');
     $('div.collapse[id^="granularity"]').on('show.bs.collapse',
         function(e) {
-            if ((e.target != this) || ($('.granularity', $(this)).html() != '')) {
+            if ((e.target != this) || ($('.granularity tbody', $(this)).html() != '')) {
                 return;
             }
             $(this).attr('data-first-cell', <?=$defaultDataFirstCell?>);
             $(this).trigger('loadCells');
-            $('.granularity', $(this)).html('');
+            $('.granularity tbody', $(this)).html('');
         }
     );
     $('div.collapse[id^="granularity"].in').trigger('loadCells').css('overflow','visible');

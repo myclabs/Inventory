@@ -42,6 +42,33 @@
             </tuv>
         </tu>
 
+        <!-- Désignation des granularités -->
+
+        <tu tuid="actionsColumn">
+            <tuv xml:lang="fr">
+                <seg>Actions</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Actions</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryColumn">
+            <tuv xml:lang="fr">
+                <seg>Collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inventory</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputColumn">
+            <tuv xml:lang="fr">
+                <seg>Saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input</seg>
+            </tuv>
+        </tu>
+
         <!-- Lien d'accès à la saisie -->
 
         <tu tuid="inputLinkDetail">
@@ -456,6 +483,22 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noInputsCompleted">
+            <tuv xml:lang="fr">
+                <seg>Aucune saisie terminée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>no input finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="percentInputsCompleted">
+            <tuv xml:lang="fr">
+                <seg>des saisies terminées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>inputs finished</seg>
             </tuv>
         </tu>
 

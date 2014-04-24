@@ -145,7 +145,7 @@ class Orga_CellController extends Core_Controller
         $currentAxes = $granularity->getAxes();
         $this->view->assign(
             'refAxes',
-            json_encode(array_map(function ($axis) { return $axis->getRef(); }, $currentAxes))
+            array_map(function ($axis) { return $axis->getRef(); }, $currentAxes)
         );
         $this->setActiveMenuItemOrganization($organization->getId());
 
