@@ -424,12 +424,15 @@ class ImportCommand extends Command
         // Import Orga
         $output->writeln('<comment>Importing Orga</comment>');
         $objects = $serializer->unserialize(file_get_contents($root . '/orga.json'));
+        $output->writeln('<info>unserialization done</info>');
         foreach ($objects as $object) {
             if (($object instanceof \Core_Model_Entity) && !($object instanceof User)) {
+                $output->writeln(sprintf('<info>persisting object of type %s</info>', get_class($object)));
                 $object->save();
             }
         }
 
+        $output->writeln('<info>flushing</info>');
         $this->entityManager->flush();
         $this->entityManager->clear();
 
