@@ -60,6 +60,15 @@ class ExportCommand extends Command
                     ],
                 ],
             ],
+            \Social_Model_Comment::class => [
+                'properties' => [
+                    'author' => [
+                        'transform' => function (User $author) {
+                            return $author->getEmail();
+                        },
+                    ],
+                ],
+            ],
         ]);
 
         $output->writeln('<comment>Exporting users</comment>');
