@@ -423,7 +423,7 @@ class ImportCommand extends Command
 
         // Import Orga
         $output->writeln('<comment>Importing Orga</comment>');
-        $objects = $serializer->unserialize(file_get_contents($root . '/orga.json'));
+        $objects = $serializer->unserialize(file_get_contents($root . '/orga.json'), $output);
         $output->writeln('<info>unserialization done</info>');
         foreach ($objects as $object) {
             if (($object instanceof \Core_Model_Entity) && !($object instanceof User)) {

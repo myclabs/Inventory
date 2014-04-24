@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Proxy\Proxy;
 use Doctrine\Common\Util\ClassUtils;
 use stdClass;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Serializer
 {
@@ -58,16 +59,28 @@ class Serializer
         return json_encode($this->objectMap, JSON_PRETTY_PRINT);
     }
 
-    public function unserialize($json)
+    public function unserialize($json, OutputInterface $output = null)
     {
         $this->objectMap = [];
         $this->callbacks = [];
 
-        foreach (json_decode($json, true) as $id => $object) {
+        $objects = json_decode($json, true);
+        if ($output) {
+            $output->writeln('<info>JSON decoded</info>');
+        }
+
+        foreach ($objects as $id => $object) {
+            if ($output && isset($vars['__objectClassName'])) {
+                $output->writeln(sprintf('<info>Unserializing object of type %s</info>', $vars['__objectClassName']));
+            }
+
             $this->unserializeObject($id, $object);
         }
 
         // Run the callbacks
+        if ($output) {
+            $output->writeln('<info>Running the callbacks</info>');
+        }
         foreach ($this->callbacks as $callback) {
             $callback();
         }
