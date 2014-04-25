@@ -480,6 +480,7 @@ class ImportCommand extends Command
                         $report->setChartType($reportObject->getChartType());
                         $report->setSortType($reportObject->getSortType());
                         $report->setWithUncertainty($reportObject->getWithUncertainty());
+
                         if ($reportObject->getNumerator() != null) {
                             try {
                                 $report->setNumerator(
@@ -522,34 +523,45 @@ class ImportCommand extends Command
                                     }
                                 }
                             }
-                            if (!$errorHappened) {
-                                if ($reportObject->getDenominatorAxis1() != null) {
-                                    $denominatorAxisRef = $reportObject->getDenominatorAxis1();
-                                    if (strstr($denominatorAxisRef, 'c_') === 0) {
-                                        $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
-                                            . substr($reportObject->getDenominatorAxis1(), 2);
-                                    }
-                                    try {
-                                        $report->setDenominatorAxis1(
-                                            $dwCube->getAxisByRef($denominatorAxisRef)
-                                        );
-                                    } catch (\Core_Exception_NotFound $e) {
-                                        $errorHappened = true;
-                                    }
+                            if ($reportObject->getDenominator() != null) {
+                                try {
+                                    $report->setDenominator(
+                                        $dwCube->getIndicatorByRef(
+                                            $classificationLibrary->getId() . '_' . $reportObject->getDenominator()
+                                        )
+                                    );
+                                } catch (\Core_Exception_NotFound $e) {
+                                    $errorHappened++;
                                 }
                                 if (!$errorHappened) {
-                                    if ($reportObject->getDenominatorAxis2() != null) {
-                                        $denominatorAxisRef = $reportObject->getDenominatorAxis2();
+                                    if ($reportObject->getDenominatorAxis1() != null) {
+                                        $denominatorAxisRef = $reportObject->getDenominatorAxis1();
                                         if (strstr($denominatorAxisRef, 'c_') === 0) {
                                             $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
-                                                . substr($reportObject->getDenominatorAxis2(), 2);
+                                                . substr($reportObject->getDenominatorAxis1(), 2);
                                         }
                                         try {
-                                            $report->setDenominatorAxis2(
+                                            $report->setDenominatorAxis1(
                                                 $dwCube->getAxisByRef($denominatorAxisRef)
                                             );
                                         } catch (\Core_Exception_NotFound $e) {
                                             $errorHappened = true;
+                                        }
+                                    }
+                                    if (!$errorHappened) {
+                                        if ($reportObject->getDenominatorAxis2() != null) {
+                                            $denominatorAxisRef = $reportObject->getDenominatorAxis2();
+                                            if (strstr($denominatorAxisRef, 'c_') === 0) {
+                                                $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                                    . substr($reportObject->getDenominatorAxis2(), 2);
+                                            }
+                                            try {
+                                                $report->setDenominatorAxis2(
+                                                    $dwCube->getAxisByRef($denominatorAxisRef)
+                                                );
+                                            } catch (\Core_Exception_NotFound $e) {
+                                                $errorHappened = true;
+                                            }
                                         }
                                     }
                                 }
