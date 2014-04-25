@@ -448,6 +448,8 @@ class ImportCommand extends Command
             foreach ($organization->getGranularities() as $granularity) {
                 $granularity->setCellsGenerateDWCubes($granularity->getCellsGenerateDWCubes());
             }
+            $organization->save();
+            $this->entityManager->flush();
         }
         $this->entityManager->flush();
 
@@ -456,7 +458,6 @@ class ImportCommand extends Command
         $output->writeln('<comment>Importing Reports</comment>');
         $objects = $serializer->unserialize(file_get_contents($root . '/reports.json'));
         foreach ($objects as $object) {
-            continue;
             if (($object instanceof \StdClass) && ($object->type === "organization")) {
                 $organization = $this->getOrganizationByLabel($object->label);
                 foreach ($object->granularitiesReports as $granularityObject) {
@@ -473,16 +474,22 @@ class ImportCommand extends Command
                     foreach ($granularityObject->granularityReports as $reportObject) {
                         $report = new \DW_Model_Report($dwCube);
 
+                        $errorHappened = 0;
+
                         $report->setLabel($reportObject->getLabel());
                         $report->setChartType($reportObject->getChartType());
                         $report->setSortType($reportObject->getSortType());
                         $report->setWithUncertainty($reportObject->getWithUncertainty());
                         if ($reportObject->getNumerator() != null) {
-                            $report->setNumerator(
-                                $dwCube->getIndicatorByRef(
-                                    $classificationLibrary->getId() . '_' . $reportObject->getNumerator()
-                                )
-                            );
+                            try {
+                                $report->setNumerator(
+                                    $dwCube->getIndicatorByRef(
+                                        $classificationLibrary->getId() . '_' . $reportObject->getNumerator()
+                                    )
+                                );
+                            } catch (\Core_Exception_NotFound $e) {
+                                $errorHappened++;
+                            }
                         }
                         if ($reportObject->getNumeratorAxis1() != null) {
                             $numeratorAxisRef = $reportObject->getNumeratorAxis1();
@@ -490,9 +497,13 @@ class ImportCommand extends Command
                                 $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                     . substr($reportObject->getNumeratorAxis1(), 2);
                             }
-                            $report->setNumeratorAxis1(
-                                $dwCube->getAxisByRef($numeratorAxisRef)
-                            );
+                            try {
+                                $report->setNumeratorAxis1(
+                                    $dwCube->getAxisByRef($numeratorAxisRef)
+                                );
+                            } catch (\Core_Exception_NotFound $e) {
+                                $errorHappened++;
+                            }
                         }
                         if ($reportObject->getNumeratorAxis2() != null) {
                             $numeratorAxisRef = $reportObject->getNumeratorAxis2();
@@ -500,9 +511,13 @@ class ImportCommand extends Command
                                 $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                     . substr($reportObject->getNumeratorAxis2(), 2);
                             }
-                            $report->setNumeratorAxis2(
-                                $dwCube->getAxisByRef($numeratorAxisRef)
-                            );
+                            try {
+                                $report->setNumeratorAxis2(
+                                    $dwCube->getAxisByRef($numeratorAxisRef)
+                                );
+                            } catch (\Core_Exception_NotFound $e) {
+                                $errorHappened++;
+                            }
                         }
                         if ($reportObject->getDenominatorAxis1() != null) {
                             $denominatorAxisRef = $reportObject->getDenominatorAxis1();
@@ -510,9 +525,13 @@ class ImportCommand extends Command
                                 $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                     . substr($reportObject->getDenominatorAxis1(), 2);
                             }
-                            $report->setDenominatorAxis1(
-                                $dwCube->getAxisByRef($denominatorAxisRef)
-                            );
+                            try {
+                                $report->setDenominatorAxis1(
+                                    $dwCube->getAxisByRef($denominatorAxisRef)
+                                );
+                            } catch (\Core_Exception_NotFound $e) {
+                                $errorHappened++;
+                            }
                         }
                         if ($reportObject->getDenominatorAxis2() != null) {
                             $denominatorAxisRef = $reportObject->getDenominatorAxis2();
@@ -520,9 +539,13 @@ class ImportCommand extends Command
                                 $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                     . substr($reportObject->getDenominatorAxis2(), 2);
                             }
-                            $report->setDenominatorAxis2(
-                                $dwCube->getAxisByRef($denominatorAxisRef)
-                            );
+                            try {
+                                $report->setDenominatorAxis2(
+                                    $dwCube->getAxisByRef($denominatorAxisRef)
+                                );
+                            } catch (\Core_Exception_NotFound $e) {
+                                $errorHappened++;
+                            }
                         }
                         foreach ($reportObject->getFilters() as $filterObject) {
                             $filterAxisRef = $filterObject->getAxis();
@@ -530,13 +553,30 @@ class ImportCommand extends Command
                                 $filterAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                     . substr($filterObject->getAxis(), 2);
                             }
-                            $axis = $dwCube->getAxisByRef($filterAxisRef);
+                            try {
+                                $axis = $dwCube->getAxisByRef($filterAxisRef);
+                            } catch (\Core_Exception_NotFound $e) {
+                                $errorHappened++;
+                            }
                             $filter = new \DW_Model_Filter($report, $axis);
                             foreach ($filterObject->getMembers() as $refMember) {
-                                $filter->addMember(
-                                    $axis->getMemberByRef($refMember)
-                                );
+                                try {
+                                    $filter->addMember(
+                                        $axis->getMemberByRef($refMember)
+                                    );
+                                } catch (\Core_Exception_NotFound $e) {
+                                    $errorHappened++;
+                                }
                             }
+                        }
+                        if ($errorHappened > 0) {
+                            $output->writeln(
+                                '<error>'.
+                                $errorHappened.
+                                ' happened while migrating report '.
+                                '"' . $report->getLabel() . '"'.
+                                '</error>'
+                            );
                         }
                         $report->save();
                     }
