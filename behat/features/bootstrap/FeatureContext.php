@@ -55,6 +55,10 @@ class FeatureContext extends MinkContext
      */
     public function assertMessageShown($message)
     {
+        $this->spin(function () use ($message) {
+            $this->findElement('#messageZone:contains("' . $message . '")');
+        });
+
         return [
             new Step\Then('the "#messageZone" element should contain "' . $message . '"'),
             new Step\Then('I click element "#messageZone button.close"'),
