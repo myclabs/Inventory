@@ -1,5 +1,6 @@
 <?php
 
+use User\Application\ForbiddenException;
 use User\Domain\User;
 
 /**
@@ -42,6 +43,13 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
                 } catch (Core_Exception_NotFound $e) {
                     if (!in_array(spl_object_hash($subject), self::$copiedReports)) {
                         // Le Report n'est pas issue d'un Cube de Granularity.
+                        $auth = Zend_Auth::getInstance();
+                        if (!$auth->hasIdentity()) {
+                            throw new ForbiddenException();
+                        }
+                        $connectedUser = User::load($auth->getIdentity());
+                        $cellReport = new Orga_Model_CellReport($subject, $connectedUser);
+                        $cellReport->save();
                     }
                 }
                 break;
