@@ -41,7 +41,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
-use User\Domain\ACL\AdminRole;
 use User\Domain\User;
 use MyCLabs\ACL\ACL;
 
@@ -62,7 +61,7 @@ class ImportCommand extends Command
      * @Inject
      * @var ACL
      */
-    private $aclManager;
+    private $acl;
 
     protected function configure()
     {
@@ -564,7 +563,7 @@ class ImportCommand extends Command
                     $output->writeln(
                         '<comment>'.$adminEmail.' admin of organization '.$organization->getLabel().'</comment>'
                     );
-                    $this->aclManager->grant(
+                    $this->acl->grant(
                         User::loadByEmail($adminEmail),
                         new OrganizationAdminRole(
                             User::loadByEmail($adminEmail),
@@ -595,7 +594,7 @@ class ImportCommand extends Command
                             $output->writeln(
                                 '<comment>'.$adminEmail.' admin of cell '.$cell->getLabel().'</comment>'
                             );
-                            $this->aclManager->grant(
+                            $this->acl->grant(
                                 User::loadByEmail($adminEmail),
                                 new CellAdminRole(User::loadByEmail($adminEmail), $cell)
                             );
@@ -604,7 +603,7 @@ class ImportCommand extends Command
                             $output->writeln(
                                 '<comment>'.$managerEmail.' manager of cell '.$cell->getLabel().'</comment>'
                             );
-                            $this->aclManager->grant(
+                            $this->acl->grant(
                                 User::loadByEmail($managerEmail),
                                 new CellManagerRole(User::loadByEmail($managerEmail), $cell)
                             );
@@ -613,7 +612,7 @@ class ImportCommand extends Command
                             $output->writeln(
                                 '<comment>'.$contributorEmail.' contributor of cell '.$cell->getLabel().'</comment>'
                             );
-                            $this->aclManager->grant(
+                            $this->acl->grant(
                                 User::loadByEmail($contributorEmail),
                                 new CellContributorRole(User::loadByEmail($contributorEmail), $cell)
                             );
@@ -622,7 +621,7 @@ class ImportCommand extends Command
                             $output->writeln(
                                 '<comment>'.$observerEmail.' observer of cell '.$cell->getLabel().'</comment>'
                             );
-                            $this->aclManager->grant(
+                            $this->acl->grant(
                                 User::loadByEmail($observerEmail),
                                 new CellObserverRole(User::loadByEmail($observerEmail), $cell)
                             );
