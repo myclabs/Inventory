@@ -108,6 +108,7 @@ class Orga_Datagrid_Organization_AclController extends UI_Controller_Datagrid
     public function deleteelementAction()
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
+        /** @var OrganizationAdminRole $role */
         $role = $this->entityManager->find(OrganizationAdminRole::class, $this->delete);
 
         $success = function () {
@@ -126,7 +127,7 @@ class Orga_Datagrid_Organization_AclController extends UI_Controller_Datagrid
             [$organization, $role, false],
             __('Orga', 'backgroundTasks', 'removeRoleFromUser', [
                 'ROLE' => $role->getLabel(),
-                'USER' => $role->getUser()->getEmail(),
+                'USER' => $role->getSecurityIdentity()->getEmail(),
             ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
