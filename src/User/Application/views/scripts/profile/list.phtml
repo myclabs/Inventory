@@ -40,7 +40,6 @@ $datagrid->addCol($colEmail);
 // Date de création
 $colCreationDate = new UI_Datagrid_Col_Date('creationDate', __('UI', 'name', 'creationDate'));
 $colCreationDate->sortName = User::QUERY_CREATIONDATE;
-$colCreationDate->filterName = User::QUERY_CREATIONDATE;
 $colCreationDate->addable = false;
 $datagrid->addCol($colCreationDate);
 
