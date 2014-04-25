@@ -491,9 +491,7 @@ class ImportCommand extends Command
                                     . substr($reportObject->getNumeratorAxis1(), 2);
                             }
                             $report->setNumeratorAxis1(
-                                $dwCube->getAxisByRef(
-                                    $numeratorAxisRef
-                                )
+                                $dwCube->getAxisByRef($numeratorAxisRef)
                             );
                         }
                         if ($reportObject->getNumeratorAxis2() != null) {
@@ -503,9 +501,7 @@ class ImportCommand extends Command
                                     . substr($reportObject->getNumeratorAxis2(), 2);
                             }
                             $report->setNumeratorAxis2(
-                                $dwCube->getAxisByRef(
-                                    $numeratorAxisRef
-                                )
+                                $dwCube->getAxisByRef($numeratorAxisRef)
                             );
                         }
                         if ($reportObject->getDenominatorAxis1() != null) {
@@ -515,9 +511,7 @@ class ImportCommand extends Command
                                     . substr($reportObject->getDenominatorAxis1(), 2);
                             }
                             $report->setDenominatorAxis1(
-                                $dwCube->getAxisByRef(
-                                    $denominatorAxisRef
-                                )
+                                $dwCube->getAxisByRef($denominatorAxisRef)
                             );
                         }
                         if ($reportObject->getDenominatorAxis2() != null) {
@@ -527,9 +521,7 @@ class ImportCommand extends Command
                                     . substr($reportObject->getDenominatorAxis2(), 2);
                             }
                             $report->setDenominatorAxis2(
-                                $dwCube->getAxisByRef(
-                                    $denominatorAxisRef
-                                )
+                                $dwCube->getAxisByRef($denominatorAxisRef)
                             );
                         }
                         foreach ($reportObject->getFilters() as $filterObject) {
