@@ -491,60 +491,68 @@ class ImportCommand extends Command
                                 $errorHappened++;
                             }
                         }
-                        if ($reportObject->getNumeratorAxis1() != null) {
-                            $numeratorAxisRef = $reportObject->getNumeratorAxis1();
-                            if (strstr($numeratorAxisRef, 'c_') === 0) {
-                                $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
-                                    . substr($reportObject->getNumeratorAxis1(), 2);
+                        if (!$errorHappened) {
+                            if ($reportObject->getNumeratorAxis1() != null) {
+                                $numeratorAxisRef = $reportObject->getNumeratorAxis1();
+                                if (strstr($numeratorAxisRef, 'c_') === 0) {
+                                    $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                        . substr($reportObject->getNumeratorAxis1(), 2);
+                                }
+                                try {
+                                    $report->setNumeratorAxis1(
+                                        $dwCube->getAxisByRef($numeratorAxisRef)
+                                    );
+                                } catch (\Core_Exception_NotFound $e) {
+                                    $errorHappened = true;
+                                }
                             }
-                            try {
-                                $report->setNumeratorAxis1(
-                                    $dwCube->getAxisByRef($numeratorAxisRef)
-                                );
-                            } catch (\Core_Exception_NotFound $e) {
-                                $errorHappened++;
+                            if (!$errorHappened) {
+                                if ($reportObject->getNumeratorAxis2() != null) {
+                                    $numeratorAxisRef = $reportObject->getNumeratorAxis2();
+                                    if (strstr($numeratorAxisRef, 'c_') === 0) {
+                                        $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                            . substr($reportObject->getNumeratorAxis2(), 2);
+                                    }
+                                    try {
+                                        $report->setNumeratorAxis2(
+                                            $dwCube->getAxisByRef($numeratorAxisRef)
+                                        );
+                                    } catch (\Core_Exception_NotFound $e) {
+                                        $errorHappened = true;
+                                    }
+                                }
                             }
-                        }
-                        if ($reportObject->getNumeratorAxis2() != null) {
-                            $numeratorAxisRef = $reportObject->getNumeratorAxis2();
-                            if (strstr($numeratorAxisRef, 'c_') === 0) {
-                                $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
-                                    . substr($reportObject->getNumeratorAxis2(), 2);
-                            }
-                            try {
-                                $report->setNumeratorAxis2(
-                                    $dwCube->getAxisByRef($numeratorAxisRef)
-                                );
-                            } catch (\Core_Exception_NotFound $e) {
-                                $errorHappened++;
-                            }
-                        }
-                        if ($reportObject->getDenominatorAxis1() != null) {
-                            $denominatorAxisRef = $reportObject->getDenominatorAxis1();
-                            if (strstr($denominatorAxisRef, 'c_') === 0) {
-                                $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
-                                    . substr($reportObject->getDenominatorAxis1(), 2);
-                            }
-                            try {
-                                $report->setDenominatorAxis1(
-                                    $dwCube->getAxisByRef($denominatorAxisRef)
-                                );
-                            } catch (\Core_Exception_NotFound $e) {
-                                $errorHappened++;
-                            }
-                        }
-                        if ($reportObject->getDenominatorAxis2() != null) {
-                            $denominatorAxisRef = $reportObject->getDenominatorAxis2();
-                            if (strstr($denominatorAxisRef, 'c_') === 0) {
-                                $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
-                                    . substr($reportObject->getDenominatorAxis2(), 2);
-                            }
-                            try {
-                                $report->setDenominatorAxis2(
-                                    $dwCube->getAxisByRef($denominatorAxisRef)
-                                );
-                            } catch (\Core_Exception_NotFound $e) {
-                                $errorHappened++;
+                            if (!$errorHappened) {
+                                if ($reportObject->getDenominatorAxis1() != null) {
+                                    $denominatorAxisRef = $reportObject->getDenominatorAxis1();
+                                    if (strstr($denominatorAxisRef, 'c_') === 0) {
+                                        $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                            . substr($reportObject->getDenominatorAxis1(), 2);
+                                    }
+                                    try {
+                                        $report->setDenominatorAxis1(
+                                            $dwCube->getAxisByRef($denominatorAxisRef)
+                                        );
+                                    } catch (\Core_Exception_NotFound $e) {
+                                        $errorHappened = true;
+                                    }
+                                }
+                                if (!$errorHappened) {
+                                    if ($reportObject->getDenominatorAxis2() != null) {
+                                        $denominatorAxisRef = $reportObject->getDenominatorAxis2();
+                                        if (strstr($denominatorAxisRef, 'c_') === 0) {
+                                            $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                                . substr($reportObject->getDenominatorAxis2(), 2);
+                                        }
+                                        try {
+                                            $report->setDenominatorAxis2(
+                                                $dwCube->getAxisByRef($denominatorAxisRef)
+                                            );
+                                        } catch (\Core_Exception_NotFound $e) {
+                                            $errorHappened = true;
+                                        }
+                                    }
+                                }
                             }
                         }
                         foreach ($reportObject->getFilters() as $filterObject) {
@@ -556,7 +564,8 @@ class ImportCommand extends Command
                             try {
                                 $axis = $dwCube->getAxisByRef($filterAxisRef);
                             } catch (\Core_Exception_NotFound $e) {
-                                $errorHappened++;
+                                $errorHappened = true;
+                                continue;
                             }
                             $filter = new \DW_Model_Filter($report, $axis);
                             foreach ($filterObject->getMembers() as $refMember) {
@@ -565,15 +574,14 @@ class ImportCommand extends Command
                                         $axis->getMemberByRef($refMember)
                                     );
                                 } catch (\Core_Exception_NotFound $e) {
-                                    $errorHappened++;
+                                    $errorHappened = true;
                                 }
                             }
                         }
-                        if ($errorHappened > 0) {
+                        if ($errorHappened) {
                             $output->writeln(
                                 '<error>'.
-                                $errorHappened.
-                                ' happened while migrating report '.
+                                'Configuration broken while migrating report '.
                                 '"' . $report->getLabel() . '"'.
                                 '</error>'
                             );
