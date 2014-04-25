@@ -65,3 +65,5 @@ Orga_Model_Organization:
   manyToMany:
     contextIndicators:
       targetEntity: Classification\Domain\ContextIndicator
+      joinTable:
+        name: Orga_Organization_Contextindicator
