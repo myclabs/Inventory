@@ -52,9 +52,7 @@ class AccountViewFactory
         // Organisations
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
-        $query->aclFilter->enabled = true;
-        $query->aclFilter->user = $user;
-        $query->aclFilter->action = Actions::TRAVERSE;
+        $query->aclFilter->enable($user, Actions::TRAVERSE);
         foreach (Orga_Model_Organization::loadList($query) as $organization) {
             /** @var Orga_Model_Organization $organization */
             $accountView->organizations[] = $this->organizationViewFactory->createOrganizationView(
@@ -66,6 +64,7 @@ class AccountViewFactory
         // Bibliothèques d'AF
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
+        $query->aclFilter->enable($user, Actions::VIEW);
         foreach (AFLibrary::loadList($query) as $library) {
             /** @var AFLibrary $library */
 
@@ -78,6 +77,7 @@ class AccountViewFactory
         // Bibliothèques de paramètres
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
+        $query->aclFilter->enable($user, Actions::VIEW);
         foreach (ParameterLibrary::loadList($query) as $library) {
             /** @var ParameterLibrary $library */
 
@@ -90,6 +90,7 @@ class AccountViewFactory
         // Bibliothèques de classification
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
+        $query->aclFilter->enable($user, Actions::VIEW);
         foreach (ClassificationLibrary::loadList($query) as $library) {
             /** @var ClassificationLibrary $library */
 
