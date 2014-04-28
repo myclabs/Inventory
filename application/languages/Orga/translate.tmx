@@ -5,7 +5,7 @@
     <body>
         <tu tuid="translateOrganizationalAxes">
             <tuv xml:lang="fr">
-                <seg>Tranduire les axes organisationnels</seg>
+                <seg>Traduire les axes organisationnels</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Translate organizational axes</seg>

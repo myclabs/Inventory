@@ -45,7 +45,6 @@ class CellViewModelFactory
             PrimaryInputSet::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
             PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
             PrimaryInputSet::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
-            CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED => __('Orga', 'view', 'inventoryNotLaunched'),
             CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => __('Orga', 'view', 'statusAFNotConfigured'),
             CellViewModel::AF_STATUS_NOT_STARTED => __('Orga', 'view', 'statusNotStarted'),
         ];
@@ -59,6 +58,7 @@ class CellViewModelFactory
      * @param bool $withReports
      * @param bool $withExports
      * @param bool $withInventory
+     * @param bool $withInventoryProgress
      * @param bool $editInventory
      * @param bool $withInput
      * @param bool $withInputLink
@@ -72,6 +72,7 @@ class CellViewModelFactory
         $withReports = null,
         $withExports = null,
         $withInventory = null,
+        $withInventoryProgress = null,
         $editInventory = null,
         $withInput = null,
         $withInputLink = null
@@ -132,75 +133,114 @@ class CellViewModelFactory
         }
 
         // Inventory
-        $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
-        $cellViewModel->inventoryStatusTitle = $this->inventoryStatusList[$cellViewModel->inventoryStatus];
         if (($withInventory === true)
-            || (($withInventory !== false)
-                && (($this->acl->isAllowed($user, Actions::ANALYZE, $cell))))
+            || ($withInventory !== false)
         ) {
             try {
                 $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
 
-                if (($editInventory)
-                    || (($cell->getGranularity() === $granularityForInventoryStatus)
-                        && ($this->acl->isAllowed($user, Actions::INPUT, $cell)))) {
-                    $cellViewModel->canEditInventory = true;
-                }
-
-                if (($cell->getGranularity() === $granularityForInventoryStatus)
-                    || ($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus))
+                if (($withInventory === true)
+                    || (($withInventory !== false)
+                        && (($cell->getGranularity() === $granularityForInventoryStatus)
+                            || ($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus))))
                 ) {
                     $cellViewModel->showInventory = true;
 
-                    $cellViewModel->inventoryNotStartedInputsNumber = 0;
-                    $cellViewModel->inventoryStartedInputsNumber = 0;
-                    $cellViewModel->inventoryFinishedInputsNumber = 0;
-                    if (($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)
-                        || ($cell->getGranularity() === $granularityForInventoryStatus))
-                        && ($cell->getGranularity()->getInputConfigGranularity() !== null)) {
-                        if ($cell->getAFInputSetPrimary() !== null) {
-                            if ($cell->getAFInputSetPrimary()->isFinished()) {
-                                $cellViewModel->inventoryFinishedInputsNumber ++;
-                            } else if ($cell->getAFInputSetPrimary()->getCompletion() == 0) {
-                                $cellViewModel->inventoryNotStartedInputsNumber ++;
-                            } else {
-                                $cellViewModel->inventoryStartedInputsNumber ++;
+                    $cellViewModel->inventoryStatus = $cell->getInventoryStatus();
+                    $cellViewModel->inventoryStatusTitle = $this->inventoryStatusList[$cellViewModel->inventoryStatus];
+
+                    if (($editInventory === true)
+                        || (($editInventory !== false)
+                            || (($cell->getGranularity() === $granularityForInventoryStatus)
+                                && ($this->acl->isAllowed($user, Actions::EDIT, $cell))))
+                    ) {
+                        $cellViewModel->canEditInventory = true;
+                    }
+
+                    if (($withInventoryProgress !== true) && ($withInventoryProgress !== false)) {
+                        $withInventoryProgress = true;
+                        if ($withInventoryProgress) {
+                            $narrowerGranularityHasACLParent = $cell->getGranularity()->getCellsWithACL();
+                            if (!$narrowerGranularityHasACLParent) {
+                                foreach ($cell->getGranularity()->getBroaderGranularities() as $broaderInventoryGranularity) {
+                                    if ($broaderInventoryGranularity->getCellsWithACL()) {
+                                        foreach ($cell->getGranularity()->getAxes() as $narrowerGranularityAxis) {
+                                            if (!$granularityForInventoryStatus->hasAxis($narrowerGranularityAxis)
+                                                && !$broaderInventoryGranularity->hasAxis($narrowerGranularityAxis)) {
+                                                continue 2;
+                                            }
+                                        }
+                                        $narrowerGranularityHasACLParent = true;
+                                        break;
+                                    }
+                                }
                             }
-                        } else {
-                            $cellViewModel->inventoryNotStartedInputsNumber ++;
+                            $withInventoryProgress = $withInventoryProgress && $narrowerGranularityHasACLParent;
+                        }
+                        if ($withInventoryProgress) {
+                            $narrowerGranularityHasSubInputGranlarities = false;
+                            foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerInventoryGranularity) {
+                                if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
+                                    $narrowerGranularityHasSubInputGranlarities = true;
+                                    break;
+                                }
+                            }
+                            $withInventoryProgress = $withInventoryProgress && $narrowerGranularityHasSubInputGranlarities;
                         }
                     }
-                    foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerInputGranularity) {
-                        if (($narrowerInputGranularity->getInputConfigGranularity() !== null)
-                            && ($narrowerInputGranularity->isNarrowerThan($granularityForInventoryStatus))) {
-                            $relevantCriteria = new Criteria();
-                            $relevantCriteria->where($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true));
-                            $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_RELEVANT, true));
-                            $relevantChildInputCells = $cell->getChildCellsForGranularity($narrowerInputGranularity)->matching($relevantCriteria);
-                            /** @var Orga_Model_Cell $childInputCell */
-                            foreach ($relevantChildInputCells as $childInputCell) {
-                                $childAFInputSetPrimary = $childInputCell->getAFInputSetPrimary();
-                                if ($childAFInputSetPrimary !== null) {
-                                    if ($childInputCell->getAFInputSetPrimary()->isFinished()) {
-                                        $cellViewModel->inventoryFinishedInputsNumber ++;
-                                    } else if ($childInputCell->getAFInputSetPrimary()->getCompletion() == 0) {
-                                        $cellViewModel->inventoryNotStartedInputsNumber ++;
-                                    } else {
-                                        $cellViewModel->inventoryStartedInputsNumber ++;
-                                    }
-                                } else {
+                    if ($withInventoryProgress === true) {
+                        $cellViewModel->showInventoryProgress = true;
+
+                        $cellViewModel->inventoryNotStartedInputsNumber = 0;
+                        $cellViewModel->inventoryStartedInputsNumber = 0;
+                        $cellViewModel->inventoryFinishedInputsNumber = 0;
+                        if (($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)
+                            || ($cell->getGranularity() === $granularityForInventoryStatus))
+                            && ($cell->getGranularity()->getInputConfigGranularity() !== null)) {
+                            if ($cell->getAFInputSetPrimary() !== null) {
+                                if ($cell->getAFInputSetPrimary()->isFinished()) {
+                                    $cellViewModel->inventoryFinishedInputsNumber ++;
+                                } else if ($cell->getAFInputSetPrimary()->getCompletion() == 0) {
                                     $cellViewModel->inventoryNotStartedInputsNumber ++;
+                                } else {
+                                    $cellViewModel->inventoryStartedInputsNumber ++;
+                                }
+                            } else {
+                                $cellViewModel->inventoryNotStartedInputsNumber ++;
+                            }
+                        }
+                        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerInputGranularity) {
+                            if (($narrowerInputGranularity->getInputConfigGranularity() !== null)
+                                && ($narrowerInputGranularity->isNarrowerThan($granularityForInventoryStatus))) {
+                                $relevantCriteria = new Criteria();
+                                $relevantCriteria->where($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true));
+                                $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Orga_Model_Cell::QUERY_RELEVANT, true));
+                                $relevantChildInputCells = $cell->getChildCellsForGranularity($narrowerInputGranularity)->matching($relevantCriteria);
+                                /** @var Orga_Model_Cell $childInputCell */
+                                foreach ($relevantChildInputCells as $childInputCell) {
+                                    $childAFInputSetPrimary = $childInputCell->getAFInputSetPrimary();
+                                    if ($childAFInputSetPrimary !== null) {
+                                        if ($childInputCell->getAFInputSetPrimary()->isFinished()) {
+                                            $cellViewModel->inventoryFinishedInputsNumber ++;
+                                        } else if ($childInputCell->getAFInputSetPrimary()->getCompletion() == 0) {
+                                            $cellViewModel->inventoryNotStartedInputsNumber ++;
+                                        } else {
+                                            $cellViewModel->inventoryStartedInputsNumber ++;
+                                        }
+                                    } else {
+                                        $cellViewModel->inventoryNotStartedInputsNumber ++;
+                                    }
                                 }
                             }
                         }
+                        $totalInventoryInputs = $cellViewModel->inventoryNotStartedInputsNumber + $cellViewModel->inventoryStartedInputsNumber + $cellViewModel->inventoryFinishedInputsNumber;
+                        if ($totalInventoryInputs > 0) {
+                            $cellViewModel->inventoryCompletion = $cellViewModel->inventoryFinishedInputsNumber / $totalInventoryInputs * 100;
+                        } else {
+                            $cellViewModel->inventoryCompletion = 0;
+                        }
+                        $cellViewModel->inventoryCompletion = round($cellViewModel->inventoryCompletion);
                     }
-                    $totalInventoryInputs = $cellViewModel->inventoryNotStartedInputsNumber + $cellViewModel->inventoryStartedInputsNumber + $cellViewModel->inventoryFinishedInputsNumber;
-                    if ($totalInventoryInputs > 0) {
-                        $cellViewModel->inventoryCompletion = $cellViewModel->inventoryFinishedInputsNumber / $totalInventoryInputs * 100;
-                    } else {
-                        $cellViewModel->inventoryCompletion = 0;
-                    }
-                    $cellViewModel->inventoryCompletion = round($cellViewModel->inventoryCompletion);
                 }
             } catch (Core_Exception_UndefinedAttribute $e) {
             } catch (\Core_Exception_NotFound $e) {
@@ -224,7 +264,6 @@ class CellViewModelFactory
                     if ($withInputLink !== false) {
                         $cellViewModel->showInputLink = false;
                     }
-                    $inputStatus = CellViewModel::AF_STATUS_INVENTORY_NOT_STARTED;
                 }
             } catch (Core_Exception_UndefinedAttribute $e) {
             } catch (\Core_Exception_NotFound $e) {
