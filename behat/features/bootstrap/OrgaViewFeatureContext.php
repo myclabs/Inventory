@@ -32,7 +32,7 @@ trait OrgaViewFeatureContext
     }
 
     /**
-     * @Then /^the "(?P<cell>[^"]*)" cell input status should be (?P<inputStatus>\d+)$/
+     * @Then /^the "(?P<cell>[^"]*)" cell input status should be "(?P<inputStatus>[^"]*)"$/
      */
     public function assertCellInputStatusVisible($cell, $inputStatus)
     {
