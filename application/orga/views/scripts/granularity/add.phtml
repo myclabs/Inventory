@@ -39,7 +39,6 @@ $organization = $this->organization;
             type: "POST",
             data: form.serialize(),
             success: function(data) {
-                $('.granularityLoading', granularityInfo).remove();
                 $('#addGranularity<?=$organization->getId()?>_<?=$this->purpose?>').trigger('granularityAdded', data);
                 form.attr('data-submitting', false);
             },
