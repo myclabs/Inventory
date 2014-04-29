@@ -208,6 +208,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         } else {
             $granularity->setInputConfigGranularity();
             $granularity->save();
+            $this->message = __('UI', 'message', 'updated');
             $this->data = ['value' => $granularity->isInput(), 'editable' => false];
         }
 
