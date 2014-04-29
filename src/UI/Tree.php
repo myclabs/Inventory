@@ -721,6 +721,7 @@ class UI_Tree extends UI_Generic
             $editScript .= 'setMask(false);';
             $editScript .= '}).error(function(o) {';
             $editScript .= '$(\'#'.$this->id.'_deletePanel\').modal(\'hide\');';
+            $editScript .= '$(\'#'.$this->id.'_editPanel\').modal(\'hide\');';
             $editScript .= 'setMask(false);';
             $editScript .= 'errorHandler(o);';
             $editScript .= '});';
