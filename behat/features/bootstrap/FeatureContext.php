@@ -14,6 +14,7 @@ require_once __DIR__ . '/../../../application/init.php';
 
 require_once 'DatabaseFeatureContext.php';
 require_once 'DatagridFeatureContext.php';
+require_once 'OrgaViewFeatureContext.php';
 require_once 'PopupFeatureContext.php';
 
 /**
@@ -25,6 +26,7 @@ class FeatureContext extends MinkContext
     use DatagridFeatureContext;
     use PopupFeatureContext;
     use AccountFeatureContext;
+    use OrgaViewFeatureContext;
 
     /**
      * @BeforeScenario
