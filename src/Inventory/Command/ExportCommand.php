@@ -69,6 +69,23 @@ class ExportCommand extends Command
                     ],
                 ],
             ],
+            \Orga_Model_Organization::class => [
+                'properties' => [
+                    'acl' => [ 'exclude' => true ],
+                ],
+            ],
+            \Orga_Model_Cell::class => [
+                'properties' => [
+                    'acl' => [ 'exclude' => true ],
+                    'dwResults' => [ 'exclude' => true ],
+                ],
+            ],
+            \Calc_UnitValue::class => [
+                'serialize' => true,
+            ],
+            \Calc_Value::class => [
+                'serialize' => true,
+            ],
         ]);
 
         $output->writeln('<comment>Exporting users</comment>');
@@ -124,7 +141,7 @@ class ExportCommand extends Command
                         foreach ($cell->getContributorRoles() as $cellContributor) {
                             $cellContributors[] = $cellContributor->getUser()->getEmail();
                         }
-                        $cellObserver = [];
+                        $cellObservers = [];
                         foreach ($cell->getObserverRoles() as $cellObserver) {
                             $cellObservers[] = $cellObserver->getUser()->getEmail();
                         }
