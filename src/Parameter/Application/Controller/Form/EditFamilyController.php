@@ -57,10 +57,10 @@ class Parameter_Form_EditFamilyController extends Core_Controller
         $documentation = $this->getParam('documentation');
 
         if (! $this->hasFormError()) {
-            $family->setLabel($label);
+            $this->translationHelper->set($family->getLabel(), $label);
             $family->setRef($ref);
             $family->setUnit(new UnitAPI($refUnit));
-            $family->setDocumentation($documentation);
+            $this->translationHelper->set($family->getDocumentation(), $documentation);
             $this->setFormMessage(__('UI', 'message', 'updated'));
         } else {
             $this->setFormMessage('Erreur de validation du formulaire.');

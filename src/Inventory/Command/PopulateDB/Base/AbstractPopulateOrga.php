@@ -535,7 +535,7 @@ abstract class AbstractPopulateOrga
 
         $query = new \Core_Model_Query();
         $query->filter->addCondition('library', $afLibrary);
-        $query->filter->addCondition('label', $label);
+        $query->filter->addCondition('label.fr', $label);
 
         return AF::loadList($query)[0];
     }

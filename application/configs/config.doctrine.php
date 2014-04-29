@@ -78,6 +78,13 @@ return [
             $driverChain->addDriver($yamlDriver, $module . '\Domain');
         }
 
+        // Translation
+        $yamlDriver = new SimplifiedYamlDriver(
+            [PACKAGE_PATH . '/src/Core/Translation' => 'Core\Translation'],
+            '.yml'
+        );
+        $driverChain->addDriver($yamlDriver, 'Core\Translation');
+
         $doctrineConfig->setMetadataDriverImpl($driverChain);
 
         // Configuration de Doctrine pour utiliser le cache

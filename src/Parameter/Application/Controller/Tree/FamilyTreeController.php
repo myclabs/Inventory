@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use Core\Translation\TranslatedString;
 use MyCLabs\ACL\ACL;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Category;
@@ -41,13 +42,21 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         }
 
         foreach ($categories as $category) {
-            $this->addNode($this->getTreeId($category), $category->getLabel(), false, null, false, true, $isEditable);
+            $this->addNode(
+                $this->getTreeId($category),
+                $this->translationHelper->toString($category->getLabel()),
+                false,
+                null,
+                false,
+                true,
+                $isEditable
+            );
         }
 
         if ($currentCategory) {
             foreach ($currentCategory->getFamilies() as $family) {
                 // Place un symbole indiquant le type de la famille
-                $label = $family->getLabel();
+                $label = $this->translate($family->getLabel());
                 $url = $this->_helper->url('edit', 'family', 'parameter', ['id' => $family->getId()]);
                 $this->addNode($this->getTreeId($family), $label, true, $url, true, false, $isEditable);
             }
@@ -70,7 +79,10 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         $this->addElementList("root", __('UI', 'name', 'root'));
 
         foreach ($library->getRootCategories() as $category) {
-            $this->addElementList($this->getTreeId($category), $category->getLabel());
+            $this->addElementList(
+                $this->getTreeId($category),
+                $this->translationHelper->toString($category->getLabel())
+            );
         }
         $this->send();
     }
@@ -145,6 +157,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
             return;
         }
 
+        $label = $this->translationHelper->set(new TranslatedString(), $label);
         $category = new Category($library, $label);
         $category->save();
         $this->entityManager->flush();
@@ -168,7 +181,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
             return;
         }
         if ($label != null) {
-            $node->setLabel($label);
+            $this->translationHelper->set($node->getLabel(), $label);
         }
 
         // Parent

@@ -15,6 +15,7 @@ use AF\Domain\InputService;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
+use Core\Translation\TranslatedString;
 use DI\Annotation\Inject;
 
 /**
@@ -54,7 +55,7 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->addToActionStack('submit-test', 'input', 'af');
         $viewConfiguration->setDisplayConfigurationLink(true);
         $viewConfiguration->addBaseTabs();
-        $viewConfiguration->setPageTitle($af->getLabel());
+        $viewConfiguration->setPageTitle($this->translationHelper->toString($af->getLabel()));
         $viewConfiguration->setUseSession(true);
         $viewConfiguration->setExitUrl('af/library/view/id/' . $af->getLibrary()->getId());
 
@@ -268,6 +269,7 @@ class AF_AfController extends Core_Controller
             return;
         }
 
+        $newLabel = $this->translationHelper->set(new TranslatedString(), $newLabel);
         $newAF = $this->afCopyService->copyAF($af, $newLabel);
 
         $newAF->save();

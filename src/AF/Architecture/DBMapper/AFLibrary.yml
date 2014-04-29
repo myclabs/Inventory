@@ -3,10 +3,6 @@ AF\Domain\AFLibrary:
   repositoryClass: \Core_Model_Repository
   table: AF_Library
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       type: integer
@@ -14,13 +10,12 @@ AF\Domain\AFLibrary:
         strategy: AUTO
 
   fields:
-    label:
-      type: string
-      nullable: false
-      gedmo:
-        - translatable
     public:
       type: boolean
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     account:

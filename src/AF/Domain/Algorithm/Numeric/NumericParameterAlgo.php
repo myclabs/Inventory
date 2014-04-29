@@ -57,7 +57,7 @@ class NumericParameterAlgo extends NumericAlgo
         if (!$value) {
             throw new ExecutionException(sprintf(
                 'No value was found for parameter %s and coordinates %s in algorithm %s',
-                $this->familyRef,
+                $this->familyReference->getFamilyRef(),
                 implode(', ', $coordinates),
                 $this->ref
             ));
@@ -84,7 +84,7 @@ class NumericParameterAlgo extends NumericAlgo
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'invalidFamily', [
                 'REF_ALGO'   => $this->ref,
-                'REF_FAMILY' => $this->familyRef
+                'REF_FAMILY' => $this->familyReference->getFamilyRef()
             ]), true);
             $errors[] = $configError;
             return $errors;
@@ -106,7 +106,7 @@ class NumericParameterAlgo extends NumericAlgo
                 $configError->isFatal(true);
                 $configError->setMessage(__('Algo', 'configControl', 'missingCoordinate', [
                     'REF_ALGO'      => $this->ref,
-                    'REF_DIMENSION' => $dimension->getLabel()
+                    'REF_DIMENSION' => $dimension->getRef()
                 ]), true);
                 $errors[] = $configError;
             }

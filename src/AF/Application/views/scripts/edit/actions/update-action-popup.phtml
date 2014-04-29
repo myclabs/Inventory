@@ -77,7 +77,7 @@ $locale = Core_Locale::loadDefault();
                     <?php foreach ($selectField->getOptions() as $option) : ?>
                         <option value="<?=$option->getId()?>"
                                 <?=$selectedOption == $option->getId() ? 'selected' : ''?>>
-                            <?=$option->getLabel()?>
+                            <?=$this->translate($option->getLabel())?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -102,7 +102,7 @@ $locale = Core_Locale::loadDefault();
                         <?php if ($algo instanceof NumericAlgo) : ?>
                             <option value="<?=$algo->getId()?>"
                                     <?=$selectedAlgo == $algo->getId() ? 'selected' : ''?>>
-                                <?=$algo->getLabel()?>
+                                <?=$this->translate($algo->getLabel())?>
                             </option>
                         <?php endif; ?>
                     <?php endforeach; ?>

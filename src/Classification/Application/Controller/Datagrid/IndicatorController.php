@@ -4,6 +4,7 @@ use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
 use Core\Annotation\Secure;
+use Core\Translation\TranslatedString;
 use Unit\UnitAPI;
 use Unit\IncompatibleUnitsException;
 
@@ -17,10 +18,10 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
         /** @var ClassificationLibrary $library */
         $library = ClassificationLibrary::load($this->getParam('library'));
 
-        foreach ($library->getIndicators()->toArray() as $indicator) {
+        foreach ($library->getIndicators() as $indicator) {
             $data = array();
             $data['index'] = $indicator->getId();
-            $data['label'] = $this->cellText($indicator->getLabel());
+            $data['label'] = $this->cellTranslatedText($indicator->getLabel());
             $data['ref'] = $this->cellText($indicator->getRef());
             $data['unit'] = $this->cellText($indicator->getUnit()->getRef(), $indicator->getUnit()->getSymbol());
             $data['ratioUnit'] = $this->cellText($indicator->getRatioUnit()->getRef(), $indicator->getRatioUnit()->getSymbol());
@@ -60,6 +61,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
                 $library->getIndicatorByRef($ref);
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
+                $label = $this->translationHelper->set(new TranslatedString(), $label);
                 $indicator = new Indicator($library, $ref, $label, $unit, $ratioUnit);
             }
         } catch (Core_Exception_User $e) {
@@ -102,7 +104,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
         $indicator = Indicator::load($this->update['index']);
         switch ($this->update['column']) {
             case 'label':
-                $indicator->setLabel($this->update['value']);
+                $this->translationHelper->set($indicator->getLabel(), $this->update['value']);
                 $this->message = __('UI', 'message', 'updated');
                 break;
             case 'ref':

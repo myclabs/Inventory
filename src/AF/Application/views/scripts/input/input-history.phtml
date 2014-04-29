@@ -6,8 +6,6 @@ use AF\Domain\InputHistoryService\Entry;
 use Doctrine\Common\Collections\Collection;
 use Gedmo\Loggable\Entity\LogEntry;
 
-/** @var Component $component */
-$component = $this->component;
 /** @var Entry[] $entries */
 $entries = $this->entries;
 
@@ -34,12 +32,12 @@ if (empty($entries)) : ?>
                     . ' ± ' . $locale->formatUncertainty($value->getRelativeUncertainty());
             }
             if ($value instanceof SelectOption) {
-                $shownValue = $value->getLabel();
+                $shownValue = $this->translate($value->getLabel());
             }
             if (is_array($value)) {
                 $labels = array_map(function(SelectOption $option) {
-                        return $option->getLabel();
-                    }, $value);
+                    return $this->translate($option->getLabel());
+                }, $value);
                 $shownValue = implode(', ', $labels);
             }
             // Tronque à 50 caractères

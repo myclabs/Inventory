@@ -28,7 +28,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
             foreach ($contextIndicator->getAxes() as $axis) {
                 $data = [];
                 $data['index'] = $axis->getId();
-                $data['axis'] = $axis->getLabel();
+                $data['axis'] = $this->cellTranslatedText($axis->getLabel());
                 $index = $algo->getIndexForAxis($axis);
                 if ($index instanceof FixedIndex) {
                     $data['type'] = $this->cellList('FixedIndex');
@@ -166,7 +166,10 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
             case FixedIndex::class:
                 // Liste des membres de l'axe
                 foreach ($axis->getMembers() as $member) {
-                    $this->addElementList($member->getRef(), $member->getLabel());
+                    $this->addElementList(
+                        $member->getRef(),
+                        $this->translationHelper->toString($member->getLabel())
+                    );
                 }
                 break;
             case AlgoResultIndex::class:

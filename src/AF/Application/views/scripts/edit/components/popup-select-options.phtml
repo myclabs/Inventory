@@ -76,11 +76,11 @@ echo $optionDatagrid->render();
             <?php foreach ($families as $family) : ?>
                 <?php foreach ($family->getDimensions() as $dimension) : ?>
                     <option value="<?=$dimension->getId()?>">
-                        <?=$family->getLibrary()->getLabel()?>
+                        <?=$this->translate($family->getLibrary()->getLabel())?>
                         >
-                        <?=$family->getLabel()?>
+                        <?=$this->translate($family->getLabel())?>
                         >
-                        <?=$dimension->getLabel()?>
+                        <?=$this->translate($dimension->getLabel())?>
                     </option>
                 <?php endforeach; ?>
             <?php endforeach; ?>

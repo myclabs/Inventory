@@ -777,7 +777,8 @@ class Orga_OrganizationController extends Core_Controller
         /** @var \AF\Domain\AF $af */
         foreach (AFLibrary::loadUsableInAccount($organization->getAccount()) as $afLibrary) {
             foreach ($afLibrary->getAFList() as $af) {
-                $afs[$af->getId()] = $af->getLabel() . ' (' . $afLibrary->getLabel() . ')';
+                $afs[$af->getId()] = $this->translationHelper->toString($af->getLabel())
+                    . ' (' . $this->translationHelper->toString($afLibrary->getLabel()) . ')';
             }
         }
         $this->view->assign('afs', $afs);

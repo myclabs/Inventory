@@ -22,6 +22,7 @@ use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Context;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
@@ -65,6 +66,12 @@ class ImportCommand extends Command
      */
     private $acl;
 
+    /**
+     * @Inject("translation.defaultLocale")
+     * @var string
+     */
+    private $defaultLanguage;
+
     protected function configure()
     {
         $this->setName('import')
@@ -87,19 +94,22 @@ class ImportCommand extends Command
         // Create the classification library
         $label = $input->getArgument('classificationLibrary');
         $output->writeln("<comment>Creating library '$label'</comment>");
-        $classificationLibrary = new ClassificationLibrary($account, $label);
+        $classificationLibrary = new ClassificationLibrary(
+            $account,
+            new TranslatedString($label, $this->defaultLanguage)
+        );
         $classificationLibrary->save();
 
         // Create the parameter library
         $label = $input->getArgument('parameterLibrary');
         $output->writeln("<comment>Creating library '$label'</comment>");
-        $parameterLibrary = new ParameterLibrary($account, $label);
+        $parameterLibrary = new ParameterLibrary($account, new TranslatedString($label, $this->defaultLanguage));
         $parameterLibrary->save();
 
         // Create the AF library
         $label = $input->getArgument('afLibrary');
         $output->writeln("<comment>Creating library '$label'</comment>");
-        $afLibrary = new AFLibrary($account, $label);
+        $afLibrary = new AFLibrary($account, new TranslatedString($label, $this->defaultLanguage));
         $afLibrary->save();
 
 
@@ -429,7 +439,7 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/parameters.json'));
         foreach ($objects as $object) {
             if ($object instanceof Family) {
-                $output->writeln(sprintf('<info>Imported family: %s</info>', $object->getLabel()));
+                $output->writeln(sprintf('<info>Imported family: %s</info>', $this->translate($object->getLabel())));
             }
             if ($object instanceof \Core_Model_Entity) {
                 $object->save();
@@ -441,7 +451,7 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/af.json'));
         foreach ($objects as $object) {
             if ($object instanceof \AF\Domain\AF) {
-                $output->writeln(sprintf('<info>Imported AF: %s</info>', $object->getLabel()));
+                $output->writeln(sprintf('<info>Imported AF: %s</info>', $object->getLabel()->get('fr')));
             }
             if ($object instanceof \Core_Model_Entity) {
                 $object->save();

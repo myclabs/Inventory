@@ -37,8 +37,8 @@ foreach ($parameterLibraries as $parameterLibrary) {
         /** @var $family Family */
         $familyColumn->list[(string) $ref] = sprintf(
             '%s > %s',
-            $parameterLibrary->getLabel(),
-            $family->getLabel()
+            $this->translate($parameterLibrary->getLabel()),
+            $this->translate($family->getLabel())
         );
     }
 }

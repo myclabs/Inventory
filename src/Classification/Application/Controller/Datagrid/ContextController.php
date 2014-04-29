@@ -48,9 +48,9 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
             } catch (Core_Exception_NotFound $e) {
                 $context = new Context($library);
                 $context->setRef($ref);
-                $context->setLabel($label);
+                $this->translationHelper->set($context->getLabel(), $label);
                 $context->save();
-                $this->message = __('UI', 'message', 'added', array('LABEL' => $context->getLabel()));
+                $this->message = __('UI', 'message', 'added');
             }
         } catch (Core_Exception_User $e) {
             $this->setAddElementErrorMessage('ref', $e->getMessage());
@@ -73,7 +73,7 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
         }
 
         $context->delete();
-        $this->message = __('UI', 'message', 'deleted', array('LABEL' => $context->getLabel()));
+        $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
 
@@ -88,8 +88,8 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
         $context = Context::load($this->update['index']);
         switch ($this->update['column']) {
             case 'label':
-                $context->setLabel($this->update['value']);
-                $this->message = __('UI', 'message', 'updated', array('LABEL' => $context->getLabel()));
+                $this->translationHelper->set($context->getLabel(), $this->update['value']);
+                $this->message = __('UI', 'message', 'updated');
                 break;
             case 'ref':
                 Core_Tools::checkRef($this->update['value']);

@@ -2,6 +2,7 @@
 
 namespace Parameter\Application\Service;
 
+use Mnapoli\Translated\TranslationHelper;
 use PHPExcel_Writer_Excel2007;
 use PHPExcel_Writer_Excel5;
 use Parameter\Domain\Category;
@@ -18,6 +19,16 @@ use Xport\MappingReader\YamlMappingReader;
  */
 class ExportService
 {
+    /**
+     * @var TranslationHelper
+     */
+    private $translationHelper;
+
+    public function __construct(TranslationHelper $translationHelper)
+    {
+        $this->translationHelper = $translationHelper;
+    }
+
     /**
      * Exporte les paramètres.
      *
@@ -54,10 +65,10 @@ class ExportService
 
                 $category = $family->getCategory();
                 while ($category->getParentCategory() !== null) {
-                    $label .= $category->getLabel() . ' / ';
+                    $label .= $this->translationHelper->toString($category->getLabel()) . ' / ';
                     $category = $category->getParentCategory();
                 }
-                $label .= $family->getLabel();
+                $label .= $this->translationHelper->toString($family->getLabel());
 
                 $label .= ' (' . $family->getUnit()->getSymbol() . ')';
 
@@ -70,7 +81,7 @@ class ExportService
             function (Cell $cell, Dimension $dimension) {
                 foreach ($cell->getMembers() as $member) {
                     if ($dimension->hasMember($member)) {
-                        return $member->getLabel();
+                        return $this->translationHelper->toString($member->getLabel());
                     }
                 }
                 return '';

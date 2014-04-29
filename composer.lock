@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "9c2783261fd00a41869f07b74936fdec",
+    "hash": "56f9fcbe1646144d414e5753a26ce41b",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -511,12 +511,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "7a305475e35930749e15bad0d060f8a917b1992f"
+                "reference": "7fffba80c304c73b3209cf933803c25dcddf702f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/7a305475e35930749e15bad0d060f8a917b1992f",
-                "reference": "7a305475e35930749e15bad0d060f8a917b1992f",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/7fffba80c304c73b3209cf933803c25dcddf702f",
+                "reference": "7fffba80c304c73b3209cf933803c25dcddf702f",
                 "shasum": ""
             },
             "require": {
@@ -580,7 +580,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-04-29 11:25:17"
+            "time": "2014-05-01 12:23:56"
         },
         {
             "name": "dompdf/dompdf",
@@ -736,6 +736,46 @@
             ],
             "description": "A library for easily creating recursive-descent parsers.",
             "time": "2012-11-18 18:08:43"
+        },
+        {
+            "name": "mnapoli/doctrine-translated",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mnapoli/DoctrineTranslated.git",
+                "reference": "d5ebed9fa3f81a65f16369b5322fd7101311f8c3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/d5ebed9fa3f81a65f16369b5322fd7101311f8c3",
+                "reference": "d5ebed9fa3f81a65f16369b5322fd7101311f8c3",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "2.5.*@dev",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mnapoli\\Translated\\": "src/",
+                    "Test\\Mnapoli\\Translated\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Translated strings for Doctrine",
+            "homepage": "https://github.com/mnapoli/DoctrineTranslated",
+            "keywords": [
+                "doctrine",
+                "i18n",
+                "translatable",
+                "translation",
+                "translations"
+            ],
+            "time": "2014-05-02 13:06:59"
         },
         {
             "name": "mnapoli/metamodel",
@@ -2767,6 +2807,7 @@
     "stability-flags": {
         "doctrine/orm": 20,
         "gedmo/doctrine-extensions": 20,
+        "mnapoli/doctrine-translated": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "mnapoli/metaconsole": 20

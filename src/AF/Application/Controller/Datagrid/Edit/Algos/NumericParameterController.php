@@ -35,7 +35,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
-                $data['label'] = $algo->getLabel();
+                $data['label'] = $this->cellTranslatedText($algo->getLabel());
 
                 try {
                     $data['family'] = (string) $algo->getFamilyReference();
@@ -99,7 +99,7 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 $this->send();
                 return;
             }
-            $algo->setLabel($this->getAddElementValue('label'));
+            $this->translationHelper->set($algo->getLabel(), $this->getAddElementValue('label'));
             /** @noinspection PhpUndefinedVariableInspection */
             $algo->setFamily($family);
             $algo->save();
@@ -131,8 +131,8 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
                 $this->data = $algo->getRef();
                 break;
             case 'label':
-                $algo->setLabel($newValue);
-                $this->data = $algo->getLabel();
+                $this->translationHelper->set($algo->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($algo->getLabel());
                 break;
             case 'family':
                 try {
@@ -195,7 +195,8 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
             foreach ($library->getContextIndicators() as $contextIndicator) {
                 $this->addElementList(
                     $contextIndicator->getId(),
-                    $library->getLabel() . ' > ' . $contextIndicator->getLabel()
+                    $this->translationHelper->toString($library->getLabel()) . ' > '
+                    . $this->translationHelper->toString($contextIndicator->getLabel())
                 );
             }
         }

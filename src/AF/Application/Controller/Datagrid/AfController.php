@@ -7,6 +7,7 @@ use AF\Domain\Category;
 use AF\Domain\Component\SubAF;
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\Output\OutputElement;
+use Core\Translation\TranslatedString;
 use DI\Annotation\Inject;
 use Core\Annotation\Secure;
 
@@ -40,7 +41,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             $data = [];
             $data['index'] = $af->getId();
             $data['category'] = $this->cellList($af->getCategory()->getId());
-            $data['label'] = $af->getLabel();
+            $data['label'] = $this->cellTranslatedText($af->getLabel());
             $data['configuration'] = $this->cellLink($this->view->url([
                 'module'     => 'af',
                 'controller' => 'edit',
@@ -89,6 +90,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             /** @var $category Category */
             $category = Category::load($idCategory);
 
+            $label = $this->translationHelper->set(new TranslatedString(), $label);
             $af = new AF($library, $label);
             $library->addAF($af);
             $af->setCategory($category);
@@ -119,8 +121,8 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 if (empty($newValue)) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
-                $af->setLabel($newValue);
-                $this->data = $af->getLabel();
+                $this->translationHelper->set($af->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($af->getLabel());
                 break;
         }
         $af->save();

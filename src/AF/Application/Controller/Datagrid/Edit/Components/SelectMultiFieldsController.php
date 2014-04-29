@@ -30,7 +30,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
         foreach ($selectFields as $selectField) {
             $data = [];
             $data['index'] = $selectField->getId();
-            $data['label'] = $selectField->getLabel();
+            $data['label'] = $this->cellTranslatedText($selectField->getLabel());
             $data['ref'] = $selectField->getRef();
             $data['help'] = $this->cellLongText(
                 'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $selectField->getId(),
@@ -85,9 +85,9 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
                 $this->send();
                 return;
             }
-            $selectField->setLabel($this->getAddElementValue('label'));
+            $this->translationHelper->set($selectField->getLabel(), $this->getAddElementValue('label'));
+            $this->translationHelper->set($selectField->getHelp(), $this->getAddElementValue('help'));
             $selectField->setVisible($isVisible);
-            $selectField->setHelp($this->getAddElementValue('help'));
             $selectField->setEnabled($this->getAddElementValue('enabled'));
             $selectField->setRequired($this->getAddElementValue('required'));
             $selectField->setType($type);
@@ -118,15 +118,15 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $selectField->setLabel($newValue);
-                $this->data = $selectField->getLabel();
+                $this->translationHelper->set($selectField->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($selectField->getLabel());
                 break;
             case 'ref':
                 $selectField->setRef($newValue);
                 $this->data = $selectField->getRef();
                 break;
             case 'help':
-                $selectField->setHelp($newValue);
+                $this->translationHelper->set($selectField->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -194,7 +194,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
     {
         /** @var $select Select */
         $select = Select::load($this->getParam('component'));
-        $this->data = $select->getHelp();
+        $this->data = $this->translationHelper->toString($select->getHelp());
         $this->send();
     }
 }

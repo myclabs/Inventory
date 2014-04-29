@@ -77,8 +77,8 @@ class NumericField extends Field
         $locale = Core_Locale::loadDefault();
 
         $uiElement = new UI_Form_Element_Pattern_Value($this->ref, false);
-        $uiElement->setLabel($this->label);
-        $uiElement->getElement()->help = $this->help;
+        $uiElement->setLabel($this->uglyTranslate($this->label));
+        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         $uiElement->setRequired($this->getRequired());
         if ($generationHelper->isReadOnly()) {
             $uiElement->getElement()->setReadOnly();

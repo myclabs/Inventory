@@ -28,7 +28,7 @@ $datagridFixed->addParam('idAlgo', $algo->getId());
 $dimensionColumn = new UI_Datagrid_Col_List('dimension', __('Parameter', 'name', 'dimension'));
 $dimensionColumn->list = [];
 foreach ($family->getDimensions() as $dimension) {
-    $dimensionColumn->list[$dimension->getId()] = $dimension->getLabel();
+    $dimensionColumn->list[$dimension->getId()] = $this->translate($dimension->getLabel());
 }
 $datagridFixed->addCol($dimensionColumn);
 // Colonne membre

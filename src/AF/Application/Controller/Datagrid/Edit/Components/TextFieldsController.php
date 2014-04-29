@@ -8,7 +8,6 @@ use AF\Domain\AF;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\TextField;
 use AF\Domain\Condition\ElementaryCondition;
-use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 use Core\Annotation\Secure;
 
 /**
@@ -31,7 +30,7 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
         foreach ($textFields as $field) {
             $data = [];
             $data['index'] = $field->getId();
-            $data['label'] = $field->getLabel();
+            $data['label'] = $this->cellTranslatedText($field->getLabel());
             $data['ref'] = $field->getRef();
             $data['help'] = $this->cellLongText(
                 'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $field->getId(),
@@ -77,9 +76,9 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
                 $this->send();
                 return;
             }
-            $field->setLabel($this->getAddElementValue('label'));
+            $this->translationHelper->set($field->getLabel(), $this->getAddElementValue('label'));
+            $this->translationHelper->set($field->getHelp(), $this->getAddElementValue('help'));
             $field->setVisible($isVisible);
-            $field->setHelp($this->getAddElementValue('help'));
             $field->setEnabled($this->getAddElementValue('enabled'));
             $field->setRequired($this->getAddElementValue('required'));
             $af->addComponent($field);
@@ -110,15 +109,15 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $field->setLabel($newValue);
-                $this->data = $field->getLabel();
+                $this->translationHelper->set($field->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($field->getLabel());
                 break;
             case 'ref':
                 $field->setRef($newValue);
                 $this->data = $field->getRef();
                 break;
             case 'help':
-                $field->setHelp($newValue);
+                $this->translationHelper->set($field->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -186,7 +185,7 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
     {
         /** @var $numeric TextField */
         $numeric = TextField::load($this->getParam('component'));
-        $this->data = $numeric->getHelp();
+        $this->data = $this->translationHelper->toString($numeric->getHelp());
         $this->send();
     }
 }

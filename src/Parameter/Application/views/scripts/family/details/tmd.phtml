@@ -40,18 +40,18 @@ foreach ($dimensions as $dimension) {
     // Éléments de la dimension
     $values = [];
     foreach ($dimension->getMembers() as $member) {
-        $values[$member->getRef()] = $member->getLabel();
+        $values[$member->getRef()] = $this->translate($member->getLabel());
     }
     // Ajoute la dimension
     if ($dimension->getOrientation() == Dimension::ORIENTATION_HORIZONTAL) {
         $tmd->addDimensionIndexCol(
-            $dimension->getLabel(),
+            $this->translate($dimension->getLabel()),
             $values,
             $dimension->getPosition()
         );
     } else {
         $tmd->addDimensionIndexLine(
-            $dimension->getLabel(),
+            $this->translate($dimension->getLabel()),
             $values,
             $dimension->getPosition()
         );

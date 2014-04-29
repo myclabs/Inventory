@@ -31,7 +31,7 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
         foreach ($subAFList as $subAF) {
             $data = [];
             $data['index'] = $subAF->getId();
-            $data['label'] = $subAF->getLabel();
+            $data['label'] = $this->cellTranslatedText($subAF->getLabel());
             $data['ref'] = $subAF->getRef();
             $data['help'] = $this->cellLongText(
                 'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $subAF->getId(),
@@ -75,9 +75,9 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
                 $this->send();
                 return;
             }
-            $subAF->setLabel($this->getAddElementValue('label'));
+            $this->translationHelper->set($subAF->getLabel(), $this->getAddElementValue('label'));
+            $this->translationHelper->set($subAF->getHelp(), $this->getAddElementValue('help'));
             $subAF->setVisible($isVisible);
-            $subAF->setHelp($this->getAddElementValue('help'));
             /** @var $calledAF AF */
             $calledAF = AF::load($this->getAddElementValue('targetAF'));
             $subAF->setCalledAF($calledAF);
@@ -113,11 +113,11 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
                 $this->data = $subAF->getRef();
                 break;
             case 'label':
-                $subAF->setLabel($newValue);
-                $this->data = $subAF->getLabel();
+                $this->translationHelper->set($subAF->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($subAF->getLabel());
                 break;
             case 'help':
-                $subAF->setHelp($newValue);
+                $this->translationHelper->set($subAF->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -168,7 +168,7 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
     {
         /** @var $subAF RepeatedSubAF */
         $subAF = RepeatedSubAF::load($this->getParam('component'));
-        $this->data = $subAF->getHelp();
+        $this->data = $this->translationHelper->toString($subAF->getHelp());
         $this->send();
     }
 }

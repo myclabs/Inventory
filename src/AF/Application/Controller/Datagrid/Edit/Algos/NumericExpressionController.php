@@ -23,7 +23,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
-                $data['label'] = $algo->getLabel();
+                $data['label'] = $this->cellTranslatedText($algo->getLabel());
                 $data['unit'] = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
                 $data['expression'] = $this->cellLongText(
                     'af/edit_algos/popup-expression/idAF/' . $af->getId() . '/algo/' . $algo->getId(),
@@ -80,7 +80,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->send();
                 return;
             }
-            $algo->setLabel($this->getAddElementValue('label'));
+            $this->translationHelper->set($algo->getLabel(), $this->getAddElementValue('label'));
             try {
                 $algo->setExpression($this->getAddElementValue('expression'));
             } catch (InvalidExpressionException $e) {
@@ -123,8 +123,8 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->data = $algo->getRef();
                 break;
             case 'label':
-                $algo->setLabel($newValue);
-                $this->data = $algo->getLabel();
+                $this->translationHelper->set($algo->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($algo->getLabel());
                 break;
             case 'unit':
                 try {
@@ -211,7 +211,8 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
             foreach ($library->getContextIndicators() as $contextIndicator) {
                 $this->addElementList(
                     $contextIndicator->getId(),
-                    $library->getLabel() . ' > ' . $contextIndicator->getLabel()
+                    $this->translationHelper->toString($library->getLabel()) . ' > '
+                    . $this->translationHelper->toString($contextIndicator->getLabel())
                 );
             }
         }

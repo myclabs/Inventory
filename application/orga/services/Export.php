@@ -1,10 +1,4 @@
 <?php
-/**
- * Classe Orga_Service_Export
- * @author valentin.claras
- * @package    Orga
- * @subpackage Service
- */
 
 use AF\Domain\Input\Input;
 use AF\Domain\Input\TextFieldInput;
@@ -20,23 +14,29 @@ use AF\Domain\InputSet\SubInputSet;
 use AF\Domain\Output\OutputElement;
 use Classification\Domain\Axis;
 use Classification\Domain\Indicator;
+use Mnapoli\Translated\TranslationHelper;
 use Orga\Model\ACL\AbstractCellRole;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
 
 /**
- * Service Orga.
- * @package    Orga
- * @subpackage Service
+ * @author valentin.claras
  */
 class Orga_Service_Export
 {
     /**
+     * @var TranslationHelper
+     */
+    private $translationHelper;
+
+    /**
      * Constructeur, augmente la limite de mémoire à 2G pour réaliser l'export.
      */
-    public function __construct()
+    public function __construct(TranslationHelper $translationHelper)
     {
+        $this->translationHelper = $translationHelper;
+
         ini_set('memory_limit','2G');
     }
 
@@ -629,7 +629,7 @@ class Orga_Service_Export
                             }
                         }
                     }
-                    return $member->getLabel();
+                    return $this->translationHelper->toString($member->getLabel());
                 } catch (Core_Exception_NotFound $e) {
                     // Pas d'indexation suivant cet axe.
                 }

@@ -10,7 +10,7 @@ $library = $this->library;
 
 <div class="page-header">
     <h1>
-        <?=$library->getLabel()?>
+        <?=$this->translate($library->getLabel())?>
         <small><?=__('AF', 'formList', 'pageTitle')?></small>
     </h1>
 </div>
@@ -30,7 +30,7 @@ $categoryColumn->addable = true;
 $categories = $library->getCategories();
 $categoryColumn->list = [];
 foreach ($categories as $category) {
-    $categoryColumn->list[$category->getId()] = $category->getLabel();
+    $categoryColumn->list[$category->getId()] = $this->translate($category->getLabel());
 }
 $categoryColumn->withEmptyElement = false;
 $datagrid->addCol($categoryColumn);

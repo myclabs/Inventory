@@ -36,7 +36,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
         foreach ($groups as $group) {
             $data = [];
             $data['index'] = $group->getId();
-            $data['label'] = $group->getLabel();
+            $data['label'] = $this->cellTranslatedText($group->getLabel());
             $data['ref'] = $group->getRef();
             $data['help'] = $this->cellLongText(
                 'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $group->getId(),
@@ -75,9 +75,9 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
                 $this->send();
                 return;
             }
-            $group->setLabel($this->getAddElementValue('label'));
+            $this->translationHelper->set($group->getLabel(), $this->getAddElementValue('label'));
+            $this->translationHelper->set($group->getHelp(), $this->getAddElementValue('help'));
             $group->setVisible($isVisible);
-            $group->setHelp($this->getAddElementValue('help'));
             $group->save();
             $af->addComponent($group);
 
@@ -110,11 +110,11 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
                 $this->data = $group->getRef();
                 break;
             case 'label':
-                $group->setLabel($newValue);
-                $this->data = $group->getLabel();
+                $this->translationHelper->set($group->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($group->getLabel());
                 break;
             case 'help':
-                $group->setHelp($newValue);
+                $this->translationHelper->set($group->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -163,7 +163,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
     {
         /** @var $group Group */
         $group = Group::load($this->getParam('component'));
-        $this->data = $group->getHelp();
+        $this->data = $this->translationHelper->toString($group->getHelp());
         $this->send();
     }
 }

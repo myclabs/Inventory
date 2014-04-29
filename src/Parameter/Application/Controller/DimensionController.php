@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use Core\Translation\TranslatedString;
 use Parameter\Domain\Family\Dimension;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Family\Member;
@@ -30,6 +31,7 @@ class Parameter_DimensionController extends Core_Controller
             return;
         }
 
+        $label = $this->translationHelper->set(new TranslatedString(), $label);
         $dimension = new Dimension($family, $ref, $label, $orientation);
         $dimension->save();
         $family->addDimension($dimension);
@@ -60,7 +62,7 @@ class Parameter_DimensionController extends Core_Controller
 
         $dimension = $family->getDimension($this->getParam('refDimension'));
         $dimension->setRef($ref);
-        $dimension->setLabel($label);
+        $this->translationHelper->set($dimension->getLabel(), $label);
         $this->entityManager->flush();
 
         UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
@@ -120,6 +122,7 @@ class Parameter_DimensionController extends Core_Controller
             }
 
             try {
+                $label = $this->translationHelper->set(new TranslatedString(), $label);
                 $member = new Member($dimension, $ref, $label);
             } catch (Core_Exception_User $e) {
                 UI_Message::addMessageStatic($e->getMessage());

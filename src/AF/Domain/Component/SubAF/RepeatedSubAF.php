@@ -58,8 +58,8 @@ class RepeatedSubAF extends SubAF
     {
         // Groupe contenant une liste de sous-formulaires
         $uiElement = new UI_Form_Element_GroupRepeated($this->ref);
-        $uiElement->setLabel($this->label);
-        $uiElement->getElement()->help = $this->help;
+        $uiElement->setLabel($this->uglyTranslate($this->label));
+        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         $uiElement->getElement()->hidden = !$this->visible;
         switch ($this->foldaway) {
             case self::FOLDAWAY:

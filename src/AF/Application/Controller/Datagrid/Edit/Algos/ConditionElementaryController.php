@@ -191,7 +191,7 @@ class AF_Datagrid_Edit_Algos_ConditionElementaryController extends UI_Controller
 
         $this->addElementList(null, '');
         foreach ($fieldList as $field) {
-            $this->addElementList($field->getRef(), $field->getLabel());
+            $this->addElementList($field->getRef(), $this->translationHelper->toString($field->getLabel()));
         }
         $this->send();
     }

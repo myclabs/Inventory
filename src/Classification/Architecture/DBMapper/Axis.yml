@@ -3,10 +3,6 @@ Classification\Domain\Axis:
   repositoryClass: \Core_Model_Repository_Ordered
   table: Classification_Axis
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       column: id
@@ -18,14 +14,13 @@ Classification\Domain\Axis:
     ref:
       type: string
       nullable: false
-    label:
-      type: string
-      nullable: false
-      gedmo:
-        - translatable
     position:
       type: integer
       nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     directNarrower:

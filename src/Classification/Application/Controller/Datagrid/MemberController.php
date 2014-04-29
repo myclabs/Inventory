@@ -31,7 +31,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
         foreach (Member::loadList($this->request) as $member) {
             $data = array();
             $data['index'] = $member->getId();
-            $data['label'] = $this->cellText($member->getLabel());
+            $data['label'] = $this->cellTranslatedText($member->getLabel());
             $data['ref'] = $this->cellText($member->getRef());
             $canUp = !($member->getPosition() === 1);
             $canDown = !($member->getPosition() === $member->getLastEligiblePosition());
@@ -92,7 +92,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
             if (empty($this->_addErrorMessages)) {
                 $member = new Member();
                 $member->setRef($ref);
-                $member->setLabel($label);
+                $this->translationHelper->set($member->getLabel(), $label);
                 $member->setAxis($axis);
                 foreach ($broaderMembers as $broaderMember) {
                     $member->addDirectParent($broaderMember);
@@ -130,7 +130,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
 
         switch ($this->update['column']) {
             case 'label':
-                $member->setLabel($this->update['value']);
+                $this->translationHelper->set($member->getLabel(), $this->update['value']);
                 $this->message = __('UI', 'message', 'updated');
                 break;
             case 'ref':
@@ -205,7 +205,10 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
             $this->addElementList(0, '');
         }
         foreach ($broaderAxis->getMembers() as $eligibleParentMember) {
-            $this->addElementList($eligibleParentMember->getId(), $eligibleParentMember->getLabel());
+            $this->addElementList(
+                $eligibleParentMember->getId(),
+                $this->translationHelper->toString($eligibleParentMember->getLabel())
+            );
         }
 
         $this->send();

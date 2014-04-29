@@ -8,6 +8,8 @@ use AF\Domain\Component\NumericField;
 use AF\Domain\Condition\NumericFieldCondition;
 use AF\Domain\AFCopyService;
 use Core\Test\TestCase;
+use Core\Translation\TranslatedString;
+use Mnapoli\Translated\TranslationHelper;
 use Unit\UnitAPI;
 
 /**
@@ -21,8 +23,7 @@ class AFCopyTest extends TestCase
     {
         $library = $this->getMock(AFLibrary::class, [], [], '', false);
 
-        $oldAF = new AF($library, 'old_ref');
-        $oldAF->setLabel('label');
+        $oldAF = new AF($library, new TranslatedString('label', 'fr'));
         $oldAF->setDocumentation('documentation');
 
         $component = new NumericField();
@@ -41,13 +42,13 @@ class AFCopyTest extends TestCase
 
         $afCopyService = new AFCopyService();
         /** @var AF $newAF */
-        $newAF = $afCopyService->copyAF($oldAF, 'new label');
+        $newAF = $afCopyService->copyAF($oldAF, new TranslatedString('new label', 'fr'));
 
         $this->assertInstanceOf(get_class($oldAF), $newAF);
 
         $this->assertNull($newAF->getId());
         $this->assertNull($newAF->getPosition());
-        $this->assertEquals('new label', $newAF->getLabel());
+        $this->assertEquals('new label', $newAF->getLabel()->get('fr'));
         $this->assertEquals($oldAF->getDocumentation(), $newAF->getDocumentation());
         $this->assertNull($newAF->getCategory());
         $this->assertSame($library, $newAF->getLibrary());

@@ -8,6 +8,7 @@ use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
 use Classification\Domain\Member;
 use Classification\Domain\ClassificationLibrary;
+use Core\Translation\TranslatedString;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
 
@@ -46,7 +47,7 @@ abstract class AbstractPopulateClassification
     {
         $axis = new Axis($library);
         $axis->setRef($ref);
-        $axis->setLabel($label);
+        $axis->getLabel()->set($label, 'fr');
         if ($narrower !== null) {
             $axis->setDirectNarrower($narrower);
         }
@@ -59,7 +60,7 @@ abstract class AbstractPopulateClassification
         $member = new Member();
         $member->setAxis($axis);
         $member->setRef($ref);
-        $member->setLabel($label);
+        $member->getLabel()->set($label, 'fr');
         foreach ($parents as $directParent) {
             $member->addDirectParent($directParent);
         }
@@ -79,6 +80,8 @@ abstract class AbstractPopulateClassification
     {
         $ratioUnit = $ratioUnitRef ? new UnitAPI($ratioUnitRef) : null;
 
+        $label = new TranslatedString($label, 'fr');
+
         $indicator = new Indicator($library, $ref, $label, new UnitAPI($unitRef), $ratioUnit);
         $indicator->save();
 
@@ -91,7 +94,7 @@ abstract class AbstractPopulateClassification
     {
         $context = new Context($library);
         $context->setRef($ref);
-        $context->setLabel($label);
+        $context->getLabel()->set($label, 'fr');
         $context->save();
         return $context;
     }

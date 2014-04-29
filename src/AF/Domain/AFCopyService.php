@@ -4,6 +4,7 @@ namespace AF\Domain;
 
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Component\SubAF;
+use Core\Translation\TranslatedString;
 use DeepCopy\DeepCopy;
 use DeepCopy\Filter\Doctrine\DoctrineCollectionFilter;
 use DeepCopy\Filter\KeepFilter;
@@ -21,11 +22,11 @@ use Doctrine\Common\Collections\Collection;
 class AFCopyService
 {
     /**
-     * @param AF     $af
-     * @param string $newLabel
+     * @param AF               $af
+     * @param TranslatedString $newLabel
      * @return AF
      */
-    public function copyAF(AF $af, $newLabel)
+    public function copyAF(AF $af, TranslatedString $newLabel)
     {
         $deepCopy = new DeepCopy();
 
