@@ -156,7 +156,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
                 break;
             case 'after':
                 $currentAxisPosition = $axis->getPosition();
-                $refAfter = $this->_form[$this->id.'_changeOrder']['children'][$this->id.'_selectAfter_child']['value'];
+                $refAfter = $this->getEditElementValue('selectAfter');
                 $newPosition = $organization->getAxisByRef($refAfter)->getPosition();
                 if (($currentAxisPosition > $newPosition)) {
                     $newPosition += 1;
