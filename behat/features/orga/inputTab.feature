@@ -12,9 +12,11 @@ Feature: Organization input tab feature
     Then I should see "4 / 6" in the "#granularity8 span.granularity-info" element
   # Filtre sur le site "Annecy"
     When I select "Annecy" from "granularity8_axissite"
+    And I wait 2 seconds
     Then I should see "2 / 6" in the "#granularity8 span.granularity-info" element
   # Bouton "Réinitialiser"
-    When I click element "div[id='granularity8'] button.reset"
+    When I click element "#granularity8 button.reset"
+    And I wait 2 seconds
     Then I should see "6 / 6" in the "#granularity8 span.granularity-info" element
 
   @javascript @readOnly
@@ -22,20 +24,20 @@ Feature: Organization input tab feature
     Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading
   # Cas inventaire en cours, saisie complète
-    Then I should see "2012 | Annecy" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/']" element
-    And I should see "Collecte en cours" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/'] div.inventory-status" element
-    And I should see "Saisie complète" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/'] div.input-status" element
+    Then I should see the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/" cell
+    And the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/" cell inventory status should be "active"
+    And the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/" cell input status should be "complete"
   # Cas inventaire en cours, saisie incomplète / saisie terminée
-    Then I should see "2012 | Annecy | Énergie" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/']" element
-    And I should see "Saisie terminée" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/'] div.input-status" element
-    Then I should see "2012 | Annecy | Test affichage" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/']" element
-    And I should see "Saisie incomplète" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/'] div.input-status" element
+    Then I should see the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/" cell
+    And the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/" cell input status should be "finished"
+    Then I should see the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/" cell
+    And the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/" cell input status should be "input_incomplete"
   # Cas inventaire non lancé, inventaire clôturé
     And I click element "div[id='granularity8'] button.reset"
-    Then I should see "2012 | Grenoble" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/']" element
-    And I should see "Collecte clôturée" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.inventory-status" element
-    And I should see "Saisie terminée" in the "div.cell[data-tag='/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.input-status" element
-    Then I should see "2013 | Grenoble" in the "div.cell[data-tag='/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/']" element
-    And I should see "Collecte non lancée" in the "div.cell[data-tag='/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.inventory-status" element
-    And I should see "Collecte non lancée" in the "div.cell[data-tag='/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/'] div.input-status" element
+    Then I should see the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell
+    And the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell inventory status should be "closed"
+    And the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell input status should be "finished"
+    Then I should see the "/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell
+    And the "/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell inventory status should be "notLaunched"
+    And the "/1-annee:2013/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell input status should be "statusNotStarted"
 
