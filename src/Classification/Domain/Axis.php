@@ -74,15 +74,6 @@ class Axis extends Core_Model_Entity
     }
 
     /**
-     * @param string $ref
-     * @return Axis $axis
-     */
-    public static function loadByRef($ref)
-    {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref));
-    }
-
-    /**
      * @return int
      */
     public function getId()
