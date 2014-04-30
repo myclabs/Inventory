@@ -56,7 +56,7 @@ abstract class NumericAlgo extends Algo
     /**
      * Execute and index the value
      * @param InputSet $inputSet
-     * @return \AF\Domain\Algorithm\Output
+     * @return Output
      * @throws Core_Exception_UndefinedAttribute If the numeric algo could not be indexed with an indicator
      */
     public function executeAndIndex(InputSet $inputSet)
@@ -68,7 +68,10 @@ abstract class NumericAlgo extends Algo
         // On récupère les membres de classification
         $members = [];
         foreach ($this->indexes as $resultIndex) {
-            $members[] = $resultIndex->getClassificationMember($inputSet);
+            $member = $resultIndex->getClassificationMember($inputSet);
+            if ($member) {
+                $members[] = $member;
+            }
         }
         return new Output($result, $this, $members);
     }
