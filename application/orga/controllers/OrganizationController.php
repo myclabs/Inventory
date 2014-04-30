@@ -1045,10 +1045,8 @@ class Orga_OrganizationController extends Core_Controller
             $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
             $cellsResults = [$globalCell];
             foreach ($globalCell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-                if ($narrowerGranularity->getCellsGenerateDWCubes()) {
-                    foreach ($narrowerGranularity->getCells() as $childCell) {
-                        $cellsResults[] = $childCell;
-                    }
+                foreach ($narrowerGranularity->getCells() as $childCell) {
+                    $cellsResults[] = $childCell;
                 }
             }
             $this->view->assign('cellsResults', $cellsResults);
