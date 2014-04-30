@@ -12,8 +12,10 @@ use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
+use AF\Domain\Input\Select\SelectMultiInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputSet\SubInputSet;
+use AF\Domain\Output\OutputIndex;
 use AF\Domain\Output\OutputTotal;
 use Classification\Domain\Axis;
 use Classification\Domain\ClassificationLibrary;
@@ -190,13 +192,25 @@ class ImportCommand extends Command
             ],
             FixedIndex::class => [
                 'properties' => [
-                    'refClassifMember' => [ 'name' => 'refClassificationMember' ],
-                    'refClassifAxis' => [ 'name' => 'refClassificationAxis' ],
+                    'refClassifMember' => [ 'name' => 'refMember' ],
+                    'refClassifAxis' => [ 'exclude' => true ],
+                ],
+                'callbacks' => [
+                    function (FixedIndex $algo, array $data) use ($classificationLibrary) {
+                        $axis = $classificationLibrary->getAxisByRef($data['refClassifAxis']);
+                        $this->setProperty($algo, 'axis', $axis);
+                    },
                 ],
             ],
             AlgoResultIndex::class => [
                 'properties' => [
-                    'refClassifAxis' => [ 'name' => 'refClassificationAxis' ],
+                    'refClassifAxis' => [ 'exclude' => true ],
+                ],
+                'callbacks' => [
+                    function (AlgoResultIndex $algo, array $data) use ($classificationLibrary) {
+                        $axis = $classificationLibrary->getAxisByRef($data['refClassifAxis']);
+                        $this->setProperty($algo, 'axis', $axis);
+                    },
                 ],
             ],
             NumericInputAlgo::class => [
@@ -305,17 +319,32 @@ class ImportCommand extends Command
                     ]
                 ],
             ],
+            SelectMultiInput::class => [
+                'properties' => [
+                    'value' => [
+                        'callback' => function ($array) {
+                            return new ArrayCollection($array);
+                        },
+                    ]
+                ],
+            ],
             OutputTotal::class => [
                 'properties' => [
                     'refIndicator' => [ 'name' => 'indicator' ],
                     'indicator' => [
                         'callback' => function ($var) use ($classificationLibrary) {
-                                $queryIndicator = new \Core_Model_Query();
-                                $queryIndicator->filter->addCondition('library', $classificationLibrary);
-                                $queryIndicator->filter->addCondition('ref', $var);
-                                $indicatorList = Indicator::loadList($queryIndicator);
-                                return reset($indicatorList);
-                            },
+                            return $classificationLibrary->getIndicatorByRef($var);
+                        },
+                    ]
+                ],
+            ],
+            OutputIndex::class => [
+                'properties' => [
+                    'refAxis' => [ 'name' => 'axis' ],
+                    'axis' => [
+                        'callback' => function ($var) use ($classificationLibrary) {
+                            return $classificationLibrary->getAxisByRef($var);
+                        },
                     ]
                 ],
             ],
