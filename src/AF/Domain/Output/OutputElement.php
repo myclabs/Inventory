@@ -92,7 +92,7 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @return \Classification\Domain\ContextIndicator
+     * @return ContextIndicator
      */
     public function getContextIndicator()
     {
@@ -136,7 +136,7 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @return \AF\Domain\InputSet\InputSet
+     * @return InputSet
      */
     public function getInputSet()
     {
@@ -144,7 +144,7 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\InputSet\InputSet $set
+     * @param InputSet $set
      */
     public function setInputSet($set)
     {

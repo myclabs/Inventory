@@ -17,13 +17,11 @@ class OutputIndex extends Core_Model_Entity
     protected $id;
 
     /**
-     * Reference of the classification axis
-     * @var string
+     * @var Axis
      */
-    protected $refAxis;
+    protected $axis;
 
     /**
-     * Reference of the classification member
      * @var string
      */
     protected $refMember;
@@ -36,10 +34,6 @@ class OutputIndex extends Core_Model_Entity
     protected $outputElements;
 
 
-    /**
-     * @param Axis $axis
-     * @param Member    $member
-     */
     public function __construct(Axis $axis, Member $member)
     {
         $this->setAxis($axis);
@@ -51,7 +45,7 @@ class OutputIndex extends Core_Model_Entity
      */
     public function getAxis()
     {
-        return Axis::loadByRef($this->refAxis);
+        return $this->axis;
     }
 
     /**
@@ -59,7 +53,7 @@ class OutputIndex extends Core_Model_Entity
      */
     public function setAxis(Axis $axis)
     {
-        $this->refAxis = $axis->getRef();
+        $this->axis = $axis;
     }
 
     /**
@@ -83,7 +77,7 @@ class OutputIndex extends Core_Model_Entity
      */
     public function getRefAxis()
     {
-        return $this->refAxis;
+        return $this->axis->getRef();
     }
 
     /**
