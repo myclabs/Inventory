@@ -17,7 +17,6 @@ Classification\Domain\Context:
   fields:
     ref:
       type: string
-      unique: true
       nullable: false
     label:
       type: string
@@ -33,7 +32,15 @@ Classification\Domain\Context:
       targetEntity: ClassificationLibrary
       inversedBy: contexts
       joinColumn:
+        name: idLibrary
+        referencedColumnName: id
         nullable: false
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - library
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

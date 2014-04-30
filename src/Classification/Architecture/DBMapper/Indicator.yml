@@ -17,7 +17,6 @@ Classification\Domain\Indicator:
   fields:
     ref:
       type: string
-      unique: true
       nullable: false
     label:
       type: string
@@ -39,7 +38,15 @@ Classification\Domain\Indicator:
       targetEntity: ClassificationLibrary
       inversedBy: indicators
       joinColumn:
+        name: idLibrary
+        referencedColumnName: id
         nullable: false
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - library
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

@@ -17,7 +17,6 @@ Classification\Domain\Axis:
   fields:
     ref:
       type: string
-      unique: true
       nullable: false
     label:
       type: string
@@ -39,6 +38,8 @@ Classification\Domain\Axis:
       targetEntity: ClassificationLibrary
       inversedBy: axes
       joinColumn:
+        name: idLibrary
+        referencedColumnName: id
         nullable: false
 
   oneToMany:
@@ -54,6 +55,12 @@ Classification\Domain\Axis:
       cascade: [ remove ]
       orderBy:
         position: ASC
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - library
 
   lifecycleCallbacks:
     prePersist: [ preSave ]
