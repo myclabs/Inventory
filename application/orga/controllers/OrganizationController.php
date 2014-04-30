@@ -1066,10 +1066,8 @@ class Orga_OrganizationController extends Core_Controller
         foreach ($topCells as $topCell) {
             $cellsData[$topCell->getId()] = $topCell;
             foreach ($topCell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-                if ($narrowerGranularity->getCellsGenerateDWCubes()) {
-                    foreach ($topCell->getChildCellsForGranularity($narrowerGranularity) as $childCell) {
-                        $cellsData[$childCell->getId()] = $childCell;
-                    }
+                foreach ($topCell->getChildCellsForGranularity($narrowerGranularity) as $childCell) {
+                    $cellsData[$childCell->getId()] = $childCell;
                 }
             }
         }
