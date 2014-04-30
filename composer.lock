@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "d20800c6ba0f0dc3bee79b8c2564beee",
+    "hash": "9c2783261fd00a41869f07b74936fdec",
     "packages": [
         {
             "name": "container-interop/container-interop",

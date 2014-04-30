@@ -3,12 +3,14 @@
         "psr-0": {
             "": "src/"
         },
-        "psr-4": {
-            "Tests\\": "tests/"
-        },
         "files": [
             "src/Core/Translation/functions.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "require": {
         "zendframework/zendframework1": "1.12.*",
