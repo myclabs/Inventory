@@ -105,18 +105,27 @@ class FeatureContext extends MinkContext
         $field = $this->fixStepArgument($field);
         $error = $this->fixStepArgument($error);
 
-        $node = $this->assertSession()->fieldExists($field);
+        try {
+            $node = $this->assertSession()->fieldExists($field);
 
-        // Anciens formulaires Bootstrap 2
-        $fieldId = $node->getAttribute('id');
-        $expression = '$("#' . $fieldId . '").parents(".controls").children(".errorMessage").text()';
-        $errorMessage = $this->getSession()->evaluateScript("return $expression;");
-
-        // Nouveaux formulaires
-        if ($errorMessage == '') {
-            $fieldName = $node->getAttribute('name');
-            $expression = '$(\'[name="' . $fieldName . '"]\').parents(".form-group").find(".errorMessage").text()';
+            // Anciens formulaires Bootstrap 2
+            $fieldId = $node->getAttribute('id');
+            $expression = '$("#' . $fieldId . '").parents(".controls").children(".errorMessage").text()';
             $errorMessage = $this->getSession()->evaluateScript("return $expression;");
+
+            // Nouveaux formulaires
+            if ($errorMessage == '') {
+                $fieldName = $node->getAttribute('name');
+                $expression = '$(\'[name="' . $fieldName . '"]\').parents(".form-group").find(".errorMessage").text()';
+                $errorMessage = $this->getSession()->evaluateScript("return $expression;");
+            }
+        } catch (ElementNotFoundException $e) {
+            // Select2
+            $expression = '$(\'#s2id_' . $field . '\').parents(".form-group").find(".errorMessage").text()';
+            $errorMessage = $this->getSession()->evaluateScript("return $expression;");
+            if ($errorMessage == '') {
+                throw $e;
+            }
         }
 
         if (strpos($errorMessage, $error) === false) {
@@ -218,6 +227,61 @@ class FeatureContext extends MinkContext
         /** @var NodeElement $node */
         $node = current($nodes);
         $node->check();
+    }
+
+    /**
+     * @When /^(?:|I )select "(?P<value>(?:[^"]|\\")*)" in s2 "(?P<id>(?:[^"]|\\")*)"$/
+     */
+    public function selectS2($value, $id)
+    {
+        $value = $this->fixStepArgument($value);
+
+        $selector = "#s2id_$id";
+
+        /** @var NodeElement[] $nodes */
+        $nodes = $this->getSession()->getPage()->findAll('css', $selector . ' .select2-arrow');
+        if (count($nodes) === 0) {
+            throw new ExpectationException(
+                "No s2 select with id '$id'found.",
+                $this->getSession()
+            );
+        }
+
+        $nodes = array_filter(
+            $nodes,
+            function (NodeElement $node) {
+                return $this->isElementVisible($node);
+            }
+        );
+        if (count($nodes) === 0) {
+            throw new ExpectationException(
+                "No s2 select with id '$id' is visible.",
+                $this->getSession()
+            );
+        }
+
+        if (count($nodes) > 1) {
+            $nb = count($nodes);
+            throw new ExpectationException(
+                "Too many ($nb) s2 select with id '$id' are visible.",
+                $this->getSession()
+            );
+        }
+
+        $node = current($nodes);
+        $node->click();
+
+        $this->wait(2);
+
+        $element = $this->getSession()->getPage()->find(
+            'xpath',
+            '//*[@class="select2-results"]//*[@class="select2-result-label"][text()[contains(., "'. $value .'")]]'
+        );
+        if ($element === null) {
+            throw new \InvalidArgumentException(sprintf('Cannot find s2 option with text "%s"', $value));
+        }
+
+        $element->click();
     }
 
     /**
