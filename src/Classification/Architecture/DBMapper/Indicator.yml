@@ -46,7 +46,7 @@ Classification\Domain\Indicator:
     memberRefUniquenessInAxis:
       columns:
         - ref
-        - library
+        - idLibrary
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

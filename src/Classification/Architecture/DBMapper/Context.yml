@@ -40,7 +40,7 @@ Classification\Domain\Context:
     memberRefUniquenessInAxis:
       columns:
         - ref
-        - library
+        - idLibrary
 
   lifecycleCallbacks:
     prePersist: [ preSave ]
