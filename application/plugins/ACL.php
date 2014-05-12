@@ -38,8 +38,8 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
         $aclQuery = new Core_Model_Query();
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
-        $aclQuery->aclFilter->action = Actions::VIEW;
-        $isIdentityAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 1);
+        $aclQuery->aclFilter->action = Actions::TRAVERSE;
+        $isIdentityAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
         if ($isIdentityAbleToSeeManyOrganizations) {
             return true;
         }
@@ -88,7 +88,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
     {
         return $this->acl->isAllowed(
             $identity,
-            Actions::VIEW,
+            Actions::TRAVERSE,
             $this->getOrganization($request)
         );
     }
