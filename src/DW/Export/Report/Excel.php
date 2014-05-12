@@ -55,7 +55,8 @@ class DW_Export_Report_Excel extends Export_Excel
         if ($report->getDenominator() === null) {
             $sheetData[] = array(
                 __('Classification', 'indicator', 'indicator'),
-                $report->getNumerator()->getLabel() . ' (' . $report->getValuesUnitSymbol() . ')'
+                $this->translationHelper->toString($report->getNumerator()->getLabel())
+                    . ' (' . $report->getValuesUnitSymbol() . ')'
             );
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
@@ -72,7 +73,8 @@ class DW_Export_Report_Excel extends Export_Excel
         } else {
             $sheetData[] = array(
                 __('DW', 'name', 'numerator'),
-                $report->getNumerator()->getLabel() . ' (' . $report->getNumerator()->getRatioUnit()->getSymbol() . ')'
+                $this->translationHelper->toString($report->getNumerator()->getLabel())
+                    . ' (' . $report->getNumerator()->getRatioUnit()->getSymbol() . ')'
             );
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
@@ -89,7 +91,8 @@ class DW_Export_Report_Excel extends Export_Excel
 
             $sheetData[] = array(
                 __('DW', 'name', 'denominator'),
-                $report->getDenominator()->getLabel(). ' (' .  $report->getDenominator()->getRatioUnit()->getSymbol() . ')'
+                $this->translationHelper->toString($report->getDenominator()->getLabel())
+                    . ' (' .  $report->getDenominator()->getRatioUnit()->getSymbol() . ')'
             );
 
             if ($numeratorAxis1 !== null) {

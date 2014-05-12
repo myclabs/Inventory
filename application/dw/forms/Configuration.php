@@ -91,7 +91,7 @@ class DW_Form_configuration extends GenericTag
         $numeratorIndicatorSelect->setAttribute('name', 'numeratorIndicator');
         $numeratorIndicatorSelect->addClass('form-control');
         foreach ($report->getCube()->getIndicators() as $indicator) {
-            $indicatorOption = new GenericTag('option', $indicator->getLabel());
+            $indicatorOption = new GenericTag('option', $this->translationHelper->toString($indicator->getLabel()));
             $indicatorOption->setAttribute('value', $indicator->getRef());
             $numeratorIndicatorSelect->appendContent($indicatorOption);
         }
@@ -111,7 +111,7 @@ class DW_Form_configuration extends GenericTag
         $denominatorIndicatorSelect->setAttribute('name', 'denominatorIndicator');
         $denominatorIndicatorSelect->addClass('form-control');
         foreach ($report->getCube()->getIndicators() as $indicator) {
-            $indicatorOption = new GenericTag('option', $indicator->getLabel());
+            $indicatorOption = new GenericTag('option', $this->translationHelper->toString($indicator->getLabel()));
             $indicatorOption->setAttribute('value', $indicator->getRef());
             $denominatorIndicatorSelect->appendContent($indicatorOption);
         }

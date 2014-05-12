@@ -419,9 +419,9 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
         $label = $xmlReport->getAttribute('label');
         if ($label == '') {
-            $label = $report->getNumerator()->getLabel();
+            $label = $this->translationHelper->toString($report->getNumerator()->getLabel());
             if (($report->getDenominator() !== null)) {
-                $label .= ' / '.$report->getDenominator()->getLabel();
+                $label .= ' / '.$this->translationHelper->toString($report->getDenominator()->getLabel());
             }
         }
         $report->setLabel($label);

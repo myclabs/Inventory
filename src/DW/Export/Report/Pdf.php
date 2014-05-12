@@ -103,7 +103,8 @@ class DW_Export_Report_Pdf extends Export_Pdf
 
             $this->html .= '<tr>';
             $this->html .= '<td>'.__('Classification', 'indicator', 'indicator').' : </td>';
-            $this->html .= '<td>'.$indicator->getLabel().' ('.$indicator->getUnit()->getSymbol() .')'.'</td>';
+            $this->html .= '<td>'.$this->translationHelper->toString($indicator->getLabel())
+                .' ('.$indicator->getUnit()->getSymbol() .')'.'</td>';
             $this->html .= '</tr>';
 
             if ($numeratorAxis1 !== null) {
@@ -124,12 +125,14 @@ class DW_Export_Report_Pdf extends Export_Pdf
 
             $this->html .= '<tr>';
             $this->html .= '<td>'.__('DW', 'name', 'numerator').' : </td>';
-            $this->html .= '<td>'.$numerator->getLabel().' ('.$numerator->getRatioUnit()->getSymbol().')'.'</td>';
+            $this->html .= '<td>'.$this->translationHelper->toString($numerator->getLabel())
+                .' ('.$numerator->getRatioUnit()->getSymbol().')'.'</td>';
             $this->html .= '</tr>';
 
             $this->html .= '<tr>';
             $this->html .= '<td>'.__('DW', 'name', 'denominator').' : </td>';
-            $this->html .= '<td>'.$denominator->getLabel().' ('.$denominator->getRatioUnit()->getSymbol().')'.'</td>';
+            $this->html .= '<td>'.$this->translationHelper->toString($denominator->getLabel())
+                .' ('.$denominator->getRatioUnit()->getSymbol().')'.'</td>';
             $this->html .= '</tr>';
 
             if ($numeratorAxis1 !== null) {

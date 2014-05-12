@@ -6,6 +6,9 @@
  * @package    DW
  * @subpackage Model
  */
+
+use Core\Translation\TranslatedString;
+use Mnapoli\Translated\TranslatedStringInterface;
 use Unit\UnitAPI;
 
 /**
@@ -16,7 +19,6 @@ use Unit\UnitAPI;
 class DW_Model_Indicator extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';
@@ -42,7 +44,7 @@ class DW_Model_Indicator extends Core_Model_Entity
     /**
      * Label de l'Indicator.
      *
-     * @var string
+     * @var TranslatedString
      */
     protected $label = null;
 
@@ -158,9 +160,9 @@ class DW_Model_Indicator extends Core_Model_Entity
     /**
      * Modifie le label de l'Indicator.
      *
-     * @param string $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
     }
@@ -168,7 +170,7 @@ class DW_Model_Indicator extends Core_Model_Entity
     /**
      * Retourne le label de l'Indicator.
      *
-     * @return string
+     * @return TranslatedStringInterface
      */
     public function getLabel()
     {
