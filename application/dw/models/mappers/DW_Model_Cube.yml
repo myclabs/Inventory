@@ -4,11 +4,6 @@ DW_Model_Cube:
   repositoryClass: Core_Model_Repository
   table: DW_Cube
 
-  gedmo:
-    translation:
-      locale: translationLocale
-      entity: \DW_Model_Translation_CubeTranslation
-
   id:
     id:
       column: id
@@ -16,14 +11,9 @@ DW_Model_Cube:
       generator:
         strategy: AUTO
 
-  fields:
+  embedded:
     label:
-      column: label
-      type: string
-      length: 255
-      nullable: false
-      gedmo:
-        - translatable
+      class: Core\Translation\TranslatedString
 
   oneToMany:
     reports:

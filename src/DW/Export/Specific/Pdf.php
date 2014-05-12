@@ -6,6 +6,8 @@
  * @subpackage Library
  */
 
+use Mnapoli\Translated\TranslationHelper;
+
 /**
  * Classe permettant de gérer en export spécifique au format pdf.
  * @package DW
@@ -13,18 +15,25 @@
 class DW_Export_Specific_Pdf extends Export_Pdf
 {
     /**
+     * @var TranslationHelper
+     */
+    private $translationHelper;
+
+    /**
      * @var DW_Model_Report[]
      */
     private $reports = [];
 
     /**
-     * Constructeur de la classe.
-     *
-     * @param string $xmlPath
-     * @param DW_Model_Cube $cube
+     * @param string            $xmlPath
+     * @param DW_Model_Cube     $cube
+     * @param string|null       $exportUrl
+     * @param TranslationHelper $translationHelper
      */
-    public function __construct($xmlPath, $cube, $exportUrl=null)
+    public function __construct($xmlPath, DW_Model_Cube $cube, $exportUrl = null, TranslationHelper $translationHelper)
     {
+        $this->translationHelper = $translationHelper;
+
         $isPreview = ($exportUrl !== null);
 
         //    Ajout du html
@@ -67,7 +76,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
         } else {
             $xmlSpecificExport = $xmlDocument->getElementsByTagName("specificExport")->item(0);
             $this->fileName = date('Y-m-d', time())
-                .'-'.Core_Tools::refactor($cube->getLabel())
+                .'-'.Core_Tools::refactor($this->translationHelper->toString($cube->getLabel()))
                 .'-'.Core_Tools::refactor($xmlSpecificExport->getAttribute('label'));
             if ($isPreview) {
                 UI_Chart_Generic::addHeader();
@@ -140,7 +149,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $locale = Core_Locale::loadDefault();
             $this->html .= '<h2>'
                 .$xmlSpecificExport->getAttribute("prefix")
-                .$cube->getLabel()
+                .$this->translationHelper->toString($cube->getLabel())
                 .$xmlSpecificExport->getAttribute("postfix")
                 .'</h2>';
 

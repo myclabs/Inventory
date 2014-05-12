@@ -6,6 +6,8 @@
  * @subpackage Library
  */
 
+use Mnapoli\Translated\TranslationHelper;
+
 /**
  * Classe permettant de gérer l'export détaillé d'une analyse au format pdf.
  * @package DW
@@ -13,20 +15,22 @@
 class DW_Export_Report_Pdf extends Export_Pdf
 {
     /**
-     * Constructeur de la classe.
-     *
-     * @param DW_Model_Report $report
+     * @var TranslationHelper
      */
-    public function __construct($report)
+    private $translationHelper;
+
+    public function __construct(DW_Model_Report $report, TranslationHelper $translationHelper)
     {
+        $this->translationHelper = $translationHelper;
+
         $numeratorAxis1 = $report->getNumeratorAxis1();
         $numeratorAxis2 = $report->getNumeratorAxis2();
         $denominatorAxis1 = $report->getDenominatorAxis1();
         $denominatorAxis2 = $report->getDenominatorAxis2();
 
         $this->fileName = date('Y-m-d', time())
-            .'-'.Core_Tools::refactor($report->getCube()->getLabel())
-            .'-'.Core_Tools::refactor($report->getLabel());
+            .'-'.Core_Tools::refactor($this->translationHelper->toString($report->getCube()->getLabel()))
+            .'-'.Core_Tools::refactor($this->translationHelper->toString($report->getLabel()));
 
         //    Ajout du html
         $this->html = '<html>';
@@ -87,7 +91,7 @@ class DW_Export_Report_Pdf extends Export_Pdf
         $this->html .= '</style>';
         $this->html .= '<body>';
         $this->html .= '<div class="pdf">';
-        $this->html .= '<h2>'.$report->getCube()->getLabel().'</h2>';
+        $this->html .= '<h2>'.$this->translationHelper->toString($report->getCube()->getLabel()).'</h2>';
         $this->html .= '<h2>'.$report->getLabel().'</h2>';
         $this->html .= '<h3>'.__('UI', 'name', 'configuration').'</h3>';
 

@@ -254,12 +254,7 @@ class Orga_Service_ETLStructure
      */
     protected function updateDWCubeLabel(DW_Model_Cube $dWCube, $labels)
     {
-        $dWCube->getLabel();
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
-        foreach ($labels as $localeId => $label) {
-            $translationRepository->translate($dWCube, 'label', $localeId, $label);
-        }
+        $this->translationHelper->setMany($dWCube->getLabel(), $labels);
     }
 
     /**

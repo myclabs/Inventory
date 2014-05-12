@@ -6,7 +6,12 @@
  * @package    DW
  * @subpackage Model
  */
+
+use Core\Translation\TranslatedString;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Mnapoli\Translated\TranslatedStringInterface;
 
 /**
  * Cube de données.
@@ -15,8 +20,6 @@ use Doctrine\Common\Collections\Criteria;
  */
 class DW_Model_Cube extends Core_Model_Entity
 {
-    use Core_Model_Entity_Translatable;
-
     /**
      * Identifiant unique du Cube.
      *
@@ -27,28 +30,28 @@ class DW_Model_Cube extends Core_Model_Entity
     /**
      * Label du Cube.
      *
-     * @var string
+     * @var TranslatedStringInterface
      */
-    protected $label = null;
+    protected $label;
 
     /**
      * Collection des Axis du Cube.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection
      */
     protected $axes = null;
 
     /**
      * Collection des Indicator du Cube.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection
      */
     protected $indicators = null;
 
     /**
      * Collection des Reports du Cube.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection
      */
     protected $reports = null;
 
@@ -58,9 +61,10 @@ class DW_Model_Cube extends Core_Model_Entity
      */
     public function __construct()
     {
-        $this->axes = new Doctrine\Common\Collections\ArrayCollection();
-        $this->indicators = new Doctrine\Common\Collections\ArrayCollection();
-        $this->reports = new Doctrine\Common\Collections\ArrayCollection();
+        $this->label = new TranslatedString();
+        $this->axes = new ArrayCollection();
+        $this->indicators = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     /**
@@ -76,17 +80,17 @@ class DW_Model_Cube extends Core_Model_Entity
     /**
      * Définit le label du Cube.
      *
-     * @param String $label
+     * @param TranslatedStringInterface $label
      */
-    public function setLabel ($label)
+    public function setLabel(TranslatedStringInterface $label)
     {
-        $this->label = (string) $label;
+        $this->label = $label;
     }
 
     /**
      * Renvoie le label du Cube.
      *
-     * @return String
+     * @return TranslatedStringInterface
      */
     public function getLabel()
     {
