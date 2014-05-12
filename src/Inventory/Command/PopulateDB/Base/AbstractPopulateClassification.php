@@ -52,6 +52,9 @@ abstract class AbstractPopulateClassification
             $axis->setDirectNarrower($narrower);
         }
         $axis->save();
+
+        $library->addAxis($axis);
+
         return $axis;
     }
 
@@ -96,6 +99,9 @@ abstract class AbstractPopulateClassification
         $context->setRef($ref);
         $context->getLabel()->set($label, 'fr');
         $context->save();
+
+        $library->addContext($context);
+
         return $context;
     }
 
@@ -110,6 +116,9 @@ abstract class AbstractPopulateClassification
             $contextIndicator->addAxis($axis);
         }
         $contextIndicator->save();
+
+        $library->addContextIndicator($contextIndicator);
+
         return $contextIndicator;
     }
 }
