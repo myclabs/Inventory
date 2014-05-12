@@ -723,9 +723,9 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
             $filterValue .= 'if (selectedOptions != \'[]\') {';
 
             // Ajout au filtre.
-            $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+            $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
             $filterValue .= '\"'.$this->filterOperator.'\":" + selectedOptions + "';
-            $filterValue .= '},";';
+            $filterValue .= '}},";';
 
             $filterValue .= '}';
         } else {
@@ -734,10 +734,10 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
             $filterValue .= '&& ($(\'#'.$this->getFilterFormId($datagrid).'\').val() != \'\')) {';
 
             // Ajout au filtre.
-            $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+            $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
             $filterValue .= '\"'.$this->filterOperator.'\":\"" ';
             $filterValue .= '+ $(\'#'.$this->getFilterFormId($datagrid).'\').val() + "\"';
-            $filterValue .= '},";';
+            $filterValue .= '}},";';
 
             $filterValue .= '}';
         }

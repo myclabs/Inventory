@@ -145,10 +145,12 @@ abstract class DatagridController extends Core_Controller
                 /* Filtre */
                 // Récupération du filtre.
                 $filters = Zend_Json::decode($this->getParam('filters'), Zend_Json::TYPE_ARRAY);
-                foreach ($filters as $attributeName => $filterValue) {
-                    foreach ($filterValue as $criteriaOperator => $value) {
-                        if ($value !== null) {
-                            $this->criteria->$attributeName->$criteriaOperator($value);
+                foreach ($filters as $filter) {
+                    foreach ($filter as $attributeName => $filterValue) {
+                        foreach ($filterValue as $criteriaOperator => $value) {
+                            if ($value !== null) {
+                                $this->criteria->$attributeName->$criteriaOperator($value);
+                            }
                         }
                     }
                 }

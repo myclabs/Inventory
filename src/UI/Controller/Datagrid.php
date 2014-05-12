@@ -143,18 +143,20 @@ abstract class UI_Controller_Datagrid extends Core_Controller
 
                 /* Filtre */
                 // Récupération du filtre.
-                $filtres = Zend_Json::decode($this->_getParam('filters'), Zend_Json::TYPE_ARRAY);
-                foreach ($filtres as $filterName => $filterValue) {
-                    list($alias, $filterName) = explode('.', $filterName);
-                    $alias = (empty($alias)) ? null : $alias;
-                    foreach ($filterValue as $operator => $value) {
-                        if ($value !== null) {
-                            $this->request->filter->addCondition($filterName, urldecode($value), $operator, $alias);
+                $filters = Zend_Json::decode($this->_getParam('filters'));
+                foreach ($filters as $filter) {
+                    foreach ($filter as $filterName => $filterValue) {
+                        list($alias, $filterName) = explode('.', $filterName);
+                        $alias = (empty($alias)) ? null : $alias;
+                        foreach ($filterValue as $operator => $value) {
+                            if ($value !== null) {
+                                $this->request->filter->addCondition($filterName, urldecode($value), $operator, $alias);
+                            }
                         }
                     }
                 }
                 // Sauvegarde du filtre.
-                $datagridSession['filters'] = $filtres;
+                $datagridSession['filters'] = $filters;
 
                 /* Tri */
                 // Définition de la colonne de tri et sauvegarde du tri.

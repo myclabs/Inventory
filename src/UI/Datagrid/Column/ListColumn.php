@@ -687,9 +687,9 @@ class ListColumn extends GenericColumn
             $filterValue .= 'if (selectedOptions != \'[]\') {';
 
             // Ajout au filtre.
-            $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+            $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
             $filterValue .= '\"'.$this->criteriaFilterOperator.'\":" + selectedOptions + "';
-            $filterValue .= '},";';
+            $filterValue .= '}},";';
 
             $filterValue .= '}';
         } else {
@@ -698,10 +698,10 @@ class ListColumn extends GenericColumn
             $filterValue .= '&& ($(\'#'.$this->getFilterFormId($datagrid).'\').val() != \'\')) {';
 
             // Ajout au filtre.
-            $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+            $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
             $filterValue .= '\"'.$this->criteriaFilterOperator.'\":\"" ';
             $filterValue .= '+ $(\'#'.$this->getFilterFormId($datagrid).'\').val() + "\"';
-            $filterValue .= '},";';
+            $filterValue .= '}},";';
 
             $filterValue .= '}';
         }

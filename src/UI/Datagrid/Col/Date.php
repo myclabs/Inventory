@@ -204,7 +204,7 @@ class UI_Datagrid_Col_Date extends UI_Datagrid_Col_Generic
         $filterValue .= 'if ((valueSup != \'\') || (valueInf != \'\')) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {";';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {";';
         $filterValue .= 'if (valueSup != \'\') {';
         $filterValue .= 'filter += "\"'.$this->filterOperatorHigher.'\":\"" + valueSup + "\"";';
         $filterValue .= '}';
@@ -214,7 +214,7 @@ class UI_Datagrid_Col_Date extends UI_Datagrid_Col_Generic
         $filterValue .= 'if (valueInf != \'\') {';
         $filterValue .= 'filter += "\"'.$this->filterOperatorLower.'\":\"" + valueInf + "\"";';
         $filterValue .= '}';
-        $filterValue .= 'filter += "},";';
+        $filterValue .= 'filter += "}},";';
 
         $filterValue .= '}';
 
