@@ -54,13 +54,13 @@ class Orga_OrganizationConsistency
                             $member->getParentForAxis($broaderAxis);
                         } catch (Core_Exception_NotFound $e) {
                             $listParentsAxes[] = $this->translationHelper->toString($axis->getLabel());
-                            $listParentsMembers[] = $member->getLabel();
+                            $listParentsMembers[] = $this->translationHelper->toString($member->getLabel());
                         }
                     }
                     foreach ($broaderAxis->getOrderedMembers() as $parentMember) {
                         if (count($parentMember->getChildrenForAxis($axis)) === 0) {
                             $listChildrenAxes[] = $this->translationHelper->toString($broaderAxis->getLabel());
-                            $listChildrenMembers[] = $parentMember->getLabel();
+                            $listChildrenMembers[] = $this->translationHelper->toString($parentMember->getLabel());
                         }
                     }
                 }

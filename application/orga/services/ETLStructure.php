@@ -198,7 +198,7 @@ class Orga_Service_ETLStructure
                     } elseif (isset($originalTranslations[$this->defaultLocale])) {
                         $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
                     } else {
-                        $labelParts[] = $member->getLabel();
+                        $labelParts[] = $this->translationHelper->toString($member->getLabel());
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labelParts);

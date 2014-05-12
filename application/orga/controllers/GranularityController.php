@@ -41,7 +41,7 @@ class Orga_GranularityController extends Core_Controller
         $idOrganization = $granularity->getOrganization()->getId();
 
         $viewConfiguration = new DW_ViewConfiguration();
-        $viewConfiguration->setComplementaryPageTitle(' <small>'.$granularity->getLabel().'</small>');
+        $viewConfiguration->setComplementaryPageTitle(' <small>'.$this->translationHelper->toString($granularity->getLabel()).'</small>');
         $viewConfiguration->setOutputUrl('orga/organization/edit/idOrganization/' . $idOrganization . '/tab/reports/');
         $viewConfiguration->setSaveURL('orga/granularity/view-report/idGranularity/' . $granularity->getId());
 

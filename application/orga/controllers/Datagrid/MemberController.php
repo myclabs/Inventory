@@ -92,12 +92,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         foreach ($members as $member) {
             $data = [];
             $data['index'] = $member->getId();
-            $data['label'] = $this->cellText($member->getLabel());
+            $data['label'] = $this->cellTranslatedText($member->getLabel());
             $data['ref'] = $this->cellText($member->getRef());
             foreach ($member->getDirectParents() as $directParentMember) {
                 $data['broader'.$directParentMember->getAxis()->getRef()] = $this->cellList(
                     $directParentMember->getCompleteRef(),
-                    $directParentMember->getLabel()
+                    $this->translationHelper->toString($directParentMember->getLabel())
                 );
             }
             $this->addLine($data);
@@ -222,7 +222,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             'deleteMember',
             [$member],
             __('Orga', 'backgroundTasks', 'deleteMember', [
-                'MEMBER' => $member->getLabel(),
+                'MEMBER' => $this->translationHelper->toString($member->getLabel()),
                 'AXIS' => $this->translationHelper->toString($member->getAxis()->getLabel()),
             ])
         );
@@ -246,8 +246,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
         switch ($this->update['column']) {
             case 'label':
-                $member->setLabel($this->update['value']);
-                $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
+                $this->translationHelper->set($member->getLabel(), $this->update['value']);
+                $this->message = __('UI', 'message', 'updated', [
+                    'LABEL' => $this->translationHelper->toString($member->getLabel())
+                ]);
                 break;
             case 'ref':
                 Core_Tools::checkRef($this->update['value']);
@@ -259,7 +261,9 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     }
                 } catch (Core_Exception_NotFound $e) {
                     $member->setRef($this->update['value']);
-                    $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
+                    $this->message = __('UI', 'message', 'updated', [
+                        'LABEL' => $this->translationHelper->toString($member->getLabel())
+                    ]);
                 }
                 break;
             default:
@@ -272,7 +276,9 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 if (!empty($this->update['value'])) {
                     $parentMember = $broaderAxis->getMemberByCompleteRef($this->update['value']);
                     $member->setDirectParentForAxis($parentMember);
-                    $this->message = __('UI', 'message', 'updated', array('LABEL' => $member->getLabel()));
+                    $this->message = __('UI', 'message', 'updated', [
+                        'LABEL' => $this->translationHelper->toString($member->getLabel())
+                    ]);
                 } else {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
@@ -347,7 +353,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $query = $this->getParam('q');
         if (!empty($query)) {
             foreach ($members as $indexMember => $member) {
-                if (strpos($member->getLabel(), $query) === false) {
+                if (strpos($this->translationHelper->toString($member->getLabel()), $query) === false) {
                     unset($members[$indexMember]);
                 }
             }
@@ -356,7 +362,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         foreach ($members as $eligibleParentMember) {
             $this->addElementAutocompleteList(
                 $eligibleParentMember->getCompleteRef(),
-                $eligibleParentMember->getLabel()
+                $this->translationHelper->toString($eligibleParentMember->getLabel())
             );
         }
 

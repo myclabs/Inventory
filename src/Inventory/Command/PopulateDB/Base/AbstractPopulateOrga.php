@@ -192,7 +192,7 @@ abstract class AbstractPopulateOrga
     protected function createMember(Orga_Model_Axis $axis, $ref, $label, array $parents = [])
     {
         $member = new Orga_Model_Member($axis, $ref, $parents);
-        $member->setLabel($label);
+        $member->getLabel()->set($label, 'fr');
         $member->save();
         return $member;
     }

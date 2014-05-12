@@ -97,7 +97,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userOrganizationAdministratorRoleRemoved', [
-                    'ORGANIZATION' => $organization->getLabel()
+                    'ORGANIZATION' => $this->translationHelper->toString($organization->getLabel())
                 ])
             );
         }
@@ -129,7 +129,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userRoleAdded', [
-                    'CELL' => $cell->getExtendedLabel(),
+                    'CELL' => $this->translationHelper->toString($cell->getExtendedLabel()),
                     'ROLE' => $role->getLabel(),
                 ])
             );
@@ -150,7 +150,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userRoleRemoved', [
-                    'CELL' => $role->getCell()->getExtendedLabel(),
+                    'CELL' => $this->translationHelper->toString($role->getCell()->getExtendedLabel()),
                     'ROLE' => $role->getLabel()
                 ])
             );

@@ -4,6 +4,7 @@ namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
 use Doctrine\Common\Collections\Criteria;
+use Mnapoli\Translated\TranslationHelper;
 use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use Orga_Model_Cell;
@@ -30,10 +31,16 @@ class CellViewModelFactory
      */
     public $inputStatusList;
 
+    /**
+     * @var TranslationHelper
+     */
+    private $translationHelper;
 
-    public function __construct(ACL $acl)
+
+    public function __construct(ACL $acl, TranslationHelper $translationHelper)
     {
         $this->acl = $acl;
+        $this->translationHelper = $translationHelper;
 
         $this->inventoryStatusList = [
             Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'view', 'inventoryNotLaunched'),
@@ -79,13 +86,13 @@ class CellViewModelFactory
     ) {
         $cellViewModel = new CellViewModel();
         $cellViewModel->id = $cell->getId();
-        $cellViewModel->shortLabel = $cell->getLabel();
-        $cellViewModel->extendedLabel = $cell->getExtendedLabel();
+        $cellViewModel->shortLabel = $this->translationHelper->toString($cell->getLabel());
+        $cellViewModel->extendedLabel = $this->translationHelper->toString($cell->getExtendedLabel());
         $cellViewModel->relevant = $cell->isRelevant();
         $cellViewModel->tag = $cell->getTag();
 
         foreach ($cell->getMembers() as $member) {
-            $cellViewModel->members[$member->getAxis()->getRef()] = $member->getLabel();
+            $cellViewModel->members[$member->getAxis()->getRef()] = $this->translationHelper->toString($member->getLabel());
         }
 
         // Administrateurs.

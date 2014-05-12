@@ -266,16 +266,6 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Définit le label de l'axe.
-     *
-     * @param TranslatedString $label
-     */
-    public function setLabel(TranslatedString $label)
-    {
-        $this->label = $label;
-    }
-
-    /**
      * Renvoie le label de l'axe.
      *
      * @return TranslatedString

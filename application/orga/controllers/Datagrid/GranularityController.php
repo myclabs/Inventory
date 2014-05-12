@@ -163,7 +163,9 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             'Orga_Service_OrganizationService',
             'removeGranularity',
             [$granularity],
-            __('Orga', 'backgroundTasks', 'removeGranularity', ['LABEL' => $granularity->getLabel()])
+            __('Orga', 'backgroundTasks', 'removeGranularity', [
+                'LABEL' => $this->translationHelper->toString($granularity->getLabel())
+            ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
@@ -202,7 +204,9 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 'Orga_Service_OrganizationService',
                 'editGranularity',
                 [$granularity, [ $this->update['column'] => (bool) $this->update['value'] ]],
-                __('Orga', 'backgroundTasks', 'editGranularity', ['LABEL' => $granularity->getLabel()])
+                __('Orga', 'backgroundTasks', 'editGranularity', [
+                    'LABEL' => $this->translationHelper->toString($granularity->getLabel())
+                ])
             );
             $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         } else {

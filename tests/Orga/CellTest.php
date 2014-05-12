@@ -311,39 +311,39 @@ class Orga_Test_CellAttributes extends TestCase
         $this->axis2->getLabel()->set('Label 2', 'fr');
 
         $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
-        $this->member111a->setLabel('Label 111 A');
+        $this->member111a->getLabel()->set('Label 111 A', 'fr');
         $this->member111b = new Orga_Model_Member($this->axis111, 'ref111_b');
-        $this->member111b->setLabel('Label 111 B');
+        $this->member111b->getLabel()->set('Label 111 B', 'fr');
 
         $this->member11a = new Orga_Model_Member($this->axis11, 'ref11_a', [$this->member111a]);
-        $this->member11a->setLabel('Label 11 A');
+        $this->member11a->getLabel()->set('Label 11 A', 'fr');
         $this->member11b = new Orga_Model_Member($this->axis11, 'ref11_b', [$this->member111b]);
-        $this->member11b->setLabel('Label 11 B');
+        $this->member11b->getLabel()->set('Label 11 B', 'fr');
         $this->member11c = new Orga_Model_Member($this->axis11, 'ref11_c', [$this->member111b]);
-        $this->member11c->setLabel('Label 11 C');
+        $this->member11c->getLabel()->set('Label 11 C', 'fr');
 
         $this->member12a = new Orga_Model_Member($this->axis12, 'ref12_a');
-        $this->member12a->setLabel('Label 12 A');
+        $this->member12a->getLabel()->set('Label 12 A', 'fr');
         $this->member12b = new Orga_Model_Member($this->axis12, 'ref12_b');
-        $this->member12b->setLabel('Label 12 B');
+        $this->member12b->getLabel()->set('Label 12 B', 'fr');
 
         $this->member1a = new Orga_Model_Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
-        $this->member1a->setLabel('Label 1 A');
+        $this->member1a->getLabel()->set('Label 1 A', 'fr');
         $this->member1b = new Orga_Model_Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
-        $this->member1b->setLabel('Label 1 B');
+        $this->member1b->getLabel()->set('Label 1 B', 'fr');
         $this->member1c = new Orga_Model_Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
-        $this->member1c->setLabel('Label 1 C');
+        $this->member1c->getLabel()->set('Label 1 C', 'fr');
         $this->member1d = new Orga_Model_Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
-        $this->member1d->setLabel('Label 1 D');
+        $this->member1d->getLabel()->set('Label 1 D', 'fr');
         $this->member1e = new Orga_Model_Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
-        $this->member1e->setLabel('Label 1 E');
+        $this->member1e->getLabel()->set('Label 1 E', 'fr');
         $this->member1f = new Orga_Model_Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
-        $this->member1f->setLabel('Label 1 F');
+        $this->member1f->getLabel()->set('Label 1 F', 'fr');
 
         $this->member2a = new Orga_Model_Member($this->axis2, 'ref2_a');
-        $this->member2a->setLabel('Label 2 A');
+        $this->member2a->getLabel()->set('Label 2 A', 'fr');
         $this->member2b = new Orga_Model_Member($this->axis2, 'ref2_b');
-        $this->member2b->setLabel('Label 2 B');
+        $this->member2b->getLabel()->set('Label 2 B', 'fr');
 
         $this->granularity0 = new Orga_Model_Granularity($this->organization, []);
         $this->granularity0->setCellsControlRelevance(true);
@@ -400,223 +400,223 @@ class Orga_Test_CellAttributes extends TestCase
         $this->cell5_2b = $this->granularity5->getCellByMembers([$this->member2b]);
     }
 
-    function testGetLabel()
+    public function testGetLabel()
     {
-        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCell'), $this->cell0_0->getLabel());
+        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCell'), $this->cell0_0->getLabel()->get('fr'));
 
-        $this->assertSame('Label 111 A', $this->cell1_111a->getLabel());
-        $this->assertSame('Label 111 B', $this->cell1_111b->getLabel());
+        $this->assertSame('Label 111 A', $this->cell1_111a->getLabel()->get('fr'));
+        $this->assertSame('Label 111 B', $this->cell1_111b->getLabel()->get('fr'));
 
-        $this->assertSame('Label 11 A | Label 12 A', $this->cell2_11a12a->getLabel());
-        $this->assertSame('Label 11 B | Label 12 A', $this->cell2_11b12a->getLabel());
-        $this->assertSame('Label 11 C | Label 12 A', $this->cell2_11c12a->getLabel());
-        $this->assertSame('Label 11 A | Label 12 B', $this->cell2_11a12b->getLabel());
-        $this->assertSame('Label 11 B | Label 12 B', $this->cell2_11b12b->getLabel());
-        $this->assertSame('Label 11 C | Label 12 B', $this->cell2_11c12b->getLabel());
+        $this->assertSame('Label 11 A | Label 12 A', $this->cell2_11a12a->getLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 A', $this->cell2_11b12a->getLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 A', $this->cell2_11c12a->getLabel()->get('fr'));
+        $this->assertSame('Label 11 A | Label 12 B', $this->cell2_11a12b->getLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 B', $this->cell2_11b12b->getLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 B', $this->cell2_11c12b->getLabel()->get('fr'));
 
-        $this->assertSame('Label 11 A | Label 12 A | Label 2 A', $this->cell3_11a12a2a->getLabel());
-        $this->assertSame('Label 11 B | Label 12 A | Label 2 A', $this->cell3_11b12a2a->getLabel());
-        $this->assertSame('Label 11 C | Label 12 A | Label 2 A', $this->cell3_11c12a2a->getLabel());
-        $this->assertSame('Label 11 A | Label 12 B | Label 2 A', $this->cell3_11a12b2a->getLabel());
-        $this->assertSame('Label 11 B | Label 12 B | Label 2 A', $this->cell3_11b12b2a->getLabel());
-        $this->assertSame('Label 11 C | Label 12 B | Label 2 A', $this->cell3_11c12b2a->getLabel());
-        $this->assertSame('Label 11 A | Label 12 A | Label 2 B', $this->cell3_11a12a2b->getLabel());
-        $this->assertSame('Label 11 B | Label 12 A | Label 2 B', $this->cell3_11b12a2b->getLabel());
-        $this->assertSame('Label 11 C | Label 12 A | Label 2 B', $this->cell3_11c12a2b->getLabel());
-        $this->assertSame('Label 11 A | Label 12 B | Label 2 B', $this->cell3_11a12b2b->getLabel());
-        $this->assertSame('Label 11 B | Label 12 B | Label 2 B', $this->cell3_11b12b2b->getLabel());
-        $this->assertSame('Label 11 C | Label 12 B | Label 2 B', $this->cell3_11c12b2b->getLabel());
+        $this->assertSame('Label 11 A | Label 12 A | Label 2 A', $this->cell3_11a12a2a->getLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 A | Label 2 A', $this->cell3_11b12a2a->getLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 A | Label 2 A', $this->cell3_11c12a2a->getLabel()->get('fr'));
+        $this->assertSame('Label 11 A | Label 12 B | Label 2 A', $this->cell3_11a12b2a->getLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 B | Label 2 A', $this->cell3_11b12b2a->getLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 B | Label 2 A', $this->cell3_11c12b2a->getLabel()->get('fr'));
+        $this->assertSame('Label 11 A | Label 12 A | Label 2 B', $this->cell3_11a12a2b->getLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 A | Label 2 B', $this->cell3_11b12a2b->getLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 A | Label 2 B', $this->cell3_11c12a2b->getLabel()->get('fr'));
+        $this->assertSame('Label 11 A | Label 12 B | Label 2 B', $this->cell3_11a12b2b->getLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 B | Label 2 B', $this->cell3_11b12b2b->getLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 B | Label 2 B', $this->cell3_11c12b2b->getLabel()->get('fr'));
 
-        $this->assertSame('Label 1 A | Label 2 A', $this->cell4_1a2a->getLabel());
-        $this->assertSame('Label 1 B | Label 2 A', $this->cell4_1b2a->getLabel());
-        $this->assertSame('Label 1 C | Label 2 A', $this->cell4_1c2a->getLabel());
-        $this->assertSame('Label 1 D | Label 2 A', $this->cell4_1d2a->getLabel());
-        $this->assertSame('Label 1 E | Label 2 A', $this->cell4_1e2a->getLabel());
-        $this->assertSame('Label 1 F | Label 2 A', $this->cell4_1f2a->getLabel());
-        $this->assertSame('Label 1 A | Label 2 B', $this->cell4_1a2b->getLabel());
-        $this->assertSame('Label 1 B | Label 2 B', $this->cell4_1b2b->getLabel());
-        $this->assertSame('Label 1 C | Label 2 B', $this->cell4_1c2b->getLabel());
-        $this->assertSame('Label 1 D | Label 2 B', $this->cell4_1d2b->getLabel());
-        $this->assertSame('Label 1 E | Label 2 B', $this->cell4_1e2b->getLabel());
-        $this->assertSame('Label 1 F | Label 2 B', $this->cell4_1f2b->getLabel());
+        $this->assertSame('Label 1 A | Label 2 A', $this->cell4_1a2a->getLabel()->get('fr'));
+        $this->assertSame('Label 1 B | Label 2 A', $this->cell4_1b2a->getLabel()->get('fr'));
+        $this->assertSame('Label 1 C | Label 2 A', $this->cell4_1c2a->getLabel()->get('fr'));
+        $this->assertSame('Label 1 D | Label 2 A', $this->cell4_1d2a->getLabel()->get('fr'));
+        $this->assertSame('Label 1 E | Label 2 A', $this->cell4_1e2a->getLabel()->get('fr'));
+        $this->assertSame('Label 1 F | Label 2 A', $this->cell4_1f2a->getLabel()->get('fr'));
+        $this->assertSame('Label 1 A | Label 2 B', $this->cell4_1a2b->getLabel()->get('fr'));
+        $this->assertSame('Label 1 B | Label 2 B', $this->cell4_1b2b->getLabel()->get('fr'));
+        $this->assertSame('Label 1 C | Label 2 B', $this->cell4_1c2b->getLabel()->get('fr'));
+        $this->assertSame('Label 1 D | Label 2 B', $this->cell4_1d2b->getLabel()->get('fr'));
+        $this->assertSame('Label 1 E | Label 2 B', $this->cell4_1e2b->getLabel()->get('fr'));
+        $this->assertSame('Label 1 F | Label 2 B', $this->cell4_1f2b->getLabel()->get('fr'));
 
-        $this->assertSame('Label 2 A', $this->cell5_2a->getLabel());
-        $this->assertSame('Label 2 B', $this->cell5_2b->getLabel());
+        $this->assertSame('Label 2 A', $this->cell5_2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B', $this->cell5_2b->getLabel()->get('fr'));
 
         $this->axis2->setPosition(1);
         $this->axis12->setPosition(1);
 
-        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCell'), $this->cell0_0->getLabel());
+        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCell'), $this->cell0_0->getLabel()->get('fr'));
 
-        $this->assertSame('Label 111 A', $this->cell1_111a->getLabel());
-        $this->assertSame('Label 111 B', $this->cell1_111b->getLabel());
+        $this->assertSame('Label 111 A', $this->cell1_111a->getLabel()->get('fr'));
+        $this->assertSame('Label 111 B', $this->cell1_111b->getLabel()->get('fr'));
 
-        $this->assertSame('Label 12 A | Label 11 A', $this->cell2_11a12a->getLabel());
-        $this->assertSame('Label 12 A | Label 11 B', $this->cell2_11b12a->getLabel());
-        $this->assertSame('Label 12 A | Label 11 C', $this->cell2_11c12a->getLabel());
-        $this->assertSame('Label 12 B | Label 11 A', $this->cell2_11a12b->getLabel());
-        $this->assertSame('Label 12 B | Label 11 B', $this->cell2_11b12b->getLabel());
-        $this->assertSame('Label 12 B | Label 11 C', $this->cell2_11c12b->getLabel());
+        $this->assertSame('Label 12 A | Label 11 A', $this->cell2_11a12a->getLabel()->get('fr'));
+        $this->assertSame('Label 12 A | Label 11 B', $this->cell2_11b12a->getLabel()->get('fr'));
+        $this->assertSame('Label 12 A | Label 11 C', $this->cell2_11c12a->getLabel()->get('fr'));
+        $this->assertSame('Label 12 B | Label 11 A', $this->cell2_11a12b->getLabel()->get('fr'));
+        $this->assertSame('Label 12 B | Label 11 B', $this->cell2_11b12b->getLabel()->get('fr'));
+        $this->assertSame('Label 12 B | Label 11 C', $this->cell2_11c12b->getLabel()->get('fr'));
 
-        $this->assertSame('Label 2 A | Label 12 A | Label 11 A', $this->cell3_11a12a2a->getLabel());
-        $this->assertSame('Label 2 A | Label 12 A | Label 11 B', $this->cell3_11b12a2a->getLabel());
-        $this->assertSame('Label 2 A | Label 12 A | Label 11 C', $this->cell3_11c12a2a->getLabel());
-        $this->assertSame('Label 2 A | Label 12 B | Label 11 A', $this->cell3_11a12b2a->getLabel());
-        $this->assertSame('Label 2 A | Label 12 B | Label 11 B', $this->cell3_11b12b2a->getLabel());
-        $this->assertSame('Label 2 A | Label 12 B | Label 11 C', $this->cell3_11c12b2a->getLabel());
-        $this->assertSame('Label 2 B | Label 12 A | Label 11 A', $this->cell3_11a12a2b->getLabel());
-        $this->assertSame('Label 2 B | Label 12 A | Label 11 B', $this->cell3_11b12a2b->getLabel());
-        $this->assertSame('Label 2 B | Label 12 A | Label 11 C', $this->cell3_11c12a2b->getLabel());
-        $this->assertSame('Label 2 B | Label 12 B | Label 11 A', $this->cell3_11a12b2b->getLabel());
-        $this->assertSame('Label 2 B | Label 12 B | Label 11 B', $this->cell3_11b12b2b->getLabel());
-        $this->assertSame('Label 2 B | Label 12 B | Label 11 C', $this->cell3_11c12b2b->getLabel());
+        $this->assertSame('Label 2 A | Label 12 A | Label 11 A', $this->cell3_11a12a2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 12 A | Label 11 B', $this->cell3_11b12a2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 12 A | Label 11 C', $this->cell3_11c12a2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 12 B | Label 11 A', $this->cell3_11a12b2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 12 B | Label 11 B', $this->cell3_11b12b2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 12 B | Label 11 C', $this->cell3_11c12b2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 A | Label 11 A', $this->cell3_11a12a2b->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 A | Label 11 B', $this->cell3_11b12a2b->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 A | Label 11 C', $this->cell3_11c12a2b->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 B | Label 11 A', $this->cell3_11a12b2b->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 B | Label 11 B', $this->cell3_11b12b2b->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 B | Label 11 C', $this->cell3_11c12b2b->getLabel()->get('fr'));
 
-        $this->assertSame('Label 2 A | Label 1 A', $this->cell4_1a2a->getLabel());
-        $this->assertSame('Label 2 A | Label 1 B', $this->cell4_1b2a->getLabel());
-        $this->assertSame('Label 2 A | Label 1 C', $this->cell4_1c2a->getLabel());
-        $this->assertSame('Label 2 A | Label 1 D', $this->cell4_1d2a->getLabel());
-        $this->assertSame('Label 2 A | Label 1 E', $this->cell4_1e2a->getLabel());
-        $this->assertSame('Label 2 A | Label 1 F', $this->cell4_1f2a->getLabel());
-        $this->assertSame('Label 2 B | Label 1 A', $this->cell4_1a2b->getLabel());
-        $this->assertSame('Label 2 B | Label 1 B', $this->cell4_1b2b->getLabel());
-        $this->assertSame('Label 2 B | Label 1 C', $this->cell4_1c2b->getLabel());
-        $this->assertSame('Label 2 B | Label 1 D', $this->cell4_1d2b->getLabel());
-        $this->assertSame('Label 2 B | Label 1 E', $this->cell4_1e2b->getLabel());
-        $this->assertSame('Label 2 B | Label 1 F', $this->cell4_1f2b->getLabel());
+        $this->assertSame('Label 2 A | Label 1 A', $this->cell4_1a2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 1 B', $this->cell4_1b2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 1 C', $this->cell4_1c2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 1 D', $this->cell4_1d2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 1 E', $this->cell4_1e2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 1 F', $this->cell4_1f2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 A', $this->cell4_1a2b->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 B', $this->cell4_1b2b->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 C', $this->cell4_1c2b->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 D', $this->cell4_1d2b->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 E', $this->cell4_1e2b->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 F', $this->cell4_1f2b->getLabel()->get('fr'));
 
-        $this->assertSame('Label 2 A', $this->cell5_2a->getLabel());
-        $this->assertSame('Label 2 B', $this->cell5_2b->getLabel());
+        $this->assertSame('Label 2 A', $this->cell5_2a->getLabel()->get('fr'));
+        $this->assertSame('Label 2 B', $this->cell5_2b->getLabel()->get('fr'));
     }
 
     function testGetExtendedLabel()
     {
-        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCellExtended'), $this->cell0_0->getExtendedLabel());
+        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCellExtended'), $this->cell0_0->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 111 A', $this->cell1_111a->getExtendedLabel());
-        $this->assertSame('Label 111 B', $this->cell1_111b->getExtendedLabel());
+        $this->assertSame('Label 111 A', $this->cell1_111a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 111 B', $this->cell1_111b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 11 A | Label 12 A', $this->cell2_11a12a->getExtendedLabel());
-        $this->assertSame('Label 11 B | Label 12 A', $this->cell2_11b12a->getExtendedLabel());
-        $this->assertSame('Label 11 C | Label 12 A', $this->cell2_11c12a->getExtendedLabel());
-        $this->assertSame('Label 11 A | Label 12 B', $this->cell2_11a12b->getExtendedLabel());
-        $this->assertSame('Label 11 B | Label 12 B', $this->cell2_11b12b->getExtendedLabel());
-        $this->assertSame('Label 11 C | Label 12 B', $this->cell2_11c12b->getExtendedLabel());
+        $this->assertSame('Label 11 A | Label 12 A', $this->cell2_11a12a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 A', $this->cell2_11b12a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 A', $this->cell2_11c12a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 A | Label 12 B', $this->cell2_11a12b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 B', $this->cell2_11b12b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 B', $this->cell2_11c12b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 11 A | Label 12 A | Label 2 A', $this->cell3_11a12a2a->getExtendedLabel());
-        $this->assertSame('Label 11 B | Label 12 A | Label 2 A', $this->cell3_11b12a2a->getExtendedLabel());
-        $this->assertSame('Label 11 C | Label 12 A | Label 2 A', $this->cell3_11c12a2a->getExtendedLabel());
-        $this->assertSame('Label 11 A | Label 12 B | Label 2 A', $this->cell3_11a12b2a->getExtendedLabel());
-        $this->assertSame('Label 11 B | Label 12 B | Label 2 A', $this->cell3_11b12b2a->getExtendedLabel());
-        $this->assertSame('Label 11 C | Label 12 B | Label 2 A', $this->cell3_11c12b2a->getExtendedLabel());
-        $this->assertSame('Label 11 A | Label 12 A | Label 2 B', $this->cell3_11a12a2b->getExtendedLabel());
-        $this->assertSame('Label 11 B | Label 12 A | Label 2 B', $this->cell3_11b12a2b->getExtendedLabel());
-        $this->assertSame('Label 11 C | Label 12 A | Label 2 B', $this->cell3_11c12a2b->getExtendedLabel());
-        $this->assertSame('Label 11 A | Label 12 B | Label 2 B', $this->cell3_11a12b2b->getExtendedLabel());
-        $this->assertSame('Label 11 B | Label 12 B | Label 2 B', $this->cell3_11b12b2b->getExtendedLabel());
-        $this->assertSame('Label 11 C | Label 12 B | Label 2 B', $this->cell3_11c12b2b->getExtendedLabel());
+        $this->assertSame('Label 11 A | Label 12 A | Label 2 A', $this->cell3_11a12a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 A | Label 2 A', $this->cell3_11b12a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 A | Label 2 A', $this->cell3_11c12a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 A | Label 12 B | Label 2 A', $this->cell3_11a12b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 B | Label 2 A', $this->cell3_11b12b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 B | Label 2 A', $this->cell3_11c12b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 A | Label 12 A | Label 2 B', $this->cell3_11a12a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 A | Label 2 B', $this->cell3_11b12a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 A | Label 2 B', $this->cell3_11c12a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 A | Label 12 B | Label 2 B', $this->cell3_11a12b2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B | Label 12 B | Label 2 B', $this->cell3_11b12b2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C | Label 12 B | Label 2 B', $this->cell3_11c12b2b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 1 A | Label 2 A', $this->cell4_1a2a->getExtendedLabel());
-        $this->assertSame('Label 1 B | Label 2 A', $this->cell4_1b2a->getExtendedLabel());
-        $this->assertSame('Label 1 C | Label 2 A', $this->cell4_1c2a->getExtendedLabel());
-        $this->assertSame('Label 1 D | Label 2 A', $this->cell4_1d2a->getExtendedLabel());
-        $this->assertSame('Label 1 E | Label 2 A', $this->cell4_1e2a->getExtendedLabel());
-        $this->assertSame('Label 1 F | Label 2 A', $this->cell4_1f2a->getExtendedLabel());
-        $this->assertSame('Label 1 A | Label 2 B', $this->cell4_1a2b->getExtendedLabel());
-        $this->assertSame('Label 1 B | Label 2 B', $this->cell4_1b2b->getExtendedLabel());
-        $this->assertSame('Label 1 C | Label 2 B', $this->cell4_1c2b->getExtendedLabel());
-        $this->assertSame('Label 1 D | Label 2 B', $this->cell4_1d2b->getExtendedLabel());
-        $this->assertSame('Label 1 E | Label 2 B', $this->cell4_1e2b->getExtendedLabel());
-        $this->assertSame('Label 1 F | Label 2 B', $this->cell4_1f2b->getExtendedLabel());
+        $this->assertSame('Label 1 A | Label 2 A', $this->cell4_1a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 B | Label 2 A', $this->cell4_1b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 C | Label 2 A', $this->cell4_1c2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 D | Label 2 A', $this->cell4_1d2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 E | Label 2 A', $this->cell4_1e2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 F | Label 2 A', $this->cell4_1f2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 A | Label 2 B', $this->cell4_1a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 B | Label 2 B', $this->cell4_1b2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 C | Label 2 B', $this->cell4_1c2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 D | Label 2 B', $this->cell4_1d2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 E | Label 2 B', $this->cell4_1e2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 F | Label 2 B', $this->cell4_1f2b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 2 A', $this->cell5_2a->getExtendedLabel());
-        $this->assertSame('Label 2 B', $this->cell5_2b->getExtendedLabel());
+        $this->assertSame('Label 2 A', $this->cell5_2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B', $this->cell5_2b->getExtendedLabel()->get('fr'));
 
         $this->axis111->setContextualize(true);
 
-        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCellExtended'), $this->cell0_0->getExtendedLabel());
+        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCellExtended'), $this->cell0_0->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 111 A', $this->cell1_111a->getExtendedLabel());
-        $this->assertSame('Label 111 B', $this->cell1_111b->getExtendedLabel());
+        $this->assertSame('Label 111 A', $this->cell1_111a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 111 B', $this->cell1_111b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 11 A (Label 111 A) | Label 12 A', $this->cell2_11a12a->getExtendedLabel());
-        $this->assertSame('Label 11 B (Label 111 B) | Label 12 A', $this->cell2_11b12a->getExtendedLabel());
-        $this->assertSame('Label 11 C (Label 111 B) | Label 12 A', $this->cell2_11c12a->getExtendedLabel());
-        $this->assertSame('Label 11 A (Label 111 A) | Label 12 B', $this->cell2_11a12b->getExtendedLabel());
-        $this->assertSame('Label 11 B (Label 111 B) | Label 12 B', $this->cell2_11b12b->getExtendedLabel());
-        $this->assertSame('Label 11 C (Label 111 B) | Label 12 B', $this->cell2_11c12b->getExtendedLabel());
+        $this->assertSame('Label 11 A (Label 111 A) | Label 12 A', $this->cell2_11a12a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B (Label 111 B) | Label 12 A', $this->cell2_11b12a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C (Label 111 B) | Label 12 A', $this->cell2_11c12a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 A (Label 111 A) | Label 12 B', $this->cell2_11a12b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B (Label 111 B) | Label 12 B', $this->cell2_11b12b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C (Label 111 B) | Label 12 B', $this->cell2_11c12b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 11 A (Label 111 A) | Label 12 A | Label 2 A', $this->cell3_11a12a2a->getExtendedLabel());
-        $this->assertSame('Label 11 B (Label 111 B) | Label 12 A | Label 2 A', $this->cell3_11b12a2a->getExtendedLabel());
-        $this->assertSame('Label 11 C (Label 111 B) | Label 12 A | Label 2 A', $this->cell3_11c12a2a->getExtendedLabel());
-        $this->assertSame('Label 11 A (Label 111 A) | Label 12 B | Label 2 A', $this->cell3_11a12b2a->getExtendedLabel());
-        $this->assertSame('Label 11 B (Label 111 B) | Label 12 B | Label 2 A', $this->cell3_11b12b2a->getExtendedLabel());
-        $this->assertSame('Label 11 C (Label 111 B) | Label 12 B | Label 2 A', $this->cell3_11c12b2a->getExtendedLabel());
-        $this->assertSame('Label 11 A (Label 111 A) | Label 12 A | Label 2 B', $this->cell3_11a12a2b->getExtendedLabel());
-        $this->assertSame('Label 11 B (Label 111 B) | Label 12 A | Label 2 B', $this->cell3_11b12a2b->getExtendedLabel());
-        $this->assertSame('Label 11 C (Label 111 B) | Label 12 A | Label 2 B', $this->cell3_11c12a2b->getExtendedLabel());
-        $this->assertSame('Label 11 A (Label 111 A) | Label 12 B | Label 2 B', $this->cell3_11a12b2b->getExtendedLabel());
-        $this->assertSame('Label 11 B (Label 111 B) | Label 12 B | Label 2 B', $this->cell3_11b12b2b->getExtendedLabel());
-        $this->assertSame('Label 11 C (Label 111 B) | Label 12 B | Label 2 B', $this->cell3_11c12b2b->getExtendedLabel());
+        $this->assertSame('Label 11 A (Label 111 A) | Label 12 A | Label 2 A', $this->cell3_11a12a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B (Label 111 B) | Label 12 A | Label 2 A', $this->cell3_11b12a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C (Label 111 B) | Label 12 A | Label 2 A', $this->cell3_11c12a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 A (Label 111 A) | Label 12 B | Label 2 A', $this->cell3_11a12b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B (Label 111 B) | Label 12 B | Label 2 A', $this->cell3_11b12b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C (Label 111 B) | Label 12 B | Label 2 A', $this->cell3_11c12b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 A (Label 111 A) | Label 12 A | Label 2 B', $this->cell3_11a12a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B (Label 111 B) | Label 12 A | Label 2 B', $this->cell3_11b12a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C (Label 111 B) | Label 12 A | Label 2 B', $this->cell3_11c12a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 A (Label 111 A) | Label 12 B | Label 2 B', $this->cell3_11a12b2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 B (Label 111 B) | Label 12 B | Label 2 B', $this->cell3_11b12b2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 11 C (Label 111 B) | Label 12 B | Label 2 B', $this->cell3_11c12b2b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 1 A (Label 111 A) | Label 2 A', $this->cell4_1a2a->getExtendedLabel());
-        $this->assertSame('Label 1 B (Label 111 A) | Label 2 A', $this->cell4_1b2a->getExtendedLabel());
-        $this->assertSame('Label 1 C (Label 111 B) | Label 2 A', $this->cell4_1c2a->getExtendedLabel());
-        $this->assertSame('Label 1 D (Label 111 B) | Label 2 A', $this->cell4_1d2a->getExtendedLabel());
-        $this->assertSame('Label 1 E (Label 111 B) | Label 2 A', $this->cell4_1e2a->getExtendedLabel());
-        $this->assertSame('Label 1 F (Label 111 B) | Label 2 A', $this->cell4_1f2a->getExtendedLabel());
-        $this->assertSame('Label 1 A (Label 111 A) | Label 2 B', $this->cell4_1a2b->getExtendedLabel());
-        $this->assertSame('Label 1 B (Label 111 A) | Label 2 B', $this->cell4_1b2b->getExtendedLabel());
-        $this->assertSame('Label 1 C (Label 111 B) | Label 2 B', $this->cell4_1c2b->getExtendedLabel());
-        $this->assertSame('Label 1 D (Label 111 B) | Label 2 B', $this->cell4_1d2b->getExtendedLabel());
-        $this->assertSame('Label 1 E (Label 111 B) | Label 2 B', $this->cell4_1e2b->getExtendedLabel());
-        $this->assertSame('Label 1 F (Label 111 B) | Label 2 B', $this->cell4_1f2b->getExtendedLabel());
+        $this->assertSame('Label 1 A (Label 111 A) | Label 2 A', $this->cell4_1a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 B (Label 111 A) | Label 2 A', $this->cell4_1b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 C (Label 111 B) | Label 2 A', $this->cell4_1c2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 D (Label 111 B) | Label 2 A', $this->cell4_1d2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 E (Label 111 B) | Label 2 A', $this->cell4_1e2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 F (Label 111 B) | Label 2 A', $this->cell4_1f2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 A (Label 111 A) | Label 2 B', $this->cell4_1a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 B (Label 111 A) | Label 2 B', $this->cell4_1b2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 C (Label 111 B) | Label 2 B', $this->cell4_1c2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 D (Label 111 B) | Label 2 B', $this->cell4_1d2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 E (Label 111 B) | Label 2 B', $this->cell4_1e2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 1 F (Label 111 B) | Label 2 B', $this->cell4_1f2b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 2 A', $this->cell5_2a->getExtendedLabel());
-        $this->assertSame('Label 2 B', $this->cell5_2b->getExtendedLabel());
+        $this->assertSame('Label 2 A', $this->cell5_2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B', $this->cell5_2b->getExtendedLabel()->get('fr'));
 
         $this->axis2->setPosition(1);
         $this->axis12->setPosition(1);
 
-        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCellExtended'), $this->cell0_0->getExtendedLabel());
+        $this->assertSame(__('Orga', 'navigation', 'labelGlobalCellExtended'), $this->cell0_0->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 111 A', $this->cell1_111a->getExtendedLabel());
-        $this->assertSame('Label 111 B', $this->cell1_111b->getExtendedLabel());
+        $this->assertSame('Label 111 A', $this->cell1_111a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 111 B', $this->cell1_111b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 12 A | Label 11 A (Label 111 A)', $this->cell2_11a12a->getExtendedLabel());
-        $this->assertSame('Label 12 A | Label 11 B (Label 111 B)', $this->cell2_11b12a->getExtendedLabel());
-        $this->assertSame('Label 12 A | Label 11 C (Label 111 B)', $this->cell2_11c12a->getExtendedLabel());
-        $this->assertSame('Label 12 B | Label 11 A (Label 111 A)', $this->cell2_11a12b->getExtendedLabel());
-        $this->assertSame('Label 12 B | Label 11 B (Label 111 B)', $this->cell2_11b12b->getExtendedLabel());
-        $this->assertSame('Label 12 B | Label 11 C (Label 111 B)', $this->cell2_11c12b->getExtendedLabel());
+        $this->assertSame('Label 12 A | Label 11 A (Label 111 A)', $this->cell2_11a12a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 12 A | Label 11 B (Label 111 B)', $this->cell2_11b12a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 12 A | Label 11 C (Label 111 B)', $this->cell2_11c12a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 12 B | Label 11 A (Label 111 A)', $this->cell2_11a12b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 12 B | Label 11 B (Label 111 B)', $this->cell2_11b12b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 12 B | Label 11 C (Label 111 B)', $this->cell2_11c12b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 2 A | Label 12 A | Label 11 A (Label 111 A)', $this->cell3_11a12a2a->getExtendedLabel());
-        $this->assertSame('Label 2 A | Label 12 A | Label 11 B (Label 111 B)', $this->cell3_11b12a2a->getExtendedLabel());
-        $this->assertSame('Label 2 A | Label 12 A | Label 11 C (Label 111 B)', $this->cell3_11c12a2a->getExtendedLabel());
-        $this->assertSame('Label 2 A | Label 12 B | Label 11 A (Label 111 A)', $this->cell3_11a12b2a->getExtendedLabel());
-        $this->assertSame('Label 2 A | Label 12 B | Label 11 B (Label 111 B)', $this->cell3_11b12b2a->getExtendedLabel());
-        $this->assertSame('Label 2 A | Label 12 B | Label 11 C (Label 111 B)', $this->cell3_11c12b2a->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 12 A | Label 11 A (Label 111 A)', $this->cell3_11a12a2b->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 12 A | Label 11 B (Label 111 B)', $this->cell3_11b12a2b->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 12 A | Label 11 C (Label 111 B)', $this->cell3_11c12a2b->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 12 B | Label 11 A (Label 111 A)', $this->cell3_11a12b2b->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 12 B | Label 11 B (Label 111 B)', $this->cell3_11b12b2b->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 12 B | Label 11 C (Label 111 B)', $this->cell3_11c12b2b->getExtendedLabel());
+        $this->assertSame('Label 2 A | Label 12 A | Label 11 A (Label 111 A)', $this->cell3_11a12a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 12 A | Label 11 B (Label 111 B)', $this->cell3_11b12a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 12 A | Label 11 C (Label 111 B)', $this->cell3_11c12a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 12 B | Label 11 A (Label 111 A)', $this->cell3_11a12b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 12 B | Label 11 B (Label 111 B)', $this->cell3_11b12b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 12 B | Label 11 C (Label 111 B)', $this->cell3_11c12b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 A | Label 11 A (Label 111 A)', $this->cell3_11a12a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 A | Label 11 B (Label 111 B)', $this->cell3_11b12a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 A | Label 11 C (Label 111 B)', $this->cell3_11c12a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 B | Label 11 A (Label 111 A)', $this->cell3_11a12b2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 B | Label 11 B (Label 111 B)', $this->cell3_11b12b2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 12 B | Label 11 C (Label 111 B)', $this->cell3_11c12b2b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 2 A | Label 1 A (Label 111 A)', $this->cell4_1a2a->getExtendedLabel());
-        $this->assertSame('Label 2 A | Label 1 B (Label 111 A)', $this->cell4_1b2a->getExtendedLabel());
-        $this->assertSame('Label 2 A | Label 1 C (Label 111 B)', $this->cell4_1c2a->getExtendedLabel());
-        $this->assertSame('Label 2 A | Label 1 D (Label 111 B)', $this->cell4_1d2a->getExtendedLabel());
-        $this->assertSame('Label 2 A | Label 1 E (Label 111 B)', $this->cell4_1e2a->getExtendedLabel());
-        $this->assertSame('Label 2 A | Label 1 F (Label 111 B)', $this->cell4_1f2a->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 1 A (Label 111 A)', $this->cell4_1a2b->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 1 B (Label 111 A)', $this->cell4_1b2b->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 1 C (Label 111 B)', $this->cell4_1c2b->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 1 D (Label 111 B)', $this->cell4_1d2b->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 1 E (Label 111 B)', $this->cell4_1e2b->getExtendedLabel());
-        $this->assertSame('Label 2 B | Label 1 F (Label 111 B)', $this->cell4_1f2b->getExtendedLabel());
+        $this->assertSame('Label 2 A | Label 1 A (Label 111 A)', $this->cell4_1a2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 1 B (Label 111 A)', $this->cell4_1b2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 1 C (Label 111 B)', $this->cell4_1c2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 1 D (Label 111 B)', $this->cell4_1d2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 1 E (Label 111 B)', $this->cell4_1e2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 A | Label 1 F (Label 111 B)', $this->cell4_1f2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 A (Label 111 A)', $this->cell4_1a2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 B (Label 111 A)', $this->cell4_1b2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 C (Label 111 B)', $this->cell4_1c2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 D (Label 111 B)', $this->cell4_1d2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 E (Label 111 B)', $this->cell4_1e2b->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B | Label 1 F (Label 111 B)', $this->cell4_1f2b->getExtendedLabel()->get('fr'));
 
-        $this->assertSame('Label 2 A', $this->cell5_2a->getExtendedLabel());
-        $this->assertSame('Label 2 B', $this->cell5_2b->getExtendedLabel());
+        $this->assertSame('Label 2 A', $this->cell5_2a->getExtendedLabel()->get('fr'));
+        $this->assertSame('Label 2 B', $this->cell5_2b->getExtendedLabel()->get('fr'));
     }
 
     function testIsRelevant()
@@ -1303,39 +1303,24 @@ class Orga_Test_CellHierarchy extends TestCase
         $this->axis2->getLabel()->set('Label 2', 'fr');
 
         $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
-        $this->member111a->setLabel('Label 111 A');
         $this->member111b = new Orga_Model_Member($this->axis111, 'ref111_b');
-        $this->member111b->setLabel('Label 111 B');
 
         $this->member11a = new Orga_Model_Member($this->axis11, 'ref11_a', [$this->member111a]);
-        $this->member11a->setLabel('Label 11 A');
         $this->member11b = new Orga_Model_Member($this->axis11, 'ref11_b', [$this->member111b]);
-        $this->member11b->setLabel('Label 11 B');
         $this->member11c = new Orga_Model_Member($this->axis11, 'ref11_c', [$this->member111b]);
-        $this->member11c->setLabel('Label 11 C');
 
         $this->member12a = new Orga_Model_Member($this->axis12, 'ref12_a');
-        $this->member12a->setLabel('Label 12 A');
         $this->member12b = new Orga_Model_Member($this->axis12, 'ref12_b');
-        $this->member12b->setLabel('Label 12 B');
 
         $this->member1a = new Orga_Model_Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
-        $this->member1a->setLabel('Label 1 A');
         $this->member1b = new Orga_Model_Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
-        $this->member1b->setLabel('Label 1 B');
         $this->member1c = new Orga_Model_Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
-        $this->member1c->setLabel('Label 1 C');
         $this->member1d = new Orga_Model_Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
-        $this->member1d->setLabel('Label 1 D');
         $this->member1e = new Orga_Model_Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
-        $this->member1e->setLabel('Label 1 E');
         $this->member1f = new Orga_Model_Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
-        $this->member1f->setLabel('Label 1 F');
 
         $this->member2a = new Orga_Model_Member($this->axis2, 'ref2_a');
-        $this->member2a->setLabel('Label 2 A');
         $this->member2b = new Orga_Model_Member($this->axis2, 'ref2_b');
-        $this->member2b->setLabel('Label 2 B');
 
         $this->granularity0 = new Orga_Model_Granularity($this->organization, []);
         $this->granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);

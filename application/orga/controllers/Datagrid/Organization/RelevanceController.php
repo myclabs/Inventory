@@ -60,7 +60,7 @@ class Orga_Datagrid_Organization_RelevanceController extends UI_Controller_Datag
     /**
      * @Secure("editOrganizationAndCells")
      */
-    function updateelementAction()
+    public function updateelementAction()
     {
         if ($this->update['column'] !== 'relevant') {
             parent::updateelementAction();
@@ -83,11 +83,12 @@ class Orga_Datagrid_Organization_RelevanceController extends UI_Controller_Datag
             'Orga_Service_CellService',
             'setCellRelevance',
             [$cell, (bool) $this->update['value']],
-            __('Orga', 'backgroundTasks', 'setCellRelevance', ['LABEL' => $cell->getLabel()])
+            __('Orga', 'backgroundTasks', 'setCellRelevance', [
+                'LABEL' => $this->translationHelper->toString($cell->getLabel())
+            ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
-
 }

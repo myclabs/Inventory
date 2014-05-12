@@ -14,7 +14,7 @@ foreach ($this->granularities as $inputGranularity) :
         $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $this->translate($axis->getLabel()));
         $members = [];
         foreach ($axis->getMembers() as $member) :
-            $members[$member->getTag()] = $member->getLabel();
+            $members[$member->getTag()] = $this->translate($member->getLabel());
         endforeach;
         $columnAxis->list = $members;
         $columnAxis->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
@@ -36,7 +36,8 @@ foreach ($this->granularities as $inputGranularity) :
         'cellAfs'.$inputGranularity->getId(),
         '<span class="withTooltip" data-placement="right" title="'
             . ___('Orga', 'inputGranularities', 'inputAndConfigLevelsExplanations') . '">'
-            . $configGranularity->getLabel() . ' <small>' . $inputGranularity->getLabel() . '</small><span>',
+            . $this->translate($configGranularity->getLabel())
+            . ' <small>' . $this->translate($inputGranularity->getLabel()) . '</small><span>',
         $datagridGranularityAfs->getHTML()
     );
 

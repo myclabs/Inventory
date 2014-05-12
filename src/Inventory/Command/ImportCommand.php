@@ -685,7 +685,7 @@ class ImportCommand extends Command
 
                         foreach ($cellObject->admins as $adminEmail) {
                             $output->writeln(
-                                '<comment>'.$adminEmail.' admin of cell '.$cell->getLabel().'</comment>'
+                                '<comment>'.$adminEmail.' admin of cell '.$cell->getLabel()->get('fr').'</comment>'
                             );
                             $this->acl->grant(
                                 User::loadByEmail($adminEmail),
@@ -694,7 +694,7 @@ class ImportCommand extends Command
                         }
                         foreach ($cellObject->managers as $managerEmail) {
                             $output->writeln(
-                                '<comment>'.$managerEmail.' manager of cell '.$cell->getLabel().'</comment>'
+                                '<comment>'.$managerEmail.' manager of cell '.$cell->getLabel()->get('fr').'</comment>'
                             );
                             $this->acl->grant(
                                 User::loadByEmail($managerEmail),
@@ -703,7 +703,7 @@ class ImportCommand extends Command
                         }
                         foreach ($cellObject->contributors as $contributorEmail) {
                             $output->writeln(
-                                '<comment>'.$contributorEmail.' contributor of cell '.$cell->getLabel().'</comment>'
+                                '<comment>'.$contributorEmail.' contributor of cell '.$cell->getLabel()->get('fr').'</comment>'
                             );
                             $this->acl->grant(
                                 User::loadByEmail($contributorEmail),
@@ -712,7 +712,7 @@ class ImportCommand extends Command
                         }
                         foreach ($cellObject->observers as $observerEmail) {
                             $output->writeln(
-                                '<comment>'.$observerEmail.' observer of cell '.$cell->getLabel().'</comment>'
+                                '<comment>'.$observerEmail.' observer of cell '.$cell->getLabel()->get('fr').'</comment>'
                             );
                             $this->acl->grant(
                                 User::loadByEmail($observerEmail),

@@ -8,11 +8,12 @@
  */
 
 use Core\Translation\TranslatedString;
-use Doc\Domain\Library;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
+use Mnapoli\Translated\StringConcatenation;
+use Mnapoli\Translated\UntranslatedString;
 
 /**
  * Objet métier Granularité : ensemble d'Axis formant des Cell pour chaque association de Member.
@@ -286,20 +287,19 @@ class Orga_Model_Granularity extends Core_Model_Entity
     /**
      * Renvoie le label de la Granularity, dépendant des label de ces Axis.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         if (!$this->hasAxes()) {
-            return __('Orga', 'granularity', 'labelGlobalGranularity');
+            return new UntranslatedString(__('Orga', 'granularity', 'labelGlobalGranularity'));
         }
 
-        /** @var TranslatedString|null $label */
-        $label = null;
+        $labelParts = [];
         foreach ($this->getAxes() as $axis) {
-            $label = $label ? $label->concat($axis->getLabel()) : $axis->getLabel();
+            $labelParts[] = $axis->getLabel();
         }
-        return $label;
+        return StringConcatenation::implode(self::LABEL_SEPARATOR, $labelParts);
     }
 
     /**

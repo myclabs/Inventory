@@ -23,7 +23,7 @@ class DW_Model_Cube extends Core_Model_Entity
      * @var string
      */
     protected $id = null;
-    
+
     /**
      * Label du Cube.
      *
@@ -80,7 +80,7 @@ class DW_Model_Cube extends Core_Model_Entity
      */
     public function setLabel ($label)
     {
-        $this->label = $label;
+        $this->label = (string) $label;
     }
 
     /**
@@ -97,7 +97,7 @@ class DW_Model_Cube extends Core_Model_Entity
      * Ajoute un Axis à la collection du Cube.
      *
      * @param DW_Model_Axis $axis
-     * 
+     *
      * @throws Core_Exception_InvalidArgument
      */
     public function addAxis(DW_Model_Axis $axis)

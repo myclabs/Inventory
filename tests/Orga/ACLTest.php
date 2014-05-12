@@ -281,46 +281,31 @@ class Orga_Test_ACLTest extends TestCase
 
         // Années.
         $this->memberAnnee2012 = new Orga_Model_Member($this->axisAnnee, '2012');
-        $this->memberAnnee2012->setLabel('2012');
         $this->memberAnnee2013 = new Orga_Model_Member($this->axisAnnee, '2013');
-        $this->memberAnnee2013->setLabel('2013');
 
         // Zones.
         $this->memberZoneEurope = new Orga_Model_Member($this->axisZone, 'europe');
-        $this->memberZoneEurope->setLabel('Europe');
         $this->memberZoneSudamerique = new Orga_Model_Member($this->axisZone, 'sudamerique');
-        $this->memberZoneSudamerique->setLabel('Amerique du Sud');
 
         // Pays.
         $this->memberPaysFrance = new Orga_Model_Member($this->axisPays, 'france', [$this->memberZoneEurope]);
-        $this->memberPaysFrance->setLabel('France');
         $this->memberPaysAllemagne = new Orga_Model_Member($this->axisPays, 'allemagne', [$this->memberZoneEurope]);
-        $this->memberPaysAllemagne->setLabel('Allemagne');
         $this->memberPaysPerou = new Orga_Model_Member($this->axisPays, 'perou', [$this->memberZoneSudamerique]);
-        $this->memberPaysPerou->setLabel('Pérou');
 
         // Marques.
         $this->memberMarqueA = new Orga_Model_Member($this->axisMarque, 'a');
-        $this->memberMarqueA->setLabel('A');
         $this->memberMarqueB = new Orga_Model_Member($this->axisMarque, 'b');
         $this->memberMarqueB->setRef('b');
-        $this->memberMarqueB->setLabel('B');
 
         // Sites.
         $this->memberSiteAnnecy = new Orga_Model_Member($this->axisSite, 'annecy', [$this->memberPaysFrance, $this->memberMarqueA]);
-        $this->memberSiteAnnecy->setLabel('Annecy');
         $this->memberSiteChambery = new Orga_Model_Member($this->axisSite, 'chambery', [$this->memberPaysFrance, $this->memberMarqueA]);
-        $this->memberSiteChambery->setLabel('Chambery');
         $this->memberSiteBerlin = new Orga_Model_Member($this->axisSite, 'berlin', [$this->memberPaysAllemagne, $this->memberMarqueB]);
-        $this->memberSiteBerlin->setLabel('Berlin');
         $this->memberSiteLima = new Orga_Model_Member($this->axisSite, 'lima', [$this->memberPaysPerou, $this->memberMarqueB]);
-        $this->memberSiteLima->setLabel('Lima');
 
         // Catégories.
         $this->memberCategorieEnergie = new Orga_Model_Member($this->axisCategorie, 'energie');
-        $this->memberCategorieEnergie->setLabel('Énergie');
         $this->memberCategorieTransport = new Orga_Model_Member($this->axisCategorie, 'transport');
-        $this->memberCategorieTransport->setLabel('Transport');
 
         // Création des granularités de l'organisation.
 
@@ -2911,12 +2896,12 @@ class Orga_Test_ACLTest extends TestCase
         // Droit en cascade d'admin sur toutes les cellules
         foreach ($organization->getGranularities() as $granularity) {
             foreach ($granularity->getCells() as $cell) {
-                $this->assertAllowed($user, Actions::VIEW, $cell, $cell->getLabel());
-                $this->assertAllowed($user, Actions::EDIT, $cell, $cell->getLabel());
-                $this->assertAllowed($user, Actions::ALLOW, $cell, $cell->getLabel());
-                $this->assertAllowed($user, Actions::INPUT, $cell, $cell->getLabel());
-                $this->assertAllowed($user, Actions::ANALYZE, $cell, $cell->getLabel());
-                $this->assertAllowed($user, Actions::MANAGE_INVENTORY, $cell, $cell->getLabel());
+                $this->assertAllowed($user, Actions::VIEW, $cell, $cell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::EDIT, $cell, $cell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::ALLOW, $cell, $cell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::INPUT, $cell, $cell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::ANALYZE, $cell, $cell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::MANAGE_INVENTORY, $cell, $cell->getLabel()->get('fr'));
             }
         }
     }
@@ -2932,20 +2917,20 @@ class Orga_Test_ACLTest extends TestCase
 
             // Droit d'admin sur la cellule et ses sous-cellules
             if ($testedCell === $cell || $testedCell->isChildOf($cell)) {
-                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel());
+                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel()->get('fr'));
             } else {
                 // Aucun droit sur les autres cellules
-                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel());
+                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel()->get('fr'));
             }
         }
     }
@@ -2961,23 +2946,23 @@ class Orga_Test_ACLTest extends TestCase
 
             // Droit de manager sur la cellule et ses sous-cellules
             if ($testedCell === $cell || $testedCell->isChildOf($cell)) {
-                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel());
+                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel()->get('fr'));
             } else {
                 // Aucun droit sur les autres cellules
-                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel());
+                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel()->get('fr'));
             }
 
             // Dans tous les cas il n'a pas ces droits
-            $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel());
-            $this->assertNotAllowed($user, Actions::DELETE, $testedCell, $testedCell->getLabel());
+            $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel()->get('fr'));
+            $this->assertNotAllowed($user, Actions::DELETE, $testedCell, $testedCell->getLabel()->get('fr'));
         }
     }
 
@@ -2992,20 +2977,20 @@ class Orga_Test_ACLTest extends TestCase
 
             // Droit de contributeur sur la cellule et ses sous-cellules
             if ($testedCell === $cell || $testedCell->isChildOf($cell)) {
-                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel());
+                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel()->get('fr'));
             } else {
                 // Aucun droit sur les autres cellules
-                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel());
+                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel()->get('fr'));
             }
 
             // Dans tous les cas il n'a pas ces droits
-            $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel());
-            $this->assertNotAllowed($user, Actions::DELETE, $testedCell, $testedCell->getLabel());
-            $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel());
-            $this->assertNotAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel());
-            $this->assertNotAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel());
+            $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel()->get('fr'));
+            $this->assertNotAllowed($user, Actions::DELETE, $testedCell, $testedCell->getLabel()->get('fr'));
+            $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel()->get('fr'));
+            $this->assertNotAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel()->get('fr'));
+            $this->assertNotAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel()->get('fr'));
         }
     }
 
@@ -3020,20 +3005,20 @@ class Orga_Test_ACLTest extends TestCase
 
             // Droit d'observateur sur la cellule et ses sous-cellules
             if ($testedCell === $cell || $testedCell->isChildOf($cell)) {
-                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
-                $this->assertAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel());
+                $this->assertAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel()->get('fr'));
             } else {
                 // Aucun droit sur les autres cellules
-                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel());
-                $this->assertNotAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel());
+                $this->assertNotAllowed($user, Actions::VIEW, $testedCell, $testedCell->getLabel()->get('fr'));
+                $this->assertNotAllowed($user, Actions::ANALYZE, $testedCell, $testedCell->getLabel()->get('fr'));
             }
 
             // Dans tous les cas il n'a pas ces droits
-            $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel());
-            $this->assertNotAllowed($user, Actions::DELETE, $testedCell, $testedCell->getLabel());
-            $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel());
-            $this->assertNotAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel());
-            $this->assertNotAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel());
+            $this->assertNotAllowed($user, Actions::EDIT, $testedCell, $testedCell->getLabel()->get('fr'));
+            $this->assertNotAllowed($user, Actions::DELETE, $testedCell, $testedCell->getLabel()->get('fr'));
+            $this->assertNotAllowed($user, Actions::ALLOW, $testedCell, $testedCell->getLabel()->get('fr'));
+            $this->assertNotAllowed($user, Actions::INPUT, $testedCell, $testedCell->getLabel()->get('fr'));
+            $this->assertNotAllowed($user, Actions::MANAGE_INVENTORY, $testedCell, $testedCell->getLabel()->get('fr'));
         }
     }
 }

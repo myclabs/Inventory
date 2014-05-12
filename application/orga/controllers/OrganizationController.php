@@ -1107,7 +1107,9 @@ class Orga_OrganizationController extends Core_Controller
             $taskName = 'resetCellAndChildrenDWCubes';
             $cell = Orga_Model_Cell::load($this->getParam('cell'));
             $taskParameters = [$cell];
-            $organizationalUnit = __('Orga', 'organization', 'forOrganizationalUnit', ['LABEL' => $cell->getLabel()]);
+            $organizationalUnit = __('Orga', 'organization', 'forOrganizationalUnit', [
+                'LABEL' => $this->translationHelper->toString($cell->getLabel())
+            ]);
         }
 
         $success = function () {
@@ -1152,7 +1154,9 @@ class Orga_OrganizationController extends Core_Controller
             'Orga_Service_ETLStructure',
             'resetCellAndChildrenCalculationsAndDWCubes',
             [$cell],
-            __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
+            __('Orga', 'backgroundTasks', 'resetDWCellAndResults', [
+                'LABEL' => $this->translationHelper->toString($cell->getLabel())
+            ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }

@@ -13,7 +13,7 @@ foreach ($this->granularities as $granularity) {
         $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $this->translate($axis->getLabel()));
         $members = [];
         foreach ($axis->getMembers() as $member) {
-            $members[$member->getTag()] = $member->getLabel();
+            $members[$member->getTag()] = $this->translate($member->getLabel());
         }
         $columnAxis->list = $members;
         $columnAxis->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
@@ -36,7 +36,7 @@ foreach ($this->granularities as $granularity) {
 
     echo $this->collapse(
         'cellRelevance'.$granularity->getId(),
-        $granularity->getLabel(),
+        $this->translate($granularity->getLabel()),
         $datagridGranularityRelevance->getHTML()
     );
 

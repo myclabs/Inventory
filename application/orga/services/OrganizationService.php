@@ -348,7 +348,7 @@ class Orga_Service_OrganizationService
     public function addMember(Orga_Model_Axis $axis, $ref, $label, array $parentMembers)
     {
         $member = new Orga_Model_Member($axis, $ref, $parentMembers);
-        $member->setLabel($label);
+        $this->translationHelper->set($member->getLabel(), $label);
 
         try {
             $this->entityManager->beginTransaction();
@@ -476,7 +476,7 @@ class Orga_Service_OrganizationService
                     $memberRef .= '_'.$i;
                 }
                 $member = new Orga_Model_Member($membersAxis, $memberRef, $parentMembers);
-                $member->setLabel($memberData['value']);
+                $this->translationHelper->set($member->getLabel(), $memberData['value']);
                 $members[$axisId][$memberId] = $member;
             }
         }
@@ -583,27 +583,27 @@ class Orga_Service_OrganizationService
     {
         // Axe Catégorie
         $categoryAxis = new Orga_Model_Axis($organization, 'categorie');
-        $categoryAxis->setLabel('Catégorie');
+        $categoryAxis->getLabel()->set('Catégorie', 'fr');
         $categoryAxis->save();
         $categoryEnergy = new Orga_Model_Member($categoryAxis, 'energie');
-        $categoryEnergy->setLabel('Énergie');
+        $this->translationHelper->set($categoryEnergy->getLabel(), 'Énergie');
         $categoryEnergy->save();
         $categoryTravel = new Orga_Model_Member($categoryAxis, 'deplacement');
-        $categoryTravel->setLabel('Déplacement');
+        $this->translationHelper->set($categoryTravel->getLabel(), 'Déplacement');
         $categoryTravel->save();
 
         // Axe Année
         $timeAxis = new Orga_Model_Axis($organization, 'annee');
-        $timeAxis->setLabel('Année');
+        $categoryAxis->getLabel()->set('Année', 'fr');
         $timeAxis->save();
-        $year2013 = new Orga_Model_Member($timeAxis, '2012');
-        $year2013->setLabel('2012');
-        $year2013->save();
+        $year2012 = new Orga_Model_Member($timeAxis, '2012');
+        $this->translationHelper->set($year2012->getLabel(), '2012');
+        $year2012->save();
         $year2013 = new Orga_Model_Member($timeAxis, '2013');
-        $year2013->setLabel('2013');
+        $this->translationHelper->set($year2013->getLabel(), '2013');
         $year2013->save();
         $year2014 = new Orga_Model_Member($timeAxis, '2014');
-        $year2014->setLabel('2014');
+        $this->translationHelper->set($year2014->getLabel(), '2014');
         $year2014->save();
 
         // Granularités

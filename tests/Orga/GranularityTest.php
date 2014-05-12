@@ -119,17 +119,17 @@ class Orga_Test_GranularityAttributes extends TestCase
     function testGetLabel()
     {
         $granularity0 = new Orga_Model_Granularity($this->organization, []);
-        $this->assertSame(__('Orga', 'granularity', 'labelGlobalGranularity'), $granularity0->getLabel());
+        $this->assertSame(__('Orga', 'granularity', 'labelGlobalGranularity'), $granularity0->getLabel()->get('fr'));
 
         $granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
-        $this->assertSame('Label 11 | Label 12', $granularity1->getLabel());
+        $this->assertSame('Label 11 | Label 12', $granularity1->getLabel()->get('fr'));
 
         $granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis2, $this->axis12, $this->axis11, $this->axis2]);
-        $this->assertSame('Label 11 | Label 12 | Label 2', $granularity2->getLabel());
+        $this->assertSame('Label 11 | Label 12 | Label 2', $granularity2->getLabel()->get('fr'));
 
         $this->axis11->getLabel()->set('Label 11 updated', 'fr');
-        $this->assertSame('Label 11 updated | Label 12', $granularity1->getLabel());
-        $this->assertSame('Label 11 updated | Label 12 | Label 2', $granularity2->getLabel());
+        $this->assertSame('Label 11 updated | Label 12', $granularity1->getLabel()->get('fr'));
+        $this->assertSame('Label 11 updated | Label 12 | Label 2', $granularity2->getLabel()->get('fr'));
     }
 
 }
@@ -562,39 +562,24 @@ class Orga_Test_GranularityCells extends TestCase
         $this->axis2->getLabel()->set('Label 2', 'fr');
 
         $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
-        $this->member111a->setLabel('Label 111 A');
         $this->member111b = new Orga_Model_Member($this->axis111, 'ref111_b');
-        $this->member111b->setLabel('Label 111 B');
 
         $this->member11a = new Orga_Model_Member($this->axis11, 'ref11_a', [$this->member111a]);
-        $this->member11a->setLabel('Label 11 A');
         $this->member11b = new Orga_Model_Member($this->axis11, 'ref11_b', [$this->member111b]);
-        $this->member11b->setLabel('Label 11 B');
         $this->member11c = new Orga_Model_Member($this->axis11, 'ref11_c', [$this->member111b]);
-        $this->member11c->setLabel('Label 11 C');
 
         $this->member12a = new Orga_Model_Member($this->axis12, 'ref12_a');
-        $this->member12a->setLabel('Label 12 A');
         $this->member12b = new Orga_Model_Member($this->axis12, 'ref12_b');
-        $this->member12b->setLabel('Label 12 B');
 
         $this->member1a = new Orga_Model_Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
-        $this->member1a->setLabel('Label 1 A');
         $this->member1b = new Orga_Model_Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
-        $this->member1b->setLabel('Label 1 B');
         $this->member1c = new Orga_Model_Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
-        $this->member1c->setLabel('Label 1 C');
         $this->member1d = new Orga_Model_Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
-        $this->member1d->setLabel('Label 1 D');
         $this->member1e = new Orga_Model_Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
-        $this->member1e->setLabel('Label 1 E');
         $this->member1f = new Orga_Model_Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
-        $this->member1f->setLabel('Label 1 F');
 
         $this->member2a = new Orga_Model_Member($this->axis2, 'ref2_a');
-        $this->member2a->setLabel('Label 2 A');
         $this->member2b = new Orga_Model_Member($this->axis2, 'ref2_b');
-        $this->member2b->setLabel('Label 2 B');
     }
 
     public function testGenerateCells()

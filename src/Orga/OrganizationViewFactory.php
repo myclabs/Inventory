@@ -91,7 +91,7 @@ class OrganizationViewFactory
         foreach ($organization->getGranularities() as $granularity) {
             $granularityView = new GranularityView();
             $granularityView->id = $granularity->getId();
-            $granularityView->label = $granularity->getLabel();
+            $granularityView->label = $this->translationHelper->toString($granularity->getLabel());
 
             $organizationView->granularities[] = $granularityView;
         }

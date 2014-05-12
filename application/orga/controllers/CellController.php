@@ -377,7 +377,7 @@ class Orga_CellController extends Core_Controller
                         $members = $broaderAxis->getMembers();
                     }
                     foreach ($members as $parentMember) {
-                        $parentMemberOption = new GenericTag('option', $parentMember->getLabel());
+                        $parentMemberOption = new GenericTag('option', $this->translationHelper->toString($parentMember->getLabel()));
                         $parentMemberOption->setAttribute('value', $parentMember->getId());
                         $parentMemberChoiceInput->appendContent($parentMemberOption);
                     }
@@ -433,7 +433,7 @@ class Orga_CellController extends Core_Controller
             $members = $axis->getOrderedMembers()->toArray();
         }
         foreach ($members as $member) {
-            $memberOptions[$member->getTag()] = $member->getLabel();
+            $memberOptions[$member->getTag()] = $this->translationHelper->toString($member->getLabel());
         }
 
         return $memberOptions;
@@ -634,7 +634,7 @@ class Orga_CellController extends Core_Controller
                 . __('Orga', 'input', 'aboutInput')
                 . ' <a href="orga/cell/input/idCell/' . $comment->getCell()->getId()
                     . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
-                    . $comment->getCell()->getLabel()
+                    . $this->translationHelper->toString($comment->getCell()->getLabel())
                 . '</a>' . __('UI', 'other', ':')
                 . '« '
                 . Core_Tools::truncateString(Core_Tools::removeTextileMarkUp($comment->getText()), 150)
@@ -999,7 +999,9 @@ class Orga_CellController extends Core_Controller
         }
 
         $viewConfiguration = new DW_ViewConfiguration();
-        $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getExtendedLabel().'</small>');
+        $viewConfiguration->setComplementaryPageTitle(
+            ' <small>'.$this->translationHelper->toString($cell->getExtendedLabel()).'</small>'
+        );
         $viewConfiguration->setOutputUrl('orga/cell/view/idCell/'.$fromIdCell.'/');
         $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$fromIdCell);
         $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
@@ -1317,7 +1319,9 @@ class Orga_CellController extends Core_Controller
         } else {
             $aFViewConfiguration->setMode(AFViewConfiguration::MODE_READ);
         }
-        $aFViewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
+        $aFViewConfiguration->setPageTitle(
+            __('UI', 'name', 'input').' <small>'.$this->translationHelper->toString($cell->getLabel()).'</small>'
+        );
         $aFViewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $idCell]);
         $aFViewConfiguration->setResultsPreviewUrl('orga/cell/input-preview');
         $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $fromIdCell . '/');
