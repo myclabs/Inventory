@@ -784,7 +784,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         if ($this->dWCube === null) {
             $this->dWCube = new DW_Model_Cube();
-            $this->dWCube->setLabel($this->getLabel());
+            $this->dWCube->setLabel(clone $this->getLabel());
 
             /** @var Orga_Service_ETLStructure $etlStructureService */
             $etlStructureService = \Core\ContainerSingleton::getContainer()->get(Orga_Service_ETLStructure::class);

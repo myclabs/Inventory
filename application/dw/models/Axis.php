@@ -7,8 +7,10 @@
  * @subpackage Model
  */
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Mnapoli\Translated\TranslatedStringInterface;
 
 /**
  * Objet métier définissant un axe organisationnel au sein d'un cube.
@@ -18,7 +20,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 class DW_Model_Axis extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';
@@ -45,7 +46,7 @@ class DW_Model_Axis extends Core_Model_Entity
     /**
      * Label de l'axe.
      *
-     * @var string
+     * @var TranslatedStringInterface
      */
     protected $label = null;
 
@@ -83,6 +84,7 @@ class DW_Model_Axis extends Core_Model_Entity
      */
     public function __construct(DW_Model_Cube $cube)
     {
+        $this->label = new TranslatedString();
         $this->directBroaders = new ArrayCollection();
         $this->members = new ArrayCollection();
 
@@ -169,19 +171,9 @@ class DW_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Définit le label de l'axe.
-     *
-     * @param String $label
-     */
-    public function setLabel ($label)
-    {
-        $this->label = $label;
-    }
-
-    /**
      * Renvoie le label de l'axe.
      *
-     * @return String
+     * @return TranslatedStringInterface
      */
     public function getLabel()
     {
@@ -331,7 +323,7 @@ class DW_Model_Axis extends Core_Model_Entity
      * Ajoute une Member à l'Axis.
      *
      * @param DW_Model_Member $member
-     * 
+     *
      * @throws Core_Exception_InvalidArgument
      */
     public function addMember(DW_Model_Member $member)

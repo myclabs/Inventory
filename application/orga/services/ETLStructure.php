@@ -82,27 +82,7 @@ class Orga_Service_ETLStructure
      */
     protected function translateEntity($originalEntity, $dWEntity)
     {
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
-
-        $originalTranslations = $translationRepository->findTranslations($originalEntity);
-
-        if (isset($originalTranslations[$this->defaultLocale])) {
-            $dWEntity->setLabel($originalTranslations[$this->defaultLocale]);
-        } else {
-            $dWEntity->setLabel($originalEntity->getLabel());
-        }
-        // Traductions.
-        foreach ($this->locales as $localeId) {
-            if (isset($originalTranslations[$localeId]['label'])) {
-                $translationRepository->translate(
-                    $dWEntity,
-                    'label',
-                    $localeId,
-                    $originalTranslations[$localeId]['label']
-                );
-            }
-        }
+        $dWEntity->setLabel(clone $originalEntity->getLabel());
     }
 
     /**
@@ -115,31 +95,7 @@ class Orga_Service_ETLStructure
      */
     protected function areTranslationsDifferent($originalEntity, $dWEntity)
     {
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
-
-        $originalTranslations = $translationRepository->findTranslations($originalEntity);
-        $dWTranslations = $translationRepository->findTranslations($dWEntity);
-
-        // Traductions
-        foreach ($this->locales as $localeId) {
-            if (isset($originalTranslations[$localeId])) {
-                $originalLabel = $originalTranslations[$localeId]['label'];
-            } else {
-                $originalLabel = '';
-            }
-            if (isset($dWTranslations[$localeId])) {
-                $dWLabel = $dWTranslations[$localeId]['label'];
-            } else {
-                $dWLabel = '';
-            }
-
-            if ($originalLabel != $dWLabel) {
-                return true;
-            }
-        }
-
-        return false;
+        return $originalEntity->getLabel() != $dWEntity->getLabel();
     }
 
 

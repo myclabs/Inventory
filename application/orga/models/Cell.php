@@ -1088,7 +1088,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $etlDataService = $container->get(Orga_Service_ETLData::class);
 
             $this->dWCube = new DW_model_cube();
-            $this->dWCube->setLabel($this->getLabel());
+            $this->dWCube->setLabel(clone $this->getLabel());
 
             $etlStructureService->populateCellDWCube($this);
             $etlStructureService->addGranularityDWReportsToCellDWCube($this);

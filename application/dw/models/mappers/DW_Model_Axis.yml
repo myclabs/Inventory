@@ -4,11 +4,6 @@ DW_Model_Axis:
   repositoryClass: Core_Model_Repository_Ordered
   table: DW_Axis
 
-  gedmo:
-    translation:
-      locale: translationLocale
-      entity: \DW_Model_Translation_AxisTranslation
-
   id:
     id:
       column: id
@@ -22,17 +17,14 @@ DW_Model_Axis:
       type: string
       length: 255
       nullable: false
-    label:
-      column: label
-      type: string
-      length: 255
-      nullable: false
-      gedmo:
-        - translatable
     position:
       column: position
       type: integer
       nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     cube:

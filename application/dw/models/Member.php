@@ -177,7 +177,7 @@ class DW_Model_Member extends Core_Model_Entity
      */
     public function setLabel($label)
     {
-        $this->label = $label;
+        $this->label = (string) $label;
     }
 
     /**

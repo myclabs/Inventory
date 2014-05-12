@@ -1,4 +1,6 @@
 <?php
+
+use Mnapoli\Translated\TranslationHelper;
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\GenericTag;
@@ -20,13 +22,21 @@ use MyCLabs\MUIH\GenericVoidTag;
 class DW_Form_configuration extends GenericTag
 {
     /**
+     * @var Mnapoli\Translated\TranslationHelper
+     */
+    private $translationHelper;
+
+    /**
      * Génération du formulaire
      *
-     * @param DW_Model_Report $report
-     * @param string          $hash
+     * @param DW_Model_Report   $report
+     * @param string            $hash
+     * @param TranslationHelper $translationHelper
      */
-    public function __construct(DW_Model_Report $report, $hash)
+    public function __construct(DW_Model_Report $report, $hash, TranslationHelper $translationHelper)
     {
+        $this->translationHelper = $translationHelper;
+
         $reportNumeratorIndicator = $report->getNumerator();
         $reportDenominatorIndicator = $report->getDenominator();
         $numeratorAxisOne = $report->getNumeratorAxis1();
@@ -148,7 +158,7 @@ class DW_Form_configuration extends GenericTag
         $sumAxisOneSelect->setAttribute('name', 'sumAxisOne');
         $sumAxisOneSelect->addClass('form-control');
         foreach ($report->getCube()->getAxes() as $axis) {
-            $axisOption = new GenericTag('option', $axis->getLabel());
+            $axisOption = new GenericTag('option', $this->translationHelper->toString($axis->getLabel()));
             $axisOption->setAttribute('value', $axis->getRef());
             $sumAxisOneSelect->appendContent($axisOption);
         }
@@ -164,7 +174,7 @@ class DW_Form_configuration extends GenericTag
         $sumAxisTwoSelect->setAttribute('name', 'sumAxisTwo');
         $sumAxisTwoSelect->addClass('form-control');
         foreach ($report->getCube()->getAxes() as $axis) {
-            $axisOption = new GenericTag('option', $axis->getLabel());
+            $axisOption = new GenericTag('option', $this->translationHelper->toString($axis->getLabel()));
             $axisOption->setAttribute('value', $axis->getRef());
             $sumAxisTwoSelect->appendContent($axisOption);
         }
@@ -211,7 +221,7 @@ class DW_Form_configuration extends GenericTag
         $ratioNumeratorAxisOneSelect->setAttribute('name', 'ratioNumeratorAxisOne');
         $ratioNumeratorAxisOneSelect->addClass('form-control');
         foreach ($report->getCube()->getAxes() as $axis) {
-            $axisOption = new GenericTag('option', $axis->getLabel());
+            $axisOption = new GenericTag('option', $this->translationHelper->toString($axis->getLabel()));
             $axisOption->setAttribute('value', $axis->getRef());
             $ratioNumeratorAxisOneSelect->appendContent($axisOption);
         }
@@ -227,7 +237,7 @@ class DW_Form_configuration extends GenericTag
         $ratioNumeratorAxisTwoSelect->setAttribute('name', 'ratioNumeratorAxisTwo');
         $ratioNumeratorAxisTwoSelect->addClass('form-control');
         foreach ($report->getCube()->getAxes() as $axis) {
-            $axisOption = new GenericTag('option', $axis->getLabel());
+            $axisOption = new GenericTag('option', $this->translationHelper->toString($axis->getLabel()));
             $axisOption->setAttribute('value', $axis->getRef());
             $ratioNumeratorAxisTwoSelect->appendContent($axisOption);
         }
@@ -253,7 +263,7 @@ class DW_Form_configuration extends GenericTag
         $emptyOption->setAttribute('value', '');
         $ratioDenominatorAxisOneSelect->appendContent($emptyOption);
         foreach ($report->getCube()->getAxes() as $axis) {
-            $axisOption = new GenericTag('option', $axis->getLabel());
+            $axisOption = new GenericTag('option', $this->translationHelper->toString($axis->getLabel()));
             $axisOption->setAttribute('value', $axis->getRef());
             $ratioDenominatorAxisOneSelect->appendContent($axisOption);
         }
@@ -272,7 +282,7 @@ class DW_Form_configuration extends GenericTag
         $emptyOption->setAttribute('value', '');
         $ratioDenominatorAxisTwoSelect->appendContent($emptyOption);
         foreach ($report->getCube()->getAxes() as $axis) {
-            $axisOption = new GenericTag('option', $axis->getLabel());
+            $axisOption = new GenericTag('option', $this->translationHelper->toString($axis->getLabel()));
             $axisOption->setAttribute('value', $axis->getRef());
             $ratioDenominatorAxisTwoSelect->appendContent($axisOption);
         }
@@ -614,7 +624,5 @@ class DW_Form_configuration extends GenericTag
         if ($report->hasFilters()) {
             $filtersCollapse->show();
         }
-
     }
-
 }

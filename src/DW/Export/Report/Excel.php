@@ -60,13 +60,13 @@ class DW_Export_Report_Excel extends Export_Excel
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis').' 1',
-                    $numeratorAxis1->getLabel()
+                    $this->translationHelper->toString($numeratorAxis1->getLabel())
                 );
             }
             if ($numeratorAxis2 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis').' 2',
-                    $numeratorAxis2->getLabel()
+                    $this->translationHelper->toString($numeratorAxis2->getLabel())
                 );
             }
         } else {
@@ -77,13 +77,13 @@ class DW_Export_Report_Excel extends Export_Excel
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis') . ' 1 ' . __('DW', 'name', 'numeratorMin'),
-                    $numeratorAxis1->getLabel()
+                    $this->translationHelper->toString($numeratorAxis1->getLabel())
                 );
             }
             if ($numeratorAxis2 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis') . ' 2 ' . __('DW', 'name', 'numeratorMin'),
-                    $numeratorAxis2->getLabel()
+                    $this->translationHelper->toString($numeratorAxis2->getLabel())
                 );
             }
 
@@ -95,13 +95,13 @@ class DW_Export_Report_Excel extends Export_Excel
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis').' 1 '.__('DW', 'name', 'denominatorMin'),
-                    ($denominatorAxis1 !== null) ? $denominatorAxis1->getLabel() : '--'
+                    ($denominatorAxis1 !== null) ? $this->translationHelper->toString($denominatorAxis1->getLabel()) : '--'
                 );
             }
             if ($numeratorAxis2 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis').' 2 '.__('DW', 'name', 'denominatorMin'),
-                    ($denominatorAxis2 !== null) ? $denominatorAxis2->getLabel() : '--'
+                    ($denominatorAxis2 !== null) ? $this->translationHelper->toString($denominatorAxis2->getLabel()) : '--'
                 );
             }
         }
@@ -115,7 +115,7 @@ class DW_Export_Report_Excel extends Export_Excel
             $filter = $report->getFilterForAxis($axis);
             if ($filter !== null) {
                 $hasFilter = true;
-                $sheetData[] = array($axis->getLabel());
+                $sheetData[] = [$this->translationHelper->toString($axis->getLabel())];
                 foreach ($filter->getMembers() as $member) {
                     $sheetData[] = array('', $member->getLabel());
                 }
@@ -144,7 +144,7 @@ class DW_Export_Report_Excel extends Export_Excel
         $y = 0;
         if ($numeratorAxis1 !== null) {
             $sheetHeader[] = array(
-                $numeratorAxis1->getLabel(),
+                $this->translationHelper->toString($numeratorAxis1->getLabel()),
                 array(
                     'font' => array('bold' => true),
                     'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
@@ -154,7 +154,7 @@ class DW_Export_Report_Excel extends Export_Excel
         }
         if ($numeratorAxis2 !== null) {
             $sheetHeader[] = array(
-                $numeratorAxis2->getLabel(),
+                $this->translationHelper->toString($numeratorAxis2->getLabel()),
                 array(
                     'font' => array('bold' => true),
                     'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
@@ -195,7 +195,7 @@ class DW_Export_Report_Excel extends Export_Excel
                 if ($value['value'] != 0) {
                     $line = array();
                     foreach ($value['members'] as $member) {
-                        $line[] = $member->getLabel();
+                        $line[] = $this->translationHelper->toString($member->getLabel());
                     }
                     $line[] = (string) floatval(
                         str_replace(
@@ -213,7 +213,7 @@ class DW_Export_Report_Excel extends Export_Excel
             foreach ($report->getValues() as $value) {
                 if ($value['value'] != 0) {
                     $line = array();
-                    $line[] = array_shift($value['members'])->getLabel();
+                    $line[] = $this->translationHelper->toString(array_shift($value['members'])->getLabel());
                     $line[] = (string) floatval(
                         str_replace(
                             ['&Acirc;', '&nbsp;'],
