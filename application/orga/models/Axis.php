@@ -734,7 +734,7 @@ class Orga_Model_Axis extends Core_Model_Entity
         if ($this->isMemberPositioning()) {
             $criteria->orderBy(['parentMembersHashKey' => 'ASC', 'position' => 'ASC']);
         } else {
-            $criteria->orderBy(['label' => 'ASC']);
+            $criteria->orderBy(['ref' => 'ASC']);
         }
         return $this->members->matching($criteria);
     }

@@ -1051,7 +1051,7 @@ class Orga_Test_AxisMembers extends TestCase
         $this->assertSame($this->member2, $members[1]);
         $this->assertSame($this->member3, $members[2]);
 
-        $this->member2->getLabel()->set('Label 0', 'fr');
+        $this->member2->setRef('ref_0');
 
         $members = $this->axis->getOrderedMembers();
         $this->assertSame($this->member2, $members[0]);
@@ -1068,7 +1068,7 @@ class Orga_Test_AxisMembers extends TestCase
         $this->assertSame($this->member2, $members[1]);
         $this->assertSame($this->member3, $members[2]);
 
-        $this->member2->getLabel()->set('Label 0', 'fr');
+        $this->member2->setRef('ref_0');
 
         $members = $this->axis->getOrderedMembers();
         $this->assertSame($this->member1, $members[0]);
