@@ -52,7 +52,7 @@ class Orga_Test_AxisAttributes extends TestCase
         $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis = new Orga_Model_Axis($this->organization, 'ref');
-        $this->axis->setLabel ('Label');
+        $this->axis->getLabel()->set('Label', 'fr');
     }
 
     public function testSetGetRef()
@@ -104,7 +104,6 @@ class Orga_Test_AxisTag extends TestCase
         $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis = new Orga_Model_Axis($this->organization, 'ref');
-        $this->axis->setLabel ('Label');
     }
 
     public function testGetAxisTag()
@@ -232,53 +231,52 @@ class Orga_Test_AxisHierarchy extends TestCase
      */
     protected $axis321;
 
-    /**
-     * Set up
-     */
     public function setUp()
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+        $this->organization = new Orga_Model_Organization(
+            $this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock()
+        );
 
         $this->axis = new Orga_Model_Axis($this->organization, 'ref');
-        $this->axis->setLabel ('Label');
+        $this->axis->getLabel()->set('Label', 'fr');
 
         $this->newAxis = new Orga_Model_Axis($this->organization, 'new');
-        $this->newAxis->setLabel('New');
+        $this->newAxis->getLabel()->set('New', 'fr');
 
         $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
-        $this->axis1->setLabel('Label 1');
+        $this->axis1->getLabel()->set('Label 1', 'fr');
 
         $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
-        $this->axis11->setLabel('Label 11');
+        $this->axis11->getLabel()->set('Label 11', 'fr');
 
         $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
-        $this->axis111->setLabel('Label 111');
+        $this->axis111->getLabel()->set('Label 111', 'fr');
 
         $this->axis112 = new Orga_Model_Axis($this->organization, 'ref_112', $this->axis11);
-        $this->axis112->setLabel('Label 112');
+        $this->axis112->getLabel()->set('Label 112', 'fr');
 
         $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
-        $this->axis12->setLabel('Label 12');
+        $this->axis12->getLabel()->set('Label 12', 'fr');
 
         $this->axis121 = new Orga_Model_Axis($this->organization, 'ref_121', $this->axis12);
-        $this->axis121->setLabel('Label 121');
+        $this->axis121->getLabel()->set('Label 121', 'fr');
 
         $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
-        $this->axis2->setLabel('Label 2');
+        $this->axis2->getLabel()->set('Label 2', 'fr');
 
         $this->axis3 = new Orga_Model_Axis($this->organization, 'ref_3');
-        $this->axis3->setLabel('Label 3');
+        $this->axis3->getLabel()->set('Label 3', 'fr');
 
         $this->axis31 = new Orga_Model_Axis($this->organization, 'ref_31', $this->axis3);
-        $this->axis31->setLabel('Label 31');
+        $this->axis31->getLabel()->set('Label 31', 'fr');
 
         $this->axis32 = new Orga_Model_Axis($this->organization, 'ref_32', $this->axis3);
-        $this->axis32->setLabel('Label 32');
+        $this->axis32->getLabel()->set('Label 32', 'fr');
 
         $this->axis321 = new Orga_Model_Axis($this->organization, 'ref_321', $this->axis32);
-        $this->axis321->setLabel('Label 321');
+        $this->axis321->getLabel()->set('Label 321', 'fr');
     }
 
     public function testFirstAndLastOrder()
@@ -1016,19 +1014,21 @@ class Orga_Test_AxisMembers extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+        $this->organization = new Orga_Model_Organization(
+            $this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock()
+        );
 
         $this->axis = new Orga_Model_Axis($this->organization, 'ref');
-        $this->axis->setLabel ('Label');
+        $this->axis->getLabel()->set('Label', 'fr');
 
         $this->member1 = new Orga_Model_Member($this->axis, 'ref_1');
-        $this->member1->setLabel ('Label 1');
+        $this->member1->getLabel()->set('Label 1', 'fr');
 
         $this->member2 = new Orga_Model_Member($this->axis, 'ref_2');
-        $this->member2->setLabel ('Label 2');
+        $this->member1->getLabel()->set('Label 2', 'fr');
 
         $this->member3 = new Orga_Model_Member($this->axis, 'ref_3');
-        $this->member3->setLabel ('Label 3');
+        $this->member1->getLabel()->set('Label 3', 'fr');
     }
 
     public function testGetMemberByCompleteRef()

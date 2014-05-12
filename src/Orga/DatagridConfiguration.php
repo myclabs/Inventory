@@ -60,7 +60,7 @@ class Orga_DatagridConfiguration
      */
     protected function addAxis($axis, $cell)
     {
-        $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $axis->getLabel());
+        $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $this->translationHelper->toString($axis->getLabel()));
         $columnAxis->list = array();
 
         if ($axis->hasMembers()) {

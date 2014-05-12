@@ -11,7 +11,7 @@ foreach ($this->granularities as $inputGranularity) :
     );
 
     foreach ($configGranularity->getAxes() as $axis) :
-        $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $axis->getLabel());
+        $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $this->translate($axis->getLabel()));
         $members = [];
         foreach ($axis->getMembers() as $member) :
             $members[$member->getTag()] = $member->getLabel();

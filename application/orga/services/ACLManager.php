@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use Mnapoli\Translated\TranslationHelper;
 use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\Role;
@@ -36,15 +37,20 @@ class Orga_Service_ACLManager
     private $entityManager;
 
     /**
-     * @param UserService   $userService
-     * @param ACL           $acl
-     * @param EntityManager $entityManager
+     * @var TranslationHelper
      */
-    public function __construct(UserService $userService, ACL $acl, EntityManager $entityManager)
-    {
+    private $translationHelper;
+
+    public function __construct(
+        UserService $userService,
+        ACL $acl,
+        EntityManager $entityManager,
+        TranslationHelper $translationHelper
+    ) {
         $this->userService = $userService;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
+        $this->translationHelper = $translationHelper;
     }
 
     /**
@@ -67,7 +73,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userOrganizationAdministratorRoleAdded', [
-                    'ORGANIZATION' => $organization->getLabel()
+                    'ORGANIZATION' => $this->translationHelper->toString($organization->getLabel())
                 ])
             );
         }

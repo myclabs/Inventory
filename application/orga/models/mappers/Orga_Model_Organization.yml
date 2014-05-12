@@ -4,10 +4,6 @@ Orga_Model_Organization:
   repositoryClass: Core_Model_Repository
   table: Orga_Organization
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       column: id
@@ -15,14 +11,9 @@ Orga_Model_Organization:
       generator:
         strategy: AUTO
 
-  fields:
+  embedded:
     label:
-      column: label
-      type: string
-      length: 255
-      nullable: false
-      gedmo:
-        - translatable
+      class: Core\Translation\TranslatedString
 
   oneToOne:
     granularityForInventoryStatus:

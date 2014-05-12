@@ -651,9 +651,11 @@ class ImportCommand extends Command
                 $organization = $this->getOrganizationByLabel($object->label);
 
                 foreach ($object->admins as $adminEmail) {
-                    $output->writeln(
-                        '<comment>'.$adminEmail.' admin of organization '.$organization->getLabel().'</comment>'
-                    );
+                    $output->writeln(sprintf(
+                        '<comment>%s admin of organization %s</comment>',
+                        $adminEmail,
+                        $organization->getLabel()->get('fr')
+                    ));
                     $this->acl->grant(
                         User::loadByEmail($adminEmail),
                         new OrganizationAdminRole(
@@ -739,7 +741,7 @@ class ImportCommand extends Command
     private function getOrganizationByLabel($label)
     {
         foreach (\Orga_Model_Organization::loadList() as $organization) {
-            if ($organization->getLabel() === $label) {
+            if ($organization->getLabel()->get('fr') === $label) {
                 return $organization;
             }
         }

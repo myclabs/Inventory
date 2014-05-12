@@ -72,7 +72,8 @@ class Orga_Service_Export
             'displayAxisDirectNarrower',
             function (Orga_Model_Axis $axis) {
                 if ($axis->getDirectNarrower() !== null) {
-                    return $axis->getDirectNarrower()->getLabel() . ' (' . $axis->getDirectNarrower()->getRef() . ')';
+                    return $this->translationHelper->toString($axis->getDirectNarrower()->getLabel())
+                        . ' (' . $axis->getDirectNarrower()->getRef() . ')';
                 }
                 return '';
             }
@@ -455,9 +456,9 @@ class Orga_Service_Export
             // Colonnes
             $columns = [];
             foreach ($granularity->getAxes() as $axis) {
-                $columns[] = $axis->getLabel();
+                $columns[] = $this->translationHelper->toString($axis->getLabel());
                 foreach ($axis->getAllBroadersFirstOrdered() as $broaderAxis) {
-                    $columns[] = $broaderAxis->getLabel();
+                    $columns[] = $this->translationHelper->toString($broaderAxis->getLabel());
                 }
             };
             $columns[] = __('Orga', 'export', 'subForm');

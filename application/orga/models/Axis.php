@@ -7,6 +7,7 @@
  * @subpackage Model
  */
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -47,9 +48,9 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Label de l'axe.
      *
-     * @var string
+     * @var TranslatedString
      */
-    protected $label = null;
+    protected $label;
 
     /**
      * Organization contenant l'axe.
@@ -127,6 +128,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function __construct(Orga_Model_Organization $organization, $ref, Orga_Model_Axis $directNarrowerAxis=null)
     {
+        $this->label = new TranslatedString();
         $this->directBroaders = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->granularities = new ArrayCollection();
@@ -266,9 +268,9 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Définit le label de l'axe.
      *
-     * @param String $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
     }
@@ -276,7 +278,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Renvoie le label de l'axe.
      *
-     * @return String
+     * @return TranslatedString
      */
     public function getLabel()
     {

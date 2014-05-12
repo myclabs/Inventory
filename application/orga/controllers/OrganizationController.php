@@ -465,7 +465,7 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $this->view->assign('idOrganization', $idOrganization);
-        $this->view->assign('organizationLabel', $organization->getLabel());
+        $this->view->assign('organizationLabel', $this->translationHelper->toString($organization->getLabel()));
 
         $potentialContextIndicators = [];
         foreach (ClassificationLibrary::loadUsableInAccount($organization->getAccount()) as $classificationLibrary) {
@@ -502,8 +502,8 @@ class Orga_OrganizationController extends Core_Controller
                 'label',
                 __('UI', 'formValidation', 'emptyRequiredField')
             );
-        } elseif ($organization->getLabel() !== $label) {
-            $organization->setLabel($label);
+        } elseif ($this->translationHelper->toString($organization->getLabel()) !== $label) {
+            $this->translationHelper->set($organization->getLabel(), $label);
             $updated = true;
         }
 
@@ -1100,7 +1100,9 @@ class Orga_OrganizationController extends Core_Controller
         if (empty($idCell)) {
             $taskName = 'resetOrganizationDWCubes';
             $taskParameters = [$organization];
-            $organizationalUnit = __('Orga', 'organization', 'forWorkspace', ['LABEL' => $organization->getLabel()]);
+            $organizationalUnit = __('Orga', 'organization', 'forWorkspace', [
+                'LABEL' => $this->translationHelper->toString($organization->getLabel())
+            ]);
         } else {
             $taskName = 'resetCellAndChildrenDWCubes';
             $cell = Orga_Model_Cell::load($this->getParam('cell'));

@@ -287,29 +287,28 @@ class Orga_Test_CellAttributes extends TestCase
      */
     protected $cell5_2b;
 
-    /**
-     * Set up
-     */
     public function setUp()
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+        $this->organization = new Orga_Model_Organization(
+            $this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock()
+        );
 
         $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
-        $this->axis1->setLabel('Label 1');
+        $this->axis1->getLabel()->set('Label 1', 'fr');
 
         $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
-        $this->axis11->setLabel('Label 11');
+        $this->axis11->getLabel()->set('Label 11', 'fr');
 
         $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
-        $this->axis111->setLabel('Label 111');
+        $this->axis111->getLabel()->set('Label 111', 'fr');
 
         $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
-        $this->axis12->setLabel('Label 12');
+        $this->axis12->getLabel()->set('Label 12', 'fr');
 
         $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
-        $this->axis2->setLabel('Label 2');
+        $this->axis2->getLabel()->set('Label 2', 'fr');
 
         $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
         $this->member111a->setLabel('Label 111 A');
@@ -400,7 +399,7 @@ class Orga_Test_CellAttributes extends TestCase
         $this->cell5_2a = $this->granularity5->getCellByMembers([$this->member2a]);
         $this->cell5_2b = $this->granularity5->getCellByMembers([$this->member2b]);
     }
-    
+
     function testGetLabel()
     {
         $this->assertSame(__('Orga', 'navigation', 'labelGlobalCell'), $this->cell0_0->getLabel());
@@ -488,7 +487,7 @@ class Orga_Test_CellAttributes extends TestCase
         $this->assertSame('Label 2 A', $this->cell5_2a->getLabel());
         $this->assertSame('Label 2 B', $this->cell5_2b->getLabel());
     }
-    
+
     function testGetExtendedLabel()
     {
         $this->assertSame(__('Orga', 'navigation', 'labelGlobalCellExtended'), $this->cell0_0->getExtendedLabel());
@@ -1288,20 +1287,20 @@ class Orga_Test_CellHierarchy extends TestCase
         $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
-        $this->axis1->setLabel('Label 1');
+        $this->axis1->getLabel()->set('Label 1', 'fr');
 
         $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
-        $this->axis11->setLabel('Label 11');
+        $this->axis11->getLabel()->set('Label 11', 'fr');
 
         $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
-        $this->axis111->setLabel('Label 111');
+        $this->axis111->getLabel()->set('Label 111', 'fr');
 
         $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
-        $this->axis12->setLabel('Label 12');
+        $this->axis12->getLabel()->set('Label 12', 'fr');
 
         $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
         $this->axis2->setRef('ref_2');
-        $this->axis2->setLabel('Label 2');
+        $this->axis2->getLabel()->set('Label 2', 'fr');
 
         $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
         $this->member111a->setLabel('Label 111 A');
@@ -1337,26 +1336,26 @@ class Orga_Test_CellHierarchy extends TestCase
         $this->member2a->setLabel('Label 2 A');
         $this->member2b = new Orga_Model_Member($this->axis2, 'ref2_b');
         $this->member2b->setLabel('Label 2 B');
-        
+
         $this->granularity0 = new Orga_Model_Granularity($this->organization, []);
         $this->granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);
         $this->granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
         $this->granularity3 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12, $this->axis2]);
         $this->granularity4 = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis2]);
         $this->granularity5 = new Orga_Model_Granularity($this->organization, [$this->axis2]);
-        
+
         $this->cell0_0 = $this->granularity0->getCellByMembers([]);
-        
+
         $this->cell1_111a = $this->granularity1->getCellByMembers([$this->member111a]);
         $this->cell1_111b = $this->granularity1->getCellByMembers([$this->member111b]);
-        
+
         $this->cell2_11a12a = $this->granularity2->getCellByMembers([$this->member11a, $this->member12a]);
         $this->cell2_11b12a = $this->granularity2->getCellByMembers([$this->member11b, $this->member12a]);
         $this->cell2_11c12a = $this->granularity2->getCellByMembers([$this->member11c, $this->member12a]);
         $this->cell2_11a12b = $this->granularity2->getCellByMembers([$this->member11a, $this->member12b]);
         $this->cell2_11b12b = $this->granularity2->getCellByMembers([$this->member11b, $this->member12b]);
         $this->cell2_11c12b = $this->granularity2->getCellByMembers([$this->member11c, $this->member12b]);
-        
+
         $this->cell3_11a12a2a = $this->granularity3->getCellByMembers([$this->member11a, $this->member12a, $this->member2a]);
         $this->cell3_11b12a2a = $this->granularity3->getCellByMembers([$this->member11b, $this->member12a, $this->member2a]);
         $this->cell3_11c12a2a = $this->granularity3->getCellByMembers([$this->member11c, $this->member12a, $this->member2a]);
@@ -1369,7 +1368,7 @@ class Orga_Test_CellHierarchy extends TestCase
         $this->cell3_11a12b2b = $this->granularity3->getCellByMembers([$this->member11a, $this->member12b, $this->member2b]);
         $this->cell3_11b12b2b = $this->granularity3->getCellByMembers([$this->member11b, $this->member12b, $this->member2b]);
         $this->cell3_11c12b2b = $this->granularity3->getCellByMembers([$this->member11c, $this->member12b, $this->member2b]);
-        
+
         $this->cell4_1a2a = $this->granularity4->getCellByMembers([$this->member1a, $this->member2a]);
         $this->cell4_1b2a = $this->granularity4->getCellByMembers([$this->member1b, $this->member2a]);
         $this->cell4_1c2a = $this->granularity4->getCellByMembers([$this->member1c, $this->member2a]);
@@ -1390,17 +1389,17 @@ class Orga_Test_CellHierarchy extends TestCase
     function testGetTag()
     {
         $this->assertSame('/', $this->cell0_0->getTag());
-        
+
         $this->assertSame('/1-ref_111:ref111_a/', $this->cell1_111a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/', $this->cell1_111b->getTag());
-        
+
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12:ref12_a/', $this->cell2_11a12a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12:ref12_a/', $this->cell2_11b12a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12:ref12_a/', $this->cell2_11c12a->getTag());
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12:ref12_b/', $this->cell2_11a12b->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12:ref12_b/', $this->cell2_11b12b->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12:ref12_b/', $this->cell2_11c12b->getTag());
-        
+
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11a12a2a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11b12a2a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11c12a2a->getTag());
@@ -1413,7 +1412,7 @@ class Orga_Test_CellHierarchy extends TestCase
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11a12b2b->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11b12b2b->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11c12b2b->getTag());
-        
+
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_a/&/2-ref_12:ref12_a/1-ref_1:ref1_a/&/2-ref_2:ref2_a/', $this->cell4_1a2a->getTag());
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_b/&/2-ref_12:ref12_b/1-ref_1:ref1_b/&/2-ref_2:ref2_a/', $this->cell4_1b2a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_c/&/2-ref_12:ref12_a/1-ref_1:ref1_c/&/2-ref_2:ref2_a/', $this->cell4_1c2a->getTag());
@@ -1426,25 +1425,25 @@ class Orga_Test_CellHierarchy extends TestCase
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_d/&/2-ref_12:ref12_b/1-ref_1:ref1_d/&/2-ref_2:ref2_b/', $this->cell4_1d2b->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_e/&/2-ref_12:ref12_a/1-ref_1:ref1_e/&/2-ref_2:ref2_b/', $this->cell4_1e2b->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/1-ref_1:ref1_f/&/2-ref_12:ref12_b/1-ref_1:ref1_f/&/2-ref_2:ref2_b/', $this->cell4_1f2b->getTag());
-        
+
         $this->assertSame('/2-ref_2:ref2_a/', $this->cell5_2a->getTag());
         $this->assertSame('/2-ref_2:ref2_b/', $this->cell5_2b->getTag());
-        
+
         // Modification de la ref d'un axe.
         $this->axis12->setRef('ref_12_updated');
-        
+
         $this->assertSame('/', $this->cell0_0->getTag());
-        
+
         $this->assertSame('/1-ref_111:ref111_a/', $this->cell1_111a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/', $this->cell1_111b->getTag());
-        
+
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/', $this->cell2_11a12a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/', $this->cell2_11b12a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/', $this->cell2_11c12a->getTag());
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/', $this->cell2_11a12b->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/', $this->cell2_11b12b->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/', $this->cell2_11c12b->getTag());
-        
+
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11a12a2a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11b12a2a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_a/&/2-ref_2:ref2_a/', $this->cell3_11c12a2a->getTag());
@@ -1457,7 +1456,7 @@ class Orga_Test_CellHierarchy extends TestCase
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/&/2-ref_12_updated:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11a12b2b->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/&/2-ref_12_updated:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11b12b2b->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_c/&/2-ref_12_updated:ref12_b/&/2-ref_2:ref2_b/', $this->cell3_11c12b2b->getTag());
-        
+
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_a/&/2-ref_12_updated:ref12_a/1-ref_1:ref1_a/&/2-ref_2:ref2_a/', $this->cell4_1a2a->getTag());
         $this->assertSame('/1-ref_111:ref111_a/1-ref_11:ref11_a/1-ref_1:ref1_b/&/2-ref_12_updated:ref12_b/1-ref_1:ref1_b/&/2-ref_2:ref2_a/', $this->cell4_1b2a->getTag());
         $this->assertSame('/1-ref_111:ref111_b/1-ref_11:ref11_b/1-ref_1:ref1_c/&/2-ref_12_updated:ref12_a/1-ref_1:ref1_c/&/2-ref_2:ref2_a/', $this->cell4_1c2a->getTag());
@@ -1561,7 +1560,7 @@ class Orga_Test_CellHierarchy extends TestCase
 
         $this->assertSame('/1-ref_2:ref2_a/', $this->cell5_2a->getTag());
         $this->assertSame('/1-ref_2:ref2_b/', $this->cell5_2b->getTag());
-        
+
         // Modification du positionnement des membres d'un axe.
         $this->axis11->setMemberPositioning(true);
 

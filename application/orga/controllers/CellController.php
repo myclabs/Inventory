@@ -331,7 +331,7 @@ class Orga_CellController extends Core_Controller
             $axisChoiceNullOption->setAttribute('value', '');
             $axisChoiceInput->appendContent($axisChoiceNullOption);
             foreach ($axesCanEdit as $axis) {
-                $axisOption = new GenericTag('option', $axis->getLabel());
+                $axisOption = new GenericTag('option', $this->translationHelper->toString($axis->getLabel()));
                 $axisOption->setAttribute('value', $axis->getRef());
                 $axisChoiceInput->appendContent($axisOption);
 
@@ -343,7 +343,7 @@ class Orga_CellController extends Core_Controller
                     $parentMemberGroup->addClass($axis->getRef());
                     $addMemberForm->appendContent($parentMemberGroup);
 
-                    $parentMemberChoiceLabel = new GenericTag('label', $broaderAxis->getLabel());
+                    $parentMemberChoiceLabel = new GenericTag('label', $this->translationHelper->toString($broaderAxis->getLabel()));
                     $parentMemberChoiceLabel->setAttribute('for', 'addMember_axis_'.$broaderAxis->getId());
                     $parentMemberChoiceLabel->addClass('control-label');
                     $parentMemberChoiceLabel->addClass('col-xs-2');
@@ -421,7 +421,9 @@ class Orga_CellController extends Core_Controller
     protected function getFilterAxisOptions(Orga_Model_Axis $axis, Orga_Model_Cell $cell)
     {
         $memberOptions = [];
-        $memberOptions[''] = __('Orga', 'view', 'allMembers', ['AXIS' => $axis->getLabel()]);
+        $memberOptions[''] = __('Orga', 'view', 'allMembers', [
+            'AXIS' => $this->translationHelper->toString($axis->getLabel())
+        ]);
 
         $filter = $cell->getChildMembersForAxes([$axis]);
         /** @var Orga_Model_Member[] $members */
@@ -721,7 +723,10 @@ class Orga_CellController extends Core_Controller
             'Orga_Service_OrganizationService',
             'addMember',
             [$axis, $ref, $label, $parentMembers],
-            __('Orga', 'backgroundTasks', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
+            __('Orga', 'backgroundTasks', 'addMember', [
+                'MEMBER' => $label,
+                'AXIS' => $this->translationHelper->toString($axis->getLabel()),
+            ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }

@@ -511,12 +511,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "7fffba80c304c73b3209cf933803c25dcddf702f"
+                "reference": "08347cf4f74f1f7461ba1005a5fe5bb93f3c2c5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/7fffba80c304c73b3209cf933803c25dcddf702f",
-                "reference": "7fffba80c304c73b3209cf933803c25dcddf702f",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/08347cf4f74f1f7461ba1005a5fe5bb93f3c2c5c",
+                "reference": "08347cf4f74f1f7461ba1005a5fe5bb93f3c2c5c",
                 "shasum": ""
             },
             "require": {
@@ -580,7 +580,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-05-01 12:23:56"
+            "time": "2014-05-11 15:51:23"
         },
         {
             "name": "dompdf/dompdf",
@@ -743,12 +743,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/DoctrineTranslated.git",
-                "reference": "d5ebed9fa3f81a65f16369b5322fd7101311f8c3"
+                "reference": "3d9f7bd4e4af66b7c2310ae1c9d039874cab9038"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/d5ebed9fa3f81a65f16369b5322fd7101311f8c3",
-                "reference": "d5ebed9fa3f81a65f16369b5322fd7101311f8c3",
+                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/3d9f7bd4e4af66b7c2310ae1c9d039874cab9038",
+                "reference": "3d9f7bd4e4af66b7c2310ae1c9d039874cab9038",
                 "shasum": ""
             },
             "require": {
@@ -775,7 +775,7 @@
                 "translation",
                 "translations"
             ],
-            "time": "2014-05-02 13:06:59"
+            "time": "2014-05-02 15:26:11"
         },
         {
             "name": "mnapoli/metamodel",

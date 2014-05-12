@@ -4,6 +4,7 @@ use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use Doctrine\ORM\EntityManager;
+use Mnapoli\Translated\TranslationHelper;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -35,21 +36,29 @@ class Orga_Service_OrganizationService
     private $accountRepository;
 
     /**
+     * @var TranslationHelper
+     */
+    private $translationHelper;
+
+    /**
      * @param EntityManager           $entityManager
      * @param Orga_Service_ACLManager $aclManager
      * @param UserService             $userService
      * @param AccountRepository       $accountRepository
+     * @param TranslationHelper       $translationHelper
      */
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ACLManager $aclManager,
         UserService $userService,
-        AccountRepository $accountRepository
+        AccountRepository $accountRepository,
+        TranslationHelper $translationHelper
     ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
         $this->userService = $userService;
         $this->accountRepository = $accountRepository;
+        $this->translationHelper = $translationHelper;
     }
 
     /**
@@ -77,7 +86,7 @@ class Orga_Service_OrganizationService
         try {
             // Création de l'organization.
             $organization = new Orga_Model_Organization($account);
-            $organization->setLabel($labelOrganization);
+            $organization->getLabel()->set($labelOrganization, 'fr');
 
             $organization->save();
             $this->entityManager->flush();
@@ -411,7 +420,7 @@ class Orga_Service_OrganizationService
             }
 
             $mainAxis = new Orga_Model_Axis($organization, $mainAxisRef, $mainParentAxis);
-            $mainAxis->setLabel($mainAxisData['value']);
+            $this->translationHelper->set($mainAxis->getLabel(), $mainAxisData['value']);
 
             $axes[$mainAxisId] = $mainAxis;
         }
@@ -424,7 +433,7 @@ class Orga_Service_OrganizationService
         } catch (Core_Exception_NotFound $e) {
         }
         $timeAxis = new Orga_Model_Axis($organization, $timeAxisRef);
-        $timeAxis->setLabel($timeAxisLabel);
+        $this->translationHelper->set($timeAxis->getLabel(), $timeAxisLabel);
         $axes['timeAxis'] = $timeAxis;
         // Création de l'axe de subdivision.
         $subdivisionAxisLabel = $axesData['subdivisionAxisGroup']['elements']['subdivisionAxis']['value'];
@@ -436,7 +445,7 @@ class Orga_Service_OrganizationService
             } catch (Core_Exception_NotFound $e) {
             }
             $subdivisionAxis = new Orga_Model_Axis($organization, $subdivisionAxisRef);
-            $subdivisionAxis->setLabel($subdivisionAxisLabel);
+            $this->translationHelper->set($subdivisionAxis->getLabel(), $subdivisionAxisLabel);
             $axes['subdivisionAxis'] = $subdivisionAxis;
         }
 

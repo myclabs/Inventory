@@ -83,7 +83,7 @@ class RebuildExportsCommand extends Command
 
         /** @var Orga_Model_Organization $organization */
         foreach (Orga_Model_Organization::loadList() as $organization) {
-            $output->writeln(sprintf('  <info>%s</info>', $organization->getLabel()));
+            $output->writeln(sprintf('  <info>%s</info>', $organization->getLabel()->get('fr')));
 
             foreach ($organization->getInputGranularities() as $inputGranularity) {
                 $this->entityManager->clear();

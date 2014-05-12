@@ -7,6 +7,7 @@
  * @subpackage Model
  */
 
+use Core\Translation\TranslatedString;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -290,13 +291,13 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getLabel()
     {
         if (!$this->hasAxes()) {
-            $label = __('Orga', 'granularity', 'labelGlobalGranularity');
-        } else {
-            $labelParts = array();
-            foreach ($this->getAxes() as $axis) {
-                $labelParts[] = $axis->getLabel();
-            }
-            $label = implode(self::LABEL_SEPARATOR, $labelParts);
+            return __('Orga', 'granularity', 'labelGlobalGranularity');
+        }
+
+        /** @var TranslatedString|null $label */
+        $label = null;
+        foreach ($this->getAxes() as $axis) {
+            $label = $label ? $label->concat($axis->getLabel()) : $axis->getLabel();
         }
         return $label;
     }

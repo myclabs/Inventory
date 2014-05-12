@@ -21,7 +21,7 @@ class Orga_GranularityController extends Core_Controller
         $organization = Orga_Model_Organization::load($this->view->idOrganization);
         $this->view->listAxes = array();
         foreach ($organization->getFirstOrderedAxes() as $axis) {
-            $this->view->listAxes[$axis->getRef()] = $axis->getLabel();
+            $this->view->listAxes[$axis->getRef()] = $this->translationHelper->toString($axis->getLabel());
         }
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {

@@ -63,16 +63,16 @@ class Orga_Test_GranularityAttributes extends TestCase
         $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
-        $this->axis1->setLabel('Label 1');
+        $this->axis1->getLabel()->set('Label 1', 'fr');
 
         $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
-        $this->axis11->setLabel('Label 11');
+        $this->axis11->getLabel()->set('Label 11', 'fr');
 
         $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
-        $this->axis12->setLabel('Label 12');
+        $this->axis12->getLabel()->set('Label 12', 'fr');
 
         $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
-        $this->axis2->setLabel('Label 2');
+        $this->axis2->getLabel()->set('Label 2', 'fr');
     }
 
     function testConstruct()
@@ -127,7 +127,7 @@ class Orga_Test_GranularityAttributes extends TestCase
         $granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis2, $this->axis12, $this->axis11, $this->axis2]);
         $this->assertSame('Label 11 | Label 12 | Label 2', $granularity2->getLabel());
 
-        $this->axis11->setLabel('Label 11 updated');
+        $this->axis11->getLabel()->set('Label 11 updated', 'fr');
         $this->assertSame('Label 11 updated | Label 12', $granularity1->getLabel());
         $this->assertSame('Label 11 updated | Label 12 | Label 2', $granularity2->getLabel());
     }
@@ -193,29 +193,28 @@ class Orga_Test_GranularityHierarchy extends TestCase
      */
     protected $granularity7;
 
-    /**
-     * Set up
-     */
     public function setUp()
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+        $this->organization = new Orga_Model_Organization(
+            $this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock()
+        );
 
         $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
-        $this->axis1->setLabel('Label 1');
+        $this->axis1->getLabel()->set('Label 1', 'fr');
 
         $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
-        $this->axis11->setLabel('Label 11');
+        $this->axis11->getLabel()->set('Label 11', 'fr');
 
         $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
-        $this->axis111->setLabel('Label 111');
+        $this->axis111->getLabel()->set('Label 111', 'fr');
 
         $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
-        $this->axis12->setLabel('Label 12');
+        $this->axis12->getLabel()->set('Label 12', 'fr');
 
         $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
-        $this->axis2->setLabel('Label 2');
+        $this->axis2->getLabel()->set('Label 2', 'fr');
 
         $this->granularity0 = new Orga_Model_Granularity($this->organization);
         $this->granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);
@@ -239,7 +238,7 @@ class Orga_Test_GranularityHierarchy extends TestCase
         $this->assertSame('/2-ref_2/', $this->granularity7->getTag());
 
         $this->axis11->setRef('ref_11_updated');
-        
+
         $this->assertSame('/', $this->granularity0->getTag());
         $this->assertSame('/1-ref_111/', $this->granularity1->getTag());
         $this->assertSame('/1-ref_111/1-ref_11_updated/&/2-ref_12/', $this->granularity2->getTag());
@@ -261,7 +260,7 @@ class Orga_Test_GranularityHierarchy extends TestCase
         $this->assertSame('/1-ref_2/&/1-ref_12/2-ref_1/&/1-ref_111/2-ref_11_updated/2-ref_1/', $this->granularity6->getTag());
         $this->assertSame('/1-ref_2/', $this->granularity7->getTag());
     }
-    
+
     function testIsNarrowerThan()
     {
         $this->assertFalse($this->granularity0->isNarrowerThan($this->granularity0));
@@ -336,7 +335,7 @@ class Orga_Test_GranularityHierarchy extends TestCase
         $this->assertFalse($this->granularity7->isNarrowerThan($this->granularity6));
         $this->assertFalse($this->granularity7->isNarrowerThan($this->granularity7));
     }
-    
+
     function testIsBroaderThan()
     {
         $this->assertFalse($this->granularity0->isBroaderThan($this->granularity0));
@@ -541,9 +540,6 @@ class Orga_Test_GranularityCells extends TestCase
      */
     protected $member2b;
 
-    /**
-     * Set up
-     */
     public function setUp()
     {
         parent::setUp();
@@ -551,19 +547,19 @@ class Orga_Test_GranularityCells extends TestCase
         $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
         $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
-        $this->axis1->setLabel('Label 1');
+        $this->axis1->getLabel()->set('Label 1', 'fr');
 
         $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
-        $this->axis11->setLabel('Label 11');
+        $this->axis11->getLabel()->set('Label 11', 'fr');
 
         $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
-        $this->axis111->setLabel('Label 111');
+        $this->axis111->getLabel()->set('Label 111', 'fr');
 
         $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
-        $this->axis12->setLabel('Label 12');
+        $this->axis12->getLabel()->set('Label 12', 'fr');
 
         $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
-        $this->axis2->setLabel('Label 2');
+        $this->axis2->getLabel()->set('Label 2', 'fr');
 
         $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
         $this->member111a->setLabel('Label 111 A');

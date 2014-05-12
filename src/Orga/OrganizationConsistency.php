@@ -5,12 +5,24 @@
  * @package Orga
  */
 
+use Mnapoli\Translated\TranslationHelper;
+
 /**
  * Controller du datagrid de coherence
  * @package Orga
  */
 class Orga_OrganizationConsistency
 {
+    /**
+     * @var TranslationHelper
+     */
+    private $translationHelper;
+
+    public function __construct(TranslationHelper $translationHelper)
+    {
+        $this->translationHelper = $translationHelper;
+    }
+
     /**
      * Methode qui vérifie la cohérence d'un cube.
      *
@@ -33,7 +45,7 @@ class Orga_OrganizationConsistency
 
         foreach ($organization->getFirstOrderedAxes() as $axis) {
             if (!$axis->hasMembers()) {
-                $listAxes[] = $axis->getLabel();
+                $listAxes[] = $this->translationHelper->toString($axis->getLabel());
             }
             if ($axis->hasDirectBroaders()) {
                 foreach ($axis->getDirectBroaders() as $broaderAxis) {
@@ -41,13 +53,13 @@ class Orga_OrganizationConsistency
                         try {
                             $member->getParentForAxis($broaderAxis);
                         } catch (Core_Exception_NotFound $e) {
-                            $listParentsAxes[] = $axis->getLabel();
+                            $listParentsAxes[] = $this->translationHelper->toString($axis->getLabel());
                             $listParentsMembers[] = $member->getLabel();
                         }
                     }
                     foreach ($broaderAxis->getOrderedMembers() as $parentMember) {
                         if (count($parentMember->getChildrenForAxis($axis)) === 0) {
-                            $listChildrenAxes[] = $broaderAxis->getLabel();
+                            $listChildrenAxes[] = $this->translationHelper->toString($broaderAxis->getLabel());
                             $listChildrenMembers[] = $parentMember->getLabel();
                         }
                     }

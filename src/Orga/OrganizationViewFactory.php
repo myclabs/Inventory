@@ -2,6 +2,7 @@
 
 namespace Orga;
 
+use Mnapoli\Translated\TranslationHelper;
 use MyCLabs\ACL\ACL;
 use Orga\ViewModel\GranularityView;
 use Orga\ViewModel\OrganizationView;
@@ -23,22 +24,29 @@ class OrganizationViewFactory
      * @var ACL
      */
     private $acl;
+
     /**
      * @var Orga_Service_ACLManager
      */
     private $orgaACLManager;
 
-    public function __construct(ACL $acl, Orga_Service_ACLManager $orgaACLManager)
+    /**
+     * @var TranslationHelper
+     */
+    private $translationHelper;
+
+    public function __construct(ACL $acl, Orga_Service_ACLManager $orgaACLManager, TranslationHelper $translationHelper)
     {
         $this->acl = $acl;
         $this->orgaACLManager = $orgaACLManager;
+        $this->translationHelper = $translationHelper;
     }
 
     public function createOrganizationView(Orga_Model_Organization $organization, User $connectedUser)
     {
         $organizationView = new OrganizationView();
         $organizationView->id = $organization->getId();
-        $organizationView->label = $organization->getLabel();
+        $organizationView->label = $this->translationHelper->toString($organization->getLabel());
         if ($organizationView->label == '') {
             $organizationView->label = __('Orga', 'navigation', 'defaultOrganizationLabel');
         }

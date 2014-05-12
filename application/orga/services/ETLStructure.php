@@ -6,6 +6,7 @@ use Classification\Domain\Axis;
 use Classification\Domain\Member;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Translatable\Entity\Repository\TranslationRepository;
+use Mnapoli\Translated\TranslationHelper;
 
 /**
  * Classe permettant de construire les DW.
@@ -43,6 +44,11 @@ class Orga_Service_ETLStructure
      */
     private $locales;
 
+    /**
+     * @var TranslationHelper
+     */
+    private $translationHelper;
+
 
     /**
      * @param EntityManager        $entityManager
@@ -50,19 +56,22 @@ class Orga_Service_ETLStructure
      * @param Core_EventDispatcher $eventDispatcher
      * @param string               $defaultLocale
      * @param string[]             $locales
+     * @param TranslationHelper    $translationHelper
      */
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ETLData $etlDataService,
         Core_EventDispatcher $eventDispatcher,
         $defaultLocale,
-        array $locales
+        array $locales,
+        TranslationHelper $translationHelper
     ) {
         $this->entityManager = $entityManager;
         $this->etlDataService = $etlDataService;
         $this->eventDispatcher = $eventDispatcher;
         $this->defaultLocale = $defaultLocale;
         $this->locales = $locales;
+        $this->translationHelper = $translationHelper;
     }
 
     /**
@@ -227,7 +236,7 @@ class Orga_Service_ETLStructure
                     } elseif (isset($originalTranslations[$this->defaultLocale])) {
                         $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
                     } else {
-                        $labelParts[] = $axis->getLabel();
+                        $labelParts[] = $this->translationHelper->toString($axis->getLabel());
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);

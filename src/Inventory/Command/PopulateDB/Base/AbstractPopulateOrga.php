@@ -177,7 +177,7 @@ abstract class AbstractPopulateOrga
     protected function createAxis(Orga_Model_Organization $organization, $ref, $label, Orga_Model_Axis $narrower = null)
     {
         $axis = new Orga_Model_Axis($organization, $ref, $narrower);
-        $axis->setLabel($label);
+        $axis->getLabel()->set($label, 'fr');
         $axis->save();
         return $axis;
     }

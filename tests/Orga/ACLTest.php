@@ -252,7 +252,6 @@ class Orga_Test_ACLTest extends TestCase
 
         // Création de l'organization (proche de populateTest au 08/08/2013).
         $this->organization = new Orga_Model_Organization($this->account);
-        $this->organization->setLabel('ACL Test');
         $this->organization->save();
 
         // Nécéssaire du fait du bug Doctrine inserant les granularités avant les organisations.
@@ -262,27 +261,21 @@ class Orga_Test_ACLTest extends TestCase
 
         // Année.
         $this->axisAnnee = new Orga_Model_Axis($this->organization, 'annee');
-        $this->axisAnnee->setLabel('Année');
 
         // Site.
         $this->axisSite = new Orga_Model_Axis($this->organization, 'site');
-        $this->axisSite->setLabel('Site');
 
         // Pays.
         $this->axisPays = new Orga_Model_Axis($this->organization, 'pays', $this->axisSite);
-        $this->axisPays->setLabel('Pays');
 
         // Zone.
         $this->axisZone = new Orga_Model_Axis($this->organization, 'zone', $this->axisPays);
-        $this->axisZone->setLabel('Zone');
 
         // Marque.
         $this->axisMarque = new Orga_Model_Axis($this->organization, 'marque', $this->axisSite);
-        $this->axisMarque->setLabel('Marque');
 
         // Catégories.
         $this->axisCategorie = new Orga_Model_Axis($this->organization, 'categorie');
-        $this->axisCategorie->setLabel('Catégorie');
 
         // Création des membres des axes.
 

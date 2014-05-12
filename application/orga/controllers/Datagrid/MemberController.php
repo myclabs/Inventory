@@ -176,7 +176,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     'Orga_Service_OrganizationService',
                     'addMember',
                     [$axis, $ref, $label, $broaderMembers],
-                    __('Orga', 'backgroundTasks', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
+                    __('Orga', 'backgroundTasks', 'addMember', [
+                        'MEMBER' => $label,
+                        'AXIS' => $this->translationHelper->toString($axis->getLabel()),
+                    ])
                 );
                 $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
             }
@@ -218,7 +221,10 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             'Orga_Service_OrganizationService',
             'deleteMember',
             [$member],
-            __('Orga', 'backgroundTasks', 'deleteMember', ['MEMBER' => $member->getLabel(), 'AXIS' => $member->getAxis()->getLabel()])
+            __('Orga', 'backgroundTasks', 'deleteMember', [
+                'MEMBER' => $member->getLabel(),
+                'AXIS' => $this->translationHelper->toString($member->getAxis()->getLabel()),
+            ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
