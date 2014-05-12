@@ -454,7 +454,7 @@ class DW_Form_configuration extends GenericTag
             }
 
             foreach ($axis->getMembers() as $member) {
-                $memberOption = new GenericTag('option', $member->getLabel());
+                $memberOption = new GenericTag('option', $this->translationHelper->toString($member->getLabel()));
                 $memberOption->setAttribute('value', $member->getRef());
                 $membersSelect->appendContent($memberOption);
 

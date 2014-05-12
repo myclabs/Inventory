@@ -117,7 +117,7 @@ class DW_Export_Report_Excel extends Export_Excel
                 $hasFilter = true;
                 $sheetData[] = [$this->translationHelper->toString($axis->getLabel())];
                 foreach ($filter->getMembers() as $member) {
-                    $sheetData[] = array('', $member->getLabel());
+                    $sheetData[] = ['', $this->translationHelper->toString($member->getLabel())];
                 }
             }
         }

@@ -7,8 +7,10 @@
  * @subpackage Model
  */
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Mnapoli\Translated\TranslatedStringInterface;
 
 /**
  * Definit un membre d'un axe.
@@ -32,7 +34,7 @@ class DW_Model_Member extends Core_Model_Entity
      *
      * @var string
      */
-    protected  $id = null;
+    protected $id = null;
 
     /**
      * Référence unique (au sein d'un Axis) du Member.
@@ -44,7 +46,7 @@ class DW_Model_Member extends Core_Model_Entity
     /**
      * Label du Member.
      *
-     * @var string
+     * @var TranslatedString
      */
     protected $label = null;
 
@@ -84,6 +86,7 @@ class DW_Model_Member extends Core_Model_Entity
      */
     public function __construct(DW_Model_Axis $axis)
     {
+        $this->label = new TranslatedString();
         $this->directParents = new ArrayCollection();
         $this->directChildren = new ArrayCollection();
         $this->results = new ArrayCollection();
@@ -173,17 +176,17 @@ class DW_Model_Member extends Core_Model_Entity
     /**
      * Définit le label du Member.
      *
-     * @param String $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
-        $this->label = (string) $label;
+        $this->label = $label;
     }
 
     /**
      * Renvois le label du Member.
      *
-     * @return String
+     * @return TranslatedStringInterface
      */
     public function getLabel()
     {

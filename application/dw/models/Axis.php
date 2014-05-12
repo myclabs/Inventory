@@ -46,7 +46,7 @@ class DW_Model_Axis extends Core_Model_Entity
     /**
      * Label de l'axe.
      *
-     * @var TranslatedStringInterface
+     * @var TranslatedString
      */
     protected $label = null;
 
@@ -168,6 +168,16 @@ class DW_Model_Axis extends Core_Model_Entity
     public function getRef ()
     {
         return $this->ref;
+    }
+
+    /**
+     * Définit le label de l'axe.
+     *
+     * @param TranslatedString $label
+     */
+    public function setLabel(TranslatedString $label)
+    {
+        $this->label = $label;
     }
 
     /**

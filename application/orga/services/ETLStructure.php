@@ -234,9 +234,6 @@ class Orga_Service_ETLStructure
      */
     protected function populateDWCubeWithAF(DW_Model_Cube $dWCube)
     {
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(Gedmo\Translatable\Entity\Translation::class);
-
         $inputStatusDWAxis = new DW_Model_Axis($dWCube);
         $inputStatusDWAxis->setRef('inputStatus');
 
@@ -265,9 +262,9 @@ class Orga_Service_ETLStructure
                     break;
             }
 
-            $translationRepository->translate($inputStatusDWAxis, 'label', $localeId, $inputStatusLabel);
-            $translationRepository->translate($finishedDWMember, 'label', $localeId, $finishedLabel);
-            $translationRepository->translate($completedDWMember, 'label', $localeId, $completedLabel);
+            $inputStatusDWAxis->getLabel()->set($inputStatusLabel, $localeId);
+            $finishedDWMember->getLabel()->set($finishedLabel, $localeId);
+            $completedDWMember->getLabel()->set($completedLabel, $localeId);
         }
     }
 
@@ -280,7 +277,7 @@ class Orga_Service_ETLStructure
     protected function populateDWCubeWithClassification(DW_Model_Cube $dWCube, Orga_Model_Organization $orgaOrganization)
     {
         $classificationIndicators = array_map(
-            function ($contextIndicator) { return $contextIndicator->getIndicator(); },
+            function (ContextIndicator $contextIndicator) { return $contextIndicator->getIndicator(); },
             $orgaOrganization->getContextIndicators()->toArray()
         );
         $classificationIndicators = array_unique($classificationIndicators);

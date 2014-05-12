@@ -170,7 +170,7 @@ class DW_Export_Report_Pdf extends Export_Pdf
                 $hasFilter = true;
                 $this->html .= '<tr><td>' .$this->translationHelper->toString($axis->getLabel()).': </td><td>';
                 foreach ($filteredAxis->getMembers() as $member) {
-                    $this->html .= $member->getLabel().', ';
+                    $this->html .= $this->translationHelper->toString($member->getLabel()).', ';
                 }
                 $this->html = substr($this->html, 0, -2);
                 $this->html .= '</td></tr>';
