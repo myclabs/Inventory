@@ -1,4 +1,3 @@
-# orga\models\mappers\Orga_Model_Axis.yml
 Orga_Model_Axis:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
@@ -94,4 +93,3 @@ Orga_Model_Axis:
       columns:
         - ref
         - idOrganization
-      

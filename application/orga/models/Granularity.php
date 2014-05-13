@@ -7,11 +7,11 @@
  * @subpackage Model
  */
 
-use Doc\Domain\Library;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
+use Doctrine\Common\Collections\Selectable;
 
 /**
  * Objet métier Granularité : ensemble d'Axis formant des Cell pour chaque association de Member.
@@ -418,7 +418,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     /**
      * Renvoie un tableau des Cell de la Granularity.
      *
-     * @return Collection|Orga_Model_Cell[]
+     * @return Collection|Selectable|Orga_Model_Cell[]
      */
     public function getCells()
     {
@@ -460,7 +460,11 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 $membersRef[] = $member->getRef();
             }
             $membersHashKey = implode(self::REF_SEPARATOR, $membersRef);
-            throw new Core_Exception_NotFound('No Cell matching members "'.$membersHashKey.'" for "'.$this->getRef().'".');
+            throw new Core_Exception_NotFound(sprintf(
+                'No Cell matching members "%s" for "%s".',
+                $membersHashKey,
+                $this->getRef()
+            ));
         } elseif (count($matchingCells) > 1) {
             @usort($listMembers, [Orga_Model_Member::class, 'orderMembers']);
             $membersRef = [];
@@ -468,7 +472,11 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 $membersRef[] = $member->getRef();
             }
             $membersHashKey = implode(self::REF_SEPARATOR, $membersRef);
-            throw new Core_Exception_TooMany('Too many Cell matching members "'.$membersHashKey.'" for "'.$this->getRef().'".');
+            throw new Core_Exception_TooMany(sprintf(
+                'Too many Cell matching members "%s" for "%s".',
+                $membersHashKey,
+                $this->getRef()
+            ));
         }
 
         return array_pop($matchingCells);

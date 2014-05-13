@@ -1,4 +1,3 @@
-# inventory\models\mappers\Inventory_Model_Association.yml
 Inventory_Model_Association:
   type: entity
   repositoryClass: Inventory_Model_Repository_Association

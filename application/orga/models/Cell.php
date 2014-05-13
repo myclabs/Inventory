@@ -69,7 +69,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      *
      * @var Collection|Orga_Model_Member[]
      */
-    protected $members = array();
+    protected $members;
 
     /**
      * Représentation simplifié en chaine de caractère des membres de la cellule.
@@ -1160,7 +1160,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
         $populatingCells = [];
 
         foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
-            if (($inputGranularity === $this->getGranularity()) && ($this->isRelevant())){
+            if (($inputGranularity === $this->getGranularity()) && ($this->isRelevant())) {
                 $populatingCells[] = $this;
             } elseif ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {
@@ -1267,7 +1267,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      */
     public function deleteDWResults()
     {
-        foreach ($this->dWResults->toArray() as $dWResult) {
+        foreach ($this->dWResults as $dWResult) {
             $this->dWResults->removeElement($dWResult);
             $dWResult->delete();
         }
@@ -1285,7 +1285,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 //            Doctrine\Common\Collections\Criteria::expr()->eq('dWCube', $dWCube)
 //        );
 //        foreach ($this->dWResults->matching($criteria)->toArray() as $dWResult) {
-        foreach ($this->dWResults->toArray() as $dWResult) {
+        foreach ($this->dWResults as $dWResult) {
             if ($dWResult->getCube() === $dWCube) {
                 $this->dWResults->removeElement($dWResult);
                 $dWResult->delete();

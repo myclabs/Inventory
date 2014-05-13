@@ -48,7 +48,7 @@ class Orga_Model_CellReport extends Core_Model_Entity
 
     /**
      * Charge le CellReport correspondant à un Report de DW.
-     * 
+     *
      * @param DW_Model_Report $cellDWReport
      *
      * @return Orga_Model_CellReport
@@ -85,5 +85,4 @@ class Orga_Model_CellReport extends Core_Model_Entity
     {
         return $this->owner;
     }
-
 }
