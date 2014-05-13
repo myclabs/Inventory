@@ -5,6 +5,8 @@
  * @subpackage Model
  */
 
+use Mnapoli\Translated\TranslationManager;
+
 /**
  * Tri dans une requête
  *
@@ -37,18 +39,38 @@ class Core_Model_Order
      * Ajoute un nouveau tri.
      *
      * @param string $name
-     * @param const  $direction Constante de la classe indiquant la direction du tri.
+     * @param string $direction Constante de la classe indiquant la direction du tri.
      * @param string $alias Alias sur l'objet concerné par la condition dans la requêtte DQL.
      *
      * @return void
      */
-    public function addOrder($name, $direction=self::ORDER_ASC, $alias=null)
+    public function addOrder($name, $direction = self::ORDER_ASC, $alias = null)
     {
         $this->_orders[] = array(
             'name'      => $name,
             'direction' => $direction,
             'alias'     => $alias,
         );
+    }
+
+
+    /**
+     * Ajoute un nouveau tri.
+     *
+     * @param string $name
+     * @param string $direction Constante de la classe indiquant la direction du tri.
+     * @param string $alias Alias sur l'objet concerné par la condition dans la requêtte DQL.
+     *
+     * @return void
+     */
+    public function addTranslatedOrder($name, $direction = self::ORDER_ASC, $alias = null)
+    {
+        /** @var TranslationManager $translationManager */
+        $translationManager = \Core\ContainerSingleton::getContainer()->get(TranslationManager::class);
+
+        $locale = $translationManager->getCurrentContext()->getLocale();
+
+        $this->addOrder($name . '.' . $locale, $direction, $alias);
     }
 
     /**
@@ -69,8 +91,6 @@ class Core_Model_Order
 
     /**
      * Valide les attributs de la classe.
-     *
-     * @return void
      */
     public function validate()
     {

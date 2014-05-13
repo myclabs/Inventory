@@ -54,7 +54,7 @@ return [
         'en' => ['fr'],
     ],
     TranslationManager::class => DI\object()
-            ->method('setFallbacks', DI\link('translation.fallbacks')),
+            ->constructor(DI\link('translation.defaultLocale'), DI\link('translation.fallbacks')),
     TranslationHelper::class => DI\object()
             ->constructor(DI\link(TranslationManager::class)),
 

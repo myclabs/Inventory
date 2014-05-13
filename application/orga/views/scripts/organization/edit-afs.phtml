@@ -62,7 +62,8 @@ if (count($this->granularities) > 0) :
 endif;
 $complementaryFields = '<select multiple name="inputConfigAxes[]" class="inputConfigAxes" style="min-width: 250px;">';
 foreach ($this->organization->getFirstOrderedAxes() as $axis) :
-    $complementaryFields .= '<option value="' . $axis->getRef() . '">' . $axis->getLabel() . '</option>';
+    $complementaryFields .= '<option value="' . $axis->getRef() . '">'
+        . $this->translate($axis->getLabel()) . '</option>';
 endforeach;
 $complementaryFields .= '</select>';
 $complementaryFields .= '<script>' .

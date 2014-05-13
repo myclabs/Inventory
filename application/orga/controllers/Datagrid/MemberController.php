@@ -84,7 +84,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             usort($members, [Orga_Model_Member::class, 'orderMembers']);
         } else {
             $this->request->filter->addCondition(Orga_Model_Member::QUERY_AXIS, $axis);
-            $this->request->order->addOrder(Orga_Model_Member::QUERY_LABEL);
+            $this->request->order->addTranslatedOrder(Orga_Model_Member::QUERY_LABEL);
             /** @var Orga_Model_Member[] $members */
             $members = Orga_Model_Member::loadList($this->request);
         }
