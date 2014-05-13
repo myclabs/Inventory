@@ -6,6 +6,7 @@
  * @subpackage Model
  */
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -18,7 +19,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 class DW_Model_Report extends Core_Model_Entity
 {
     use Core_Event_ObservableTrait;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_CUBE = 'cube';
@@ -52,7 +52,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Label de l'Indicator.
      *
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -154,6 +154,7 @@ class DW_Model_Report extends Core_Model_Entity
 
     public function __construct(DW_Model_Cube $cube)
     {
+        $this->label = new TranslatedString();
         $this->filters = new ArrayCollection();
 
         $this->cube = $cube;
@@ -218,9 +219,9 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Définit le label.
      *
-     * @param string $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
     }
@@ -228,7 +229,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoie le label.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {

@@ -1,27 +1,9 @@
 <?php
-/**
- * Classe Orga_Datagrid_Translate_GranularityreportsController
- * @author valentin.claras
- * @package Orga
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
-use Gedmo\Translatable\TranslatableListener;
 
-/**
- * Classe du controller du datagrid des traductions des Reports de DW issus des Granularity.
- * @package Orga
- * @subpackage Controller
- */
 class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var TranslatableListener
-     */
-    private $translatableListener;
-
     /**
      * @Inject("translation.languages")
      * @var string[]
@@ -35,7 +17,6 @@ class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller
      */
     public function getelementsAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         $this->request->filter->addCondition(
             DW_Model_Report::QUERY_CUBE,
@@ -48,9 +29,7 @@ class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller
             $data['identifier'] = $report->getKey()['id'];
 
             foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $report->reloadWithLocale($locale);
-                $data[$language] = $report->getLabel();
+                $data[$language] = $report->getLabel()->get($language);
             }
             $this->addline($data);
         }
@@ -66,11 +45,9 @@ class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller
      */
     public function updateelementAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $report = DW_Model_Report::load($this->update['index']);
-        $report->reloadWithLocale(Core_Locale::load($this->update['column']));
-        $report->setLabel($this->update['value']);
-        $this->data = $report->getLabel();
+        $report->getLabel()->set($this->update['value'], $this->update['column']);
+        $this->data = $report->getLabel()->get($this->update['column']);
 
         $this->send(true);
     }

@@ -636,7 +636,7 @@ class Orga_Service_OrganizationService
 
         // Analyses préconfigurées
         $report = new DW_Model_Report($granularityYear->getDWCube());
-        $report->setLabel('GES émis par catégorie');
+        $report->getLabel()->set('GES émis par catégorie', 'fr');
         $report->setChartType(DW_Model_Report::CHART_PIE);
         $report->setWithUncertainty(false);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('ges', $granularityYear->getDWCube()));
@@ -645,7 +645,7 @@ class Orga_Service_OrganizationService
         $report->save();
 
         $report = new DW_Model_Report($granularityYear->getDWCube());
-        $report->setLabel('GES émis par catégorie et poste article 75');
+        $report->getLabel()->set('GES émis par catégorie et poste article 75', 'fr');
         $report->setChartType(DW_Model_Report::CHART_VERTICAL_STACKED);
         $report->setWithUncertainty(false);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('ges', $granularityYear->getDWCube()));
@@ -655,7 +655,7 @@ class Orga_Service_OrganizationService
         $report->save();
 
         $report = new DW_Model_Report($granularityYear->getDWCube());
-        $report->setLabel('Energie finale consommée par catégorie');
+        $report->getLabel()->set('Energie finale consommée par catégorie', 'fr');
         $report->setChartType(DW_Model_Report::CHART_PIE);
         $report->setWithUncertainty(false);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('energie_finale', $granularityYear->getDWCube()));

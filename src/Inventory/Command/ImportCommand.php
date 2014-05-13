@@ -515,7 +515,7 @@ class ImportCommand extends Command
 
                         $errorHappened = 0;
 
-                        $report->setLabel($reportObject->getLabel());
+                        $report->setLabel(clone $reportObject->getLabel());
                         $report->setChartType($reportObject->getChartType());
                         $report->setSortType($reportObject->getSortType());
                         $report->setWithUncertainty($reportObject->getWithUncertainty());

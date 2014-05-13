@@ -927,7 +927,10 @@ class Orga_CellController extends Core_Controller
         $usersReports = [];
         $dWReports = $cell->getDWCube()->getReports();
         usort($dWReports, function (DW_Model_Report $a, DW_Model_Report $b) {
-            return strcmp($a->getLabel(), $b->getLabel());
+            return strcmp(
+                $this->translationHelper->toString($a->getLabel()),
+                $this->translationHelper->toString($b->getLabel())
+            );
         });
         foreach ($dWReports as $dWReport) {
             try {
@@ -937,7 +940,7 @@ class Orga_CellController extends Core_Controller
                 // Rapport Copié.
             }
             $cellReports[] = [
-                'label' => $dWReport->getLabel(),
+                'label' => $this->translationHelper->toString($dWReport->getLabel()),
                 'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$dWReport->getId(),
                 'type' => 'copiedReport',
             ];
@@ -947,7 +950,7 @@ class Orga_CellController extends Core_Controller
         foreach ($usersReports as $cellReport) {
             /** @var DW_Model_Report $dWReport */
             $cellReports[] = [
-                'label' => $cellReport->getCellDWReport()->getLabel(),
+                'label' => $this->translationHelper->toString($cellReport->getCellDWReport()->getLabel()),
                 'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$cellReport->getCellDWReport()->getId(),
                 'type' => 'userReport',
                 'owner' => $cellReport->getOwner(),

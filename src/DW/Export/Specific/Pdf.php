@@ -193,7 +193,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                             $results = $report->getValues();
 
-                            $this->html .= $report->getLabel().' : '.
+                            $this->html .= $this->translationHelper->toString($report->getLabel()).' : '.
                             $locale->formatNumber(array_pop($results)['value'], 3).
                             // On n'affiche pas l'incertitude
                             //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
@@ -227,7 +227,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                         $this->html .= '<div class="data">';
                         $this->html .= '<h4>';
-                        $this->html .= $report->getLabel();
+                        $this->html .= $this->translationHelper->toString($report->getLabel());
                         $this->html .= '</h4>';
 
                         if ($isPreview) {
@@ -424,7 +424,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
                 $label .= ' / '.$this->translationHelper->toString($report->getDenominator()->getLabel());
             }
         }
-        $report->setLabel($label);
+        $this->translationHelper->set($report->getLabel(), $label);
         if ($xmlReport->hasAttribute('format')) {
             $report->setChartType($xmlReport->getAttribute('format'));
         }

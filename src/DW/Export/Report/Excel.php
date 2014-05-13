@@ -44,9 +44,12 @@ class DW_Export_Report_Excel extends Export_Excel
                 array('font' => array('bold' => true, 'size' => 14))
             )
         );
-        $sheetData[] = array(
-            array($report->getLabel(), array('font' => array('bold' => true, 'size' => 14)))
-        );
+        $sheetData[] = [
+            [
+                $this->translationHelper->toString($report->getLabel()),
+                ['font' => ['bold' => true, 'size' => 14]]
+            ]
+        ];
         $sheetData[] = array();
         $sheetData[] = array(
             array(__('UI', 'name', 'configuration'), array('font' => array('bold' => true, 'size' => 12)))

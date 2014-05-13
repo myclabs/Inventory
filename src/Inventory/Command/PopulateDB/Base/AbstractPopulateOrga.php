@@ -320,7 +320,7 @@ abstract class AbstractPopulateOrga
     private function createReport(DW_Model_Cube $cube, $label, $chartType, $displayUncertainty, $filters = array())
     {
         $report = new DW_Model_Report($cube);
-        $report->setLabel($label);
+        $report->getLabel()->set($label, 'fr');
         $report->setChartType($chartType);
         $report->setWithUncertainty($displayUncertainty);
         foreach ($filters as $refAxis => $membersFiltered) {
