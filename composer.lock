@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "56f9fcbe1646144d414e5753a26ce41b",
+    "hash": "1606c65ee882a89df19500670b5f70e5",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -625,11 +625,17 @@
         },
         {
             "name": "gedmo/doctrine-extensions",
-            "version": "dev-OptimizedTranslatable",
+            "version": "v2.3.9",
             "source": {
                 "type": "git",
-                "url": "git://github.com/myclabs/DoctrineExtensions.git",
-                "reference": "ac4ec824bcbcff3040dc438dda94177599d50f5b"
+                "url": "https://github.com/Atlantic18/DoctrineExtensions.git",
+                "reference": "35adcaae1a3f50d0d5b73aa50ed8fd28ee35ce54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Atlantic18/DoctrineExtensions/zipball/35adcaae1a3f50d0d5b73aa50ed8fd28ee35ce54",
+                "reference": "35adcaae1a3f50d0d5b73aa50ed8fd28ee35ce54",
+                "shasum": ""
             },
             "require": {
                 "doctrine/common": ">=2.2,<2.5-dev",
@@ -660,10 +666,15 @@
                     "Gedmo\\": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
+                {
+                    "name": "David Buchmann",
+                    "email": "david@liip.ch"
+                },
                 {
                     "name": "Gediminas Morkevicius",
                     "email": "gediminas.morkevicius@gmail.com"
@@ -671,17 +682,13 @@
                 {
                     "name": "Gustavo Falco",
                     "email": "comfortablynumb84@gmail.com"
-                },
-                {
-                    "name": "David Buchmann",
-                    "email": "david@liip.ch"
                 }
             ],
             "description": "Doctrine2 behavioral extensions",
             "homepage": "http://gediminasm.org/",
             "keywords": [
+                "Blameable",
                 "behaviors",
-                "blameable",
                 "doctrine2",
                 "extensions",
                 "gedmo",
@@ -694,13 +701,7 @@
                 "tree",
                 "uploadable"
             ],
-            "support": {
-                "email": "gediminas.morkevicius@gmail.com",
-                "wiki": "https://github.com/l3pp4rd/DoctrineExtensions/tree/master/doc",
-                "issues": "https://github.com/l3pp4rd/DoctrineExtensions/issues",
-                "source": "https://github.com/l3pp4rd/DoctrineExtensions"
-            },
-            "time": "2013-10-24 12:17:26"
+            "time": "2014-01-12 16:34:06"
         },
         {
             "name": "jms/parser-lib",
@@ -2791,12 +2792,6 @@
     ],
     "aliases": [
         {
-            "alias": "2.99",
-            "alias_normalized": "2.99.0.0",
-            "version": "dev-OptimizedTranslatable",
-            "package": "gedmo/doctrine-extensions"
-        },
-        {
             "alias": "1.7.99",
             "alias_normalized": "1.7.99.0",
             "version": "dev-WriterExcel5OptionalConstructor",
@@ -2806,7 +2801,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "doctrine/orm": 20,
-        "gedmo/doctrine-extensions": 20,
         "mnapoli/doctrine-translated": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,

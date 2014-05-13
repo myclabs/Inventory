@@ -12,7 +12,6 @@ use Doctrine\ORM\Mapping\Driver\DriverChain;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use Gedmo\Loggable\LoggableListener;
-use Gedmo\Translatable\TranslatableListener;
 use Interop\Container\ContainerInterface;
 use MyCLabs\ACL\ACL;
 use MyCLabs\ACL\Doctrine\ACLSetup;
@@ -128,8 +127,6 @@ return [
 
         $evm = $em->getEventManager();
 
-        // Extension de traduction de champs
-        $evm->addEventSubscriber($c->get(TranslatableListener::class));
         // Extension de versionnement de champs
         $evm->addEventSubscriber($c->get(LoggableListener::class));
 
@@ -141,16 +138,6 @@ return [
         });
 
         return $em;
-    }),
-
-    // Extensions Doctrine
-    TranslatableListener::class => DI\factory(function (ContainerInterface $c) {
-        $listener = new TranslatableListener();
-        $listener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
-        $listener->setDefaultLocale($c->get('translation.defaultLocale'));
-        $listener->setPersistDefaultLocaleTranslation(true);
-        $listener->setTranslationFallback(true);
-        return $listener;
     }),
 
 ];

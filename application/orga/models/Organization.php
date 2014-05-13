@@ -24,8 +24,6 @@ use Orga\Model\ACL\OrganizationAdminRole;
  */
 class Orga_Model_Organization extends Core_Model_Entity implements EntityResource
 {
-    use Core_Model_Entity_Translatable;
-
     // Constantes de tris et de filtres.
     const QUERY_ACCOUNT = 'account';
     // Constantes de path des Axis, Member, Granularity et Cell.

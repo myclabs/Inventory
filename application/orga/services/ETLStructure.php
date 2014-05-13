@@ -5,7 +5,6 @@ use Classification\Domain\Indicator;
 use Classification\Domain\Axis;
 use Classification\Domain\Member;
 use Doctrine\ORM\EntityManager;
-use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 use Mnapoli\Translated\TranslationHelper;
 
 /**
@@ -136,9 +135,7 @@ class Orga_Service_ETLStructure
      */
     protected function updateCellDWCubeLabel(Orga_Model_Cell $cell)
     {
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
-
+        // TODO à updater avec le nouveau système des traductions
         $labels = [];
         if (!$cell->hasMembers()) {
             foreach ($this->locales as $localeId) {
@@ -171,9 +168,7 @@ class Orga_Service_ETLStructure
      */
     protected function updateGranularityDWCubeLabel(Orga_Model_Granularity $granularity)
     {
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
-
+        // TODO à updater avec le nouveau système des traductions
         $labels = [];
         if (!$granularity->hasAxes()) {
             foreach ($this->locales as $localeId) {
