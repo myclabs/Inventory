@@ -24,7 +24,7 @@ Feature: Classification axis feature
     Then I should see the popup "Ajout d'un axe"
     When I fill in "label" with "Axe plus grossier"
     And I fill in "ref" with "axe_plus_grossier"
-    And I select "Axe vide" from "refParent"
+    And I select "Axe vide" from "parent"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Vérification que l'axe ajouté est bien "plus grossier" que l'axe "Axe vide" (a l'axe vide comme parent)
@@ -32,7 +32,7 @@ Feature: Classification axis feature
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
+    When I click element "div[id='editAxis_deletePanel'] button:contains('Confirmer')"
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
 
   @javascript @readOnly
@@ -161,19 +161,19 @@ Feature: Classification axis feature
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
+    When I click element "div[id='editAxis_deletePanel'] button:contains('Confirmer')"
     Then the following message is shown and closed: "Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses éléments."
   # Axe relié à un axe plus grossier
     When I click "Poste article 75"
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
+    When I click element "div[id='editAxis_deletePanel'] button:contains('Confirmer')"
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
   # Suppression sans obstacle
     When I click "Axe vide"
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
+    When I click element "div[id='editAxis_deletePanel'] button:contains('Confirmer')"
     Then the following message is shown and closed: "Suppression effectuée."

@@ -72,15 +72,13 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
         $newLabel = $this->getEditElementValue('label');
         $newRef = $this->getEditElementValue('ref');
         $newParentId = $this->getEditElementValue('changeParent');
-        if ($newParentId != 0) {
-            $newParentId = ($newParentId === ($this->id.'_root')) ? null : $newParentId;
-        }
+        $newParentId = ($newParentId === ('root')) ? null : (int) $newParentId;
         switch ($this->getEditElementValue('changeOrder')) {
             case 'first':
                 $newPosition = 1;
                 break;
             case 'last':
-                if ($newParentId == 0) {
+                if ($newParentId === 0) {
                     $newPosition = $axis->getLastEligiblePosition();
                 } elseif ($newParentId === null) {
                     $queryRootAxis = new Core_Model_Query();
@@ -120,7 +118,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
             } elseif ($axis->getRef() !== $newRef) {
                 $label = $this->axisService->updateRef($axis->getId(), $newRef);
             }
-            if ($newParentId != 0) {
+            if ($newParentId !== 0) {
                 $label = $this->axisService->updateParent($axis->getId(), $newParentId, $newPosition);
             } elseif (($newPosition !== null) && ($axis->getPosition() !== $newPosition)) {
                 $label = $this->axisService->updatePosition($axis->getId(), $newPosition);
@@ -145,7 +143,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
 
         $this->addElementList(0, '');
         if (($this->idNode !== null) && (Axis::load($this->idNode)->getDirectNarrower() !== null)) {
-            $this->addElementList($this->id.'_root', __('Classification', 'axis', 'rootParentAxisLabel'));
+            $this->addElementList('root', __('Classification', 'axis', 'rootParentAxisLabel'));
         }
 
         foreach ($library->getAxes()->toArray() as $axis) {
@@ -166,10 +164,10 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
         $library = ClassificationLibrary::load($this->getParam('library'));
 
         $axis = Axis::load($this->idNode);
-        if (($this->getParam('idParent') != null) && ($this->getParam('idParent') !== $this->id.'_root')) {
+        if (($this->getParam('idParent') != null) && ($this->getParam('idParent') !== 'root')) {
             $axisParent = Axis::load($this->getParam('idParent'));
             $siblingAxes = $axisParent->getDirectBroaders();
-        } elseif (($axis->getDirectNarrower() === null) || ($this->getParam('idParent') === $this->id.'_root')) {
+        } elseif (($axis->getDirectNarrower() === null) || ($this->getParam('idParent') === 'root')) {
             $siblingAxes = $library->getRootAxes();
         } else {
             $siblingAxes = $axis->getDirectNarrower()->getDirectBroaders();
