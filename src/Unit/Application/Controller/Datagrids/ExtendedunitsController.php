@@ -34,9 +34,9 @@ class Unit_Datagrids_ExtendedunitsController extends UI_Controller_Datagrid
             $element = array();
             $idExtendedUnit = $extendedUnit->getKey();
             $element['index'] = $idExtendedUnit['id'];
-            $element['name'] = $extendedUnit->getName();
+            $element['name'] = $this->cellTranslatedText($extendedUnit->getName());
             $element['ref'] = $extendedUnit->getRef();
-            $element['symbol'] = $extendedUnit->getSymbol();
+            $element['symbol'] = $this->cellTranslatedText($extendedUnit->getSymbol());
             $element['multiplier'] = Core_Locale::loadDefault()->formatNumber($extendedUnit->getMultiplier(), 10);
             $this->addLine($element);
         }

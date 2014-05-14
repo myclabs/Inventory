@@ -2,6 +2,7 @@
 
 namespace Unit\Domain\ComposedUnit;
 
+use Core\Translation\TranslatedString;
 use Core_Tools;
 use Doctrine\Common\Util\ClassUtils;
 use Unit\Domain\Unit\Unit;
@@ -177,42 +178,49 @@ class ComposedUnit
 
     /**
      * Récupère le symbole d'une unité.
-     * @return string
+     * @return TranslatedString
      */
     public function getSymbol()
     {
-        $leftPart = '';
-        $rightPart = '';
+        $leftPart = [];
+        $rightPart = [];
         foreach ($this->components as $unitArray) {
             // Pour les exposants positifs on construit le numérateur du symbole de l'unité.
             if ($unitArray['exponent'] > 0) {
-                $leftPart .= $unitArray['unit']->getSymbol();
+                $leftPart[] = $unitArray['unit']->getSymbol();
                 if ($unitArray['exponent'] > 1) {
-                    $leftPart .= $unitArray['exponent'];
+                    $leftPart[] = $unitArray['exponent'];
                 }
-                $leftPart .= '.';
+                $leftPart[] = '.';
             } // Pour les exposants négatifs on construite le dénominateur du symbole de l'unité.
             else {
                 if ($unitArray['exponent'] < 0) {
-                    $rightPart .= $unitArray['unit']->getSymbol();
+                    $rightPart[] = $unitArray['unit']->getSymbol();
                     if ($unitArray['exponent'] < -1) {
                         // pour un exposant négatif on prend la valeur absolue de celui ci.
-                        $rightPart .= abs($unitArray['exponent']);
+                        $rightPart[] = abs($unitArray['exponent']);
                     }
-                    $rightPart .= '.';
+                    $rightPart[] = '.';
                 }
             }
         }
         // On supprime le dernier point de séparation à la fin de chaques parties du symbole.
-        // Dans le cas ou une des parties est une chaine vide, cela renvoi une chaine vide.
-        $leftPart = substr($leftPart, 0, -1);
-        $rightPart = substr($rightPart, 0, -1);
+        if (count($leftPart) > 0) {
+            array_pop($leftPart);
+        }
+        if (count($rightPart) > 0) {
+            array_pop($rightPart);
+        }
         // Si on a une partie négative on sépare le numérateur et le dénominateur avec un trait de fraction
-        if ($rightPart != '') {
-            return $leftPart . '/' . $rightPart;
+        if (count($rightPart) > 0) {
+            return TranslatedString::join([
+                TranslatedString::join($leftPart),
+                '/',
+                TranslatedString::join($rightPart)
+            ]);
         } else {
             // Sinon on ne retourne que la partie positive.
-            return $leftPart;
+            return TranslatedString::join($leftPart);
         }
     }
 

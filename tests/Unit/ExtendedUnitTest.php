@@ -28,7 +28,6 @@ class Unit_Test_ExtendedUnitTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Unit_Test_ExtendedUnitSetUp');
         $suite->addTestSuite('Unit_Test_ExtendedUnitOther');
         return $suite;
     }
@@ -59,8 +58,8 @@ class Unit_Test_ExtendedUnitTest
     {
         $o = new ExtendedUnit();
         $o->setRef('Ref'.$ref);
-        $o->setName('Name'.$ref);
-        $o->setSymbol('Symbol'.$ref);
+        $o->getName()->set('Name'.$ref, 'fr');
+        $o->getSymbol()->set('Symbol'.$ref, 'fr');
         $o->setMultiplier($multiplier);
         if ($extension == null) {
             $extension = Unit_Test_UnitExtensionTest::generateObject($ref);
@@ -90,153 +89,6 @@ class Unit_Test_ExtendedUnitTest
         }
         if ($deleteStandardUnit == true) {
             Unit_Test_StandardUnitTest::deleteObject($o->getStandardUnit());
-        }
-    }
-}
-
-
-/**
- * ExtendedUnitSetUpTest
- * @package Unit
- */
-class Unit_Test_ExtendedUnitSetUp extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Méthode appelé avant le lancement des tests de la classe
-     */
-    public static function setUpBeforeClass()
-    {
-        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
-        if (Unit::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit::loadList() as $unit) {
-                $unit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-        // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
-        if (UnitExtension::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (UnitExtension::loadList() as $extensionunit) {
-                $extensionunit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
-        if (PhysicalQuantity::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
-                $physicalQuantity->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
-        if (UnitSystem::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (UnitSystem::loadList() as $systemunit) {
-                $systemunit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-    }
-
-    /**
-     * Test le constructeur
-     * @return \Unit\Domain\Unit\ExtendedUnit
-     */
-    function testConstruct()
-    {
-        $unitExtension = Unit_Test_UnitExtensionTest::generateObject();
-        $standardUnit = Unit_Test_StandardUnitTest::generateObject();
-
-        $o = new ExtendedUnit();
-        $this->assertInstanceOf('Unit\Domain\Unit\ExtendedUnit', $o);
-        $o->setRef('RefExtendedUnit');
-        $o->setName('NameExtendedUnit');
-        $o->setSymbol('ExtendedUnit');
-        $o->setMultiplier(1);
-        $o->setExtension($unitExtension);
-        $o->setStandardUnit($standardUnit);
-
-        $this->assertEquals(array(), $o->getKey());
-        $o->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertNotEquals(array(), $o->getKey());
-
-        return $o;
-    }
-
-    /**
-     * @depends testConstruct
-     * @param \Unit\Domain\Unit\ExtendedUnit $o
-     */
-    function testLoad($o)
-    {
-        \Core\ContainerSingleton::getEntityManager()->clear($o);
-        // On tente de charger l'unité enregistrée dans la base lors du test de la méthode save().
-        $oLoaded = ExtendedUnit::load($o->getKey());
-        $this->assertInstanceOf('Unit\Domain\Unit\ExtendedUnit', $oLoaded);
-        $this->assertEquals($oLoaded->getKey(), $o->getKey());
-        $this->assertEquals($oLoaded->getRef(), $o->getRef());
-        $this->assertEquals($oLoaded->getName(), $o->getName());
-        $this->assertEquals($oLoaded->getSymbol(), $o->getSymbol());
-        $this->assertEquals($oLoaded->getMultiplier(), $o->getMultiplier());
-        $this->assertEquals($oLoaded->getExtension()->getKey(), $o->getExtension()->getKey());
-        $this->assertEquals($oLoaded->getStandardUnit()->getKey(), $o->getStandardUnit()->getKey());
-
-        return $oLoaded;
-    }
-
-    /**
-     * @depends testLoad
-     * @param \Unit\Domain\Unit\ExtendedUnit $o
-     */
-    function testDelete(ExtendedUnit $o)
-    {
-        $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertEquals(array(), $o->getKey());
-
-        Unit_Test_UnitExtensionTest::deleteObject($o->getExtension());
-        Unit_Test_StandardUnitTest::deleteObject($o->getStandardUnit());
-    }
-
-    /**
-     * On verifie que les tables soient vides après les tests
-     */
-    public static function tearDownAfterClass()
-    {
-        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
-        if (Unit::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit::loadList() as $unit) {
-                $unit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-        // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
-        if (UnitExtension::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (UnitExtension::loadList() as $extensionunit) {
-                $extensionunit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
-        if (PhysicalQuantity::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
-                $physicalQuantity->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
-        if (UnitSystem::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (UnitSystem::loadList() as $systemunit) {
-                $systemunit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
         }
     }
 }
@@ -359,8 +211,8 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
 
         $this->standardUnit = new StandardUnit();
         $this->standardUnit->setRef('j');
-        $this->standardUnit->setName('Joule');
-        $this->standardUnit->setSymbol('J');
+        $this->standardUnit->getName()->set('Joule', 'fr');
+        $this->standardUnit->getSymbol()->set('J', 'fr');
         $this->standardUnit->setMultiplier(1);
         $this->standardUnit->setPhysicalQuantity($this->physicalQuantity1);
         $this->standardUnit->setUnitSystem($this->unitSystem);
@@ -372,8 +224,8 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
 
         $this->_extendedUnit = new ExtendedUnit();
         $this->_extendedUnit->setRef('RefExtendedUnit');
-        $this->_extendedUnit->setName('NameExtendedUnit');
-        $this->_extendedUnit->setSymbol('SymbolExtendedUnit');
+        $this->_extendedUnit->getName()->set('NameExtendedUnit', 'fr');
+        $this->_extendedUnit->getSymbol()->set('SymbolExtendedUnit', 'fr');
         $this->_extendedUnit->setMultiplier(1);
         $this->_extendedUnit->setExtension($this->extension);
         $this->_extendedUnit->setStandardUnit($this->standardUnit);
@@ -438,8 +290,12 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
          // Résultat supposé !
         $extendedReferenceUnit = new ExtendedUnit();
         $extendedReferenceUnit->setRef($this->standardUnit->getReferenceUnit()->getRef().'_co2e');
-        $extendedReferenceUnit->setName('('.$this->standardUnit->getReferenceUnit()->getName().' equivalent CO2)');
-        $extendedReferenceUnit->setSymbol('('.$this->standardUnit->getReferenceUnit()->getSymbol().'.equCO2)');
+        $extendedReferenceUnit->getName()->set(
+            '('.$this->standardUnit->getReferenceUnit()->getName()->get('fr').' equivalent CO2)', 'fr'
+        );
+        $extendedReferenceUnit->getSymbol()->set(
+            '('.$this->standardUnit->getReferenceUnit()->getSymbol()->get('fr').'.equCO2)', 'fr'
+        );
         $extendedReferenceUnit->setStandardUnit($this->standardUnit->getReferenceUnit());
         $extendedReferenceUnit->setExtension($this->_extendedUnit->getExtension());
 

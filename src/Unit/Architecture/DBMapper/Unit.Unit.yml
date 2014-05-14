@@ -12,10 +12,6 @@ Unit\Domain\Unit\Unit:
     extended: Unit\Domain\Unit\ExtendedUnit
     discrete: Unit\Domain\Unit\DiscreteUnit
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       column: id
@@ -27,12 +23,9 @@ Unit\Domain\Unit\Unit:
     ref:
       type: string
       unique: true
+
+  embedded:
     name:
-      type: string
-      nullable: true
-      gedmo:
-        - translatable
+      class: Core\Translation\TranslatedString
     symbol:
-      type: string
-      gedmo:
-        - translatable
+      class: Core\Translation\TranslatedString

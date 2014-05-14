@@ -30,7 +30,7 @@ class Unit_ConsultController extends Core_Controller
         foreach (StandardUnit::loadList() as $standardUnit) {
             /* @var $standardUnit StandardUnit */
             $idStandardUnit = $standardUnit->getKey();
-            $this->view->listStandardUnits[$idStandardUnit['id']] = $standardUnit->getName();
+            $this->view->listStandardUnits[$idStandardUnit['id']] = $this->translationHelper->toString($standardUnit->getName());
         }
 
         $queryBasePhyscialQuantity = new Core_Model_Query();

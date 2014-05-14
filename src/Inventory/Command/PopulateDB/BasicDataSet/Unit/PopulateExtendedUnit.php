@@ -2,6 +2,7 @@
 
 namespace Inventory\Command\PopulateDB\BasicDataSet\Unit;
 
+use Core\Translation\TranslatedString;
 use Core_Model_Query;
 use Doctrine\ORM\EntityManager;
 use Unit\Domain\Unit\ExtendedUnit;
@@ -51,12 +52,13 @@ class PopulateExtendedUnit
             $extendedUnit->setMultiplier($standardUnit->getMultiplier() * $extension->getMultiplier());
             $extendedUnit->setExtension($extension);
             $extendedUnit->setStandardUnit($standardUnit);
+            $extendedUnit->setName(
+                TranslatedString::join([$standardUnit->getName(), ' ', $extension->getName()])
+            );
+            $extendedUnit->setSymbol(
+                TranslatedString::join([$standardUnit->getSymbol(), ' ', $extension->getSymbol()])
+            );
             $extendedUnit->save();
-
-            foreach (['fr', 'en'] as $lang) {
-                $extendedUnit->setName($standardUnit->getName() . ' ' . $extension->getName()->get($lang));
-                $extendedUnit->setSymbol($standardUnit->getSymbol() . ' ' . $extension->getSymbol()->get($lang));
-            }
         }
         $this->entityManager->flush();
     }

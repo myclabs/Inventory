@@ -15,16 +15,6 @@ use Unit\Domain\Unit\StandardUnit;
 class Unit_Datagrids_StandardunitsController extends UI_Controller_Datagrid
 {
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
-     * Récupération des paramètres de tris et filtres de la manière suivante :
-     *  $this->request.
-     *
-     * Récupération des arguments de la manière suivante :
-     *  $this->getParam('nomArgument').
-     *
-     * Renvoie la liste d'éléments, le nombre total et un message optionnel.
-     *
      * @Secure("viewUnit")
      */
     public function getelementsAction()
@@ -34,9 +24,9 @@ class Unit_Datagrids_StandardunitsController extends UI_Controller_Datagrid
             $element = array();
             $idStandardUnit = $standardUnit->getKey();
             $element['index'] = $idStandardUnit['id'];
-            $element['name'] = $standardUnit->getName();
+            $element['name'] = $this->cellTranslatedText($standardUnit->getName());
             $element['ref'] = $standardUnit->getRef();
-            $element['symbol'] = $standardUnit->getSymbol();
+            $element['symbol'] = $this->cellTranslatedText($standardUnit->getSymbol());
             $idPhysicalQuantity = $standardUnit->getPhysicalQuantity()->getKey();
             $element['physicalQuantity'] = $this->cellList($idPhysicalQuantity['id']);
             $element['multiplier'] = Core_Locale::loadDefault()->formatNumber($standardUnit->getMultiplier(), 10);
@@ -47,5 +37,4 @@ class Unit_Datagrids_StandardunitsController extends UI_Controller_Datagrid
         $this->totalElements = StandardUnit::countTotal($this->request);
         $this->send();
     }
-
 }

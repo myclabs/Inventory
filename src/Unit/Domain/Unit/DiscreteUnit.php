@@ -18,6 +18,8 @@ class DiscreteUnit extends Unit
 {
     public function __construct()
     {
+        parent::__construct();
+
         // Le Symbole n'etant pas utile dans les unités discretes, il vaut le nom.
         $this->symbol = & $this->name;
     }

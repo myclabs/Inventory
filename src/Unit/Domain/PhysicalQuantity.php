@@ -10,7 +10,6 @@ namespace Unit\Domain;
 
 use Core\Translation\TranslatedString;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Unit\Domain\PhysicalQuantity\Component;
