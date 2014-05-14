@@ -26,6 +26,14 @@ trait AccountFeatureContext
     }
 
     /**
+     * @Then /^I should see the "([^"]*)" organization$/
+     */
+    public function iShouldSeeTheOrganization($name)
+    {
+        $this->assertSession()->elementExists('css', ".organization:contains(\"$name\")");
+    }
+
+    /**
      * @Then /^I should see the "([^"]*)" AF library$/
      */
     public function iShouldSeeTheAFLibrary($name)

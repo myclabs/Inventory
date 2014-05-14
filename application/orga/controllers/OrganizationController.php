@@ -219,7 +219,7 @@ class Orga_OrganizationController extends Core_Controller
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
-        $this->redirect('orga/organization/manage');
+        $this->redirect('account/dashboard/');
     }
 
     /**
