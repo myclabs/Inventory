@@ -52,7 +52,7 @@ class Classification_LibraryController extends Core_Controller
             if ($label == '') {
                 UI_Message::addMessageStatic(__('UI', 'formValidation', 'allFieldsRequired'));
             } else {
-                $label = $this->translationHelper->set(new TranslatedString(), $label);
+                $label = $this->translator->set(new TranslatedString(), $label);
                 $library = new ClassificationLibrary($account, $label);
                 $library->save();
                 $this->entityManager->flush();
@@ -106,7 +106,7 @@ class Classification_LibraryController extends Core_Controller
 
         foreach ($library->getAxes() as $axis) {
             if (!$axis->hasMembers()) {
-                $listAxesWithoutMember[] = $this->translationHelper->toString($axis->getLabel());
+                $listAxesWithoutMember[] = $this->translator->toString($axis->getLabel());
             } else {
                 $narrowerAxis = $axis->getDirectNarrower();
                 $broaderAxes = $axis->getDirectBroaders();
@@ -121,7 +121,7 @@ class Classification_LibraryController extends Core_Controller
                             if (!isset($listAxesWithMembersNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()])) {
                                 $listAxesWithMembersNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()] = [];
                             }
-                            $listAxesWithMembersNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()][] = $this->translationHelper->toString($member->getLabel());
+                            $listAxesWithMembersNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()][] = $this->translator->toString($member->getLabel());
                         }
                     }
                     foreach ($broaderAxes as $broaderAxis) {
@@ -133,7 +133,7 @@ class Classification_LibraryController extends Core_Controller
                             if (!isset($listAxesWithMembersNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()])) {
                                 $listAxesWithMembersNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()] = [];
                             }
-                            $listAxesWithMembersNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()][] = $this->translationHelper->toString($member->getLabel());
+                            $listAxesWithMembersNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()][] = $this->translator->toString($member->getLabel());
                         }
                     }
                 }
@@ -148,8 +148,8 @@ class Classification_LibraryController extends Core_Controller
                     if (($contextIndicatorAxis !== $contextIndicatorAxisVerif)
                         && ($contextIndicatorAxis->isNarrowerThan($contextIndicatorAxisVerif))) {
                         $contextIndicatorErrors[] = '('
-                            . $this->translationHelper->toString($contextIndicatorAxis->getLabel())
-                            . ' - ' . $this->translationHelper->toString($contextIndicatorAxisVerif->getLabel())
+                            . $this->translator->toString($contextIndicatorAxis->getLabel())
+                            . ' - ' . $this->translator->toString($contextIndicatorAxisVerif->getLabel())
                             . ')';
                     }
                 }
@@ -177,10 +177,10 @@ class Classification_LibraryController extends Core_Controller
             $message->occurences = '';
             foreach ($listAxesWithMembersNotLinkedToNarrower as $axisId => $narrowerAxesMembers) {
                 $axis = Axis::load($axisId);
-                $message->occurences .= $this->translationHelper->toString($axis->getLabel()) . ' : { ';
+                $message->occurences .= $this->translator->toString($axis->getLabel()) . ' : { ';
                 foreach ($narrowerAxesMembers as $narrowerAxisId => $refMembers) {
                     $narrowerAxis = Axis::load($narrowerAxisId);
-                    $message->occurences .= $this->translationHelper->toString($narrowerAxis->getLabel())
+                    $message->occurences .= $this->translator->toString($narrowerAxis->getLabel())
                         . ' : [' . implode(', ', $refMembers) . '], ';
                 }
                 $message->occurences = substr($message->occurences, 0, -2);
@@ -196,10 +196,10 @@ class Classification_LibraryController extends Core_Controller
             $message->occurences = '';
             foreach ($listAxesWithMembersNotLinkedToBroader as $axisId => $narrowerAxesMembers) {
                 $axis = Axis::load($axisId);
-                $message->occurences .= $this->translationHelper->toString($axis->getLabel()) . ' : { ';
+                $message->occurences .= $this->translator->toString($axis->getLabel()) . ' : { ';
                 foreach ($narrowerAxesMembers as $broaderAxisId => $refMembers) {
                     $broaderAxis = Axis::load($broaderAxisId);
-                    $message->occurences .= $this->translationHelper->toString($broaderAxis->getLabel())
+                    $message->occurences .= $this->translator->toString($broaderAxis->getLabel())
                         . ' : [' . implode(', ', $refMembers) . '], ';
                 }
                 $message->occurences = substr($message->occurences, 0, -2);
@@ -216,8 +216,8 @@ class Classification_LibraryController extends Core_Controller
             $message->control = __('Classification', 'control', 'contextIndicatorsWithLinkedAxes');
             $message->occurences = '';
             foreach ($listContextIndicatorsWithLinkedAxes as $contextIndicatorArray) {
-                $message->occurences .= $this->translationHelper->toString($contextIndicatorArray['contextIndicator']->getContext()->getLabel()) . ' - ' .
-                    $this->translationHelper->toString($contextIndicatorArray['contextIndicator']->getIndicator()->getLabel()) .
+                $message->occurences .= $this->translator->toString($contextIndicatorArray['contextIndicator']->getContext()->getLabel()) . ' - ' .
+                    $this->translator->toString($contextIndicatorArray['contextIndicator']->getIndicator()->getLabel()) .
                     ' : { ' . implode(', ', $contextIndicatorArray['axes']) . ' }, ';
             }
             if (strlen($message->occurences) > 0) {

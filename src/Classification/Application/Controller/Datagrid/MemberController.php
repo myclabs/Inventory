@@ -92,7 +92,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
             if (empty($this->_addErrorMessages)) {
                 $member = new Member();
                 $member->setRef($ref);
-                $this->translationHelper->set($member->getLabel(), $label);
+                $this->translator->set($member->getLabel(), $label);
                 $member->setAxis($axis);
                 foreach ($broaderMembers as $broaderMember) {
                     $member->addDirectParent($broaderMember);
@@ -130,7 +130,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
 
         switch ($this->update['column']) {
             case 'label':
-                $this->translationHelper->set($member->getLabel(), $this->update['value']);
+                $this->translator->set($member->getLabel(), $this->update['value']);
                 $this->message = __('UI', 'message', 'updated');
                 break;
             case 'ref':
@@ -207,7 +207,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
         foreach ($broaderAxis->getMembers() as $eligibleParentMember) {
             $this->addElementList(
                 $eligibleParentMember->getId(),
-                $this->translationHelper->toString($eligibleParentMember->getLabel())
+                $this->translator->toString($eligibleParentMember->getLabel())
             );
         }
 

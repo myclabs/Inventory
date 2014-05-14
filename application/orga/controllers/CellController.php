@@ -331,7 +331,7 @@ class Orga_CellController extends Core_Controller
             $axisChoiceNullOption->setAttribute('value', '');
             $axisChoiceInput->appendContent($axisChoiceNullOption);
             foreach ($axesCanEdit as $axis) {
-                $axisOption = new GenericTag('option', $this->translationHelper->toString($axis->getLabel()));
+                $axisOption = new GenericTag('option', $this->translator->toString($axis->getLabel()));
                 $axisOption->setAttribute('value', $axis->getRef());
                 $axisChoiceInput->appendContent($axisOption);
 
@@ -343,7 +343,7 @@ class Orga_CellController extends Core_Controller
                     $parentMemberGroup->addClass($axis->getRef());
                     $addMemberForm->appendContent($parentMemberGroup);
 
-                    $parentMemberChoiceLabel = new GenericTag('label', $this->translationHelper->toString($broaderAxis->getLabel()));
+                    $parentMemberChoiceLabel = new GenericTag('label', $this->translator->toString($broaderAxis->getLabel()));
                     $parentMemberChoiceLabel->setAttribute('for', 'addMember_axis_'.$broaderAxis->getId());
                     $parentMemberChoiceLabel->addClass('control-label');
                     $parentMemberChoiceLabel->addClass('col-xs-2');
@@ -377,7 +377,7 @@ class Orga_CellController extends Core_Controller
                         $members = $broaderAxis->getMembers();
                     }
                     foreach ($members as $parentMember) {
-                        $parentMemberOption = new GenericTag('option', $this->translationHelper->toString($parentMember->getLabel()));
+                        $parentMemberOption = new GenericTag('option', $this->translator->toString($parentMember->getLabel()));
                         $parentMemberOption->setAttribute('value', $parentMember->getId());
                         $parentMemberChoiceInput->appendContent($parentMemberOption);
                     }
@@ -422,7 +422,7 @@ class Orga_CellController extends Core_Controller
     {
         $memberOptions = [];
         $memberOptions[''] = __('Orga', 'view', 'allMembers', [
-            'AXIS' => $this->translationHelper->toString($axis->getLabel())
+            'AXIS' => $this->translator->toString($axis->getLabel())
         ]);
 
         $filter = $cell->getChildMembersForAxes([$axis]);
@@ -433,7 +433,7 @@ class Orga_CellController extends Core_Controller
             $members = $axis->getOrderedMembers()->toArray();
         }
         foreach ($members as $member) {
-            $memberOptions[$member->getTag()] = $this->translationHelper->toString($member->getLabel());
+            $memberOptions[$member->getTag()] = $this->translator->toString($member->getLabel());
         }
 
         return $memberOptions;
@@ -634,7 +634,7 @@ class Orga_CellController extends Core_Controller
                 . __('Orga', 'input', 'aboutInput')
                 . ' <a href="orga/cell/input/idCell/' . $comment->getCell()->getId()
                     . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
-                    . $this->translationHelper->toString($comment->getCell()->getLabel())
+                    . $this->translator->toString($comment->getCell()->getLabel())
                 . '</a>' . __('UI', 'other', ':')
                 . '« '
                 . Core_Tools::truncateString(Core_Tools::removeTextileMarkUp($comment->getText()), 150)
@@ -725,7 +725,7 @@ class Orga_CellController extends Core_Controller
             [$axis, $ref, $label, $parentMembers],
             __('Orga', 'backgroundTasks', 'addMember', [
                 'MEMBER' => $label,
-                'AXIS' => $this->translationHelper->toString($axis->getLabel()),
+                'AXIS' => $this->translator->toString($axis->getLabel()),
             ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
@@ -928,8 +928,8 @@ class Orga_CellController extends Core_Controller
         $dWReports = $cell->getDWCube()->getReports();
         usort($dWReports, function (DW_Model_Report $a, DW_Model_Report $b) {
             return strcmp(
-                $this->translationHelper->toString($a->getLabel()),
-                $this->translationHelper->toString($b->getLabel())
+                $this->translator->toString($a->getLabel()),
+                $this->translator->toString($b->getLabel())
             );
         });
         foreach ($dWReports as $dWReport) {
@@ -940,7 +940,7 @@ class Orga_CellController extends Core_Controller
                 // Rapport Copié.
             }
             $cellReports[] = [
-                'label' => $this->translationHelper->toString($dWReport->getLabel()),
+                'label' => $this->translator->toString($dWReport->getLabel()),
                 'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$dWReport->getId(),
                 'type' => 'copiedReport',
             ];
@@ -950,7 +950,7 @@ class Orga_CellController extends Core_Controller
         foreach ($usersReports as $cellReport) {
             /** @var DW_Model_Report $dWReport */
             $cellReports[] = [
-                'label' => $this->translationHelper->toString($cellReport->getCellDWReport()->getLabel()),
+                'label' => $this->translator->toString($cellReport->getCellDWReport()->getLabel()),
                 'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$cellReport->getCellDWReport()->getId(),
                 'type' => 'userReport',
                 'owner' => $cellReport->getOwner(),
@@ -1003,7 +1003,7 @@ class Orga_CellController extends Core_Controller
 
         $viewConfiguration = new DW_ViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(
-            ' <small>'.$this->translationHelper->toString($cell->getExtendedLabel()).'</small>'
+            ' <small>'.$this->translator->toString($cell->getExtendedLabel()).'</small>'
         );
         $viewConfiguration->setOutputUrl('orga/cell/view/idCell/'.$fromIdCell.'/');
         $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$fromIdCell);
@@ -1323,7 +1323,7 @@ class Orga_CellController extends Core_Controller
             $aFViewConfiguration->setMode(AFViewConfiguration::MODE_READ);
         }
         $aFViewConfiguration->setPageTitle(
-            __('UI', 'name', 'input').' <small>'.$this->translationHelper->toString($cell->getLabel()).'</small>'
+            __('UI', 'name', 'input').' <small>'.$this->translator->toString($cell->getLabel()).'</small>'
         );
         $aFViewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $idCell]);
         $aFViewConfiguration->setResultsPreviewUrl('orga/cell/input-preview');

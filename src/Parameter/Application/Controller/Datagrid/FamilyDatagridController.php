@@ -93,7 +93,7 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             /** @var $category Category */
             $category = Category::load($idCategory);
 
-            $label = $this->translationHelper->set(new TranslatedString(), $label);
+            $label = $this->translator->set(new TranslatedString(), $label);
 
             try {
                 $family = new Family($library, $ref, $label);

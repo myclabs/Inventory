@@ -35,7 +35,7 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
                 $data['input'] = $algo->getInputRef();
                 $data['unit'] = $this->cellText(
                     $algo->getUnit()->getRef(),
-                    $this->translationHelper->toString($algo->getUnit()->getSymbol())
+                    $this->translator->toString($algo->getUnit()->getSymbol())
                 );
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
@@ -72,7 +72,7 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $this->translationHelper->set($algo->getLabel(), $newValue);
+                $this->translator->set($algo->getLabel(), $newValue);
                 $this->data = $this->cellTranslatedText($algo->getLabel());
                 break;
             case 'contextIndicator':
@@ -115,8 +115,8 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
             foreach ($library->getContextIndicators() as $contextIndicator) {
                 $this->addElementList(
                     $contextIndicator->getId(),
-                    $this->translationHelper->toString($library->getLabel()) . ' > '
-                    . $this->translationHelper->toString($contextIndicator->getLabel())
+                    $this->translator->toString($library->getLabel()) . ' > '
+                    . $this->translator->toString($contextIndicator->getLabel())
                 );
             }
         }

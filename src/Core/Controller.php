@@ -14,7 +14,6 @@ use Psr\Log\LoggerInterface;
  */
 abstract class Core_Controller extends Zend_Controller_Action
 {
-
     /**
      * @Inject
      * @var EntityManager
@@ -31,7 +30,7 @@ abstract class Core_Controller extends Zend_Controller_Action
      * @Inject
      * @var TranslationHelper
      */
-    protected $translationHelper;
+    protected $translator;
 
     /**
      * Helper pour les redirections.

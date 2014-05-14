@@ -311,7 +311,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      */
     public function cellTranslatedText(TranslatedString $text, $editable = true)
     {
-        return $this->baseCell($this->translationHelper->toString($text), null, $editable);
+        return $this->baseCell($this->translator->toString($text), null, $editable);
     }
 
     /**

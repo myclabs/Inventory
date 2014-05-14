@@ -25,11 +25,11 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
             $data['ref'] = $this->cellText($indicator->getRef());
             $data['unit'] = $this->cellText(
                 $indicator->getUnit()->getRef(),
-                $this->translationHelper->toString($indicator->getUnit()->getSymbol())
+                $this->translator->toString($indicator->getUnit()->getSymbol())
             );
             $data['ratioUnit'] = $this->cellText(
                 $indicator->getRatioUnit()->getRef(),
-                $this->translationHelper->toString($indicator->getRatioUnit()->getSymbol())
+                $this->translator->toString($indicator->getRatioUnit()->getSymbol())
             );
             $canUp = !($indicator->getPosition() === 1);
             $canDown = !($indicator->getPosition() === $indicator->getLastEligiblePosition());
@@ -67,7 +67,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
                 $library->getIndicatorByRef($ref);
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
             } catch (Core_Exception_NotFound $e) {
-                $label = $this->translationHelper->set(new TranslatedString(), $label);
+                $label = $this->translator->set(new TranslatedString(), $label);
                 $indicator = new Indicator($library, $ref, $label, $unit, $ratioUnit);
             }
         } catch (Core_Exception_User $e) {
@@ -110,7 +110,7 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
         $indicator = Indicator::load($this->update['index']);
         switch ($this->update['column']) {
             case 'label':
-                $this->translationHelper->set($indicator->getLabel(), $this->update['value']);
+                $this->translator->set($indicator->getLabel(), $this->update['value']);
                 $this->message = __('UI', 'message', 'updated');
                 break;
             case 'ref':

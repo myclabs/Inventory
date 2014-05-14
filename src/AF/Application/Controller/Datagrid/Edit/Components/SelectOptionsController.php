@@ -71,7 +71,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
                 $this->send();
                 return;
             }
-            $this->translationHelper->set($option->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($option->getLabel(), $this->getAddElementValue('label'));
             $option->setVisible($isVisible);
             $option->setEnabled($this->getAddElementValue('enabled'));
 
@@ -108,7 +108,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $this->translationHelper->set($option->getLabel(), $newValue);
+                $this->translator->set($option->getLabel(), $newValue);
                 $this->data = $this->cellTranslatedText($option->getLabel());
                 break;
             case 'ref':

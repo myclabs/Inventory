@@ -48,7 +48,7 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
             } catch (Core_Exception_NotFound $e) {
                 $context = new Context($library);
                 $context->setRef($ref);
-                $this->translationHelper->set($context->getLabel(), $label);
+                $this->translator->set($context->getLabel(), $label);
                 $context->save();
                 $this->message = __('UI', 'message', 'added');
             }
@@ -88,7 +88,7 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
         $context = Context::load($this->update['index']);
         switch ($this->update['column']) {
             case 'label':
-                $this->translationHelper->set($context->getLabel(), $this->update['value']);
+                $this->translator->set($context->getLabel(), $this->update['value']);
                 $this->message = __('UI', 'message', 'updated');
                 break;
             case 'ref':

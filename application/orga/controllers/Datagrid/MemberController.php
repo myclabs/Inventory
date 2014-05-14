@@ -97,7 +97,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             foreach ($member->getDirectParents() as $directParentMember) {
                 $data['broader'.$directParentMember->getAxis()->getRef()] = $this->cellList(
                     $directParentMember->getCompleteRef(),
-                    $this->translationHelper->toString($directParentMember->getLabel())
+                    $this->translator->toString($directParentMember->getLabel())
                 );
             }
             $this->addLine($data);
@@ -178,7 +178,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     [$axis, $ref, $label, $broaderMembers],
                     __('Orga', 'backgroundTasks', 'addMember', [
                         'MEMBER' => $label,
-                        'AXIS' => $this->translationHelper->toString($axis->getLabel()),
+                        'AXIS' => $this->translator->toString($axis->getLabel()),
                     ])
                 );
                 $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
@@ -222,8 +222,8 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             'deleteMember',
             [$member],
             __('Orga', 'backgroundTasks', 'deleteMember', [
-                'MEMBER' => $this->translationHelper->toString($member->getLabel()),
-                'AXIS' => $this->translationHelper->toString($member->getAxis()->getLabel()),
+                'MEMBER' => $this->translator->toString($member->getLabel()),
+                'AXIS' => $this->translator->toString($member->getAxis()->getLabel()),
             ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
@@ -246,9 +246,9 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
 
         switch ($this->update['column']) {
             case 'label':
-                $this->translationHelper->set($member->getLabel(), $this->update['value']);
+                $this->translator->set($member->getLabel(), $this->update['value']);
                 $this->message = __('UI', 'message', 'updated', [
-                    'LABEL' => $this->translationHelper->toString($member->getLabel())
+                    'LABEL' => $this->translator->toString($member->getLabel())
                 ]);
                 break;
             case 'ref':
@@ -262,7 +262,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 } catch (Core_Exception_NotFound $e) {
                     $member->setRef($this->update['value']);
                     $this->message = __('UI', 'message', 'updated', [
-                        'LABEL' => $this->translationHelper->toString($member->getLabel())
+                        'LABEL' => $this->translator->toString($member->getLabel())
                     ]);
                 }
                 break;
@@ -277,7 +277,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     $parentMember = $broaderAxis->getMemberByCompleteRef($this->update['value']);
                     $member->setDirectParentForAxis($parentMember);
                     $this->message = __('UI', 'message', 'updated', [
-                        'LABEL' => $this->translationHelper->toString($member->getLabel())
+                        'LABEL' => $this->translator->toString($member->getLabel())
                     ]);
                 } else {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
@@ -353,7 +353,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $query = $this->getParam('q');
         if (!empty($query)) {
             foreach ($members as $indexMember => $member) {
-                if (strpos($this->translationHelper->toString($member->getLabel()), $query) === false) {
+                if (strpos($this->translator->toString($member->getLabel()), $query) === false) {
                     unset($members[$indexMember]);
                 }
             }
@@ -362,7 +362,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         foreach ($members as $eligibleParentMember) {
             $this->addElementAutocompleteList(
                 $eligibleParentMember->getCompleteRef(),
-                $this->translationHelper->toString($eligibleParentMember->getLabel())
+                $this->translator->toString($eligibleParentMember->getLabel())
             );
         }
 

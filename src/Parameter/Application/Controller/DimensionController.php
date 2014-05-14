@@ -31,7 +31,7 @@ class Parameter_DimensionController extends Core_Controller
             return;
         }
 
-        $label = $this->translationHelper->set(new TranslatedString(), $label);
+        $label = $this->translator->set(new TranslatedString(), $label);
         $dimension = new Dimension($family, $ref, $label, $orientation);
         $dimension->save();
         $family->addDimension($dimension);
@@ -62,7 +62,7 @@ class Parameter_DimensionController extends Core_Controller
 
         $dimension = $family->getDimension($this->getParam('refDimension'));
         $dimension->setRef($ref);
-        $this->translationHelper->set($dimension->getLabel(), $label);
+        $this->translator->set($dimension->getLabel(), $label);
         $this->entityManager->flush();
 
         UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
@@ -122,7 +122,7 @@ class Parameter_DimensionController extends Core_Controller
             }
 
             try {
-                $label = $this->translationHelper->set(new TranslatedString(), $label);
+                $label = $this->translator->set(new TranslatedString(), $label);
                 $member = new Member($dimension, $ref, $label);
             } catch (Core_Exception_User $e) {
                 UI_Message::addMessageStatic($e->getMessage());

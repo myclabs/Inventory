@@ -75,8 +75,8 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
                 $this->send();
                 return;
             }
-            $this->translationHelper->set($group->getLabel(), $this->getAddElementValue('label'));
-            $this->translationHelper->set($group->getHelp(), $this->getAddElementValue('help'));
+            $this->translator->set($group->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($group->getHelp(), $this->getAddElementValue('help'));
             $group->setVisible($isVisible);
             $group->save();
             $af->addComponent($group);
@@ -110,11 +110,11 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
                 $this->data = $group->getRef();
                 break;
             case 'label':
-                $this->translationHelper->set($group->getLabel(), $newValue);
+                $this->translator->set($group->getLabel(), $newValue);
                 $this->data = $this->cellTranslatedText($group->getLabel());
                 break;
             case 'help':
-                $this->translationHelper->set($group->getHelp(), $newValue);
+                $this->translator->set($group->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -163,7 +163,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
     {
         /** @var $group Group */
         $group = Group::load($this->getParam('component'));
-        $this->data = $this->translationHelper->toString($group->getHelp());
+        $this->data = $this->translator->toString($group->getHelp());
         $this->send();
     }
 }

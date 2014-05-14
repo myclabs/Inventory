@@ -90,7 +90,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             /** @var $category Category */
             $category = Category::load($idCategory);
 
-            $label = $this->translationHelper->set(new TranslatedString(), $label);
+            $label = $this->translator->set(new TranslatedString(), $label);
             $af = new AF($library, $label);
             $library->addAF($af);
             $af->setCategory($category);
@@ -121,7 +121,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 if (empty($newValue)) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
-                $this->translationHelper->set($af->getLabel(), $newValue);
+                $this->translator->set($af->getLabel(), $newValue);
                 $this->data = $this->cellTranslatedText($af->getLabel());
                 break;
         }

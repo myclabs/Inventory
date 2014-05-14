@@ -168,7 +168,7 @@ class AF_Datagrid_Edit_Algos_IndexationController extends UI_Controller_Datagrid
                 foreach ($axis->getMembers() as $member) {
                     $this->addElementList(
                         $member->getRef(),
-                        $this->translationHelper->toString($member->getLabel())
+                        $this->translator->toString($member->getLabel())
                     );
                 }
                 break;

@@ -30,7 +30,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
             $isLeaf = (! $component instanceof Group);
             $this->addNode(
                 $component->getId(),
-                $this->translationHelper->toString($component->getLabel())
+                $this->translator->toString($component->getLabel())
                 . ' <em>(' . $component->getRef() . ')</em>',
                 $isLeaf,
                 null,
@@ -156,7 +156,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
                     continue;
                 }
             }
-            $this->addElementList($sibling->getId(), $this->translationHelper->toString($sibling->getLabel()));
+            $this->addElementList($sibling->getId(), $this->translator->toString($sibling->getLabel()));
         }
         $this->send();
     }
@@ -170,7 +170,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         $groups = [];
         foreach ($group->getSubComponents() as $component) {
             if ($component instanceof Group) {
-                $groups[$component->getId()] = $this->translationHelper->toString($component->getLabel());
+                $groups[$component->getId()] = $this->translator->toString($component->getLabel());
                 $groups = $groups + $this->getAllAFGroups($component);
             }
         }

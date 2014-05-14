@@ -72,7 +72,7 @@ class AF_EditController extends Core_Controller
                 $this->sendFormResponse();
                 return;
             }
-            $this->translationHelper->set($af->getLabel(), $label);
+            $this->translator->set($af->getLabel(), $label);
             $af->setDocumentation($this->getParam('documentation'));
             $af->save();
             $this->entityManager->flush();

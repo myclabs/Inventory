@@ -75,8 +75,8 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
                 $this->send();
                 return;
             }
-            $this->translationHelper->set($subAF->getLabel(), $this->getAddElementValue('label'));
-            $this->translationHelper->set($subAF->getHelp(), $this->getAddElementValue('help'));
+            $this->translator->set($subAF->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($subAF->getHelp(), $this->getAddElementValue('help'));
             $subAF->setVisible($isVisible);
             /** @var $calledAF AF */
             $calledAF = AF::load($this->getAddElementValue('targetAF'));
@@ -113,11 +113,11 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
                 $this->data = $subAF->getRef();
                 break;
             case 'label':
-                $this->translationHelper->set($subAF->getLabel(), $newValue);
+                $this->translator->set($subAF->getLabel(), $newValue);
                 $this->data = $this->cellTranslatedText($subAF->getLabel());
                 break;
             case 'help':
-                $this->translationHelper->set($subAF->getHelp(), $newValue);
+                $this->translator->set($subAF->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -168,7 +168,7 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
     {
         /** @var $subAF RepeatedSubAF */
         $subAF = RepeatedSubAF::load($this->getParam('component'));
-        $this->data = $this->translationHelper->toString($subAF->getHelp());
+        $this->data = $this->translator->toString($subAF->getHelp());
         $this->send();
     }
 }

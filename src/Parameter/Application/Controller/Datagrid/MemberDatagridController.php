@@ -69,7 +69,7 @@ class Parameter_Datagrid_MemberDatagridController extends UI_Controller_Datagrid
                 $this->data = $newValue;
                 break;
             case 'label':
-                $this->translationHelper->set($member->getLabel(), $newValue);
+                $this->translator->set($member->getLabel(), $newValue);
                 $this->data = $newValue;
                 break;
         }

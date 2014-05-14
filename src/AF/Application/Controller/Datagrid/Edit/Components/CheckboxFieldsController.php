@@ -70,8 +70,8 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
                 $this->send();
                 return;
             }
-            $this->translationHelper->set($checkboxField->getLabel(), $this->getAddElementValue('label'));
-            $this->translationHelper->set($checkboxField->getHelp(), $this->getAddElementValue('help'));
+            $this->translator->set($checkboxField->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($checkboxField->getHelp(), $this->getAddElementValue('help'));
             $checkboxField->setVisible($isVisible);
             $checkboxField->setEnabled($this->getAddElementValue('enabled'));
             if ($this->getAddElementValue('defaultValue') == 'true') {
@@ -111,11 +111,11 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
                 $this->data = $checkboxField->getRef();
                 break;
             case 'label':
-                $this->translationHelper->set($checkboxField->getLabel(), $newValue);
+                $this->translator->set($checkboxField->getLabel(), $newValue);
                 $this->data = $this->cellTranslatedText($checkboxField->getLabel());
                 break;
             case 'help':
-                $this->translationHelper->set($checkboxField->getHelp(), $newValue);
+                $this->translator->set($checkboxField->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -177,7 +177,7 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     {
         /** @var $checkboxField Checkbox */
         $checkboxField = Checkbox::load($this->getParam('component'));
-        $this->data = $this->translationHelper->toString($checkboxField->getHelp());
+        $this->data = $this->translator->toString($checkboxField->getHelp());
         $this->send();
     }
 }

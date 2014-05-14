@@ -76,8 +76,8 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
                 $this->send();
                 return;
             }
-            $this->translationHelper->set($field->getLabel(), $this->getAddElementValue('label'));
-            $this->translationHelper->set($field->getHelp(), $this->getAddElementValue('help'));
+            $this->translator->set($field->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($field->getHelp(), $this->getAddElementValue('help'));
             $field->setVisible($isVisible);
             $field->setEnabled($this->getAddElementValue('enabled'));
             $field->setRequired($this->getAddElementValue('required'));
@@ -109,7 +109,7 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $this->translationHelper->set($field->getLabel(), $newValue);
+                $this->translator->set($field->getLabel(), $newValue);
                 $this->data = $this->cellTranslatedText($field->getLabel());
                 break;
             case 'ref':
@@ -117,7 +117,7 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
                 $this->data = $field->getRef();
                 break;
             case 'help':
-                $this->translationHelper->set($field->getHelp(), $newValue);
+                $this->translator->set($field->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -185,7 +185,7 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
     {
         /** @var $numeric TextField */
         $numeric = TextField::load($this->getParam('component'));
-        $this->data = $this->translationHelper->toString($numeric->getHelp());
+        $this->data = $this->translator->toString($numeric->getHelp());
         $this->send();
     }
 }

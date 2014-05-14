@@ -55,7 +55,7 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->addToActionStack('submit-test', 'input', 'af');
         $viewConfiguration->setDisplayConfigurationLink(true);
         $viewConfiguration->addBaseTabs();
-        $viewConfiguration->setPageTitle($this->translationHelper->toString($af->getLabel()));
+        $viewConfiguration->setPageTitle($this->translator->toString($af->getLabel()));
         $viewConfiguration->setUseSession(true);
         $viewConfiguration->setExitUrl('af/library/view/id/' . $af->getLibrary()->getId());
 
@@ -269,7 +269,7 @@ class AF_AfController extends Core_Controller
             return;
         }
 
-        $newLabel = $this->translationHelper->set(new TranslatedString(), $newLabel);
+        $newLabel = $this->translator->set(new TranslatedString(), $newLabel);
         $newAF = $this->afCopyService->copyAF($af, $newLabel);
 
         $newAF->save();

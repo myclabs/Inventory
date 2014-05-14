@@ -44,7 +44,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         foreach ($categories as $category) {
             $this->addNode(
                 $this->getTreeId($category),
-                $this->translationHelper->toString($category->getLabel()),
+                $this->translator->toString($category->getLabel()),
                 false,
                 null,
                 false,
@@ -56,7 +56,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         if ($currentCategory) {
             foreach ($currentCategory->getFamilies() as $family) {
                 // Place un symbole indiquant le type de la famille
-                $label = $this->translationHelper->toString($family->getLabel());
+                $label = $this->translator->toString($family->getLabel());
                 $url = $this->_helper->url('edit', 'family', 'parameter', ['id' => $family->getId()]);
                 $this->addNode($this->getTreeId($family), $label, true, $url, true, false, $isEditable);
             }
@@ -81,7 +81,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         foreach ($library->getRootCategories() as $category) {
             $this->addElementList(
                 $this->getTreeId($category),
-                $this->translationHelper->toString($category->getLabel())
+                $this->translator->toString($category->getLabel())
             );
         }
         $this->send();
@@ -157,7 +157,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
             return;
         }
 
-        $label = $this->translationHelper->set(new TranslatedString(), $label);
+        $label = $this->translator->set(new TranslatedString(), $label);
         $category = new Category($library, $label);
         $category->save();
         $this->entityManager->flush();
@@ -181,7 +181,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
             return;
         }
         if ($label != null) {
-            $this->translationHelper->set($node->getLabel(), $label);
+            $this->translator->set($node->getLabel(), $label);
         }
 
         // Parent

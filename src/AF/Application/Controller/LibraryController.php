@@ -44,7 +44,7 @@ class AF_LibraryController extends Core_Controller
             if ($label == '') {
                 UI_Message::addMessageStatic(__('UI', 'formValidation', 'allFieldsRequired'));
             } else {
-                $label = $this->translationHelper->set(new TranslatedString(), $label);
+                $label = $this->translator->set(new TranslatedString(), $label);
                 $library = new AFLibrary($account, $label);
                 $library->save();
                 $this->entityManager->flush();

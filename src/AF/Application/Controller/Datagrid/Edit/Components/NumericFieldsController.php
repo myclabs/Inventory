@@ -41,7 +41,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $data['required'] = $numericField->getRequired();
             $data['unit'] = $this->cellText(
                 $numericField->getUnit()->getRef(),
-                $this->translationHelper->toString($numericField->getUnit()->getSymbol())
+                $this->translator->toString($numericField->getUnit()->getSymbol())
             );
             $data['unitSelection'] = $numericField->hasUnitSelection();
             $data['withUncertainty'] = $numericField->getWithUncertainty();
@@ -99,8 +99,8 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 $this->send();
                 return;
             }
-            $this->translationHelper->set($numericField->getLabel(), $this->getAddElementValue('label'));
-            $this->translationHelper->set($numericField->getHelp(), $this->getAddElementValue('help'));
+            $this->translator->set($numericField->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($numericField->getHelp(), $this->getAddElementValue('help'));
             $numericField->setVisible($isVisible);
             $numericField->setEnabled($this->getAddElementValue('enabled'));
             $numericField->setRequired($this->getAddElementValue('required'));
@@ -141,7 +141,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $this->translationHelper->set($numericField->getLabel(), $newValue);
+                $this->translator->set($numericField->getLabel(), $newValue);
                 $this->data = $this->cellTranslatedText($numericField->getLabel());
                 break;
             case 'ref':
@@ -149,7 +149,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 $this->data = $numericField->getRef();
                 break;
             case 'help':
-                $this->translationHelper->set($numericField->getHelp(), $newValue);
+                $this->translator->set($numericField->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -177,7 +177,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 $numericField->setUnit($unit);
                 $this->data = $this->cellText(
                     $numericField->getUnit()->getRef(),
-                    $this->translationHelper->toString($numericField->getUnit()->getSymbol())
+                    $this->translator->toString($numericField->getUnit()->getSymbol())
                 );
                 break;
             case 'unitSelection':
@@ -264,7 +264,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
     {
         /** @var $numeric NumericField */
         $numeric = NumericField::load($this->getParam('component'));
-        $this->data = $this->translationHelper->toString($numeric->getHelp());
+        $this->data = $this->translator->toString($numeric->getHelp());
         $this->send();
     }
 }

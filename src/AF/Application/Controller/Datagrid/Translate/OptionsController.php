@@ -30,7 +30,7 @@ class AF_Datagrid_Translate_OptionsController extends UI_Controller_Datagrid
                 foreach ($component->getOptions() as $option) {
                     $data = array();
                     $data['index'] = $option->getId();
-                    $data['identifier'] = $this->translationHelper->toString($option->getSelect()->getAF()->getLabel())
+                    $data['identifier'] = $this->translator->toString($option->getSelect()->getAF()->getLabel())
                         .' | '.$option->getSelect()->getRef()
                         .' | '.$option->getRef();
 

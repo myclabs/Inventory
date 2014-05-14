@@ -92,8 +92,8 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
                 $this->send();
                 return;
             }
-            $this->translationHelper->set($selectField->getLabel(), $this->getAddElementValue('label'));
-            $this->translationHelper->set($selectField->getHelp(), $this->getAddElementValue('help'));
+            $this->translator->set($selectField->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($selectField->getHelp(), $this->getAddElementValue('help'));
             $selectField->setVisible($isVisible);
             $selectField->setEnabled($this->getAddElementValue('enabled'));
             $selectField->setRequired($this->getAddElementValue('required'));
@@ -126,7 +126,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $this->translationHelper->set($selectField->getLabel(), $newValue);
+                $this->translator->set($selectField->getLabel(), $newValue);
                 $this->data = $this->cellTranslatedText($selectField->getLabel());
                 break;
             case 'ref':
@@ -134,7 +134,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
                 $this->data = $selectField->getRef();
                 break;
             case 'help':
-                $this->translationHelper->set($selectField->getHelp(), $newValue);
+                $this->translator->set($selectField->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -220,7 +220,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
         /** @var $select Select */
         $select = Select::load($this->getParam('index'));
         foreach ($select->getOptions() as $option) {
-            $this->addElementList($option->getId(), $this->translationHelper->toString($option->getLabel()));
+            $this->addElementList($option->getId(), $this->translator->toString($option->getLabel()));
         }
         $this->send();
     }
@@ -233,7 +233,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
     {
         /** @var $select Select */
         $select = Select::load($this->getParam('component'));
-        $this->data = $this->translationHelper->toString($select->getHelp());
+        $this->data = $this->translator->toString($select->getHelp());
         $this->send();
     }
 }
