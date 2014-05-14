@@ -129,7 +129,10 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             if ($sameParent && $sibling->getPosition() == $node->getPosition() - 1) {
                 continue;
             }
-            $this->addElementList($this->getTreeId($sibling), $sibling->getLabel());
+            $this->addElementList(
+                $this->getTreeId($sibling),
+                $this->translationHelper->toString($sibling->getLabel())
+            );
         }
 
         $this->send();

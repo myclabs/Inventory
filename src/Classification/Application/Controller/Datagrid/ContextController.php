@@ -18,7 +18,7 @@ class Classification_Datagrid_ContextController extends UI_Controller_Datagrid
         foreach ($library->getContexts()->toArray() as $context) {
             $data = array();
             $data['index'] = $context->getId();
-            $data['label'] = $this->cellText($context->getLabel());
+            $data['label'] = $this->cellTranslatedText($context->getLabel());
             $data['ref'] = $this->cellText($context->getRef());
             $canUp = !($context->getPosition() === 1);
             $canDown = !($context->getPosition() === $context->getLastEligiblePosition());

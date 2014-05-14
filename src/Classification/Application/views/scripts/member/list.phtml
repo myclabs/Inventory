@@ -30,7 +30,10 @@ foreach ($this->listAxes as $axis) {
     // Membres broaders pour chaque axe broader.
     foreach ($axis->getDirectBroaders() as $broaderAxis) {
         // Construction de la liste de membres.
-        $columnBroader = new UI_Datagrid_Col_List('broader'.$broaderAxis->getId(), $broaderAxis->getLabel());
+        $columnBroader = new UI_Datagrid_Col_List(
+            'broader'.$broaderAxis->getId(),
+            $this->translate($broaderAxis->getLabel())
+        );
         $columnBroader->list = 'classification/datagrid_member/getparents/parentAxis/'.$broaderAxis->getId();
         $columnBroader->dynamicList = true;
         $columnBroader->editable = true;
@@ -52,7 +55,7 @@ foreach ($this->listAxes as $axis) {
     $datagridAxis->addElements = true;
     $datagridAxis->addPanelTitle = __('Classification', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));
 
-    echo $this->collapse($axis->getRef(), $axis->getLabel(), $datagridAxis->getHTML());
+    echo $this->collapse($axis->getRef(), $this->translate($axis->getLabel()), $datagridAxis->getHTML());
     UI_Datagrid::addHeader($datagridAxis);
 
     $script = '';

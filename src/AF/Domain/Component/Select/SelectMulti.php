@@ -78,7 +78,7 @@ class SelectMulti extends Select
         // Remplit avec les options saisies
         $input = null;
         if ($generationHelper->getInputSet()) {
-            /** @var $input \AF\Domain\Input\Select\SelectMultiInput */
+            /** @var $input SelectMultiInput */
             $input = $generationHelper->getInputSet()->getInputForComponent($this);
         }
         if ($input) {

@@ -56,7 +56,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         if ($currentCategory) {
             foreach ($currentCategory->getFamilies() as $family) {
                 // Place un symbole indiquant le type de la famille
-                $label = $this->translate($family->getLabel());
+                $label = $this->translationHelper->toString($family->getLabel());
                 $url = $this->_helper->url('edit', 'family', 'parameter', ['id' => $family->getId()]);
                 $this->addNode($this->getTreeId($family), $label, true, $url, true, false, $isEditable);
             }

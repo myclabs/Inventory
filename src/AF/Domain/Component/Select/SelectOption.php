@@ -12,6 +12,7 @@ use Core_Model_Query;
 use Core_ORM_ForeignKeyViolationException;
 use Core_Strategy_Ordered;
 use Core_Tools;
+use Mnapoli\Translated\TranslationHelper;
 use UI_Form_Element_Option;
 
 /**
@@ -74,7 +75,7 @@ class SelectOption extends Core_Model_Entity
     {
         $uiElement = new UI_Form_Element_Option($this->ref);
         $uiElement->value = $this->ref;
-        $uiElement->label = $this->label;
+        $uiElement->label = $this->uglyTranslate($this->label);
         $uiElement->disabled = !$this->enabled;
         $uiElement->hidden = !$this->visible;
         return $uiElement;
@@ -234,5 +235,19 @@ class SelectOption extends Core_Model_Entity
         return [
             'select' => $this->select,
         ];
+    }
+
+    /**
+     * @deprecated Moche, très moche
+     * @todo À supprimer quand la génération UI est sortie du modèle
+     * @param TranslatedString $string
+     * @return string
+     */
+    protected function uglyTranslate(TranslatedString $string)
+    {
+        /** @var TranslationHelper $translationHelper */
+        $translationHelper = \Core\ContainerSingleton::getContainer()->get(TranslationHelper::class);
+
+        return $translationHelper->toString($string);
     }
 }
