@@ -10,7 +10,6 @@
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Mnapoli\Translated\StringConcatenation;
 
 /**
  * Definit un membre d'un axe.
@@ -361,11 +360,7 @@ class Orga_Model_Member extends Core_Model_Entity
         }
 
         if ((count($broaderLabelParts) > 0)) {
-            $postfix = StringConcatenation::fromArray([
-                ' (',
-                StringConcatenation::implode(', ', $broaderLabelParts),
-                ')',
-            ]);
+            $postfix = TranslatedString::join([' (', TranslatedString::implode(', ', $broaderLabelParts), ')']);
         } else {
             $postfix = '';
         }

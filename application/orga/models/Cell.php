@@ -6,8 +6,6 @@ use Core\Translation\TranslatedString;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Mnapoli\Translated\StringConcatenation;
-use Mnapoli\Translated\UntranslatedString;
 use MyCLabs\ACL\Model\EntityResource;
 use Orga\Model\ACL\AbstractCellRole;
 use Orga\Model\ACL\CellAdminRole;
@@ -502,7 +500,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     public function getLabel()
     {
         if ($this->members->isEmpty()) {
-            return new UntranslatedString(__('Orga', 'navigation', 'labelGlobalCell'));
+            return TranslatedString::untranslated(__('Orga', 'navigation', 'labelGlobalCell'));
         }
 
         $labels = [];
@@ -512,7 +510,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $labels[] = $member->getLabel();
         }
 
-        return StringConcatenation::implode(self::LABEL_SEPARATOR, $labels);
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
@@ -523,7 +521,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     public function getExtendedLabel()
     {
         if ($this->members->isEmpty()) {
-            return new UntranslatedString(__('Orga', 'navigation', 'labelGlobalCellExtended'));
+            return TranslatedString::untranslated(__('Orga', 'navigation', 'labelGlobalCellExtended'));
         }
 
         $labels = [];
@@ -533,7 +531,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $labels[] = $member->getExtendedLabel();
         }
 
-        return StringConcatenation::implode(self::LABEL_SEPARATOR, $labels);
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**

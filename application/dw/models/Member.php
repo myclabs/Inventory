@@ -10,7 +10,6 @@
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Mnapoli\Translated\TranslatedStringInterface;
 
 /**
  * Definit un membre d'un axe.
@@ -185,7 +184,7 @@ class DW_Model_Member extends Core_Model_Entity
     /**
      * Renvois le label du Member.
      *
-     * @return TranslatedStringInterface
+     * @return TranslatedString
      */
     public function getLabel()
     {

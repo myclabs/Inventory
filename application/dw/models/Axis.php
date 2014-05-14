@@ -10,7 +10,6 @@
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Mnapoli\Translated\TranslatedStringInterface;
 
 /**
  * Objet métier définissant un axe organisationnel au sein d'un cube.
@@ -183,7 +182,7 @@ class DW_Model_Axis extends Core_Model_Entity
     /**
      * Renvoie le label de l'axe.
      *
-     * @return TranslatedStringInterface
+     * @return TranslatedString
      */
     public function getLabel()
     {

@@ -8,7 +8,6 @@
  */
 
 use Core\Translation\TranslatedString;
-use Mnapoli\Translated\TranslatedStringInterface;
 use Unit\UnitAPI;
 
 /**
@@ -170,7 +169,7 @@ class DW_Model_Indicator extends Core_Model_Entity
     /**
      * Retourne le label de l'Indicator.
      *
-     * @return TranslatedStringInterface
+     * @return TranslatedString
      */
     public function getLabel()
     {

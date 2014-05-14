@@ -12,8 +12,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
-use Mnapoli\Translated\StringConcatenation;
-use Mnapoli\Translated\UntranslatedString;
 
 /**
  * Objet métier Granularité : ensemble d'Axis formant des Cell pour chaque association de Member.
@@ -292,14 +290,14 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getLabel()
     {
         if (!$this->hasAxes()) {
-            return new UntranslatedString(__('Orga', 'granularity', 'labelGlobalGranularity'));
+            return TranslatedString::untranslated(__('Orga', 'granularity', 'labelGlobalGranularity'));
         }
 
         $labelParts = [];
         foreach ($this->getAxes() as $axis) {
             $labelParts[] = $axis->getLabel();
         }
-        return StringConcatenation::implode(self::LABEL_SEPARATOR, $labelParts);
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labelParts);
     }
 
     /**

@@ -11,7 +11,6 @@ use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Mnapoli\Translated\TranslatedStringInterface;
 
 /**
  * Cube de données.
@@ -30,7 +29,7 @@ class DW_Model_Cube extends Core_Model_Entity
     /**
      * Label du Cube.
      *
-     * @var TranslatedStringInterface
+     * @var TranslatedString
      */
     protected $label;
 
@@ -80,9 +79,9 @@ class DW_Model_Cube extends Core_Model_Entity
     /**
      * Définit le label du Cube.
      *
-     * @param TranslatedStringInterface $label
+     * @param TranslatedString $label
      */
-    public function setLabel(TranslatedStringInterface $label)
+    public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
     }
@@ -90,7 +89,7 @@ class DW_Model_Cube extends Core_Model_Entity
     /**
      * Renvoie le label du Cube.
      *
-     * @return TranslatedStringInterface
+     * @return TranslatedString
      */
     public function getLabel()
     {
