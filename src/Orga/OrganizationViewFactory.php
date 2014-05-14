@@ -33,20 +33,20 @@ class OrganizationViewFactory
     /**
      * @var TranslationHelper
      */
-    private $translationHelper;
+    private $translator;
 
-    public function __construct(ACL $acl, Orga_Service_ACLManager $orgaACLManager, TranslationHelper $translationHelper)
+    public function __construct(ACL $acl, Orga_Service_ACLManager $orgaACLManager, TranslationHelper $translator)
     {
         $this->acl = $acl;
         $this->orgaACLManager = $orgaACLManager;
-        $this->translationHelper = $translationHelper;
+        $this->translator = $translator;
     }
 
     public function createOrganizationView(Orga_Model_Organization $organization, User $connectedUser)
     {
         $organizationView = new OrganizationView();
         $organizationView->id = $organization->getId();
-        $organizationView->label = $this->translationHelper->toString($organization->getLabel());
+        $organizationView->label = $this->translator->toString($organization->getLabel());
         if ($organizationView->label == '') {
             $organizationView->label = __('Orga', 'navigation', 'defaultOrganizationLabel');
         }
@@ -91,7 +91,7 @@ class OrganizationViewFactory
         foreach ($organization->getGranularities() as $granularity) {
             $granularityView = new GranularityView();
             $granularityView->id = $granularity->getId();
-            $granularityView->label = $this->translationHelper->toString($granularity->getLabel());
+            $granularityView->label = $this->translator->toString($granularity->getLabel());
 
             $organizationView->granularities[] = $granularityView;
         }

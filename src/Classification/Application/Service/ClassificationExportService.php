@@ -23,11 +23,11 @@ class ClassificationExportService
     /**
      * @var TranslationHelper
      */
-    private $translationHelper;
+    private $translator;
 
-    public function __construct(TranslationHelper $translationHelper)
+    public function __construct(TranslationHelper $translator)
     {
-        $this->translationHelper = $translationHelper;
+        $this->translator = $translator;
     }
 
     /**
@@ -64,7 +64,7 @@ class ClassificationExportService
             function (ContextIndicator $contextIndicator) {
                 $axesLabelRef = [];
                 foreach ($contextIndicator->getAxes() as $axis) {
-                    $axesLabelRef[] = $this->translationHelper->toString($axis->getLabel())
+                    $axesLabelRef[] = $this->translator->toString($axis->getLabel())
                         . ' (' . $axis->getRef() . ')';
                 }
                 return implode(' - ', $axesLabelRef);
@@ -82,7 +82,7 @@ class ClassificationExportService
             'displayAxisDirectNarrower',
             function (Axis $axis) {
                 if ($axis->getDirectNarrower() !== null) {
-                    return $this->translationHelper->toString($axis->getDirectNarrower()->getLabel())
+                    return $this->translator->toString($axis->getDirectNarrower()->getLabel())
                         . ' (' . $axis->getDirectNarrower()->getRef() . ')';
                 }
                 return '';
@@ -99,7 +99,7 @@ class ClassificationExportService
             function (Member $member, Axis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
-                        return $this->translationHelper->toString($directParent->getLabel());
+                        return $this->translator->toString($directParent->getLabel());
                     }
                 }
                 return '';

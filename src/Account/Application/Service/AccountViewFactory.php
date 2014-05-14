@@ -37,16 +37,16 @@ class AccountViewFactory
     /**
      * @var TranslationHelper
      */
-    private $translationHelper;
+    private $translator;
 
     public function __construct(
         OrganizationViewFactory $organizationViewFactory,
         ACL $acl,
-        TranslationHelper $translationHelper
+        TranslationHelper $translator
     ) {
         $this->organizationViewFactory = $organizationViewFactory;
         $this->acl = $acl;
-        $this->translationHelper = $translationHelper;
+        $this->translator = $translator;
     }
 
     /**
@@ -80,7 +80,7 @@ class AccountViewFactory
 
             $libraryView = new AFLibraryView(
                 $library->getId(),
-                $this->translationHelper->toString($library->getLabel())
+                $this->translator->toString($library->getLabel())
             );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
@@ -96,7 +96,7 @@ class AccountViewFactory
 
             $libraryView = new ParameterLibraryView(
                 $library->getId(),
-                $this->translationHelper->toString($library->getLabel())
+                $this->translator->toString($library->getLabel())
             );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
@@ -112,7 +112,7 @@ class AccountViewFactory
 
             $libraryView = new ClassificationLibraryView(
                 $library->getId(),
-                $this->translationHelper->toString($library->getLabel())
+                $this->translator->toString($library->getLabel())
             );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 

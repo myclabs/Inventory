@@ -46,7 +46,7 @@ class Orga_Service_ETLStructure
     /**
      * @var TranslationHelper
      */
-    private $translationHelper;
+    private $translator;
 
 
     /**
@@ -55,7 +55,7 @@ class Orga_Service_ETLStructure
      * @param Core_EventDispatcher $eventDispatcher
      * @param string               $defaultLocale
      * @param string[]             $locales
-     * @param TranslationHelper    $translationHelper
+     * @param TranslationHelper    $translator
      */
     public function __construct(
         EntityManager $entityManager,
@@ -63,14 +63,14 @@ class Orga_Service_ETLStructure
         Core_EventDispatcher $eventDispatcher,
         $defaultLocale,
         array $locales,
-        TranslationHelper $translationHelper
+        TranslationHelper $translator
     ) {
         $this->entityManager = $entityManager;
         $this->etlDataService = $etlDataService;
         $this->eventDispatcher = $eventDispatcher;
         $this->defaultLocale = $defaultLocale;
         $this->locales = $locales;
-        $this->translationHelper = $translationHelper;
+        $this->translator = $translator;
     }
 
     /**
@@ -151,7 +151,7 @@ class Orga_Service_ETLStructure
                     } elseif (isset($originalTranslations[$this->defaultLocale])) {
                         $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
                     } else {
-                        $labelParts[] = $this->translationHelper->toString($member->getLabel());
+                        $labelParts[] = $this->translator->toString($member->getLabel());
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labelParts);
@@ -187,7 +187,7 @@ class Orga_Service_ETLStructure
                     } elseif (isset($originalTranslations[$this->defaultLocale])) {
                         $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
                     } else {
-                        $labelParts[] = $this->translationHelper->toString($axis->getLabel());
+                        $labelParts[] = $this->translator->toString($axis->getLabel());
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
@@ -205,7 +205,7 @@ class Orga_Service_ETLStructure
      */
     protected function updateDWCubeLabel(DW_Model_Cube $dWCube, $labels)
     {
-        $this->translationHelper->setMany($dWCube->getLabel(), $labels);
+        $this->translator->setMany($dWCube->getLabel(), $labels);
     }
 
     /**

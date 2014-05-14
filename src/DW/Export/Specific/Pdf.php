@@ -17,7 +17,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
     /**
      * @var TranslationHelper
      */
-    private $translationHelper;
+    private $translator;
 
     /**
      * @var DW_Model_Report[]
@@ -27,12 +27,12 @@ class DW_Export_Specific_Pdf extends Export_Pdf
     /**
      * @param string            $xmlPath
      * @param DW_Model_Cube     $cube
+     * @param TranslationHelper $translator
      * @param string|null       $exportUrl
-     * @param TranslationHelper $translationHelper
      */
-    public function __construct($xmlPath, DW_Model_Cube $cube, $exportUrl = null, TranslationHelper $translationHelper)
+    public function __construct($xmlPath, DW_Model_Cube $cube, TranslationHelper $translator, $exportUrl = null)
     {
-        $this->translationHelper = $translationHelper;
+        $this->translator = $translator;
 
         $isPreview = ($exportUrl !== null);
 
@@ -76,7 +76,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
         } else {
             $xmlSpecificExport = $xmlDocument->getElementsByTagName("specificExport")->item(0);
             $this->fileName = date('Y-m-d', time())
-                .'-'.Core_Tools::refactor($this->translationHelper->toString($cube->getLabel()))
+                .'-'.Core_Tools::refactor($this->translator->toString($cube->getLabel()))
                 .'-'.Core_Tools::refactor($xmlSpecificExport->getAttribute('label'));
             if ($isPreview) {
                 UI_Chart_Generic::addHeader();
@@ -149,7 +149,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $locale = Core_Locale::loadDefault();
             $this->html .= '<h2>'
                 .$xmlSpecificExport->getAttribute("prefix")
-                .$this->translationHelper->toString($cube->getLabel())
+                .$this->translator->toString($cube->getLabel())
                 .$xmlSpecificExport->getAttribute("postfix")
                 .'</h2>';
 
@@ -193,11 +193,11 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                             $results = $report->getValues();
 
-                            $this->html .= $this->translationHelper->toString($report->getLabel())
+                            $this->html .= $this->translator->toString($report->getLabel())
                                 . ' : ' . $locale->formatNumber(array_pop($results)['value'], 3)
                                 // On n'affiche pas l'incertitude
                                 //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
-                                . ' ' . $this->translationHelper->toString($report->getValuesUnitSymbol());
+                                . ' ' . $this->translator->toString($report->getValuesUnitSymbol());
 
                             if ($isMain) {
                                 $this->html .= '</h3>';
@@ -227,7 +227,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                         $this->html .= '<div class="data">';
                         $this->html .= '<h4>';
-                        $this->html .= $this->translationHelper->toString($report->getLabel());
+                        $this->html .= $this->translator->toString($report->getLabel());
                         $this->html .= '</h4>';
 
                         if ($isPreview) {
@@ -419,12 +419,12 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
         $label = $xmlReport->getAttribute('label');
         if ($label == '') {
-            $label = $this->translationHelper->toString($report->getNumerator()->getLabel());
+            $label = $this->translator->toString($report->getNumerator()->getLabel());
             if (($report->getDenominator() !== null)) {
-                $label .= ' / '.$this->translationHelper->toString($report->getDenominator()->getLabel());
+                $label .= ' / '.$this->translator->toString($report->getDenominator()->getLabel());
             }
         }
-        $this->translationHelper->set($report->getLabel(), $label);
+        $this->translator->set($report->getLabel(), $label);
         if ($xmlReport->hasAttribute('format')) {
             $report->setChartType($xmlReport->getAttribute('format'));
         }

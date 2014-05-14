@@ -39,18 +39,18 @@ class Orga_Service_ACLManager
     /**
      * @var TranslationHelper
      */
-    private $translationHelper;
+    private $translator;
 
     public function __construct(
         UserService $userService,
         ACL $acl,
         EntityManager $entityManager,
-        TranslationHelper $translationHelper
+        TranslationHelper $translator
     ) {
         $this->userService = $userService;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
-        $this->translationHelper = $translationHelper;
+        $this->translator = $translator;
     }
 
     /**
@@ -73,7 +73,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userOrganizationAdministratorRoleAdded', [
-                    'ORGANIZATION' => $this->translationHelper->toString($organization->getLabel())
+                    'ORGANIZATION' => $this->translator->toString($organization->getLabel())
                 ])
             );
         }
@@ -97,7 +97,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userOrganizationAdministratorRoleRemoved', [
-                    'ORGANIZATION' => $this->translationHelper->toString($organization->getLabel())
+                    'ORGANIZATION' => $this->translator->toString($organization->getLabel())
                 ])
             );
         }
@@ -129,7 +129,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userRoleAdded', [
-                    'CELL' => $this->translationHelper->toString($cell->getExtendedLabel()),
+                    'CELL' => $this->translator->toString($cell->getExtendedLabel()),
                     'ROLE' => $role->getLabel(),
                 ])
             );
@@ -150,7 +150,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userRoleRemoved', [
-                    'CELL' => $this->translationHelper->toString($role->getCell()->getExtendedLabel()),
+                    'CELL' => $this->translator->toString($role->getCell()->getExtendedLabel()),
                     'ROLE' => $role->getLabel()
                 ])
             );

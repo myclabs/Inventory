@@ -9,7 +9,6 @@ use AF\Domain\Condition\NumericFieldCondition;
 use AF\Domain\AFCopyService;
 use Core\Test\TestCase;
 use Core\Translation\TranslatedString;
-use Mnapoli\Translated\TranslationHelper;
 use Unit\UnitAPI;
 
 /**

@@ -38,27 +38,27 @@ class Orga_Service_OrganizationService
     /**
      * @var TranslationHelper
      */
-    private $translationHelper;
+    private $translator;
 
     /**
      * @param EntityManager           $entityManager
      * @param Orga_Service_ACLManager $aclManager
      * @param UserService             $userService
      * @param AccountRepository       $accountRepository
-     * @param TranslationHelper       $translationHelper
+     * @param TranslationHelper       $translator
      */
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ACLManager $aclManager,
         UserService $userService,
         AccountRepository $accountRepository,
-        TranslationHelper $translationHelper
+        TranslationHelper $translator
     ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
         $this->userService = $userService;
         $this->accountRepository = $accountRepository;
-        $this->translationHelper = $translationHelper;
+        $this->translator = $translator;
     }
 
     /**
@@ -348,7 +348,7 @@ class Orga_Service_OrganizationService
     public function addMember(Orga_Model_Axis $axis, $ref, $label, array $parentMembers)
     {
         $member = new Orga_Model_Member($axis, $ref, $parentMembers);
-        $this->translationHelper->set($member->getLabel(), $label);
+        $this->translator->set($member->getLabel(), $label);
 
         try {
             $this->entityManager->beginTransaction();
@@ -420,7 +420,7 @@ class Orga_Service_OrganizationService
             }
 
             $mainAxis = new Orga_Model_Axis($organization, $mainAxisRef, $mainParentAxis);
-            $this->translationHelper->set($mainAxis->getLabel(), $mainAxisData['value']);
+            $this->translator->set($mainAxis->getLabel(), $mainAxisData['value']);
 
             $axes[$mainAxisId] = $mainAxis;
         }
@@ -433,7 +433,7 @@ class Orga_Service_OrganizationService
         } catch (Core_Exception_NotFound $e) {
         }
         $timeAxis = new Orga_Model_Axis($organization, $timeAxisRef);
-        $this->translationHelper->set($timeAxis->getLabel(), $timeAxisLabel);
+        $this->translator->set($timeAxis->getLabel(), $timeAxisLabel);
         $axes['timeAxis'] = $timeAxis;
         // Création de l'axe de subdivision.
         $subdivisionAxisLabel = $axesData['subdivisionAxisGroup']['elements']['subdivisionAxis']['value'];
@@ -445,7 +445,7 @@ class Orga_Service_OrganizationService
             } catch (Core_Exception_NotFound $e) {
             }
             $subdivisionAxis = new Orga_Model_Axis($organization, $subdivisionAxisRef);
-            $this->translationHelper->set($subdivisionAxis->getLabel(), $subdivisionAxisLabel);
+            $this->translator->set($subdivisionAxis->getLabel(), $subdivisionAxisLabel);
             $axes['subdivisionAxis'] = $subdivisionAxis;
         }
 
@@ -476,7 +476,7 @@ class Orga_Service_OrganizationService
                     $memberRef .= '_'.$i;
                 }
                 $member = new Orga_Model_Member($membersAxis, $memberRef, $parentMembers);
-                $this->translationHelper->set($member->getLabel(), $memberData['value']);
+                $this->translator->set($member->getLabel(), $memberData['value']);
                 $members[$axisId][$memberId] = $member;
             }
         }
@@ -586,10 +586,10 @@ class Orga_Service_OrganizationService
         $categoryAxis->getLabel()->set('Catégorie', 'fr');
         $categoryAxis->save();
         $categoryEnergy = new Orga_Model_Member($categoryAxis, 'energie');
-        $this->translationHelper->set($categoryEnergy->getLabel(), 'Énergie');
+        $this->translator->set($categoryEnergy->getLabel(), 'Énergie');
         $categoryEnergy->save();
         $categoryTravel = new Orga_Model_Member($categoryAxis, 'deplacement');
-        $this->translationHelper->set($categoryTravel->getLabel(), 'Déplacement');
+        $this->translator->set($categoryTravel->getLabel(), 'Déplacement');
         $categoryTravel->save();
 
         // Axe Année
@@ -597,13 +597,13 @@ class Orga_Service_OrganizationService
         $categoryAxis->getLabel()->set('Année', 'fr');
         $timeAxis->save();
         $year2012 = new Orga_Model_Member($timeAxis, '2012');
-        $this->translationHelper->set($year2012->getLabel(), '2012');
+        $this->translator->set($year2012->getLabel(), '2012');
         $year2012->save();
         $year2013 = new Orga_Model_Member($timeAxis, '2013');
-        $this->translationHelper->set($year2013->getLabel(), '2013');
+        $this->translator->set($year2013->getLabel(), '2013');
         $year2013->save();
         $year2014 = new Orga_Model_Member($timeAxis, '2014');
-        $this->translationHelper->set($year2014->getLabel(), '2014');
+        $this->translator->set($year2014->getLabel(), '2014');
         $year2014->save();
 
         // Granularités

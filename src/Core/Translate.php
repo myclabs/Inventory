@@ -33,8 +33,12 @@ class Core_Translate
      */
     private $translationHelper;
 
-    public function __construct(Translator $translator, LoggerInterface $logger, Cache $cache, TranslationHelper $translationHelper)
-    {
+    public function __construct(
+        Translator $translator,
+        LoggerInterface $logger,
+        Cache $cache,
+        TranslationHelper $translationHelper
+    ) {
         $this->translator = $translator;
         $this->logger = $logger;
         $this->cache = $cache;

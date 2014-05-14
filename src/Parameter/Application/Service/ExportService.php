@@ -22,11 +22,11 @@ class ExportService
     /**
      * @var TranslationHelper
      */
-    private $translationHelper;
+    private $translator;
 
-    public function __construct(TranslationHelper $translationHelper)
+    public function __construct(TranslationHelper $translator)
     {
-        $this->translationHelper = $translationHelper;
+        $this->translator = $translator;
     }
 
     /**
@@ -65,12 +65,12 @@ class ExportService
 
                 $category = $family->getCategory();
                 while ($category->getParentCategory() !== null) {
-                    $label .= $this->translationHelper->toString($category->getLabel()) . ' / ';
+                    $label .= $this->translator->toString($category->getLabel()) . ' / ';
                     $category = $category->getParentCategory();
                 }
-                $label .= $this->translationHelper->toString($family->getLabel());
+                $label .= $this->translator->toString($family->getLabel());
 
-                $label .= ' (' . $this->translationHelper->toString($family->getUnit()->getSymbol()) . ')';
+                $label .= ' (' . $this->translator->toString($family->getUnit()->getSymbol()) . ')';
 
                 return $label;
             }
@@ -81,7 +81,7 @@ class ExportService
             function (Cell $cell, Dimension $dimension) {
                 foreach ($cell->getMembers() as $member) {
                     if ($dimension->hasMember($member)) {
-                        return $this->translationHelper->toString($member->getLabel());
+                        return $this->translator->toString($member->getLabel());
                     }
                 }
                 return '';

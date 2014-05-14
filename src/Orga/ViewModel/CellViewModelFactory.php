@@ -34,13 +34,13 @@ class CellViewModelFactory
     /**
      * @var TranslationHelper
      */
-    private $translationHelper;
+    private $translator;
 
 
-    public function __construct(ACL $acl, TranslationHelper $translationHelper)
+    public function __construct(ACL $acl, TranslationHelper $translator)
     {
         $this->acl = $acl;
-        $this->translationHelper = $translationHelper;
+        $this->translator = $translator;
 
         $this->inventoryStatusList = [
             Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'view', 'inventoryNotLaunched'),
@@ -86,13 +86,13 @@ class CellViewModelFactory
     ) {
         $cellViewModel = new CellViewModel();
         $cellViewModel->id = $cell->getId();
-        $cellViewModel->shortLabel = $this->translationHelper->toString($cell->getLabel());
-        $cellViewModel->extendedLabel = $this->translationHelper->toString($cell->getExtendedLabel());
+        $cellViewModel->shortLabel = $this->translator->toString($cell->getLabel());
+        $cellViewModel->extendedLabel = $this->translator->toString($cell->getExtendedLabel());
         $cellViewModel->relevant = $cell->isRelevant();
         $cellViewModel->tag = $cell->getTag();
 
         foreach ($cell->getMembers() as $member) {
-            $cellViewModel->members[$member->getAxis()->getRef()] = $this->translationHelper->toString($member->getLabel());
+            $cellViewModel->members[$member->getAxis()->getRef()] = $this->translator->toString($member->getLabel());
         }
 
         // Administrateurs.

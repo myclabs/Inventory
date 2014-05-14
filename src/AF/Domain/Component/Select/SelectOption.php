@@ -245,9 +245,9 @@ class SelectOption extends Core_Model_Entity
      */
     protected function uglyTranslate(TranslatedString $string)
     {
-        /** @var TranslationHelper $translationHelper */
-        $translationHelper = \Core\ContainerSingleton::getContainer()->get(TranslationHelper::class);
+        /** @var TranslationHelper $translator */
+        $translator = \Core\ContainerSingleton::getContainer()->get(TranslationHelper::class);
 
-        return $translationHelper->toString($string);
+        return $translator->toString($string);
     }
 }

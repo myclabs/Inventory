@@ -21,11 +21,11 @@ class AxisService
     /**
      * @var TranslationHelper
      */
-    private $translationHelper;
+    private $translator;
 
-    public function __construct(TranslationHelper $translationHelper)
+    public function __construct(TranslationHelper $translator)
     {
-        $this->translationHelper = $translationHelper;
+        $this->translator = $translator;
     }
 
     /**
@@ -48,7 +48,7 @@ class AxisService
         $this->checkAxisRef($library, $ref);
 
         $axis->setRef($ref);
-        $this->translationHelper->set($axis->getLabel(), $label);
+        $this->translator->set($axis->getLabel(), $label);
         if (!empty($idParent)) {
             $axis->setDirectNarrower(Axis::load($idParent));
         }
@@ -89,7 +89,7 @@ class AxisService
     {
         $axis = Axis::load($axisId);
 
-        $this->translationHelper->set($axis->getLabel(), $newLabel);
+        $this->translator->set($axis->getLabel(), $newLabel);
 
         return $axis->getLabel();
     }
@@ -110,7 +110,7 @@ class AxisService
         $this->checkAxisRef($axis->getLibrary(), $newRef);
 
         $axis->setRef($newRef);
-        $this->translationHelper->set($axis->getLabel(), $newLabel);
+        $this->translator->set($axis->getLabel(), $newLabel);
 
         return $axis->getLabel();
     }

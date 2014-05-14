@@ -1045,6 +1045,7 @@ class Orga_CellController extends Core_Controller
         $specificReports = new DW_Export_Specific_Pdf(
             $specificReportsDirectoryPath.$this->getParam('report').'.xml',
             $cell->getDWCube(),
+            $this->translator,
             $exportUrl
         );
 
