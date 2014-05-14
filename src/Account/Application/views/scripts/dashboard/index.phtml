@@ -18,7 +18,7 @@ $account = $this->account;
             <th colspan="2">Workspaces</th>
             <th class="col-button hidden-xs">
                 <?php if ($this->canEditAccount) : ?>
-                    <a href="orga/organization/add" class="btn btn-default btn-xs pull-right"
+                    <a href="orga/organization/add/account/<?=$account->id?>" class="btn btn-default btn-xs pull-right"
                        title="<?=__('Orga', 'workspace', 'createNewWorkspace')?>">
                         <i class="fa fa-lg fa-plus"></i>
                     </a>
