@@ -28,7 +28,7 @@ if (empty($entries)) : ?>
             }
             if ($value instanceof Calc_UnitValue) {
                 $shownValue = $locale->formatNumber($value->getDigitalValue())
-                    . ' ' . $value->getUnit()->getSymbol()
+                    . ' ' . $this->translate($value->getUnit()->getSymbol())
                     . ' ± ' . $locale->formatUncertainty($value->getRelativeUncertainty());
             }
             if ($value instanceof SelectOption) {

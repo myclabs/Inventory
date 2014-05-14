@@ -37,7 +37,7 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             $data['category'] = $family->getCategory()->getId();
             $data['label'] = $this->cellTranslatedText($family->getLabel());
             $data['ref'] = $family->getRef();
-            $data['unit'] = $family->getValueUnit()->getSymbol();
+            $data['unit'] = $this->cellTranslatedText($family->getValueUnit()->getSymbol());
             // Test des droits (consultation/édition)
             $canEdit = $this->acl->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
             if ($canEdit) {

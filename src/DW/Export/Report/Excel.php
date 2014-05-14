@@ -59,7 +59,7 @@ class DW_Export_Report_Excel extends Export_Excel
             $sheetData[] = array(
                 __('Classification', 'indicator', 'indicator'),
                 $this->translationHelper->toString($report->getNumerator()->getLabel())
-                    . ' (' . $report->getValuesUnitSymbol() . ')'
+                    . ' (' . $this->translationHelper->toString($report->getValuesUnitSymbol()) . ')'
             );
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
@@ -77,7 +77,9 @@ class DW_Export_Report_Excel extends Export_Excel
             $sheetData[] = array(
                 __('DW', 'name', 'numerator'),
                 $this->translationHelper->toString($report->getNumerator()->getLabel())
-                    . ' (' . $report->getNumerator()->getRatioUnit()->getSymbol() . ')'
+                    . ' ('
+                    . $this->translationHelper->toString($report->getNumerator()->getRatioUnit()->getSymbol())
+                    . ')'
             );
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
@@ -95,7 +97,9 @@ class DW_Export_Report_Excel extends Export_Excel
             $sheetData[] = array(
                 __('DW', 'name', 'denominator'),
                 $this->translationHelper->toString($report->getDenominator()->getLabel())
-                    . ' (' .  $report->getDenominator()->getRatioUnit()->getSymbol() . ')'
+                    . ' ('
+                    . $this->translationHelper->toString($report->getDenominator()->getRatioUnit()->getSymbol())
+                    . ')'
             );
 
             if ($numeratorAxis1 !== null) {
@@ -170,7 +174,8 @@ class DW_Export_Report_Excel extends Export_Excel
         }
 
         $sheetHeader[] = array(
-            __('UI', 'name', 'value') . ' (' . $report->getValuesUnitSymbol() . ')',
+            __('UI', 'name', 'value')
+                . ' (' . $this->translationHelper->toString($report->getValuesUnitSymbol()) . ')',
             array(
                 'font' => array('bold' => true),
                 'alignment' => array(

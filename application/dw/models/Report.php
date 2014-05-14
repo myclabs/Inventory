@@ -550,12 +550,16 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoie le symbol des unités associées aux valeurs du rapport.
      *
-     * @return String
+     * @return TranslatedString
      */
     public function getValuesUnitSymbol()
     {
         if (($this->getDenominator() !== null)) {
-            return $this->getNumerator()->getRatioUnit()->getSymbol() . ' / ' . $this->getDenominator()->getRatioUnit()->getSymbol();
+            return TranslatedString::join([
+                $this->getNumerator()->getRatioUnit()->getSymbol(),
+                ' / ',
+                $this->getDenominator()->getRatioUnit()->getSymbol()
+            ]);
         } else {
             return $this->getNumerator()->getUnit()->getSymbol();
         }
@@ -604,10 +608,12 @@ class DW_Model_Report extends Core_Model_Entity
                 || ($chartType === DW_Model_Report::CHART_HORIZONTAL_STACKEDGROUPED)) {
                 $chart->vertical = false;
                 $chart->addAttribute('chartArea', '{top:"5%", left:"25%", width:"50%", height:"75%"}');
-                $chart->addAttribute('hAxis', '{title: \''.$this->getValuesUnitSymbol().'\',  titleTextStyle: {color: \'#9E0000\'}}');
+                $chart->addAttribute('hAxis', '{title: \''.
+                    $this->translationHelper->toString($this->getValuesUnitSymbol()).'\',  titleTextStyle: {color: \'#9E0000\'}}');
             } else {
                 $chart->addAttribute('chartArea', '{top:"5%", left:"15%", width:"50%", height:"65%"}');
-                $chart->addAttribute('vAxis', '{title: \''.$this->getValuesUnitSymbol().'\',  titleTextStyle: {color: \'#9E0000\'}}');
+                $chart->addAttribute('vAxis', '{title: \''.
+                    $this->translationHelper->toString($this->getValuesUnitSymbol()).'\',  titleTextStyle: {color: \'#9E0000\'}}');
             }
 
             if ($this->numeratorAxis2 === null) {

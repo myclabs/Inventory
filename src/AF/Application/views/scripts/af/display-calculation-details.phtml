@@ -225,7 +225,7 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
     if ($algo instanceof NumericAlgo) {
         $value = $algo->execute($inputSet);
         $stringValue = $locale->formatNumber($value->getDigitalValue(), 20)
-            . ' <strong>' . $value->getUnit()->getSymbol() . '</strong> ± '
+            . ' <strong>' . $view->translate($value->getUnit()->getSymbol()) . '</strong> ± '
             . $locale->formatNumber($value->getRelativeUncertainty()) . ' <strong>%</strong>';
         $collapse->appendContent("<p><strong>" . __('UI', 'name', 'value') . __('UI', 'other', ':')
             . "</strong> $stringValue</p>");

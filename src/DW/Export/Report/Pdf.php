@@ -104,7 +104,7 @@ class DW_Export_Report_Pdf extends Export_Pdf
             $this->html .= '<tr>';
             $this->html .= '<td>'.__('Classification', 'indicator', 'indicator').' : </td>';
             $this->html .= '<td>'.$this->translationHelper->toString($indicator->getLabel())
-                .' ('.$indicator->getUnit()->getSymbol() .')'.'</td>';
+                .' ('.$this->translationHelper->toString($indicator->getUnit()->getSymbol()) .')'.'</td>';
             $this->html .= '</tr>';
 
             if ($numeratorAxis1 !== null) {
@@ -126,13 +126,13 @@ class DW_Export_Report_Pdf extends Export_Pdf
             $this->html .= '<tr>';
             $this->html .= '<td>'.__('DW', 'name', 'numerator').' : </td>';
             $this->html .= '<td>'.$this->translationHelper->toString($numerator->getLabel())
-                .' ('.$numerator->getRatioUnit()->getSymbol().')'.'</td>';
+                .' ('.$this->translationHelper->toString($numerator->getRatioUnit()->getSymbol()).')'.'</td>';
             $this->html .= '</tr>';
 
             $this->html .= '<tr>';
             $this->html .= '<td>'.__('DW', 'name', 'denominator').' : </td>';
             $this->html .= '<td>'.$this->translationHelper->toString($denominator->getLabel())
-                .' ('.$denominator->getRatioUnit()->getSymbol().')'.'</td>';
+                .' ('.$this->translationHelper->toString($denominator->getRatioUnit()->getSymbol()).')'.'</td>';
             $this->html .= '</tr>';
 
             if ($numeratorAxis1 !== null) {
@@ -207,7 +207,8 @@ class DW_Export_Report_Pdf extends Export_Pdf
         if ($numeratorAxis2 !== null) {
             $this->html .= '<th>'.$this->translationHelper->toString($numeratorAxis2->getLabel()).'</th>';
         }
-        $this->html .= '<th>'.__('UI', 'name', 'value').' ('. $report->getValuesUnitSymbol() .')</th>';
+        $this->html .= '<th>'.__('UI', 'name', 'value').' ('
+            . $this->translationHelper->toString($report->getValuesUnitSymbol()) .')</th>';
         $this->html .= '<th>'.__('UI', 'name', 'uncertainty').' (%)</th>';
         $this->html .= '</tr>';
 

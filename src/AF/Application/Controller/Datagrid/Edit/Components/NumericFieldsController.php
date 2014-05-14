@@ -39,7 +39,10 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $data['isVisible'] = $numericField->isVisible();
             $data['enabled'] = $numericField->isEnabled();
             $data['required'] = $numericField->getRequired();
-            $data['unit'] = $this->cellText($numericField->getUnit()->getRef(), $numericField->getUnit()->getSymbol());
+            $data['unit'] = $this->cellText(
+                $numericField->getUnit()->getRef(),
+                $this->translationHelper->toString($numericField->getUnit()->getSymbol())
+            );
             $data['unitSelection'] = $numericField->hasUnitSelection();
             $data['withUncertainty'] = $numericField->getWithUncertainty();
             $data['digitalValue'] = $this->cellNumber($numericField->getDefaultValue()->getDigitalValue());
@@ -172,7 +175,10 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $numericField->setUnit($unit);
-                $this->data = $this->cellText($numericField->getUnit()->getRef(), $numericField->getUnit()->getSymbol());
+                $this->data = $this->cellText(
+                    $numericField->getUnit()->getRef(),
+                    $this->translationHelper->toString($numericField->getUnit()->getSymbol())
+                );
                 break;
             case 'unitSelection':
                 $numericField->setUnitSelection($newValue);

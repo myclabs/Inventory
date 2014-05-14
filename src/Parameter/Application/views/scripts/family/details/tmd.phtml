@@ -85,7 +85,7 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
             'elementId' => implode('-', $membersCoordinates),
             'value'     => $locale->formatNumber($value->getDigitalValue(), 3)
                 . ' ± ' . $locale->formatUncertainty($value->getRelativeUncertainty()),
-            'unit'      => $family->getValueUnit()->getSymbol(),
+            'unit'      => $this->translate($family->getValueUnit()->getSymbol()),
         ];
     }
     return [
@@ -93,7 +93,7 @@ $tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
             . '?coordinates=' . urlencode(json_encode($membersCoordinates)),
         'elementId' => implode('-', $membersCoordinates),
         'value'     => '-',
-        'unit'      => $family->getValueUnit()->getSymbol(),
+        'unit'      => $this->translate($family->getValueUnit()->getSymbol()),
     ];
 };
 

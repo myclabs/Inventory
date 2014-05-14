@@ -347,7 +347,7 @@ class DW_ReportController extends Core_Controller
         $this->view->assign('hashReport', $this->getParam('hashReport'));
         $this->view->assign('numeratorAxis1', $report->getNumeratorAxis1());
         $this->view->assign('numeratorAxis2', $report->getNumeratorAxis2());
-        $this->view->assign('valueUnit', $report->getValuesUnitSymbol());
+        $this->view->assign('valueUnit', $this->translationHelper->toString($report->getValuesUnitSymbol()));
         $this->_helper->layout()->disableLayout();
 
         $this->entityManager->clear();
@@ -362,7 +362,7 @@ class DW_ReportController extends Core_Controller
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
         $this->view->assign('chart', $report->getChart());
-        $this->view->assign('valueUnit', $report->getValuesUnitSymbol());
+        $this->view->assign('valueUnit', $this->translationHelper->toString($report->getValuesUnitSymbol()));
         $this->_helper->layout()->disableLayout();
 
         $this->entityManager->clear();

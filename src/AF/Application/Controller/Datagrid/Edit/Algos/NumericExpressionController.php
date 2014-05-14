@@ -24,7 +24,10 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
                 $data['label'] = $this->cellTranslatedText($algo->getLabel());
-                $data['unit'] = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
+                $data['unit'] = $this->cellText(
+                    $algo->getUnit()->getRef(),
+                    $this->translationHelper->toString($algo->getUnit()->getSymbol())
+                );
                 $data['expression'] = $this->cellLongText(
                     'af/edit_algos/popup-expression/idAF/' . $af->getId() . '/algo/' . $algo->getId(),
                     'af/datagrid_edit_algos_numeric-expression/get-expression/idAF/' . $af->getId() . '/algo/'
@@ -137,7 +140,10 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $algo->setUnit($unit);
-                $this->data = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
+                $this->data = $this->cellText(
+                    $algo->getUnit()->getRef(),
+                    $this->translationHelper->toString($algo->getUnit()->getSymbol())
+                );
                 break;
             case 'expression':
                 try {

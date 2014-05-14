@@ -33,7 +33,10 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
                 $data['ref'] = $algo->getRef();
                 $data['label'] = $this->cellTranslatedText($algo->getLabel());
                 $data['input'] = $algo->getInputRef();
-                $data['unit'] = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
+                $data['unit'] = $this->cellText(
+                    $algo->getUnit()->getRef(),
+                    $this->translationHelper->toString($algo->getUnit()->getSymbol())
+                );
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
                     $data['contextIndicator'] = $this->cellList($contextIndicator->getId());

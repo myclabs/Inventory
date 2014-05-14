@@ -32,7 +32,7 @@ if (count($indicators) == 0) {
 foreach ($indicators as $indicator) {
 
     $outputTotal = $outputSet->getTotalByIndicator($indicator);
-    $formattedUnit = $indicator->getUnit()->getSymbol();
+    $formattedUnit = $this->translate($indicator->getUnit()->getSymbol());
 
     $indicatorLabel = $this->translate($indicator->getLabel());
     echo "<h2>$indicatorLabel</h2>";

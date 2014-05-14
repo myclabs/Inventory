@@ -283,31 +283,6 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
      }
 
     /**
-     * Test la fonction getUnitReference()
-     */
-     function testGetReferenceUnit()
-     {
-         // Résultat supposé !
-        $extendedReferenceUnit = new ExtendedUnit();
-        $extendedReferenceUnit->setRef($this->standardUnit->getReferenceUnit()->getRef().'_co2e');
-        $extendedReferenceUnit->getName()->set(
-            '('.$this->standardUnit->getReferenceUnit()->getName()->get('fr').' equivalent CO2)', 'fr'
-        );
-        $extendedReferenceUnit->getSymbol()->set(
-            '('.$this->standardUnit->getReferenceUnit()->getSymbol()->get('fr').'.equCO2)', 'fr'
-        );
-        $extendedReferenceUnit->setStandardUnit($this->standardUnit->getReferenceUnit());
-        $extendedReferenceUnit->setExtension($this->_extendedUnit->getExtension());
-
-        // L'unité étendue servant uniquement de proxy, elle est supprimée de l'entité manager.
-         \Core\ContainerSingleton::getEntityManager()->detach($extendedReferenceUnit);
-
-        // On vérifie que ces deux unités sont bien les mêmes
-        $this->assertEquals($this->_extendedUnit->getReferenceUnit(), $extendedReferenceUnit);
-     }
-
-
-    /**
      * Méthode appelée à la fin de chaque test
      */
     protected function tearDown()

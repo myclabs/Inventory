@@ -70,7 +70,7 @@ class ExportService
                 }
                 $label .= $this->translationHelper->toString($family->getLabel());
 
-                $label .= ' (' . $family->getUnit()->getSymbol() . ')';
+                $label .= ' (' . $this->translationHelper->toString($family->getUnit()->getSymbol()) . ')';
 
                 return $label;
             }

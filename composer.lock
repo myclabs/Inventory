@@ -744,12 +744,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/DoctrineTranslated.git",
-                "reference": "7cc06318bdb3aa830bf6d0ffdca229b1260a8faf"
+                "reference": "f35103ca1b7f7b4f2ee5901201577b140dccbbfe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/7cc06318bdb3aa830bf6d0ffdca229b1260a8faf",
-                "reference": "7cc06318bdb3aa830bf6d0ffdca229b1260a8faf",
+                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/f35103ca1b7f7b4f2ee5901201577b140dccbbfe",
+                "reference": "f35103ca1b7f7b4f2ee5901201577b140dccbbfe",
                 "shasum": ""
             },
             "require": {
@@ -776,7 +776,7 @@
                 "translation",
                 "translations"
             ],
-            "time": "2014-05-14 14:46:34"
+            "time": "2014-05-14 15:05:45"
         },
         {
             "name": "mnapoli/metamodel",

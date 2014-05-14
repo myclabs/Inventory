@@ -189,7 +189,7 @@ class ComposedUnit
             if ($unitArray['exponent'] > 0) {
                 $leftPart[] = $unitArray['unit']->getSymbol();
                 if ($unitArray['exponent'] > 1) {
-                    $leftPart[] = $unitArray['exponent'];
+                    $leftPart[] = (string) $unitArray['exponent'];
                 }
                 $leftPart[] = '.';
             } // Pour les exposants négatifs on construite le dénominateur du symbole de l'unité.
@@ -198,19 +198,15 @@ class ComposedUnit
                     $rightPart[] = $unitArray['unit']->getSymbol();
                     if ($unitArray['exponent'] < -1) {
                         // pour un exposant négatif on prend la valeur absolue de celui ci.
-                        $rightPart[] = abs($unitArray['exponent']);
+                        $rightPart[] = (string) abs($unitArray['exponent']);
                     }
                     $rightPart[] = '.';
                 }
             }
         }
         // On supprime le dernier point de séparation à la fin de chaques parties du symbole.
-        if (count($leftPart) > 0) {
-            array_pop($leftPart);
-        }
-        if (count($rightPart) > 0) {
-            array_pop($rightPart);
-        }
+        array_pop($leftPart);
+        array_pop($rightPart);
         // Si on a une partie négative on sépare le numérateur et le dénominateur avec un trait de fraction
         if (count($rightPart) > 0) {
             return TranslatedString::join([

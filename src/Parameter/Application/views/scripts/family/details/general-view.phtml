@@ -22,7 +22,7 @@ $family = $this->family;
 
 <p>
     <strong><?=__('Unit', 'name', 'unit') . __('UI', 'other', ':')?></strong>
-    <?=$family->getValueUnit()->getSymbol()?>
+    <?=$this->translate($family->getValueUnit()->getSymbol())?>
 </p>
 
 <p>

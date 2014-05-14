@@ -193,11 +193,11 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                             $results = $report->getValues();
 
-                            $this->html .= $this->translationHelper->toString($report->getLabel()).' : '.
-                            $locale->formatNumber(array_pop($results)['value'], 3).
-                            // On n'affiche pas l'incertitude
-                            //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
-                            ' '.$report->getValuesUnitSymbol();
+                            $this->html .= $this->translationHelper->toString($report->getLabel())
+                                . ' : ' . $locale->formatNumber(array_pop($results)['value'], 3)
+                                // On n'affiche pas l'incertitude
+                                //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
+                                . ' ' . $this->translationHelper->toString($report->getValuesUnitSymbol());
 
                             if ($isMain) {
                                 $this->html .= '</h3>';
