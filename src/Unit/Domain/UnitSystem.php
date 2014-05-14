@@ -9,6 +9,7 @@
 
 namespace Unit\Domain;
 
+use Core\Translation\TranslatedString;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Unit\Domain\Unit\Unit;
@@ -20,9 +21,6 @@ use Unit\Domain\Unit\Unit;
  */
 class UnitSystem extends Core_Model_Entity
 {
-
-    use Core_Model_Entity_Translatable;
-
     // Constantes de tri et filtres.
     const QUERY_ID = 'id';
     const QUERY_NAME = 'name';
@@ -36,7 +34,7 @@ class UnitSystem extends Core_Model_Entity
 
     /**
      * Nom du système d'unité.
-     * @var string
+     * @var TranslatedString
      */
     protected $name;
 
@@ -46,6 +44,11 @@ class UnitSystem extends Core_Model_Entity
      */
     protected $ref;
 
+
+    public function __construct()
+    {
+        $this->name = new TranslatedString();
+    }
 
     /**
      * Renvoie la référence de la pool active.
@@ -88,16 +91,16 @@ class UnitSystem extends Core_Model_Entity
 
     /**
      * Défini le nom du système d'unité.
-     * @param string $name
+     * @param TranslatedString $name
      */
-    public function setName($name)
+    public function setName(TranslatedString $name)
     {
         $this->name = $name;
     }
 
     /**
      * Renvoi le nom du système d'unité.
-     * @return string
+     * @return TranslatedString
      */
     public function getName()
     {

@@ -76,14 +76,14 @@ class Unit_ConsultController extends Core_Controller
         /* @var $physicalQuantity PhysicalQuantity */
         foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
             $idPhysicalQuantity = $physicalQuantity->getKey();
-            $this->view->listPhysicalQuantities[$idPhysicalQuantity['id']] = $physicalQuantity->getName();
+            $this->view->listPhysicalQuantities[$idPhysicalQuantity['id']] = $this->translationHelper->toString($physicalQuantity->getName());
         }
 
         $this->view->listUnitSystems = array();
         /* @var $idUnitSystem UnitSystem */
         foreach (UnitSystem::loadList() as $unitSystem) {
             $idUnitSystem = $unitSystem->getKey();
-            $this->view->listUnitSystems[$idUnitSystem['id']] = $unitSystem->getName();
+            $this->view->listUnitSystems[$idUnitSystem['id']] = $this->translationHelper->toString($unitSystem->getName());
         }
     }
 

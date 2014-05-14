@@ -24,7 +24,6 @@ class Unit_Test_PhysicalQuantityTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Unit_Test_PhysicalQuantitySetUp');
         $suite->addTestSuite('Unit_Test_PhysicalQuantityOthers');
         return $suite;
     }
@@ -34,11 +33,11 @@ class Unit_Test_PhysicalQuantityTest
      * @param string $ref
      * @return PhysicalQuantity $o
      */
-    public static function generateObject($ref='UnitPhysicalQuantityTest')
+    public static function generateObject($ref = 'UnitPhysicalQuantityTest')
     {
         $o = new PhysicalQuantity();
         $o->setRef('Ref'.$ref);
-        $o->setName('Name'.$ref);
+        $o->getName()->set('Name' . $ref, 'fr');
         $o->setSymbol('Symbol'.$ref);
         $o->setIsBase(true);
         $o->save();
@@ -57,121 +56,6 @@ class Unit_Test_PhysicalQuantityTest
         \Core\ContainerSingleton::getEntityManager()->flush();
     }
 }
-
-/**
- * PhysicalQuantitySetUpTest
- * @package Unit
- */
-class Unit_Test_PhysicalQuantitySetUp extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
-    public static function setUpBeforeClass()
-    {
-        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
-        if (Unit::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit::loadList() as $unit) {
-                $unit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
-        if (PhysicalQuantity::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
-                $physicalQuantity->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
-        if (UnitSystem::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (UnitSystem::loadList() as $systemunit) {
-                $systemunit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-    }
-
-    /**
-     * Test le constructeur
-     */
-    function testConstruct()
-    {
-        $o = new PhysicalQuantity();
-        $this->assertInstanceOf('Unit\Domain\PhysicalQuantity', $o);
-        $o->setRef('RefPhysicalQuantityTest');
-        $o->setName('NamePhysicalQuantityTest');
-        $o->setSymbol('physicalQuantity');
-        $o->setIsBase(true);
-        $this->assertEquals(array(), $o->getKey());
-        $o->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertNotEquals(array(), $o->getKey());
-        return $o;
-    }
-
-    /**
-     * @depends testConstruct
-     * @param PhysicalQuantity $o
-     */
-    function testLoad($o)
-    {
-         $oLoaded = PhysicalQuantity::load($o->getKey());
-         $this->assertInstanceOf('Unit\Domain\PhysicalQuantity', $o);
-         $this->assertEquals($oLoaded->getKey(), $o->getKey());
-         $this->assertEquals($oLoaded->getRef(), $o->getRef());
-         $this->assertEquals($oLoaded->getName(), $o->getName());
-         $this->assertEquals($oLoaded->getSymbol(), $o->getSymbol());
-         $this->assertEquals($oLoaded->isBase(), $o->isBase());
-         return $oLoaded;
-    }
-
-    /**
-     * @depends testLoad
-     * @param PhysicalQuantity $o
-     */
-    function testDelete(PhysicalQuantity $o)
-    {
-        $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertEquals(array(), $o->getKey());
-    }
-
-    /**
-     * On verifie que les tables soientt vides après les tests
-     */
-    public static function tearDownAfterClass()
-    {
-        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
-        if (Unit::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit::loadList() as $unit) {
-                $unit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-        // Vérification qu'il ne reste aucun PhysicalQuantity en base, sinon suppression !
-        if (PhysicalQuantity::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
-                $physicalQuantity->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
-        if (UnitSystem::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (UnitSystem::loadList() as $systemunit) {
-                $systemunit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-    }
-}
-
 
 /**
  * PhysicalQuantityOthersTest

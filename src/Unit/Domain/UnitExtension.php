@@ -9,6 +9,7 @@
 
 namespace Unit\Domain;
 
+use Core\Translation\TranslatedString;
 use Core_Model_Entity;
 use Core_Model_Entity_Translatable;
 use Unit\Domain\Unit\Unit;
@@ -20,9 +21,6 @@ use Unit\Domain\Unit\Unit;
  */
 class UnitExtension extends Core_Model_Entity
 {
-
-    use Core_Model_Entity_Translatable;
-
     // Constantes de tri et filtres.
     const QUERY_ID = 'id';
     const QUERY_NAME = 'name';
@@ -41,13 +39,13 @@ class UnitExtension extends Core_Model_Entity
 
     /**
      * Nom de l'extension.
-     * @var String
+     * @var TranslatedString
      */
     protected $name;
 
     /**
      * Symbole de l'extension.
-     * @var String
+     * @var TranslatedString
      */
     protected $symbol;
 
@@ -57,6 +55,11 @@ class UnitExtension extends Core_Model_Entity
      */
     protected $multiplier;
 
+    public function __construct()
+    {
+        $this->name = new TranslatedString();
+        $this->symbol = new TranslatedString();
+    }
 
     /**
      * Renvoie la référence de la pool active.
@@ -98,17 +101,8 @@ class UnitExtension extends Core_Model_Entity
     }
 
     /**
-     * Défini le nom de l'extension.
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
      * Renvoi le nom de l'extension.
-     * @return string
+     * @return TranslatedString
      */
     public function getName()
     {
@@ -116,17 +110,8 @@ class UnitExtension extends Core_Model_Entity
     }
 
     /**
-     * Défini le symbole de l'extension.
-     * @param string $symbol
-     */
-    public function setSymbol($symbol)
-    {
-        $this->symbol = $symbol;
-    }
-
-    /**
      * Renvoi le symbole de l'extension.
-     * @return string
+     * @return TranslatedString
      */
     public function getSymbol()
     {

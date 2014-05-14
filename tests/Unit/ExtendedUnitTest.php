@@ -305,33 +305,32 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
         //On créer un système d'unité (obligatoire pour une unité standard).
         $this->unitSystem = new UnitSystem();
         $this->unitSystem->setRef('international');
-        $this->unitSystem->setName('International');
         $this->unitSystem->save();
 
         //On créer les grandeurs physiques de base.
         $this->_lengthPhysicalQuantity = new PhysicalQuantity();
-        $this->_lengthPhysicalQuantity->setName('longueur');
+        $this->_lengthPhysicalQuantity->getName()->set('longueur', 'fr');
         $this->_lengthPhysicalQuantity->setRef('l');
         $this->_lengthPhysicalQuantity->setSymbol('L');
         $this->_lengthPhysicalQuantity->setIsBase(true);
         $this->_lengthPhysicalQuantity->save();
 
         $this->_massPhysicalQuantity = new PhysicalQuantity();
-        $this->_massPhysicalQuantity->setName('masse');
+        $this->_massPhysicalQuantity->getName()->set('masse', 'fr');
         $this->_massPhysicalQuantity->setRef('m');
         $this->_massPhysicalQuantity->setSymbol('M');
         $this->_massPhysicalQuantity->setIsBase(true);
         $this->_massPhysicalQuantity->save();
 
         $this->_timePhysicalQuantity = new PhysicalQuantity();
-        $this->_timePhysicalQuantity->setName('temps');
+        $this->_timePhysicalQuantity->getName()->set('temps', 'fr');
         $this->_timePhysicalQuantity->setRef('t');
         $this->_timePhysicalQuantity->setSymbol('T');
         $this->_timePhysicalQuantity->setIsBase(true);
         $this->_timePhysicalQuantity->save();
 
         $this->_cashPhysicalQuantity = new PhysicalQuantity();
-        $this->_cashPhysicalQuantity->setName('numéraire');
+        $this->_cashPhysicalQuantity->getName()->set('numéraire', 'fr');
         $this->_cashPhysicalQuantity->setRef('numeraire');
         $this->_cashPhysicalQuantity->setSymbol('$');
         $this->_cashPhysicalQuantity->setIsBase(true);
@@ -339,7 +338,7 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
 
         //On créer une grandeur physique composée de grandeur physique de base.
         $this->physicalQuantity1 = new PhysicalQuantity();
-        $this->physicalQuantity1->setName('energie');
+        $this->physicalQuantity1->getName()->set('energie', 'fr');
         $this->physicalQuantity1->setRef('ml2/t2');
         $this->physicalQuantity1->setSymbol('M.L2/T2');
         $this->physicalQuantity1->setIsBase(false);
@@ -353,9 +352,8 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
         $this->physicalQuantity1->addPhysicalQuantityComponent($this->_cashPhysicalQuantity, 0);
 
         $this->extension = new UnitExtension();
-        $this->extension->setName('ExtensionTest');
         $this->extension->setRef('ExtensionTest');
-        $this->extension->setSymbol('Ext');
+        $this->extension->getSymbol()->set('Ext', 'fr');
         $this->extension->setMultiplier(1);
         $this->extension->save();
 
@@ -460,6 +458,9 @@ class Unit_Test_ExtendedUnitOther extends PHPUnit_Framework_TestCase
     {
         $this->physicalQuantity1->setReferenceUnit(null);
 
+        if (! $this->_extendedUnit) {
+            return;
+        }
         $this->_extendedUnit->delete();
         $this->standardUnit->delete();
 

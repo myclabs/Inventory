@@ -3,10 +3,6 @@ Unit\Domain\PhysicalQuantity:
   repositoryClass: \Core_Model_Repository
   table: Unit_PhysicalQuantity
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       type: integer
@@ -17,16 +13,15 @@ Unit\Domain\PhysicalQuantity:
     ref:
       type: string
       unique: true
-    name:
-      type: string
-      nullable: true
-      gedmo:
-        - translatable
     symbol:
       type: string
       nullable : true
     isBase:
       type: boolean
+
+  embedded:
+    name:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     referenceUnit:

@@ -22,7 +22,6 @@ class Unit_Test_UnitExtensionTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Unit_Test_UnitExtensionSetUp');
         $suite->addTestSuite('Unit_Test_UnitExtensionOthers');
         return $suite;
     }
@@ -37,8 +36,8 @@ class Unit_Test_UnitExtensionTest
     {
         $o = new UnitExtension();
         $o->setRef('Ref'.$ref);
-        $o->setName('Name'.$ref);
-        $o->setSymbol('Symbol'.$ref);
+        $o->getName()->set('Name' . $ref, 'fr');
+        $o->getSymbol()->set('Symbol' . $ref, 'fr');
         $o->setMultiplier($multiplier);
         $o->save();
         \Core\ContainerSingleton::getEntityManager()->flush();
@@ -54,90 +53,6 @@ class Unit_Test_UnitExtensionTest
     {
         $o->delete();
         \Core\ContainerSingleton::getEntityManager()->flush();
-    }
-}
-
-/**
- * ExtensionSetUpTest
- * @package Unit
- */
-class Unit_Test_UnitExtensionSetUp extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
-    public static function setUpBeforeClass()
-    {
-        // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
-        if (UnitExtension::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_Extention restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (UnitExtension::loadList() as $extensionunit) {
-                $extensionunit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-    }
-
-    /**
-     * test si l'objet renvoyé est bien dy type demandé
-     * @return $o
-     */
-    function testConstruct()
-    {
-        $o = new UnitExtension();
-        $this->assertInstanceOf('Unit\Domain\UnitExtension', $o);
-        $o->setRef('RefUnitExtensionTest');
-        $o->setName('NameUnitExtensionTest');
-        $o->setSymbol('Ext');
-        $o->setMultiplier(1);
-        $this->assertEquals(array(), $o->getKey());
-        $o->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertNotEquals(array(), $o->getKey());
-        return $o;
-    }
-
-    /**
-     * @depends testConstruct
-     * @param \Unit\Domain\UnitExtension $o
-     */
-    function testLoad($o)
-    {
-        \Core\ContainerSingleton::getEntityManager()->clear($o);
-        $oLoaded = UnitExtension::load($o->getKey());
-        $this->assertInstanceOf('Unit\Domain\UnitExtension', $o);
-        $this->assertEquals($oLoaded->getKey(), $o->getKey());
-        $this->assertEquals($oLoaded->getRef(), $o->getRef());
-        $this->assertEquals($oLoaded->getName(), $o->getName());
-        $this->assertEquals($oLoaded->getSymbol(), $o->getSymbol());
-        $this->assertEquals($oLoaded->getMultiplier(), $o->getMultiplier());
-        return $oLoaded;
-    }
-
-    /**
-     * @depends testLoad
-     * @param \Unit\Domain\UnitExtension $o
-     */
-    function testDelete(UnitExtension $o)
-    {
-        $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertEquals(array(), $o->getKey());
-    }
-
-    /**
-     * Méthode appelée à la fin de la classe de test
-     */
-    public static function tearDownAfterClass()
-    {
-        // Vérification qu'il ne reste aucun UnitExtension en base, sinon suppression !
-        if (UnitExtension::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_Extension restants ont été trouvé après les tests, suppression en cours !';
-            foreach (UnitExtension::loadList() as $extensionunit) {
-                $extensionunit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
     }
 }
 

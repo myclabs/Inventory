@@ -2,7 +2,6 @@
 
 namespace Inventory\Command\PopulateDB\BasicDataSet\Unit;
 
-use Core_Locale;
 use Doctrine\ORM\EntityManager;
 use DOMDocument;
 use DOMElement;
@@ -51,10 +50,9 @@ class PopulateUnitSystem
                 continue;
             }
 
-            $unitSystem->setTranslationLocale(Core_Locale::load($lang));
-            $unitSystem->setName($value);
-            $unitSystem->save();
-            $this->entityManager->flush();
+            $unitSystem->getName()->set($value, $lang);
         }
+        $unitSystem->save();
+        $this->entityManager->flush();
     }
 }

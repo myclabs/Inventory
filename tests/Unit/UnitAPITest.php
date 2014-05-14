@@ -109,33 +109,28 @@ class Unit_Test_UnitAPITest extends TestCase
         // On créer un système d'unité (obligatoire pour une unité standard).
         $this->unitSystem = new UnitSystem();
         $this->unitSystem->setRef('international');
-        $this->unitSystem->setName('International');
         $this->unitSystem->save();
 
         // On créer les grandeurs physiques de base.
         $this->lengthPhysicalQuantity = new PhysicalQuantity();
-        $this->lengthPhysicalQuantity->setName('longueur');
         $this->lengthPhysicalQuantity->setRef('l');
         $this->lengthPhysicalQuantity->setSymbol('L');
         $this->lengthPhysicalQuantity->setIsBase(true);
         $this->lengthPhysicalQuantity->save();
 
         $this->massPhysicalQuantity = new PhysicalQuantity();
-        $this->massPhysicalQuantity->setName('masse');
         $this->massPhysicalQuantity->setRef('m');
         $this->massPhysicalQuantity->setSymbol('M');
         $this->massPhysicalQuantity->setIsBase(true);
         $this->massPhysicalQuantity->save();
 
         $this->timePhysicalQuantity = new PhysicalQuantity();
-        $this->timePhysicalQuantity->setName('temps');
         $this->timePhysicalQuantity->setRef('t');
         $this->timePhysicalQuantity->setSymbol('T');
         $this->timePhysicalQuantity->setIsBase(true);
         $this->timePhysicalQuantity->save();
 
         $this->cashPhysicalQuantity = new PhysicalQuantity();
-        $this->cashPhysicalQuantity->setName('numéraire');
         $this->cashPhysicalQuantity->setRef('numeraire');
         $this->cashPhysicalQuantity->setSymbol('$');
         $this->cashPhysicalQuantity->setIsBase(true);
@@ -143,7 +138,6 @@ class Unit_Test_UnitAPITest extends TestCase
 
         // On créer une grandeur physique composée de grandeur physique de base.
         $this->physicalQuantity1 = new PhysicalQuantity();
-        $this->physicalQuantity1->setName('energie');
         $this->physicalQuantity1->setRef('ml2/t2');
         $this->physicalQuantity1->setSymbol('M.L2/T2');
         $this->physicalQuantity1->setIsBase(false);
@@ -211,15 +205,13 @@ class Unit_Test_UnitAPITest extends TestCase
         // On créer deux extensions.
         $this->extension = new UnitExtension();
         $this->extension->setRef('co2e');
-        $this->extension->setName('équivalent CO2');
-        $this->extension->setSymbol('equ. CO2');
+        $this->extension->getSymbol()->set('equ. CO2', 'fr');
         $this->extension->setMultiplier(1);
         $this->extension->save();
 
         $this->extension2 = new UnitExtension();
         $this->extension2->setRef('ce');
-        $this->extension2->setName('équivalent carbone');
-        $this->extension2->setSymbol('equ. C');
+        $this->extension2->getSymbol()->set('equ. C', 'fr');
         $this->extension2->setMultiplier(3.7);
         $this->extension2->save();
 
@@ -454,6 +446,9 @@ class Unit_Test_UnitAPITest extends TestCase
         $this->timePhysicalQuantity->setReferenceUnit(null);
         $this->cashPhysicalQuantity->setReferenceUnit(null);
 
+        if (! $this->unit1) {
+            return;
+        }
         $this->unit1->delete();
         $this->unit2->delete();
         $this->unit3->delete();
