@@ -29,7 +29,7 @@ class ExportCommand extends Command
 
         $root = PACKAGE_PATH . '/data/exports/migration-3.0';
 
-        $serializer = new CustomSerializerForMigration([
+        $serializer = new Serializer([
             \Orga\Model\ACL\Role\OrganizationAdminRole::class => [ 'exclude' => true ],
             \Orga\Model\ACL\Role\CellAdminRole::class => [ 'exclude' => true ],
             \Orga\Model\ACL\Role\CellManagerRole::class => [ 'exclude' => true ],

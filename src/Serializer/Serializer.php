@@ -96,8 +96,8 @@ class Serializer
     {
         $serialized = [];
 
-        foreach ($array as $item) {
-            $serialized[] = $this->recursiveSerialization($item);
+        foreach ($array as $key => $item) {
+            $serialized[$key] = $this->recursiveSerialization($item);
         }
 
         return $serialized;
