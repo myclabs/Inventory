@@ -511,12 +511,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "08347cf4f74f1f7461ba1005a5fe5bb93f3c2c5c"
+                "reference": "5c828fc6c8a8690a75d25a1775bc0751a5905cce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/08347cf4f74f1f7461ba1005a5fe5bb93f3c2c5c",
-                "reference": "08347cf4f74f1f7461ba1005a5fe5bb93f3c2c5c",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/5c828fc6c8a8690a75d25a1775bc0751a5905cce",
+                "reference": "5c828fc6c8a8690a75d25a1775bc0751a5905cce",
                 "shasum": ""
             },
             "require": {
@@ -580,7 +580,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-05-11 15:51:23"
+            "time": "2014-05-15 02:37:24"
         },
         {
             "name": "dompdf/dompdf",
@@ -744,12 +744,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/DoctrineTranslated.git",
-                "reference": "fbea25a70acda37292e67473a07260509aa21139"
+                "reference": "d1f308c509b13c6e6fad64ec0aa459fcf799e74a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/fbea25a70acda37292e67473a07260509aa21139",
-                "reference": "fbea25a70acda37292e67473a07260509aa21139",
+                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/d1f308c509b13c6e6fad64ec0aa459fcf799e74a",
+                "reference": "d1f308c509b13c6e6fad64ec0aa459fcf799e74a",
                 "shasum": ""
             },
             "require": {
@@ -776,7 +776,7 @@
                 "translation",
                 "translations"
             ],
-            "time": "2014-05-14 15:56:40"
+            "time": "2014-05-14 16:16:33"
         },
         {
             "name": "mnapoli/metamodel",
@@ -2432,30 +2432,88 @@
             "time": "2014-04-27 11:55:27"
         },
         {
-            "name": "instaclick/php-webdriver",
-            "version": "1.4.0",
+            "name": "behat/mink-selenium2-driver",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/instaclick/php-webdriver.git",
-                "reference": "3cf130283b054b50119f887e11b9b5a648d785a9"
+                "url": "https://github.com/Behat/MinkSelenium2Driver.git",
+                "reference": "bcf1b537de37db6db0822d9e7bd97e600fd7a476"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/instaclick/php-webdriver/zipball/3cf130283b054b50119f887e11b9b5a648d785a9",
-                "reference": "3cf130283b054b50119f887e11b9b5a648d785a9",
+                "url": "https://api.github.com/repos/Behat/MinkSelenium2Driver/zipball/bcf1b537de37db6db0822d9e7bd97e600fd7a476",
+                "reference": "bcf1b537de37db6db0822d9e7bd97e600fd7a476",
+                "shasum": ""
+            },
+            "require": {
+                "behat/mink": "~1.5.0",
+                "instaclick/php-webdriver": "~1.0.12",
+                "php": ">=5.3.1"
+            },
+            "type": "mink-driver",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Behat\\Mink\\Driver": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Konstantin Kudryashov",
+                    "email": "ever.zet@gmail.com",
+                    "homepage": "http://everzet.com"
+                },
+                {
+                    "name": "Pete Otaqui",
+                    "email": "pete@otaqui.com",
+                    "homepage": "https://github.com/pete-otaqui"
+                }
+            ],
+            "description": "Selenium2 (WebDriver) driver for Mink framework",
+            "homepage": "http://mink.behat.org/",
+            "keywords": [
+                "ajax",
+                "browser",
+                "javascript",
+                "selenium",
+                "testing",
+                "webdriver"
+            ],
+            "time": "2013-06-02 19:09:45"
+        },
+        {
+            "name": "instaclick/php-webdriver",
+            "version": "1.0.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/instaclick/php-webdriver.git",
+                "reference": "47a6019553a7a5b42d35493276ffc2c9252c53d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/instaclick/php-webdriver/zipball/47a6019553a7a5b42d35493276ffc2c9252c53d5",
+                "reference": "47a6019553a7a5b42d35493276ffc2c9252c53d5",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "php": ">=5.3.2"
             },
-            "require-dev": {
-                "satooshi/php-coveralls": "dev-master"
-            },
+            "bin": [
+                "bin/webunit"
+            ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4.x-dev"
+                    "dev-master": "1.0.x-dev"
                 }
             },
             "autoload": {
@@ -2487,7 +2545,7 @@
                 "webdriver",
                 "webtest"
             ],
-            "time": "2014-05-08 04:19:19"
+            "time": "2013-10-04 15:03:51"
         },
         {
             "name": "mnapoli/metaconsole",
@@ -2519,67 +2577,6 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "time": "2014-01-06 16:09:30"
-        },
-        {
-            "name": "silverstripe/mink-selenium2-driver",
-            "version": "1.1.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/silverstripe-labs/MinkSelenium2Driver.git",
-                "reference": "6561c5bd95ac83f5eea9cc0019401a7f0d594af9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/silverstripe-labs/MinkSelenium2Driver/zipball/6561c5bd95ac83f5eea9cc0019401a7f0d594af9",
-                "reference": "6561c5bd95ac83f5eea9cc0019401a7f0d594af9",
-                "shasum": ""
-            },
-            "require": {
-                "behat/mink": "~1.5@dev",
-                "instaclick/php-webdriver": "~1.1",
-                "php": ">=5.3.1"
-            },
-            "replace": {
-                "behat/mink-selenium2-driver": "self.version"
-            },
-            "type": "mink-driver",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Behat\\Mink\\Driver": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Konstantin Kudryashov",
-                    "email": "ever.zet@gmail.com",
-                    "homepage": "http://everzet.com"
-                },
-                {
-                    "name": "Pete Otaqui",
-                    "email": "pete@otaqui.com",
-                    "homepage": "https://github.com/pete-otaqui"
-                }
-            ],
-            "description": "SilverStripe fork of Selenium2 (WebDriver) driver for Mink framework",
-            "homepage": "http://mink.behat.org/",
-            "keywords": [
-                "ajax",
-                "browser",
-                "javascript",
-                "selenium",
-                "testing",
-                "webdriver"
-            ],
-            "time": "2014-05-13 23:33:39"
         },
         {
             "name": "symfony/config",
