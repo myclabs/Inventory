@@ -100,20 +100,12 @@ class FeatureContext extends MinkContext
         try {
             $node = $this->assertSession()->fieldExists($field);
 
-            // Anciens formulaires Bootstrap 2
-            $fieldId = $node->getAttribute('id');
-            $expression = '$("#' . $fieldId . '").parents(".controls").children(".errorMessage").text()';
+            $fieldName = $node->getAttribute('name');
+            $expression = '$(\'[name="' . $fieldName . '"]\').parents(".has-error").find(".errorMessage").text()';
             $errorMessage = $this->getSession()->evaluateScript("return $expression;");
-
-            // Nouveaux formulaires
-            if ($errorMessage == '') {
-                $fieldName = $node->getAttribute('name');
-                $expression = '$(\'[name="' . $fieldName . '"]\').parents(".form-group").find(".errorMessage").text()';
-                $errorMessage = $this->getSession()->evaluateScript("return $expression;");
-            }
         } catch (ElementNotFoundException $e) {
             // Select2
-            $expression = '$(\'#s2id_' . $field . '\').parents(".form-group").find(".errorMessage").text()';
+            $expression = '$(\'#s2id_' . $field . '\').parents(".has-error").find(".errorMessage").text()';
             $errorMessage = $this->getSession()->evaluateScript("return $expression;");
             if ($errorMessage == '') {
                 throw $e;
