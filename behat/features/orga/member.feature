@@ -19,8 +19,8 @@ Feature: Organizational member feature
   # Ajout d'un élément, saisie correcte (parent renseigné en partie)
     When I fill in "listMemberssite_label_addForm" with "AAA"
     And I fill in "listMemberssite_ref_addForm" with "aaa"
-    And I fill in "listMemberssite_broaderpays_addForm" with "france#da39a3ee5e6b4b0d3255bfef95601890afd80709"
-    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    And I select "France" in s2 "listMemberssite_broaderpays_addForm"
+    And I select "Marque A" in s2 "listMemberssite_broadermarque_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Affichage suivant l'ordre alphabétique des identifiants
@@ -54,8 +54,8 @@ Feature: Organizational member feature
     Then the field "listMemberssite_broaderpays_addForm" should have error: "Merci de renseigner ce champ."
     And the field "listMemberssite_broadermarque_addForm" should have error: "Merci de renseigner ce champ."
   # Ajout, identifiant déjà utilisé, éléments axes parents remplis
-    When I fill in "listMemberssite_broaderpays_addForm" with "france#da39a3ee5e6b4b0d3255bfef95601890afd80709"
-    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    When I select "France" in s2 "listMemberssite_broaderpays_addForm"
+    And I select "Marque A" in s2 "listMemberssite_broadermarque_addForm"
     And I click "Valider"
     Then the field "listMemberssite_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 

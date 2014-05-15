@@ -581,9 +581,9 @@ abstract class UI_Datagrid_Col_Generic
         $filterValue .= 'if ($(\'#'.$this->getFilterFormId($datagrid).'\').val() != \'\') {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
         $filterValue .= '\"'.$this->filterOperator.'\":\"" + $(\'#'.$this->getFilterFormId($datagrid).'\').val() + "\"';
-        $filterValue .= '},";';
+        $filterValue .= '}},";';
 
         $filterValue .= '}';
 

@@ -1024,7 +1024,7 @@ JS;
         $datagridScript .= '}';
         // Ajout du filtre à la requete.
         $datagridScript .= 'var filter = \'\';';
-        $datagridScript .= 'filter += "{ ";';
+        $datagridScript .= 'filter += "[ ";';
         if ($this->hasFilter() === true) {
             $filters = array_merge($this->columns, $this->customFilters);
             /** @var Column\GenericColumn $column */
@@ -1035,7 +1035,7 @@ JS;
             }
             $datagridScript .= 'filter = filter.substr(0, filter.length-1);';
         }
-        $datagridScript .= 'filter += "}";';
+        $datagridScript .= 'filter += "]";';
         // Mise à jour de l'indicateur de présence du filtre.
         $datagridScript .= '$(\'#'.$this->id.'_filter legend i.filterActive\').remove();';
         $datagridScript .= 'if (filter != \'{}\') {';
@@ -1050,7 +1050,7 @@ JS;
         $datagridScript .= '/sortDirection/" + dir + "';
         $datagridScript .= '/nbElements/" + results + "';
         $datagridScript .= '/startIndex/" + startIndex + "';
-        $datagridScript .= '/filters/" + encodeURIComponent(filter);';
+        $datagridScript .= '?filters=" + encodeURIComponent(filter);';
         $datagridScript .= '};';
 
         // Création d'une variable permettant de savoir si la requête Initiale a déjà été envoyé.

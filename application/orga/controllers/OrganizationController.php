@@ -1,5 +1,6 @@
 <?php
 
+use Account\Domain\AccountRepository;
 use AF\Domain\AFLibrary;
 use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
@@ -53,6 +54,12 @@ class Orga_OrganizationController extends Core_Controller
      * @var Orga_Service_OrganizationService
      */
     private $organizationService;
+
+    /**
+     * @Inject
+     * @var AccountRepository
+     */
+    private $accountRepository;
 
     /**
      * @Inject
@@ -143,6 +150,7 @@ class Orga_OrganizationController extends Core_Controller
     public function addAction()
     {
         UI_Form::addHeader();
+        $this->view->assign('account', $this->getParam('account'));
         $this->view->assign('templates', $this->organizationService->getOrganizationTemplates());
     }
 
@@ -152,14 +160,13 @@ class Orga_OrganizationController extends Core_Controller
     public function addSubmitAction()
     {
         $user = $this->_helper->auth();
-        $formData = json_decode($this->getRequest()->getParam('addOrganization'), true);
-        $label = $formData['organization']['elements']['organizationLabel']['value'];
+        $label = $this->getParam('oranizationLabel');
 
         $success = function () {
             $this->sendJsonResponse(
                 [
                     'message' => __('UI', 'message', 'added'),
-                    'typeMessage' => 'success',
+                    'type' => 'success',
                     'info' => __('Orga', 'add', 'complementaryInfo')
                 ]
             );
@@ -168,7 +175,7 @@ class Orga_OrganizationController extends Core_Controller
             $this->sendJsonResponse(
                 [
                     'message' => __('UI', 'message', 'addedLater'),
-                    'typeMessage' => 'info',
+                    'type' => 'info',
                     'info' => __('Orga', 'add', 'complementaryInfo')
                 ]
             );
@@ -181,7 +188,7 @@ class Orga_OrganizationController extends Core_Controller
         $task = new ServiceCallTask(
             'Orga_Service_OrganizationService',
             'createOrganizationFromTemplatesForm',
-            [$user, $formData],
+            [$user, $this->accountRepository->get($this->getParam('account')), $this->getRequest()->getPost()],
             __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
@@ -212,7 +219,7 @@ class Orga_OrganizationController extends Core_Controller
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
-        $this->redirect('orga/organization/manage');
+        $this->redirect('account/dashboard/');
     }
 
     /**
@@ -1046,10 +1053,8 @@ class Orga_OrganizationController extends Core_Controller
             $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
             $cellsResults = [$globalCell];
             foreach ($globalCell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-                if ($narrowerGranularity->getCellsGenerateDWCubes()) {
-                    foreach ($narrowerGranularity->getCells() as $childCell) {
-                        $cellsResults[] = $childCell;
-                    }
+                foreach ($narrowerGranularity->getCells() as $childCell) {
+                    $cellsResults[] = $childCell;
                 }
             }
             $this->view->assign('cellsResults', $cellsResults);
@@ -1067,10 +1072,8 @@ class Orga_OrganizationController extends Core_Controller
         foreach ($topCells as $topCell) {
             $cellsData[$topCell->getId()] = $topCell;
             foreach ($topCell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-                if ($narrowerGranularity->getCellsGenerateDWCubes()) {
-                    foreach ($topCell->getChildCellsForGranularity($narrowerGranularity) as $childCell) {
-                        $cellsData[$childCell->getId()] = $childCell;
-                    }
+                foreach ($topCell->getChildCellsForGranularity($narrowerGranularity) as $childCell) {
+                    $cellsData[$childCell->getId()] = $childCell;
                 }
             }
         }
@@ -1089,9 +1092,6 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function rebuildDataAction()
     {
-        /** @var User $connectedUser */
-        $connectedUser = $this->_helper->auth();
-
         $idOrganization = $this->getParam('idOrganization');
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);

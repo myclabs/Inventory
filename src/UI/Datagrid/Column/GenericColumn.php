@@ -436,9 +436,9 @@ abstract class GenericColumn
         $filterValue .= "if ($('#".$this->getFilterFormId($datagrid)."').val() != '') {";
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
         $filterValue .= '\"'.$this->criteriaFilterOperator.'\":\"" + $(\'#'.$this->getFilterFormId($datagrid).'\').val() + "\"';
-        $filterValue .= '},";';
+        $filterValue .= '}},";';
 
         $filterValue .= '}';
 

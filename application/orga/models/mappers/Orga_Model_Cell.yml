@@ -1,4 +1,3 @@
-# orga\models\mappers\Orga_Model_Cell.yml
 Orga_Model_Cell:
   type: entity
   repositoryClass: Orga_Model_Repository_Cell

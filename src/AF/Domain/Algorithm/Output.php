@@ -45,7 +45,7 @@ class Output
      *
      * @param Calc_UnitValue $value
      * @param NumericAlgo    $algo
-     * @param Member[]   $classificationMembers
+     * @param Member[]       $classificationMembers
      */
     public function __construct(Calc_UnitValue $value, NumericAlgo $algo, array $classificationMembers)
     {

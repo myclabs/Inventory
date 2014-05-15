@@ -10,6 +10,7 @@
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Selectable;
 
 /**
  * Definit un membre d'un axe.
@@ -35,7 +36,7 @@ class Orga_Model_Member extends Core_Model_Entity
      *
      * @var string
      */
-    protected  $id = null;
+    protected $id = null;
 
     /**
      * Référence unique (au sein des membres contextualisant parent) du Member.
@@ -104,7 +105,7 @@ class Orga_Model_Member extends Core_Model_Entity
      * @throws Core_Exception_Duplicate
      * @throws Core_Exception_InvalidArgument
      */
-    public function __construct(Orga_Model_Axis $axis, $ref, array $directParentMembers=[])
+    public function __construct(Orga_Model_Axis $axis, $ref, array $directParentMembers = [])
     {
         $this->label = new TranslatedString();
         $this->directParents = new ArrayCollection();
@@ -220,11 +221,7 @@ class Orga_Model_Member extends Core_Model_Entity
     public static function orderMembers(Orga_Model_Member $a, Orga_Model_Member $b)
     {
         if ($a->getAxis() === $b->getAxis()) {
-            if ($a->getAxis()->isMemberPositioning()) {
-                return strcmp($a->getTag(), $b->getTag());
-            } else {
-                return strcmp($a->getLabel(), $b->getLabel());
-            }
+            return strcmp($a->getRef(), $b->getRef());
         }
         return Orga_Model_Axis::firstOrderAxes($a->getAxis(), $b->getAxis());
     }
@@ -582,7 +579,7 @@ class Orga_Model_Member extends Core_Model_Entity
     /**
      * Renvoie un tableau des Member parents directs.
      *
-     * @return Collection|Orga_Model_Member[]
+     * @return Collection|Selectable|Orga_Model_Member[]
      */
     public function getDirectParents()
     {
@@ -622,7 +619,7 @@ class Orga_Model_Member extends Core_Model_Entity
 
         if (count($member) === 0) {
             throw new Core_Exception_NotFound('No direct parent Member matching Axis "'.$axis->getRef().'".');
-        } else if (count($member) > 1) {
+        } elseif (count($member) > 1) {
             throw new Core_Exception_TooMany('Too many direct parent Member matching Axis "'.$axis->getRef().'".');
         }
 
@@ -682,7 +679,7 @@ class Orga_Model_Member extends Core_Model_Entity
 
         if (count($member) === 0) {
             throw new Core_Exception_NotFound('No parent Member matching Axis "'.$axis->getRef().'".');
-        } else if (count($member) > 1) {
+        } elseif (count($member) > 1) {
             throw new Core_Exception_TooMany('Too many direct parent Member matching Axis "'.$axis->getRef().'".');
         }
 
@@ -827,5 +824,4 @@ class Orga_Model_Member extends Core_Model_Entity
     {
         return $this->getCompleteRef();
     }
-
 }

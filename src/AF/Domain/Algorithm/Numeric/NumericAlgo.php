@@ -67,7 +67,10 @@ abstract class NumericAlgo extends Algo
         // On récupère les membres de classification
         $members = [];
         foreach ($this->indexes as $resultIndex) {
-            $members[] = $resultIndex->getClassificationMember($inputSet);
+            $member = $resultIndex->getClassificationMember($inputSet);
+            if ($member) {
+                $members[] = $member;
+            }
         }
         return new Output($result, $this, $members);
     }

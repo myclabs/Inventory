@@ -452,7 +452,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
         $filterValue .= 'if ((valueEqu != \'\') || (valueInf != \'\') || (valueSup != \'\')) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {";';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {";';
         $filterValue .= 'if (valueEqu != \'\') {';
         $filterValue .= 'filter += "\"'.$this->filterOperator.'\":\"" + valueEqu + "\"";';
         $filterValue .= '}';
@@ -468,7 +468,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
         $filterValue .= '}';
         $filterValue .= 'filter += "\"'.$this->filterOperatorHigher.'\":\"" + valueSup + "\"";';
         $filterValue .= '}';
-        $filterValue .= 'filter += "},";';
+        $filterValue .= 'filter += "}},";';
 
         $filterValue .= '}';
 

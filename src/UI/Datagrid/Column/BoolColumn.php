@@ -211,11 +211,11 @@ JS;
         $filterValue .= 'if (inputOptions.length == 1) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
         $filterValue .= '\"'.$this->criteriaFilterOperator.'\":" + inputOptions.val() + "';
         $filterValue .= '},";';
 
-        $filterValue .= '}';
+        $filterValue .= '}}';
 
         return $filterValue;
     }

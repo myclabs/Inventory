@@ -1,4 +1,3 @@
-# inventory\models\mappers\Inventory_Model_Ordered.yml
 Inventory_Model_Ordered:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered

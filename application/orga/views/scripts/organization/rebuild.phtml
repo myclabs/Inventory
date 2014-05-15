@@ -5,7 +5,7 @@
     <form action="orga/organization/rebuild-data/idOrganization/<?=$this->organization->getId()?>/" class="rebuild-data">
         <div class="input-group">
             <?php if (count($this->cellsData) > 1) : ?>
-                <select name="cell" class="form-control">
+                <select name="cell">
                     <?php foreach ($this->cellsData as $cellIndex => $cellData) : ?>
                         <?php if ($cellData instanceof Orga_Model_Organization) : ?>
                             <option value=""><?=$this->translate($cellData->getLabel())?></option>
@@ -30,6 +30,19 @@
         </div>
     </form>
     <script type="text/javascript">
+        $('.rebuild-data  select[name="cell"]').select2({
+            matcher: function(term, text) {
+                var terms = term.split(' ');
+                for (var termIndex in terms) {
+                    if ((terms[termIndex] != '')
+                        && (text.toUpperCase().indexOf(terms[termIndex].toUpperCase()) < 0)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        });
+        $('.rebuild-data .select2-container').css('width', '100%');
         $('body').on('submit', '.rebuild-data', function(e) {
             e.preventDefault();
             var form = $(this);
@@ -78,7 +91,7 @@
     <form action="orga/organization/rebuild-results/idOrganization/<?=$this->organization->getId()?>/" class="rebuild-results">
         <div class="input-group">
             <?php if (count($this->cellsResults) > 1) : ?>
-                <select name="cell" class="form-control">
+                <select name="cell">
                     <?php foreach ($this->cellsResults as $cellResults) : ?>
                         <option value="<?=$cellResults->getId()?>"><?=$this->translate($cellResults->getLabel())?></option>
                     <?php endforeach; ?>
@@ -99,6 +112,19 @@
         </div>
     </form>
     <script type="text/javascript">
+        $('.rebuild-results  select[name="cell"]').select2({
+            matcher: function(term, text) {
+                var terms = term.split(' ');
+                for (var termIndex in terms) {
+                    if ((terms[termIndex] != '')
+                        && (text.toUpperCase().indexOf(terms[termIndex].toUpperCase()) < 0)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        });
+        $('.rebuild-results .select2-container').css('width', '100%');
         $('body').on('submit', '.rebuild-results', function(e) {
             e.preventDefault();
             var form = $(this);

@@ -248,9 +248,9 @@ class UI_Datagrid_Col_Bool extends UI_Datagrid_Col_Generic
         $filterValue .= 'if (inputOptions.length == 1) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
         $filterValue .= '\"'.$this->filterOperator.'\":" + inputOptions.val() + "';
-        $filterValue .= '},";';
+        $filterValue .= '}},";';
 
         $filterValue .= '}';
 

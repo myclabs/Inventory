@@ -1,4 +1,3 @@
-# inventory\models\mappers\Inventory_Model_Simple.yml
 Inventory_Model_Simple:
   type: entity
   repositoryClass: Core_Model_Repository

@@ -47,7 +47,7 @@ trait OrgaViewFeatureContext
                 $inputStatusIcon = 'warning';
                 break;
             case 'input_incomplete':
-                $inputStatusIcon = 'check-square-o';
+                $inputStatusIcon = 'pencil-square-o';
                 break;
             case 'statusNotStarted':
                 $inputStatusIcon = 'square-o';
@@ -88,7 +88,7 @@ trait OrgaViewFeatureContext
     }
 
     /**
-     * @Then /^the "(?P<cell>[^"]*)" cell inventory status should be (?P<inventoryStatus>\d+)$/
+     * @Then /^the "(?P<cell>[^"]*)" cell inventory status should be "(?P<inventoryStatus>[^"]*)"$/
      */
     public function assertCellInventoryStatusVisible($cell, $inventoryStatus)
     {
@@ -124,7 +124,7 @@ trait OrgaViewFeatureContext
     }
 
     /**
-     * @Then /^the "(?P<cell>[^"]*)" cell inventory percent should be (?P<percent>[^"]*)%$/
+     * @Then /^the "(?P<cell>[^"]*)" cell inventory percent should be "(?P<percent>[^"]*)"$/
      */
     public function assertCellInventoryStatusPercent($cell, $percent)
     {

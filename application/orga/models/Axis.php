@@ -10,6 +10,7 @@
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Selectable;
 
 /**
  * Objet métier définissant un axe organisationnel au sein d'un organization.
@@ -35,14 +36,14 @@ class Orga_Model_Axis extends Core_Model_Entity
      *
      * @var int
      */
-    protected  $id = null;
+    protected $id = null;
 
     /**
      * Référence unique (au sein d'un organization) de l'axe.
      *
      * @var string
      */
-    protected  $ref = null;
+    protected $ref = null;
 
     /**
      * Label de l'axe.
@@ -125,7 +126,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      * @throws Core_Exception_Duplicate
      * @throws Core_Exception_InvalidArgument
      */
-    public function __construct(Orga_Model_Organization $organization, $ref, Orga_Model_Axis $directNarrowerAxis=null)
+    public function __construct(Orga_Model_Organization $organization, $ref, Orga_Model_Axis $directNarrowerAxis = null)
     {
         $this->label = new TranslatedString();
         $this->directBroaders = new ArrayCollection();
@@ -240,7 +241,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     {
         if ($ref === 'global') {
             throw new Core_Exception_InvalidArgument('An Axis ref cannot be "global".');
-        } else if ($this->ref !== $ref) {
+        } elseif ($this->ref !== $ref) {
             try {
                 $this->getOrganization()->getAxisByRef($ref);
                 throw new Core_Exception_Duplicate('An Axis with ref "'.$ref.'" already exists in the Organization');
@@ -402,7 +403,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     {
         if (strpos($a->getNarrowerTag(), $b->getNarrowerTag()) !== false) {
             return -1;
-        } else if (strpos($b->getNarrowerTag(), $a->getNarrowerTag()) !== false) {
+        } elseif (strpos($b->getNarrowerTag(), $a->getNarrowerTag()) !== false) {
             return 1;
         }
         return self::firstOrderAxes($a, $b);
@@ -415,7 +416,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function moveTo(Orga_Model_Axis $newDirectNarrowerAxis=null)
+    public function moveTo(Orga_Model_Axis $newDirectNarrowerAxis = null)
     {
         if ($this->getDirectNarrower() !== $newDirectNarrowerAxis) {
             if ($newDirectNarrowerAxis !== null && $newDirectNarrowerAxis->isBroaderThan($this)) {
@@ -507,7 +508,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Retourne l'ensemble des broaders directs de l'Axis.
      *
-     * @return Orga_Model_Axis[]
+     * @return Collection|Selectable|Orga_Model_Axis[]
      */
     public function getDirectBroaders()
     {
@@ -715,7 +716,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Retourne un tableau contenant les members de l'Axis.
      *
-     * @return Collection|Orga_Model_Member[]
+     * @return Collection|Selectable|Orga_Model_Member[]
      */
     public function getMembers()
     {
@@ -725,7 +726,7 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Retourne un tableau contenant les members de l'Axis.
      *
-     * @return Collection|Orga_Model_Member[]
+     * @return Collection|Selectable|Orga_Model_Member[]
      */
     public function getOrderedMembers()
     {

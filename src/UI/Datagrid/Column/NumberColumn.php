@@ -224,7 +224,7 @@ JS;
         $filterValue .= 'if ((valueEqu != \'\') || (valueInf != \'\') || (valueSup != \'\')) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {";';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {";';
         $filterValue .= 'if (valueEqu != \'\') {';
         $filterValue .= 'filter += "\"'.$this->criteriaFilterOperator.'\":\"" + valueEqu + "\"";';
         $filterValue .= '}';
@@ -240,7 +240,7 @@ JS;
         $filterValue .= '}';
         $filterValue .= 'filter += "\"'.$this->filterOperatorHigher.'\":\"" + valueSup + "\"";';
         $filterValue .= '}';
-        $filterValue .= 'filter += "},";';
+        $filterValue .= 'filter += "}},";';
 
         $filterValue .= '}';
 

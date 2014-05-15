@@ -234,7 +234,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     /**
      * Renvoie les Axis de l'Organization.
      *
-     * @return Collection|Orga_Model_Axis[]
+     * @return Collection|Selectable|Orga_Model_Axis[]
      */
     public function getAxes()
     {
@@ -430,7 +430,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function setGranularityForInventoryStatus(Orga_Model_Granularity $granularity=null)
+    public function setGranularityForInventoryStatus(Orga_Model_Granularity $granularity = null)
     {
         if ($this->granularityForInventoryStatus !== $granularity) {
             if ($this->granularityForInventoryStatus !== null) {
@@ -528,7 +528,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
             }
             usort(
                 $classificationAxes,
-                function($a, $b) {
+                function ($a, $b) {
                     /** @var Classification\Domain\Axis $a */
                     /** @var Classification\Domain\Axis $b */
                     if ($a->getLibrary()->getId() < $b->getLibrary()->getId()) {

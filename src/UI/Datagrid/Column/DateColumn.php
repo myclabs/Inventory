@@ -164,7 +164,7 @@ JS;
         $filterValue .= 'if ((valueSup != \'\') || (valueInf != \'\')) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {";';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {";';
         $filterValue .= 'if (valueSup != \'\') {';
         $filterValue .= 'filter += "\"'.$this->criteriaFilterOperatorHigher.'\":\"" + valueSup + "\"";';
         $filterValue .= '}';
@@ -174,7 +174,7 @@ JS;
         $filterValue .= 'if (valueInf != \'\') {';
         $filterValue .= 'filter += "\"'.$this->criteriaFilterOperatorLower.'\":\"" + valueInf + "\"";';
         $filterValue .= '}';
-        $filterValue .= 'filter += "},";';
+        $filterValue .= 'filter += "}},";';
 
         $filterValue .= '}';
 

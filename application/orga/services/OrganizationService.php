@@ -31,11 +31,6 @@ class Orga_Service_OrganizationService
     private $userService;
 
     /**
-     * @var AccountRepository
-     */
-    private $accountRepository;
-
-    /**
      * @var TranslationHelper
      */
     private $translator;
@@ -44,20 +39,17 @@ class Orga_Service_OrganizationService
      * @param EntityManager           $entityManager
      * @param Orga_Service_ACLManager $aclManager
      * @param UserService             $userService
-     * @param AccountRepository       $accountRepository
      * @param TranslationHelper       $translator
      */
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ACLManager $aclManager,
         UserService $userService,
-        AccountRepository $accountRepository,
         TranslationHelper $translator
     ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
         $this->userService = $userService;
-        $this->accountRepository = $accountRepository;
         $this->translator = $translator;
     }
 
@@ -109,20 +101,20 @@ class Orga_Service_OrganizationService
 
     /**
      * @param User $administrator
+     * @param Account $account
      * @param array $formData
      * @throws Exception
      * @return Orga_Model_Organization
      */
-    public function createOrganizationFromTemplatesForm(User $administrator, array $formData)
+    public function createOrganizationFromTemplatesForm(User $administrator, Account $account, array $formData)
     {
-        $account = $this->accountRepository->get($this->getParam('idAccount'));
         $this->entityManager->beginTransaction();
 
         try {
-            $organizationLabel = $formData['organization']['elements']['organizationLabel']['value'];
+            $organizationLabel = $formData['organizationLabel'];
             $organization = $this->createOrganization($account, $organizationLabel);
 
-            $template = $formData['organization']['elements']['organizationTemplate']['value'];
+            $template = $formData['organizationTemplate'];
             if ($template !== self::TEMPLATE_EMPTY) {
                 if (($template === self::TEMPLATE_USER_INVENTORY) || ($template == self::TEMPLATE_USER_REPORTING)) {
                     $this->initOrganizationUserForm($organization, $formData);
@@ -398,34 +390,11 @@ class Orga_Service_OrganizationService
         /** @var Orga_Model_Granularity[] $reportsGranularities */
         $reportsGranularities = [];
 
-        $axesData = $formData['axes']['elements'];
+        $axesData = $formData['axes'];
+        /** @var Orga_Model_Axis[] $axes */
         $axes = [];
-        // Création des axes principaux.
-        foreach ($axesData['mainAxisGroup']['elements'] as $mainAxisData) {
-            $mainAxisId = $mainAxisData['name'];
-            if (isset($mainAxisData['hiddenValues'][$mainAxisId.'-parent'])) {
-                $mainParentAxisId = $mainAxisData['hiddenValues'][$mainAxisId.'-parent'];
-                $mainParentAxis = $axes[$mainParentAxisId];
-            } else {
-                $mainParentAxis = null;
-            }
-
-            $mainAxisRef = Core_Tools::refactor($mainAxisData['value']);
-            if (isset($axes[$mainAxisRef])) {
-                $i = 2;
-                while (isset($axes[$mainAxisRef.'_'.$i])) {
-                    $i++;
-                }
-                $mainAxisRef .= '_'.$i;
-            }
-
-            $mainAxis = new Orga_Model_Axis($organization, $mainAxisRef, $mainParentAxis);
-            $this->translator->set($mainAxis->getLabel(), $mainAxisData['value']);
-
-            $axes[$mainAxisId] = $mainAxis;
-        }
         // Création de l'axe temps.
-        $timeAxisLabel = $axesData['timeAxisGroup']['elements']['timeAxis']['value'];
+        $timeAxisLabel = $axesData['timeAxis'];
         $timeAxisRef = Core_Tools::refactor($timeAxisLabel);
         try {
             $organization->getAxisByRef($timeAxisRef);
@@ -436,7 +405,7 @@ class Orga_Service_OrganizationService
         $this->translator->set($timeAxis->getLabel(), $timeAxisLabel);
         $axes['timeAxis'] = $timeAxis;
         // Création de l'axe de subdivision.
-        $subdivisionAxisLabel = $axesData['subdivisionAxisGroup']['elements']['subdivisionAxis']['value'];
+        $subdivisionAxisLabel = $axesData['subdivisionAxis'];
         if (!empty($subdivisionAxisLabel)) {
             $subdivisionAxisRef = Core_Tools::refactor($subdivisionAxisLabel);
             try {
@@ -448,64 +417,88 @@ class Orga_Service_OrganizationService
             $this->translator->set($subdivisionAxis->getLabel(), $subdivisionAxisLabel);
             $axes['subdivisionAxis'] = $subdivisionAxis;
         }
+        // Création des axes principaux.
+        foreach ($axesData as $mainAxisId => $mainAxisLabel) {
+            if (($mainAxisId === 'timeAxis') || ($mainAxisId === 'subdivisionAxis')
+                || (strpos($mainAxisId, '-parent') === (strlen($mainAxisId) - 7))) {
+                continue;
+            }
+            if (isset($axesData[$mainAxisId.'-parent'])) {
+                $mainParentAxis = $axes[$axesData[$mainAxisId.'-parent']];
+            } else {
+                $mainParentAxis = null;
+            }
+
+            $mainAxisRef = Core_Tools::refactor($mainAxisLabel);
+
+            $complement = '';
+            $i = 2;
+            do {
+                try {
+                    $organization->getAxisByRef($mainAxisRef.$complement);
+                    $complement = '_' . $i;
+                    $i++;
+                } catch (Core_Exception_NotFound $e) {
+                    $mainAxis = new Orga_Model_Axis($organization, $mainAxisRef.$complement, $mainParentAxis);
+                    $mainAxis->setLabel($mainAxisLabel);
+                    $axes[$mainAxisId] = $mainAxis;
+                }
+            } while (!isset($axes[$mainAxisId]));
+        }
 
         // Création des membres.
+        $completeRef = Orga_Model_Member::COMPLETEREF_JOIN . Orga_Model_Member::buildParentMembersHashKey([]);
         $membersData = $formData['members'];
         $members = [];
-        foreach ($membersData['elements'] as $membersAxisId => $axisMembersData) {
-            $axisId = explode('-members', $membersAxisId)[0];
+        foreach ($membersData as $axisId => $axisMembersData) {
             $membersAxis = $axes[$axisId];
-            foreach ($axisMembersData['elements'] as $memberData) {
-                $memberId = $memberData['name'];
-                $memberRef = Core_Tools::refactor($memberData['value']);
-                if (($memberId === 'addMember'.$axisId) || (empty($memberRef))) {
+            foreach ($axisMembersData as $memberId => $memberLabel) {
+                if (strpos($memberId, '-parent') === (strlen($memberId) - 7)) {
+                    continue;
+                }
+                $memberRef = Core_Tools::refactor($memberLabel);
+                if (empty($memberRef)) {
                     continue;
                 }
                 /** @var Orga_Model_Member[] $parentMembers */
                 $parentMembers = [];
-                foreach ($memberData['children'] as $parentMemberAxisId => $parentMemberData) {
-                    $parentAxisId = substr($parentMemberAxisId, strlen('parent'.ucfirst($memberId)));
-                    $parentMembers[] = $members[$parentAxisId][$parentMemberData['value']];
+                if (isset($axisMembersData[$memberId.'-parent'])) {
+                    foreach ($axisMembersData[$memberId.'-parent'] as $parentMemberAxisId => $parentMemberId) {
+                        $parentMembers[] = $members[$parentMemberAxisId][$parentMemberId];
+                    }
                 }
 
-                if (isset($members[$axisId][$memberRef])) {
-                    $i = 2;
-                    while (isset($members[$axisId][$memberRef.'_'.$i])) {
+                $complement = '';
+                $i = 2;
+                do {
+                    try {
+                        $membersAxis->getMemberByCompleteRef($memberRef.$complement.$completeRef);
+                        $complement = '_' . $i;
                         $i++;
+                    } catch (Core_Exception_NotFound $e) {
+                        $member = new Orga_Model_Member($membersAxis, $memberRef, $parentMembers);
+                        $member->setLabel($memberLabel);
+                        $members[$axisId][$memberId] = $member;
                     }
-                    $memberRef .= '_'.$i;
-                }
-                $member = new Orga_Model_Member($membersAxis, $memberRef, $parentMembers);
-                $this->translator->set($member->getLabel(), $memberData['value']);
-                $members[$axisId][$memberId] = $member;
+                } while (!isset($members[$axisId][$memberId]));
             }
         }
 
         // Création de la granularité de collecte.
-        $inventoryGranularityId = $formData['inventory']['elements']['inventoryGranularityGroup']['elements']['inventoryGranularity']['value'];
+        $inventoryGranularityId = $formData['inventoryGranularity'];
         $inventoryGranularityAxes = [];
-        $inventoryNavigableGranularityAxes = [];
         foreach (explode('|', $inventoryGranularityId) as $inventoryGranularityAxisId) {
             $inventoryGranularityAxes[] = $axes[$inventoryGranularityAxisId];
-            if ($inventoryGranularityAxisId !== 'timeAxis') {
-                $inventoryNavigableGranularityAxes[] = $axes[$inventoryGranularityAxisId];
-            }
         }
         $inventoryGranularity = new Orga_Model_Granularity($organization, $inventoryGranularityAxes);
         $organization->setGranularityForInventoryStatus($inventoryGranularity);
-        try {
-            $navigableInventoryGranularity = $organization->getGranularityByRef(
-                Orga_Model_Granularity::buildRefFromAxes($inventoryNavigableGranularityAxes)
-            );
-        } catch (Core_Exception_NotFound $e) {
-            $navigableInventoryGranularity = new Orga_Model_Granularity($organization, $inventoryNavigableGranularityAxes);
-        }
+
         // Création de la granularité de saisie.
         $inputsGranularityAxes = [$axes['mainAxis'], $axes['timeAxis']];
-        $inputsNavigableGranularityAxes = [$axes['timeAxis']];
+        $inputsConfigurationGranularityAxes = [$axes['timeAxis']];
         if (isset($axes['subdivisionAxis'])) {
             $inputsGranularityAxes[] = $axes['subdivisionAxis'];
-            $inputsNavigableGranularityAxes[] = $axes['subdivisionAxis'];
+            $inputsConfigurationGranularityAxes[] = $axes['subdivisionAxis'];
         }
         try {
             $inputsGranularity = $organization->getGranularityByRef(
@@ -515,16 +508,17 @@ class Orga_Service_OrganizationService
             $inputsGranularity = new Orga_Model_Granularity($organization, $inputsGranularityAxes);
         }
         try {
-            $navigableInputsGranularity = $organization->getGranularityByRef(
-                Orga_Model_Granularity::buildRefFromAxes($inputsNavigableGranularityAxes)
+            $inputsConfigurationGranularity = $organization->getGranularityByRef(
+                Orga_Model_Granularity::buildRefFromAxes($inputsConfigurationGranularityAxes)
             );
         } catch (Core_Exception_NotFound $e) {
-            $navigableInputsGranularity = new Orga_Model_Granularity($organization, $inputsNavigableGranularityAxes);
+            $inputsConfigurationGranularity = new Orga_Model_Granularity($organization, $inputsConfigurationGranularityAxes);
         }
-        $inputsGranularity->setInputConfigGranularity($navigableInputsGranularity);
+        $inputsGranularity->setInputConfigGranularity($inputsConfigurationGranularity);
+
         // Création des granularités d'acl.
-        $aclGranularitiesData = $formData['acl']['elements']['aclGranularitiesGroup']['elements']['aclGranularities'];
-        foreach ($aclGranularitiesData['value'] as $aclGranularityId) {
+        $aclGranularitiesData = $formData['aclGranularities'];
+        foreach ($aclGranularitiesData as $aclGranularityId) {
             if ($aclGranularityId === 'global') {
                 $aclGranularity = $defaultGranularity;
             } else {
@@ -542,10 +536,11 @@ class Orga_Service_OrganizationService
             }
             $aclGranularity->setCellsWithACL(true);
         }
+
         // Création des granularités de reports.
-        if ($formData['organization']['elements']['organizationTemplate']['value'] === self::TEMPLATE_USER_REPORTING) {
-            $reportsGranularitiesData = $formData['reports']['elements']['reportsGranularitiesGroup']['elements']['reportsGranularities'];
-            foreach ($reportsGranularitiesData['value'] as $reportsGranularityId) {
+        if ($formData['organizationTemplate'] === self::TEMPLATE_USER_REPORTING) {
+            $reportsGranularitiesData = $formData['reportsGranularities'];
+            foreach ($reportsGranularitiesData as $reportsGranularityId) {
                 if ($reportsGranularityId === 'global') {
                     $reportsGranularity = $defaultGranularity;
                 } else {

@@ -1,4 +1,3 @@
-# Orga\models\mappers\Orga_Model_CellReport.yml
 Orga_Model_CellReport:
   type: entity
   repositoryClass: Core_Model_Repository
