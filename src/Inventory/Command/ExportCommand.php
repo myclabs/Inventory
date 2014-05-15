@@ -413,7 +413,7 @@ class ExportCommand extends Command
         file_put_contents($root . '/reports.json', $reportsSerializer->serialize($reportsData));
 
         $output->writeln('<comment>Exporting ACL</comment>');
-        $aclSerializer = new Serializer([]);
+        $aclSerializer = new Serializer([], $this->entityManager->getRepository(Translation::class));
         file_put_contents($root . '/acl.json', $aclSerializer->serialize($aclData));
     }
 }
