@@ -3,6 +3,8 @@
 namespace Inventory\Command;
 
 use AF\Domain\Category as AFCategory;
+use Doctrine\ORM\EntityManager;
+use Gedmo\Translatable\Entity\Translation;
 use Serializer\Serializer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,6 +19,18 @@ use User\Domain\User;
  */
 class ExportCommand extends Command
 {
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this->setName('export')
@@ -30,6 +44,132 @@ class ExportCommand extends Command
         $root = PACKAGE_PATH . '/data/exports/migration-3.0';
 
         $serializer = new Serializer([
+            \Classif_Model_Axis::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \Classif_Model_Context::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \Classif_Model_Indicator::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \Classif_Model_Member::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \Techno\Domain\Category::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \Techno\Domain\Family\Family::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'documentation' => ['translated' => true],
+                ],
+            ],
+            \Techno\Domain\Family\Dimension::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'documentation' => ['translated' => true],
+                ],
+            ],
+            \Techno\Domain\Family\Member::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'documentation' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Category::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\AF::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Algorithm\Numeric\NumericConstantAlgo::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Algorithm\Numeric\NumericExpressionAlgo::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Algorithm\Numeric\NumericInputAlgo::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Algorithm\Numeric\NumericParameterAlgo::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Component\Checkbox::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'help' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Component\Group::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'help' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Component\NumericField::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'help' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Component\Select\SelectMulti::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'help' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Component\Select\SelectSingle::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'help' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Component\SubAF\NotRepeatedSubAF::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'help' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Component\SubAF\RepeatedSubAF::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'help' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Component\TextField::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                    'help' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Component\Select\SelectOption::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
             \Orga\Model\ACL\Role\OrganizationAdminRole::class => [ 'exclude' => true ],
             \Orga\Model\ACL\Role\CellAdminRole::class => [ 'exclude' => true ],
             \Orga\Model\ACL\Role\CellManagerRole::class => [ 'exclude' => true ],
@@ -72,6 +212,17 @@ class ExportCommand extends Command
             \Orga_Model_Organization::class => [
                 'properties' => [
                     'acl' => [ 'exclude' => true ],
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \Orga_Model_Axis::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
+                ],
+            ],
+            \Orga_Model_Member::class => [
+                'properties' => [
+                    'label' => ['translated' => true],
                 ],
             ],
             \Orga_Model_Cell::class => [
@@ -86,7 +237,7 @@ class ExportCommand extends Command
             \Calc_Value::class => [
                 'serialize' => true,
             ],
-        ]);
+        ], $this->entityManager->getRepository(Translation::class));
 
         $output->writeln('<comment>Exporting users</comment>');
         $data = User::loadList();

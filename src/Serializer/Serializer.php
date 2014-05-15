@@ -5,6 +5,7 @@ namespace Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Proxy\Proxy;
 use Doctrine\Common\Util\ClassUtils;
+use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 
 class Serializer
 {
@@ -28,9 +29,15 @@ class Serializer
      */
     private $callbacks = [];
 
-    public function __construct(array $config)
+    /**
+     * @var TranslationRepository
+     */
+    private $translationRepository;
+
+    public function __construct(array $config, TranslationRepository $translationRepository)
     {
         $this->config = $config;
+        $this->translationRepository = $translationRepository;
     }
 
     public function serialize($data)
@@ -91,8 +98,8 @@ class Serializer
     {
         $serialized = [];
 
-        foreach ($array as $item) {
-            $serialized[] = $this->recursiveSerialization($item);
+        foreach ($array as $key => $item) {
+            $serialized[$key] = $this->recursiveSerialization($item);
         }
 
         return $serialized;
@@ -159,6 +166,22 @@ class Serializer
             }
 
             $property->setAccessible(true);
+
+            // Translated property
+            if (isset($config['properties'][$propertyName]['translated'])
+                && $config['properties'][$propertyName]['translated'] === true) {
+                $translations = $this->translationRepository->findTranslations($object);
+                $propertyTranslations = [
+                    'translated' => true,
+                    'fr'         => $property->getValue($object), // valeur par défaut
+                ];
+                foreach ($translations as $lang => $properties) {
+                    if (isset($properties[$propertyName])) {
+                        $propertyTranslations[$lang] = $properties[$propertyName];
+                    }
+                }
+                $property->setValue($object, $propertyTranslations);
+            }
 
             if (isset($config['properties'][$propertyName]['transform'])) {
                 $callable = $config['properties'][$propertyName]['transform'];

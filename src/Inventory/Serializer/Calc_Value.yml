@@ -1,6 +1,0 @@
-Calc_Value:
-  properties:
-    digitalValue:
-      type: float
-    relativeUncertainty:
-      type: float
