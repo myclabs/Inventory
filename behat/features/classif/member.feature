@@ -48,15 +48,15 @@ Feature: Classification member feature
     When I fill in "membersposte_article_75_label_addForm" with "Élément sans parent bis"
     And I fill in "membersposte_article_75_ref_addForm" with "element_sans_parent_bis"
     When I click "Valider"
-    Then the field "membersposte_article_75_broaderscope_addForm" should have error: "Merci de renseigner ce champ."
+    Then the field "membersposte_article_75_broader3_addForm" should have error: "Merci de renseigner ce champ."
   # Ajout d'un élément, élément parent renseigné
     When I fill in "membersposte_article_75_label_addForm" with "Élément avec parent"
     And I fill in "membersposte_article_75_ref_addForm" with "element_avec_parent"
-    And I select "1" from "membersposte_article_75_broaderscope_addForm"
+    And I select "1" from "membersposte_article_75_broader3_addForm"
     When I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the row 3 of the "membersposte_article_75" datagrid should contain:
-      | label               | ref                 | broaderscope |
+      | label               | ref                 | broader3 |
       | Élément avec parent | element_avec_parent | 1            |
 
 
@@ -89,10 +89,10 @@ Feature: Classification member feature
     When I am on "classification/member/list?library=1"
     And I open collapse "Poste article 75"
     Then I should see the "membersposte_article_75" datagrid
-    When I set "2" for column "broaderscope" of row 1 of the "membersposte_article_75" datagrid with a confirmation message
+    When I set "2" for column "broader3" of row 1 of the "membersposte_article_75" datagrid with a confirmation message
     Then the row 1 of the "membersposte_article_75" datagrid should contain:
-      | broaderscope |
-      | 2   |
+      | broader3 |
+      | 2        |
 
   @javascript
   Scenario:  Deletion of a classification member
