@@ -285,7 +285,7 @@ AF.Input.prototype = {
         // Pour tous les input du formulaire (utilise "on()" pour des raisons de performances)
         this.form.on("change keyup", ":input", handler);
         this.form.on("click", ".addRow", handler);
-        this.form.on("click", ".deleteRow", handler);
+        this.form.find('.repeatedGroup').on("click", ".deleteRow", handler);
     },
 
     /**
