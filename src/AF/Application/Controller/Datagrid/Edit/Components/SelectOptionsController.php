@@ -12,6 +12,7 @@ use AF\Domain\Component\Select\SelectMulti;
 use AF\Domain\Condition\Condition;
 use AF\Domain\Algorithm\Condition\ConditionAlgo;
 use Core\Annotation\Secure;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /**
  * Permet de gérer les options d'un champ de sélection
@@ -160,7 +161,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
         $option->save();
         try {
             $this->entityManager->flush();
-        } catch (Core_ORM_DuplicateEntryException $e) {
+        } catch (UniqueConstraintViolationException $e) {
             throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
         $this->message = __('UI', 'message', 'updated');
