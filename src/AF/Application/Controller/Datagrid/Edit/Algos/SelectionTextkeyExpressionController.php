@@ -7,6 +7,7 @@
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo;
 use Core\Annotation\Secure;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use TEC\Exception\InvalidExpressionException;
 
 /**
@@ -80,7 +81,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
             $af->save();
             try {
                 $this->entityManager->flush();
-            } catch (Core_ORM_DuplicateEntryException $e) {
+            } catch (UniqueConstraintViolationException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
                 return;
@@ -118,7 +119,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
         $algo->save();
         try {
             $this->entityManager->flush();
-        } catch (Core_ORM_DuplicateEntryException $e) {
+        } catch (UniqueConstraintViolationException $e) {
             throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
         $this->message = __('UI', 'message', 'updated');

@@ -88,7 +88,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
             $selectField->save();
             try {
                 $this->entityManager->flush();
-            } catch (Core_ORM_DuplicateEntryException $e) {
+            } catch (UniqueConstraintViolationException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
                 return;
