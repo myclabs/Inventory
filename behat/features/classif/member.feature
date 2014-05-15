@@ -6,7 +6,7 @@ Feature: Classification member feature
 
   @javascript
   Scenario: Creation of a classification member (axis without broader axis)
-    When I am on "classification/member/manage"
+    When I am on "classification/member/list?library=1"
   # Ouverture du volet "Gaz"
     And I open collapse "Gaz"
     Then I should see the "membersgaz" datagrid
@@ -41,7 +41,7 @@ Feature: Classification member feature
   @javascript
   Scenario: Creation of a classification member (axis with broader axis)
   # Ajout d'un élément, élément parent non renseigné
-    When I am on "classification/member/manage"
+    When I am on "classification/member/list?library=1"
     And I open collapse "Poste article 75"
     Then I should see the "membersposte_article_75" datagrid
     When I click "Ajouter"
@@ -62,7 +62,7 @@ Feature: Classification member feature
 
   @javascript
   Scenario: Edition of a classification member (label and identifier)
-    When I am on "classification/member/manage"
+    When I am on "classification/member/list?library=1"
     And I open collapse "Gaz"
     Then I should see the "membersgaz" datagrid
   # Édition du libellé et de l'identifiant, saisie correcte
@@ -86,7 +86,7 @@ Feature: Classification member feature
   # TODO : Autoriser, dans les interfaces, la modification à "vide" d'un élément parent
   # TODO : Tester la modification du numéro d'ordre d'un élément
   # Modification élément parent
-    When I am on "classification/member/manage"
+    When I am on "classification/member/list?library=1"
     And I open collapse "Poste article 75"
     Then I should see the "membersposte_article_75" datagrid
     When I set "2" for column "broaderscope" of row 1 of the "membersposte_article_75" datagrid with a confirmation message
@@ -96,7 +96,7 @@ Feature: Classification member feature
 
   @javascript
   Scenario:  Deletion of a classification member
-    When I am on "classification/member/manage"
+    When I am on "classification/member/list?library=1"
     And I wait 5 seconds
   # Suppression d'un élément, sans obstacle
     And I open collapse "Scope"

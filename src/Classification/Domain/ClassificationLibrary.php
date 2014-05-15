@@ -296,7 +296,7 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
 
         $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('context', $context));
-        $criteria->where($criteria->expr()->eq('indicator', $indicator));
+        $criteria->andWhere($criteria->expr()->eq('indicator', $indicator));
         $context = $this->contextIndicators->matching($criteria);
 
         if ($context->isEmpty()) {

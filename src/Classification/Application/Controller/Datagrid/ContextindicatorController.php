@@ -70,7 +70,7 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
                     $contextIndicator->save();
                     $this->message = __('UI', 'message', 'added');
                 } catch (Core_Exception_InvalidArgument $e) {
-                    $this->setAddElementErrorMessage('axes', __('Classification', 'contextIndicator', 'axesMustBeTransverse'));
+                    $this->setAddElementErrorMessage('axes', __('Classification', 'contextIndicator', 'axesMustBeTransverse'), true);
                 }
             }
         }
@@ -83,9 +83,19 @@ class Classification_Datagrid_ContextindicatorController extends UI_Controller_D
      */
     public function deleteelementAction()
     {
-        $contextIndicator = ContextIndicator::load($this->delete);
-        $contextIndicator->delete();
-        $this->message = __('UI', 'message', 'deleted');
+        $this->entityManager->beginTransaction();
+
+        try {
+            $contextIndicator = ContextIndicator::load($this->delete);
+            $contextIndicator->delete();
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+            $this->message = __('UI', 'message', 'deleted');
+        } catch (Exception $e) {
+            $this->entityManager->rollback();
+            throw new Core_Exception_User('Classification', 'contextIndicator', 'usedByApplication');
+        }
 
         $this->send();
     }

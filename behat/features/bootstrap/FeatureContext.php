@@ -279,7 +279,7 @@ class FeatureContext extends MinkContext
         $label = $this->fixStepArgument($label);
 
         /** @var NodeElement[] $nodes */
-        $nodes = $this->getSession()->getPage()->findAll('css', 'legend:contains("' . $label . '")');
+        $nodes = $this->getSession()->getPage()->findAll('css', 'legend a:contains("' . $label . '")');
         $nodes = array_filter($nodes, function (NodeElement $node) {
             return $this->isElementVisible($node);
         });
