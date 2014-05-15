@@ -472,7 +472,7 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $this->view->assign('idOrganization', $idOrganization);
-        $this->view->assign('organizationLabel', $this->translator->toString($organization->getLabel()));
+        $this->view->assign('organizationLabel', $this->translator->get($organization->getLabel()));
 
         $potentialContextIndicators = [];
         foreach (ClassificationLibrary::loadUsableInAccount($organization->getAccount()) as $classificationLibrary) {
@@ -509,7 +509,7 @@ class Orga_OrganizationController extends Core_Controller
                 'label',
                 __('UI', 'formValidation', 'emptyRequiredField')
             );
-        } elseif ($this->translator->toString($organization->getLabel()) !== $label) {
+        } elseif ($this->translator->get($organization->getLabel()) !== $label) {
             $this->translator->set($organization->getLabel(), $label);
             $updated = true;
         }
@@ -784,8 +784,8 @@ class Orga_OrganizationController extends Core_Controller
         /** @var \AF\Domain\AF $af */
         foreach (AFLibrary::loadUsableInAccount($organization->getAccount()) as $afLibrary) {
             foreach ($afLibrary->getAFList() as $af) {
-                $afs[$af->getId()] = $this->translator->toString($af->getLabel())
-                    . ' (' . $this->translator->toString($afLibrary->getLabel()) . ')';
+                $afs[$af->getId()] = $this->translator->get($af->getLabel())
+                    . ' (' . $this->translator->get($afLibrary->getLabel()) . ')';
             }
         }
         $this->view->assign('afs', $afs);
@@ -1101,14 +1101,14 @@ class Orga_OrganizationController extends Core_Controller
             $taskName = 'resetOrganizationDWCubes';
             $taskParameters = [$organization];
             $organizationalUnit = __('Orga', 'organization', 'forWorkspace', [
-                'LABEL' => $this->translator->toString($organization->getLabel())
+                'LABEL' => $this->translator->get($organization->getLabel())
             ]);
         } else {
             $taskName = 'resetCellAndChildrenDWCubes';
             $cell = Orga_Model_Cell::load($this->getParam('cell'));
             $taskParameters = [$cell];
             $organizationalUnit = __('Orga', 'organization', 'forOrganizationalUnit', [
-                'LABEL' => $this->translator->toString($cell->getLabel())
+                'LABEL' => $this->translator->get($cell->getLabel())
             ]);
         }
 
@@ -1155,7 +1155,7 @@ class Orga_OrganizationController extends Core_Controller
             'resetCellAndChildrenCalculationsAndDWCubes',
             [$cell],
             __('Orga', 'backgroundTasks', 'resetDWCellAndResults', [
-                'LABEL' => $this->translator->toString($cell->getLabel())
+                'LABEL' => $this->translator->get($cell->getLabel())
             ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);

@@ -3,8 +3,7 @@
 use Account\Domain\ACL\AccountAdminRole;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Mnapoli\Translated\TranslationHelper;
-use Mnapoli\Translated\TranslationManager;
+use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\Doctrine\ACLSetup;
 use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
@@ -53,10 +52,8 @@ return [
         'fr' => ['en'],
         'en' => ['fr'],
     ],
-    TranslationManager::class => DI\object()
+    Translator::class => DI\object()
             ->constructor(DI\link('translation.defaultLocale'), DI\link('translation.fallbacks')),
-    TranslationHelper::class => DI\object()
-            ->constructor(DI\link(TranslationManager::class)),
 
     // ACL
     'enable.acl' => true,

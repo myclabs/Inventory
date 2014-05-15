@@ -1,21 +1,14 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Model
- */
 
-use Mnapoli\Translated\TranslationManager;
+use Mnapoli\Translated\Translator;
 
 /**
  * Tri dans une requête
  *
- * @package    Core
- * @subpackage Model
+ * @author matthieu.napoli
  */
 class Core_Model_Order
 {
-
     /**
      * Ordre de tri ascendant.
      */
@@ -32,7 +25,7 @@ class Core_Model_Order
      *     array(name, direction, alias)
      * )
      */
-    protected $_orders = array();
+    protected $orders = [];
 
 
     /**
@@ -46,7 +39,7 @@ class Core_Model_Order
      */
     public function addOrder($name, $direction = self::ORDER_ASC, $alias = null)
     {
-        $this->_orders[] = array(
+        $this->orders[] = array(
             'name'      => $name,
             'direction' => $direction,
             'alias'     => $alias,
@@ -65,12 +58,10 @@ class Core_Model_Order
      */
     public function addTranslatedOrder($name, $direction = self::ORDER_ASC, $alias = null)
     {
-        /** @var TranslationManager $translationManager */
-        $translationManager = \Core\ContainerSingleton::getContainer()->get(TranslationManager::class);
+        /** @var Translator $translator */
+        $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
 
-        $locale = $translationManager->getCurrentContext()->getLocale();
-
-        $this->addOrder($name . '.' . $locale, $direction, $alias);
+        $this->addOrder($name . '.' . $translator->getCurrentLocale(), $direction, $alias);
     }
 
     /**
@@ -86,7 +77,7 @@ class Core_Model_Order
      */
     public function getOrders()
     {
-        return $this->_orders;
+        return $this->orders;
     }
 
     /**
@@ -95,7 +86,7 @@ class Core_Model_Order
     public function validate()
     {
         $ordersName = array();
-        foreach ($this->_orders as $order) {
+        foreach ($this->orders as $order) {
             $tmpOrder = $order['alias'] . '.' . $order['name'];
             if (in_array($tmpOrder, $ordersName)) {
                 throw new Core_Exception_InvalidArgument('Order for '.$order['name'].'" has already been specified.');
@@ -108,5 +99,4 @@ class Core_Model_Order
         }
 
     }
-
 }

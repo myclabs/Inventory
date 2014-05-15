@@ -18,15 +18,15 @@ class Classification_ContextindicatorController extends Core_Controller
 
         $this->view->listContexts = [];
         foreach ($library->getContexts()->toArray() as $context) {
-            $this->view->listContexts[$context->getId()] = $this->translator->toString($context->getLabel());
+            $this->view->listContexts[$context->getId()] = $this->translator->get($context->getLabel());
         }
         $this->view->listIndicators = [];
         foreach ($library->getIndicators()->toArray() as $indicator) {
-            $this->view->listIndicators[$indicator->getId()] = $this->translator->toString($indicator->getLabel());
+            $this->view->listIndicators[$indicator->getId()] = $this->translator->get($indicator->getLabel());
         }
         $this->view->listAxes = array();
         foreach ($library->getAxes()->toArray() as $axis) {
-            $this->view->listAxes[$axis->getId()] = $this->translator->toString($axis->getLabel());
+            $this->view->listAxes[$axis->getId()] = $this->translator->get($axis->getLabel());
         }
 
         $this->view->assign('library', $library);

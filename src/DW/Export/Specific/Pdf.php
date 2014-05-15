@@ -6,7 +6,7 @@
  * @subpackage Library
  */
 
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 
 /**
  * Classe permettant de gérer en export spécifique au format pdf.
@@ -15,7 +15,7 @@ use Mnapoli\Translated\TranslationHelper;
 class DW_Export_Specific_Pdf extends Export_Pdf
 {
     /**
-     * @var TranslationHelper
+     * @var Translator
      */
     private $translator;
 
@@ -25,12 +25,12 @@ class DW_Export_Specific_Pdf extends Export_Pdf
     private $reports = [];
 
     /**
-     * @param string            $xmlPath
-     * @param DW_Model_Cube     $cube
-     * @param TranslationHelper $translator
-     * @param string|null       $exportUrl
+     * @param string        $xmlPath
+     * @param DW_Model_Cube $cube
+     * @param Translator    $translator
+     * @param string|null   $exportUrl
      */
-    public function __construct($xmlPath, DW_Model_Cube $cube, TranslationHelper $translator, $exportUrl = null)
+    public function __construct($xmlPath, DW_Model_Cube $cube, Translator $translator, $exportUrl = null)
     {
         $this->translator = $translator;
 
@@ -76,7 +76,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
         } else {
             $xmlSpecificExport = $xmlDocument->getElementsByTagName("specificExport")->item(0);
             $this->fileName = date('Y-m-d', time())
-                .'-'.Core_Tools::refactor($this->translator->toString($cube->getLabel()))
+                .'-'.Core_Tools::refactor($this->translator->get($cube->getLabel()))
                 .'-'.Core_Tools::refactor($xmlSpecificExport->getAttribute('label'));
             if ($isPreview) {
                 UI_Chart_Generic::addHeader();
@@ -149,7 +149,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $locale = Core_Locale::loadDefault();
             $this->html .= '<h2>'
                 .$xmlSpecificExport->getAttribute("prefix")
-                .$this->translator->toString($cube->getLabel())
+                .$this->translator->get($cube->getLabel())
                 .$xmlSpecificExport->getAttribute("postfix")
                 .'</h2>';
 
@@ -193,11 +193,11 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                             $results = $report->getValues();
 
-                            $this->html .= $this->translator->toString($report->getLabel())
+                            $this->html .= $this->translator->get($report->getLabel())
                                 . ' : ' . $locale->formatNumber(array_pop($results)['value'], 3)
                                 // On n'affiche pas l'incertitude
                                 //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
-                                . ' ' . $this->translator->toString($report->getValuesUnitSymbol());
+                                . ' ' . $this->translator->get($report->getValuesUnitSymbol());
 
                             if ($isMain) {
                                 $this->html .= '</h3>';
@@ -227,7 +227,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                         $this->html .= '<div class="data">';
                         $this->html .= '<h4>';
-                        $this->html .= $this->translator->toString($report->getLabel());
+                        $this->html .= $this->translator->get($report->getLabel());
                         $this->html .= '</h4>';
 
                         if ($isPreview) {
@@ -419,9 +419,9 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
         $label = $xmlReport->getAttribute('label');
         if ($label == '') {
-            $label = $this->translator->toString($report->getNumerator()->getLabel());
+            $label = $this->translator->get($report->getNumerator()->getLabel());
             if (($report->getDenominator() !== null)) {
-                $label .= ' / '.$this->translator->toString($report->getDenominator()->getLabel());
+                $label .= ' / '.$this->translator->get($report->getDenominator()->getLabel());
             }
         }
         $this->translator->set($report->getLabel(), $label);

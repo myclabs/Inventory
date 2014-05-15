@@ -12,7 +12,7 @@ use Core_Model_Query;
 use Core_ORM_ForeignKeyViolationException;
 use Core_Strategy_Ordered;
 use Core_Tools;
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 use UI_Form_Element_Option;
 
 /**
@@ -245,9 +245,9 @@ class SelectOption extends Core_Model_Entity
      */
     protected function uglyTranslate(TranslatedString $string)
     {
-        /** @var TranslationHelper $translator */
-        $translator = \Core\ContainerSingleton::getContainer()->get(TranslationHelper::class);
+        /** @var Translator $translator */
+        $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
 
-        return $translator->toString($string);
+        return $translator->get($string);
     }
 }

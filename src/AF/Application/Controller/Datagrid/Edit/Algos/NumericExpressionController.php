@@ -26,7 +26,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $data['label'] = $this->cellTranslatedText($algo->getLabel());
                 $data['unit'] = $this->cellText(
                     $algo->getUnit()->getRef(),
-                    $this->translator->toString($algo->getUnit()->getSymbol())
+                    $this->translator->get($algo->getUnit()->getSymbol())
                 );
                 $data['expression'] = $this->cellLongText(
                     'af/edit_algos/popup-expression/idAF/' . $af->getId() . '/algo/' . $algo->getId(),
@@ -142,7 +142,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $algo->setUnit($unit);
                 $this->data = $this->cellText(
                     $algo->getUnit()->getRef(),
-                    $this->translator->toString($algo->getUnit()->getSymbol())
+                    $this->translator->get($algo->getUnit()->getSymbol())
                 );
                 break;
             case 'expression':
@@ -217,8 +217,8 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
             foreach ($library->getContextIndicators() as $contextIndicator) {
                 $this->addElementList(
                     $contextIndicator->getId(),
-                    $this->translator->toString($library->getLabel()) . ' > '
-                    . $this->translator->toString($contextIndicator->getLabel())
+                    $this->translator->get($library->getLabel()) . ' > '
+                    . $this->translator->get($contextIndicator->getLabel())
                 );
             }
         }

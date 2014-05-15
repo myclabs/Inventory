@@ -135,7 +135,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
         }
 
         foreach ($dimension->getMembers() as $member) {
-            $this->addElementList($member->getRef(), $this->translator->toString($member->getLabel()));
+            $this->addElementList($member->getRef(), $this->translator->get($member->getLabel()));
         }
         $this->send();
     }

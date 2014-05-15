@@ -13,7 +13,7 @@ use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\DBAL\Types\Type;
 use Mnapoli\Translated\Helper\Zend1\TranslateZend1Helper;
-use Mnapoli\Translated\TranslationManager;
+use Mnapoli\Translated\Translator as DoctrineTranslator;
 use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
@@ -275,9 +275,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->container->set(Translator::class, $translator);
 
         // Traductions en BDD
-        /** @var TranslationManager $translationManager */
-        $translationManager = $this->container->get(TranslationManager::class);
-        $translationManager->setCurrentContext($locale->getLanguage());
+        /** @var DoctrineTranslator $doctrineTranslator */
+        $doctrineTranslator = $this->container->get(DoctrineTranslator::class);
+        $doctrineTranslator->setCurrentLocale($locale->getLanguage());
     }
 
     /**

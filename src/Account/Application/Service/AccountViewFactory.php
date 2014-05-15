@@ -10,7 +10,7 @@ use Account\Domain\Account;
 use AF\Domain\AFLibrary;
 use Classification\Domain\ClassificationLibrary;
 use Core_Model_Query;
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use Orga_Model_Organization;
@@ -35,14 +35,14 @@ class AccountViewFactory
     private $acl;
 
     /**
-     * @var TranslationHelper
+     * @var Translator
      */
     private $translator;
 
     public function __construct(
         OrganizationViewFactory $organizationViewFactory,
         ACL $acl,
-        TranslationHelper $translator
+        Translator $translator
     ) {
         $this->organizationViewFactory = $organizationViewFactory;
         $this->acl = $acl;
@@ -80,7 +80,7 @@ class AccountViewFactory
 
             $libraryView = new AFLibraryView(
                 $library->getId(),
-                $this->translator->toString($library->getLabel())
+                $this->translator->get($library->getLabel())
             );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
@@ -96,7 +96,7 @@ class AccountViewFactory
 
             $libraryView = new ParameterLibraryView(
                 $library->getId(),
-                $this->translator->toString($library->getLabel())
+                $this->translator->get($library->getLabel())
             );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
@@ -112,7 +112,7 @@ class AccountViewFactory
 
             $libraryView = new ClassificationLibraryView(
                 $library->getId(),
-                $this->translator->toString($library->getLabel())
+                $this->translator->get($library->getLabel())
             );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 

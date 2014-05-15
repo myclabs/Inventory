@@ -195,8 +195,8 @@ class AF_Datagrid_Edit_Algos_NumericParameterController extends UI_Controller_Da
             foreach ($library->getContextIndicators() as $contextIndicator) {
                 $this->addElementList(
                     $contextIndicator->getId(),
-                    $this->translator->toString($library->getLabel()) . ' > '
-                    . $this->translator->toString($contextIndicator->getLabel())
+                    $this->translator->get($library->getLabel()) . ' > '
+                    . $this->translator->get($contextIndicator->getLabel())
                 );
             }
         }

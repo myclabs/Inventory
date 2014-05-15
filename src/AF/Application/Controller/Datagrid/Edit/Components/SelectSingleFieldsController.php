@@ -220,7 +220,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
         /** @var $select Select */
         $select = Select::load($this->getParam('index'));
         foreach ($select->getOptions() as $option) {
-            $this->addElementList($option->getId(), $this->translator->toString($option->getLabel()));
+            $this->addElementList($option->getId(), $this->translator->get($option->getLabel()));
         }
         $this->send();
     }
@@ -233,7 +233,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
     {
         /** @var $select Select */
         $select = Select::load($this->getParam('component'));
-        $this->data = $this->translator->toString($select->getHelp());
+        $this->data = $this->translator->get($select->getHelp());
         $this->send();
     }
 }

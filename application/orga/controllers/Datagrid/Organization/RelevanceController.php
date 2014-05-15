@@ -84,7 +84,7 @@ class Orga_Datagrid_Organization_RelevanceController extends UI_Controller_Datag
             'setCellRelevance',
             [$cell, (bool) $this->update['value']],
             __('Orga', 'backgroundTasks', 'setCellRelevance', [
-                'LABEL' => $this->translator->toString($cell->getLabel())
+                'LABEL' => $this->translator->get($cell->getLabel())
             ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);

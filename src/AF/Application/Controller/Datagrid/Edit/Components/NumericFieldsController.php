@@ -41,7 +41,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $data['required'] = $numericField->getRequired();
             $data['unit'] = $this->cellText(
                 $numericField->getUnit()->getRef(),
-                $this->translator->toString($numericField->getUnit()->getSymbol())
+                $this->translator->get($numericField->getUnit()->getSymbol())
             );
             $data['unitSelection'] = $numericField->hasUnitSelection();
             $data['withUncertainty'] = $numericField->getWithUncertainty();
@@ -177,7 +177,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 $numericField->setUnit($unit);
                 $this->data = $this->cellText(
                     $numericField->getUnit()->getRef(),
-                    $this->translator->toString($numericField->getUnit()->getSymbol())
+                    $this->translator->get($numericField->getUnit()->getSymbol())
                 );
                 break;
             case 'unitSelection':
@@ -264,7 +264,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
     {
         /** @var $numeric NumericField */
         $numeric = NumericField::load($this->getParam('component'));
-        $this->data = $this->translator->toString($numeric->getHelp());
+        $this->data = $this->translator->get($numeric->getHelp());
         $this->send();
     }
 }

@@ -194,7 +194,7 @@ class AF_Datagrid_Edit_Components_SelectMultiFieldsController extends UI_Control
     {
         /** @var $select Select */
         $select = Select::load($this->getParam('component'));
-        $this->data = $this->translator->toString($select->getHelp());
+        $this->data = $this->translator->get($select->getHelp());
         $this->send();
     }
 }

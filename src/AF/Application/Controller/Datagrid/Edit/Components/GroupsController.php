@@ -163,7 +163,7 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
     {
         /** @var $group Group */
         $group = Group::load($this->getParam('component'));
-        $this->data = $this->translator->toString($group->getHelp());
+        $this->data = $this->translator->get($group->getHelp());
         $this->send();
     }
 }

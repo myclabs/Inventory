@@ -16,7 +16,7 @@ use Core_Strategy_Ordered;
 use Core_Tools;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Icon;
 use UI_Form_Element_HTML;
@@ -368,9 +368,9 @@ abstract class Component extends Core_Model_Entity
      */
     protected function uglyTranslate(TranslatedString $string)
     {
-        /** @var TranslationHelper $translator */
-        $translator = \Core\ContainerSingleton::getContainer()->get(TranslationHelper::class);
+        /** @var Translator $translator */
+        $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
 
-        return $translator->toString($string);
+        return $translator->get($string);
     }
 }

@@ -2,7 +2,7 @@
 
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Cache\Cache;
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator as DoctrineTranslator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Translator;
 
@@ -29,20 +29,20 @@ class Core_Translate
     private $cache;
 
     /**
-     * @var TranslationHelper
+     * @var DoctrineTranslator
      */
-    private $translationHelper;
+    private $doctrineTranslator;
 
     public function __construct(
         Translator $translator,
         LoggerInterface $logger,
         Cache $cache,
-        TranslationHelper $translationHelper
+        DoctrineTranslator $doctrineTranslator
     ) {
         $this->translator = $translator;
         $this->logger = $logger;
         $this->cache = $cache;
-        $this->translationHelper = $translationHelper;
+        $this->doctrineTranslator = $doctrineTranslator;
     }
 
     /**
@@ -63,7 +63,7 @@ class Core_Translate
 
         $replacements = array_map(function ($replacement) {
             if ($replacement instanceof TranslatedString) {
-                return $this->translationHelper->toString($replacement);
+                return $this->doctrineTranslator->get($replacement);
             }
             return $replacement;
         }, $replacements);

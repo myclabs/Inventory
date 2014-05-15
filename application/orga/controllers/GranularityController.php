@@ -21,7 +21,7 @@ class Orga_GranularityController extends Core_Controller
         $organization = Orga_Model_Organization::load($this->view->idOrganization);
         $this->view->listAxes = array();
         foreach ($organization->getFirstOrderedAxes() as $axis) {
-            $this->view->listAxes[$axis->getRef()] = $this->translator->toString($axis->getLabel());
+            $this->view->listAxes[$axis->getRef()] = $this->translator->get($axis->getLabel());
         }
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
@@ -41,7 +41,7 @@ class Orga_GranularityController extends Core_Controller
         $idOrganization = $granularity->getOrganization()->getId();
 
         $viewConfiguration = new DW_ViewConfiguration();
-        $viewConfiguration->setComplementaryPageTitle(' <small>'.$this->translator->toString($granularity->getLabel()).'</small>');
+        $viewConfiguration->setComplementaryPageTitle(' <small>'.$this->translator->get($granularity->getLabel()).'</small>');
         $viewConfiguration->setOutputUrl('orga/organization/edit/idOrganization/' . $idOrganization . '/tab/reports/');
         $viewConfiguration->setSaveURL('orga/granularity/view-report/idGranularity/' . $granularity->getId());
 

@@ -44,7 +44,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         foreach ($categories as $category) {
             $this->addNode(
                 $this->getTreeId($category),
-                $this->translator->toString($category->getLabel()),
+                $this->translator->get($category->getLabel()),
                 false,
                 null,
                 false,
@@ -56,7 +56,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         if ($currentCategory) {
             foreach ($currentCategory->getFamilies() as $family) {
                 // Place un symbole indiquant le type de la famille
-                $label = $this->translator->toString($family->getLabel());
+                $label = $this->translator->get($family->getLabel());
                 $url = $this->_helper->url('edit', 'family', 'parameter', ['id' => $family->getId()]);
                 $this->addNode($this->getTreeId($family), $label, true, $url, true, false, $isEditable);
             }
@@ -81,7 +81,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
         foreach ($library->getRootCategories() as $category) {
             $this->addElementList(
                 $this->getTreeId($category),
-                $this->translator->toString($category->getLabel())
+                $this->translator->get($category->getLabel())
             );
         }
         $this->send();

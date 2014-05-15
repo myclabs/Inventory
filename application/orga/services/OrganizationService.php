@@ -4,7 +4,7 @@ use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use Doctrine\ORM\EntityManager;
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -31,7 +31,7 @@ class Orga_Service_OrganizationService
     private $userService;
 
     /**
-     * @var TranslationHelper
+     * @var Translator
      */
     private $translator;
 
@@ -39,13 +39,13 @@ class Orga_Service_OrganizationService
      * @param EntityManager           $entityManager
      * @param Orga_Service_ACLManager $aclManager
      * @param UserService             $userService
-     * @param TranslationHelper       $translator
+     * @param Translator              $translator
      */
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ACLManager $aclManager,
         UserService $userService,
-        TranslationHelper $translator
+        Translator $translator
     ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;

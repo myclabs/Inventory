@@ -76,7 +76,7 @@ class DW_ReportController extends Core_Controller
 
         $this->view->assign('idCube', $report->getCube()->getId());
         $this->view->assign('hashReport', $hash);
-        $this->view->assign('reportLabel', $this->translator->toString($report->getLabel()));
+        $this->view->assign('reportLabel', $this->translator->get($report->getLabel()));
         require_once (dirname(__FILE__).'/../forms/Configuration.php');
         $this->view->assign('configurationForm', new DW_Form_configuration($report, $hash, $this->translator));
 
@@ -347,7 +347,7 @@ class DW_ReportController extends Core_Controller
         $this->view->assign('hashReport', $this->getParam('hashReport'));
         $this->view->assign('numeratorAxis1', $report->getNumeratorAxis1());
         $this->view->assign('numeratorAxis2', $report->getNumeratorAxis2());
-        $this->view->assign('valueUnit', $this->translator->toString($report->getValuesUnitSymbol()));
+        $this->view->assign('valueUnit', $this->translator->get($report->getValuesUnitSymbol()));
         $this->_helper->layout()->disableLayout();
 
         $this->entityManager->clear();
@@ -362,7 +362,7 @@ class DW_ReportController extends Core_Controller
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
         $this->view->assign('chart', $report->getChart());
-        $this->view->assign('valueUnit', $this->translator->toString($report->getValuesUnitSymbol()));
+        $this->view->assign('valueUnit', $this->translator->get($report->getValuesUnitSymbol()));
         $this->_helper->layout()->disableLayout();
 
         $this->entityManager->clear();

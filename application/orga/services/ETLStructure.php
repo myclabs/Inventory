@@ -5,7 +5,7 @@ use Classification\Domain\Indicator;
 use Classification\Domain\Axis;
 use Classification\Domain\Member;
 use Doctrine\ORM\EntityManager;
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 
 /**
  * Classe permettant de construire les DW.
@@ -44,7 +44,7 @@ class Orga_Service_ETLStructure
     private $locales;
 
     /**
-     * @var TranslationHelper
+     * @var Translator
      */
     private $translator;
 
@@ -55,7 +55,7 @@ class Orga_Service_ETLStructure
      * @param Core_EventDispatcher $eventDispatcher
      * @param string               $defaultLocale
      * @param string[]             $locales
-     * @param TranslationHelper    $translator
+     * @param Translator           $translator
      */
     public function __construct(
         EntityManager $entityManager,
@@ -63,7 +63,7 @@ class Orga_Service_ETLStructure
         Core_EventDispatcher $eventDispatcher,
         $defaultLocale,
         array $locales,
-        TranslationHelper $translator
+        Translator $translator
     ) {
         $this->entityManager = $entityManager;
         $this->etlDataService = $etlDataService;
@@ -151,7 +151,7 @@ class Orga_Service_ETLStructure
                     } elseif (isset($originalTranslations[$this->defaultLocale])) {
                         $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
                     } else {
-                        $labelParts[] = $this->translator->toString($member->getLabel());
+                        $labelParts[] = $this->translator->get($member->getLabel());
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labelParts);
@@ -187,7 +187,7 @@ class Orga_Service_ETLStructure
                     } elseif (isset($originalTranslations[$this->defaultLocale])) {
                         $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
                     } else {
-                        $labelParts[] = $this->translator->toString($axis->getLabel());
+                        $labelParts[] = $this->translator->get($axis->getLabel());
                     }
                 }
                 $labels[$localeId] = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);

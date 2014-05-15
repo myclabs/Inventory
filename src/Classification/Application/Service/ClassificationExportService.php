@@ -6,7 +6,7 @@ use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Member;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Axis;
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 use PHPExcel_Writer_Excel2007;
 use PHPExcel_Writer_Excel5;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
@@ -21,11 +21,11 @@ use Xport\MappingReader\YamlMappingReader;
 class ClassificationExportService
 {
     /**
-     * @var TranslationHelper
+     * @var Translator
      */
     private $translator;
 
-    public function __construct(TranslationHelper $translator)
+    public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }
@@ -64,7 +64,7 @@ class ClassificationExportService
             function (ContextIndicator $contextIndicator) {
                 $axesLabelRef = [];
                 foreach ($contextIndicator->getAxes() as $axis) {
-                    $axesLabelRef[] = $this->translator->toString($axis->getLabel())
+                    $axesLabelRef[] = $this->translator->get($axis->getLabel())
                         . ' (' . $axis->getRef() . ')';
                 }
                 return implode(' - ', $axesLabelRef);
@@ -82,7 +82,7 @@ class ClassificationExportService
             'displayAxisDirectNarrower',
             function (Axis $axis) {
                 if ($axis->getDirectNarrower() !== null) {
-                    return $this->translator->toString($axis->getDirectNarrower()->getLabel())
+                    return $this->translator->get($axis->getDirectNarrower()->getLabel())
                         . ' (' . $axis->getDirectNarrower()->getRef() . ')';
                 }
                 return '';
@@ -99,7 +99,7 @@ class ClassificationExportService
             function (Member $member, Axis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
-                        return $this->translator->toString($directParent->getLabel());
+                        return $this->translator->get($directParent->getLabel());
                     }
                 }
                 return '';

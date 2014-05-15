@@ -168,7 +168,7 @@ class AF_Datagrid_Edit_Components_SubAfRepeatedController extends UI_Controller_
     {
         /** @var $subAF RepeatedSubAF */
         $subAF = RepeatedSubAF::load($this->getParam('component'));
-        $this->data = $this->translator->toString($subAF->getHelp());
+        $this->data = $this->translator->get($subAF->getHelp());
         $this->send();
     }
 }

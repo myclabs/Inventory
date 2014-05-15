@@ -4,7 +4,7 @@ namespace Orga\ViewModel;
 
 use Core_Exception_UndefinedAttribute;
 use Doctrine\Common\Collections\Criteria;
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use Orga_Model_Cell;
@@ -32,12 +32,12 @@ class CellViewModelFactory
     public $inputStatusList;
 
     /**
-     * @var TranslationHelper
+     * @var Translator
      */
     private $translator;
 
 
-    public function __construct(ACL $acl, TranslationHelper $translator)
+    public function __construct(ACL $acl, Translator $translator)
     {
         $this->acl = $acl;
         $this->translator = $translator;
@@ -86,13 +86,13 @@ class CellViewModelFactory
     ) {
         $cellViewModel = new CellViewModel();
         $cellViewModel->id = $cell->getId();
-        $cellViewModel->shortLabel = $this->translator->toString($cell->getLabel());
-        $cellViewModel->extendedLabel = $this->translator->toString($cell->getExtendedLabel());
+        $cellViewModel->shortLabel = $this->translator->get($cell->getLabel());
+        $cellViewModel->extendedLabel = $this->translator->get($cell->getExtendedLabel());
         $cellViewModel->relevant = $cell->isRelevant();
         $cellViewModel->tag = $cell->getTag();
 
         foreach ($cell->getMembers() as $member) {
-            $cellViewModel->members[$member->getAxis()->getRef()] = $this->translator->toString($member->getLabel());
+            $cellViewModel->members[$member->getAxis()->getRef()] = $this->translator->get($member->getLabel());
         }
 
         // Administrateurs.

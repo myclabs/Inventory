@@ -25,7 +25,7 @@ class AF_Datagrid_Translate_Components_HelpController extends UI_Controller_Data
             foreach ($af->getRootGroup()->getSubComponentsRecursive() as $component) {
                 $data = array();
                 $data['index'] = $component->getId();
-                $data['identifier'] = $this->translator->toString($component->getAF()->getLabel())
+                $data['identifier'] = $this->translator->get($component->getAF()->getLabel())
                     .' | '.$component->getRef();
 
                 foreach ($this->languages as $language) {

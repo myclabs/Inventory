@@ -609,11 +609,11 @@ class DW_Model_Report extends Core_Model_Entity
                 $chart->vertical = false;
                 $chart->addAttribute('chartArea', '{top:"5%", left:"25%", width:"50%", height:"75%"}');
                 $chart->addAttribute('hAxis', '{title: \''.
-                    $this->translationHelper->toString($this->getValuesUnitSymbol()).'\',  titleTextStyle: {color: \'#9E0000\'}}');
+                    $this->translator->get($this->getValuesUnitSymbol()).'\',  titleTextStyle: {color: \'#9E0000\'}}');
             } else {
                 $chart->addAttribute('chartArea', '{top:"5%", left:"15%", width:"50%", height:"65%"}');
                 $chart->addAttribute('vAxis', '{title: \''.
-                    $this->translationHelper->toString($this->getValuesUnitSymbol()).'\',  titleTextStyle: {color: \'#9E0000\'}}');
+                    $this->translator->get($this->getValuesUnitSymbol()).'\',  titleTextStyle: {color: \'#9E0000\'}}');
             }
 
             if ($this->numeratorAxis2 === null) {

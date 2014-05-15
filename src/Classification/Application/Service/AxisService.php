@@ -9,7 +9,7 @@ use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Core_Exception_User;
 use Core_Tools;
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 
 /**
  * Service Axis.
@@ -19,11 +19,11 @@ use Mnapoli\Translated\TranslationHelper;
 class AxisService
 {
     /**
-     * @var TranslationHelper
+     * @var Translator
      */
     private $translator;
 
-    public function __construct(TranslationHelper $translator)
+    public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }

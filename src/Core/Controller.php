@@ -2,7 +2,7 @@
 
 use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -28,7 +28,7 @@ abstract class Core_Controller extends Zend_Controller_Action
 
     /**
      * @Inject
-     * @var TranslationHelper
+     * @var Translator
      */
     protected $translator;
 

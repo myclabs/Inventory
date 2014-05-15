@@ -41,7 +41,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         foreach ($categories as $category) {
             $this->addNode(
                 $this->getTreeId($category),
-                $this->translator->toString($category->getLabel()),
+                $this->translator->get($category->getLabel()),
                 false,
                 null,
                 false,
@@ -51,7 +51,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
 
         if ($currentCategory) {
             foreach ($currentCategory->getAFs() as $af) {
-                $label = $this->translator->toString($af->getLabel());
+                $label = $this->translator->get($af->getLabel());
                 $this->addNode($this->getTreeId($af), $label, true, null, false, true);
             }
         }
@@ -75,7 +75,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
         foreach ($library->getCategories() as $category) {
             $this->addElementList(
                 $this->getTreeId($category),
-                $this->translator->toString($category->getLabel())
+                $this->translator->get($category->getLabel())
             );
         }
         $this->send();
@@ -131,7 +131,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             }
             $this->addElementList(
                 $this->getTreeId($sibling),
-                $this->translator->toString($sibling->getLabel())
+                $this->translator->get($sibling->getLabel())
             );
         }
 

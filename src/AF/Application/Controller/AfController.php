@@ -55,7 +55,7 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->addToActionStack('submit-test', 'input', 'af');
         $viewConfiguration->setDisplayConfigurationLink(true);
         $viewConfiguration->addBaseTabs();
-        $viewConfiguration->setPageTitle($this->translator->toString($af->getLabel()));
+        $viewConfiguration->setPageTitle($this->translator->get($af->getLabel()));
         $viewConfiguration->setUseSession(true);
         $viewConfiguration->setExitUrl('af/library/view/id/' . $af->getLibrary()->getId());
 

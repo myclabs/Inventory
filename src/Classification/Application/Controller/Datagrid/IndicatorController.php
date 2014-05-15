@@ -25,11 +25,11 @@ class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
             $data['ref'] = $this->cellText($indicator->getRef());
             $data['unit'] = $this->cellText(
                 $indicator->getUnit()->getRef(),
-                $this->translator->toString($indicator->getUnit()->getSymbol())
+                $this->translator->get($indicator->getUnit()->getSymbol())
             );
             $data['ratioUnit'] = $this->cellText(
                 $indicator->getRatioUnit()->getRef(),
-                $this->translator->toString($indicator->getRatioUnit()->getSymbol())
+                $this->translator->get($indicator->getRatioUnit()->getSymbol())
             );
             $canUp = !($indicator->getPosition() === 1);
             $canDown = !($indicator->getPosition() === $indicator->getLastEligiblePosition());

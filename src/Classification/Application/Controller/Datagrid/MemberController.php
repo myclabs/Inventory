@@ -207,7 +207,7 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
         foreach ($broaderAxis->getMembers() as $eligibleParentMember) {
             $this->addElementList(
                 $eligibleParentMember->getId(),
-                $this->translator->toString($eligibleParentMember->getLabel())
+                $this->translator->get($eligibleParentMember->getLabel())
             );
         }
 

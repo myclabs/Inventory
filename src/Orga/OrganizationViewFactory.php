@@ -2,7 +2,7 @@
 
 namespace Orga;
 
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\ACL;
 use Orga\ViewModel\GranularityView;
 use Orga\ViewModel\OrganizationView;
@@ -31,11 +31,11 @@ class OrganizationViewFactory
     private $orgaACLManager;
 
     /**
-     * @var TranslationHelper
+     * @var Translator
      */
     private $translator;
 
-    public function __construct(ACL $acl, Orga_Service_ACLManager $orgaACLManager, TranslationHelper $translator)
+    public function __construct(ACL $acl, Orga_Service_ACLManager $orgaACLManager, Translator $translator)
     {
         $this->acl = $acl;
         $this->orgaACLManager = $orgaACLManager;
@@ -46,7 +46,7 @@ class OrganizationViewFactory
     {
         $organizationView = new OrganizationView();
         $organizationView->id = $organization->getId();
-        $organizationView->label = $this->translator->toString($organization->getLabel());
+        $organizationView->label = $this->translator->get($organization->getLabel());
         if ($organizationView->label == '') {
             $organizationView->label = __('Orga', 'navigation', 'defaultOrganizationLabel');
         }
@@ -91,7 +91,7 @@ class OrganizationViewFactory
         foreach ($organization->getGranularities() as $granularity) {
             $granularityView = new GranularityView();
             $granularityView->id = $granularity->getId();
-            $granularityView->label = $this->translator->toString($granularity->getLabel());
+            $granularityView->label = $this->translator->get($granularity->getLabel());
 
             $organizationView->granularities[] = $granularityView;
         }

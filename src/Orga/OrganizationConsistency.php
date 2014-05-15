@@ -5,7 +5,7 @@
  * @package Orga
  */
 
-use Mnapoli\Translated\TranslationHelper;
+use Mnapoli\Translated\Translator;
 
 /**
  * Controller du datagrid de coherence
@@ -14,11 +14,11 @@ use Mnapoli\Translated\TranslationHelper;
 class Orga_OrganizationConsistency
 {
     /**
-     * @var TranslationHelper
+     * @var Translator
      */
     private $translator;
 
-    public function __construct(TranslationHelper $translator)
+    public function __construct(Translator $translator)
     {
         $this->translator = $translator;
     }
@@ -45,7 +45,7 @@ class Orga_OrganizationConsistency
 
         foreach ($organization->getFirstOrderedAxes() as $axis) {
             if (!$axis->hasMembers()) {
-                $listAxes[] = $this->translator->toString($axis->getLabel());
+                $listAxes[] = $this->translator->get($axis->getLabel());
             }
             if ($axis->hasDirectBroaders()) {
                 foreach ($axis->getDirectBroaders() as $broaderAxis) {
@@ -53,14 +53,14 @@ class Orga_OrganizationConsistency
                         try {
                             $member->getParentForAxis($broaderAxis);
                         } catch (Core_Exception_NotFound $e) {
-                            $listParentsAxes[] = $this->translator->toString($axis->getLabel());
-                            $listParentsMembers[] = $this->translator->toString($member->getLabel());
+                            $listParentsAxes[] = $this->translator->get($axis->getLabel());
+                            $listParentsMembers[] = $this->translator->get($member->getLabel());
                         }
                     }
                     foreach ($broaderAxis->getOrderedMembers() as $parentMember) {
                         if (count($parentMember->getChildrenForAxis($axis)) === 0) {
-                            $listChildrenAxes[] = $this->translator->toString($broaderAxis->getLabel());
-                            $listChildrenMembers[] = $this->translator->toString($parentMember->getLabel());
+                            $listChildrenAxes[] = $this->translator->get($broaderAxis->getLabel());
+                            $listChildrenMembers[] = $this->translator->get($parentMember->getLabel());
                         }
                     }
                 }

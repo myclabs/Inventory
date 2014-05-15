@@ -162,7 +162,7 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
     {
         /** @var $subAF NotRepeatedSubAF */
         $subAF = NotRepeatedSubAF::load($this->getParam('component'));
-        $this->data = $this->translator->toString($subAF->getHelp());
+        $this->data = $this->translator->get($subAF->getHelp());
         $this->send();
     }
 }

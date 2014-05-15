@@ -28,7 +28,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
             $axes = Axis::load($this->idNode)->getDirectBroaders();
         }
         foreach ($axes as $axis) {
-            $axisLabel = '<b>' . $this->translator->toString($axis->getLabel()) . '</b> <i>('.$axis->getRef().')</i>';
+            $axisLabel = '<b>' . $this->translator->get($axis->getLabel()) . '</b> <i>('.$axis->getRef().')</i>';
             $this->addNode($axis->getId(), $axisLabel, (!$axis->hasdirectBroaders()), null, false, true, true);
         }
 
@@ -112,7 +112,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
 
         if (empty($this->_formErrorMessages)) {
             $label = null;
-            $currentAxisLabel = $this->translator->toString($axis->getLabel());
+            $currentAxisLabel = $this->translator->get($axis->getLabel());
             if (($axis->getRef() !== $newRef) && ($currentAxisLabel !== $newLabel)) {
                 $label = $this->axisService->updateRefAndLabel($axis->getId(), $newRef, $newLabel);
             } elseif ($currentAxisLabel !== $newLabel) {
@@ -151,7 +151,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
         foreach ($library->getAxes()->toArray() as $axis) {
             /** @var Axis $axis */
             if ($axis->getId() != $this->idNode) {
-                $this->addElementList($axis->getId(), $this->translator->toString($axis->getLabel()));
+                $this->addElementList($axis->getId(), $this->translator->get($axis->getLabel()));
             }
         }
         $this->send();
@@ -179,7 +179,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
             if ($siblingAxis->getId() != $this->idNode) {
                 $this->addElementList(
                     $siblingAxis->getId(),
-                    $this->translator->toString($siblingAxis->getLabel())
+                    $this->translator->get($siblingAxis->getLabel())
                 );
             }
         }
@@ -194,7 +194,7 @@ class Classification_Tree_AxisController extends UI_Controller_Tree
     {
         $axis = Axis::load($this->idNode);
         $this->data['ref'] = $axis->getRef();
-        $this->data['label'] = $this->translator->toString($axis->getLabel());
+        $this->data['label'] = $this->translator->get($axis->getLabel());
         $this->send();
     }
 
