@@ -38,11 +38,6 @@ Feature: AF copy feature
     When I open collapse "emissions_amont"
     Then I should see "Type : Expression"
     And I should see "quantite_combustible * fe_amont"
-    When I click element "#collapse_combustion_combustible_unite_masse_copy__emissions_amont .fa-search"
-    Then I should see the popup "emissions_amont (Émissions liées aux processus amont de la combustion)"
-    And I should see "quantite_combustible * fe_amont"
-    And I should see "Produit"
-    When I click "×"
     Then I should see "Valeur : 2,54 t équ. CO2 ± 20 %"
 
   @javascript @readOnly
