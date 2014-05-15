@@ -28,7 +28,7 @@ class UI_Form_Decorator_Group extends Zend_Form_Decorator_Abstract
         }
 
         if ($this->getElement()->foldaway == true) {
-            $collapse = new Collapse($this->getElement()->getId(), $this->getElement()->getLabel(), $content);
+            $collapse = new Collapse($this->getElement()->getId() . '_wrapper', $this->getElement()->getLabel(), $content);
             if (!$this->getElement()->folded) {
                 $collapse->show();
             }
@@ -43,6 +43,8 @@ class UI_Form_Decorator_Group extends Zend_Form_Decorator_Abstract
             if ($this->getElement()->isHidden()) {
                 $collapse->addClass('hide');
             }
+
+            $collapse->setAttribute('id', $this->getElement()->getId());
 
             $content = $collapse->getHTML();
         } else {

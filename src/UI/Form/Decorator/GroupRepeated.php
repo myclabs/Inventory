@@ -17,7 +17,7 @@ use MyCLabs\MUIH\Button;
 class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
 {
     const OCCURRENCE_SEPARATOR = '__';
-    
+
     /**
      * @param string $content
      * @see Zend/Form/Decorator/Zend_Form_Decorator_Abstract::render()
@@ -85,7 +85,7 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
                  * @var Zend_Form_Element $childZendElement
                  */
                 $this->initZendElement($childZendElement, $occurrence);
-                
+
                 $htmlElementTagDecorator->setOption('id', $childZendElement->getId().'-line');
                 $elements .= $htmlElementTagDecorator->render($childZendElement->render());
                 $htmlElementTagDecorator->removeOption('id');
@@ -104,7 +104,6 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $tableOptions = array(
             'tag'   => 'table',
             'class' => 'table table-condensed repeatedGroup',
-            'id'    => $this->getElement()->getId(),
         );
         $htmlTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlTagDecorator->setOptions($tableOptions);
