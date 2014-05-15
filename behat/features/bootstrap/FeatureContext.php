@@ -37,14 +37,6 @@ class FeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario
-     */
-    public function setLanguage()
-    {
-//        $this->getSession()->setRequestHeader('Accept-Language', 'fr');
-    }
-
-    /**
      * @Given /^(?:|I )am logged in$/
      */
     public function assertLoggedIn()
@@ -58,7 +50,7 @@ class FeatureContext extends MinkContext
     public function assertMessageShown($message)
     {
         $this->spin(function () use ($message) {
-            $this->findElement('#messageZone:contains("' . $message . '")');
+            $this->assertElementContainsText('#messageZone', $message);
         });
 
         return [
