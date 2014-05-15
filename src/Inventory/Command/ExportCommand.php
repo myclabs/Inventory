@@ -408,7 +408,7 @@ class ExportCommand extends Command
                     ],
                 ],
             ],
-            false
+            $this->entityManager->getRepository(Translation::class)
         );
         file_put_contents($root . '/reports.json', $reportsSerializer->serialize($reportsData));
 
