@@ -2,6 +2,8 @@
 
 namespace AF\Domain;
 
+use AF\Domain\Algorithm\Index\AlgoResultIndex;
+use AF\Domain\Algorithm\Index\FixedIndex;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Component\SubAF;
 use DeepCopy\DeepCopy;
@@ -43,6 +45,8 @@ class AFCopyService
         $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher(SubAF::class, 'calledAF'));
         // Indexation
         $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher(NumericAlgo::class, 'contextIndicator'));
+        $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher(AlgoResultIndex::class, 'axis'));
+        $deepCopy->addFilter(new KeepFilter(), new PropertyMatcher(FixedIndex::class, 'axis'));
 
         /** @var AF $newAF */
         $newAF = $deepCopy->copy($af);
