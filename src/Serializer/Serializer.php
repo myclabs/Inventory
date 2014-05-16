@@ -315,7 +315,7 @@ class Serializer
         }
 
         // TranslatedString
-        if (is_array($value) && (isset($value['translated']))) {
+        if (is_array($value) && (array_key_exists('translated', $value))) {
             unset($value['translated']);
             $property->setValue($object, TranslatedString::fromArray($value));
             return;

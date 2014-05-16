@@ -498,7 +498,7 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/reports.json'));
         foreach ($objects as $object) {
             if (($object instanceof \StdClass) && ($object->type === "organization")) {
-                $organization = $this->getOrganizationByLabel($object->label);
+                $organization = $this->getOrganizationByLabel($object->label['fr']);
                 foreach ($object->granularitiesReports as $granularityObject) {
                     $granularityAxes = [];
                     foreach ($granularityObject->granularityAxes as $refAxis) {
@@ -648,7 +648,7 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/acl.json'));
         foreach ($objects as $object) {
             if (($object instanceof \StdClass) && ($object->type === "organization")) {
-                $organization = $this->getOrganizationByLabel($object->label);
+                $organization = $this->getOrganizationByLabel($object->label['fr']);
 
                 foreach ($object->admins as $adminEmail) {
                     $output->writeln(sprintf(
@@ -745,5 +745,6 @@ class ImportCommand extends Command
                 return $organization;
             }
         }
+        throw new Exception;
     }
 }
