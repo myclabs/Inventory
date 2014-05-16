@@ -439,7 +439,7 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/parameters.json'));
         foreach ($objects as $object) {
             if ($object instanceof Family) {
-                $output->writeln(sprintf('<info>Imported family: %s</info>', $this->translate($object->getLabel())));
+                $output->writeln(sprintf('<info>Imported family: %s</info>', $object->getLabel()->get('fr')));
             }
             if ($object instanceof \Core_Model_Entity) {
                 $object->save();

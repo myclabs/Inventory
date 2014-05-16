@@ -277,7 +277,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Traductions en BDD
         /** @var DoctrineTranslator $doctrineTranslator */
         $doctrineTranslator = $this->container->get(DoctrineTranslator::class);
-        $doctrineTranslator->setCurrentLocale($locale->getLanguage());
+        $doctrineTranslator->setLanguage($locale->getLanguage());
     }
 
     /**

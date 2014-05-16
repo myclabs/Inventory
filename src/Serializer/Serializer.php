@@ -2,6 +2,7 @@
 
 namespace Serializer;
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Proxy\Proxy;
 use Doctrine\Common\Util\ClassUtils;
@@ -233,6 +234,11 @@ class Serializer
                 continue;
             }
 
+            // Ignore Translatable extension
+            if ($propertyName === 'translationLocale') {
+                continue;
+            }
+
             // Ignore property
             if (isset($config['properties'][$propertyName]['exclude'])
                 && $config['properties'][$propertyName]['exclude'] === true) {
@@ -295,6 +301,7 @@ class Serializer
     {
         $property->setAccessible(true);
 
+        // ArrayCollection
         if (is_array($value) && ((strpos(reset($value), '@@@') === 0) || empty($value))) {
             $collection = new ArrayCollection();
             $property->setValue($object, $collection);
@@ -307,6 +314,14 @@ class Serializer
             return;
         }
 
+        // TranslatedString
+        if (is_array($value) && (isset($value['translated']))) {
+            unset($value['translated']);
+            $property->setValue($object, TranslatedString::fromArray($value));
+            return;
+        }
+
+        // Reference to another object
         if (!is_array($value) && strpos($value, '@@@') === 0) {
             $this->callbacks[] = function () use ($property, $object, $value) {
                 $property->setValue($object, $this->objectMap[$value]);
