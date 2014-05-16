@@ -156,11 +156,20 @@ class Serializer
 
             $property->setAccessible(true);
 
-            if (isset($propertyConfig['serialize'])) {
-                $callable = $propertyConfig['serialize'];
-                $serializedValue = $callable($property->getValue($object));
-            } else {
-                $serializedValue = $this->recursiveSerialization($property->getValue($object));
+            // Translated property
+            if (isset($config['properties'][$propertyName]['translated'])
+                && $config['properties'][$propertyName]['translated'] === true) {
+                $translations = $this->translationRepository->findTranslations($object);
+                $propertyTranslations = [
+                    'translated' => true,
+                    'fr'         => $property->getValue($object), // valeur par défaut
+                ];
+                foreach ($translations as $lang => $properties) {
+                    if (isset($properties[$propertyName])) {
+                        $propertyTranslations[$lang] = $properties[$propertyName];
+                    }
+                }
+                $property->setValue($object, $propertyTranslations);
             }
 
             $serialized->$propertyName = $serializedValue;
