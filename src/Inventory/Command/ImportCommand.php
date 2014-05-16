@@ -300,6 +300,20 @@ class ImportCommand extends Command
                     }
                 },
             ],
+            \Orga_Model_CellsGroup::class => [
+                'properties' => [
+                    'aF' => [
+                        'callback' => function ($var) use ($afLibrary) {
+                            foreach ($afLibrary->getAFList() as $af) {
+                                if ($af->getRef() == $var) {
+                                    return $af;
+                                }
+                            }
+                            throw new Exception('AF "' . $var . '" NOT FOUND !');
+                        },
+                    ],
+                ],
+            ],
             PrimaryInputSet::class => [
                 'properties' => [
                     'refAF' => [ 'name' => 'af' ],
