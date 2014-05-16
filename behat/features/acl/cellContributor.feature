@@ -24,7 +24,7 @@ Feature: Cell contributor feature
   # Accès à l'onglet "Commentaires"
     When I open tab "Commentaires"
     And I click "Ajouter un commentaire"
-    And I fill in "addContent" with "Blabla"
+    And I fill in "newComment" with "Blabla"
     And I click element "#Ajouter"
     Then I should see "Blabla"
   # Accès à l'onglet "Documents" (pb de configuration, pas de bibliothèque associée…)

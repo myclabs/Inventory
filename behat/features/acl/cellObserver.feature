@@ -36,9 +36,13 @@ Feature: Cell observer feature
     And I fill in "password" with "observateur.site@toto.com"
     And I click "connection"
   # On tombe sur la liste des cellules
-    Then I should see "Observateur Annecy"
+    Then I should see "Workspace avec données"
+    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    And I wait for the page to finish loading
+    Then I should see "Workspace avec données"
+    And I should see "Observateur Annecy"
     And I should see "Observateur Chambéry"
   # Accès à une des cellules
     When I click "Observateur Annecy"
     Then I should see "Workspace avec données"
-    Then I should see "2012 | Annecy | Énergie"
+    Then I should see "Annecy"

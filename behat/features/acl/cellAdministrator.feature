@@ -11,7 +11,7 @@ Feature: Cell administrator feature
     And I click "connection"
   # On tombe sur la page de la cellule globale
     Then I should see "Workspace avec données"
-    When I click element "tr.organization h4 ,('Workspace avec données')"
+    When I click element "tr.organization h4 a:contains('Workspace avec données')"
     And I wait for the page to finish loading
     Then I should see "Workspace avec données"
     And I should see "Vue globale"
@@ -65,7 +65,7 @@ Feature: Cell administrator feature
     Then I should see "Workspace avec données"
     Then I should see "Annecy"
   # Accès à l'onglet "Analyses", vérification que l'utilisateur peut bien voir les analyses préconfigurées
-    When I click element "div[di='currentGranularity'] i.fa-bar-chart-o"
+    When I click element "div[id='currentGranularity'] i.fa-bar-chart-o"
     And I wait 5 seconds
     Then I should see "Chiffre d'affaire, par année"
     When I click "Chiffre d'affaire, par année"
