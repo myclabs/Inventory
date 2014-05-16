@@ -34,7 +34,7 @@ class Parameter_Datagrid_Translate_Families_DocumentationController extends UI_C
                 $data[$language] = $this->cellLongText(
                     'parameter/datagrid_translate_families_documentation/view/id/'.$family->getId().'/locale/'.$language,
                     'parameter/datagrid_translate_families_documentation/edit/id/'.$family->getId().'/locale/'.$language,
-                    substr($brutText, 0, 50).((strlen($brutText) > 50) ? __('UI', 'translate', '…') : ''),
+                    substr($brutText, 0, 50).((strlen($brutText) > 50) ? '…' : ''),
                     'zoom-in'
                 );
             }
