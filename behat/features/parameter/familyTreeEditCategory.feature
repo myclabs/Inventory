@@ -78,7 +78,6 @@ Feature: Family tree edit of categories feature
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     And I click element "#familyTree_deletePanel button:contains('Confirmer')"
-    And I click "Annuler"
     Then the following message is shown and closed: "Cette catégorie ne peut pas être supprimée, car elle n'est pas vide (elle contient au moins une famille ou une autre catégorie)."
   # Catégorie contenant un formulaire
     When I click "Catégorie contenant une famille"
@@ -86,7 +85,6 @@ Feature: Family tree edit of categories feature
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     And I click element "#familyTree_deletePanel button:contains('Confirmer')"
-    And I click "Annuler"
     Then the following message is shown and closed: "Cette catégorie ne peut pas être supprimée, car elle n'est pas vide (elle contient au moins une famille ou une autre catégorie)."
   # Catégorie vide
     When I click "Catégorie vide"
