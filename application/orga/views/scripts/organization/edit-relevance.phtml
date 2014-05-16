@@ -1,4 +1,8 @@
 <?php
+use User\Domain\User;
+
+/** @var Orga_Model_Cell[] $topCellsWithAccess */
+$topCellsWithAccess = $this->topCellsWithAccess;
 
 foreach ($this->granularities as $granularity) {
     /** @var $granularity Orga_Model_Granularity */
@@ -12,8 +16,10 @@ foreach ($this->granularities as $granularity) {
     foreach ($granularity->getAxes() as $axis) {
         $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $axis->getLabel());
         $members = [];
-        foreach ($axis->getMembers() as $member) {
-            $members[$member->getTag()] = $member->getLabel();
+        foreach ($topCellsWithAccess as $cell) {
+            foreach ($cell->getChildMembersForAxes([$axis])[$axis->getRef()] as $member) {
+                $members[$member->getTag()] = $member->getLabel();
+            }
         }
         $columnAxis->list = $members;
         $columnAxis->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;

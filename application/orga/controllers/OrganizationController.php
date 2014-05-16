@@ -701,6 +701,10 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $this->view->assign('organization', $organization);
+        $this->view->assign(
+            'topCellsWithAccess',
+            $this->orgaACLManager->getTopCellsWithAccessForOrganization($connectedUser, $organization)['cells']
+        );
 
         $isUserAllowedToEditOrganization = $this->acl->isAllowed(
             $connectedUser,
