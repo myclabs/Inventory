@@ -2,7 +2,7 @@
 
     <div id="logo-group">
         <span id="logo">
-            <a href="<?=$this->baseUrl()?>">My C-Tool</a>
+            <a href="<?=$this->baseUrl()?>/">My C-Tool</a>
         </span>
     </div>
 
@@ -39,7 +39,7 @@
             <!-- account button -->
             <div class="btn-header transparent pull-right">
                 <span>
-                    <a href="user/profile/edit" title="<?=__('User', 'menu', 'myAccount')?>">
+                    <a href="user/profile/edit" title="<?=__('User', 'menu', 'myAccount')?> (<?=$this->user->getEmail()?>)">
                         <i class="fa fa-user"></i>
                     </a>
                 </span>
