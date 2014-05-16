@@ -11,16 +11,19 @@ Feature: Cell observer feature
     And I click "connection"
   # On tombe sur la page de la cellule
     Then I should see "Workspace avec données"
-    Then I should see "Europe | Marque A"
-    And I click element "legend[data-target='#granularity7']"
-    Then I should see "Collecte en cours" in the ".cell[data-tag='/1-annee:2012/&/1-zone:europe/&/2-marque:marque_a/']" element
+    When I click element "tr.organization h4 a:contans('Workspace avec données')"
+    And I wait for the page to finish loading
+    Then I should see "Workspace avec données"
+    And I should see "Europe | Marque A"
+    When I click element "legend a[href='#granularity7']"
+    Then I should see "13%" in the ".cell[data-tag='/1-annee:2012/&/1-zone:europe/&/2-marque:marque_a/']" element
     # And the "inventories6" datagrid should contain 2 row
   # TODO : statut de la collecte non éditable
   # Accès à l'onglet "Analyses"
-    When I click element ".current-cell .fa-bar-chart-o"
+    And I click element "div[id='currentGranularity'] .fa-bar-chart-o"
     Then I should see the popup "Analyses —  Europe | Marque A"
     When I click element "#reports3 .modal-header button"
-    When I click element ".current-cell .fa-download"
+    And I click element "div[id='currentGranularity'] .fa-download"
     Then I should see the popup "Exports —  Europe | Marque A"
     # TODO : accès aux exports
 

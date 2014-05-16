@@ -14,7 +14,7 @@ Feature: Cell coordinator feature
     Then I should see "Europe | Marque A"
   # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)
     When I wait 5 seconds
-    And I click element ".current-cell .input-actions a"
+    And I click element "div[id='currentGranularity'] a.go-input"
     And I click element "#chiffre_affaireHistory .btn"
     Then I should see "Historique des valeurs"
     And I should see a "code:contains('10 k€ ± 15 %')" element

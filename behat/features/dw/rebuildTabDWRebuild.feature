@@ -55,7 +55,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
   # Vérification que la régénération a bien fonctionné
     When I am on "orga/cell/view/idCell/1/"
-    And I click element ".current-cell .fa-bar-chart"
+    And I click element "div[id='currentGranularity'] .fa-bar-chart"
     Then I should see "Chiffre d'affaire, par année" in element "#reports1"
     When I click "Chiffre d'affaire, par année"
     And I open tab "Valeurs"
@@ -77,7 +77,7 @@ Feature: Rebuild of dataware through the data rebuild tab feature
     Then the following message is shown and closed: "Régénération des données d'analyse effectuée."
     # Vérification que la régénération a bien fonctionné
     When I am on "orga/cell/view/idCell/1/"
-    And I click element ".current-cell .fa-bar-chart"
+    And I click element "div[id='currentGranularity'] .fa-bar-chart"
     Then I should see "Chiffre d'affaire, par année" in element "#reports1"
     When I click "Chiffre d'affaire, par année"
     And I open tab "Valeurs"
