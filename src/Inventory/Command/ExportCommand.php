@@ -2,6 +2,7 @@
 
 namespace Inventory\Command;
 
+use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Category as AFCategory;
 use Doctrine\ORM\EntityManager;
 use Gedmo\Translatable\Entity\Translation;
@@ -168,6 +169,15 @@ class ExportCommand extends Command
             \AF\Domain\Component\Select\SelectOption::class => [
                 'properties' => [
                     'label' => ['translated' => true],
+                ],
+            ],
+            \AF\Domain\Output\OutputElement::class => [
+                'properties' => [
+                    'algo' => [
+                        'transform' => function (NumericAlgo $algo) {
+                            return $algo->getRef();
+                        },
+                    ],
                 ],
             ],
             \Orga\Model\ACL\Role\OrganizationAdminRole::class => [ 'exclude' => true ],
@@ -388,6 +398,9 @@ class ExportCommand extends Command
                         ],
                         'denominatorAxis2' => [
                             'transform' => function ($i) { return ($i != null) ? $i->getRef() : null; },
+                        ],
+                        'label' => [
+                            'translated' => true
                         ],
                     ],
                 ],
