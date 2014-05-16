@@ -5,6 +5,7 @@ namespace Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Proxy\Proxy;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\Query;
 use Gedmo\Translatable\Entity\Repository\TranslationRepository;
 
 class Serializer
@@ -171,6 +172,21 @@ class Serializer
             if (isset($config['properties'][$propertyName]['translated'])
                 && $config['properties'][$propertyName]['translated'] === true) {
                 $translations = $this->translationRepository->findTranslations($object);
+                // Moche, à cause d'un bug dans Translatable
+                if (empty($translations)) {
+                    $qb = $this->translationRepository->createQueryBuilder('trans');
+                    $qb->select('trans.content, trans.field, trans.locale')
+                        ->where('trans.foreignKey = :entityId', 'trans.objectClass = :entityClass');
+                    $data = $qb->getQuery()->execute(
+                        ['entityId' => $object->getId(), 'entityClass' => ClassUtils::getClass($object)],
+                        Query::HYDRATE_ARRAY
+                    );
+                    if ($data && is_array($data) && count($data)) {
+                        foreach ($data as $row) {
+                            $translations[$row['locale']][$row['field']] = $row['content'];
+                        }
+                    }
+                }
                 $propertyTranslations = [
                     'translated' => true,
                     'fr'         => $property->getValue($object), // valeur par défaut
