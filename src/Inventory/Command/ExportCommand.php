@@ -241,6 +241,15 @@ class ExportCommand extends Command
                     'dwResults' => [ 'exclude' => true ],
                 ],
             ],
+            \Orga_Model_CellsGroup::class => [
+                'properties' => [
+                    'aF' => [
+                        'transform' => function (\AF\Domain\AF $af) {
+                            return $af->getRef();
+                        },
+                    ],
+                ],
+            ],
             \Calc_UnitValue::class => [
                 'serialize' => true,
             ],
