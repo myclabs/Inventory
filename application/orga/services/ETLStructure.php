@@ -4,6 +4,7 @@ use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
 use Classification\Domain\Axis;
 use Classification\Domain\Member;
+use Core\Translation\TranslatedString;
 use Doctrine\ORM\EntityManager;
 use Mnapoli\Translated\Translator;
 
@@ -135,30 +136,13 @@ class Orga_Service_ETLStructure
      */
     protected function updateCellDWCubeLabel(Orga_Model_Cell $cell)
     {
-        // TODO à updater avec le nouveau système des traductions
-        $labels = [];
-        if (!$cell->hasMembers()) {
-            foreach ($this->locales as $localeId) {
-                $labels[$localeId] = __('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
-            }
-        } else {
-            foreach ($this->locales as $localeId) {
-                $labelParts = [];
-                foreach ($cell->getMembers() as $member) {
-                    $originalTranslations = $translationRepository->findTranslations($member);
-                    if (isset($originalTranslations[$localeId])) {
-                        $labelParts[] = $originalTranslations[$localeId]['label'];
-                    } elseif (isset($originalTranslations[$this->defaultLocale])) {
-                        $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
-                    } else {
-                        $labelParts[] = $this->translator->get($member->getLabel());
-                    }
-                }
-                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labelParts);
-            }
-        }
+        $cube = $cell->getDWCube();
 
-        $this->updateDWCubeLabel($cell->getDWCube(), $labels);
+        $labels = array_map(function (Orga_Model_Member $member) {
+            return $member->getLabel();
+        }, $cell->getMembers());
+
+        $cube->setLabel(TranslatedString::implode(Orga_Model_Cell::LABEL_SEPARATOR, $labels));
     }
 
     /**
@@ -168,44 +152,13 @@ class Orga_Service_ETLStructure
      */
     protected function updateGranularityDWCubeLabel(Orga_Model_Granularity $granularity)
     {
-        // TODO à updater avec le nouveau système des traductions
-        $labels = [];
-        if (!$granularity->hasAxes()) {
-            foreach ($this->locales as $localeId) {
-                $labels[$localeId] = __('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
-            }
-        } else {
-            $axes = $granularity->getAxes();
-            // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
-            @uasort($axes, [Orga_Model_Axis::class, 'orderAxes']);
-            foreach ($this->locales as $localeId) {
-                $labelParts = [];
-                foreach ($axes as $axis) {
-                    $originalTranslations = $translationRepository->findTranslations($axis);
-                    if (isset($originalTranslations[$localeId])) {
-                        $labelParts[] = $originalTranslations[$localeId]['label'];
-                    } elseif (isset($originalTranslations[$this->defaultLocale])) {
-                        $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
-                    } else {
-                        $labelParts[] = $this->translator->get($axis->getLabel());
-                    }
-                }
-                $labels[$localeId] = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
-            }
-        }
+        $cube = $granularity->getDWCube();
 
-        $this->updateDWCubeLabel($granularity->getDWCube(), $labels);
-    }
+        $labels = array_map(function (Orga_Model_Axis $axis) {
+            return $axis->getLabel();
+        }, $granularity->getAxes());
 
-    /**
-     * Met à jour les labels d'un Cube de DW donné.
-     *
-     * @param DW_Model_Cube $dWCube
-     * @param array $labels
-     */
-    protected function updateDWCubeLabel(DW_Model_Cube $dWCube, $labels)
-    {
-        $this->translator->setMany($dWCube->getLabel(), $labels);
+        $cube->setLabel(TranslatedString::implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labels));
     }
 
     /**

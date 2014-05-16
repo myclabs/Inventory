@@ -818,7 +818,7 @@ class DW_Model_Report extends Core_Model_Entity
         }
 
         // Label.
-        $report->setLabel($stdReport->label);
+        $report->setLabel(TranslatedString::fromArray((array) $stdReport->label));
 
         // Numerator Indicator.
         if ($stdReport->refNumerator !== null) {
