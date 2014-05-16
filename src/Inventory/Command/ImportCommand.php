@@ -15,6 +15,7 @@ use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Input\Select\SelectMultiInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputSet\SubInputSet;
+use AF\Domain\Output\OutputElement;
 use AF\Domain\Output\OutputIndex;
 use AF\Domain\Output\OutputTotal;
 use Classification\Domain\Axis;
@@ -358,6 +359,19 @@ class ImportCommand extends Command
                     ]
                 ],
             ],
+            OutputElement::class => [
+                'properties' => [
+                    'algo' => [
+                        'exclude' => true,
+                    ],
+                ],
+                'callbacks' => [
+                    function (OutputElement $outputElement, array $data) use ($parameterLibrary) {
+                        $algo = $outputElement->getInputSet()->getAF()->getAlgoByRef($data['algo']);
+                        $this->setProperty($outputElement, 'algo', $algo);
+                    },
+                ],
+            ],
             'Social_Model_Comment' => [
                 'class' => \Orga_Model_Cell_InputComment::class,
                 'properties' => [
@@ -389,10 +403,6 @@ class ImportCommand extends Command
             ],
             'User\Domain\ACL\Role\AdminRole' => [
                 'exclude' => true,
-                'callbacks' => [
-                    function ($vars) {
-                    }
-                ]
             ],
             'User\Domain\ACL\Authorization\NamedResourceAuthorization' => [ 'exclude' => true ],
             'User\Domain\ACL\Resource\NamedResource' => [ 'exclude' => true ],
@@ -633,7 +643,7 @@ class ImportCommand extends Command
                             $output->writeln(
                                 '<error>'.
                                 'Configuration broken while migrating report '.
-                                '"' . $report->getLabel() . '"'.
+                                '"' . $report->getLabel()->get('fr') . '"'.
                                 '</error>'
                             );
                         }
