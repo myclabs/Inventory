@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1606c65ee882a89df19500670b5f70e5",
+    "hash": "83a1eaf55276ca61466ab4dfe7bfd747",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -246,16 +246,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.4.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "ceb18cf9b0230f3ea208b6238130fd415abda0a7"
+                "reference": "434c364b6a8780c16769b60fcc56e61e6bac766f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/ceb18cf9b0230f3ea208b6238130fd415abda0a7",
-                "reference": "ceb18cf9b0230f3ea208b6238130fd415abda0a7",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/434c364b6a8780c16769b60fcc56e61e6bac766f",
+                "reference": "434c364b6a8780c16769b60fcc56e61e6bac766f",
                 "shasum": ""
             },
             "require": {
@@ -266,10 +266,13 @@
                 "doctrine/lexer": "1.*",
                 "php": ">=5.3.2"
             },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4.x-dev"
+                    "dev-master": "2.5.x-dev"
                 }
             },
             "autoload": {
@@ -317,7 +320,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2013-09-07 10:20:34"
+            "time": "2014-03-19 13:50:21"
         },
         {
             "name": "doctrine/dbal",
@@ -511,12 +514,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "47ca10076b19ce2da1a17e24a963bdf42a18a723"
+                "reference": "04aea73a850dad408c068f43c875e52fbd14004e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/47ca10076b19ce2da1a17e24a963bdf42a18a723",
-                "reference": "47ca10076b19ce2da1a17e24a963bdf42a18a723",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/04aea73a850dad408c068f43c875e52fbd14004e",
+                "reference": "04aea73a850dad408c068f43c875e52fbd14004e",
                 "shasum": ""
             },
             "require": {
@@ -580,7 +583,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-05-16 04:27:30"
+            "time": "2014-05-17 17:08:37"
         },
         {
             "name": "dompdf/dompdf",
@@ -2793,6 +2796,12 @@
     ],
     "aliases": [
         {
+            "alias": "2.4.99",
+            "alias_normalized": "2.4.99.0",
+            "version": "9999999-dev",
+            "package": "doctrine/common"
+        },
+        {
             "alias": "1.7.99",
             "alias_normalized": "1.7.99.0",
             "version": "dev-WriterExcel5OptionalConstructor",
@@ -2801,6 +2810,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "doctrine/common": 20,
         "doctrine/orm": 20,
         "mnapoli/doctrine-translated": 20,
         "dompdf/dompdf": 20,
