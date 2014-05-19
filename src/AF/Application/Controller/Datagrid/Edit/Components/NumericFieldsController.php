@@ -264,7 +264,7 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
     {
         /** @var $numeric NumericField */
         $numeric = NumericField::load($this->getParam('component'));
-        $this->data = $this->translator->get($numeric->getHelp());
+        $this->data = (string) $this->translator->get($numeric->getHelp());
         $this->send();
     }
 }

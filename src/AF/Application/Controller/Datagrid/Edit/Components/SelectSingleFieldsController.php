@@ -233,7 +233,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
     {
         /** @var $select Select */
         $select = Select::load($this->getParam('component'));
-        $this->data = $this->translator->get($select->getHelp());
+        $this->data = (string) $this->translator->get($select->getHelp());
         $this->send();
     }
 }

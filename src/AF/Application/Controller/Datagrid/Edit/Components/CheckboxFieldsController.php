@@ -177,7 +177,7 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     {
         /** @var $checkboxField Checkbox */
         $checkboxField = Checkbox::load($this->getParam('component'));
-        $this->data = $this->translator->get($checkboxField->getHelp());
+        $this->data = (string) $this->translator->get($checkboxField->getHelp());
         $this->send();
     }
 }

@@ -185,7 +185,7 @@ class AF_Datagrid_Edit_Components_TextFieldsController extends UI_Controller_Dat
     {
         /** @var $numeric TextField */
         $numeric = TextField::load($this->getParam('component'));
-        $this->data = $this->translator->get($numeric->getHelp());
+        $this->data = (string) $this->translator->get($numeric->getHelp());
         $this->send();
     }
 }
