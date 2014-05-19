@@ -146,7 +146,7 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
     {
         $node = $this->fromTreeId($this->idNode);
 
-        $this->data['label'] = $node->getLabel();
+        $this->data['label'] = $this->translator->get($node->getLabel());
         if ($node instanceof Category) {
             $this->data['title'] = __('AF', 'formTree', 'editCategoryPanelTitle');
             $this->data['htmlComplement'] = '';
@@ -213,8 +213,8 @@ class AF_Tree_AfTreeController extends UI_Controller_Tree
             $this->send();
             return;
         }
-        if ($newLabel !== $node->getLabel()) {
-            $node->setLabel($newLabel);
+        if ($newLabel !== $this->translator->get($node->getLabel())) {
+            $this->translator->set($node->getLabel(), $newLabel);
         }
 
         // Parent
