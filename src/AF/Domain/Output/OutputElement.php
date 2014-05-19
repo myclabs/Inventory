@@ -8,6 +8,7 @@ use AF\Domain\Algorithm\Output;
 use Calc_Value;
 use Classification\Domain\Axis;
 use Classification\Domain\ContextIndicator;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\Collection;
@@ -128,7 +129,7 @@ class OutputElement extends Core_Model_Entity
 
     /**
      * Retourne le libellé de l'algo
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {

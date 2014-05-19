@@ -5,12 +5,24 @@
  * @package Orga
  */
 
+use Mnapoli\Translated\Translator;
+
 /**
  * Controller du datagrid de coherence
  * @package Orga
  */
 class Orga_OrganizationConsistency
 {
+    /**
+     * @var Translator
+     */
+    private $translator;
+
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * Methode qui vérifie la cohérence d'un cube.
      *
@@ -33,7 +45,7 @@ class Orga_OrganizationConsistency
 
         foreach ($organization->getFirstOrderedAxes() as $axis) {
             if (!$axis->hasMembers()) {
-                $listAxes[] = $axis->getLabel();
+                $listAxes[] = $this->translator->get($axis->getLabel());
             }
             if ($axis->hasDirectBroaders()) {
                 foreach ($axis->getDirectBroaders() as $broaderAxis) {
@@ -41,14 +53,14 @@ class Orga_OrganizationConsistency
                         try {
                             $member->getParentForAxis($broaderAxis);
                         } catch (Core_Exception_NotFound $e) {
-                            $listParentsAxes[] = $axis->getLabel();
-                            $listParentsMembers[] = $member->getLabel();
+                            $listParentsAxes[] = $this->translator->get($axis->getLabel());
+                            $listParentsMembers[] = $this->translator->get($member->getLabel());
                         }
                     }
                     foreach ($broaderAxis->getOrderedMembers() as $parentMember) {
                         if (count($parentMember->getChildrenForAxis($axis)) === 0) {
-                            $listChildrenAxes[] = $broaderAxis->getLabel();
-                            $listChildrenMembers[] = $parentMember->getLabel();
+                            $listChildrenAxes[] = $this->translator->get($broaderAxis->getLabel());
+                            $listChildrenMembers[] = $this->translator->get($parentMember->getLabel());
                         }
                     }
                 }

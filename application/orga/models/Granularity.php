@@ -7,6 +7,7 @@
  * @subpackage Model
  */
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -285,20 +286,19 @@ class Orga_Model_Granularity extends Core_Model_Entity
     /**
      * Renvoie le label de la Granularity, dépendant des label de ces Axis.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         if (!$this->hasAxes()) {
-            $label = __('Orga', 'granularity', 'labelGlobalGranularity');
-        } else {
-            $labelParts = array();
-            foreach ($this->getAxes() as $axis) {
-                $labelParts[] = $axis->getLabel();
-            }
-            $label = implode(self::LABEL_SEPARATOR, $labelParts);
+            return TranslatedString::untranslated(__('Orga', 'granularity', 'labelGlobalGranularity'));
         }
-        return $label;
+
+        $labelParts = [];
+        foreach ($this->getAxes() as $axis) {
+            $labelParts[] = $axis->getLabel();
+        }
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labelParts);
     }
 
     /**
@@ -791,7 +791,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     {
         if ($this->dWCube === null) {
             $this->dWCube = new DW_Model_Cube();
-            $this->dWCube->setLabel($this->getLabel());
+            $this->dWCube->setLabel(clone $this->getLabel());
 
             /** @var Orga_Service_ETLStructure $etlStructureService */
             $etlStructureService = \Core\ContainerSingleton::getContainer()->get(Orga_Service_ETLStructure::class);

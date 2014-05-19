@@ -8,14 +8,14 @@
                 <select name="cell">
                     <?php foreach ($this->cellsData as $cellIndex => $cellData) : ?>
                         <?php if ($cellData instanceof Orga_Model_Organization) : ?>
-                            <option value=""><?=$cellData->getLabel()?></option>
+                            <option value=""><?=$this->translate($cellData->getLabel())?></option>
                         <?php else : ?>
-                            <option value="<?=$cellData->getId()?>"><?=$cellData->getLabel()?></option>
+                            <option value="<?=$cellData->getId()?>"><?=$this->translate($cellData->getLabel())?></option>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
             <?php else : ?>
-                <input type="text" name="cell" class="disabled" disabled value="<?=reset($this->cellsData)->getLabel()?>" class="form-control">
+                <input type="text" name="cell" class="disabled" disabled value="<?=$this->translate(reset($this->cellsData)->getLabel())?>" class="form-control">
             <?php endif; ?>
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-primary dw-action">
@@ -93,11 +93,11 @@
             <?php if (count($this->cellsResults) > 1) : ?>
                 <select name="cell">
                     <?php foreach ($this->cellsResults as $cellResults) : ?>
-                        <option value="<?=$cellResults->getId()?>"><?=$cellResults->getLabel()?></option>
+                        <option value="<?=$cellResults->getId()?>"><?=$this->translate($cellResults->getLabel())?></option>
                     <?php endforeach; ?>
                 </select>
             <?php else : ?>
-                <input type="text" name="cell" class="disabled" disabled value="<?=reset($this->cellsResults)->getLabel()?>" class="form-control">
+                <input type="text" name="cell" class="disabled" disabled value="<?=$this->translate(reset($this->cellsResults)->getLabel())?>" class="form-control">
             <?php endif; ?>
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-primary dw-action">

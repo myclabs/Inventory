@@ -36,8 +36,8 @@ $targetAF->list = [];
 foreach ($subAFList as $currentAf) {
     /** @var $currentAf AF */
     if ($currentAf->getId() != $af->getId()) {
-        $targetAF->list[$currentAf->getId()] = $currentAf->getLibrary()->getLabel()
-            . ' > ' . $currentAf->getLabel();
+        $targetAF->list[$currentAf->getId()] = $this->translate($currentAf->getLibrary()->getLabel())
+            . ' > ' . $this->translate($currentAf->getLabel());
     }
 }
 $targetAF->withEmptyElement = false;

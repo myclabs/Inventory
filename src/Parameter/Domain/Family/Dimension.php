@@ -2,6 +2,7 @@
 
 namespace Parameter\Domain\Family;
 
+use Core\Translation\TranslatedString;
 use Core_Exception_InvalidArgument;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
@@ -47,7 +48,7 @@ class Dimension extends Core_Model_Entity
     protected $ref;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -64,14 +65,13 @@ class Dimension extends Core_Model_Entity
     protected $members;
 
     /**
-     * Construction d'une dimension
-     * @param Family  $family
-     * @param string  $ref
-     * @param string  $label
-     * @param int     $orientation
+     * @param Family           $family
+     * @param string           $ref
+     * @param TranslatedString $label
+     * @param int              $orientation
      * @throws Core_Exception_InvalidArgument
      */
-    public function __construct(Family $family, $ref, $label, $orientation)
+    public function __construct(Family $family, $ref, TranslatedString $label, $orientation)
     {
         $this->members = new ArrayCollection();
         Core_Tools::checkRef($ref);
@@ -121,19 +121,11 @@ class Dimension extends Core_Model_Entity
     }
 
     /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         return $this->label;
-    }
-
-    /**
-     * @param string $label
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
     }
 
     /**

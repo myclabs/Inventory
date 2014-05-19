@@ -1,19 +1,14 @@
 <?php
-/**
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Model
- */
+
+use Mnapoli\Translated\Translator;
 
 /**
  * Tri dans une requête
  *
- * @package    Core
- * @subpackage Model
+ * @author matthieu.napoli
  */
 class Core_Model_Order
 {
-
     /**
      * Ordre de tri ascendant.
      */
@@ -30,25 +25,43 @@ class Core_Model_Order
      *     array(name, direction, alias)
      * )
      */
-    protected $_orders = array();
+    protected $orders = [];
 
 
     /**
      * Ajoute un nouveau tri.
      *
      * @param string $name
-     * @param const  $direction Constante de la classe indiquant la direction du tri.
+     * @param string $direction Constante de la classe indiquant la direction du tri.
      * @param string $alias Alias sur l'objet concerné par la condition dans la requêtte DQL.
      *
      * @return void
      */
-    public function addOrder($name, $direction=self::ORDER_ASC, $alias=null)
+    public function addOrder($name, $direction = self::ORDER_ASC, $alias = null)
     {
-        $this->_orders[] = array(
+        $this->orders[] = array(
             'name'      => $name,
             'direction' => $direction,
             'alias'     => $alias,
         );
+    }
+
+
+    /**
+     * Ajoute un nouveau tri.
+     *
+     * @param string $name
+     * @param string $direction Constante de la classe indiquant la direction du tri.
+     * @param string $alias Alias sur l'objet concerné par la condition dans la requêtte DQL.
+     *
+     * @return void
+     */
+    public function addTranslatedOrder($name, $direction = self::ORDER_ASC, $alias = null)
+    {
+        /** @var Translator $translator */
+        $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
+
+        $this->addOrder($name . '.' . $translator->getCurrentLocale(), $direction, $alias);
     }
 
     /**
@@ -64,18 +77,16 @@ class Core_Model_Order
      */
     public function getOrders()
     {
-        return $this->_orders;
+        return $this->orders;
     }
 
     /**
      * Valide les attributs de la classe.
-     *
-     * @return void
      */
     public function validate()
     {
         $ordersName = array();
-        foreach ($this->_orders as $order) {
+        foreach ($this->orders as $order) {
             $tmpOrder = $order['alias'] . '.' . $order['name'];
             if (in_array($tmpOrder, $ordersName)) {
                 throw new Core_Exception_InvalidArgument('Order for '.$order['name'].'" has already been specified.');
@@ -88,5 +99,4 @@ class Core_Model_Order
         }
 
     }
-
 }

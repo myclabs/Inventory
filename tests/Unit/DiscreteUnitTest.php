@@ -23,7 +23,6 @@ class Unit_Test_DiscreteUnitTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Unit_Test_DiscreteUnitSetUp');
         $suite->addTestSuite('Unit_Test_DiscreteUnitOthers');
         return $suite;
     }
@@ -37,8 +36,8 @@ class Unit_Test_DiscreteUnitTest
     {
         $o = new DiscreteUnit();
         $o->setRef('Ref'.$ref);
-        $o->setName('Name'.$ref);
-        $o->setSymbol('Symbol'.$ref);
+        $o->getName()->set('Name'.$ref, 'fr');
+        $o->getSymbol()->set('Symbol'.$ref, 'fr');
         $o->save();
         \Core\ContainerSingleton::getEntityManager()->flush();
 
@@ -55,100 +54,6 @@ class Unit_Test_DiscreteUnitTest
         $o->delete();
         \Core\ContainerSingleton::getEntityManager()->flush();
     }
-}
-
-/**
- * DiscreteUnit
- * @package Unit
- */
-class Unit_Test_DiscreteUnitSetUp extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
-    public static function setUpBeforeClass()
-    {
-        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
-        if (Unit::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (Unit::loadList() as $unit) {
-                $unit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-    }
-
-    /**
-     *  Méthode apellée avant chaque test
-     */
-    protected function setUp()
-    {
-
-    }
-
-    /**
-     * Test du constructeur
-     */
-    function testConstruct()
-    {
-        $o = new DiscreteUnit();
-        $this->assertInstanceOf('Unit\Domain\Unit\DiscreteUnit', $o);
-        $o->setRef('RefDiscreteUnit');
-        $o->setName('NameDiscreteUnit');
-        $o->setSymbol('SymbolDiscreteUnit');
-        $this->assertEquals(array(), $o->getKey());
-        $o->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertNotEquals(array(), $o->getKey());
-
-        return $o;
-    }
-
-    /**
-     * @depends testConstruct
-     * @param \Unit\Domain\Unit\DiscreteUnit $o
-     */
-    function testLoad(DiscreteUnit $o)
-    {
-        \Core\ContainerSingleton::getEntityManager()->clear($o);
-        // On tente de charger l'unité enregistrée dans la base lors du test de la méthode save().
-        $oLoaded = DiscreteUnit::load($o->getKey());
-        $this->assertInstanceOf('Unit\Domain\Unit\DiscreteUnit', $oLoaded);
-        $this->assertEquals($oLoaded->getKey(), $o->getKey());
-        $this->assertEquals($oLoaded->getRef(), $o->getRef());
-        $this->assertEquals($oLoaded->getName(), $o->getName());
-        $this->assertEquals($oLoaded->getSymbol(), $o->getSymbol());
-
-        return $oLoaded;
-    }
-
-
-    /**
-     * @depends testLoad
-     * @param \Unit\Domain\Unit\DiscreteUnit $o
-     */
-    function testDelete(DiscreteUnit $o)
-    {
-        $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertEquals(array(), $o->getKey());
-    }
-
-    /**
-     * Métode appelée à la fin de la classe de test
-     */
-    public static function tearDownAfterClass()
-    {
-        // Vérification qu'il ne reste aucun Unit en base, sinon suppression !
-        if (Unit::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit::loadList() as $unit) {
-                $unit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-    }
-
 }
 
 

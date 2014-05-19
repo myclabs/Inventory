@@ -3,6 +3,7 @@
 namespace Inventory\Command\PopulateDB\Base;
 
 use Calc_Value;
+use Core\Translation\TranslatedString;
 use Parameter\Domain\ParameterLibrary;
 use Symfony\Component\Console\Output\OutputInterface;
 use Parameter\Domain\Family\Family;
@@ -46,7 +47,7 @@ abstract class AbstractPopulateParameter
      */
     protected function createCategory(ParameterLibrary $library, $label, Category $parent = null)
     {
-        $category = new Category($library, $label);
+        $category = new Category($library, new TranslatedString($label, 'fr'));
         if ($parent !== null) {
             $category->setParentCategory($parent);
         }
@@ -72,11 +73,11 @@ abstract class AbstractPopulateParameter
         $refUnit,
         $documentation = ''
     ) {
-        $family = new Family($library, $ref, $label);
+        $family = new Family($library, $ref, new TranslatedString($label, 'fr'));
 
         $family->setCategory($category);
         $family->setUnit(new UnitAPI($refUnit));
-        $family->setDocumentation($documentation);
+        $family->getDocumentation()->set($documentation, 'fr');
         $family->save();
         $library->addFamily($family);
         return $family;
@@ -113,9 +114,9 @@ abstract class AbstractPopulateParameter
      */
     protected function createDimension(Family $family, $ref, $label, $orientation, array $members)
     {
-        $dimension = new Dimension($family, $ref, $label, $orientation);
+        $dimension = new Dimension($family, $ref, new TranslatedString($label, 'fr'), $orientation);
         foreach ($members as $memberRef => $memberLabel) {
-            $member = new Member($dimension, $memberRef, $memberLabel);
+            $member = new Member($dimension, $memberRef, new TranslatedString($memberLabel, 'fr'));
             $member->save();
             $dimension->addMember($member);
         }

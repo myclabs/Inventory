@@ -29,7 +29,7 @@ foreach ($this->componentList as $component) {
     if ($component instanceof Field
         && !$component instanceof TextField
     ) {
-        $list[$component->getId()] = $component->getLabel();
+        $list[$component->getId()] = $this->translate($component->getLabel());
     }
 }
 $fieldColumn->list = $list;

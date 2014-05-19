@@ -13,16 +13,15 @@ Parameter\Domain\Family\Dimension:
     ref:
       type: string
       nullable: false
-    label:
-      type: string
-      nullable: false
-      gedmo:
-        - translatable
     position:
       type: integer
       nullable: false
     orientation:
       type: integer
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     family:

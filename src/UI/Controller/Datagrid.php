@@ -7,6 +7,7 @@
  * @package    UI
  * @subpackage Controller
  */
+use Core\Translation\TranslatedString;
 
 /**
  * Description of Controller_Datagrid.
@@ -303,6 +304,19 @@ abstract class UI_Controller_Datagrid extends Core_Controller
     }
 
     /**
+     * Formate les données à renvoyer pour un texte traduit.
+     *
+     * @param TranslatedString $text Valeur d'une colonne date.
+     * @param bool             $editable
+     *
+     * @return array
+     */
+    public function cellTranslatedText(TranslatedString $text, $editable = true)
+    {
+        return $this->baseCell($this->translator->get($text), null, $editable);
+    }
+
+    /**
      * Formate les données à renvoyer pour une cellule date.
      *
      * @param DateTime $date Valeur d'une colonne date.
@@ -539,7 +553,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      *
      * @param string $elementName
      *
-     * @return mixed
+     * @return string
      */
     public function getAddElementValue($elementName)
     {

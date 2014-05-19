@@ -5,6 +5,7 @@ namespace Inventory\Command\PopulateDB\TestDataSet;
 use AF\Domain\Action\Action;
 use AF\Domain\AFLibrary;
 use Calc_Value;
+use Core\Translation\TranslatedString;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateAF;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,7 +29,7 @@ class PopulateAF extends AbstractPopulateAF
     {
         $output->writeln('  <info>Populating AF</info>');
 
-        $library = new AFLibrary($this->publicAccount, 'Formulaires My C-Sense', true);
+        $library = new AFLibrary($this->publicAccount, new TranslatedString('Formulaires My C-Sense', 'fr'), true);
         $library->save();
 
         // Création des catégories.

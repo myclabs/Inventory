@@ -10,7 +10,7 @@ $family = $this->family;
     if ($category) {
         $categories = '';
         while ($category) {
-            $categories = $category->getLabel() . ' / ' . $categories;
+            $categories = $this->translate($category->getLabel()) . ' / ' . $categories;
             $category = $category->getParentCategory();
         }
         echo substr($categories, 0, -3);
@@ -22,7 +22,7 @@ $family = $this->family;
 
 <p>
     <strong><?=__('Unit', 'name', 'unit') . __('UI', 'other', ':')?></strong>
-    <?=$family->getValueUnit()->getSymbol()?>
+    <?=$this->translate($family->getValueUnit()->getSymbol())?>
 </p>
 
 <p>
@@ -30,7 +30,7 @@ $family = $this->family;
 </p>
 
 <?php
-$documentation = $family->getDocumentation();
+$documentation = $this->translate($family->getDocumentation());
 if ($documentation) {
     $displayedDocumentation = Core_Tools::textile($documentation);
 } else {

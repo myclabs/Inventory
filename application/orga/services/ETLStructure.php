@@ -4,8 +4,9 @@ use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
 use Classification\Domain\Axis;
 use Classification\Domain\Member;
+use Core\Translation\TranslatedString;
 use Doctrine\ORM\EntityManager;
-use Gedmo\Translatable\Entity\Repository\TranslationRepository;
+use Mnapoli\Translated\Translator;
 
 /**
  * Classe permettant de construire les DW.
@@ -43,6 +44,11 @@ class Orga_Service_ETLStructure
      */
     private $locales;
 
+    /**
+     * @var Translator
+     */
+    private $translator;
+
 
     /**
      * @param EntityManager        $entityManager
@@ -50,19 +56,22 @@ class Orga_Service_ETLStructure
      * @param Core_EventDispatcher $eventDispatcher
      * @param string               $defaultLocale
      * @param string[]             $locales
+     * @param Translator           $translator
      */
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ETLData $etlDataService,
         Core_EventDispatcher $eventDispatcher,
         $defaultLocale,
-        array $locales
+        array $locales,
+        Translator $translator
     ) {
         $this->entityManager = $entityManager;
         $this->etlDataService = $etlDataService;
         $this->eventDispatcher = $eventDispatcher;
         $this->defaultLocale = $defaultLocale;
         $this->locales = $locales;
+        $this->translator = $translator;
     }
 
     /**
@@ -73,27 +82,7 @@ class Orga_Service_ETLStructure
      */
     protected function translateEntity($originalEntity, $dWEntity)
     {
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
-
-        $originalTranslations = $translationRepository->findTranslations($originalEntity);
-
-        if (isset($originalTranslations[$this->defaultLocale])) {
-            $dWEntity->setLabel($originalTranslations[$this->defaultLocale]);
-        } else {
-            $dWEntity->setLabel($originalEntity->getLabel());
-        }
-        // Traductions.
-        foreach ($this->locales as $localeId) {
-            if (isset($originalTranslations[$localeId]['label'])) {
-                $translationRepository->translate(
-                    $dWEntity,
-                    'label',
-                    $localeId,
-                    $originalTranslations[$localeId]['label']
-                );
-            }
-        }
+        $dWEntity->setLabel(clone $originalEntity->getLabel());
     }
 
     /**
@@ -106,31 +95,7 @@ class Orga_Service_ETLStructure
      */
     protected function areTranslationsDifferent($originalEntity, $dWEntity)
     {
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
-
-        $originalTranslations = $translationRepository->findTranslations($originalEntity);
-        $dWTranslations = $translationRepository->findTranslations($dWEntity);
-
-        // Traductions
-        foreach ($this->locales as $localeId) {
-            if (isset($originalTranslations[$localeId])) {
-                $originalLabel = $originalTranslations[$localeId]['label'];
-            } else {
-                $originalLabel = '';
-            }
-            if (isset($dWTranslations[$localeId])) {
-                $dWLabel = $dWTranslations[$localeId]['label'];
-            } else {
-                $dWLabel = '';
-            }
-
-            if ($originalLabel != $dWLabel) {
-                return true;
-            }
-        }
-
-        return false;
+        return $originalEntity->getLabel() != $dWEntity->getLabel();
     }
 
 
@@ -171,32 +136,13 @@ class Orga_Service_ETLStructure
      */
     protected function updateCellDWCubeLabel(Orga_Model_Cell $cell)
     {
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
+        $cube = $cell->getDWCube();
 
-        $labels = [];
-        if (!$cell->hasMembers()) {
-            foreach ($this->locales as $localeId) {
-                $labels[$localeId] = __('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
-            }
-        } else {
-            foreach ($this->locales as $localeId) {
-                $labelParts = [];
-                foreach ($cell->getMembers() as $member) {
-                    $originalTranslations = $translationRepository->findTranslations($member);
-                    if (isset($originalTranslations[$localeId])) {
-                        $labelParts[] = $originalTranslations[$localeId]['label'];
-                    } elseif (isset($originalTranslations[$this->defaultLocale])) {
-                        $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
-                    } else {
-                        $labelParts[] = $member->getLabel();
-                    }
-                }
-                $labels[$localeId] = implode(Orga_Model_Cell::LABEL_SEPARATOR, $labelParts);
-            }
-        }
+        $labels = array_map(function (Orga_Model_Member $member) {
+            return $member->getLabel();
+        }, $cell->getMembers());
 
-        $this->updateDWCubeLabel($cell->getDWCube(), $labels);
+        $cube->setLabel(TranslatedString::implode(Orga_Model_Cell::LABEL_SEPARATOR, $labels));
     }
 
     /**
@@ -206,51 +152,13 @@ class Orga_Service_ETLStructure
      */
     protected function updateGranularityDWCubeLabel(Orga_Model_Granularity $granularity)
     {
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
+        $cube = $granularity->getDWCube();
 
-        $labels = [];
-        if (!$granularity->hasAxes()) {
-            foreach ($this->locales as $localeId) {
-                $labels[$localeId] = __('Orga', 'navigation', 'labelGlobalCell', [], $localeId);
-            }
-        } else {
-            $axes = $granularity->getAxes();
-            // Suppression des erreurs avec '@' dans le cas ou des proxies sont utilisées.
-            @uasort($axes, [Orga_Model_Axis::class, 'orderAxes']);
-            foreach ($this->locales as $localeId) {
-                $labelParts = [];
-                foreach ($axes as $axis) {
-                    $originalTranslations = $translationRepository->findTranslations($axis);
-                    if (isset($originalTranslations[$localeId])) {
-                        $labelParts[] = $originalTranslations[$localeId]['label'];
-                    } elseif (isset($originalTranslations[$this->defaultLocale])) {
-                        $labelParts[] = $originalTranslations[$this->defaultLocale]['label'];
-                    } else {
-                        $labelParts[] = $axis->getLabel();
-                    }
-                }
-                $labels[$localeId] = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
-            }
-        }
+        $labels = array_map(function (Orga_Model_Axis $axis) {
+            return $axis->getLabel();
+        }, $granularity->getAxes());
 
-        $this->updateDWCubeLabel($granularity->getDWCube(), $labels);
-    }
-
-    /**
-     * Met à jour les labels d'un Cube de DW donné.
-     *
-     * @param DW_Model_Cube $dWCube
-     * @param array $labels
-     */
-    protected function updateDWCubeLabel(DW_Model_Cube $dWCube, $labels)
-    {
-        $dWCube->getLabel();
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(\Gedmo\Translatable\Entity\Translation::class);
-        foreach ($labels as $localeId => $label) {
-            $translationRepository->translate($dWCube, 'label', $localeId, $label);
-        }
+        $cube->setLabel(TranslatedString::implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labels));
     }
 
     /**
@@ -274,9 +182,6 @@ class Orga_Service_ETLStructure
      */
     protected function populateDWCubeWithAF(DW_Model_Cube $dWCube)
     {
-        /** @var $translationRepository TranslationRepository */
-        $translationRepository = $this->entityManager->getRepository(Gedmo\Translatable\Entity\Translation::class);
-
         $inputStatusDWAxis = new DW_Model_Axis($dWCube);
         $inputStatusDWAxis->setRef('inputStatus');
 
@@ -305,9 +210,9 @@ class Orga_Service_ETLStructure
                     break;
             }
 
-            $translationRepository->translate($inputStatusDWAxis, 'label', $localeId, $inputStatusLabel);
-            $translationRepository->translate($finishedDWMember, 'label', $localeId, $finishedLabel);
-            $translationRepository->translate($completedDWMember, 'label', $localeId, $completedLabel);
+            $inputStatusDWAxis->getLabel()->set($inputStatusLabel, $localeId);
+            $finishedDWMember->getLabel()->set($finishedLabel, $localeId);
+            $completedDWMember->getLabel()->set($completedLabel, $localeId);
         }
     }
 
@@ -320,7 +225,7 @@ class Orga_Service_ETLStructure
     protected function populateDWCubeWithClassification(DW_Model_Cube $dWCube, Orga_Model_Organization $orgaOrganization)
     {
         $classificationIndicators = array_map(
-            function ($contextIndicator) { return $contextIndicator->getIndicator(); },
+            function (ContextIndicator $contextIndicator) { return $contextIndicator->getIndicator(); },
             $orgaOrganization->getContextIndicators()->toArray()
         );
         $classificationIndicators = array_unique($classificationIndicators);

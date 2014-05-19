@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\EntityManager;
+use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\Role;
@@ -36,15 +37,20 @@ class Orga_Service_ACLManager
     private $entityManager;
 
     /**
-     * @param UserService   $userService
-     * @param ACL           $acl
-     * @param EntityManager $entityManager
+     * @var Translator
      */
-    public function __construct(UserService $userService, ACL $acl, EntityManager $entityManager)
-    {
+    private $translator;
+
+    public function __construct(
+        UserService $userService,
+        ACL $acl,
+        EntityManager $entityManager,
+        Translator $translator
+    ) {
         $this->userService = $userService;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -67,7 +73,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userOrganizationAdministratorRoleAdded', [
-                    'ORGANIZATION' => $organization->getLabel()
+                    'ORGANIZATION' => $this->translator->get($organization->getLabel())
                 ])
             );
         }
@@ -91,7 +97,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userOrganizationAdministratorRoleRemoved', [
-                    'ORGANIZATION' => $organization->getLabel()
+                    'ORGANIZATION' => $this->translator->get($organization->getLabel())
                 ])
             );
         }
@@ -123,7 +129,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userRoleAdded', [
-                    'CELL' => $cell->getExtendedLabel(),
+                    'CELL' => $this->translator->get($cell->getExtendedLabel()),
                     'ROLE' => $role->getLabel(),
                 ])
             );
@@ -144,7 +150,7 @@ class Orga_Service_ACLManager
                 $user,
                 __('User', 'email', 'subjectAccessRightsChange'),
                 __('Orga', 'email', 'userRoleRemoved', [
-                    'CELL' => $role->getCell()->getExtendedLabel(),
+                    'CELL' => $this->translator->get($role->getCell()->getExtendedLabel()),
                     'ROLE' => $role->getLabel()
                 ])
             );

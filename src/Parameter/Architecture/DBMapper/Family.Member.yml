@@ -13,14 +13,13 @@ Parameter\Domain\Family\Member:
     ref:
       type: string
       nullable: false
-    label:
-      type: string
-      nullable: false
-      gedmo:
-        - translatable
     position:
       type: integer
       nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     dimension:

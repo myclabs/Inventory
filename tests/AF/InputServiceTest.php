@@ -13,6 +13,7 @@ use AF\Domain\Input\NumericFieldInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputService;
 use Core\Test\TestCase;
+use Core\Translation\TranslatedString;
 use Unit\UnitAPI;
 
 /**
@@ -98,10 +99,10 @@ class InputServiceTest extends TestCase
         $account = new Account('foo');
         $this->accountRepository->add($account);
 
-        $library = new AFLibrary($account, 'foo');
+        $library = new AFLibrary($account, new TranslatedString());
         $library->save();
 
-        $this->af = new AF($library, 'test');
+        $this->af = new AF($library, new TranslatedString());
 
         $this->comp1 = new NumericField();
         $this->comp1->setAf($this->af);

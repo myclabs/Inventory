@@ -8,8 +8,8 @@
 
 namespace Unit\Domain\Unit;
 
+use Core\Translation\TranslatedString;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 
 /**
  * Unité
@@ -17,9 +17,6 @@ use Core_Model_Entity_Translatable;
  */
 abstract class Unit extends Core_Model_Entity
 {
-
-    use Core_Model_Entity_Translatable;
-
     // Constantes de tri et filtres.
     const QUERY_ID = 'id';
     const QUERY_NAME = 'name';
@@ -41,16 +38,22 @@ abstract class Unit extends Core_Model_Entity
 
     /**
      * Nom d'une unité
-     * @var string
+     * @var TranslatedString
      */
     protected $name;
 
     /**
      * Symbole d'une unité
-     * @var string
+     * @var TranslatedString
      */
     protected $symbol;
 
+
+    public function __construct()
+    {
+        $this->name = new TranslatedString();
+        $this->symbol = new TranslatedString();
+    }
 
     /**
      * Retourne l'objet Unit à partir de son référent textuel.
@@ -82,16 +85,16 @@ abstract class Unit extends Core_Model_Entity
 
     /**
      * Définit le nom de l'unité.
-     * @param string $name
+     * @param TranslatedString $name
      */
-    public function setName($name)
+    public function setName(TranslatedString $name)
     {
         $this->name = $name;
     }
 
     /**
      * Renvoie le nom de l'unité.
-     * @return string
+     * @return TranslatedString
      */
     public function getName()
     {
@@ -100,16 +103,16 @@ abstract class Unit extends Core_Model_Entity
 
     /**
      * Définit le symbole de l'unité.
-     * @param string $symbol
+     * @param TranslatedString $symbol
      */
-    public function setSymbol($symbol)
+    public function setSymbol(TranslatedString $symbol)
     {
         $this->symbol = $symbol;
     }
 
     /**
      * Renvoie le symbole de l'unité.
-     * @return string
+     * @return TranslatedString
      */
     public function getSymbol()
     {

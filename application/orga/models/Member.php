@@ -7,6 +7,7 @@
  * @subpackage Model
  */
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Selectable;
@@ -19,7 +20,6 @@ use Doctrine\Common\Collections\Selectable;
 class Orga_Model_Member extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_TAG = 'tag';
@@ -55,9 +55,9 @@ class Orga_Model_Member extends Core_Model_Entity
     /**
      * Label du Member.
      *
-     * @var string
+     * @var TranslatedString
      */
-    protected $label = null;
+    protected $label;
 
     /**
      * Axis auqel appartient le Member.
@@ -107,6 +107,7 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public function __construct(Orga_Model_Axis $axis, $ref, array $directParentMembers = [])
     {
+        $this->label = new TranslatedString();
         $this->directParents = new ArrayCollection();
         $this->directChildren = new ArrayCollection();
         $this->cells = new ArrayCollection();
@@ -219,7 +220,7 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public static function orderMembers(Orga_Model_Member $a, Orga_Model_Member $b)
     {
-        if ($a->getAxis() === $b->getAxis())  {
+        if ($a->getAxis() === $b->getAxis()) {
             return strcmp($a->getRef(), $b->getRef());
         }
         return Orga_Model_Axis::firstOrderAxes($a->getAxis(), $b->getAxis());
@@ -334,19 +335,9 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * Définit le label du Member.
-     *
-     * @param string $label
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
-
-    /**
      * Renvois le label du Member.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -356,17 +347,22 @@ class Orga_Model_Member extends Core_Model_Entity
     /**
      * Renvoie le label étendu (avec le label étendu des parents).
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getExtendedLabel()
     {
         $broaderLabelParts = [];
-
         foreach ($this->getContextualizingParents() as $contextualizingParentMember) {
             $broaderLabelParts[] = $contextualizingParentMember->getExtendedLabel();
         }
 
-        return $this->getLabel() . ((count($broaderLabelParts) > 0) ? ' (' . implode(', ', $broaderLabelParts) . ')' : '');
+        if ((count($broaderLabelParts) > 0)) {
+            $postfix = TranslatedString::join([' (', TranslatedString::implode(', ', $broaderLabelParts), ')']);
+        } else {
+            $postfix = '';
+        }
+
+        return $this->getLabel()->concat($postfix);
     }
 
     /**

@@ -3,10 +3,6 @@ Classification\Domain\Indicator:
   repositoryClass: \Core_Model_Repository_Ordered
   table: Classification_Indicator
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       column: id
@@ -18,11 +14,6 @@ Classification\Domain\Indicator:
     ref:
       type: string
       nullable: false
-    label:
-      type: string
-      nullable: false
-      gedmo:
-        - translatable
     position:
       type: integer
       nullable: false
@@ -32,6 +23,10 @@ Classification\Domain\Indicator:
     ratioUnit:
       type: unit_api
       nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     library:

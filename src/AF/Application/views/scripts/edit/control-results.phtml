@@ -2,12 +2,7 @@
 use AF\Domain\AF;
 use AF\Domain\AFConfigurationError;
 
-/**
- * @author  matthieu.napoli
- * @package AF
- */
-
-/** @var $af \AF\Domain\AF */
+/** @var $af AF */
 $af = $this->af;
 /** @var $errors AFConfigurationError[] */
 $errors = $this->errors;
@@ -43,7 +38,7 @@ if (count($errors) == 0) {
                     if ($error->getAf() === $af) {
                         echo "Formulaire maître";
                     } else {
-                        echo $error->getAf()->getLabel();
+                        echo $this->translate($error->getAf()->getLabel());
                     }
                 }
                 ?>

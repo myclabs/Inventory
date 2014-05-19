@@ -7,6 +7,7 @@
  * @subpackage Model
  */
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Selectable;
@@ -19,7 +20,6 @@ use Doctrine\Common\Collections\Selectable;
 class Orga_Model_Axis extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_NARROWER_TAG = 'narrowerTag';
@@ -48,9 +48,9 @@ class Orga_Model_Axis extends Core_Model_Entity
     /**
      * Label de l'axe.
      *
-     * @var string
+     * @var TranslatedString
      */
-    protected $label = null;
+    protected $label;
 
     /**
      * Organization contenant l'axe.
@@ -128,6 +128,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function __construct(Orga_Model_Organization $organization, $ref, Orga_Model_Axis $directNarrowerAxis = null)
     {
+        $this->label = new TranslatedString();
         $this->directBroaders = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->granularities = new ArrayCollection();
@@ -265,19 +266,9 @@ class Orga_Model_Axis extends Core_Model_Entity
     }
 
     /**
-     * Définit le label de l'axe.
-     *
-     * @param String $label
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
-
-    /**
      * Renvoie le label de l'axe.
      *
-     * @return String
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -743,7 +734,7 @@ class Orga_Model_Axis extends Core_Model_Entity
         if ($this->isMemberPositioning()) {
             $criteria->orderBy(['parentMembersHashKey' => 'ASC', 'position' => 'ASC']);
         } else {
-            $criteria->orderBy(['label' => 'ASC']);
+            $criteria->orderBy(['ref' => 'ASC']);
         }
         return $this->members->matching($criteria);
     }

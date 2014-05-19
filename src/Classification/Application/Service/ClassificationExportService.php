@@ -6,8 +6,7 @@ use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Member;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Axis;
-use Classification\Domain\Context;
-use Classification\Domain\Indicator;
+use Mnapoli\Translated\Translator;
 use PHPExcel_Writer_Excel2007;
 use PHPExcel_Writer_Excel5;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
@@ -22,7 +21,18 @@ use Xport\MappingReader\YamlMappingReader;
 class ClassificationExportService
 {
     /**
-     * @param string $format
+     * @var Translator
+     */
+    private $translator;
+
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
+     * @param ClassificationLibrary $classificationLibrary
+     * @param string                $format
      */
     public function stream(ClassificationLibrary $classificationLibrary, $format)
     {
@@ -54,7 +64,8 @@ class ClassificationExportService
             function (ContextIndicator $contextIndicator) {
                 $axesLabelRef = [];
                 foreach ($contextIndicator->getAxes() as $axis) {
-                    $axesLabelRef[] = $axis->getLabel() . ' (' . $axis->getRef() . ')';
+                    $axesLabelRef[] = $this->translator->get($axis->getLabel())
+                        . ' (' . $axis->getRef() . ')';
                 }
                 return implode(' - ', $axesLabelRef);
             }
@@ -71,7 +82,8 @@ class ClassificationExportService
             'displayAxisDirectNarrower',
             function (Axis $axis) {
                 if ($axis->getDirectNarrower() !== null) {
-                    return $axis->getDirectNarrower()->getLabel() . ' (' . $axis->getDirectNarrower()->getRef() . ')';
+                    return $this->translator->get($axis->getDirectNarrower()->getLabel())
+                        . ' (' . $axis->getDirectNarrower()->getRef() . ')';
                 }
                 return '';
             }
@@ -87,7 +99,7 @@ class ClassificationExportService
             function (Member $member, Axis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
-                        return $directParent->getLabel();
+                        return $this->translator->get($directParent->getLabel());
                     }
                 }
                 return '';

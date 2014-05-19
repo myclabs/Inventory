@@ -1,22 +1,11 @@
 <?php
 
 use Core\Annotation\Secure;
-use Gedmo\Translatable\TranslatableListener;
 use Parameter\Domain\Category;
 use Parameter\Domain\ParameterLibrary;
 
-/**
- * Classe du controller du datagrid des traductions des categories.
- * @author valentin.claras
- */
 class Parameter_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var TranslatableListener
-     */
-    private $translatableListener;
-
     /**
      * @Inject("translation.languages")
      * @var string[]
@@ -24,14 +13,10 @@ class Parameter_Datagrid_Translate_CategoriesController extends UI_Controller_Da
     private $languages;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
      * @Secure("editParameterLibrary")
      */
     public function getelementsAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
-
         $library = ParameterLibrary::load($this->getParam('library'));
         $this->request->filter->addCondition('library', $library);
 
@@ -42,9 +27,7 @@ class Parameter_Datagrid_Translate_CategoriesController extends UI_Controller_Da
             $data['identifier'] = $category->getId();
 
             foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $category->reloadWithLocale($locale);
-                $data[$language] = $category->getLabel();
+                $data[$language] = $category->getLabel()->get($language);
             }
             $this->addline($data);
         }
@@ -54,17 +37,13 @@ class Parameter_Datagrid_Translate_CategoriesController extends UI_Controller_Da
     }
 
     /**
-     * Fonction modifiant la valeur d'un élément.
-     *
      * @Secure("editParameterLibrary")
      */
     public function updateelementAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $category = Category::load($this->update['index']);
-        $category->reloadWithLocale(Core_Locale::load($this->update['column']));
-        $category->setLabel($this->update['value']);
-        $this->data = $category->getLabel();
+        $category->getLabel()->set($this->update['value'], $this->update['column']);
+        $this->data = $category->getLabel()->get($this->update['column']);
 
         $this->send(true);
     }

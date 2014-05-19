@@ -19,7 +19,6 @@ class Unit_Test_StandardUnitTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Unit_Test_StandardUnitSetUp');
         $suite->addTestSuite('Unit_Test_StandardUnitOthers');
         return $suite;
     }
@@ -36,8 +35,8 @@ class Unit_Test_StandardUnitTest
     {
         $o = new StandardUnit();
         $o->setRef('Ref'.$ref);
-        $o->setName('Name'.$ref);
-        $o->setSymbol('Symbol'.$ref);
+        $o->getName()->set('Name'.$ref, 'fr');
+        $o->getSymbol()->set('Symbol'.$ref, 'fr');
         $o->setMultiplier($multiplier);
         if ($physicalQuantity == null) {
             $physicalQuantity = Unit_Test_PhysicalQuantityTest::generateObject($ref);
@@ -70,128 +69,6 @@ class Unit_Test_StandardUnitTest
         }
     }
 
-}
-
-/**
- * Test de la construction/sauvegarde de l'objet métier
- * @package Unit
- */
-class Unit_Test_StandardUnitSetUp extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
-    public static function setUpBeforeClass()
-    {
-        $em = \Core\ContainerSingleton::getEntityManager();
-        if (Unit::countTotal() > 0) {
-            foreach (Unit::loadList() as $o) {
-                $o->delete();
-            }
-            $em->flush();
-        }
-        if (PhysicalQuantity::countTotal() > 0) {
-            foreach (PhysicalQuantity::loadList() as $o) {
-                $o->delete();
-            }
-            $em->flush();
-        }
-        if (UnitSystem::countTotal() > 0) {
-            foreach (UnitSystem::loadList() as $o) {
-                $o->delete();
-            }
-            $em->flush();
-        }
-    }
-
-    /**
-     * Test le constructeur
-     * @return \Unit\Domain\Unit\StandardUnit
-     */
-    function testConstruct()
-    {
-        $unitSystem = Unit_Test_UnitSystemTest::generateObject();
-        $physicalQuantity = Unit_Test_PhysicalQuantityTest::generateObject();
-
-        $o = new StandardUnit();
-        $o->setRef('RefStandardUnit');
-        $o->setName('NameStandardUnit');
-        $o->setSymbol('StandardUnit');
-        $o->setMultiplier(1);
-        $o->setUnitSystem($unitSystem);
-        $o->setPhysicalQuantity($physicalQuantity);
-
-        $this->assertEquals(array(), $o->getKey());
-        $o->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertNotEquals(array(), $o->getKey());
-
-        return $o;
-    }
-
-    /**
-     * @depends testConstruct
-     * @param StandardUnit $o
-     */
-    function testLoad(StandardUnit $o)
-    {
-        \Core\ContainerSingleton::getEntityManager()->clear($o);
-        // On tente de charger l'unité enregistrée dans la base lors du test de la méthode save().
-        $oLoaded = StandardUnit::load($o->getKey());
-        $this->assertInstanceOf('Unit\Domain\Unit\StandardUnit', $oLoaded);
-        $this->assertEquals($oLoaded->getKey(), $o->getKey());
-        $this->assertEquals($oLoaded->getRef(), $o->getRef());
-        $this->assertEquals($oLoaded->getName(), $o->getName());
-        $this->assertEquals($oLoaded->getSymbol(), $o->getSymbol());
-        $this->assertEquals($oLoaded->getMultiplier(), $o->getMultiplier());
-        $this->assertEquals($oLoaded->getUnitSystem()->getKey(), $o->getUnitSystem()->getKey());
-        $this->assertEquals($oLoaded->getPhysicalQuantity()->getKey(), $o->getPhysicalQuantity()->getKey());
-
-        return $oLoaded;
-    }
-
-    /**
-     * @depends testLoad
-     * @param StandardUnit $o
-     */
-    function testDelete(StandardUnit $o)
-    {
-        $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertEquals(array(), $o->getKey());
-
-        Unit_Test_UnitSystemTest::deleteObject($o->getUnitSystem());
-        Unit_Test_PhysicalQuantityTest::deleteObject($o->getPhysicalQuantity());
-    }
-
-    /**
-     * Function called once, after all the tests
-     */
-    public static function tearDownAfterClass()
-    {
-        $em = \Core\ContainerSingleton::getEntityManager();
-        if (Unit::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit restants ont été trouvé après les tests, suppression en cours !';
-            foreach (Unit::loadList() as $unit) {
-                $unit->delete();
-            }
-            $em->flush();
-        }
-        if (PhysicalQuantity::countTotal() > 0) {
-            echo PHP_EOL . 'Des PhysicalQuantity restants ont été trouvé après les tests, suppression en cours !';
-            foreach (PhysicalQuantity::loadList() as $physicalQuantity) {
-                $physicalQuantity->delete();
-            }
-            $em->flush();
-        }
-        if (UnitSystem::countTotal() > 0) {
-            echo PHP_EOL . 'Des UnitSystem restants ont été trouvé après les tests, suppression en cours !';
-            foreach (UnitSystem::loadList() as $systemunit) {
-                $systemunit->delete();
-            }
-            $em->flush();
-        }
-    }
 }
 
 /**
@@ -304,38 +181,32 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
         //On créer un système d'unité (obligatoire pour une unité standard).
         $this->unitSystem1 = new UnitSystem();
         $this->unitSystem1->setRef('international');
-        $this->unitSystem1->setName('International');
         $this->unitSystem1->save();
 
         $this->unitSystem2 = new UnitSystem();
         $this->unitSystem2->setRef('francais');
-        $this->unitSystem2->setName('Francais');
         $this->unitSystem2->save();
 
         //On créer les grandeurs physiques de base.
         $this->_lengthPhysicalQuantity = new PhysicalQuantity();
-        $this->_lengthPhysicalQuantity->setName('longueur');
         $this->_lengthPhysicalQuantity->setRef('l');
         $this->_lengthPhysicalQuantity->setSymbol('L');
         $this->_lengthPhysicalQuantity->setIsBase(true);
         $this->_lengthPhysicalQuantity->save();
 
         $this->_massPhysicalQuantity = new PhysicalQuantity();
-        $this->_massPhysicalQuantity->setName('masse');
         $this->_massPhysicalQuantity->setRef('m');
         $this->_massPhysicalQuantity->setSymbol('M');
         $this->_massPhysicalQuantity->setIsBase(true);
         $this->_massPhysicalQuantity->save();
 
         $this->_timePhysicalQuantity = new PhysicalQuantity();
-        $this->_timePhysicalQuantity->setName('temps');
         $this->_timePhysicalQuantity->setRef('t');
         $this->_timePhysicalQuantity->setSymbol('T');
         $this->_timePhysicalQuantity->setIsBase(true);
         $this->_timePhysicalQuantity->save();
 
         $this->_cashPhysicalQuantity = new PhysicalQuantity();
-        $this->_cashPhysicalQuantity->setName('numéraire');
         $this->_cashPhysicalQuantity->setRef('numeraire');
         $this->_cashPhysicalQuantity->setSymbol('$');
         $this->_cashPhysicalQuantity->setIsBase(true);
@@ -343,14 +214,12 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
 
         //On créer une grandeur physique composée de grandeur physique de base.
         $this->physicalQuantity1 = new PhysicalQuantity();
-        $this->physicalQuantity1->setName('energie');
         $this->physicalQuantity1->setRef('ml2/t2');
         $this->physicalQuantity1->setSymbol('M.L2/T2');
         $this->physicalQuantity1->setIsBase(false);
         $this->physicalQuantity1->save();
 
         $this->physicalQuantity2 = new PhysicalQuantity();
-        $this->physicalQuantity2->setName('masse2');
         $this->physicalQuantity2->setRef('m2');
         $this->physicalQuantity2->setSymbol('M2');
         $this->physicalQuantity2->setIsBase(false);
@@ -376,8 +245,7 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
         // On crée les unités standards.
         $this->_lengthStandardUnit = new StandardUnit();
         $this->_lengthStandardUnit->setMultiplier(1);
-        $this->_lengthStandardUnit->setName('Metre');
-        $this->_lengthStandardUnit->setSymbol('m');
+        $this->_lengthStandardUnit->getSymbol()->set('m', 'fr');
         $this->_lengthStandardUnit->setRef('m');
         $this->_lengthStandardUnit->setPhysicalQuantity($this->_lengthPhysicalQuantity);
         $this->_lengthStandardUnit->setUnitSystem($this->unitSystem1);
@@ -387,8 +255,7 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
 
         $this->_massStandardUnit = new StandardUnit();
         $this->_massStandardUnit->setMultiplier(1);
-        $this->_massStandardUnit->setName('Kilogramme');
-        $this->_massStandardUnit->setSymbol('kg');
+        $this->_massStandardUnit->getSymbol()->set('kg', 'fr');
         $this->_massStandardUnit->setRef('kg');
         $this->_massStandardUnit->setPhysicalQuantity($this->_massPhysicalQuantity);
         $this->_massStandardUnit->setUnitSystem($this->unitSystem1);
@@ -398,8 +265,7 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
 
         $this->_massStandardUnit2 = new StandardUnit();
         $this->_massStandardUnit2->setMultiplier(1000);
-        $this->_massStandardUnit2->setName('Ton');
-        $this->_massStandardUnit2->setSymbol('t');
+        $this->_massStandardUnit2->getSymbol()->set('t', 'fr');
         $this->_massStandardUnit2->setRef('t');
         $this->_massStandardUnit2->setPhysicalQuantity($this->_massPhysicalQuantity);
         $this->_massStandardUnit2->setUnitSystem($this->unitSystem1);
@@ -409,8 +275,7 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
 
         $this->_timeStandardUnit = new StandardUnit();
         $this->_timeStandardUnit->setMultiplier(1);
-        $this->_timeStandardUnit->setName('Seconde');
-        $this->_timeStandardUnit->setSymbol('s');
+        $this->_timeStandardUnit->getSymbol()->set('s', 'fr');
         $this->_timeStandardUnit->setRef('s');
         $this->_timeStandardUnit->setPhysicalQuantity($this->_timePhysicalQuantity);
         $this->_timeStandardUnit->setUnitSystem($this->unitSystem1);
@@ -420,8 +285,7 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
 
         $this->_cashStandardUnit = new StandardUnit();
         $this->_cashStandardUnit->setMultiplier(1);
-        $this->_cashStandardUnit->setName('Euro');
-        $this->_cashStandardUnit->setSymbol('€');
+        $this->_cashStandardUnit->getSymbol()->set('€', 'fr');
         $this->_cashStandardUnit->setRef('e');
         $this->_cashStandardUnit->setPhysicalQuantity($this->_cashPhysicalQuantity);
         $this->_cashStandardUnit->setUnitSystem($this->unitSystem1);
@@ -431,8 +295,7 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
 
         $this->standardUnit1 = new StandardUnit();
         $this->standardUnit1->setMultiplier(1);
-        $this->standardUnit1->setName('Joule');
-        $this->standardUnit1->setSymbol('J');
+        $this->standardUnit1->getSymbol()->set('J', 'fr');
         $this->standardUnit1->setRef('j');
         $this->standardUnit1->setPhysicalQuantity($this->physicalQuantity1);
         $this->standardUnit1->setUnitSystem($this->unitSystem1);
@@ -440,8 +303,7 @@ class Unit_Test_StandardUnitOthers extends PHPUnit_Framework_TestCase
 
         $this->standardUnit2 = new StandardUnit();
         $this->standardUnit2->setMultiplier(0.001);
-        $this->standardUnit2->setName('Gramme');
-        $this->standardUnit2->setSymbol('g');
+        $this->standardUnit2->getSymbol()->set('g', 'fr');
         $this->standardUnit2->setRef('g');
         $this->standardUnit2->setPhysicalQuantity($this->physicalQuantity2);
         $this->standardUnit2->setUnitSystem($this->unitSystem1);

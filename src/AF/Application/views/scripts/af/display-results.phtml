@@ -32,9 +32,10 @@ if (count($indicators) == 0) {
 foreach ($indicators as $indicator) {
 
     $outputTotal = $outputSet->getTotalByIndicator($indicator);
-    $formattedUnit = $indicator->getUnit()->getSymbol();
+    $formattedUnit = $this->translate($indicator->getUnit()->getSymbol());
 
-    echo "<h2>{$indicator->getLabel()}</h2>";
+    $indicatorLabel = $this->translate($indicator->getLabel());
+    echo "<h2>$indicatorLabel</h2>";
 
     if (!empty($outputTotal)) {
         echo "<h3>" . __('UI', 'name', 'total') . __('UI', 'other', ':')
@@ -57,7 +58,7 @@ foreach ($indicators as $indicator) {
 
         $indexColumns = "";
         foreach ($axes as $axis) {
-            $indexColumns .= "<th>" . $axis->getLabel() . "</th>";
+            $indexColumns .= "<th>" . $this->translate($axis->getLabel()) . "</th>";
         }
 
         echo "<table class='table table-bordered table-hover'>
@@ -78,7 +79,7 @@ foreach ($indicators as $indicator) {
                 continue;
             }
             echo "<tr>";
-            echo "<td>" . $outputElement->getLabel() . "</td>";
+            echo "<td>" . $this->translate($outputElement->getLabel()) . "</td>";
             echo "<td>" . $locale->formatNumber($outputElement->getValue()->getDigitalValue(), 3) . "</td>";
             echo "<td>" . $locale->formatInteger($outputElement->getValue()->getRelativeUncertainty()) . "</td>";
 
@@ -87,7 +88,7 @@ foreach ($indicators as $indicator) {
                 $index = $outputElement->getIndexForAxis($axis);
                 $member = $index->getMember();
                 if ($member) {
-                    echo "<td>" . $member->getLabel() . "</td>";
+                    echo "<td>" . $this->translate($member->getLabel()) . "</td>";
                 }
             }
 

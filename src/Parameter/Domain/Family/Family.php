@@ -3,12 +3,11 @@
 namespace Parameter\Domain\Family;
 
 use Closure;
+use Core\Translation\TranslatedString;
 use Core_Exception_InvalidArgument;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
-use Core_Model_Query;
 use Core_Strategy_Ordered;
 use Core_Tools;
 use Doctrine\Common\Collections\Collection;
@@ -30,7 +29,6 @@ use Unit\UnitAPI;
 class Family extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     const QUERY_REF = 'ref';
 
@@ -51,8 +49,7 @@ class Family extends Core_Model_Entity
     protected $ref;
 
     /**
-     * Nom de la famille
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -86,16 +83,16 @@ class Family extends Core_Model_Entity
     protected $unit;
 
     /**
-     * Documentation
-     * @var string
+     * @var TranslatedString
      */
     protected $documentation;
 
-    public function __construct(ParameterLibrary $library, $ref, $label)
+    public function __construct(ParameterLibrary $library, $ref, TranslatedString $label)
     {
         $this->library = $library;
         $this->setRef($ref);
         $this->label = $label;
+        $this->documentation = new TranslatedString();
 
         $this->dimensions = new ArrayCollection();
         $this->cells = new ArrayCollection();
@@ -154,15 +151,7 @@ class Family extends Core_Model_Entity
     }
 
     /**
-     * @param string $label Nom de la famille
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
-
-    /**
-     * @return string Nom de la famille
+     * @return TranslatedString Nom de la famille
      */
     public function getLabel()
     {
@@ -414,15 +403,7 @@ class Family extends Core_Model_Entity
     }
 
     /**
-     * @param string $documentation
-     */
-    public function setDocumentation($documentation)
-    {
-        $this->documentation = $documentation;
-    }
-
-    /**
-     * @return string
+     * @return TranslatedString
      */
     public function getDocumentation()
     {

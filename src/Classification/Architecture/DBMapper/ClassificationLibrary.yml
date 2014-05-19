@@ -3,10 +3,6 @@ Classification\Domain\ClassificationLibrary:
   repositoryClass: \Core_Model_Repository
   table: Classification_Library
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       column: id
@@ -15,13 +11,12 @@ Classification\Domain\ClassificationLibrary:
         strategy: AUTO
 
   fields:
-    label:
-      type: string
-      nullable: false
-      gedmo:
-        - translatable
     public:
       type: boolean
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     account:

@@ -34,7 +34,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyInputController extends UI_Controll
                 $data['ref'] = $algo->getRef();
                 try {
                     $component = SelectSingle::loadByRef($algo->getInputRef(), $af);
-                    $data['input'] = $component->getLabel();
+                    $data['input'] = $this->cellTranslatedText($component->getLabel());
                 } catch (Core_Exception_NotFound $e) {
                     $data['input'] = null;
                 }

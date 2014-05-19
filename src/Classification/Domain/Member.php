@@ -2,9 +2,9 @@
 
 namespace Classification\Domain;
 
+use Core\Translation\TranslatedString;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Strategy_Ordered;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -17,7 +17,6 @@ use Doctrine\Common\Collections\Collection;
 class Member extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';
@@ -36,7 +35,7 @@ class Member extends Core_Model_Entity
     protected $ref;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -60,6 +59,7 @@ class Member extends Core_Model_Entity
     {
         $this->directChildren = new ArrayCollection();
         $this->directParents = new ArrayCollection();
+        $this->label = new TranslatedString();
     }
 
     /**
@@ -87,15 +87,7 @@ class Member extends Core_Model_Entity
     }
 
     /**
-     * @param string $label
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
-
-    /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {

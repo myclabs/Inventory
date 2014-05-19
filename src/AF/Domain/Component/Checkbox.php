@@ -25,8 +25,8 @@ class Checkbox extends Field
     public function getUIElement(AFGenerationHelper $generationHelper)
     {
         $uiElement = new UI_Form_Element_Checkbox($this->ref);
-        $uiElement->setLabel($this->label);
-        $uiElement->getElement()->help = $this->help;
+        $uiElement->setLabel($this->uglyTranslate($this->label));
+        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         if ($generationHelper->isReadOnly()) {
             $uiElement->getElement()->setReadOnly();
         }

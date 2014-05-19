@@ -93,9 +93,9 @@ class DoctrineEntryRepositoryTest extends TestCase
         $this->entityManager->flush();
         $organization = new Orga_Model_Organization($account);
         $axis = new Orga_Model_Axis($organization, 'axis');
-        $axis->setLabel('axis');
+        $axis->getLabel()->set('axis', 'fr');
         $member = new Orga_Model_Member($axis, 'member');
-        $member->setLabel('member');
+        $member->getLabel()->set('member', 'fr');
         $organization->save();
         $this->entityManager->flush();
         new Orga_Model_Granularity($organization, [$axis]);

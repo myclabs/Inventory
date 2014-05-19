@@ -3,10 +3,6 @@ Orga_Model_Axis:
   repositoryClass: Core_Model_Repository_Ordered
   table: Orga_Axis
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       column: id
@@ -20,13 +16,6 @@ Orga_Model_Axis:
       type: string
       length: 255
       nullable: false
-    label:
-      column: label
-      type: string
-      length: 255
-      nullable: false
-      gedmo:
-        - translatable
     narrowerTag:
       column: narrowerTag
       type: text
@@ -47,6 +36,10 @@ Orga_Model_Axis:
       column: position
       type: integer
       nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     organization:

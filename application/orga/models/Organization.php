@@ -9,6 +9,7 @@
 
 use Account\Domain\Account;
 use Classification\Domain\ContextIndicator;
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -23,8 +24,6 @@ use Orga\Model\ACL\OrganizationAdminRole;
  */
 class Orga_Model_Organization extends Core_Model_Entity implements EntityResource
 {
-    use Core_Model_Entity_Translatable;
-
     // Constantes de tris et de filtres.
     const QUERY_ACCOUNT = 'account';
     // Constantes de path des Axis, Member, Granularity et Cell.
@@ -48,9 +47,9 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     /**
      * Label de l'Organization.
      *
-     * @var string
+     * @var TranslatedString
      */
-    protected $label = '';
+    protected $label;
 
     /**
      * Collection des Axis de l'Organization.
@@ -93,6 +92,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function __construct(Account $account)
     {
+        $this->label = new TranslatedString();
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
         $this->contextIndicators = new ArrayCollection();
@@ -122,21 +122,9 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Spécifie le label de l'Organization.
-     *
-     * @param string $label
-     *
-     * @throws Core_Exception_InvalidArgument
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
-
-    /**
      * Renvoie le label textuel du projet.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {

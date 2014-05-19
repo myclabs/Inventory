@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "9c2783261fd00a41869f07b74936fdec",
+    "hash": "1606c65ee882a89df19500670b5f70e5",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -511,16 +511,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "7a305475e35930749e15bad0d060f8a917b1992f"
+                "reference": "47ca10076b19ce2da1a17e24a963bdf42a18a723"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/7a305475e35930749e15bad0d060f8a917b1992f",
-                "reference": "7a305475e35930749e15bad0d060f8a917b1992f",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/47ca10076b19ce2da1a17e24a963bdf42a18a723",
+                "reference": "47ca10076b19ce2da1a17e24a963bdf42a18a723",
                 "shasum": ""
             },
             "require": {
-                "doctrine/collections": "~1.1",
+                "doctrine/collections": "~1.2",
                 "doctrine/dbal": ">=2.5-dev,<2.6-dev",
                 "ext-pdo": "*",
                 "php": ">=5.3.2",
@@ -580,7 +580,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-04-29 11:25:17"
+            "time": "2014-05-16 04:27:30"
         },
         {
             "name": "dompdf/dompdf",
@@ -625,11 +625,17 @@
         },
         {
             "name": "gedmo/doctrine-extensions",
-            "version": "dev-OptimizedTranslatable",
+            "version": "v2.3.9",
             "source": {
                 "type": "git",
-                "url": "git://github.com/myclabs/DoctrineExtensions.git",
-                "reference": "ac4ec824bcbcff3040dc438dda94177599d50f5b"
+                "url": "https://github.com/Atlantic18/DoctrineExtensions.git",
+                "reference": "35adcaae1a3f50d0d5b73aa50ed8fd28ee35ce54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Atlantic18/DoctrineExtensions/zipball/35adcaae1a3f50d0d5b73aa50ed8fd28ee35ce54",
+                "reference": "35adcaae1a3f50d0d5b73aa50ed8fd28ee35ce54",
+                "shasum": ""
             },
             "require": {
                 "doctrine/common": ">=2.2,<2.5-dev",
@@ -660,10 +666,15 @@
                     "Gedmo\\": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
+                {
+                    "name": "David Buchmann",
+                    "email": "david@liip.ch"
+                },
                 {
                     "name": "Gediminas Morkevicius",
                     "email": "gediminas.morkevicius@gmail.com"
@@ -671,17 +682,13 @@
                 {
                     "name": "Gustavo Falco",
                     "email": "comfortablynumb84@gmail.com"
-                },
-                {
-                    "name": "David Buchmann",
-                    "email": "david@liip.ch"
                 }
             ],
             "description": "Doctrine2 behavioral extensions",
             "homepage": "http://gediminasm.org/",
             "keywords": [
+                "Blameable",
                 "behaviors",
-                "blameable",
                 "doctrine2",
                 "extensions",
                 "gedmo",
@@ -694,13 +701,7 @@
                 "tree",
                 "uploadable"
             ],
-            "support": {
-                "email": "gediminas.morkevicius@gmail.com",
-                "wiki": "https://github.com/l3pp4rd/DoctrineExtensions/tree/master/doc",
-                "issues": "https://github.com/l3pp4rd/DoctrineExtensions/issues",
-                "source": "https://github.com/l3pp4rd/DoctrineExtensions"
-            },
-            "time": "2013-10-24 12:17:26"
+            "time": "2014-01-12 16:34:06"
         },
         {
             "name": "jms/parser-lib",
@@ -736,6 +737,46 @@
             ],
             "description": "A library for easily creating recursive-descent parsers.",
             "time": "2012-11-18 18:08:43"
+        },
+        {
+            "name": "mnapoli/doctrine-translated",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mnapoli/DoctrineTranslated.git",
+                "reference": "a09bcda319811095e985efd438964298b03e25d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/a09bcda319811095e985efd438964298b03e25d2",
+                "reference": "a09bcda319811095e985efd438964298b03e25d2",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "2.5.*@dev",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mnapoli\\Translated\\": "src/",
+                    "Test\\Mnapoli\\Translated\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Translated strings for Doctrine",
+            "homepage": "https://github.com/mnapoli/DoctrineTranslated",
+            "keywords": [
+                "doctrine",
+                "i18n",
+                "translatable",
+                "translation",
+                "translations"
+            ],
+            "time": "2014-05-16 12:13:44"
         },
         {
             "name": "mnapoli/metamodel",
@@ -2342,26 +2383,27 @@
         },
         {
             "name": "behat/mink-extension",
-            "version": "v1.3.1",
+            "version": "v1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/MinkExtension.git",
-                "reference": "0642b680b613fdd6cb774debacf65a0d0d1f08e8"
+                "reference": "b885b9407cba50a954f72c69ed1b2f8d3bc694f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/MinkExtension/zipball/0642b680b613fdd6cb774debacf65a0d0d1f08e8",
-                "reference": "0642b680b613fdd6cb774debacf65a0d0d1f08e8",
+                "url": "https://api.github.com/repos/Behat/MinkExtension/zipball/b885b9407cba50a954f72c69ed1b2f8d3bc694f8",
+                "reference": "b885b9407cba50a954f72c69ed1b2f8d3bc694f8",
                 "shasum": ""
             },
             "require": {
                 "behat/behat": "~2.5.0",
-                "behat/mink": ">=1.4.3,<1.6-dev",
+                "behat/mink": "~1.5",
                 "php": ">=5.3.2",
                 "symfony/config": "~2.2"
             },
             "require-dev": {
-                "behat/mink-goutte-driver": "~1.0"
+                "behat/mink-goutte-driver": "~1.0",
+                "fabpot/goutte": "~1.0"
             },
             "type": "behat-extension",
             "autoload": {
@@ -2388,7 +2430,7 @@
                 "test",
                 "web"
             ],
-            "time": "2014-04-27 11:55:27"
+            "time": "2014-05-15 19:27:39"
         },
         {
             "name": "behat/mink-selenium2-driver",
@@ -2396,17 +2438,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/MinkSelenium2Driver.git",
-                "reference": "v1.1.1"
+                "reference": "bcf1b537de37db6db0822d9e7bd97e600fd7a476"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/MinkSelenium2Driver/zipball/v1.1.1",
-                "reference": "v1.1.1",
+                "url": "https://api.github.com/repos/Behat/MinkSelenium2Driver/zipball/bcf1b537de37db6db0822d9e7bd97e600fd7a476",
+                "reference": "bcf1b537de37db6db0822d9e7bd97e600fd7a476",
                 "shasum": ""
             },
             "require": {
-                "behat/mink": ">=1.5,<1.6",
-                "instaclick/php-webdriver": ">=1.0.12.0,<1.1",
+                "behat/mink": "~1.5.0",
+                "instaclick/php-webdriver": "~1.0.12",
                 "php": ">=5.3.1"
             },
             "type": "mink-driver",
@@ -2751,12 +2793,6 @@
     ],
     "aliases": [
         {
-            "alias": "2.99",
-            "alias_normalized": "2.99.0.0",
-            "version": "dev-OptimizedTranslatable",
-            "package": "gedmo/doctrine-extensions"
-        },
-        {
             "alias": "1.7.99",
             "alias_normalized": "1.7.99.0",
             "version": "dev-WriterExcel5OptionalConstructor",
@@ -2766,7 +2802,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "doctrine/orm": 20,
-        "gedmo/doctrine-extensions": 20,
+        "mnapoli/doctrine-translated": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "mnapoli/metaconsole": 20

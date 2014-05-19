@@ -19,10 +19,10 @@ use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
 use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\Algorithm\AlgoSet;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Model_Query;
 use Core_Strategy_Ordered;
 use Doctrine\Common\Collections\Collection;
@@ -41,7 +41,6 @@ use UI_Form_Element_Group;
 class AF extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     const ALGO_MAIN_REF = 'main';
 
@@ -64,7 +63,7 @@ class AF extends Core_Model_Entity
     private $ref;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -107,10 +106,10 @@ class AF extends Core_Model_Entity
 
 
     /**
-     * @param AFLibrary $library
-     * @param string    $label
+     * @param AFLibrary        $library
+     * @param TranslatedString $label
      */
-    public function __construct(AFLibrary $library, $label)
+    public function __construct(AFLibrary $library, TranslatedString $label)
     {
         $this->components = new ArrayCollection();
         $this->conditions = new ArrayCollection();
@@ -181,19 +180,19 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param string $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
-        $this->label = (string) $label;
+        $this->label = $label;
     }
 
     /**
-     * @return string label
+     * @return TranslatedString
      */
     public function getLabel()
     {
-        return ($this->label);
+        return $this->label;
     }
 
     /**

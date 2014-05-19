@@ -3,10 +3,6 @@ Parameter\Domain\ParameterLibrary:
   repositoryClass: \Core_Model_Repository
   table: Parameter_ParameterLibrary
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       type: integer
@@ -14,12 +10,12 @@ Parameter\Domain\ParameterLibrary:
         strategy: AUTO
 
   fields:
-    label:
-      type: string
-      gedmo:
-        - translatable
     public:
       type: boolean
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     account:

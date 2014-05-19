@@ -34,6 +34,7 @@ class TextField extends Field
      */
     public function __construct($type)
     {
+        parent::__construct();
         $this->setType($type);
     }
 
@@ -47,8 +48,8 @@ class TextField extends Field
         } else {
             $uiElement = new UI_Form_Element_Textarea($this->ref);
         }
-        $uiElement->setLabel($this->label);
-        $uiElement->getElement()->help = $this->help;
+        $uiElement->setLabel($this->uglyTranslate($this->label));
+        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         $uiElement->setRequired($this->getRequired());
         if ($generationHelper->isReadOnly()) {
             $uiElement->getElement()->setReadOnly();

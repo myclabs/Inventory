@@ -4,6 +4,7 @@ namespace Tests\Parameter;
 
 use Account\Domain\Account;
 use Core\Test\TestCase;
+use Core\Translation\TranslatedString;
 use Core_Tools;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Family\Cell;
@@ -24,9 +25,9 @@ class FamilyTest extends TestCase
     {
         $account = new Account('test');
         self::getEntityManager()->persist($account);
-        $library = new ParameterLibrary($account, 'foo');
+        $library = new ParameterLibrary($account, new TranslatedString('foo', 'fr'));
         $library->save();
-        $family = new Family($library, Core_Tools::generateRef(), 'Test');
+        $family = new Family($library, Core_Tools::generateRef(), new TranslatedString('Test', 'fr'));
         $family->setUnit(new UnitAPI('m'));
         $family->save();
         self::getEntityManager()->flush();
@@ -51,12 +52,12 @@ class FamilyTest extends TestCase
     {
         $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
 
-        $family = new Family($library, 'ref', 'label');
+        $family = new Family($library, 'ref', new TranslatedString('Test', 'fr'));
 
         $this->assertNotNull($family->getDimensions());
         // Add
-        $dimension1 = new Dimension($family, 'ref1', 'label 1', Dimension::ORIENTATION_HORIZONTAL);
-        $dimension2 = new Dimension($family, 'ref2', 'label 2', Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension($family, 'ref1', new TranslatedString('label 1', 'fr'), Dimension::ORIENTATION_HORIZONTAL);
+        $dimension2 = new Dimension($family, 'ref2', new TranslatedString('label 2', 'fr'), Dimension::ORIENTATION_HORIZONTAL);
         $family->addDimension($dimension1);
         $family->addDimension($dimension2);
         $this->assertCount(2, $family->getDimensions());
@@ -72,7 +73,7 @@ class FamilyTest extends TestCase
     {
         $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
 
-        $family = new Family($library, 'ref', 'label');
+        $family = new Family($library, 'ref', new TranslatedString('Test', 'fr'));
         $family->getCell(['foo', 'bar']);
     }
 
@@ -83,7 +84,7 @@ class FamilyTest extends TestCase
     {
         $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
 
-        $family = new Family($library, 'ref', 'label');
+        $family = new Family($library, 'ref', new TranslatedString('Test', 'fr'));
         $family->getCell([]);
     }
 
@@ -94,17 +95,22 @@ class FamilyTest extends TestCase
     {
         $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
 
-        $family = new Family($library, 'ref', 'label');
+        $family = new Family($library, 'ref', new TranslatedString('Test', 'fr'));
 
         // 1 dimension
-        $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Test', Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension(
+            $family,
+            Core_Tools::generateRef(),
+            new TranslatedString('Test', 'fr'),
+            Dimension::ORIENTATION_HORIZONTAL
+        );
 
         // 1er membre
-        $member1 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
+        $member1 = new Member($dimension1, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
         $this->assertAttributeCount(1, 'cells', $family);
 
         // 2è membre
-        $member2 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
+        $member2 = new Member($dimension1, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
         $this->assertAttributeCount(2, 'cells', $family);
 
         $this->assertCount(1, $family->getDimensions());
@@ -123,13 +129,23 @@ class FamilyTest extends TestCase
     {
         $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
 
-        $family = new Family($library, 'ref', 'label');
+        $family = new Family($library, 'ref', new TranslatedString('Test', 'fr'));
 
-        $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Test 1', Dimension::ORIENTATION_HORIZONTAL);
-        $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
+        $dimension1 = new Dimension(
+            $family,
+            Core_Tools::generateRef(),
+            new TranslatedString('Test 1', 'fr'),
+            Dimension::ORIENTATION_HORIZONTAL
+        );
+        $member11 = new Member($dimension1, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
 
-        $dimension2 = new Dimension($family, Core_Tools::generateRef(), 'Test 2', Dimension::ORIENTATION_VERTICAL);
-        $member21 = new Member($dimension2, Core_Tools::generateRef(), 'Member');
+        $dimension2 = new Dimension(
+            $family,
+            Core_Tools::generateRef(),
+            new TranslatedString('Test 2', 'fr'),
+            Dimension::ORIENTATION_VERTICAL
+        );
+        $member21 = new Member($dimension2, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
 
         $this->assertCount(2, $family->getDimensions());
 
@@ -147,15 +163,25 @@ class FamilyTest extends TestCase
     {
         $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
 
-        $family = new Family($library, 'ref', 'label');
+        $family = new Family($library, 'ref', new TranslatedString('Test', 'fr'));
 
-        $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
-        $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
-        $member12 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
+        $dimension1 = new Dimension(
+            $family,
+            Core_Tools::generateRef(),
+            new TranslatedString('Dim', 'fr'),
+            Dimension::ORIENTATION_HORIZONTAL
+        );
+        $member11 = new Member($dimension1, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
+        $member12 = new Member($dimension1, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
 
-        $dimension2 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_VERTICAL);
-        $member21 = new Member($dimension2, Core_Tools::generateRef(), 'Member');
-        $member22 = new Member($dimension2, Core_Tools::generateRef(), 'Member');
+        $dimension2 = new Dimension(
+            $family,
+            Core_Tools::generateRef(),
+            new TranslatedString('Dim', 'fr'),
+            Dimension::ORIENTATION_VERTICAL
+        );
+        $member21 = new Member($dimension2, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
+        $member22 = new Member($dimension2, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
 
         $this->assertCount(2, $family->getDimensions());
 
@@ -181,16 +207,31 @@ class FamilyTest extends TestCase
     {
         $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
 
-        $family = new Family($library, 'ref', 'label');
+        $family = new Family($library, 'ref', new TranslatedString('Test', 'fr'));
 
-        $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
-        $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
+        $dimension1 = new Dimension(
+            $family,
+            Core_Tools::generateRef(),
+            new TranslatedString('Dim', 'fr'),
+            Dimension::ORIENTATION_HORIZONTAL
+        );
+        $member11 = new Member($dimension1, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
 
-        $dimension2 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
-        $member21 = new Member($dimension2, Core_Tools::generateRef(), 'Member');
+        $dimension2 = new Dimension(
+            $family,
+            Core_Tools::generateRef(),
+            new TranslatedString('Dim', 'fr'),
+            Dimension::ORIENTATION_HORIZONTAL
+        );
+        $member21 = new Member($dimension2, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
 
-        $dimension3 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_VERTICAL);
-        $member31 = new Member($dimension3, Core_Tools::generateRef(), 'Member');
+        $dimension3 = new Dimension(
+            $family,
+            Core_Tools::generateRef(),
+            new TranslatedString('Dim', 'fr'),
+            Dimension::ORIENTATION_VERTICAL
+        );
+        $member31 = new Member($dimension3, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
 
         $this->assertCount(3, $family->getDimensions());
 
@@ -214,13 +255,23 @@ class FamilyTest extends TestCase
     {
         $library = $this->getMock(ParameterLibrary::class, [], [], '', false);
 
-        $family = new Family($library, 'ref', 'label');
+        $family = new Family($library, 'ref', new TranslatedString('Test', 'fr'));
 
-        $dimension1 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_HORIZONTAL);
-        $member11 = new Member($dimension1, Core_Tools::generateRef(), 'Member');
+        $dimension1 = new Dimension(
+            $family,
+            Core_Tools::generateRef(),
+            new TranslatedString('Dim', 'fr'),
+            Dimension::ORIENTATION_HORIZONTAL
+        );
+        $member11 = new Member($dimension1, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
 
-        $dimension2 = new Dimension($family, Core_Tools::generateRef(), 'Dim', Dimension::ORIENTATION_VERTICAL);
-        $member21 = new Member($dimension2, Core_Tools::generateRef(), 'Member');
+        $dimension2 = new Dimension(
+            $family,
+            Core_Tools::generateRef(),
+            new TranslatedString('Dim', 'fr'),
+            Dimension::ORIENTATION_VERTICAL
+        );
+        $member21 = new Member($dimension2, Core_Tools::generateRef(), new TranslatedString('Member', 'fr'));
 
         $this->assertCount(2, $family->getDimensions());
 
@@ -240,15 +291,25 @@ class FamilyTest extends TestCase
     {
         $family = self::generateObject();
 
-        $dimension1 = new Dimension($family, 'a', 'Test 1', Dimension::ORIENTATION_HORIZONTAL);
+        $dimension1 = new Dimension(
+            $family,
+            'a',
+            new TranslatedString('Test 1', 'fr'),
+            Dimension::ORIENTATION_HORIZONTAL
+        );
         $dimension1->save();
         $this->entityManager->flush();
-        $member11 = new Member($dimension1, 'aa', 'Member');
+        $member11 = new Member($dimension1, 'aa', new TranslatedString('Member', 'fr'));
 
-        $dimension2 = new Dimension($family, 'b', 'Test 2', Dimension::ORIENTATION_VERTICAL);
+        $dimension2 = new Dimension(
+            $family,
+            'b',
+            new TranslatedString('Test 2', 'fr'),
+            Dimension::ORIENTATION_VERTICAL
+        );
         $dimension2->save();
         $this->entityManager->flush();
-        $member21 = new Member($dimension2, 'bb', 'Member');
+        $member21 = new Member($dimension2, 'bb', new TranslatedString('Member', 'fr'));
 
         $cell = $family->getCell([$member11, $member21]);
 

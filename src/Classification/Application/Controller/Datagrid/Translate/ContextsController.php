@@ -1,29 +1,11 @@
 <?php
-/**
- * Classe Classification_Datagrid_Translate_ContextsController
- * @author valentin.claras
- * @package Classification
- * @subpackage Controller
- */
 
 use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Context;
 use Core\Annotation\Secure;
-use Gedmo\Translatable\TranslatableListener;
 
-/**
- * Classe du controller du datagrid des traductions des contexts.
- * @package Classification
- * @subpackage Controller
- */
 class Classification_Datagrid_Translate_ContextsController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var TranslatableListener
-     */
-    private $translatableListener;
-
     /**
      * @Inject("translation.languages")
      * @var string[]
@@ -31,14 +13,10 @@ class Classification_Datagrid_Translate_ContextsController extends UI_Controller
     private $languages;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
      * @Secure("editClassificationLibrary")
      */
     public function getelementsAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
-
         $library = ClassificationLibrary::load($this->getParam('library'));
         $this->request->filter->addCondition('library', $library);
 
@@ -48,9 +26,7 @@ class Classification_Datagrid_Translate_ContextsController extends UI_Controller
             $data['identifier'] = $context->getRef();
 
             foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $context->reloadWithLocale($locale);
-                $data[$language] = $context->getLabel();
+                $data[$language] = $context->getLabel()->get($language);
             }
             $this->addline($data);
         }
@@ -60,18 +36,14 @@ class Classification_Datagrid_Translate_ContextsController extends UI_Controller
     }
 
     /**
-     * Fonction modifiant la valeur d'un élément.
-     *
      * @Secure("editClassificationLibrary")
      */
     public function updateelementAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $context = Context::load($this->update['index']);
-        $context->reloadWithLocale(Core_Locale::load($this->update['column']));
-        $context->setLabel($this->update['value']);
-        $this->data = $context->getLabel();
+        $context->getLabel()->set($this->update['value'], $this->update['column']);
 
+        $this->data = $context->getLabel()->get($this->update['column']);
         $this->send(true);
     }
 }

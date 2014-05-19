@@ -31,7 +31,7 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
 
         foreach (Axis::loadList() as $axis) {
             if (!$axis->hasMembers()) {
-                $listAxisWithoutMember[] = $axis->getLabel();
+                $listAxisWithoutMember[] = $this->translator->get($axis->getLabel());
             } else {
                 $narrowerAxis = $axis->getDirectNarrower();
                 $broaderAxes = $axis->getDirectBroaders();
@@ -47,7 +47,7 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
                             if (!isset($listAxisWithMemberNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()])) {
                                 $listAxisWithMemberNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()] = array();
                             }
-                            $listAxisWithMemberNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()][] = $member->getLabel();
+                            $listAxisWithMemberNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()][] = $this->translator->get($member->getLabel());
                         }
                     }
                     foreach ($broaderAxes as $broaderAxis) {
@@ -60,7 +60,7 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
                             if (!isset($listAxisWithMemberNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()])) {
                                 $listAxisWithMemberNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()] = array();
                             }
-                            $listAxisWithMemberNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()][] = $member->getLabel();
+                            $listAxisWithMemberNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()][] = $this->translator->get($member->getLabel());
                         }
                     }
                 }
@@ -95,7 +95,7 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
                 foreach ($contextIndicatorAxes as $contextIndicatorAxisVerif) {
                     if (($contextIndicatorAxis !== $contextIndicatorAxisVerif)
                         && ($contextIndicatorAxis->isNarrowerThan($contextIndicatorAxisVerif))) {
-                        $contextIndicatorErrors[] = '(' . $contextIndicatorAxis->getLabel() . ' - ' . $contextIndicatorAxisVerif->getLabel() . ')';
+                        $contextIndicatorErrors[] = '(' . $this->translator->get($contextIndicatorAxis->getLabel()) . ' - ' . $this->translator->get($contextIndicatorAxisVerif->getLabel()) . ')';
                     }
                 }
             }
@@ -119,10 +119,10 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
         $data['fail'] = '';
         foreach ($listAxisWithMemberNotLinkedToNarrower as $axisId => $members) {
             $axis = Axis::load($axisId);
-            $data['fail'] .= $axis->getLabel() . ' : { ';
+            $data['fail'] .= $this->translator->get($axis->getLabel()) . ' : { ';
             foreach ($members as $narrowerAxisId => $refMember) {
                 $narrowerAxis = Axis::load($narrowerAxisId);
-                $data['fail'] .= $narrowerAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
+                $data['fail'] .= $this->translator->get($narrowerAxis->getLabel()) . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);
             $data['fail'] .= ' }, ';
@@ -138,10 +138,10 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
         $data['fail'] = '';
         foreach ($listAxisWithMemberNotLinkedToBroader as $axisId => $members) {
             $axis = Axis::load($axisId);
-            $data['fail'] .= $axis->getLabel() . ' : { ';
+            $data['fail'] .= $this->translator->get($axis->getLabel()) . ' : { ';
             foreach ($members as $broaderAxisId => $refMember) {
                 $broaderAxis = Axis::load($broaderAxisId);
-                $data['fail'] .= $broaderAxis->getLabel() . ' : [' . implode(', ', $refMember) . '], ';
+                $data['fail'] .= $this->translator->get($broaderAxis->getLabel()) . ' : [' . implode(', ', $refMember) . '], ';
             }
             $data['fail'] = substr($data['fail'], 0, -2);
             $data['fail'] .= ' }, ';
@@ -156,8 +156,8 @@ class Classification_Datagrid_ConsistencyController extends UI_Controller_Datagr
         $data['diag'] = empty($listContextIndicatorsWithLinkedAxes);
         $data['fail'] = '';
         foreach ($listContextIndicatorsWithLinkedAxes as $contextIndicatorArray) {
-            $data['fail'] .= $contextIndicatorArray['contextIndicator']->getContext()->getLabel() . ' - ' .
-                $contextIndicatorArray['contextIndicator']->getIndicator()->getLabel() .
+            $data['fail'] .= $this->translator->get($contextIndicatorArray['contextIndicator']->getContext()->getLabel()) . ' - ' .
+                $this->translator->get($contextIndicatorArray['contextIndicator']->getIndicator()->getLabel()) .
                 ' : { ' . implode(', ', $contextIndicatorArray['axes']) . ' }, ';
         }
         if (strlen($data['fail']) > 0) {

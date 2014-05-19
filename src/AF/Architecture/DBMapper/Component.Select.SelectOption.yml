@@ -3,10 +3,6 @@ AF\Domain\Component\Select\SelectOption:
   repositoryClass: \Core_Model_Repository_Ordered
   table: AF_Component_Select_Option
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       type: integer
@@ -17,11 +13,6 @@ AF\Domain\Component\Select\SelectOption:
     ref:
       type: string
       nullable: false
-    label:
-      type: string
-      nullable: true
-      gedmo:
-        - translatable
     visible:
       type: boolean
       nullable: false
@@ -31,6 +22,10 @@ AF\Domain\Component\Select\SelectOption:
     position:
       type: integer
       nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     select:

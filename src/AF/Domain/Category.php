@@ -2,9 +2,9 @@
 
 namespace AF\Domain;
 
+use Core\Translation\TranslatedString;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Model_Filter;
 use Core_Model_Query;
 use Core_Strategy_Ordered;
@@ -19,7 +19,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Category extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     const QUERY_POSITION = 'position';
     const QUERY_PARENT_CATEGORY = 'parentCategory';
@@ -35,7 +34,7 @@ class Category extends Core_Model_Entity
     protected $library;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -55,10 +54,10 @@ class Category extends Core_Model_Entity
     protected $afs;
 
 
-    public function __construct(AFLibrary $library, $label = null)
+    public function __construct(AFLibrary $library, TranslatedString $label = null)
     {
         $this->library = $library;
-        $this->label = $label;
+        $this->label = $label ?: new TranslatedString();
         $this->childCategories = new ArrayCollection();
         $this->afs = new ArrayCollection();
     }
@@ -72,19 +71,14 @@ class Category extends Core_Model_Entity
     }
 
     /**
-     * Retourne le nom de la catégorie
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         return $this->label;
     }
 
-    /**
-     * Modifie le nom de la catégorie
-     * @param string $newLabel
-     */
-    public function setLabel($newLabel)
+    public function setLabel(TranslatedString $newLabel)
     {
         $this->label = $newLabel;
     }

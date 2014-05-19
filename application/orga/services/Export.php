@@ -1,10 +1,4 @@
 <?php
-/**
- * Classe Orga_Service_Export
- * @author valentin.claras
- * @package    Orga
- * @subpackage Service
- */
 
 use AF\Domain\Input\Input;
 use AF\Domain\Input\TextFieldInput;
@@ -20,23 +14,29 @@ use AF\Domain\InputSet\SubInputSet;
 use AF\Domain\Output\OutputElement;
 use Classification\Domain\Axis;
 use Classification\Domain\Indicator;
+use Mnapoli\Translated\Translator;
 use Orga\Model\ACL\AbstractCellRole;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
 
 /**
- * Service Orga.
- * @package    Orga
- * @subpackage Service
+ * @author valentin.claras
  */
 class Orga_Service_Export
 {
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
      * Constructeur, augmente la limite de mémoire à 2G pour réaliser l'export.
      */
-    public function __construct()
+    public function __construct(Translator $translator)
     {
+        $this->translator = $translator;
+
         ini_set('memory_limit','2G');
     }
 
@@ -72,7 +72,8 @@ class Orga_Service_Export
             'displayAxisDirectNarrower',
             function (Orga_Model_Axis $axis) {
                 if ($axis->getDirectNarrower() !== null) {
-                    return $axis->getDirectNarrower()->getLabel() . ' (' . $axis->getDirectNarrower()->getRef() . ')';
+                    return $this->translator->get($axis->getDirectNarrower()->getLabel())
+                        . ' (' . $axis->getDirectNarrower()->getRef() . ')';
                 }
                 return '';
             }
@@ -101,7 +102,7 @@ class Orga_Service_Export
             function (Orga_Model_member $member, Orga_Model_Axis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
-                        return $directParent->getLabel();
+                        return $this->translator->get($directParent->getLabel());
                     }
                 }
                 return '';
@@ -118,7 +119,7 @@ class Orga_Service_Export
             function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $member) {
                     if ($member->getAxis() === $axis) {
-                        return $member->getLabel();
+                        return $this->translator->get($member->getLabel());
                     }
                 }
                 return '';
@@ -192,7 +193,7 @@ class Orga_Service_Export
             function (Orga_Model_member $member, Orga_Model_Axis $broaderAxis) {
                 foreach ($member->getDirectParents() as $directParent) {
                     if ($directParent->getAxis() === $broaderAxis) {
-                        return $directParent->getLabel();
+                        return $this->translator->get($directParent->getLabel());
                     }
                 }
                 return '';
@@ -215,7 +216,7 @@ class Orga_Service_Export
             function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $member) {
                     if ($member->getAxis() === $axis) {
-                        return $member->getLabel();
+                        return $this->translator->get($member->getLabel());
                     }
                 }
                 return '';
@@ -295,7 +296,7 @@ class Orga_Service_Export
             function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $member) {
                     if ($member->getAxis() === $axis) {
-                        return $member->getLabel();
+                        return $this->translator->get($member->getLabel());
                     }
                 }
                 return '';
@@ -378,9 +379,9 @@ class Orga_Service_Export
             function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $member) {
                     if ($member->getAxis() === $axis) {
-                        return $member->getLabel();
-                    } else if ($member->getAxis()->isNarrowerThan($axis)) {
-                        return $member->getParentForAxis($axis)->getLabel();
+                        return $this->translator->get($member->getLabel());
+                    } elseif ($member->getAxis()->isNarrowerThan($axis)) {
+                        return $this->translator->get($member->getParentForAxis($axis)->getLabel());
                     }
                 }
                 return '';
@@ -450,14 +451,14 @@ class Orga_Service_Export
             }
 
             $granularitySheet = $phpExcelModel->getSheet($indexGranularity);
-            $granularitySheet->setTitle(mb_substr($granularity->getLabel(), 0, 31));
+            $granularitySheet->setTitle(mb_substr($this->translator->get($granularity->getLabel()), 0, 31));
 
             // Colonnes
             $columns = [];
             foreach ($granularity->getAxes() as $axis) {
-                $columns[] = $axis->getLabel();
+                $columns[] = $this->translator->get($axis->getLabel());
                 foreach ($axis->getAllBroadersFirstOrdered() as $broaderAxis) {
-                    $columns[] = $broaderAxis->getLabel();
+                    $columns[] = $this->translator->get($broaderAxis->getLabel());
                 }
             };
             $columns[] = __('Orga', 'export', 'subForm');
@@ -629,7 +630,7 @@ class Orga_Service_Export
                             }
                         }
                     }
-                    return $member->getLabel();
+                    return $this->translator->get($member->getLabel());
                 } catch (Core_Exception_NotFound $e) {
                     // Pas d'indexation suivant cet axe.
                 }
