@@ -41,7 +41,10 @@ class Classification_Datagrid_MemberController extends UI_Controller_Datagrid
                 $cellAxis = $this->cellList(null, '');
                 foreach ($parentMembers as $parentMember) {
                     if (in_array($parentMember, $broaderAxis->getMembers())) {
-                        $cellAxis = $this->cellList($parentMember->getId(), $parentMember->getLabel());
+                        $cellAxis = $this->cellList(
+                            $parentMember->getId(),
+                            $this->translator->get($parentMember->getLabel())
+                        );
                     }
                 }
                 $data['broader'.$broaderAxis->getId()] = $cellAxis;
