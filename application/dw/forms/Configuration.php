@@ -390,7 +390,7 @@ class DW_Form_configuration extends GenericTag
 
         foreach ($report->getCube()->getAxes() as $axis) {
             $axisFilterWrapper = new GenericTag('fieldset');
-            $axisFilterLegend = new GenericTag('legend', $axis->getLabel());
+            $axisFilterLegend = new GenericTag('legend', $this->translator->get($axis->getLabel()));
             $axisFilterWrapper->appendContent($axisFilterLegend);
             $filtersCollapse->appendContent($axisFilterWrapper);
 
