@@ -304,6 +304,9 @@ class ImportCommand extends Command
                 'properties' => [
                     'aF' => [
                         'callback' => function ($var) use ($afLibrary) {
+                            if ($var === null) {
+                                return null;
+                            }
                             foreach ($afLibrary->getAFList() as $af) {
                                 if ($af->getRef() == $var) {
                                     return $af;
