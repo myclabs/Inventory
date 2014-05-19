@@ -254,7 +254,7 @@ class Parameter_Tree_FamilyTreeController extends UI_Controller_Tree
     {
         $node = $this->fromTreeId($this->idNode);
 
-        $this->data['label'] = $node->getLabel();
+        $this->data['label'] = $this->translator->get($node->getLabel());
         if ($node instanceof Category) {
             $this->data['titlePopup'] = __('Parameter', 'familyTree', 'editCategoryPopupTitle');
             $this->data['htmlComplement'] = '';
