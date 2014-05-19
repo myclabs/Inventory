@@ -147,7 +147,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
                 $filters = Zend_Json::decode($this->_getParam('filters'));
                 foreach ($filters as $filter) {
                     foreach ($filter as $filterName => $filterValue) {
-                        list($alias, $filterName) = explode('.', $filterName);
+                        list($alias, $filterName) = explode('.', $filterName, 2);
                         $alias = (empty($alias)) ? null : $alias;
                         foreach ($filterValue as $operator => $value) {
                             if ($value !== null) {

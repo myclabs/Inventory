@@ -35,7 +35,7 @@ foreach ($categories as $category) {
 $categoryColumn->withEmptyElement = false;
 $datagrid->addCol($categoryColumn);
 
-$labelColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$labelColumn = new UI_Datagrid_Col_TranslatedText('label', __('UI', 'name', 'label'));
 $labelColumn->editable = true;
 $labelColumn->addable = true;
 $labelColumn->sortName = AF::QUERY_LABEL;
