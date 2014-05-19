@@ -307,7 +307,7 @@ abstract class InputSet extends Core_Model_Entity implements \AF\Domain\Algorith
         $data = unserialize($data);
 
         foreach ($data as $property => $value) {
-            if ($property === 'id') {
+            if ($property === 'idAF') {
                 continue;
             }
             $this->$property = $value;
