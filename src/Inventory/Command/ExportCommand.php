@@ -244,8 +244,12 @@ class ExportCommand extends Command
             \Orga_Model_CellsGroup::class => [
                 'properties' => [
                     'aF' => [
-                        'transform' => function (\AF\Domain\AF $af) {
-                            return $af->getRef();
+                        'transform' => function (\AF\Domain\AF $af = null) {
+                            if ($af) {
+                                return $af->getRef();
+                            } else {
+                                return null;
+                            }
                         },
                     ],
                 ],
