@@ -61,7 +61,7 @@ class Core_Model_Order
         /** @var Translator $translator */
         $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
 
-        $this->addOrder($name . '.' . $translator->getCurrentLocale(), $direction, $alias);
+        $this->addOrder($name . '.' . $translator->getLanguage(), $direction, $alias);
     }
 
     /**
