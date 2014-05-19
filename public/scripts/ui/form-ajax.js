@@ -1,8 +1,8 @@
-$.fn.eraseFormErrors = function (o)
-{
-	$('#' + $(this).attr('id') + ' .help-block.errorMessage').remove();
-	$('#' + $(this).attr('id') + ' .error').removeClass('error');
-	$('#' + $(this).attr('id') + ' .warning').removeClass('warning');
+$.fn.eraseFormErrors = function (o) {
+    $('#' + $(this).attr('id') + ' .help-block.errorMessage').remove();
+    $('#' + $(this).attr('id') + ' .error').removeClass('error');
+    $('#' + $(this).attr('id') + ' .warning').removeClass('warning');
+    $('#' + $(this).attr('id') + ' .has-error').removeClass('has-error');
 };
 
 $.fn.parseFormErrors = function (request)
