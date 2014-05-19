@@ -3,7 +3,7 @@ sheets:
 
   - foreach: granularities as granularity
     do:
-      - label: "{{ granularity.label }}"
+      - label: "{{ translateString(granularity.label) }}"
 
         content:
 
@@ -11,7 +11,7 @@ sheets:
             columns:
               - foreach: granularity.axes as axis
                 do:
-                  - label: "{{ axis.label }}"
+                  - label: "{{ translateString(axis.label) }}"
               - label: "{{ userColumnFirstName }}"
               - label: "{{ userColumnLastName }}"
               - label: "{{ userColumnEmail }}"

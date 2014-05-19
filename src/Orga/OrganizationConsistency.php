@@ -5,6 +5,7 @@
  * @package Orga
  */
 
+use Core\Translation\TranslatedString;
 use Mnapoli\Translated\Translator;
 
 /**
@@ -142,8 +143,11 @@ class Orga_OrganizationConsistency
                     foreach ($axes as $axis) {
                         $labelParts[] = $axis->getLabel();
                     }
-                    $label = implode(Orga_Model_Granularity::LABEL_SEPARATOR, $labelParts);
-                    $text4 .= $label .' / ';
+                    $label = TranslatedString::implode(
+                        Orga_Model_Granularity::LABEL_SEPARATOR,
+                        $labelParts
+                    );
+                    $text4 .= $this->translator->get($label) .' / ';
                 }
                 $text4 = substr($text4, 0, -3);
             }

@@ -598,7 +598,7 @@ class Orga_CellController extends Core_Controller
             $eventText = __('Orga', 'auditTrail', $entry->getEventName(), [
                 'INPUT' => '<a href="orga/cell/input/idCell/' . $entry->getContext()->getCell()->getId()
                                 . '/fromIdCell/' . $cell->getId() . '/">'
-                                . $entry->getContext()->getCell()->getLabel()
+                                . $this->translator->get($entry->getContext()->getCell()->getLabel())
                             . '</a>',
                 'USER' => '<b>'.$entry->getUser()->getName().'</b>'
             ]);
@@ -1243,7 +1243,7 @@ class Orga_CellController extends Core_Controller
         Zend_Layout::getMvcInstance()->disableLayout();
         Zend_Controller_Front::getInstance()->setParam('noViewRenderer', true);
 
-        $exportService = new Orga_Service_Export();
+        $exportService = new Orga_Service_Export($this->translator);
         $exportService->$streamFunction($format, $cell);
     }
 
