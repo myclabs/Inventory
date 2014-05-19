@@ -26,7 +26,7 @@
 
     foreach ($this->basePhyscialQuantities as $basePhysicalQuantity) {
         $basePhysicalQuantityColumn = new UI_Datagrid_Col_Number($basePhysicalQuantity->getRef());
-        $basePhysicalQuantityColumn->label = $basePhysicalQuantity->getName();
+        $basePhysicalQuantityColumn->label = $this->translate($basePhysicalQuantity->getName());
         $datagrid->addCol($basePhysicalQuantityColumn);
     }
 
