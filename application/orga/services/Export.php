@@ -14,6 +14,7 @@ use AF\Domain\InputSet\SubInputSet;
 use AF\Domain\Output\OutputElement;
 use Classification\Domain\Axis;
 use Classification\Domain\Indicator;
+use Mnapoli\Translated\AbstractTranslatedString;
 use Mnapoli\Translated\Translator;
 use Orga\Model\ACL\AbstractCellRole;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
@@ -126,6 +127,13 @@ class Orga_Service_Export
             }
         );
 
+        $modelBuilder->bindFunction(
+            'translateString',
+            function (AbstractTranslatedString $string) {
+                return $this->translator->get($string);
+            }
+        );
+
 
         switch ($format) {
             case 'xls':
@@ -223,6 +231,13 @@ class Orga_Service_Export
             }
         );
 
+        $modelBuilder->bindFunction(
+            'translateString',
+            function (AbstractTranslatedString $string) {
+                return $this->translator->get($string);
+            }
+        );
+
 
         switch ($format) {
             case 'xls':
@@ -306,6 +321,13 @@ class Orga_Service_Export
             'displayRoleName',
             function (AbstractCellRole $role) {
                 return $role->getLabel();
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'translateString',
+            function (AbstractTranslatedString $string) {
+                return $this->translator->get($string);
             }
         );
 
@@ -407,6 +429,13 @@ class Orga_Service_Export
                     default:
                         return '';
                 }
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'translateString',
+            function (AbstractTranslatedString $string) {
+                return $this->translator->get($string);
             }
         );
 
@@ -604,10 +633,10 @@ class Orga_Service_Export
             function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $cellMember) {
                     if ($cellMember->getAxis() === $axis) {
-                        return $cellMember->getExtendedLabel();
+                        return $this->translator->get($cellMember->getExtendedLabel());
                     } else if ($cellMember->getAxis()->isNarrowerThan($axis)) {
                         try {
-                            return $cellMember->getParentForAxis($axis)->getExtendedLabel();
+                            return $this->translator->get($cellMember->getParentForAxis($axis)->getExtendedLabel());
                         } catch (Core_Exception_NotFound $e) {
                             // Pas de parent pour cet axe.
                         }
@@ -684,6 +713,13 @@ class Orga_Service_Export
             'displayRoundedValue',
             function ($value) {
                 return number_format(round($value, floor(3 - log10(abs($value)))), strlen($value), '.', '');
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'translateString',
+            function (AbstractTranslatedString $string) {
+                return $this->translator->get($string);
             }
         );
 
