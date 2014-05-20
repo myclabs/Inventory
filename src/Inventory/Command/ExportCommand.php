@@ -3,7 +3,7 @@
 namespace Inventory\Command;
 
 use AF\Domain\Category as AFCategory;
-use Serializer\Serializer;
+use Serializer\CustomSerializerForMigration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,7 +29,7 @@ class ExportCommand extends Command
 
         $root = PACKAGE_PATH . '/data/exports/migration-3.0';
 
-        $serializer = new Serializer([
+        $serializer = new CustomSerializerForMigration([
             \Orga\Model\ACL\Role\OrganizationAdminRole::class => [ 'exclude' => true ],
             \Orga\Model\ACL\Role\CellAdminRole::class => [ 'exclude' => true ],
             \Orga\Model\ACL\Role\CellManagerRole::class => [ 'exclude' => true ],
@@ -187,7 +187,7 @@ class ExportCommand extends Command
         }
 
         $output->writeln('<comment>Exporting Reports</comment>');
-        $reportsSerializer = new Serializer(
+        $reportsSerializer = new CustomSerializerForMigration(
             [
                 \DW_Model_Report::class => [
                     'properties' => [
@@ -236,7 +236,7 @@ class ExportCommand extends Command
         file_put_contents($root . '/reports.json', $reportsSerializer->serialize($reportsData));
 
         $output->writeln('<comment>Exporting ACL</comment>');
-        $aclSerializer = new Serializer([]);
+        $aclSerializer = new CustomSerializerForMigration([]);
         file_put_contents($root . '/acl.json', $aclSerializer->serialize($aclData));
     }
 }

@@ -39,7 +39,7 @@ use Parameter\Domain\Family\Family;
 use Parameter\Domain\Family\FamilyReference;
 use Parameter\Domain\Family\Member;
 use Parameter\Domain\ParameterLibrary;
-use Serializer\Serializer;
+use Serializer\CustomSerializerForMigration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -126,7 +126,7 @@ class ImportCommand extends Command
             }
         };
 
-        $serializer = new Serializer([
+        $serializer = new CustomSerializerForMigration([
             'Classif_Model_Indicator' => [
                 'class' => Indicator::class,
                 'properties' => [
@@ -520,7 +520,7 @@ class ImportCommand extends Command
         $this->entityManager->flush();
 
         // Import DW reports and filter
-        $serializer = new Serializer([]);
+        $serializer = new CustomSerializerForMigration([]);
         $output->writeln('<comment>Importing Reports</comment>');
         $objects = $serializer->unserialize(file_get_contents($root . '/reports.json'));
         foreach ($objects as $object) {
