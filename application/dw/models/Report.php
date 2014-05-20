@@ -580,6 +580,9 @@ class DW_Model_Report extends Core_Model_Entity
         if ($this->getNumeratorAxis1() === null) {
             throw new Core_Exception_InvalidArgument('At least one numerator axis is needed to drow a chart');
         }
+        //@todo Trouver une meilleur solution !
+        /** @var Translator $translator */
+        $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
 
         $chartType = $this->getChartType();
         if ($chartType === DW_Model_Report::CHART_PIE) {
@@ -587,7 +590,7 @@ class DW_Model_Report extends Core_Model_Entity
             $chart->addAttribute('chartArea', '{width:"85%", height:"85%"}');
 
             foreach ($this->getValues() as $value) {
-                $serie = new UI_Chart_Serie($value['members'][0]->getLabel());
+                $serie = new UI_Chart_Serie($translator->get($value['members'][0]->getLabel()));
                 $serie->values[] = $value['value'];
                 $chart->addSerie($serie);
             }
@@ -603,9 +606,6 @@ class DW_Model_Report extends Core_Model_Entity
                 || ($chartType === DW_Model_Report::CHART_VERTICAL_STACKEDGROUPED)) {
                 $chart->stacked = true;
             }
-            //@todo Trouver une meilleur solution !
-            /** @var Translator $translator */
-            $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
             if (($chartType === DW_Model_Report::CHART_HORIZONTAL)
                 || ($chartType === DW_Model_Report::CHART_HORIZONTAL_GROUPED)
                 || ($chartType === DW_Model_Report::CHART_HORIZONTAL_STACKED)
@@ -740,7 +740,10 @@ class DW_Model_Report extends Core_Model_Entity
         }
 
         // Label.
-        $stdReport->label = $this->label;
+        $stdReport->label = new StdClass();
+        foreach ($this->label->getAll() as $language => $translatedLabel) {
+            $stdReport->label->$language = $translatedLabel;
+        }
 
         // Numerator Indicator.
         if ($this->numerator !== null) {
