@@ -997,7 +997,7 @@ class Orga_Service_ETLStructure
             $dWReportsAsString[] = $dWReport->getAsString();
             // TODO http://42lareponse.fr/wp-content/uploads/2013/05/what-the-fuck-is-this1.jpg
             $emptyDWReportString = '{'.
-                '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWCube->getId().',"label":"",'.
+                '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWCube->getId().',"label":{},'.
                 '"refNumerator":null,"refNumeratorAxis1":null,"refNumeratorAxis2":null,'.
                 '"refDenominator":null,"refDenominatorAxis1":null,"refDenominatorAxis2":null,'.
                 '"chartType":null,"sortType":"orderResultByDecreasingValue","withUncertainty":false,'.
