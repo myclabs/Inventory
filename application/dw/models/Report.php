@@ -603,6 +603,8 @@ class DW_Model_Report extends Core_Model_Entity
                 || ($chartType === DW_Model_Report::CHART_VERTICAL_STACKEDGROUPED)) {
                 $chart->stacked = true;
             }
+            //@todo Trouver une meilleur solution !
+            /** @var Translator $translator */
             $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
             if (($chartType === DW_Model_Report::CHART_HORIZONTAL)
                 || ($chartType === DW_Model_Report::CHART_HORIZONTAL_GROUPED)

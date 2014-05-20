@@ -11,6 +11,7 @@ use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Selectable;
+use Mnapoli\Translated\Translator;
 
 /**
  * Definit un membre d'un axe.
@@ -762,7 +763,11 @@ class Orga_Model_Member extends Core_Model_Entity
         if ($axis->isMemberPositioning()) {
             $criteria->orderBy(['parentMembersHashKey' => 'ASC', 'position' => 'ASC']);
         } else {
-            $criteria->orderBy(['label' => 'ASC']);
+            //@todo Trouver une meilleur solution !
+            /** @var Translator $translator */
+            $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
+            $lang = $translator->getLanguage();
+            $criteria->orderBy(['label.'.$lang => 'ASC']);
         }
         return $axis->getMembers()->matching($criteria)->toArray();
     }
