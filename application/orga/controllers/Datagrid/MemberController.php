@@ -280,7 +280,8 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                         'LABEL' => $this->translator->get($member->getLabel())
                     ]);
                 } else {
-                    throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
+                    $member->removeDirectParentForAxis($member->getDirectParentForAxis($broaderAxis));
+                    $this->message = __('UI', 'message', 'updated');
                 }
                 break;
         }

@@ -112,7 +112,7 @@ Feature: Organizational member feature
       | Annecy | annecy   | France         | Marque B      |
   # Modification de l'élément parent suivant l'axe "Pays" (tentative de modification de "France" à "vide", non autorisé)
     When I set "" for column "broaderpays" of row 1 of the "listMemberssite" datagrid
-    Then the following message is shown and closed: "Merci de renseigner ce champ."
+    Then the following message is shown and closed: "Modification effectuée."
     And the "listMemberssite" datagrid should contain a row:
       | label  | ref      | broaderpays    | broadermarque |
-      | Annecy | annecy   | France         | Marque B      |
+      | Annecy | annecy   |                | Marque B      |
