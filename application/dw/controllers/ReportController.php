@@ -196,7 +196,7 @@ class DW_ReportController extends Core_Controller
             } catch (Core_Exception_NotFound $e) {
                 $errors['sumAxisOne'] = __('DW', 'configValidation', 'indicatorAxisOneInvalid');
             }
-            if ($this->getParam('sumAxisNumberChoice') === '2') {
+            if ($this->getParam('sumAxisNumberChoice') === 'two') {
                 $sumAxisTwoRef = $this->getParam('sumAxisTwo');
                 if ($sumAxisTwoRef === $sumAxisOneRef) {
                     $errors['sumAxisTwo'] = __('DW', 'configValidation', 'axisTwoSameAsOne');
