@@ -104,7 +104,7 @@ sheets:
 
     content:
 
-      - foreach: organization.granularities as granularity
+      - foreach: filterRelevanceGranularities(organization.granularities) as granularity
         do:
           - type: VerticalTable
             label: "{{ translateString(granularity.label) }}"
@@ -113,13 +113,11 @@ sheets:
                 do:
                   - label: "{{ translateString(axis.label) }}"
               - label: "{{ cellColumnRelevant }}"
-              - label: "{{ cellColumnAllParentsRelevant }}"
             lines:
-              - foreach: granularity.cells as cell
+              - foreach: filterAllParentsRelevantCells(granularity.cells) as cell
                 do:
                   - cells:
                       - foreach: granularity.axes as axis
                         do:
                           - "{{ displayCellMemberForAxis(cell, axis) }}"
                       - "{{ cell.relevant }}"
-                      - "{{ cell.allParentsRelevant }}"

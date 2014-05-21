@@ -24,3 +24,26 @@ sheets:
                       - foreach: axis.directBroaders as broaderAxis
                         do:
                           - "{{ displayParentMemberForAxis(member, broaderAxis) }}"
+
+
+  - label: "{{ cellsRelevanceSheetLabel }}"
+
+    content:
+
+      - foreach: filterRelevanceGranularities(cell.granularity.narrowerGranularities) as narrowerGranularity
+        do:
+          - type: VerticalTable
+            label: "{{ translateString(narrowerGranularity.label) }}"
+            columns:
+              - foreach: narrowerGranularity.axes as axis
+                do:
+                  - label: "{{ translateString(axis.label) }}"
+              - label: "{{ cellColumnRelevant }}"
+            lines:
+              - foreach: getChildCellsForGranularity(cell, narrowerGranularity) as childCell
+                do:
+                  - cells:
+                      - foreach: narrowerGranularity.axes as axis
+                        do:
+                          - "{{ displayCellMemberForAxis(childCell, axis) }}"
+                      - "{{ childCell.relevant }}"

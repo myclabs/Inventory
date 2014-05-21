@@ -116,6 +116,32 @@ class Orga_Service_Export
         $modelBuilder->bind('cellColumnRelevant', __('Orga', 'cellRelevance', 'relevance'));
         $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader'));
         $modelBuilder->bindFunction(
+            'filterRelevanceGranularities',
+            function ($granularities) {
+                $relevanceGranularities = [];
+                /** @var Orga_Model_Granularity $granularity */
+                foreach ($granularities as $granularity) {
+                    if ($granularity->getCellsControlRelevance()) {
+                        $relevanceGranularities[] = $granularity;
+                    }
+                }
+                return $relevanceGranularities;
+            }
+        );
+        $modelBuilder->bindFunction(
+            'filterAllParentsRelevantCells',
+            function ($cells) {
+                $allParentsRelevantCells = [];
+                /** @var Orga_Model_Cell $cell */
+                foreach ($cells as $cell) {
+                    if ($cell->getAllParentsRelevant()) {
+                        $allParentsRelevantCells[] = $cell;
+                    }
+                }
+                return $allParentsRelevantCells;
+            }
+        );
+        $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
             function (Orga_Model_Cell $cell, Orga_Model_Axis $axis) {
                 foreach ($cell->getMembers() as $member) {
@@ -177,7 +203,7 @@ class Orga_Service_Export
             function (Orga_Model_Cell $cell) {
                 $organization = $cell->getGranularity()->getOrganization();
                 $axes = [];
-                foreach ($organization->getFirstOrderedAxes() as $organizationAxis) {
+                foreach ($organization->getLastOrderedAxes() as $organizationAxis) {
                     foreach ($cell->getMembers() as $member) {
                         if ($organizationAxis->isBroaderThan($member->getAxis())) {
                             continue 2;
@@ -214,9 +240,28 @@ class Orga_Service_Export
         $modelBuilder->bind('cellColumnRelevant', __('Orga', 'cellRelevance', 'relevance'));
         $modelBuilder->bind('cellColumnAllParentsRelevant', __('Orga', 'cellRelevance', 'parentCellsRelevanceHeader'));
         $modelBuilder->bindFunction(
+            'filterRelevanceGranularities',
+            function ($granularities) {
+                $relevanceGranularities = [];
+                /** @var Orga_Model_Granularity $granularity */
+                foreach ($granularities as $granularity) {
+                    if ($granularity->getCellsControlRelevance()) {
+                        $relevanceGranularities[] = $granularity;
+                    }
+                }
+                return $relevanceGranularities;
+            }
+        );
+        $modelBuilder->bindFunction(
             'getChildCellsForGranularity',
             function (Orga_Model_Cell $cell, Orga_Model_Granularity $granularity) {
-                return $cell->getChildCellsForGranularity($granularity);
+                $allParentsRelevantCells = [];
+                foreach ($cell->getChildCellsForGranularity($granularity) as $childCell) {
+                    if ($childCell->getAllParentsRelevant()) {
+                        $allParentsRelevantCells[] = $childCell;
+                    }
+                }
+                return $allParentsRelevantCells;
             }
         );
         $modelBuilder->bindFunction(
@@ -239,6 +284,15 @@ class Orga_Service_Export
         );
 
 
+        $type = 'cell';
+        foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+            if ($narrowerGranularity->getCellsControlRelevance()) {
+                $type = 'relevance';
+                break;
+            }
+        }
+
+
         switch ($format) {
             case 'xls':
                 $writer = new PHPExcel_Writer_Excel5();
@@ -250,7 +304,7 @@ class Orga_Service_Export
         }
 
         $export->export(
-            $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/cell.yml')),
+            $modelBuilder->build(new YamlMappingReader(__DIR__.'/exports/'.$type.'.yml')),
             'php://output',
             $writer
         );
