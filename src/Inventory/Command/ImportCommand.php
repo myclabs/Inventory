@@ -561,7 +561,7 @@ class ImportCommand extends Command
                         if (!$errorHappened) {
                             if ($reportObject->getNumeratorAxis1() != null) {
                                 $numeratorAxisRef = $reportObject->getNumeratorAxis1();
-                                if (strstr($numeratorAxisRef, 'c_') === 0) {
+                                if (strpos($numeratorAxisRef, 'c_') === 0) {
                                     $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                         . substr($reportObject->getNumeratorAxis1(), 2);
                                 }
@@ -571,12 +571,19 @@ class ImportCommand extends Command
                                     );
                                 } catch (\Core_Exception_NotFound $e) {
                                     $errorHappened = true;
+                                    $output->writeln(
+                                        '<error>'.
+                                        "\n".
+                                        $numeratorAxisRef.
+                                        "\n".
+                                        '</error>'
+                                    );
                                 }
                             }
                             if (!$errorHappened) {
                                 if ($reportObject->getNumeratorAxis2() != null) {
                                     $numeratorAxisRef = $reportObject->getNumeratorAxis2();
-                                    if (strstr($numeratorAxisRef, 'c_') === 0) {
+                                    if (strpos($numeratorAxisRef, 'c_') === 0) {
                                         $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                             . substr($reportObject->getNumeratorAxis2(), 2);
                                     }
@@ -586,6 +593,13 @@ class ImportCommand extends Command
                                         );
                                     } catch (\Core_Exception_NotFound $e) {
                                         $errorHappened = true;
+                                        $output->writeln(
+                                            '<error>'.
+                                            "\n".
+                                            $numeratorAxisRef.
+                                            "\n".
+                                            '</error>'
+                                        );
                                     }
                                 }
                             }
@@ -602,7 +616,7 @@ class ImportCommand extends Command
                                 if (!$errorHappened) {
                                     if ($reportObject->getDenominatorAxis1() != null) {
                                         $denominatorAxisRef = $reportObject->getDenominatorAxis1();
-                                        if (strstr($denominatorAxisRef, 'c_') === 0) {
+                                        if (strpos($denominatorAxisRef, 'c_') === 0) {
                                             $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                                 . substr($reportObject->getDenominatorAxis1(), 2);
                                         }
@@ -617,7 +631,7 @@ class ImportCommand extends Command
                                     if (!$errorHappened) {
                                         if ($reportObject->getDenominatorAxis2() != null) {
                                             $denominatorAxisRef = $reportObject->getDenominatorAxis2();
-                                            if (strstr($denominatorAxisRef, 'c_') === 0) {
+                                            if (strpos($denominatorAxisRef, 'c_') === 0) {
                                                 $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                                     . substr($reportObject->getDenominatorAxis2(), 2);
                                             }
@@ -635,7 +649,7 @@ class ImportCommand extends Command
                         }
                         foreach ($reportObject->getFilters() as $filterObject) {
                             $filterAxisRef = $filterObject->getAxis();
-                            if (strstr($filterAxisRef, 'c_') === 0) {
+                            if (strpos($filterAxisRef, 'c_') === 0) {
                                 $filterAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                     . substr($filterObject->getAxis(), 2);
                             }
