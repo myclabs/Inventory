@@ -470,12 +470,9 @@ $(document).ready(function() {
                 $('li a[href="#reportValues"]').closest('li').removeClass('disabled');
             }
         <?php endif; ?>
-        $('#reportChart').attr('data-cached', false);
-        $('#reportValues').attr('data-cached', false);
-        if ($('li a[href="#reportChart"]').closest('li').hasClass('active')) {
-            $('li a[href="#reportChart"]').closest('li').removeClass('active');
-        }
         $('li a[href="#reportChart"]').tab('show');
+        $('#reportChart').html($('#reportChart').attr('data-loading'));
+        $('#reportChart').trigger('loadTab.muih', [$('#reportContent ul.nav-tabs li.active a').attr('data-src')]);
     });
     $('#reportContent li').on('click', function(e) {
         if ($(this).hasClass('disabled')) {
