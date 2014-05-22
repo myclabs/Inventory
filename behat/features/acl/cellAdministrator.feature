@@ -67,8 +67,8 @@ Feature: Cell administrator feature
   # Accès à l'onglet "Analyses", vérification que l'utilisateur peut bien voir les analyses préconfigurées
     When I click element "div[id='currentGranularity'] i.fa-bar-chart-o"
     And I wait 5 seconds
-    Then I should see "Chiffre d'affaire, par année"
-    When I click "Chiffre d'affaire, par année"
+    Then I should see "Chiffre d'affaire, par année "
+    When I click "Chiffre d'affaire, par année "
     And I wait 8 seconds
     And I open tab "Valeurs"
     Then the row 1 of the "reportValues" datagrid should contain:
