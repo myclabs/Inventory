@@ -1018,7 +1018,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
-     * Vérifie si un SocialComment est utilisée par la cellule.
+     * Vérifie si un Comment est utilisée par la cellule.
      *
      * @param Orga_Model_Cell_InputComment $comment
      *
@@ -1030,7 +1030,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
-     * Ajoute un SocialComment à la Cellule.
+     * Ajoute un Comment à la Cellule.
      *
      * @param Orga_Model_Cell_InputComment $comment
      */
@@ -1042,7 +1042,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
-     * Retire un SocialComment de la cellule.
+     * Retire un Comment de la cellule.
      *
      * @param Orga_Model_Cell_InputComment $comment
      */
@@ -1054,7 +1054,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
-     * Vérifie si au moins un SocialComment est utilisée par la cellule pour l'InputSetPrimary.
+     * Vérifie si au moins un Comment est utilisée par la cellule pour l'InputSetPrimary.
      *
      * @return bool
      */

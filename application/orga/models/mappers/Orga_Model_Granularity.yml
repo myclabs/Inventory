@@ -36,14 +36,6 @@ Orga_Model_Granularity:
       column: cellsGenerateDWCubes
       type: boolean
       nullable: false
-    cellsWithSocialGenericActions:
-      column: cellsWithSocialGenericActions
-      type: boolean
-      nullable: false
-    cellsWithSocialContextActions:
-      column: cellsWithSocialContextActions
-      type: boolean
-      nullable: false
     cellsWithInputDocs:
       column: cellsWithInputDocs
       type: boolean

@@ -124,20 +124,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected $cellsWithACL = false;
 
     /**
-     * Défini si les cellules de la granularité comportent des GenericAction.
-     *
-     * @var bool
-     */
-    protected $cellsWithSocialGenericActions = false;
-
-    /**
-     * Défini si les cellules de la granularité comportent des ContextAction.
-     *
-     * @var bool
-     */
-    protected $cellsWithSocialContextActions = false;
-
-    /**
      * Défini si les cellules de la granularité contiennent des documents.
      *
      * @var bool
@@ -861,26 +847,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getCellsWithACL()
     {
         return $this->cellsWithACL;
-    }
-
-    /**
-     * Indique si les cellules de la granularité possédent des GenericAction de Social.
-     *
-     * @return bool
-     */
-    public function getCellsWithSocialGenericActions()
-    {
-        return $this->cellsWithSocialGenericActions;
-    }
-
-    /**
-     * Indique si les cellules de la granularité possédent des ContextAction de Social.
-     *
-     * @return bool
-     */
-    public function getCellsWithSocialContextActions()
-    {
-        return $this->cellsWithSocialContextActions;
     }
 
     /**

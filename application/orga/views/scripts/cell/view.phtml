@@ -414,7 +414,7 @@ if (count($file) > 0) {
 <div class="col-md-3">
     <div class="comments">
         <h3>
-            <?=___('Social', 'comment', 'comments')?>
+            <?=___('Orga', 'comment', 'comments')?>
             <small class="pull-right">
                 <a href="orga/cell/view-comments/idCell/<?=$currentCell->id?>/" class="refresh">
                     <i class="fa fa-refresh fa-fw"></i>
@@ -462,7 +462,7 @@ if (count($file) > 0) {
 $('.comments a.refresh').on('click', function(e) {
     e.preventDefault();
     $('.comments > h3 i').addClass('fa-spin');
-    $('.comments > div').html('<i class="fa fa-spinner fa-fw fa-spin fa-3x"></i> <?=addslashes(___('Social', 'comment', 'loadingComments'))?>');
+    $('.comments > div').html('<i class="fa fa-spinner fa-fw fa-spin fa-3x"></i> <?=addslashes(___('Orga', 'comment', 'loadingComments'))?>');
     $.ajax({
         url: $(this).attr('href'),
         type: "GET",
@@ -484,12 +484,12 @@ $('.comments a.refresh').on('click', function(e) {
                     });
                 });
             } else {
-                $('.comments > div').html('<p><?=addslashes(___('Social', 'comment', 'noComment'))?></p>');
+                $('.comments > div').html('<p><?=addslashes(___('Orga', 'comment', 'noComment'))?></p>');
             }
         },
         error: function(jqXHR) {
             $('.comments > h3 i').removeClass('fa-spin');
-            $('.comments > div').html('<?=addslashes(___('Social', 'comment', 'errorWhileLoadingComments'))?>');
+            $('.comments > div').html('<?=addslashes(___('Orga', 'comment', 'errorWhileLoadingComments'))?>');
         }
     });
 });

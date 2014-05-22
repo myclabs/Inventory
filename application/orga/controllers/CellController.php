@@ -632,7 +632,7 @@ class Orga_CellController extends Core_Controller
         $comments = [];
         /** @var Orga_Model_Cell_InputComment $comment */
         foreach ($cellRepository->getLatestComments($cell, 10) as $comment) {
-            $commentText = __('Social', 'comment', 'by') . ' <b>' . $comment->getAuthor()->getName() . '</b> '
+            $commentText = __('Orga', 'comment', 'by') . ' <b>' . $comment->getAuthor()->getName() . '</b> '
                 . __('Orga', 'input', 'aboutInput')
                 . ' <a href="orga/cell/input/idCell/' . $comment->getCell()->getId()
                     . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
@@ -1339,7 +1339,7 @@ class Orga_CellController extends Core_Controller
         }
 
         $tabComments = new Tab('inputComments');
-        $tabComments->setTitle(__('Social', 'comment', 'comments'));
+        $tabComments->setTitle(__('Orga', 'comment', 'comments'));
         $commentView = new Zend_View();
         $commentView->setScriptPath(__DIR__ . '/../views/scripts');
         $commentView->assign('idCell', $idCell);

@@ -200,7 +200,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'DW',
             'Algo',
             'AF',
-            'Social',
             'Orga',
             'AuditTrail',
             'Account',

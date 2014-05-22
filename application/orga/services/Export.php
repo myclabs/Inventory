@@ -89,8 +89,6 @@ class Orga_Service_Export
         $modelBuilder->bind('granularityColumnACL', __('User', 'role', 'roles'));
         $modelBuilder->bind('granularityColumnAFTab', __('UI', 'name', 'forms'));
         $modelBuilder->bind('granularityColumnDW', __('DW', 'name', 'analyses'));
-        $modelBuilder->bind('granularityColumnGenericActions', __('Social', 'actionTemplate', 'actionTemplates'));
-        $modelBuilder->bind('granularityColumnContextActions', __('Social', 'action', 'actions'));
         $modelBuilder->bind('granularityColumnInputDocuments', __('Doc', 'name', 'documents'));
 
         // Feuille des Member.
