@@ -63,7 +63,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
                 $axis = new Orga_Model_Axis($organization, $axisRef);
             }
             $this->translator->set($axis->getLabel(), $this->getAddElementValue('addAxis_label'));
-            if ($this->getAddElementValue('addAxis_contextualizing') === 'contextualizing') {
+            if ($this->getAddElementValue('addAxis_isContextualizing') === 'contextualizing') {
                 $axis->setContextualize(true);
             } else {
                 $axis->setContextualize(false);
@@ -142,12 +142,11 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             $this->setEditFormElementErrorMessage('ref', $e->getMessage());
         }
 
-//        if ($this->getEditElementValue('contextualizing') === 'contextualizing') {
-//            $contextualizing = true;
-//        } else {
-//            $contextualizing = false;
-//        }
-        $contextualizing = false;
+        if ($this->getEditElementValue('isContextualizing') === 'contextualizing') {
+            $contextualizing = true;
+        } else {
+            $contextualizing = false;
+        }
         switch ($this->getEditElementValue('changeOrder')) {
             case 'first':
                 $newPosition = 1;
@@ -234,7 +233,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
 
         $this->data['ref'] = $axis->getRef();
         $this->data['label'] = $this->translator->get($axis->getLabel());
-        $this->data['contextualizing'] = $axis->isContextualizing() ? 'contextualizing' : 'noneContextualizing';
+        $this->data['isContextualizing'] = $axis->isContextualizing() ? 'contextualizing' : 'notContextualizing';
 
         $this->send();
     }
