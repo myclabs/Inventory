@@ -2,7 +2,6 @@
 
 namespace Inventory\Command\PopulateDB\BasicDataSet\Unit;
 
-use Core_Locale;
 use Doctrine\ORM\EntityManager;
 use DOMDocument;
 use DOMElement;
@@ -50,11 +49,11 @@ class PopulateDiscreteUnit
                 continue;
             }
 
-            $discreteUnit->setTranslationLocale(Core_Locale::load($lang));
-            $discreteUnit->setName($value);
-            $discreteUnit->setSymbol($value);
-            $discreteUnit->save();
-            $this->entityManager->flush();
+            $discreteUnit->getName()->set($value, $lang);
+            $discreteUnit->getSymbol()->set($value, $lang);
         }
+
+        $discreteUnit->save();
+        $this->entityManager->flush();
     }
 }

@@ -5,9 +5,11 @@ namespace Classification\Application\Service;
 use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Axis;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Core_Exception_User;
 use Core_Tools;
+use Mnapoli\Translated\Translator;
 
 /**
  * Service Axis.
@@ -17,12 +19,22 @@ use Core_Tools;
 class AxisService
 {
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
      * Ajoute un Axis et le renvoie.
      *
-     * @param \Classification\Domain\ClassificationLibrary $library
-     * @param string $ref
-     * @param string $label
-     * @param string $idParent
+     * @param ClassificationLibrary $library
+     * @param string                $ref
+     * @param string                $label
+     * @param string                $idParent
      *
      * @return Axis
      */
@@ -36,7 +48,7 @@ class AxisService
         $this->checkAxisRef($library, $ref);
 
         $axis->setRef($ref);
-        $axis->setLabel($label);
+        $this->translator->set($axis->getLabel(), $label);
         if (!empty($idParent)) {
             $axis->setDirectNarrower(Axis::load($idParent));
         }
@@ -52,7 +64,7 @@ class AxisService
      * @param string $axisId
      * @param string $newRef
      *
-     * @return string
+     * @return TranslatedString
      */
     public function updateRef($axisId, $newRef)
     {
@@ -71,13 +83,13 @@ class AxisService
      * @param string $axisId
      * @param string $newLabel
      *
-     * @return string
+     * @return TranslatedString
      */
     public function updateLabel($axisId, $newLabel)
     {
         $axis = Axis::load($axisId);
 
-        $axis->setLabel($newLabel);
+        $this->translator->set($axis->getLabel(), $newLabel);
 
         return $axis->getLabel();
     }
@@ -89,7 +101,7 @@ class AxisService
      * @param string $newRef
      * @param string $newLabel
      *
-     * @return string
+     * @return TranslatedString
      */
     public function updateRefAndLabel($axisId, $newRef, $newLabel)
     {
@@ -98,7 +110,7 @@ class AxisService
         $this->checkAxisRef($axis->getLibrary(), $newRef);
 
         $axis->setRef($newRef);
-        $axis->setLabel($newLabel);
+        $this->translator->set($axis->getLabel(), $newLabel);
 
         return $axis->getLabel();
     }
@@ -110,7 +122,7 @@ class AxisService
      * @param string $newParentRef
      * @param string $newPosition
      *
-     * @return string
+     * @return TranslatedString
      */
     public function updateParent($axisId, $newParentRef, $newPosition = null)
     {
@@ -134,7 +146,7 @@ class AxisService
      * @param string $axisId
      * @param int    $newPosition
      *
-     * @return string
+     * @return TranslatedString
      */
     public function updatePosition($axisId, $newPosition)
     {
@@ -151,7 +163,7 @@ class AxisService
      * @param string $axisId
      *
      * @throws Core_Exception_User
-     * @return string Le label du Axis.
+     * @return TranslatedString Le label du Axis.
      */
     public function delete($axisId)
     {

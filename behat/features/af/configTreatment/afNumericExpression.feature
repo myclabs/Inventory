@@ -116,7 +116,7 @@ Feature: AF numeric expression algo feature
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "algoNumericExpression" datagrid
-    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression «  »."
+    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression"
   # Modification de l'expression, saisie invalide
     When I set "a+(b+(c+d)" for column "expression" of row 1 of the "algoNumericExpression" datagrid
     Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."

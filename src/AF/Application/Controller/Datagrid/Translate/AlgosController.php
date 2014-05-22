@@ -1,29 +1,11 @@
 <?php
-/**
- * Classe AF_Datagrid_Translate_AlgosController
- * @author valentin.claras
- * @package AF
- * @subpackage Controller
- */
 
 use AF\Domain\AFLibrary;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use Core\Annotation\Secure;
-use Gedmo\Translatable\TranslatableListener;
 
-/**
- * Classe du controller du datagrid des traductions des algos.
- * @package AF
- * @subpackage Controller
- */
 class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var TranslatableListener
-     */
-    private $translatableListener;
-
     /**
      * @Inject("translation.languages")
      * @var string[]
@@ -37,8 +19,6 @@ class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
-
         $library = AFLibrary::load($this->getParam('library'));
 
         foreach ($library->getAFList() as $af) {
@@ -52,9 +32,7 @@ class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
                 $data['identifier'] = $algo->getId();
 
                 foreach ($this->languages as $language) {
-                    $locale = Core_Locale::load($language);
-                    $algo->reloadWithLocale($locale);
-                    $data[$language] = $algo->getLabel();
+                    $data[$language] = $algo->getLabel()->get($language);
                 }
                 $this->addline($data);
             }
@@ -70,12 +48,10 @@ class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $algo = NumericAlgo::load($this->update['index']);
-        $algo->reloadWithLocale(Core_Locale::load($this->update['column']));
-        $algo->setLabel($this->update['value']);
-        $this->data = $algo->getLabel();
+        $algo->getLabel()->set($this->update['value'], $this->update['column']);
 
+        $this->data = $algo->getLabel()->get($this->update['column']);
         $this->send(true);
     }
 }

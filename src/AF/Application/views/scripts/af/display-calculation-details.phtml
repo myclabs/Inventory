@@ -91,6 +91,8 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = 'collapse_')
  */
 function getSubAFInputSets(InputSet $inputSet)
 {
+    $view = Zend_Controller_Action_HelperBroker::getStaticHelper('Layout')->getView();
+
     $subAFInputSets = [];
     foreach ($inputSet->getInputs() as $input) {
         if ($input->isHidden()) {
@@ -99,7 +101,7 @@ function getSubAFInputSets(InputSet $inputSet)
         if ($input instanceof NotRepeatedSubAFInput) {
             $subInputSet = $input->getValue();
             $subAFInputSets[] = array(
-                'title'        => $input->getComponent()->getLabel(),
+                'title'        => $view->translate($input->getComponent()->getLabel()),
                 'subInputSet'  => $subInputSet,
                 'componentRef' => $input->getRef(),
             );
@@ -108,7 +110,7 @@ function getSubAFInputSets(InputSet $inputSet)
         if ($input instanceof RepeatedSubAFInput) {
             $subInputSets = $input->getValue();
             foreach ($subInputSets as $number => $subInputSet) {
-                $title = $input->getComponent()->getLabel() . " #" . ($number + 1);
+                $title = $view->translate($input->getComponent()->getLabel()) . " #" . ($number + 1);
                 if ($subInputSet->getFreeLabel()) {
                     $title .= " - " . $subInputSet->getFreeLabel();
                 }
@@ -140,7 +142,7 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
 
     $title = $algo->getRef();
     if ($algo instanceof NumericAlgo) {
-        $title .= " <small>" . $algo->getLabel() . "</small>";
+        $title .= " <small>" . $view->translate($algo->getLabel()) . "</small>";
     }
     $collapse = new Collapse($refPrefix . $algo->getRef(), $title);
 
@@ -165,8 +167,9 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
 
     // Champ de saisie
     if ($algo instanceof NumericInputAlgo) {
+        $label = $view->translate($algo->getLabel());
         $collapse->appendContent("<p><strong>" . __('UI', 'name', 'field')  . __('UI', 'other', ':')
-            . "</strong> {$algo->getLabel()}</p>");
+            . "</strong> $label</p>");
     }
 
     // Paramètre
@@ -175,7 +178,7 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
         $collapse->appendContent('<p>');
         $collapse->appendContent('<strong>' . __('Parameter', 'name', 'family') . __('UI', 'other', ':') . '</strong>');
         $collapse->appendContent('<a href="' . $view->baseUrl('parameter/family/details/id/' . $family->getId()) . '">'
-            . $family->getLabel() . "</a>");
+            . $view->translate($family->getLabel()) . "</a>");
         $collapse->appendContent('</p>');
         $collapse->appendContent('<ul>');
         foreach ($algo->getParameterCoordinates() as $parameterCoordinate) {
@@ -183,8 +186,8 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
             try {
                 $dimension = $family->getDimension($parameterCoordinate->getDimensionRef());
                 $member = $dimension->getMember($memberRef);
-                $dimensionLabel = $dimension->getLabel();
-                $memberLabel = $member->getLabel();
+                $dimensionLabel = $view->translate($dimension->getLabel());
+                $memberLabel = $view->translate($member->getLabel());
             } catch (Core_Exception_NotFound $e) {
                 $dimensionLabel = $parameterCoordinate->getDimensionRef();
                 $memberLabel = $memberRef;
@@ -204,8 +207,9 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
         $popup->ajax(true);
         $popup->setAttribute('id', 'graph_' . $algo->getId());
         $popup->addTitle($algo->getRef());
-        if ($algo->getLabel()) {
-            $popup->getHeader()->appendContent(' (' . $algo->getLabel() . ')');
+        $algoLabel = $view->translate($algo->getLabel());
+        if ($algoLabel) {
+            $popup->getHeader()->appendContent(' (' . $algoLabel . ')');
         }
         $popup->large();
         $collapse->appendContent($popup->render());
@@ -221,7 +225,7 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
     if ($algo instanceof NumericAlgo) {
         $value = $algo->execute($inputSet);
         $stringValue = $locale->formatNumber($value->getDigitalValue(), 20)
-            . ' <strong>' . $value->getUnit()->getSymbol() . '</strong> ± '
+            . ' <strong>' . $view->translate($value->getUnit()->getSymbol()) . '</strong> ± '
             . $locale->formatNumber($value->getRelativeUncertainty()) . ' <strong>%</strong>';
         $collapse->appendContent("<p><strong>" . __('UI', 'name', 'value') . __('UI', 'other', ':')
             . "</strong> $stringValue</p>");

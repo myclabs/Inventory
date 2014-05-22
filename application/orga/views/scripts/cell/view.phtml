@@ -100,6 +100,7 @@ if (count($file) > 0) {
     .cell:hover .inventory-progress-bar { background-color: #9c9c9c; }
 
     .granularity-wrapper legend { margin-bottom: 5px; }
+    .granularity-wrapper legend small { margin-left: 5px; font-size: 75%; }
     .granularity-wrapper .cells-filter { margin-bottom: 15px; }
     .granularity-wrapper .cells-filter .granularity-info { vertical-align: middle; font-size: 14px; font-weight: normal; line-height: 20px; padding: 4px 12px; }
     .granularity-wrapper .loading-cells, .granularity-wrapper .no-cell, .granularity-wrapper .change-cells-display { text-align: center; }
@@ -163,7 +164,9 @@ if (count($file) > 0) {
                 <i class="fa fa-chevron-down fa-fw"></i>
                 <?=__('Orga', 'view', 'currentGranularity')?>
                 <small>
-                    <?=___('Orga', 'view', 'granularityExplanations')?><?=$this->currentCellPurpose?>
+                    <i>
+                        <?=___('Orga', 'view', 'granularityExplanations')?><?=$this->currentCellPurpose?>
+                    </i>
                 </small>
             </a>
         </legend>
@@ -349,9 +352,11 @@ if (count($file) > 0) {
         <legend data-closed-indicator="<i class=&quot;fa fa-chevron-right fa-fw&quot;></i>" data-opened-indicator="<i class=&quot;fa fa-chevron-down fa-fw&quot;></i>">
             <a data-toggle="collapse" href="#granularity<?=$narrowerGranularity->getId()?>">
                 <i class="fa fa-chevron-<?=(count($this->narrowerGranularities) === 1) ? 'down': $narrowerGranularityArray['isInput'] ? 'down' : 'right'?> fa-fw"></i>
-                <?=$narrowerGranularity->getLabel()?>
+                <?=$this->translate($narrowerGranularity->getLabel())?>
                 <small>
-                    <?=___('Orga', 'view', 'granularityExplanations')?><?=$narrowerGranularityArray['purpose']?>
+                    <i>
+                        <?=___('Orga', 'view', 'granularityExplanations')?><?=$narrowerGranularityArray['purpose']?>
+                    </i>
                 </small>
             </a>
         </legend>

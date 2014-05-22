@@ -11,10 +11,10 @@ foreach ($this->granularities as $inputGranularity) :
     );
 
     foreach ($configGranularity->getAxes() as $axis) :
-        $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $axis->getLabel());
+        $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $this->translate($axis->getLabel()));
         $members = [];
         foreach ($axis->getMembers() as $member) :
-            $members[$member->getTag()] = $member->getLabel();
+            $members[$member->getTag()] = $this->translate($member->getLabel());
         endforeach;
         $columnAxis->list = $members;
         $columnAxis->filterOperator = Core_Model_Filter::OPERATOR_CONTAINS;
@@ -36,7 +36,8 @@ foreach ($this->granularities as $inputGranularity) :
         'cellAfs'.$inputGranularity->getId(),
         '<span class="withTooltip" data-placement="right" title="'
             . ___('Orga', 'inputGranularities', 'inputAndConfigLevelsExplanations') . '">'
-            . $configGranularity->getLabel() . ' <small>' . $inputGranularity->getLabel() . '</small><span>',
+            . $this->translate($configGranularity->getLabel())
+            . ' <small>' . $this->translate($inputGranularity->getLabel()) . '</small><span>',
         $datagridGranularityAfs->getHTML()
     );
 
@@ -61,7 +62,8 @@ if (count($this->granularities) > 0) :
 endif;
 $complementaryFields = '<select multiple name="inputConfigAxes[]" class="inputConfigAxes" style="min-width: 250px;">';
 foreach ($this->organization->getFirstOrderedAxes() as $axis) :
-    $complementaryFields .= '<option value="' . $axis->getRef() . '">' . $axis->getLabel() . '</option>';
+    $complementaryFields .= '<option value="' . $axis->getRef() . '">'
+        . $this->translate($axis->getLabel()) . '</option>';
 endforeach;
 $complementaryFields .= '</select>';
 $complementaryFields .= '<script>' .

@@ -3,6 +3,7 @@
 namespace Inventory\Command\PopulateDB\TestDataSet;
 
 use Account\Domain\Account;
+use Core\Translation\TranslatedString;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateParameter;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,7 +34,8 @@ class PopulateParameter extends AbstractPopulateParameter
     {
         $output->writeln('  <info>Populating Parameters</info>');
 
-        $library = new ParameterLibrary($this->publicAccount, 'Paramètres My C-Sense', true);
+        $label = new TranslatedString('Paramètres My C-Sense', 'fr');
+        $library = new ParameterLibrary($this->publicAccount, $label, true);
         $library->save();
 
         $categorie_contenant_sous_categorie = $this->createCategory($library, 'Catégorie contenant une sous-catégorie');

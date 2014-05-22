@@ -33,7 +33,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
         foreach ($selectFields as $selectField) {
             $data = [];
             $data['index'] = $selectField->getId();
-            $data['label'] = $selectField->getLabel();
+            $data['label'] = $this->cellTranslatedText($selectField->getLabel());
             $data['ref'] = $selectField->getRef();
             $data['help'] = $this->cellLongText(
                 'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $selectField->getId(),
@@ -92,9 +92,9 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
                 $this->send();
                 return;
             }
-            $selectField->setLabel($this->getAddElementValue('label'));
+            $this->translator->set($selectField->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($selectField->getHelp(), $this->getAddElementValue('help'));
             $selectField->setVisible($isVisible);
-            $selectField->setHelp($this->getAddElementValue('help'));
             $selectField->setEnabled($this->getAddElementValue('enabled'));
             $selectField->setRequired($this->getAddElementValue('required'));
             $selectField->setType($type);
@@ -126,15 +126,15 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $selectField->setLabel($newValue);
-                $this->data = $selectField->getLabel();
+                $this->translator->set($selectField->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($selectField->getLabel());
                 break;
             case 'ref':
                 $selectField->setRef($newValue);
                 $this->data = $selectField->getRef();
                 break;
             case 'help':
-                $selectField->setHelp($newValue);
+                $this->translator->set($selectField->getHelp(), $newValue);
                 $this->data = null;
                 break;
             case 'isVisible':
@@ -220,7 +220,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
         /** @var $select Select */
         $select = Select::load($this->getParam('index'));
         foreach ($select->getOptions() as $option) {
-            $this->addElementList($option->getId(), $option->getLabel());
+            $this->addElementList($option->getId(), $this->translator->get($option->getLabel()));
         }
         $this->send();
     }
@@ -233,7 +233,7 @@ class AF_Datagrid_Edit_Components_SelectSingleFieldsController extends UI_Contro
     {
         /** @var $select Select */
         $select = Select::load($this->getParam('component'));
-        $this->data = $select->getHelp();
+        $this->data = (string) $this->translator->get($select->getHelp());
         $this->send();
     }
 }

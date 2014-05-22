@@ -3,10 +3,6 @@ AF\Domain\AF:
   repositoryClass: \Core_Model_Repository_Ordered
   table: AF_AF
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       type: integer
@@ -14,17 +10,16 @@ AF\Domain\AF:
         strategy: AUTO
 
   fields:
-    label:
-      type: string
-      nullable: true
-      gedmo:
-        - translatable
     documentation:
       type: text
       nullable: true
     position:
       type: integer
       nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     library:

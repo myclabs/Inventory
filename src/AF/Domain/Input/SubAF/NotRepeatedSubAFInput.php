@@ -38,7 +38,7 @@ class NotRepeatedSubAFInput extends SubAFInput
     }
 
     /**
-     * @param \AF\Domain\InputSet\SubInputSet $value
+     * @param SubInputSet $value
      */
     public function setValue(SubInputSet $value)
     {

@@ -7,6 +7,7 @@
  * @package    UI
  * @subpackage Controller
  */
+use Core\Translation\TranslatedString;
 
 /**
  * Description of Controller_Datagrid.
@@ -146,7 +147,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
                 $filters = Zend_Json::decode($this->_getParam('filters'));
                 foreach ($filters as $filter) {
                     foreach ($filter as $filterName => $filterValue) {
-                        list($alias, $filterName) = explode('.', $filterName);
+                        list($alias, $filterName) = explode('.', $filterName, 2);
                         $alias = (empty($alias)) ? null : $alias;
                         foreach ($filterValue as $operator => $value) {
                             if ($value !== null) {
@@ -300,6 +301,19 @@ abstract class UI_Controller_Datagrid extends Core_Controller
             $cell = $this->baseCell($cell, null, $possibility);
         }
         $cell['editable'] = $possibility;
+    }
+
+    /**
+     * Formate les données à renvoyer pour un texte traduit.
+     *
+     * @param TranslatedString $text Valeur d'une colonne date.
+     * @param bool             $editable
+     *
+     * @return array
+     */
+    public function cellTranslatedText(TranslatedString $text, $editable = true)
+    {
+        return $this->baseCell($this->translator->get($text), null, $editable);
     }
 
     /**
@@ -539,7 +553,7 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      *
      * @param string $elementName
      *
-     * @return mixed
+     * @return string
      */
     public function getAddElementValue($elementName)
     {

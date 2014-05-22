@@ -4,6 +4,7 @@ use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use Doctrine\ORM\EntityManager;
+use Mnapoli\Translated\Translator;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -30,18 +31,26 @@ class Orga_Service_OrganizationService
     private $userService;
 
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
      * @param EntityManager           $entityManager
      * @param Orga_Service_ACLManager $aclManager
      * @param UserService             $userService
+     * @param Translator              $translator
      */
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ACLManager $aclManager,
-        UserService $userService
+        UserService $userService,
+        Translator $translator
     ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
         $this->userService = $userService;
+        $this->translator = $translator;
     }
 
     /**
@@ -69,7 +78,7 @@ class Orga_Service_OrganizationService
         try {
             // Création de l'organization.
             $organization = new Orga_Model_Organization($account);
-            $organization->setLabel($labelOrganization);
+            $organization->getLabel()->set($labelOrganization, 'fr');
 
             $organization->save();
             $this->entityManager->flush();
@@ -331,7 +340,7 @@ class Orga_Service_OrganizationService
     public function addMember(Orga_Model_Axis $axis, $ref, $label, array $parentMembers)
     {
         $member = new Orga_Model_Member($axis, $ref, $parentMembers);
-        $member->setLabel($label);
+        $this->translator->set($member->getLabel(), $label);
 
         try {
             $this->entityManager->beginTransaction();
@@ -393,7 +402,7 @@ class Orga_Service_OrganizationService
         } catch (Core_Exception_NotFound $e) {
         }
         $timeAxis = new Orga_Model_Axis($organization, $timeAxisRef);
-        $timeAxis->setLabel($timeAxisLabel);
+        $this->translator->set($timeAxis->getLabel(), $timeAxisLabel);
         $axes['timeAxis'] = $timeAxis;
         // Création de l'axe de subdivision.
         $subdivisionAxisLabel = $axesData['subdivisionAxis'];
@@ -405,7 +414,7 @@ class Orga_Service_OrganizationService
             } catch (Core_Exception_NotFound $e) {
             }
             $subdivisionAxis = new Orga_Model_Axis($organization, $subdivisionAxisRef);
-            $subdivisionAxis->setLabel($subdivisionAxisLabel);
+            $this->translator->set($subdivisionAxis->getLabel(), $subdivisionAxisLabel);
             $axes['subdivisionAxis'] = $subdivisionAxis;
         }
         // Création des axes principaux.
@@ -569,27 +578,27 @@ class Orga_Service_OrganizationService
     {
         // Axe Catégorie
         $categoryAxis = new Orga_Model_Axis($organization, 'categorie');
-        $categoryAxis->setLabel('Catégorie');
+        $categoryAxis->getLabel()->set('Catégorie', 'fr');
         $categoryAxis->save();
         $categoryEnergy = new Orga_Model_Member($categoryAxis, 'energie');
-        $categoryEnergy->setLabel('Énergie');
+        $this->translator->set($categoryEnergy->getLabel(), 'Énergie');
         $categoryEnergy->save();
         $categoryTravel = new Orga_Model_Member($categoryAxis, 'deplacement');
-        $categoryTravel->setLabel('Déplacement');
+        $this->translator->set($categoryTravel->getLabel(), 'Déplacement');
         $categoryTravel->save();
 
         // Axe Année
         $timeAxis = new Orga_Model_Axis($organization, 'annee');
-        $timeAxis->setLabel('Année');
+        $categoryAxis->getLabel()->set('Année', 'fr');
         $timeAxis->save();
-        $year2013 = new Orga_Model_Member($timeAxis, '2012');
-        $year2013->setLabel('2012');
-        $year2013->save();
+        $year2012 = new Orga_Model_Member($timeAxis, '2012');
+        $this->translator->set($year2012->getLabel(), '2012');
+        $year2012->save();
         $year2013 = new Orga_Model_Member($timeAxis, '2013');
-        $year2013->setLabel('2013');
+        $this->translator->set($year2013->getLabel(), '2013');
         $year2013->save();
         $year2014 = new Orga_Model_Member($timeAxis, '2014');
-        $year2014->setLabel('2014');
+        $this->translator->set($year2014->getLabel(), '2014');
         $year2014->save();
 
         // Granularités
@@ -622,7 +631,7 @@ class Orga_Service_OrganizationService
 
         // Analyses préconfigurées
         $report = new DW_Model_Report($granularityYear->getDWCube());
-        $report->setLabel('GES émis par catégorie');
+        $report->getLabel()->set('GES émis par catégorie', 'fr');
         $report->setChartType(DW_Model_Report::CHART_PIE);
         $report->setWithUncertainty(false);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('ges', $granularityYear->getDWCube()));
@@ -631,7 +640,7 @@ class Orga_Service_OrganizationService
         $report->save();
 
         $report = new DW_Model_Report($granularityYear->getDWCube());
-        $report->setLabel('GES émis par catégorie et poste article 75');
+        $report->getLabel()->set('GES émis par catégorie et poste article 75', 'fr');
         $report->setChartType(DW_Model_Report::CHART_VERTICAL_STACKED);
         $report->setWithUncertainty(false);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('ges', $granularityYear->getDWCube()));
@@ -641,7 +650,7 @@ class Orga_Service_OrganizationService
         $report->save();
 
         $report = new DW_Model_Report($granularityYear->getDWCube());
-        $report->setLabel('Energie finale consommée par catégorie');
+        $report->getLabel()->set('Energie finale consommée par catégorie', 'fr');
         $report->setChartType(DW_Model_Report::CHART_PIE);
         $report->setWithUncertainty(false);
         $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('energie_finale', $granularityYear->getDWCube()));

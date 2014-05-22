@@ -25,22 +25,16 @@ class Serializer
     private $config;
 
     /**
-     * @var bool
-     */
-    private $ignoreObjectsWithoutConfig;
-
-    /**
      * @var \Closure[]
      */
     private $callbacks = [];
 
-    public function __construct(array $config, $ignoreObjectsWithoutConfig = false)
+    public function __construct(array $config)
     {
         $this->config = $config;
-        $this->ignoreObjectsWithoutConfig = $ignoreObjectsWithoutConfig;
     }
 
-    public function serialize($data)
+    public function serialize($data, $pretty = false)
     {
         $this->objectMap = [];
         $this->stackTrace = [];
@@ -55,7 +49,9 @@ class Serializer
             ), 0, $e);
         }
 
-        return json_encode($this->objectMap, JSON_PRETTY_PRINT);
+        $options = $pretty ? JSON_PRETTY_PRINT : null;
+
+        return json_encode($this->objectMap, $options);
     }
 
     public function unserialize($json)
@@ -109,40 +105,33 @@ class Serializer
 
     private function serializeObject($object)
     {
-        $objectHash = '@@@' . spl_object_hash($object);
+        $objectHash = '@@@' . ltrim(spl_object_hash($object), '0');
 
         if (isset($this->objectMap[$objectHash])) {
             return $objectHash;
         }
 
+        $className = ClassUtils::getClass($object);
         $serialized = new \stdClass();
-
-        $serialized->__objectClassName = ClassUtils::getClass($object);
-
-        // If it's a proxy, we trigger it to load it
-        if ($object instanceof Proxy) {
-            $object->__load();
-        }
-
-        if (isset($this->config[$serialized->__objectClassName])) {
-            $config = $this->config[$serialized->__objectClassName];
-        } else {
-            if ($this->ignoreObjectsWithoutConfig) {
-                return $objectHash;
-            }
-            $config = [];
-        }
+        $config = $this->getClassConfig($className);
 
         // Ignore class
         if (isset($config['exclude']) && $config['exclude'] === true) {
             return null;
         }
 
+        $serialized->__class = $className;
         $this->objectMap[$objectHash] = $serialized;
 
+        // If it's a proxy, we trigger it to load it
+        if ($object instanceof Proxy) {
+            $object->__load();
+        }
+
         // Serialization de l'objet via PHP
-        if (isset($config['serialize']) && $config['serialize'] === true) {
-            $serialized->__serialized = serialize($object);
+        if (isset($config['serialize'])) {
+            $callable = $config['serialize'];
+            $serialized->__serialized = $callable($object);
             return $objectHash;
         }
 
@@ -153,11 +142,7 @@ class Serializer
             }
 
             $propertyName = $property->getName();
-
-            // Ignore ID
-            if ($propertyName == 'id') {
-                continue;
-            }
+            $propertyConfig = isset($config['properties'][$propertyName]) ? $config['properties'][$propertyName] : [];
 
             // Ignore Proxy properties
             if (strpos($propertyName, '__') === 0) {
@@ -165,20 +150,20 @@ class Serializer
             }
 
             // Ignore property
-            if (isset($config['properties'][$propertyName]['exclude'])
-                && $config['properties'][$propertyName]['exclude'] === true) {
+            if (isset($propertyConfig['exclude']) && $propertyConfig['exclude'] === true) {
                 continue;
             }
 
             $property->setAccessible(true);
 
-            if (isset($config['properties'][$propertyName]['transform'])) {
-                $callable = $config['properties'][$propertyName]['transform'];
-                $serialized->$propertyName = $callable($property->getValue($object));
-                continue;
+            if (isset($propertyConfig['serialize'])) {
+                $callable = $propertyConfig['serialize'];
+                $serializedValue = $callable($property->getValue($object));
+            } else {
+                $serializedValue = $this->recursiveSerialization($property->getValue($object));
             }
 
-            $serialized->$propertyName = $this->recursiveSerialization($property->getValue($object));
+            $serialized->$propertyName = $serializedValue;
         }
 
         return $objectHash;
@@ -186,75 +171,34 @@ class Serializer
 
     private function unserializeObject($id, $vars)
     {
+        $className = $vars['__class'];
+        unset($vars['__class']);
+        $config = $this->getClassConfig($className);
+
+        // Serialized object
         if (isset($vars['__serialized'])) {
-            $object = unserialize($vars['__serialized']);
-            $this->objectMap[$id] = $object;
-            return;
-        }
-
-        $className = $vars['__objectClassName'];
-
-        if (isset($this->config[$className])) {
-            $config = $this->config[$className];
-        } else {
-            if ($this->ignoreObjectsWithoutConfig) {
-                return;
+            if (!isset($config['unserialize'])) {
+                throw new \Exception('No "unserialize" callback defined for class ' . $className);
             }
-            $config = [];
+            $callable = $config['unserialize'];
+            $this->objectMap[$id] = $callable($vars['__serialized']);
+            return;
         }
 
         // Ignore class
         if (isset($config['exclude']) && $config['exclude'] === true) {
-            // Callbacks
-            if (isset($config['callbacks'])) {
-                $callables = $config['callbacks'];
-                if (! is_array($callables)) {
-                    $callables = [ $callables ];
-                }
-                foreach ($callables as $callable) {
-                    $callable($vars);
-                }
-            }
             return;
-        }
-
-        // Class alias
-        if (isset($config['class'])) {
-            $className = $config['class'];
         }
 
         $class = new \ReflectionClass($className);
         $object = $class->newInstanceWithoutConstructor();
-
         $this->objectMap[$id] = $object;
 
         foreach ($vars as $propertyName => $value) {
-            if (strpos($propertyName, '__') === 0) {
-                continue;
-            }
+            $propertyConfig = isset($config['properties'][$propertyName]) ? $config['properties'][$propertyName] : [];
 
             // Ignore property
-            if (isset($config['properties'][$propertyName]['exclude'])
-                && $config['properties'][$propertyName]['exclude'] === true) {
-                continue;
-            }
-
-            // Property name
-            if (isset($config['properties'][$propertyName]['name'])) {
-                $propertyName = $config['properties'][$propertyName]['name'];
-            }
-
-            if ($className === stdClass::class) {
-                // Callback
-                if (isset($config['properties'][$propertyName]['callback'])) {
-                    $callback = $config['properties'][$propertyName]['callback'];
-
-                    $value = $callback($value);
-                    $object->$propertyName = $value;
-                    continue;
-                }
-
-                $this->unserializeStdClassValue($object, $propertyName, $value);
+            if (isset($propertyConfig['exclude']) && $propertyConfig['exclude'] === true) {
                 continue;
             }
 
@@ -264,13 +208,13 @@ class Serializer
                 throw new \Exception("Unknown property $propertyName in $className");
             }
 
-            // Callback
-            if (isset($config['properties'][$propertyName]['callback'])) {
-                $callback = $config['properties'][$propertyName]['callback'];
+            $property->setAccessible(true);
 
-                $value = $callback($value);
-                $property->setAccessible(true);
-                $property->setValue($object, $value);
+            // Callback
+            if (isset($propertyConfig['unserialize'])) {
+                $callback = $propertyConfig['unserialize'];
+
+                $property->setValue($object, $callback($value));
                 continue;
             }
 
@@ -278,8 +222,8 @@ class Serializer
         }
 
         // Callbacks
-        if (isset($config['callbacks'])) {
-            $callables = $config['callbacks'];
+        if (isset($config['postUnserialize'])) {
+            $callables = $config['postUnserialize'];
             if (! is_array($callables)) {
                 $callables = [ $callables ];
             }
@@ -293,8 +237,7 @@ class Serializer
 
     private function unserializePropertyValue(\ReflectionProperty $property, $object, $value)
     {
-        $property->setAccessible(true);
-
+        // ArrayCollection
         if (is_array($value) && ((strpos(reset($value), '@@@') === 0) || empty($value))) {
             $collection = new ArrayCollection();
             $property->setValue($object, $collection);
@@ -307,6 +250,7 @@ class Serializer
             return;
         }
 
+        // Reference to another object
         if (!is_array($value) && strpos($value, '@@@') === 0) {
             $this->callbacks[] = function () use ($property, $object, $value) {
                 $property->setValue($object, $this->objectMap[$value]);
@@ -317,27 +261,16 @@ class Serializer
         $property->setValue($object, $value);
     }
 
-    private function unserializeStdClassValue(stdClass $object, $propertyName, $value)
+    private function getClassConfig($className)
     {
-        if (is_array($value) && (strpos(reset($value), '@@@') === 0)) {
-            $collection = new ArrayCollection();
-            $object->$propertyName = $collection;
+        $config = isset($this->config[$className]) ? $this->config[$className] : [];
 
-            foreach ($value as $valueItem) {
-                $this->callbacks[] = function () use ($collection, $valueItem) {
-                    $collection->add($this->objectMap[$valueItem]);
-                };
+        foreach ($this->config as $class => $classConfig) {
+            if (is_subclass_of($className, $class)) {
+                $config += $classConfig;
             }
-            return;
         }
 
-        if (!is_array($value) && strpos($value, '@@@') === 0) {
-            $this->callbacks[] = function () use ($object, $propertyName, $value) {
-                $object->$propertyName = $this->objectMap[$value];
-            };
-            return;
-        }
-
-        $object->$propertyName = $value;
+        return $config;
     }
 }

@@ -17,7 +17,8 @@ $family = $this->family;
     <div class="well well-sm" data-dimension="<?=$dimension->getRef()?>">
 
         <h5>
-            <?=$dimension->getLabel() . __('UI', 'other', ':')?> <code><?=$dimension->getRef()?></code>
+            <?=$this->translate($dimension->getLabel()) . __('UI', 'other', ':')?>
+            <code><?=$dimension->getRef()?></code>
 
             <a class="btn btn-warning btn-xs pull-right deleteDimensionButton"
                     href="<?=$this->baseUrl('parameter/dimension/delete/id/' . $dimension->getId())?>"
@@ -25,8 +26,9 @@ $family = $this->family;
                 <?=__('UI', 'verb', 'delete')?>
             </a>
 
-            <a class="btn btn-default btn-xs pull-right editDimensionButton" data-dimension-ref="<?=$dimension->getRef()?>"
-               data-dimension-label="<?=$dimension->getLabel()?>" style="margin-right: 5px">
+            <a class="btn btn-default btn-xs pull-right editDimensionButton"
+               data-dimension-ref="<?=$dimension->getRef()?>"
+               data-dimension-label="<?=$this->translate($dimension->getLabel())?>" style="margin-right: 5px">
                 <?=__('UI', 'verb', 'edit')?>
             </a>
         </h5>

@@ -13,6 +13,10 @@ $(document.body).on('show.bs.collapse', '.collapse-wrapper', function(e) {
             title.attr('data-opened-indicator')
         )
     );
+    $('.tooltip', titleLink).remove();
+    $('.popover', titleLink).remove();
+    $('.withTooltip', titleLink).tooltip();
+    $('.withPopover', titleLink).popover();
 });
 $(document.body).on('hidden.bs.collapse', '.collapse-wrapper', function(e) {
     if (!$(e.target).parent().is($(this))) {
@@ -28,6 +32,10 @@ $(document.body).on('hidden.bs.collapse', '.collapse-wrapper', function(e) {
             title.attr('data-closed-indicator')
         )
     );
+    $('.tooltip', titleLink).remove();
+    $('.popover', titleLink).remove();
+    $('.withTooltip', titleLink).tooltip();
+    $('.withPopover', titleLink).popover();
 });
 
 // Tab AJAX

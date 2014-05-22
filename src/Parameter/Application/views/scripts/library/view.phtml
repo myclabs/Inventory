@@ -10,7 +10,7 @@ $library = $this->library;
 
 <div class="page-header">
     <h1>
-        <?=$library->getLabel()?>
+        <?=$this->translate($library->getLabel())?>
         <small><?=__('Parameter', 'familyList', 'familyList')?></small>
     </h1>
 </div>
@@ -27,7 +27,7 @@ $list = [];
 /** @var $categories Category[] */
 $categories = $library->getCategories();
 foreach ($categories as $category) {
-    $list[$category->getId()] = $category->getLabel();
+    $list[$category->getId()] = $this->translate($category->getLabel());
 }
 $columns['category']->list = $list;
 $columns['category']->fieldType = UI_Datagrid_Col_List::FIELD_LIST;

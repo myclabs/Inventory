@@ -2,6 +2,7 @@
 
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
+use Core\Translation\TranslatedString;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -494,12 +495,12 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     /**
      * Renvoie le label de la Cell. Basée sur les labels des Member.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         if ($this->members->isEmpty()) {
-            return __('Orga', 'navigation', 'labelGlobalCell');
+            return TranslatedString::untranslated(__('Orga', 'navigation', 'labelGlobalCell'));
         }
 
         $labels = [];
@@ -509,18 +510,18 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $labels[] = $member->getLabel();
         }
 
-        return implode(self::LABEL_SEPARATOR, $labels);
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
      * Renvoie le label étendue de la Cell. Basée sur les labels étendues des Member.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getExtendedLabel()
     {
         if ($this->members->isEmpty()) {
-            return __('Orga', 'navigation', 'labelGlobalCellExtended');
+            return TranslatedString::untranslated(__('Orga', 'navigation', 'labelGlobalCellExtended'));
         }
 
         $labels = [];
@@ -530,7 +531,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $labels[] = $member->getExtendedLabel();
         }
 
-        return implode(self::LABEL_SEPARATOR, $labels);
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
@@ -1085,7 +1086,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $etlDataService = $container->get(Orga_Service_ETLData::class);
 
             $this->dWCube = new DW_model_cube();
-            $this->dWCube->setLabel($this->getLabel());
+            $this->dWCube->setLabel(clone $this->getLabel());
 
             $etlStructureService->populateCellDWCube($this);
             $etlStructureService->addGranularityDWReportsToCellDWCube($this);

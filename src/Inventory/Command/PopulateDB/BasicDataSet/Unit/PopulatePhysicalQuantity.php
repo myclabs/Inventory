@@ -2,7 +2,6 @@
 
 namespace Inventory\Command\PopulateDB\BasicDataSet\Unit;
 
-use Core_Locale;
 use Doctrine\ORM\EntityManager;
 use DOMDocument;
 use DOMElement;
@@ -56,11 +55,10 @@ class PopulatePhysicalQuantity
                 continue;
             }
 
-            $physicalQuantity->setTranslationLocale(Core_Locale::load($lang));
-            $physicalQuantity->setName($value);
-            $physicalQuantity->save();
-            $this->entityManager->flush();
+            $physicalQuantity->getName()->set($value, $lang);
         }
+        $physicalQuantity->save();
+        $this->entityManager->flush();
     }
 
     /**

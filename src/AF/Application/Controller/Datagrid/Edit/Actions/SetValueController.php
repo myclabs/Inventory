@@ -75,7 +75,7 @@ class AF_Datagrid_Edit_Actions_SetValueController extends UI_Controller_Datagrid
                         case SetSelectSingleValue::class:
                             /** @var $action SetSelectSingleValue */
                             if (null !== $action->getOption()) {
-                                $data['value'] = $action->getOption()->getLabel();
+                                $data['value'] = $this->cellTranslatedText($action->getOption()->getLabel());
                             } else {
                                 $data['value'] = null;
                             }

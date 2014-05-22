@@ -10,6 +10,7 @@ use Account\Domain\Account;
 use AF\Domain\AFLibrary;
 use Classification\Domain\ClassificationLibrary;
 use Core_Model_Query;
+use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use Orga_Model_Organization;
@@ -33,10 +34,19 @@ class AccountViewFactory
      */
     private $acl;
 
-    public function __construct(OrganizationViewFactory $organizationViewFactory, ACL $acl)
-    {
+    /**
+     * @var Translator
+     */
+    private $translator;
+
+    public function __construct(
+        OrganizationViewFactory $organizationViewFactory,
+        ACL $acl,
+        Translator $translator
+    ) {
         $this->organizationViewFactory = $organizationViewFactory;
         $this->acl = $acl;
+        $this->translator = $translator;
     }
 
     /**
@@ -68,7 +78,10 @@ class AccountViewFactory
         foreach (AFLibrary::loadList($query) as $library) {
             /** @var AFLibrary $library */
 
-            $libraryView = new AFLibraryView($library->getId(), $library->getLabel());
+            $libraryView = new AFLibraryView(
+                $library->getId(),
+                $this->translator->get($library->getLabel())
+            );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
             $accountView->afLibraries[] = $libraryView;
@@ -81,7 +94,10 @@ class AccountViewFactory
         foreach (ParameterLibrary::loadList($query) as $library) {
             /** @var ParameterLibrary $library */
 
-            $libraryView = new ParameterLibraryView($library->getId(), $library->getLabel());
+            $libraryView = new ParameterLibraryView(
+                $library->getId(),
+                $this->translator->get($library->getLabel())
+            );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
             $accountView->parameterLibraries[] = $libraryView;
@@ -94,7 +110,10 @@ class AccountViewFactory
         foreach (ClassificationLibrary::loadList($query) as $library) {
             /** @var ClassificationLibrary $library */
 
-            $libraryView = new ClassificationLibraryView($library->getId(), $library->getLabel());
+            $libraryView = new ClassificationLibraryView(
+                $library->getId(),
+                $this->translator->get($library->getLabel())
+            );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
             $accountView->classificationLibraries[] = $libraryView;

@@ -15,6 +15,7 @@ use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Input\Select\SelectMultiInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputSet\SubInputSet;
+use AF\Domain\Output\OutputElement;
 use AF\Domain\Output\OutputIndex;
 use AF\Domain\Output\OutputTotal;
 use Classification\Domain\Axis;
@@ -22,6 +23,7 @@ use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Context;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
@@ -37,7 +39,7 @@ use Parameter\Domain\Family\Family;
 use Parameter\Domain\Family\FamilyReference;
 use Parameter\Domain\Family\Member;
 use Parameter\Domain\ParameterLibrary;
-use Serializer\Serializer;
+use Serializer\CustomSerializerForMigration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -65,6 +67,12 @@ class ImportCommand extends Command
      */
     private $acl;
 
+    /**
+     * @Inject("translation.defaultLocale")
+     * @var string
+     */
+    private $defaultLanguage;
+
     protected function configure()
     {
         $this->setName('import')
@@ -87,19 +95,22 @@ class ImportCommand extends Command
         // Create the classification library
         $label = $input->getArgument('classificationLibrary');
         $output->writeln("<comment>Creating library '$label'</comment>");
-        $classificationLibrary = new ClassificationLibrary($account, $label);
+        $classificationLibrary = new ClassificationLibrary(
+            $account,
+            new TranslatedString($label, $this->defaultLanguage)
+        );
         $classificationLibrary->save();
 
         // Create the parameter library
         $label = $input->getArgument('parameterLibrary');
         $output->writeln("<comment>Creating library '$label'</comment>");
-        $parameterLibrary = new ParameterLibrary($account, $label);
+        $parameterLibrary = new ParameterLibrary($account, new TranslatedString($label, $this->defaultLanguage));
         $parameterLibrary->save();
 
         // Create the AF library
         $label = $input->getArgument('afLibrary');
         $output->writeln("<comment>Creating library '$label'</comment>");
-        $afLibrary = new AFLibrary($account, $label);
+        $afLibrary = new AFLibrary($account, new TranslatedString($label, $this->defaultLanguage));
         $afLibrary->save();
 
 
@@ -115,7 +126,7 @@ class ImportCommand extends Command
             }
         };
 
-        $serializer = new Serializer([
+        $serializer = new CustomSerializerForMigration([
             'Classif_Model_Indicator' => [
                 'class' => Indicator::class,
                 'properties' => [
@@ -289,6 +300,23 @@ class ImportCommand extends Command
                     }
                 },
             ],
+            \Orga_Model_CellsGroup::class => [
+                'properties' => [
+                    'aF' => [
+                        'callback' => function ($var) use ($afLibrary) {
+                            if ($var === null) {
+                                return null;
+                            }
+                            foreach ($afLibrary->getAFList() as $af) {
+                                if ($af->getRef() == $var) {
+                                    return $af;
+                                }
+                            }
+                            throw new Exception('AF "' . $var . '" NOT FOUND !');
+                        },
+                    ],
+                ],
+            ],
             PrimaryInputSet::class => [
                 'properties' => [
                     'refAF' => [ 'name' => 'af' ],
@@ -348,6 +376,19 @@ class ImportCommand extends Command
                     ]
                 ],
             ],
+            OutputElement::class => [
+                'properties' => [
+                    'algo' => [
+                        'exclude' => true,
+                    ],
+                ],
+                'callbacks' => [
+                    function (OutputElement $outputElement, array $data) use ($parameterLibrary) {
+                        $algo = $outputElement->getInputSet()->getAF()->getAlgoByRef($data['algo']);
+                        $this->setProperty($outputElement, 'algo', $algo);
+                    },
+                ],
+            ],
             'Social_Model_Comment' => [
                 'class' => \Orga_Model_Cell_InputComment::class,
                 'properties' => [
@@ -379,10 +420,6 @@ class ImportCommand extends Command
             ],
             'User\Domain\ACL\Role\AdminRole' => [
                 'exclude' => true,
-                'callbacks' => [
-                    function ($vars) {
-                    }
-                ]
             ],
             'User\Domain\ACL\Authorization\NamedResourceAuthorization' => [ 'exclude' => true ],
             'User\Domain\ACL\Resource\NamedResource' => [ 'exclude' => true ],
@@ -429,7 +466,7 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/parameters.json'));
         foreach ($objects as $object) {
             if ($object instanceof Family) {
-                $output->writeln(sprintf('<info>Imported family: %s</info>', $object->getLabel()));
+                $output->writeln(sprintf('<info>Imported family: %s</info>', $object->getLabel()->get('fr')));
             }
             if ($object instanceof \Core_Model_Entity) {
                 $object->save();
@@ -441,7 +478,7 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/af.json'));
         foreach ($objects as $object) {
             if ($object instanceof \AF\Domain\AF) {
-                $output->writeln(sprintf('<info>Imported AF: %s</info>', $object->getLabel()));
+                $output->writeln(sprintf('<info>Imported AF: %s</info>', $object->getLabel()->get('fr')));
             }
             if ($object instanceof \Core_Model_Entity) {
                 $object->save();
@@ -483,12 +520,12 @@ class ImportCommand extends Command
         $this->entityManager->flush();
 
         // Import DW reports and filter
-        $serializer = new Serializer([]);
+        $serializer = new CustomSerializerForMigration([]);
         $output->writeln('<comment>Importing Reports</comment>');
         $objects = $serializer->unserialize(file_get_contents($root . '/reports.json'));
         foreach ($objects as $object) {
             if (($object instanceof \StdClass) && ($object->type === "organization")) {
-                $organization = $this->getOrganizationByLabel($object->label);
+                $organization = $this->getOrganizationByLabel($object->label['fr']);
                 foreach ($object->granularitiesReports as $granularityObject) {
                     $granularityAxes = [];
                     foreach ($granularityObject->granularityAxes as $refAxis) {
@@ -505,7 +542,7 @@ class ImportCommand extends Command
 
                         $errorHappened = 0;
 
-                        $report->setLabel($reportObject->getLabel());
+                        $report->setLabel(clone $reportObject->getLabel());
                         $report->setChartType($reportObject->getChartType());
                         $report->setSortType($reportObject->getSortType());
                         $report->setWithUncertainty($reportObject->getWithUncertainty());
@@ -524,7 +561,7 @@ class ImportCommand extends Command
                         if (!$errorHappened) {
                             if ($reportObject->getNumeratorAxis1() != null) {
                                 $numeratorAxisRef = $reportObject->getNumeratorAxis1();
-                                if (strstr($numeratorAxisRef, 'c_') === 0) {
+                                if (strpos($numeratorAxisRef, 'c_') === 0) {
                                     $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                         . substr($reportObject->getNumeratorAxis1(), 2);
                                 }
@@ -534,12 +571,19 @@ class ImportCommand extends Command
                                     );
                                 } catch (\Core_Exception_NotFound $e) {
                                     $errorHappened = true;
+                                    $output->writeln(
+                                        '<error>'.
+                                        "\n".
+                                        $numeratorAxisRef.
+                                        "\n".
+                                        '</error>'
+                                    );
                                 }
                             }
                             if (!$errorHappened) {
                                 if ($reportObject->getNumeratorAxis2() != null) {
                                     $numeratorAxisRef = $reportObject->getNumeratorAxis2();
-                                    if (strstr($numeratorAxisRef, 'c_') === 0) {
+                                    if (strpos($numeratorAxisRef, 'c_') === 0) {
                                         $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                             . substr($reportObject->getNumeratorAxis2(), 2);
                                     }
@@ -549,6 +593,13 @@ class ImportCommand extends Command
                                         );
                                     } catch (\Core_Exception_NotFound $e) {
                                         $errorHappened = true;
+                                        $output->writeln(
+                                            '<error>'.
+                                            "\n".
+                                            $numeratorAxisRef.
+                                            "\n".
+                                            '</error>'
+                                        );
                                     }
                                 }
                             }
@@ -565,7 +616,7 @@ class ImportCommand extends Command
                                 if (!$errorHappened) {
                                     if ($reportObject->getDenominatorAxis1() != null) {
                                         $denominatorAxisRef = $reportObject->getDenominatorAxis1();
-                                        if (strstr($denominatorAxisRef, 'c_') === 0) {
+                                        if (strpos($denominatorAxisRef, 'c_') === 0) {
                                             $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                                 . substr($reportObject->getDenominatorAxis1(), 2);
                                         }
@@ -580,7 +631,7 @@ class ImportCommand extends Command
                                     if (!$errorHappened) {
                                         if ($reportObject->getDenominatorAxis2() != null) {
                                             $denominatorAxisRef = $reportObject->getDenominatorAxis2();
-                                            if (strstr($denominatorAxisRef, 'c_') === 0) {
+                                            if (strpos($denominatorAxisRef, 'c_') === 0) {
                                                 $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                                     . substr($reportObject->getDenominatorAxis2(), 2);
                                             }
@@ -598,7 +649,7 @@ class ImportCommand extends Command
                         }
                         foreach ($reportObject->getFilters() as $filterObject) {
                             $filterAxisRef = $filterObject->getAxis();
-                            if (strstr($filterAxisRef, 'c_') === 0) {
+                            if (strpos($filterAxisRef, 'c_') === 0) {
                                 $filterAxisRef = 'c_' . $classificationLibrary->getId() . '_'
                                     . substr($filterObject->getAxis(), 2);
                             }
@@ -623,7 +674,7 @@ class ImportCommand extends Command
                             $output->writeln(
                                 '<error>'.
                                 'Configuration broken while migrating report '.
-                                '"' . $report->getLabel() . '"'.
+                                '"' . $report->getLabel()->get('fr') . '"'.
                                 '</error>'
                             );
                         }
@@ -638,12 +689,14 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/acl.json'));
         foreach ($objects as $object) {
             if (($object instanceof \StdClass) && ($object->type === "organization")) {
-                $organization = $this->getOrganizationByLabel($object->label);
+                $organization = $this->getOrganizationByLabel($object->label['fr']);
 
                 foreach ($object->admins as $adminEmail) {
-                    $output->writeln(
-                        '<comment>'.$adminEmail.' admin of organization '.$organization->getLabel().'</comment>'
-                    );
+                    $output->writeln(sprintf(
+                        '<comment>%s admin of organization %s</comment>',
+                        $adminEmail,
+                        $organization->getLabel()->get('fr')
+                    ));
                     $this->acl->grant(
                         User::loadByEmail($adminEmail),
                         new OrganizationAdminRole(
@@ -673,7 +726,7 @@ class ImportCommand extends Command
 
                         foreach ($cellObject->admins as $adminEmail) {
                             $output->writeln(
-                                '<comment>'.$adminEmail.' admin of cell '.$cell->getLabel().'</comment>'
+                                '<comment>'.$adminEmail.' admin of cell '.$cell->getLabel()->get('fr').'</comment>'
                             );
                             $this->acl->grant(
                                 User::loadByEmail($adminEmail),
@@ -682,7 +735,7 @@ class ImportCommand extends Command
                         }
                         foreach ($cellObject->managers as $managerEmail) {
                             $output->writeln(
-                                '<comment>'.$managerEmail.' manager of cell '.$cell->getLabel().'</comment>'
+                                '<comment>'.$managerEmail.' manager of cell '.$cell->getLabel()->get('fr').'</comment>'
                             );
                             $this->acl->grant(
                                 User::loadByEmail($managerEmail),
@@ -691,7 +744,7 @@ class ImportCommand extends Command
                         }
                         foreach ($cellObject->contributors as $contributorEmail) {
                             $output->writeln(
-                                '<comment>'.$contributorEmail.' contributor of cell '.$cell->getLabel().'</comment>'
+                                '<comment>'.$contributorEmail.' contributor of cell '.$cell->getLabel()->get('fr').'</comment>'
                             );
                             $this->acl->grant(
                                 User::loadByEmail($contributorEmail),
@@ -700,7 +753,7 @@ class ImportCommand extends Command
                         }
                         foreach ($cellObject->observers as $observerEmail) {
                             $output->writeln(
-                                '<comment>'.$observerEmail.' observer of cell '.$cell->getLabel().'</comment>'
+                                '<comment>'.$observerEmail.' observer of cell '.$cell->getLabel()->get('fr').'</comment>'
                             );
                             $this->acl->grant(
                                 User::loadByEmail($observerEmail),
@@ -729,9 +782,10 @@ class ImportCommand extends Command
     private function getOrganizationByLabel($label)
     {
         foreach (\Orga_Model_Organization::loadList() as $organization) {
-            if ($organization->getLabel() === $label) {
+            if ($organization->getLabel()->get('fr') === $label) {
                 return $organization;
             }
         }
+        throw new Exception;
     }
 }

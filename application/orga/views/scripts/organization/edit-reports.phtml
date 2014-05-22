@@ -31,7 +31,7 @@ foreach ($this->granularities as $granularity) :
 
     echo $this->collapse(
         'cellReports'.$granularity->getId(),
-        $granularity->getLabel(),
+        $this->translate($granularity->getLabel()),
         $datagridGranularityReports->getHTML() . $addButton->getHTML()
     );
 

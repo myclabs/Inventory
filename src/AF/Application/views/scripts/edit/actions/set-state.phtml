@@ -27,7 +27,7 @@ $list = [];
 foreach ($this->componentList as $component) {
     /** @var $component Component */
     if ($af->getRootGroup() !== $component) {
-        $list[$component->getId()] = $component->getLabel();
+        $list[$component->getId()] = $this->translate($component->getLabel());
     }
 }
 $targetComponentColumn->list = $list;

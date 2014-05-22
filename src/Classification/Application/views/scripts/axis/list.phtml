@@ -91,7 +91,7 @@ $optionParent->setAttribute('value', '');
 $addParentInput->appendContent($optionParent);
 foreach ($this->listParents as $parentAxis) {
     /** @var Orga_Model_Axis $parentAxis */
-    $optionParent = new GenericTag('option', $parentAxis->getLabel());
+    $optionParent = new GenericTag('option', $this->translate($parentAxis->getLabel()));
     $optionParent->setAttribute('value', $parentAxis->getRef());
     $addParentInput->appendContent($optionParent);
 }

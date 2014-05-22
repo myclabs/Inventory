@@ -7,6 +7,7 @@
  * @subpackage Model
  */
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -18,7 +19,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 class DW_Model_Member extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';
@@ -32,7 +32,7 @@ class DW_Model_Member extends Core_Model_Entity
      *
      * @var string
      */
-    protected  $id = null;
+    protected $id = null;
 
     /**
      * Référence unique (au sein d'un Axis) du Member.
@@ -44,7 +44,7 @@ class DW_Model_Member extends Core_Model_Entity
     /**
      * Label du Member.
      *
-     * @var string
+     * @var TranslatedString
      */
     protected $label = null;
 
@@ -84,6 +84,7 @@ class DW_Model_Member extends Core_Model_Entity
      */
     public function __construct(DW_Model_Axis $axis)
     {
+        $this->label = new TranslatedString();
         $this->directParents = new ArrayCollection();
         $this->directChildren = new ArrayCollection();
         $this->results = new ArrayCollection();
@@ -173,9 +174,9 @@ class DW_Model_Member extends Core_Model_Entity
     /**
      * Définit le label du Member.
      *
-     * @param String $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
     }
@@ -183,7 +184,7 @@ class DW_Model_Member extends Core_Model_Entity
     /**
      * Renvois le label du Member.
      *
-     * @return String
+     * @return TranslatedString
      */
     public function getLabel()
     {

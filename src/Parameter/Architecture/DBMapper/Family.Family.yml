@@ -3,10 +3,6 @@ Parameter\Domain\Family\Family:
   repositoryClass: Parameter\Architecture\Repository\FamilyRepository
   table: Parameter_Family
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       type: integer
@@ -16,21 +12,17 @@ Parameter\Domain\Family\Family:
   fields:
     ref:
       type: string
-    label:
-      type: string
-      nullable: true
-      gedmo:
-        - translatable
     position:
       type: integer
       nullable: false
-    documentation:
-      type: text
-      nullable: true
-      gedmo:
-        - translatable
     refUnit:
       type: string
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+    documentation:
+      class: Core\Translation\TranslatedString
 
   oneToMany:
     cells:

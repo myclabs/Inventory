@@ -22,7 +22,6 @@ class Unit_Test_UnitSystemTest
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite();
-        $suite->addTestSuite('Unit_Test_UnitSystemSetUp');
         $suite->addTestSuite('Unit_Test_UnitSystemOthers');
         return $suite;
     }
@@ -36,7 +35,7 @@ class Unit_Test_UnitSystemTest
     {
         $o = new UnitSystem();
         $o->setRef('Ref'.$ref);
-        $o->setName('Name'.$ref);
+        $o->getName()->set('Name' . $ref, 'fr');
         $o->save();
         \Core\ContainerSingleton::getEntityManager()->flush();
         return $o;
@@ -50,87 +49,6 @@ class Unit_Test_UnitSystemTest
     {
         $o->delete();
         \Core\ContainerSingleton::getEntityManager()->flush();
-    }
-}
-
-
-/**
- * UnitSystemSetUpTest
- * @package Unit
- */
-class Unit_Test_UnitSystemSetUp extends PHPUnit_Framework_TestCase
-{
-    /**
-     * Méthode appelée avant l'appel à la classe de test
-     */
-    public static function setUpBeforeClass()
-    {
-        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
-        if (UnitSystem::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé avant les tests, suppression en cours !';
-            foreach (UnitSystem::loadList() as $systemunit) {
-                $systemunit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
-    }
-
-    /**
-     * Test le constructeur
-     * @return UnitSystem
-     */
-    function testConstruct()
-    {
-        $o = new UnitSystem();
-        $this->assertInstanceOf('Unit\Domain\UnitSystem', $o);
-        $o->setRef('RefSystemeUniteTestSave');
-        $o->setName('NamzSystemeUniteTestSave');
-        $this->assertEquals(array(), $o->getKey());
-        $o->save();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertNotEquals(array(), $o->getKey());
-        return $o;
-    }
-
-    /**
-     * @depends testConstruct
-     * @param UnitSystem $o
-     */
-    function testLoad($o)
-    {
-        \Core\ContainerSingleton::getEntityManager()->clear($o);
-        $oLoaded = UnitSystem::load($o->getKey());
-        $this->assertInstanceOf('Unit\Domain\UnitSystem', $o);
-        $this->assertEquals($oLoaded->getKey(), $o->getKey());
-        $this->assertEquals($oLoaded->getRef(), $o->getRef());
-        $this->assertEquals($oLoaded->getName(), $o->getName());
-        return $oLoaded;
-    }
-
-    /**
-     * @depends testLoad
-     * @param UnitSystem $o
-     */
-    function testDelete(UnitSystem $o)
-    {
-        $o->delete();
-        \Core\ContainerSingleton::getEntityManager()->flush();
-        $this->assertEquals(array(), $o->getKey());
-    }
-
-    /**
-     * Function called once, after all the tests
-     */
-    public static function tearDownAfterClass()
-    {
-        // Vérification qu'il ne reste aucun UnitSystem en base, sinon suppression !
-        if (UnitSystem::countTotal() > 0) {
-            echo PHP_EOL . 'Des Unit_System restants ont été trouvé après les tests, suppression en cours !';
-            foreach (UnitSystem::loadList() as $systemunit) {
-                $systemunit->delete();
-            }
-            \Core\ContainerSingleton::getEntityManager()->flush();
-        }
     }
 }
 

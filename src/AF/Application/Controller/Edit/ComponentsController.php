@@ -58,7 +58,7 @@ class AF_Edit_ComponentsController extends Core_Controller
         foreach (Dimension::load($this->getParam('dimension'))->getMembers() as $member) {
             $option = new Select\SelectOption();
             $option->setRef($member->getRef());
-            $option->setLabel($member->getLabel());
+            $option->setLabel(clone $member->getLabel());
             $selectField->addOption($option);
         }
         $this->entityManager->flush();

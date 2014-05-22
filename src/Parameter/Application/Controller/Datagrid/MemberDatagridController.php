@@ -21,7 +21,7 @@ class Parameter_Datagrid_MemberDatagridController extends UI_Controller_Datagrid
         foreach ($members as $member) {
             $data = [];
             $data['index'] = $member->getId();
-            $data['label'] = $member->getLabel();
+            $data['label'] = $this->cellTranslatedText($member->getLabel());
             $data['ref'] = $member->getRef();
             // Position
             $canMoveUp = ($member->getPosition() > 1);
@@ -69,7 +69,7 @@ class Parameter_Datagrid_MemberDatagridController extends UI_Controller_Datagrid
                 $this->data = $newValue;
                 break;
             case 'label':
-                $member->setLabel($newValue);
+                $this->translator->set($member->getLabel(), $newValue);
                 $this->data = $newValue;
                 break;
         }

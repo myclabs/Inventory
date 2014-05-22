@@ -15,7 +15,6 @@ Les données sont exportées dans `data/exports/migration-3.0/`.
 - Déployer l'application en v3.0 **sans build update** (mais redémarrer le worker) :
 
 ```
-echo 'flush_all' | nc localhost 11211
 sudo deploy --no-update-db 3.0.?
 ```
 
@@ -47,9 +46,11 @@ bin/inventory import <id-account> "Bibliothèque de classification" "Bibliothèq
 bin/inventory acl:rebuild
 ```
 
-- Migration des traductions : TODO
+- Vider la table des versions
 
-Attention au renommage des classes de classif.
+```
+TRUNCATE TABLE ext_log_entries
+```
 
 
 ## 2.11

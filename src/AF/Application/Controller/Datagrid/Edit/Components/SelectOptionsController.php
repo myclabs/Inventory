@@ -30,7 +30,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
         foreach ($options as $option) {
             $data = [];
             $data['index'] = $option->getId();
-            $data['label'] = $option->getLabel();
+            $data['label'] = $this->cellTranslatedText($option->getLabel());
             $data['ref'] = $option->getRef();
             $data['isVisible'] = $option->isVisible();
             $data['enabled'] = $option->isEnabled();
@@ -72,7 +72,7 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
                 $this->send();
                 return;
             }
-            $option->setLabel($this->getAddElementValue('label'));
+            $this->translator->set($option->getLabel(), $this->getAddElementValue('label'));
             $option->setVisible($isVisible);
             $option->setEnabled($this->getAddElementValue('enabled'));
 
@@ -109,8 +109,8 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $option->setLabel($newValue);
-                $this->data = $option->getLabel();
+                $this->translator->set($option->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($option->getLabel());
                 break;
             case 'ref':
                 $option->setRef($newValue);

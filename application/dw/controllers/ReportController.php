@@ -64,7 +64,7 @@ class DW_ReportController extends Core_Controller
                 $report = DW_Model_Report::load($this->getParam('idReport'));
             } else {
                 $report = new DW_Model_Report(DW_Model_Cube::load($this->getParam('idCube')));
-                $report->setLabel(__('DW', 'report', 'newReportDefaultLabelPage'));
+                $this->translator->set($report->getLabel(), __('DW', 'report', 'newReportDefaultLabelPage'));
             }
         }
         if ($report->getKey() != array()) {
@@ -76,9 +76,9 @@ class DW_ReportController extends Core_Controller
 
         $this->view->assign('idCube', $report->getCube()->getId());
         $this->view->assign('hashReport', $hash);
-        $this->view->assign('reportLabel', $report->getLabel());
+        $this->view->assign('reportLabel', $this->translator->get($report->getLabel()));
         require_once (dirname(__FILE__).'/../forms/Configuration.php');
-        $this->view->assign('configurationForm', new DW_Form_configuration($report, $hash));
+        $this->view->assign('configurationForm', new DW_Form_configuration($report, $hash, $this->translator));
 
         if ($this->hasParam('viewConfiguration')) {
             $this->view->assign('viewConfiguration', $this->getParam('viewConfiguration'));
@@ -196,7 +196,7 @@ class DW_ReportController extends Core_Controller
             } catch (Core_Exception_NotFound $e) {
                 $errors['sumAxisOne'] = __('DW', 'configValidation', 'indicatorAxisOneInvalid');
             }
-            if ($this->getParam('sumAxisNumberChoice') === '2') {
+            if ($this->getParam('sumAxisNumberChoice') === 'two') {
                 $sumAxisTwoRef = $this->getParam('sumAxisTwo');
                 if ($sumAxisTwoRef === $sumAxisOneRef) {
                     $errors['sumAxisTwo'] = __('DW', 'configValidation', 'axisTwoSameAsOne');
@@ -319,7 +319,7 @@ class DW_ReportController extends Core_Controller
                 $report = $clonedReport;
             }
 
-            $report->setLabel($reportLabel);
+            $this->translator->set($report->getLabel(), $reportLabel);
             $report->save();
             $this->entityManager->flush($report);
 
@@ -347,7 +347,7 @@ class DW_ReportController extends Core_Controller
         $this->view->assign('hashReport', $this->getParam('hashReport'));
         $this->view->assign('numeratorAxis1', $report->getNumeratorAxis1());
         $this->view->assign('numeratorAxis2', $report->getNumeratorAxis2());
-        $this->view->assign('valueUnit', $report->getValuesUnitSymbol());
+        $this->view->assign('valueUnit', $this->translator->get($report->getValuesUnitSymbol()));
         $this->_helper->layout()->disableLayout();
 
         $this->entityManager->clear();
@@ -362,7 +362,7 @@ class DW_ReportController extends Core_Controller
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
         $this->view->assign('chart', $report->getChart());
-        $this->view->assign('valueUnit', $report->getValuesUnitSymbol());
+        $this->view->assign('valueUnit', $this->translator->get($report->getValuesUnitSymbol()));
         $this->_helper->layout()->disableLayout();
 
         $this->entityManager->clear();
@@ -376,7 +376,7 @@ class DW_ReportController extends Core_Controller
     {
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
-        $export = new DW_Export_Report_Excel($report);
+        $export = new DW_Export_Report_Excel($report, $this->translator);
 
         $this->entityManager->clear();
 
@@ -391,7 +391,7 @@ class DW_ReportController extends Core_Controller
     {
         $report = $this->getReportByHash($this->getParam('hashReport'));
 
-        $export = new DW_Export_Report_Pdf($report);
+        $export = new DW_Export_Report_Pdf($report, $this->translator);
 
         $this->entityManager->clear();
 

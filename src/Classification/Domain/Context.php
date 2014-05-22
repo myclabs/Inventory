@@ -2,9 +2,9 @@
 
 namespace Classification\Domain;
 
+use Core\Translation\TranslatedString;
 use Core_Model_Entity;
 use Core_Strategy_Ordered;
-use Core_Model_Entity_Translatable;
 use Core_Exception_UndefinedAttribute;
 
 /**
@@ -15,7 +15,6 @@ use Core_Exception_UndefinedAttribute;
 class Context extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';
@@ -38,7 +37,7 @@ class Context extends Core_Model_Entity
     protected $ref;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -46,6 +45,7 @@ class Context extends Core_Model_Entity
     public function __construct(ClassificationLibrary $library)
     {
         $this->library = $library;
+        $this->label = new TranslatedString();
     }
 
     /**
@@ -81,15 +81,7 @@ class Context extends Core_Model_Entity
     }
 
     /**
-     * @param string $value
-     */
-    public function setLabel($value)
-    {
-        $this->label = $value;
-    }
-
-    /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {

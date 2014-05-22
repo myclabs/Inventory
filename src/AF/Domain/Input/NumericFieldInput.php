@@ -22,7 +22,7 @@ class NumericFieldInput extends Input implements NumericInput
     protected $value;
 
     /**
-     * @param \AF\Domain\InputSet\InputSet  $inputSet
+     * @param InputSet  $inputSet
      * @param Component $component
      */
     public function __construct(InputSet $inputSet, Component $component)

@@ -3,16 +3,9 @@ AF\Domain\Algorithm\Numeric\NumericAlgo:
   repositoryClass: \Core_Model_Repository_Ordered
   table: Algo_Numeric
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
-  fields:
+  embedded:
     label:
-      type: string
-      nullable: true
-      gedmo:
-        - translatable
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     contextIndicator:

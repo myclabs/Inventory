@@ -2,6 +2,7 @@
 
 namespace Unit;
 
+use Core\Translation\TranslatedString;
 use Core_Exception;
 use Unit\Domain\Unit\Unit;
 use Unit\IncompatibleUnitsException;
@@ -94,7 +95,7 @@ class UnitAPI
      * sous forme de chaîne de caractères. La variable booléenne $html si elle est à "true" permet de
      * transformer par exemple un exposant de la forme m^2 en m<sup>2</sup>.
      *
-     * @return String
+     * @return TranslatedString
      */
     public function getSymbol()
     {

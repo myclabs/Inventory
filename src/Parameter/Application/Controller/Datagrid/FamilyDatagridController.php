@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use Core\Translation\TranslatedString;
 use MyCLabs\ACL\ACL;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Category;
@@ -34,9 +35,9 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             /** @var $family Family */
             $data = [];
             $data['category'] = $family->getCategory()->getId();
-            $data['label'] = $family->getLabel();
+            $data['label'] = $this->cellTranslatedText($family->getLabel());
             $data['ref'] = $family->getRef();
-            $data['unit'] = $family->getValueUnit()->getSymbol();
+            $data['unit'] = $this->cellTranslatedText($family->getValueUnit()->getSymbol());
             // Test des droits (consultation/édition)
             $canEdit = $this->acl->isAllowed($this->_helper->auth(), Actions::EDIT, $library);
             if ($canEdit) {
@@ -91,6 +92,8 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
         if (empty($this->_addErrorMessages)) {
             /** @var $category Category */
             $category = Category::load($idCategory);
+
+            $label = $this->translator->set(new TranslatedString(), $label);
 
             try {
                 $family = new Family($library, $ref, $label);

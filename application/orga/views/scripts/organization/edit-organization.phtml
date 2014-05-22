@@ -40,7 +40,8 @@
                     <select name="contextIndicators[]" multiple id="contextIndicators">
                         <?php foreach ($this->potentialContextIndicators as $contextIndicator) : ?>
                             <option value="<?=$contextIndicator->getId()?>"<?=(in_array($contextIndicator, $this->selectedContextIndicators) ? ' selected' : '')?>>
-                                <?=$contextIndicator->getLabel()?> (<?=$contextIndicator->getLibrary()->getLabel()?>)
+                                <?=$this->translate($contextIndicator->getLabel())?>
+                                (<?=$this->translate($contextIndicator->getLibrary()->getLabel())?>)
                             </option>
                         <?php endforeach ?>
                     </select>

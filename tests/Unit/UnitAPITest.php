@@ -109,33 +109,28 @@ class Unit_Test_UnitAPITest extends TestCase
         // On créer un système d'unité (obligatoire pour une unité standard).
         $this->unitSystem = new UnitSystem();
         $this->unitSystem->setRef('international');
-        $this->unitSystem->setName('International');
         $this->unitSystem->save();
 
         // On créer les grandeurs physiques de base.
         $this->lengthPhysicalQuantity = new PhysicalQuantity();
-        $this->lengthPhysicalQuantity->setName('longueur');
         $this->lengthPhysicalQuantity->setRef('l');
         $this->lengthPhysicalQuantity->setSymbol('L');
         $this->lengthPhysicalQuantity->setIsBase(true);
         $this->lengthPhysicalQuantity->save();
 
         $this->massPhysicalQuantity = new PhysicalQuantity();
-        $this->massPhysicalQuantity->setName('masse');
         $this->massPhysicalQuantity->setRef('m');
         $this->massPhysicalQuantity->setSymbol('M');
         $this->massPhysicalQuantity->setIsBase(true);
         $this->massPhysicalQuantity->save();
 
         $this->timePhysicalQuantity = new PhysicalQuantity();
-        $this->timePhysicalQuantity->setName('temps');
         $this->timePhysicalQuantity->setRef('t');
         $this->timePhysicalQuantity->setSymbol('T');
         $this->timePhysicalQuantity->setIsBase(true);
         $this->timePhysicalQuantity->save();
 
         $this->cashPhysicalQuantity = new PhysicalQuantity();
-        $this->cashPhysicalQuantity->setName('numéraire');
         $this->cashPhysicalQuantity->setRef('numeraire');
         $this->cashPhysicalQuantity->setSymbol('$');
         $this->cashPhysicalQuantity->setIsBase(true);
@@ -143,7 +138,6 @@ class Unit_Test_UnitAPITest extends TestCase
 
         // On créer une grandeur physique composée de grandeur physique de base.
         $this->physicalQuantity1 = new PhysicalQuantity();
-        $this->physicalQuantity1->setName('energie');
         $this->physicalQuantity1->setRef('ml2/t2');
         $this->physicalQuantity1->setSymbol('M.L2/T2');
         $this->physicalQuantity1->setIsBase(false);
@@ -164,8 +158,8 @@ class Unit_Test_UnitAPITest extends TestCase
         // On crée les unités standards.
         $this->lengthStandardUnit = new StandardUnit();
         $this->lengthStandardUnit->setMultiplier(1);
-        $this->lengthStandardUnit->setName('Metre');
-        $this->lengthStandardUnit->setSymbol('m');
+        $this->lengthStandardUnit->getName()->set('Metre', 'fr');
+        $this->lengthStandardUnit->getSymbol()->set('m', 'fr');
         $this->lengthStandardUnit->setRef('m');
         $this->lengthStandardUnit->setPhysicalQuantity($this->lengthPhysicalQuantity);
         $this->lengthStandardUnit->setUnitSystem($this->unitSystem);
@@ -175,8 +169,8 @@ class Unit_Test_UnitAPITest extends TestCase
 
         $this->massStandardUnit = new StandardUnit();
         $this->massStandardUnit->setMultiplier(1);
-        $this->massStandardUnit->setName('Kilogramme');
-        $this->massStandardUnit->setSymbol('kg');
+        $this->massStandardUnit->getName()->set('Kilogramme', 'fr');
+        $this->massStandardUnit->getSymbol()->set('kg', 'fr');
         $this->massStandardUnit->setRef('kg');
         $this->massStandardUnit->setPhysicalQuantity($this->massPhysicalQuantity);
         $this->massStandardUnit->setUnitSystem($this->unitSystem);
@@ -186,8 +180,8 @@ class Unit_Test_UnitAPITest extends TestCase
 
         $this->timeStandardUnit = new StandardUnit();
         $this->timeStandardUnit->setMultiplier(1);
-        $this->timeStandardUnit->setName('Seconde');
-        $this->timeStandardUnit->setSymbol('s');
+        $this->timeStandardUnit->getName()->set('Seconde', 'fr');
+        $this->timeStandardUnit->getSymbol()->set('s', 'fr');
         $this->timeStandardUnit->setRef('s');
         $this->timeStandardUnit->setPhysicalQuantity($this->timePhysicalQuantity);
         $this->timeStandardUnit->setUnitSystem($this->unitSystem);
@@ -197,8 +191,8 @@ class Unit_Test_UnitAPITest extends TestCase
 
         $this->cashStandardUnit = new StandardUnit();
         $this->cashStandardUnit->setMultiplier(1);
-        $this->cashStandardUnit->setName('Euro');
-        $this->cashStandardUnit->setSymbol('€');
+        $this->cashStandardUnit->getName()->set('Euro', 'fr');
+        $this->cashStandardUnit->getSymbol()->set('€', 'fr');
         $this->cashStandardUnit->setRef('e');
         $this->cashStandardUnit->setPhysicalQuantity($this->cashPhysicalQuantity);
         $this->cashStandardUnit->setUnitSystem($this->unitSystem);
@@ -211,29 +205,27 @@ class Unit_Test_UnitAPITest extends TestCase
         // On créer deux extensions.
         $this->extension = new UnitExtension();
         $this->extension->setRef('co2e');
-        $this->extension->setName('équivalent CO2');
-        $this->extension->setSymbol('equ. CO2');
+        $this->extension->getSymbol()->set('equ. CO2', 'fr');
         $this->extension->setMultiplier(1);
         $this->extension->save();
 
         $this->extension2 = new UnitExtension();
         $this->extension2->setRef('ce');
-        $this->extension2->setName('équivalent carbone');
-        $this->extension2->setSymbol('equ. C');
+        $this->extension2->getSymbol()->set('equ. C', 'fr');
         $this->extension2->setMultiplier(3.7);
         $this->extension2->save();
 
         //on créer plusieurs unités :
         $this->unit1 = new DiscreteUnit();
-        $this->unit1->setName('Animal');
-        $this->unit1->setSymbol('animal');
+        $this->unit1->getName()->set('Animal', 'fr');
+        $this->unit1->getSymbol()->set('animal', 'fr');
         $this->unit1->setRef('animal');
         $this->unit1->save();
 
         $this->unit2 = new StandardUnit();
         $this->unit2->setMultiplier(0.001);
-        $this->unit2->setName('gramme');
-        $this->unit2->setSymbol('g');
+        $this->unit2->getName()->set('gramme', 'fr');
+        $this->unit2->getSymbol()->set('g', 'fr');
         $this->unit2->setRef('g');
         $this->unit2->setPhysicalQuantity($this->massPhysicalQuantity);
         $this->unit2->setUnitSystem($this->unitSystem);
@@ -241,8 +233,8 @@ class Unit_Test_UnitAPITest extends TestCase
 
         $this->unit3 = new StandardUnit();
         $this->unit3->setMultiplier(1);
-        $this->unit3->setName('Joule');
-        $this->unit3->setSymbol('J');
+        $this->unit3->getName()->set('Joule', 'fr');
+        $this->unit3->getSymbol()->set('J', 'fr');
         $this->unit3->setRef('j');
         $this->unit3->setPhysicalQuantity($this->physicalQuantity1);
         $this->unit3->setUnitSystem($this->unitSystem);
@@ -250,8 +242,8 @@ class Unit_Test_UnitAPITest extends TestCase
 
         $this->unit4 = new ExtendedUnit();
         $this->unit4->setRef('g_co2e');
-        $this->unit4->setName('gramme équivalent CO2');
-        $this->unit4->setSymbol('g equ. CO2');
+        $this->unit4->getName()->set('gramme équivalent CO2', 'fr');
+        $this->unit4->getSymbol()->set('g equ. CO2', 'fr');
         $this->unit4->setMultiplier(0.001);
         $this->unit4->setExtension($this->extension);
         $this->unit4->setStandardUnit($this->massStandardUnit);
@@ -259,8 +251,8 @@ class Unit_Test_UnitAPITest extends TestCase
 
         $this->unit5 = new ExtendedUnit();
         $this->unit5->setRef('kg_ce');
-        $this->unit5->setName('kilogramme équivalent carbone');
-        $this->unit5->setSymbol('kg.equ. C');
+        $this->unit5->getName()->set('kilogramme équivalent carbone', 'fr');
+        $this->unit5->getSymbol()->set('kg.equ. C', 'fr');
         $this->unit5->setMultiplier(3.7);
         $this->unit5->setExtension($this->extension2);
         $this->unit5->setStandardUnit($this->massStandardUnit);
@@ -268,8 +260,8 @@ class Unit_Test_UnitAPITest extends TestCase
 
         $this->unit6 = new StandardUnit();
         $this->unit6->setMultiplier(3.15576e+007);
-        $this->unit6->setName('an');
-        $this->unit6->setSymbol('an');
+        $this->unit6->getName()->set('an', 'fr');
+        $this->unit6->getSymbol()->set('an', 'fr');
         $this->unit6->setRef('an');
         $this->unit6->setPhysicalQuantity($this->timePhysicalQuantity);
         $this->unit6->setUnitSystem($this->unitSystem);
@@ -277,8 +269,8 @@ class Unit_Test_UnitAPITest extends TestCase
 
         $this->unit7 = new ExtendedUnit();
         $this->unit7->setRef('kg_co2e');
-        $this->unit7->setName('kilogramme équivalent CO2');
-        $this->unit7->setSymbol('kg.equ. CO2');
+        $this->unit7->getName()->set('kilogramme équivalent CO2', 'fr');
+        $this->unit7->getSymbol()->set('kg.equ. CO2', 'fr');
         $this->unit7->setMultiplier(0.001);
         $this->unit7->setExtension($this->extension);
         $this->unit7->setStandardUnit($this->massStandardUnit);
@@ -295,7 +287,7 @@ class Unit_Test_UnitAPITest extends TestCase
     {
         //Traitement d'un cas assez complexe utilisant tout les types d'unité (discrète, étendue et standard)
         $o = new UnitAPI('m^2.animal^-1.m^-2.g.g_co2e^2');
-        $this->assertSame('m2.g.g equ. CO22/animal.m2', $o->getSymbol());
+        $this->assertSame('m2.g.g equ. CO22/animal.m2', $o->getSymbol()->get('fr'));
     }
 
 
@@ -454,6 +446,9 @@ class Unit_Test_UnitAPITest extends TestCase
         $this->timePhysicalQuantity->setReferenceUnit(null);
         $this->cashPhysicalQuantity->setReferenceUnit(null);
 
+        if (! $this->unit1) {
+            return;
+        }
         $this->unit1->delete();
         $this->unit2->delete();
         $this->unit3->delete();

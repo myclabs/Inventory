@@ -16,7 +16,6 @@ Feature: AF tree edit category feature
   # Ajout d'une catégorie, libellé non vide
     When I fill in "label" with "Test"
     And I click "Valider"
-    And I wait 7 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Ajout d'une catégorie, libellé non vide, située dans une autre catégorie
   # TODO : permettre l'ajout d'une catégorie dans une autre catégorie.

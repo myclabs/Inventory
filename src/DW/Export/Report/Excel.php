@@ -6,6 +6,8 @@
  * @subpackage Library
  */
 
+use Mnapoli\Translated\Translator;
+
 /**
  * Classe permettant de gérer l'export détaillé d'une analyse au format excel.
  * @package DW
@@ -13,20 +15,22 @@
 class DW_Export_Report_Excel extends Export_Excel
 {
     /**
-     * Constructeur
-     *
-     * @param DW_Model_Report $report
+     * @var Translator
      */
-    public function __construct($report)
+    private $translator;
+
+    public function __construct(DW_Model_Report $report, Translator $translator)
     {
+        $this->translator = $translator;
+
         $numeratorAxis1 = $report->getNumeratorAxis1();
         $numeratorAxis2 = $report->getNumeratorAxis2();
         $denominatorAxis1 = $report->getDenominatorAxis1();
         $denominatorAxis2 = $report->getDenominatorAxis2();
 
         $this->fileName = date('Y-m-d', time())
-            .'-'.Core_Tools::refactor($report->getCube()->getLabel())
-            .'-'.Core_Tools::refactor($report->getLabel());
+            .'-'.Core_Tools::refactor($this->translator->get($report->getCube()->getLabel()))
+            .'-'.Core_Tools::refactor($this->translator->get($report->getLabel()));
 
 
         $sheets = array();
@@ -36,11 +40,17 @@ class DW_Export_Report_Excel extends Export_Excel
         $sheetData = array();
 
         $sheetData[] = array(
-            array($report->getCube()->getLabel(), array('font' => array('bold' => true, 'size' => 14)))
+            array(
+                $this->translator->get($report->getCube()->getLabel()),
+                array('font' => array('bold' => true, 'size' => 14))
+            )
         );
-        $sheetData[] = array(
-            array($report->getLabel(), array('font' => array('bold' => true, 'size' => 14)))
-        );
+        $sheetData[] = [
+            [
+                $this->translator->get($report->getLabel()),
+                ['font' => ['bold' => true, 'size' => 14]]
+            ]
+        ];
         $sheetData[] = array();
         $sheetData[] = array(
             array(__('UI', 'name', 'configuration'), array('font' => array('bold' => true, 'size' => 12)))
@@ -49,53 +59,60 @@ class DW_Export_Report_Excel extends Export_Excel
         if ($report->getDenominator() === null) {
             $sheetData[] = array(
                 __('Classification', 'indicator', 'indicator'),
-                $report->getNumerator()->getLabel() . ' (' . $report->getValuesUnitSymbol() . ')'
+                $this->translator->get($report->getNumerator()->getLabel())
+                    . ' (' . $this->translator->get($report->getValuesUnitSymbol()) . ')'
             );
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis').' 1',
-                    $numeratorAxis1->getLabel()
+                    $this->translator->get($numeratorAxis1->getLabel())
                 );
             }
             if ($numeratorAxis2 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis').' 2',
-                    $numeratorAxis2->getLabel()
+                    $this->translator->get($numeratorAxis2->getLabel())
                 );
             }
         } else {
             $sheetData[] = array(
                 __('DW', 'name', 'numerator'),
-                $report->getNumerator()->getLabel() . ' (' . $report->getNumerator()->getRatioUnit()->getSymbol() . ')'
+                $this->translator->get($report->getNumerator()->getLabel())
+                    . ' ('
+                    . $this->translator->get($report->getNumerator()->getRatioUnit()->getSymbol())
+                    . ')'
             );
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis') . ' 1 ' . __('DW', 'name', 'numeratorMin'),
-                    $numeratorAxis1->getLabel()
+                    $this->translator->get($numeratorAxis1->getLabel())
                 );
             }
             if ($numeratorAxis2 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis') . ' 2 ' . __('DW', 'name', 'numeratorMin'),
-                    $numeratorAxis2->getLabel()
+                    $this->translator->get($numeratorAxis2->getLabel())
                 );
             }
 
             $sheetData[] = array(
                 __('DW', 'name', 'denominator'),
-                $report->getDenominator()->getLabel(). ' (' .  $report->getDenominator()->getRatioUnit()->getSymbol() . ')'
+                $this->translator->get($report->getDenominator()->getLabel())
+                    . ' ('
+                    . $this->translator->get($report->getDenominator()->getRatioUnit()->getSymbol())
+                    . ')'
             );
 
             if ($numeratorAxis1 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis').' 1 '.__('DW', 'name', 'denominatorMin'),
-                    ($denominatorAxis1 !== null) ? $denominatorAxis1->getLabel() : '--'
+                    ($denominatorAxis1 !== null) ? $this->translator->get($denominatorAxis1->getLabel()) : '--'
                 );
             }
             if ($numeratorAxis2 !== null) {
                 $sheetData[] = array(
                     __('UI', 'name', 'axis').' 2 '.__('DW', 'name', 'denominatorMin'),
-                    ($denominatorAxis2 !== null) ? $denominatorAxis2->getLabel() : '--'
+                    ($denominatorAxis2 !== null) ? $this->translator->get($denominatorAxis2->getLabel()) : '--'
                 );
             }
         }
@@ -109,9 +126,9 @@ class DW_Export_Report_Excel extends Export_Excel
             $filter = $report->getFilterForAxis($axis);
             if ($filter !== null) {
                 $hasFilter = true;
-                $sheetData[] = array($axis->getLabel());
+                $sheetData[] = [$this->translator->get($axis->getLabel())];
                 foreach ($filter->getMembers() as $member) {
-                    $sheetData[] = array('', $member->getLabel());
+                    $sheetData[] = ['', $this->translator->get($member->getLabel())];
                 }
             }
         }
@@ -138,7 +155,7 @@ class DW_Export_Report_Excel extends Export_Excel
         $y = 0;
         if ($numeratorAxis1 !== null) {
             $sheetHeader[] = array(
-                $numeratorAxis1->getLabel(),
+                $this->translator->get($numeratorAxis1->getLabel()),
                 array(
                     'font' => array('bold' => true),
                     'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
@@ -148,7 +165,7 @@ class DW_Export_Report_Excel extends Export_Excel
         }
         if ($numeratorAxis2 !== null) {
             $sheetHeader[] = array(
-                $numeratorAxis2->getLabel(),
+                $this->translator->get($numeratorAxis2->getLabel()),
                 array(
                     'font' => array('bold' => true),
                     'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
@@ -158,7 +175,8 @@ class DW_Export_Report_Excel extends Export_Excel
         }
 
         $sheetHeader[] = array(
-            __('UI', 'name', 'value') . ' (' . $report->getValuesUnitSymbol() . ')',
+            __('UI', 'name', 'value')
+                . ' (' . $this->translator->get($report->getValuesUnitSymbol()) . ')',
             array(
                 'font' => array('bold' => true),
                 'alignment' => array(
@@ -189,7 +207,7 @@ class DW_Export_Report_Excel extends Export_Excel
                 if ($value['value'] != 0) {
                     $line = array();
                     foreach ($value['members'] as $member) {
-                        $line[] = $member->getLabel();
+                        $line[] = $this->translator->get($member->getLabel());
                     }
                     $line[] = (string) floatval(
                         str_replace(
@@ -207,7 +225,7 @@ class DW_Export_Report_Excel extends Export_Excel
             foreach ($report->getValues() as $value) {
                 if ($value['value'] != 0) {
                     $line = array();
-                    $line[] = array_shift($value['members'])->getLabel();
+                    $line[] = $this->translator->get(array_shift($value['members'])->getLabel());
                     $line[] = (string) floatval(
                         str_replace(
                             ['&Acirc;', '&nbsp;'],

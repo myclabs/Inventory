@@ -8,6 +8,7 @@
 
 namespace Unit\Domain\Unit;
 
+use Core\Translation\TranslatedString;
 use Unit\Domain\UnitExtension;
 
 /**
@@ -144,8 +145,12 @@ class ExtendedUnit extends Unit
 
         $extendedReferenceUnit = new ExtendedUnit();
         $extendedReferenceUnit->setRef($standardUnit->getRef() . '_co2e');
-        $extendedReferenceUnit->setName('(' . $standardUnit->getName() . ' equivalent CO2)');
-        $extendedReferenceUnit->setSymbol('(' . $standardUnit->getSymbol() . '.equCO2)');
+        $extendedReferenceUnit->setName(
+            TranslatedString::join(['(', $standardUnit->getName(), ' equivalent CO2)'])
+        );
+        $extendedReferenceUnit->setSymbol(
+            TranslatedString::join(['(', $standardUnit->getSymbol(), '.equCO2)'])
+        );
         $extendedReferenceUnit->setStandardUnit($standardUnit);
         $extendedReferenceUnit->setExtension($this->getExtension());
 

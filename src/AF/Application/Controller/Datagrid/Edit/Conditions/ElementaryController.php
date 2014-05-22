@@ -58,12 +58,12 @@ class AF_Datagrid_Edit_Conditions_ElementaryController extends UI_Controller_Dat
             } elseif ($condition instanceof SelectSingleCondition) {
                 $data['relation'] = $this->cellList($condition->getRelation());
                 if ($condition->getOption()) {
-                    $data['value'] = $condition->getOption()->getLabel();
+                    $data['value'] = $this->cellTranslatedText($condition->getOption()->getLabel());
                 }
             } elseif ($condition instanceof SelectMultiCondition) {
                 $data['relation'] = $this->cellList($condition->getRelation());
                 if ($condition->getOption()) {
-                    $data['value'] = $condition->getOption()->getLabel();
+                    $data['value'] = $this->cellTranslatedText($condition->getOption()->getLabel());
                 }
             }
             $data['editValue'] = $this->cellPopup($this->_helper->url(

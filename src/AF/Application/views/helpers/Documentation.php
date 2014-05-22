@@ -26,7 +26,11 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
         foreach ($af->getSubAfList() as $subAFComponent) {
             $repeatedSubAf = ($subAFComponent instanceof RepeatedSubAF);
 
-            $html .= $this->renderAf($subAFComponent->getCalledAF(), $subAFComponent->getLabel(), $repeatedSubAf);
+            $html .= $this->renderAf(
+                $subAFComponent->getCalledAF(),
+                $this->view->translate($subAFComponent->getLabel()),
+                $repeatedSubAf
+            );
         }
 
         return $html;
@@ -44,7 +48,7 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
         $collapse = new Collapse($af->getId(), $title);
 
         // Lien vers la saisie en test
-        $html = __('AF', 'inputDocumentation', 'calledForm') . ' ' . $af->getLabel();
+        $html = __('AF', 'inputDocumentation', 'calledForm') . ' ' . $this->view->translate($af->getLabel());
         if ($repeatedSubAf) {
             $html .= ' (' . __('AF', 'inputDocumentation', 'repeated') . ')';
         }
@@ -62,7 +66,8 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
             $html .= '<ul>';
             foreach ($families as $family) {
                 $url = $this->view->baseUrl("parameter/family/details/id/" . $family->getId());
-                $html .= "<li><a href=\"$url\" target=\"_blank\">{$family->getLabel()}</a></li>";
+                $label = $this->view->translate($family->getLabel());
+                $html .= "<li><a href=\"$url\" target=\"_blank\">$label</a></li>";
             }
             $html .= '</ul>';
         }

@@ -1,0 +1,10 @@
+Core\Translation\TranslatedString:
+  type: embeddable
+
+  fields:
+    fr:
+      type: string
+      nullable: true
+    en:
+      type: string
+      nullable: true

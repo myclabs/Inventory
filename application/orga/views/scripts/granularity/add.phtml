@@ -6,7 +6,7 @@ $organization = $this->organization;
       action="orga/organization/add-granularity-<?=$this->purpose?>/idOrganization/<?=$organization->getId()?>/">
     <select multiple name="axes[]" class="axes" style="min-width: 250px;">
         <?php foreach ($organization->getFirstOrderedAxes() as $axis) : ?>
-            <option value="<?=$axis->getRef()?>"><?=$axis->getLabel()?></option>
+            <option value="<?=$axis->getRef()?>"><?=$this->translate($axis->getLabel())?></option>
         <?php endforeach; ?>
     </select>
    <?=$this->complementaryFields?>

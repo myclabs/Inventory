@@ -3,7 +3,7 @@ sheets:
 
   - foreach: indicators as indicator
     do:
-      - label: "{{ indicator.label }}"
+      - label: "{{ translateString(indicator.label) }}"
 
         content:
 
@@ -11,14 +11,14 @@ sheets:
             columns:
               - foreach: orgaAxes as orgaAxis
                 do:
-                  - label: "{{ orgaAxis.label }}"
+                  - label: "{{ translateString(orgaAxis.label) }}"
               - foreach: classifAxes as classifAxis
                 do:
-                  - label: "{{ classifAxis.label }}"
+                  - label: "{{ translateString(classifAxis.label) }}"
               - label: "{{ inputStatus }}"
               - label: "{{ resultLabel }}"
               - label: "{{ resultFreeLabel }}"
-              - label: "{{ resultValue }} ({{ indicator.unit.symbol }})"
+              - label: "{{ resultValue }} ({{ translateString(indicator.unit.symbol) }})"
               - label: "{{ resultRoundedValue }}"
               - label: "{{ resultUncertainty }}"
             lines:
@@ -34,7 +34,7 @@ sheets:
                             do:
                               - "{{ displayMemberForClassifAxis(output, classifAxis) }}"
                           - "{{ displayInputStatus(populatingCell) }}"
-                          - "{{ output.label }}"
+                          - "{{ translateString(output.label) }}"
                           - "{{ displayFreeLabel(output) }}"
                           - "{{ displayValue(output.value.digitalValue) }}"
                           - "{{ displayRoundedValue(output.value.digitalValue) }}"

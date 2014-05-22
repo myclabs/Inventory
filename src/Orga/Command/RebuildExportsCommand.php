@@ -83,20 +83,23 @@ class RebuildExportsCommand extends Command
 
         /** @var Orga_Model_Organization $organization */
         foreach (Orga_Model_Organization::loadList() as $organization) {
-            $output->writeln(sprintf('  <info>%s</info>', $organization->getLabel()));
+            $output->writeln(sprintf('  <info>%s</info>', $organization->getLabel()->get('fr')));
 
             foreach ($organization->getInputGranularities() as $inputGranularity) {
                 $this->entityManager->clear();
                 $inputGranularity = Orga_Model_Granularity::load($inputGranularity->getId());
 
-                $output->writeln(sprintf('    <info>%s</info>', $inputGranularity->getLabel()));
+                $output->writeln(sprintf('    <info>%s</info>', $inputGranularity->getLabel()->get('fr')));
 
                 foreach ($inputGranularity->getOrderedCells() as $inputCell) {
                     if (!(count(glob($this->directoryInputsExports . $inputCell->getId() . '.*')) >0)) {
                         $inputCell = Orga_Model_Cell::load($inputCell->getId());
                         $this->exportService->saveCellInput($inputCell);
                         if (count(glob($this->directoryInputsExports . $inputCell->getId() . '.*')) >0) {
-                            $output->writeln(sprintf('      <info>%s</info>', $inputCell->getExtendedLabel()));
+                            $output->writeln(sprintf(
+                                '      <info>%s</info>',
+                                $inputCell->getExtendedLabel()->get('fr')
+                            ));
                         }
                     }
                 }

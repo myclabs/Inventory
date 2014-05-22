@@ -22,7 +22,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
         foreach ($axes as $axis) {
             $this->addNode(
                 $axis->getRef(),
-               '<b>'.$axis->getLabel().'</b> <i>('.$axis->getRef().')</i>',
+               '<b>'.$this->translator->get($axis->getLabel()).'</b> <i>('.$axis->getRef().')</i>',
                (!$axis->hasDirectBroaders()),
                 null,
                 false,
@@ -62,7 +62,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             } else {
                 $axis = new Orga_Model_Axis($organization, $axisRef);
             }
-            $axis->setLabel($this->getAddElementValue('addAxis_label'));
+            $this->translator->set($axis->getLabel(), $this->getAddElementValue('addAxis_label'));
             if ($this->getAddElementValue('addAxis_contextualizing') === 'contextualizing') {
                 $axis->setContextualize(true);
             } else {
@@ -71,16 +71,14 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             $axis->save();
 
             if ($axis->getDirectNarrower() === null) {
-                $this->message = __('UI', 'message', 'added',
-                                        array('AXIS' => $axis->getLabel())
-                                    );
+                $this->message = __('UI', 'message', 'added', [
+                    'AXIS' => $this->translator->get($axis->getLabel())
+                ]);
             } else {
-                $this->message = __('UI', 'message', 'added',
-                                        array(
-                                                'AXIS' => $axis->getLabel(),
-                                                'PARENT' => $axis->getDirectNarrower()->getLabel()
-                                            )
-                                    );
+                $this->message = __('UI', 'message', 'added', [
+                    'AXIS' => $this->translator->get($axis->getLabel()),
+                    'PARENT' => $this->translator->get($axis->getDirectNarrower()->getLabel()),
+                ]);
             }
         }
 
@@ -96,7 +94,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
 
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         foreach ($organization->getFirstOrderedAxes() as $axis) {
-            $this->addElementList($axis->getRef(), ' '.$axis->getLabel());
+            $this->addElementList($axis->getRef(), ' '.$this->translator->get($axis->getLabel()));
         }
 
         $this->send();
@@ -117,7 +115,10 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
         }
         foreach ($axes as $siblingAxis) {
             if ($siblingAxis !== $axis) {
-                $this->addElementList($siblingAxis->getRef(), $siblingAxis->getLabel().' ('.$siblingAxis->getRef().')');
+                $this->addElementList(
+                    $siblingAxis->getRef(),
+                    $this->translator->get($siblingAxis->getLabel()).' ('.$siblingAxis->getRef().')'
+                );
             }
         }
 
@@ -180,8 +181,8 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             if ($axis->getRef() !== $newRef) {
                 $axis->setRef($newRef);
             }
-            if ($axis->getLabel() !== $newLabel) {
-                $axis->setLabel($newLabel);
+            if ($this->translator->get($axis->getLabel()) !== $newLabel) {
+                $this->translator->set($axis->getLabel(), $newLabel);
             }
             if ($axis->isContextualizing() !== $contextualizing) {
                 $axis->setContextualize($contextualizing);
@@ -189,7 +190,9 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             if (($newPosition !== null) && ($axis->getPosition() !== $newPosition)) {
                 $axis->setPosition($newPosition);
             }
-            $this->message = __('UI', 'message', 'updated', array('AXIS' => $axis->getLabel()));
+            $this->message = __('UI', 'message', 'updated', [
+                'AXIS' => $this->translator->get($axis->getLabel())
+            ]);
         }
 
         $this->send();
@@ -214,7 +217,9 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
                     array('AXIS' => $this->getParam('label')));
         }
         $axis->delete();
-        $this->message = __('UI', 'message', 'deleted', array('AXIS' => $axis->getLabel()));
+        $this->message = __('UI', 'message', 'deleted', [
+            'AXIS' => $this->translator->get($axis->getLabel())
+        ]);
 
         $this->send();
     }
@@ -228,7 +233,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
         $axis = $organization->getAxisByRef($this->idNode);
 
         $this->data['ref'] = $axis->getRef();
-        $this->data['label'] = $axis->getLabel();
+        $this->data['label'] = $this->translator->get($axis->getLabel());
         $this->data['contextualizing'] = $axis->isContextualizing() ? 'contextualizing' : 'noneContextualizing';
 
         $this->send();

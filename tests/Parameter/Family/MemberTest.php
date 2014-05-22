@@ -3,6 +3,7 @@
 namespace Tests\Parameter\Family;
 
 use Core\Test\TestCase;
+use Core\Translation\TranslatedString;
 use Core_Tools;
 use Doctrine\ORM\UnitOfWork;
 use Parameter\Domain\Family\Dimension;
@@ -22,7 +23,7 @@ class MemberTest extends TestCase
         $member = new Member(
             DimensionTest::generateObject(),
             strtolower(Core_Tools::generateRef()),
-            Core_Tools::generateString(10)
+            new TranslatedString('Member', 'fr')
         );
         $member->save();
         self::getEntityManager()->flush();
@@ -66,9 +67,9 @@ class MemberTest extends TestCase
         $ref1 = strtolower(Core_Tools::generateRef());
         $ref2 = strtolower(Core_Tools::generateRef());
 
-        $o1 = new Member($dimension, $ref1, 'A');
+        $o1 = new Member($dimension, $ref1, new TranslatedString('A', 'fr'));
         $o1->save();
-        $o2 = new Member($dimension, $ref2, 'B');
+        $o2 = new Member($dimension, $ref2, new TranslatedString('B', 'fr'));
         $o2->save();
 
         $this->assertEquals(1, $o1->getPosition());
@@ -107,7 +108,7 @@ class MemberTest extends TestCase
         // Fixtures
         $dimension = DimensionTest::generateObject();
 
-        $o = new Member($dimension, Core_Tools::generateRef(), 'Test');
+        $o = new Member($dimension, Core_Tools::generateRef(), new TranslatedString('Test', 'fr'));
 
         // Vérification de la cascade de la persistence
         $dimension->save();

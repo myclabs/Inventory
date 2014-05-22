@@ -2,9 +2,9 @@
 
 namespace Classification\Domain;
 
+use Core\Translation\TranslatedString;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Strategy_Ordered;
 use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
@@ -17,7 +17,6 @@ use Unit\UnitAPI;
 class Indicator extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';
@@ -41,7 +40,7 @@ class Indicator extends Core_Model_Entity
     protected $ref;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -59,13 +58,18 @@ class Indicator extends Core_Model_Entity
     /**
      * @param ClassificationLibrary $library
      * @param string           $ref       Identifiant textuel
-     * @param string           $label     Libellé
+     * @param TranslatedString $label     Libellé
      * @param UnitAPI          $unit      Unité de l'indicateur.
-     * @param UnitAPI|null     $ratioUnit Unité utilisé pour les ratios. Si null, l'unité de l'indicateur est utilisée.
+     * @param UnitAPI|null     $ratioUnit Unité utilisé pour les ratios.Si null, l'unité de l'indicateur est utilisée.
      * @throws IncompatibleUnitsException Unit ant RatioUnit should be compatible
      */
-    public function __construct(ClassificationLibrary $library, $ref, $label, UnitAPI $unit, UnitAPI $ratioUnit = null)
-    {
+    public function __construct(
+        ClassificationLibrary $library,
+        $ref,
+        TranslatedString $label,
+        UnitAPI $unit,
+        UnitAPI $ratioUnit = null
+    ) {
         $this->library = $library;
         $this->ref = $ref;
         $this->label = $label;
@@ -106,15 +110,7 @@ class Indicator extends Core_Model_Entity
     }
 
     /**
-     * @param string $label
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
-
-    /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {

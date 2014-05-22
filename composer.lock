@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "9c2783261fd00a41869f07b74936fdec",
+    "hash": "83a1eaf55276ca61466ab4dfe7bfd747",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -64,7 +64,7 @@
                     "Doctrine\\Common\\Annotations\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -90,7 +90,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -144,9 +144,10 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
-                    "homepage": "http://www.jwage.com/"
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
                 },
                 {
                     "name": "Guilherme Blanco",
@@ -162,7 +163,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -246,16 +247,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.4.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "ceb18cf9b0230f3ea208b6238130fd415abda0a7"
+                "reference": "434c364b6a8780c16769b60fcc56e61e6bac766f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/ceb18cf9b0230f3ea208b6238130fd415abda0a7",
-                "reference": "ceb18cf9b0230f3ea208b6238130fd415abda0a7",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/434c364b6a8780c16769b60fcc56e61e6bac766f",
+                "reference": "434c364b6a8780c16769b60fcc56e61e6bac766f",
                 "shasum": ""
             },
             "require": {
@@ -266,10 +267,13 @@
                 "doctrine/lexer": "1.*",
                 "php": ">=5.3.2"
             },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4.x-dev"
+                    "dev-master": "2.5.x-dev"
                 }
             },
             "autoload": {
@@ -317,7 +321,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2013-09-07 10:20:34"
+            "time": "2014-03-19 13:50:21"
         },
         {
             "name": "doctrine/dbal",
@@ -413,7 +417,7 @@
                     "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -437,9 +441,9 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -476,7 +480,7 @@
                     "Doctrine\\Common\\Lexer\\": "lib/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -493,7 +497,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -511,16 +515,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "7a305475e35930749e15bad0d060f8a917b1992f"
+                "reference": "7debf736a68e8000a272599294ba9da6e7c690b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/7a305475e35930749e15bad0d060f8a917b1992f",
-                "reference": "7a305475e35930749e15bad0d060f8a917b1992f",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/7debf736a68e8000a272599294ba9da6e7c690b7",
+                "reference": "7debf736a68e8000a272599294ba9da6e7c690b7",
                 "shasum": ""
             },
             "require": {
-                "doctrine/collections": "~1.1",
+                "doctrine/collections": "~1.2",
                 "doctrine/dbal": ">=2.5-dev,<2.6-dev",
                 "ext-pdo": "*",
                 "php": ">=5.3.2",
@@ -580,7 +584,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-04-29 11:25:17"
+            "time": "2014-05-19 20:59:06"
         },
         {
             "name": "dompdf/dompdf",
@@ -625,11 +629,17 @@
         },
         {
             "name": "gedmo/doctrine-extensions",
-            "version": "dev-OptimizedTranslatable",
+            "version": "v2.3.9",
             "source": {
                 "type": "git",
-                "url": "git://github.com/myclabs/DoctrineExtensions.git",
-                "reference": "ac4ec824bcbcff3040dc438dda94177599d50f5b"
+                "url": "https://github.com/Atlantic18/DoctrineExtensions.git",
+                "reference": "35adcaae1a3f50d0d5b73aa50ed8fd28ee35ce54"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Atlantic18/DoctrineExtensions/zipball/35adcaae1a3f50d0d5b73aa50ed8fd28ee35ce54",
+                "reference": "35adcaae1a3f50d0d5b73aa50ed8fd28ee35ce54",
+                "shasum": ""
             },
             "require": {
                 "doctrine/common": ">=2.2,<2.5-dev",
@@ -660,10 +670,15 @@
                     "Gedmo\\": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
+                {
+                    "name": "David Buchmann",
+                    "email": "david@liip.ch"
+                },
                 {
                     "name": "Gediminas Morkevicius",
                     "email": "gediminas.morkevicius@gmail.com"
@@ -671,17 +686,13 @@
                 {
                     "name": "Gustavo Falco",
                     "email": "comfortablynumb84@gmail.com"
-                },
-                {
-                    "name": "David Buchmann",
-                    "email": "david@liip.ch"
                 }
             ],
             "description": "Doctrine2 behavioral extensions",
             "homepage": "http://gediminasm.org/",
             "keywords": [
+                "Blameable",
                 "behaviors",
-                "blameable",
                 "doctrine2",
                 "extensions",
                 "gedmo",
@@ -694,13 +705,7 @@
                 "tree",
                 "uploadable"
             ],
-            "support": {
-                "email": "gediminas.morkevicius@gmail.com",
-                "wiki": "https://github.com/l3pp4rd/DoctrineExtensions/tree/master/doc",
-                "issues": "https://github.com/l3pp4rd/DoctrineExtensions/issues",
-                "source": "https://github.com/l3pp4rd/DoctrineExtensions"
-            },
-            "time": "2013-10-24 12:17:26"
+            "time": "2014-01-12 16:34:06"
         },
         {
             "name": "jms/parser-lib",
@@ -736,6 +741,46 @@
             ],
             "description": "A library for easily creating recursive-descent parsers.",
             "time": "2012-11-18 18:08:43"
+        },
+        {
+            "name": "mnapoli/doctrine-translated",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mnapoli/DoctrineTranslated.git",
+                "reference": "a09bcda319811095e985efd438964298b03e25d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/a09bcda319811095e985efd438964298b03e25d2",
+                "reference": "a09bcda319811095e985efd438964298b03e25d2",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "2.5.*@dev",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mnapoli\\Translated\\": "src/",
+                    "Test\\Mnapoli\\Translated\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Translated strings for Doctrine",
+            "homepage": "https://github.com/mnapoli/DoctrineTranslated",
+            "keywords": [
+                "doctrine",
+                "i18n",
+                "translatable",
+                "translation",
+                "translations"
+            ],
+            "time": "2014-05-16 12:13:44"
         },
         {
             "name": "mnapoli/metamodel",
@@ -775,12 +820,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/NumberTwo.git",
-                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6"
+                "reference": "0.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
-                "reference": "271289cc9da9db2f63577fa29f1ef42baf1e9cf6",
+                "url": "https://api.github.com/repos/mnapoli/NumberTwo/zipball/0.2.1",
+                "reference": "0.2.1",
                 "shasum": ""
             },
             "type": "library",
@@ -1104,16 +1149,16 @@
         },
         {
             "name": "myclabs/muih",
-            "version": "0.1.5",
+            "version": "0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/MUIH.git",
-                "reference": "6952d0a8ebcad97e5673a137b98b2f4c9a6b295a"
+                "reference": "76228efb28fa6c0fb2cdf7026b99a12caf98c076"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/MUIH/zipball/6952d0a8ebcad97e5673a137b98b2f4c9a6b295a",
-                "reference": "6952d0a8ebcad97e5673a137b98b2f4c9a6b295a",
+                "url": "https://api.github.com/repos/myclabs/MUIH/zipball/76228efb28fa6c0fb2cdf7026b99a12caf98c076",
+                "reference": "76228efb28fa6c0fb2cdf7026b99a12caf98c076",
                 "shasum": ""
             },
             "type": "library",
@@ -1133,7 +1178,7 @@
                 "helper",
                 "ui"
             ],
-            "time": "2014-03-31 13:59:47"
+            "time": "2014-05-20 09:42:38"
         },
         {
             "name": "myclabs/php-enum",
@@ -1491,7 +1536,7 @@
             ],
             "authors": [
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -1979,25 +2024,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendCode.git",
-                "reference": "7eb108341ff6c9ec240764a11270f2d12934b733"
+                "reference": "aaf820f205881563cc3c6708149e17364d1bb823"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/7eb108341ff6c9ec240764a11270f2d12934b733",
-                "reference": "7eb108341ff6c9ec240764a11270f2d12934b733",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendCode/zipball/aaf820f205881563cc3c6708149e17364d1bb823",
+                "reference": "aaf820f205881563cc3c6708149e17364d1bb823",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.23",
+                "php": ">=5.3.3",
                 "zendframework/zend-eventmanager": "self.version"
             },
             "require-dev": {
-                "doctrine/common": ">=2.1",
-                "zendframework/zend-stdlib": "self.version"
+                "doctrine/common": ">=2.1"
             },
             "suggest": {
-                "doctrine/common": "Doctrine\\Common >=2.1 for annotation features",
-                "zendframework/zend-stdlib": "Zend\\Stdlib component"
+                "doctrine/common": "Doctrine\\Common >=2.1 for annotation features"
             },
             "type": "library",
             "extra": {
@@ -2020,7 +2063,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2014-03-14 16:20:47"
+            "time": "2014-02-15 15:00:07"
         },
         {
             "name": "zendframework/zend-eventmanager",
@@ -2029,16 +2072,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendEventManager.git",
-                "reference": "048164ee81854942667ffdda3030ce06caa79bb5"
+                "reference": "89368704bb37303fba64c3ddd6bce0506aa7187c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/048164ee81854942667ffdda3030ce06caa79bb5",
-                "reference": "048164ee81854942667ffdda3030ce06caa79bb5",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/89368704bb37303fba64c3ddd6bce0506aa7187c",
+                "reference": "89368704bb37303fba64c3ddd6bce0506aa7187c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.23",
+                "php": ">=5.3.3",
                 "zendframework/zend-stdlib": "self.version"
             },
             "type": "library",
@@ -2061,7 +2104,7 @@
                 "eventmanager",
                 "zf2"
             ],
-            "time": "2014-03-14 16:21:05"
+            "time": "2014-01-04 13:00:14"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -2070,12 +2113,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "d1c481b8a43f2f079b16d3567960ba539e9dacaa"
+                "reference": "b6913eb223fa0ba646905522d4dbe1b84cddcb1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/d1c481b8a43f2f079b16d3567960ba539e9dacaa",
-                "reference": "d1c481b8a43f2f079b16d3567960ba539e9dacaa",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/b6913eb223fa0ba646905522d4dbe1b84cddcb1c",
+                "reference": "b6913eb223fa0ba646905522d4dbe1b84cddcb1c",
                 "shasum": ""
             },
             "require": {
@@ -2111,7 +2154,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2014-03-14 16:22:22"
+            "time": "2014-03-13 16:18:45"
         },
         {
             "name": "zendframework/zendframework1",
@@ -2342,26 +2385,27 @@
         },
         {
             "name": "behat/mink-extension",
-            "version": "v1.3.1",
+            "version": "v1.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/MinkExtension.git",
-                "reference": "0642b680b613fdd6cb774debacf65a0d0d1f08e8"
+                "reference": "b885b9407cba50a954f72c69ed1b2f8d3bc694f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/MinkExtension/zipball/0642b680b613fdd6cb774debacf65a0d0d1f08e8",
-                "reference": "0642b680b613fdd6cb774debacf65a0d0d1f08e8",
+                "url": "https://api.github.com/repos/Behat/MinkExtension/zipball/b885b9407cba50a954f72c69ed1b2f8d3bc694f8",
+                "reference": "b885b9407cba50a954f72c69ed1b2f8d3bc694f8",
                 "shasum": ""
             },
             "require": {
                 "behat/behat": "~2.5.0",
-                "behat/mink": ">=1.4.3,<1.6-dev",
+                "behat/mink": "~1.5",
                 "php": ">=5.3.2",
                 "symfony/config": "~2.2"
             },
             "require-dev": {
-                "behat/mink-goutte-driver": "~1.0"
+                "behat/mink-goutte-driver": "~1.0",
+                "fabpot/goutte": "~1.0"
             },
             "type": "behat-extension",
             "autoload": {
@@ -2388,7 +2432,7 @@
                 "test",
                 "web"
             ],
-            "time": "2014-04-27 11:55:27"
+            "time": "2014-05-15 19:27:39"
         },
         {
             "name": "behat/mink-selenium2-driver",
@@ -2751,10 +2795,10 @@
     ],
     "aliases": [
         {
-            "alias": "2.99",
-            "alias_normalized": "2.99.0.0",
-            "version": "dev-OptimizedTranslatable",
-            "package": "gedmo/doctrine-extensions"
+            "alias": "2.4.99",
+            "alias_normalized": "2.4.99.0",
+            "version": "9999999-dev",
+            "package": "doctrine/common"
         },
         {
             "alias": "1.7.99",
@@ -2765,8 +2809,9 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "doctrine/common": 20,
         "doctrine/orm": 20,
-        "gedmo/doctrine-extensions": 20,
+        "mnapoli/doctrine-translated": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "mnapoli/metaconsole": 20

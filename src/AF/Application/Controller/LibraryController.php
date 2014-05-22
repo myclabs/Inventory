@@ -4,6 +4,7 @@ use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use AF\Domain\AFLibrary;
 use Core\Annotation\Secure;
+use Core\Translation\TranslatedString;
 
 /**
  * @author matthieu.napoli
@@ -43,6 +44,7 @@ class AF_LibraryController extends Core_Controller
             if ($label == '') {
                 UI_Message::addMessageStatic(__('UI', 'formValidation', 'allFieldsRequired'));
             } else {
+                $label = $this->translator->set(new TranslatedString(), $label);
                 $library = new AFLibrary($account, $label);
                 $library->save();
                 $this->entityManager->flush();
