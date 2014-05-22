@@ -763,11 +763,14 @@ class Orga_Model_Member extends Core_Model_Entity
         if ($axis->isMemberPositioning()) {
             $criteria->orderBy(['parentMembersHashKey' => 'ASC', 'position' => 'ASC']);
         } else {
-            //@todo Trouver une meilleur solution !
-            /** @var Translator $translator */
-            $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
-            $lang = $translator->getLanguage();
-            $criteria->orderBy(['label.'.$lang => 'ASC']);
+//            //@todo Trouver une meilleur solution !
+//            /** @var Translator $translator */
+//            $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
+//            $lang = $translator->getLanguage();
+//            $criteria->orderBy(['label.'.$lang => 'ASC']);
+            //@todo Supprimer lorsque le bug sera corrigé.
+            //@see http://www.doctrine-project.org/jira/browse/DDC-3016
+            $criteria->orderBy(['ref' => 'ASC']);
         }
         return $axis->getMembers()->matching($criteria)->toArray();
     }
