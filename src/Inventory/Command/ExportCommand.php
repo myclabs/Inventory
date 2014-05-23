@@ -4,6 +4,11 @@ namespace Inventory\Command;
 
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Category as AFCategory;
+use Classification\Domain\Axis;
+use Classification\Domain\Context;
+use Classification\Domain\ContextIndicator;
+use Classification\Domain\Indicator;
+use Doctrine\Common\Collections\Collection;
 use Serializer\CustomSerializerForMigration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,18 +40,16 @@ class ExportCommand extends Command
                 'properties' => [
                     'algo' => [
                         'transform' => function (NumericAlgo $algo) {
-                                return $algo->getRef();
-                            },
+                            return $algo->getRef();
+                        },
                     ],
                 ],
             ],
-            \Orga\Model\ACL\Role\OrganizationAdminRole::class => [ 'exclude' => true ],
-            \Orga\Model\ACL\Role\CellAdminRole::class => [ 'exclude' => true ],
-            \Orga\Model\ACL\Role\CellManagerRole::class => [ 'exclude' => true ],
-            \Orga\Model\ACL\Role\CellContributorRole::class => [ 'exclude' => true ],
-            \Orga\Model\ACL\Role\CellObserverRole::class => [ 'exclude' => true ],
-            \Orga\Model\ACL\OrganizationAuthorization::class => [ 'exclude' => true ],
-            \Orga\Model\ACL\CellAuthorization::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\OrganizationAdminRole::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\CellAdminRole::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\CellManagerRole::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\CellContributorRole::class => [ 'exclude' => true ],
+            \Orga\Model\ACL\CellObserverRole::class => [ 'exclude' => true ],
             \DW_Model_Cube::class => [ 'exclude' => true ],
             \DW_Model_Axis::class => [ 'exclude' => true ],
             \DW_Model_Member::class => [ 'exclude' => true ],
@@ -70,12 +73,12 @@ class ExportCommand extends Command
                     ],
                 ],
             ],
-            \Social_Model_Comment::class => [
+            \Orga_Model_Cell_InputComment::class => [
                 'properties' => [
                     'author' => [
                         'transform' => function (User $author) {
-                                return $author->getEmail();
-                            },
+                            return $author->getEmail();
+                        },
                     ],
                 ],
             ],
@@ -112,10 +115,10 @@ class ExportCommand extends Command
 
         $output->writeln('<comment>Exporting classification</comment>');
         $data = [
-            \Classif_Model_Indicator::loadList(),
-            \Classif_Model_Axis::loadList(),
-            \Classif_Model_Context::loadList(),
-            \Classif_Model_ContextIndicator::loadList(),
+            Indicator::loadList(),
+            Axis::loadList(),
+            Context::loadList(),
+            ContextIndicator::loadList(),
         ];
         file_put_contents($root . '/classification.json', $serializer->serialize($data));
 
@@ -137,7 +140,7 @@ class ExportCommand extends Command
         foreach (\Orga_Model_Organization::loadList() as $organization) {
             $organizationAdmins = [];
             foreach ($organization->getAdminRoles() as $adminRoles) {
-                $organizationAdmins[] = $adminRoles->getUser()->getEmail();
+                $organizationAdmins[] = $adminRoles->getSecurityIdentity()->getEmail();
             }
 
             $granularitiesACL = [];
@@ -149,19 +152,19 @@ class ExportCommand extends Command
                     foreach ($granularity->getCells() as $cell) {
                         $cellAdmins = [];
                         foreach ($cell->getAdminRoles() as $cellAdmin) {
-                            $cellAdmins[] = $cellAdmin->getUser()->getEmail();
+                            $cellAdmins[] = $cellAdmin->getSecurityIdentity()->getEmail();
                         }
                         $cellManagers = [];
                         foreach ($cell->getManagerRoles() as $cellManager) {
-                            $cellManagers[] = $cellManager->getUser()->getEmail();
+                            $cellManagers[] = $cellManager->getSecurityIdentity()->getEmail();
                         }
                         $cellContributors = [];
                         foreach ($cell->getContributorRoles() as $cellContributor) {
-                            $cellContributors[] = $cellContributor->getUser()->getEmail();
+                            $cellContributors[] = $cellContributor->getSecurityIdentity()->getEmail();
                         }
                         $cellObservers = [];
                         foreach ($cell->getObserverRoles() as $cellObserver) {
-                            $cellObservers[] = $cellObserver->getUser()->getEmail();
+                            $cellObservers[] = $cellObserver->getSecurityIdentity()->getEmail();
                         }
                         if ((count($cellAdmins) > 0) || (count($cellManagers) > 0)
                             || (count($cellContributors) > 0) || (count($cellObservers) > 0)) {
@@ -169,7 +172,9 @@ class ExportCommand extends Command
                             $cellDataObject = new \StdClass();
                             $cellDataObject->type = 'cell';
                             $cellDataObject->members = array_map(
-                                function ($m) { return $m->getAxis()->getRef() . ';' . $m->getCompleteRef(); },
+                                function (\Orga_Model_Member $m) {
+                                    return $m->getAxis()->getRef() . ';' . $m->getCompleteRef();
+                                },
                                 $cellMembers
                             );
                             $cellDataObject->admins = $cellAdmins;
@@ -185,7 +190,9 @@ class ExportCommand extends Command
                         $granularityDataObject = new \StdClass();
                         $granularityDataObject->type = 'granularity';
                         $granularityDataObject->granularityAxes = array_map(
-                            function ($a) { return $a->getRef(); },
+                            function (\Orga_Model_Axis $a) {
+                                return $a->getRef();
+                            },
                             $granularityAxes
                         );
                         $granularityDataObject->cellsACL = $cellsACL;
@@ -205,7 +212,9 @@ class ExportCommand extends Command
                     $granularityDataObject = new \StdClass();
                     $granularityDataObject->type = 'granularity';
                     $granularityDataObject->granularityAxes = array_map(
-                        function ($a) { return $a->getRef(); },
+                        function (\Orga_Model_Axis $a) {
+                            return $a->getRef();
+                        },
                         $granularityAxes
                     );
                     $granularityDataObject->granularityReports = $granularityReports;
@@ -239,22 +248,34 @@ class ExportCommand extends Command
                             'exclude' => true,
                         ],
                         'numerator' => [
-                            'transform' => function ($i) { return ($i != null) ? $i->getRef() : null; },
+                            'transform' => function (\DW_Model_Indicator $i) {
+                                return ($i != null) ? $i->getRef() : null;
+                            },
                         ],
                         'denominator' => [
-                            'transform' => function ($i) { return ($i != null) ? $i->getRef() : null; },
+                            'transform' => function (\DW_Model_Indicator $i) {
+                                return ($i != null) ? $i->getRef() : null;
+                            },
                         ],
                         'numeratorAxis1' => [
-                            'transform' => function ($i) { return ($i != null) ? $i->getRef() : null; },
+                            'transform' => function (\DW_Model_Axis $i) {
+                                return ($i != null) ? $i->getRef() : null;
+                            },
                         ],
                         'numeratorAxis2' => [
-                            'transform' => function ($i) { return ($i != null) ? $i->getRef() : null; },
+                            'transform' => function (\DW_Model_Axis $i) {
+                                return ($i != null) ? $i->getRef() : null;
+                            },
                         ],
                         'denominatorAxis1' => [
-                            'transform' => function ($i) { return ($i != null) ? $i->getRef() : null; },
+                            'transform' => function (\DW_Model_Axis $i) {
+                                return ($i != null) ? $i->getRef() : null;
+                            },
                         ],
                         'denominatorAxis2' => [
-                            'transform' => function ($i) { return ($i != null) ? $i->getRef() : null; },
+                            'transform' => function (\DW_Model_Axis $i) {
+                                return ($i != null) ? $i->getRef() : null;
+                            },
                         ],
                     ],
                 ],
@@ -264,13 +285,17 @@ class ExportCommand extends Command
                             'exclude' => true,
                         ],
                         'axis' => [
-                            'transform' => function ($i) { return $i->getRef(); },
+                            'transform' => function (\DW_Model_Axis $i) {
+                                return $i->getRef();
+                            },
                         ],
                         'members' => [
-                            'transform' => function ($i) {
-                                    $members = $i->toArray();
-                                    return array_map(function ($m) { return $m->getRef(); }, $members);
-                                },
+                            'transform' => function (Collection $c) {
+                                $members = $c->toArray();
+                                return array_map(function (\DW_Model_Member $m) {
+                                    return $m->getRef();
+                                }, $members);
+                            },
                         ],
                     ],
                 ],
