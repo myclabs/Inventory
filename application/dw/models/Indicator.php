@@ -190,7 +190,7 @@ class DW_Model_Indicator extends Core_Model_Entity
      */
     public function setUnit(UnitAPI $unit)
     {
-        $this->unit = $unit;
+        $this->unit = $unit->getRef();
     }
 
     /**
@@ -210,7 +210,7 @@ class DW_Model_Indicator extends Core_Model_Entity
      */
     public function setRatioUnit(UnitAPI $ratioUnit)
     {
-        $this->ratioUnit = $ratioUnit;
+        $this->ratioUnit = $ratioUnit->getRef();
     }
 
     /**
