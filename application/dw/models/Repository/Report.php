@@ -4,6 +4,7 @@
  * @package    DW
  * @subpackage Model
  */
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Repository class
@@ -241,11 +242,13 @@ class DW_Model_Repository_Report extends Core_Model_Repository
     /**
      * Ajoute des paramètres personnalisés au QueryBuilder utilisé par le loadList et le countTotal.
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder $queryBuilder
      * @param Core_Model_Query $queryParameters
      */
-    protected function addCustomParametersToQueryBuilder($queryBuilder, Core_Model_Query $queryParameters=null)
-    {
+    protected function addCustomParametersToQueryBuilder(
+        QueryBuilder $queryBuilder,
+        Core_Model_Query $queryParameters = null
+    ) {
         // Nothing added by default !
     }
 
