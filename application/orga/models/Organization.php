@@ -8,6 +8,7 @@
  */
 
 use Account\Domain\Account;
+use Classification\Domain\Axis;
 use Classification\Domain\ContextIndicator;
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
@@ -87,9 +88,6 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     protected $adminRoles;
 
 
-    /**
-     * Constructeur de la classe Organization.
-     */
     public function __construct(Account $account)
     {
         $this->label = new TranslatedString();
@@ -173,7 +171,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function getAxisByRef($ref)
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('ref', $ref));
         $axis = $this->axes->matching($criteria)->toArray();
 
@@ -248,8 +246,8 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function getRootAxes()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
-        $criteria->where(Doctrine\Common\Collections\Criteria::expr()->isNull('directNarrower'));
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->isNull('directNarrower'));
         $criteria->orderBy(['position' => 'ASC']);
         return $this->axes->matching($criteria)->toArray();
     }
@@ -261,7 +259,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function getFirstOrderedAxes()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->orderBy(['narrowerTag' => 'ASC']);
         return $this->axes->matching($criteria)->toArray();
     }
@@ -354,7 +352,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function getGranularityByRef($ref)
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('ref', $ref));
         $granularity = $this->granularities->matching($criteria)->toArray();
 
@@ -418,7 +416,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function getOrderedGranularities()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria);
     }
@@ -503,11 +501,11 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * @return Classification\Domain\Axis[]
+     * @return Axis[]
      */
     public function getClassificationAxes()
     {
-        /** @var Classification\Domain\Axis[] $classificationAxes */
+        /** @var Axis[] $classificationAxes */
         $classificationAxes = [];
 
         foreach ($this->getContextIndicators() as $classificationContextIndicator) {
@@ -529,8 +527,8 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
             usort(
                 $classificationAxes,
                 function ($a, $b) {
-                    /** @var Classification\Domain\Axis $a */
-                    /** @var Classification\Domain\Axis $b */
+                    /** @var Axis $a */
+                    /** @var Axis $b */
                     if ($a->getLibrary()->getId() < $b->getLibrary()->getId()) {
                         return -1;
                     }

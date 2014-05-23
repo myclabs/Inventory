@@ -6,6 +6,7 @@ use Core\Translation\TranslatedString;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
 use MyCLabs\ACL\Model\EntityResource;
 use Orga\Model\ACL\AbstractCellRole;
@@ -327,7 +328,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      *
      * @return string
      */
-    public static function buildMembersHashKey($listMembers)
+    public static function buildMembersHashKey(array $listMembers)
     {
         @usort($listMembers, [Orga_Model_Member::class, 'orderMembers']);
         $membersRef = [];
@@ -709,8 +710,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      * @throws Core_Exception_InvalidArgument The given granularity is not narrower than the current
      * @return Orga_Model_Cell[]
      */
-    public function loadChildCellsForGranularity($narrowerGranularity, Core_Model_Query $queryParameters = null)
-    {
+    public function loadChildCellsForGranularity(
+        Orga_Model_Granularity $narrowerGranularity,
+        Core_Model_Query $queryParameters = null
+    ) {
         if (!($this->getGranularity()->isBroaderThan($narrowerGranularity))) {
             throw new Core_Exception_InvalidArgument('The given granularity is not narrower than the current');
         }
@@ -746,8 +749,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      * @throws Core_Exception_InvalidArgument The given granularity is not narrower than the current
      * @return int
      */
-    public function countTotalChildCellsForGranularity($narrowerGranularity, Core_Model_Query $queryParameters = null)
-    {
+    public function countTotalChildCellsForGranularity(
+        Orga_Model_Granularity $narrowerGranularity,
+        Core_Model_Query $queryParameters = null
+    ) {
         if (!($this->getGranularity()->isBroaderThan($narrowerGranularity))) {
             throw new Core_Exception_InvalidArgument('The given granularity is not narrower than the current.');
         }
@@ -883,7 +888,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      */
     public function getCellsGroupForInputGranularity(Orga_Model_Granularity $inputGranularity)
     {
-        $criteria = \Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('inputGranularity', $inputGranularity));
         $cellsGroup = $this->cellsGroups->matching($criteria)->toArray();
 

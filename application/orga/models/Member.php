@@ -10,6 +10,7 @@
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
 use Mnapoli\Translated\Translator;
 
@@ -199,7 +200,7 @@ class Orga_Model_Member extends Core_Model_Entity
      *
      * @return string
      */
-    public static function buildParentMembersHashKey($contextualizingParentMembers)
+    public static function buildParentMembersHashKey(array $contextualizingParentMembers)
     {
         @usort($contextualizingParentMembers, [Orga_Model_Member::class, 'orderMembers']);
         $parentMembersRef = [];
@@ -366,9 +367,6 @@ class Orga_Model_Member extends Core_Model_Entity
         return $this->getLabel()->concat($postfix);
     }
 
-    /**
-     *
-     */
     public function removeFromAxis()
     {
         if ($this->axis !== null) {
@@ -399,7 +397,8 @@ class Orga_Model_Member extends Core_Model_Entity
      */
     public function getMemberTag()
     {
-        return $this->getAxis()->getAxisTag() . ':' . ($this->getAxis()->isMemberPositioning() ? $this->getPosition() . '-' : '') . $this->getRef();
+        return $this->getAxis()->getAxisTag() . ':'
+            . ($this->getAxis()->isMemberPositioning() ? $this->getPosition() . '-' : '') . $this->getRef();
     }
 
     /**
@@ -614,7 +613,7 @@ class Orga_Model_Member extends Core_Model_Entity
             throw new Core_Exception_NotFound('No direct parent Member matching Axis "'.$axis->getRef().'".');
         }
 
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('axis', $axis));
         $member = $this->getDirectParents()->matching($criteria)->toArray();
 
@@ -669,7 +668,7 @@ class Orga_Model_Member extends Core_Model_Entity
         array_shift($parentMemberPathTags);
 
         if (count($parentMemberPathTags) > 0) {
-            $criteria = Doctrine\Common\Collections\Criteria::create();
+            $criteria = Criteria::create();
             foreach ($parentMemberPathTags as $pathTag) {
                 $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
             }
@@ -756,7 +755,7 @@ class Orga_Model_Member extends Core_Model_Entity
             throw new Core_Exception_InvalidArgument('The given Axis is not a narrower of the Member\'s Axis');
         }
 
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getTag()) as $pathTag) {
             $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
         }

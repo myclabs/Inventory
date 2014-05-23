@@ -172,7 +172,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @return Orga_Model_Granularity
      */
-    public static function loadByDWCube($dWCube)
+    public static function loadByDWCube(DW_model_cube $dWCube)
     {
         return self::getEntityRepository()->loadBy(array('dWCube' => $dWCube));
     }
@@ -244,7 +244,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @return string
      */
-    public static function buildRefFromAxes($axes)
+    public static function buildRefFromAxes(array $axes)
     {
         $axesRefParts = array();
         @usort($axes, ['Orga_Model_Axis', 'firstOrderAxes']);
@@ -355,7 +355,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected function traverseAxesThenCreateCells(
         $indexCurrentAxis = 0,
         array $selectedMembers = [],
-        $ignoredAxis = null
+        Orga_Model_Axis $ignoredAxis = null
     ) {
         if ($indexCurrentAxis >= count($this->axes)) {
             $this->createCell($selectedMembers);
@@ -418,7 +418,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getOrderedCells()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         //@todo Ordre des Cellules suivant les tag (?Position- & Ref) !== ordre réel (Position || Label).
         $criteria->orderBy(['tag' => 'ASC']);
         return $this->cells->matching($criteria);
@@ -435,7 +435,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @return Orga_Model_Cell
      */
-    public function getCellByMembers($listMembers)
+    public function getCellByMembers(array $listMembers)
     {
         $matchingCells = $this->getCellsByMembers($listMembers)->toArray();
 
@@ -509,7 +509,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @return boolean
      */
-    public function isNarrowerThan($broaderGranularity)
+    public function isNarrowerThan(Orga_Model_Granularity $broaderGranularity)
     {
         if ($broaderGranularity === $this) {
             return false;
@@ -533,7 +533,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @return boolean
      */
-    public function isBroaderThan($narrowerGranularity)
+    public function isBroaderThan(Orga_Model_Granularity $narrowerGranularity)
     {
         return $narrowerGranularity->isNarrowerThan($this);
     }
@@ -545,7 +545,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     public function getNarrowerGranularities()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getTag()) as $pathTag) {
             $criteria->andWhere($criteria->expr()->contains('tag', $pathTag));
         }
@@ -577,7 +577,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @return Orga_Model_Granularity
      */
-    public function getCrossedGranularity($crossingGranularity)
+    public function getCrossedGranularity(Orga_Model_Granularity $crossingGranularity)
     {
         $currentAxes = $this->getAxes();
         $crossingAxes = $crossingGranularity->getAxes();
@@ -627,9 +627,9 @@ class Orga_Model_Granularity extends Core_Model_Entity
     /**
      * Défini la Granularity utilisé pour configurer cette Granularity de saisie.
      *
-     * @param Orga_Model_Granularity $configGranularity
+     * @param Orga_Model_Granularity|null $configGranularity
      */
-    public function setInputConfigGranularity($configGranularity = null)
+    public function setInputConfigGranularity(Orga_Model_Granularity $configGranularity = null)
     {
         if ($this->inputConfigGranularity !== $configGranularity) {
             if ($this->inputConfigGranularity !== null) {
@@ -708,7 +708,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @param Orga_Model_Granularity $inputGranularity
      */
-    public function removeInputGranularity($inputGranularity)
+    public function removeInputGranularity(Orga_Model_Granularity $inputGranularity)
     {
         if ($this->hasInputGranularity($inputGranularity)) {
             $this->inputGranularities->removeElement($inputGranularity);

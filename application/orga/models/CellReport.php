@@ -36,10 +36,6 @@ class Orga_Model_CellReport extends Core_Model_Entity
     protected $owner;
 
 
-    /**
-     * @param DW_Model_Report $cellDWReport
-     * @param User $owner
-     */
     public function __construct(DW_Model_Report $cellDWReport, User $owner)
     {
         $this->cellDWReport = $cellDWReport;
@@ -53,9 +49,9 @@ class Orga_Model_CellReport extends Core_Model_Entity
      *
      * @return Orga_Model_CellReport
      */
-    public static function loadByCellDWReport($cellDWReport)
+    public static function loadByCellDWReport(DW_Model_Report $cellDWReport)
     {
-        return self::getEntityRepository()->loadBy(array('cellDWReport' => $cellDWReport));
+        return self::getEntityRepository()->loadBy(['cellDWReport' => $cellDWReport]);
     }
 
     /**
