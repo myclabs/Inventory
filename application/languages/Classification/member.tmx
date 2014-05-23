@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <tu tuid="members">
+            <tuv xml:lang="fr">
+                <seg>Membres</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Members</seg>
+            </tuv>
+        </tu>
+    
+          <tu tuid="pageTitle">
+            <tuv xml:lang="fr">
+                <seg>Éléments des axes de classification</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Elements of classification axes</seg>
+            </tuv>
+        </tu>
+ 
+        <!-- Popup d'ajout -->
+
+        <tu tuid="addPanelTitle">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un élément à l'axe « [AXIS_LABEL] »</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Addition of an element to axis "[AXIS_LABEL]"</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

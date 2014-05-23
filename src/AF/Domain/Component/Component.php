@@ -9,16 +9,18 @@ use AF\Domain\AFGenerationHelper;
 use AF\Domain\Input\Input;
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
+use Core\Translation\TranslatedString;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Strategy_Ordered;
 use Core_Tools;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Mnapoli\Translated\Translator;
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
 use UI_Form_Element_HTML;
 use UI_Form_ZendElement;
-use UI_HTML_Button;
 use Zend_Form_Element;
 
 /**
@@ -30,7 +32,6 @@ use Zend_Form_Element;
 abstract class Component extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Filtres pour les requetes
     const QUERY_AF = 'af';
@@ -47,12 +48,12 @@ abstract class Component extends Core_Model_Entity
     protected $ref;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $help;
 
@@ -80,6 +81,8 @@ abstract class Component extends Core_Model_Entity
 
     public function __construct()
     {
+        $this->label = new TranslatedString();
+        $this->help = new TranslatedString();
         $this->actions = new ArrayCollection();
     }
 
@@ -92,7 +95,7 @@ abstract class Component extends Core_Model_Entity
 
     /**
      * Retourne le nombre de champs requis dans le composant pour la saisie de l'AF
-     * @param \AF\Domain\InputSet\InputSet|null $inputSet
+     * @param InputSet|null $inputSet
      * @return int
      */
     abstract public function getNbRequiredFields(InputSet $inputSet = null);
@@ -106,32 +109,26 @@ abstract class Component extends Core_Model_Entity
         return [];
     }
 
-    /**
-     * @param string $label
-     */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
-        $this->label = (string) $label;
+        $this->label = $label;
     }
 
     /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         return $this->label;
     }
 
-    /**
-     * @param string $help
-     */
-    public function setHelp($help)
+    public function setHelp(TranslatedString $help)
     {
-        $this->help = (string) $help;
+        $this->help = $help;
     }
 
     /**
-     * @return string
+     * @return TranslatedString
      */
     public function getHelp()
     {
@@ -330,7 +327,7 @@ abstract class Component extends Core_Model_Entity
      * Permet de charger un Component par son ref et son AF
      * @param string $ref
      * @param AF     $af
-     * @return Component
+     * @return static
      */
     public static function loadByRef($ref, AF $af)
     {
@@ -353,13 +350,27 @@ abstract class Component extends Core_Model_Entity
      */
     protected function getHistoryComponent(Input $input)
     {
-        $historyButton = new UI_HTML_Button('<i class="fa fa-clock-o"></i>');
-        $historyButton->addAttribute('title', __('UI', 'history', 'valueHistory'));
-        $historyButton->addAttribute('class', 'input-history');
-        $historyButton->addAttribute('data-input-id', $input->getId());
-        $historyButton->addAttribute('data-toggle', 'button');
-        $historyButton->addAttribute('data-container', 'body');
+        $historyButton = new Button(new Icon('clock-o'));
+        $historyButton->addClass('input-history');
+        $historyButton->setAttribute('title', __('UI', 'history', 'valueHistory'));
+        $historyButton->setAttribute('data-input-id', $input->getId());
+        $historyButton->setAttribute('data-toggle', 'button');
+        $historyButton->setAttribute('data-container', 'body');
 
         return new UI_Form_Element_HTML($this->ref . 'History', $historyButton->render());
+    }
+
+    /**
+     * @deprecated Moche, très moche
+     * @todo À supprimer quand la génération UI est sortie du modèle
+     * @param TranslatedString $string
+     * @return string
+     */
+    protected function uglyTranslate(TranslatedString $string)
+    {
+        /** @var Translator $translator */
+        $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
+
+        return $translator->get($string);
     }
 }

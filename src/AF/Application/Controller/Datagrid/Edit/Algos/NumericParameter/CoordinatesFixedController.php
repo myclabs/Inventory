@@ -7,7 +7,7 @@
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Algorithm\ParameterCoordinate\FixedParameterCoordinate;
 use Core\Annotation\Secure;
-use Techno\Domain\Family\Dimension;
+use Parameter\Domain\Family\Dimension;
 
 /**
  * @package AF
@@ -135,7 +135,7 @@ class AF_Datagrid_Edit_Algos_NumericParameter_CoordinatesFixedController extends
         }
 
         foreach ($dimension->getMembers() as $member) {
-            $this->addElementList($member->getRef(), $member->getLabel());
+            $this->addElementList($member->getRef(), $this->translator->get($member->getLabel()));
         }
         $this->send();
     }

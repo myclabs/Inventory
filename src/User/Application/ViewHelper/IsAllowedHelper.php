@@ -2,11 +2,10 @@
 
 namespace User\Application\ViewHelper;
 
+use MyCLabs\ACL\ACL;
+use MyCLabs\ACL\Model\ResourceInterface;
 use Zend_Auth;
 use Zend_View_Helper_Abstract;
-use User\Domain\ACL\Action;
-use Core_Model_Entity;
-use User\Domain\ACL\ACLService;
 use User\Domain\User;
 
 /**
@@ -16,24 +15,24 @@ use User\Domain\User;
 class IsAllowedHelper extends Zend_View_Helper_Abstract
 {
     /**
-     * @var ACLService
+     * @var ACL
      */
-    private $aclService;
+    private $acl;
 
-    public function __construct(ACLService $aclService)
+    public function __construct(ACL $acl)
     {
-        $this->aclService = $aclService;
+        $this->acl = $acl;
     }
 
     /**
      * Vérifie une autorisation d'accès à une ressource pour l'utilisateur connecté
      *
-     * @param Action                                               $action Action demandée
-     * @param \User\Domain\ACL\Resource\Resource|Core_Model_Entity $target Ressource ou entité
+     * @param string            $action Action demandée
+     * @param ResourceInterface $target Ressource
      *
      * @return boolean
      */
-    public function isAllowed(Action $action, $target)
+    public function isAllowed($action, ResourceInterface $target)
     {
         $auth = Zend_Auth::getInstance();
         if (!$auth->hasIdentity()) {
@@ -43,6 +42,6 @@ class IsAllowedHelper extends Zend_View_Helper_Abstract
         /** @var User $user */
         $user = User::load($auth->getIdentity());
 
-        return $this->aclService->isAllowed($user, $action, $target);
+        return $this->acl->isAllowed($user, $action, $target);
     }
 }

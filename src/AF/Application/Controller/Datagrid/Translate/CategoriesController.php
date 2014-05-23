@@ -1,28 +1,11 @@
 <?php
-/**
- * Classe AF_Datagrid_Translate_CategoriesController
- * @author valentin.claras
- * @package AF
- * @subpackage Controller
- */
 
+use AF\Domain\AFLibrary;
 use AF\Domain\Category;
 use Core\Annotation\Secure;
-use Gedmo\Translatable\TranslatableListener;
 
-/**
- * Classe du controller du datagrid des traductions des categories.
- * @package AF
- * @subpackage Controller
- */
 class AF_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var TranslatableListener
-     */
-    private $translatableListener;
-
     /**
      * @Inject("translation.languages")
      * @var string[]
@@ -32,20 +15,20 @@ class AF_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getelementsAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
+        $library = AFLibrary::load($this->getParam('library'));
+        $this->request->filter->addCondition('library', $library);
+
         foreach (Category::loadList($this->request) as $category) {
             $data = array();
             $data['index'] = $category->getId();
             $data['identifier'] = $category->getId();
 
             foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $category->reloadWithLocale($locale);
-                $data[$language] = $category->getLabel();
+                $data[$language] = $category->getLabel()->get($language);
             }
             $this->addline($data);
         }
@@ -57,15 +40,13 @@ class AF_Datagrid_Translate_CategoriesController extends UI_Controller_Datagrid
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function updateelementAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $category = Category::load($this->update['index']);
-        $category->reloadWithLocale(Core_Locale::load($this->update['column']));
-        $category->setLabel($this->update['value']);
-        $this->data = $category->getLabel();
+        $category->getLabel()->set($this->update['value'], $this->update['column']);
+        $this->data = $category->getLabel()->get($this->update['column']);
 
         $this->send(true);
     }

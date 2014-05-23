@@ -1,0 +1,10 @@
+Parameter\Domain\Family\FamilyReference:
+  type: embeddable
+
+  fields:
+    libraryId:
+      type: integer
+      nullable: true
+    familyRef:
+      type: string
+      nullable: true

@@ -119,7 +119,6 @@ class UI_JS_AutoComplete extends UI_Generic
         $broker = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
 
         // Ajout des feuilles de style.
-        $broker->view->headLink()->appendStylesheet('select2/select2.css');
         // Ajout des fichiers Javascript.
         $broker->view->headScript()->appendFile('select2/select2.js', 'text/javascript');
 

@@ -5,7 +5,7 @@
  * @package Orga
  */
 
-/** @var \Orga\ViewModel\OrganizationViewModel $organization */
+/** @var \Account\Application\ViewModel\OrganizationView $organization */
 $organization = $this->organization;
 $workspaceBanner = null;
 $file = glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $organization->id . '.*');
@@ -15,6 +15,7 @@ if (count($file) > 0) {
 ?>
 <style>
     .organization h1 img { max-height: 125px; }
+    .organization h1 .pull-right small a { letter-spacing: normal; }
 </style>
 
 <div class="organization page-header">
@@ -22,7 +23,7 @@ if (count($file) > 0) {
         <?php if ($organization->canBeEdited) : ?>
             <div class="pull-right">
                 <small>
-                    <a class="editOrganization btn btn-small btn-primary"
+                    <a class="editOrganization btn btn-sm btn-default"
                        href="orga/organization/view/idOrganization/<?=$organization->id?>">
                         <i class="fa fa-external-link"></i>
                         <?=___('UI', 'name', 'data')?>
@@ -42,20 +43,24 @@ $this->tabView->display();
 ?>
 
 <script>
-    $('#orga_relevance').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_relevance'), function(e, data) {
+    $('#relevance').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_relevance'), function(e, data) {
         addMessage(data.message, 'success');
-        $.fn.loadTaborga_relevance();
+        $('#relevance').html($('#relevance').attr('data-loading'));
+        $('#relevance').trigger('loadTab.muih', [$('#content ul.nav-tabs li.active a').attr('data-src')]);
     });
-    $('#orga_afs').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_afs'), function(e, data) {
+    $('#afs').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_afs'), function(e, data) {
         addMessage(data.message, 'success');
-        $.fn.loadTaborga_afs();
+        $('#afs').html($('#afs').attr('data-loading'));
+        $('#afs').trigger('loadTab.muih', [$('#content ul.nav-tabs li.active a').attr('data-src')]);
     });
-    $('#orga_acl').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_acl'), function(e, data) {
+    $('#acl').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_acl'), function(e, data) {
         addMessage(data.message, 'success');
-        $.fn.loadTaborga_acl();
+        $('#acl').html($('#acl').attr('data-loading'));
+        $('#acl').trigger('loadTab.muih', [$('#content ul.nav-tabs li.active a').attr('data-src')]);
     });
-    $('#orga_reports').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_reports'), function(e, data) {
+    $('#reports').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_reports'), function(e, data) {
         addMessage(data.message, 'success');
-        $.fn.loadTaborga_reports();
+        $('#reports').html($('#reports').attr('data-loading'));
+        $('#reports').trigger('loadTab.muih', [$('#content ul.nav-tabs li.active a').attr('data-src')]);
     });
 </script>

@@ -1,4 +1,7 @@
 <?php
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\Icon;
+
 /**
  * Fichier de la classe Colonne.
  *
@@ -514,7 +517,7 @@ abstract class UI_Datagrid_Col_Generic
      * @param UI_Datagrid $datagrid
      * @param array $defaultValue Valeur par défaut du filtre (=null).
      *
-     * @return Zend_Form_Element
+     * @return GenericTag
      */
     abstract public function getFilterFormElement($datagrid, $defaultValue=null);
 
@@ -549,19 +552,18 @@ abstract class UI_Datagrid_Col_Generic
      *
      * @param UI_Datagrid $datagrid
      *
-     * @return string
+     * @return GenericTag
      */
     protected function getResetFieldFilterFormSuffix($datagrid)
     {
-        $resetField = '';
+        $resetFieldIcon = new Icon($datagrid->filterIconResetFieldSuffix);
+        $resetFieldIcon->addClass('reset');
 
-        $resetField .= '<i ';
-        $resetField .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
-        $resetField .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\');"';
-        $resetField .= '>';
-        $resetField .= '</i>';
+        $resetFieldSuffix = new GenericTag('span', $resetFieldIcon);
+        $resetFieldSuffix->addClass('input-group-addon');
+        $resetFieldSuffix->setAttribute('onclick', '$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\');');
 
-        return $resetField;
+        return $resetFieldSuffix;
     }
 
     /**
@@ -579,9 +581,9 @@ abstract class UI_Datagrid_Col_Generic
         $filterValue .= 'if ($(\'#'.$this->getFilterFormId($datagrid).'\').val() != \'\') {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
         $filterValue .= '\"'.$this->filterOperator.'\":\"" + $(\'#'.$this->getFilterFormId($datagrid).'\').val() + "\"';
-        $filterValue .= '},";';
+        $filterValue .= '}},";';
 
         $filterValue .= '}';
 
@@ -609,7 +611,7 @@ abstract class UI_Datagrid_Col_Generic
      *
      * @param UI_Datagrid $datagrid
      *
-     * @return Zend_Form_Element
+     * @return GenericTag
      */
     abstract public function getAddFormElement($datagrid);
 

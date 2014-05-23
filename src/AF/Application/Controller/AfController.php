@@ -10,18 +10,19 @@ use AF\Application\AFViewConfiguration;
 use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\AFCopyService;
+use AF\Domain\AFLibrary;
+use AF\Domain\InputService;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
+use Core\Translation\TranslatedString;
 use DI\Annotation\Inject;
 
 /**
  * Countroleur des AF
- * @package AF
  */
 class AF_AfController extends Core_Controller
 {
-
     /**
      * @Inject
      * @var InputSetSessionStorage
@@ -35,21 +36,10 @@ class AF_AfController extends Core_Controller
     private $afCopyService;
 
     /**
-     * Liste des AF
-     * @Secure("editAF")
+     * @Inject
+     * @var InputService
      */
-    public function listAction()
-    {
-        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
-    }
-
-    /**
-     * Arbre des AF
-     * @Secure("editAF")
-     */
-    public function treeAction()
-    {
-    }
+    private $inputService;
 
     /**
      * Affichage d'un AF en mode test
@@ -65,14 +55,11 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->addToActionStack('submit-test', 'input', 'af');
         $viewConfiguration->setDisplayConfigurationLink(true);
         $viewConfiguration->addBaseTabs();
-        $viewConfiguration->setPageTitle($af->getLabel());
+        $viewConfiguration->setPageTitle($this->translator->get($af->getLabel()));
         $viewConfiguration->setUseSession(true);
-        if ($this->hasParam('fromTree')) {
-            $viewConfiguration->setExitUrl($this->_helper->url('tree', 'af', 'af'));
-        } else {
-            $viewConfiguration->setExitUrl($this->_helper->url('list', 'af', 'af'));
-        }
+        $viewConfiguration->setExitUrl('af/library/view/id/' . $af->getLibrary()->getId());
 
+        $this->setActiveMenuItemAFLibrary($af->getLibrary()->getId());
         $this->forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
     }
 
@@ -183,6 +170,10 @@ class AF_AfController extends Core_Controller
         } else {
             // Récupère la saisie en session
             $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+            // Recalcule les résultats parce que sinon problème de serialisation de proxies en session
+            if ($inputSet) {
+                $this->inputService->updateResults($inputSet);
+            }
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
@@ -207,6 +198,10 @@ class AF_AfController extends Core_Controller
         } else {
             // Récupère la saisie en session
             $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+            // Recalcule les résultats parce que sinon problème de serialisation de proxies en session
+            if ($inputSet) {
+                $this->inputService->updateResults($inputSet);
+            }
         }
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->inputSet = $inputSet;
@@ -244,43 +239,43 @@ class AF_AfController extends Core_Controller
 
     /**
      * Popup de copie d'un AF
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function duplicatePopupAction()
     {
-        $this->view->assign('id', $this->getParam('id'));
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
+
+        $this->view->assign('id', $this->getParam('idAF'));
+        $this->view->assign('library', $library);
         $this->_helper->layout->disableLayout();
     }
 
     /**
      * Duplique un AF
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function duplicateAction()
     {
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
         /** @var $af AF */
-        $af = AF::load($this->getParam('id'));
+        $af = AF::load($this->getParam('idAF'));
 
-        $newRef = $this->getParam('ref');
         $newLabel = $this->getParam('label');
-        if ($newRef == '' || $newLabel == '') {
+        if ($newLabel == '') {
             UI_Message::addMessageStatic(__('UI', 'formValidation', 'emptyRequiredField'), UI_Message::TYPE_ERROR);
-            $this->redirect('af/af/list');
+            $this->redirect('af/library/view/id/' . $library->getId());
             return;
         }
 
-        $newAF = $this->afCopyService->copyAF($af, $newRef, $newLabel);
+        $newLabel = $this->translator->set(new TranslatedString(), $newLabel);
+        $newAF = $this->afCopyService->copyAF($af, $newLabel);
 
         $newAF->save();
-        try {
-            $this->entityManager->flush();
-        } catch (Core_ORM_DuplicateEntryException $e) {
-            UI_Message::addMessageStatic(__('UI', 'formValidation', 'alreadyUsedIdentifier'), UI_Message::TYPE_ERROR);
-            $this->redirect('af/af/list');
-            return;
-        }
+        $this->entityManager->flush();
 
         UI_Message::addMessageStatic(__('UI', 'message', 'added'), UI_Message::TYPE_SUCCESS);
-        $this->redirect('af/af/list');
+        $this->redirect('af/library/view/id/' . $library->getId());
     }
 }

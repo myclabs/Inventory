@@ -1,0 +1,94 @@
+<?php
+use AF\Domain\AF;
+use AF\Domain\AFLibrary;
+use AF\Domain\Algorithm\Numeric\NumericAlgo;
+use AF\Domain\Category;
+use AF\Domain\Component\Component;
+use AF\Domain\Component\Select\SelectOption;
+
+/** @var AFLibrary $library */
+$library = $this->library;
+?>
+
+<div class="page-header">
+    <h1>
+        <?=__('AF', 'translate', 'accountingFormCategories') ?>
+        <small><?= __('UI', 'name', 'translations') ?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(Category::class, 'label', 'datagrid_translate_categories', 'af')
+    ->addParam('library', $library->getId())
+    ->simple();
+?>
+
+<div class="page-header">
+    <h1>
+        <?=__('AF', 'translate', 'accountingFormLabels')?>
+        <small><?=__('UI', 'name', 'translations')?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(AF::class, 'label', 'datagrid_translate_afs', 'af')
+    ->addParam('library', $library->getId())
+    ->simple();
+?>
+
+<div class="page-header">
+    <h1>
+        <?= __('AF', 'translate', 'componentLabels') ?>
+        <small><?= __('UI', 'name', 'translations') ?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(Component::class, 'label', 'datagrid_translate_components_label', 'af')
+    ->addParam('library', $library->getId())
+    ->disablePagination()
+    ->simple();
+?>
+
+<div class="page-header">
+    <h1>
+        <?= __('AF', 'translate', 'componentHelps') ?>
+        <small><?= __('UI', 'name', 'translations') ?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(Component::class, 'help', 'datagrid_translate_components_help', 'af')
+    ->addParam('library', $library->getId())
+    ->addIdentifierCol()
+    ->addLanguagesLongTextCols()
+    ->disablePagination();
+?>
+
+<div class="page-header">
+    <h1>
+        <?= __('AF', 'translate', 'options') ?>
+        <small><?= __('UI', 'name', 'translations') ?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(SelectOption::class, 'label', 'datagrid_translate_options', 'af')
+    ->addParam('library', $library->getId())
+    ->disablePagination()
+    ->simple();
+?>
+
+<div class="page-header">
+    <h1>
+        <?=__('AF', 'translate', 'numericAlgorithmLabels')?>
+        <small><?=__('UI', 'name', 'translations')?></small>
+    </h1>
+</div>
+
+<?php
+echo $this->translateDatagrid(NumericAlgo::class, 'label', 'datagrid_translate_algos', 'af')
+    ->addParam('library', $library->getId())
+    ->disablePagination()
+    ->simple();
+?>

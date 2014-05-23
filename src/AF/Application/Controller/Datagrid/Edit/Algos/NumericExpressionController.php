@@ -1,26 +1,16 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  thibaud.rolland
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
+use Classification\Domain\ClassificationLibrary;
+use Classification\Domain\ContextIndicator;
 use Core\Annotation\Secure;
 use Unit\UnitAPI;
 use TEC\Exception\InvalidExpressionException;
 
-/**
- * @package AF
- */
 class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -33,26 +23,29 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
-                $data['label'] = $algo->getLabel();
-                $data['unit'] = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
-                $data['expression'] = $this->cellLongText('af/edit_algos/popup-expression/id/' . $algo->getId(),
-                                                          'af/datagrid_edit_algos_numeric-expression/get-expression/id/'
-                                                              . $algo->getId(),
-                                                          __('TEC', 'name', 'expression'),
-                                                          'zoom-in');
+                $data['label'] = $this->cellTranslatedText($algo->getLabel());
+                $data['unit'] = $this->cellText(
+                    $algo->getUnit()->getRef(),
+                    $this->translator->get($algo->getUnit()->getSymbol())
+                );
+                $data['expression'] = $this->cellLongText(
+                    'af/edit_algos/popup-expression/idAF/' . $af->getId() . '/algo/' . $algo->getId(),
+                    'af/datagrid_edit_algos_numeric-expression/get-expression/idAF/' . $af->getId() . '/algo/'
+                    . $algo->getId(),
+                    __('TEC', 'name', 'expression'),
+                    'zoom-in'
+                );
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
-                    $ref = $contextIndicator->getContext()->getRef()
-                        . "#" . $contextIndicator->getIndicator()->getRef();
-                    $data['contextIndicator'] = $this->cellList($ref);
+                    $data['contextIndicator'] = $this->cellList($contextIndicator->getId());
                 }
-                $data['resultIndex'] = $this->cellPopup($this->_helper->url('popup-indexation',
-                                                                            'edit_algos',
-                                                                            'af',
-                                                                            ['id' => $algo->getId()]),
-                                                        '<i class="fa fa-search-plus"></i> ' . __('Algo',
-                                                                                             'name',
-                                                                                             'indexation'));
+                $data['resultIndex'] = $this->cellPopup(
+                    $this->_helper->url('popup-indexation', 'edit_algos', 'af', [
+                        'idAF' => $af->getId(),
+                        'algo' => $algo->getId(),
+                    ]),
+                    '<i class="fa fa-search-plus"></i> ' . __('Algo', 'name', 'indexation')
+                );
                 $this->addLine($data);
             }
         }
@@ -60,13 +53,11 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
@@ -92,13 +83,15 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->send();
                 return;
             }
-            $algo->setLabel($this->getAddElementValue('label'));
+            $this->translator->set($algo->getLabel(), $this->getAddElementValue('label'));
             try {
                 $algo->setExpression($this->getAddElementValue('expression'));
             } catch (InvalidExpressionException $e) {
-                $this->setAddElementErrorMessage('expression',
-                                                 __('AF', 'configTreatmentMessage', 'invalidExpression')
-                                                     . "<br>" . implode("<br>", $e->getErrors()));
+                $this->setAddElementErrorMessage(
+                    'expression',
+                    __('AF', 'configTreatmentMessage', 'invalidExpression') . "<br>"
+                    . implode("<br>", $e->getErrors())
+                );
                 $this->send();
                 return;
             }
@@ -120,8 +113,6 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
      * @Secure("editAF")
      */
     public function updateelementAction()
@@ -135,8 +126,8 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->data = $algo->getRef();
                 break;
             case 'label':
-                $algo->setLabel($newValue);
-                $this->data = $algo->getLabel();
+                $this->translator->set($algo->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($algo->getLabel());
                 break;
             case 'unit':
                 try {
@@ -149,7 +140,10 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $algo->setUnit($unit);
-                $this->data = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
+                $this->data = $this->cellText(
+                    $algo->getUnit()->getRef(),
+                    $this->translator->get($algo->getUnit()->getSymbol())
+                );
                 break;
             case 'expression':
                 try {
@@ -158,16 +152,13 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
                                                   ['ERRORS' => implode("<br>", $e->getErrors())]);
                 }
-                $this->data = $this->cellLongText('af/edit_algos/popup-expression/id/' . $algo->getId(),
-                                                  'af/datagrid_edit_algos_numeric-expression/get-expression/id/'
-                                                      . $algo->getId(),
-                                                  __('TEC', 'name', 'expression'),
-                                                  'zoom-in');
+                $this->data = null;
                 break;
             case 'contextIndicator':
                 if ($newValue) {
-                    $contextIndicator = $this->getContextIndicatorByRef($newValue);
+                    $contextIndicator = ContextIndicator::load($newValue);
                     $algo->setContextIndicator($contextIndicator);
+                    $this->data = $this->cellList($contextIndicator->getId());
                 } else {
                     $algo->setContextIndicator(null);
                 }
@@ -184,8 +175,6 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -207,7 +196,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
     public function getExpressionAction()
     {
         /** @var $algo NumericExpressionAlgo */
-        $algo = NumericExpressionAlgo::load($this->getParam('id'));
+        $algo = NumericExpressionAlgo::load($this->getParam('algo'));
         $this->data = $algo->getExpression();
         $this->send();
     }
@@ -218,46 +207,22 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
      */
     public function getContextIndicatorListAction()
     {
+        /** @var $af AF */
+        $af = AF::load($this->getParam('id'));
+        $classificationLibraries = ClassificationLibrary::loadUsableInAccount($af->getLibrary()->getAccount());
+
         $this->addElementList(null, '');
-        /** @var $contextIndicators Classif_Model_ContextIndicator[] */
-        $contextIndicators = Classif_Model_ContextIndicator::loadList();
-        foreach ($contextIndicators as $contextIndicator) {
-            $this->addElementList($this->getContextIndicatorRef($contextIndicator),
-                                  $this->getContextIndicatorLabel($contextIndicator));
+
+        foreach ($classificationLibraries as $library) {
+            foreach ($library->getContextIndicators() as $contextIndicator) {
+                $this->addElementList(
+                    $contextIndicator->getId(),
+                    $this->translator->get($library->getLabel()) . ' > '
+                    . $this->translator->get($contextIndicator->getLabel())
+                );
+            }
         }
+
         $this->send();
     }
-
-    /**
-     * @param Classif_Model_ContextIndicator $contextIndicator
-     * @return string
-     */
-    private function getContextIndicatorRef(Classif_Model_ContextIndicator $contextIndicator)
-    {
-        return $contextIndicator->getContext()->getRef()
-            . '#' . $contextIndicator->getIndicator()->getRef();
-    }
-
-    /**
-     * @param string $ref
-     * @return Classif_Model_ContextIndicator
-     */
-    private function getContextIndicatorByRef($ref)
-    {
-        if (empty($ref)) {
-            return null;
-        }
-        list($refContext, $refIndicator) = explode('#', $ref);
-        return Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator);
-    }
-
-    /**
-     * @param Classif_Model_ContextIndicator $contextIndicator
-     * @return string
-     */
-    private function getContextIndicatorLabel(Classif_Model_ContextIndicator $contextIndicator)
-    {
-        return $contextIndicator->getIndicator()->getLabel() . ' - ' . $contextIndicator->getContext()->getLabel();
-    }
-
 }

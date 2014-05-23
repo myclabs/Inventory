@@ -4,6 +4,24 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="forms">
+            <tuv xml:lang="fr">
+                <seg>Formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Forms</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="formLibraries">
+            <tuv xml:lang="fr">
+                <seg>Bibliothèques de formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Form libraries</seg>
+            </tuv>
+        </tu>
+
         <tu tuid="accountingForm">
             <tuv xml:lang="fr">
                 <seg>Formulaire comptable</seg>

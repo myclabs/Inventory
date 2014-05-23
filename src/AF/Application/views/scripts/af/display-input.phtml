@@ -16,20 +16,15 @@ if ($inputSet) {
 }
 ?>
 
-<style type="text/css">
-    .alertFinishInput {
-        margin-top: -20px;
-        margin-bottom: 10px;
-    }
-</style>
+<div class="inputProgress row">
 
-<div class="inputProgress row-fluid">
-
-    <div class="progress span9">
-        <div class="bar"></div>
+    <div class="col-md-9">
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
     </div>
 
-    <div class="span3">
+    <div class="col-md-3">
         <img class="completionIcon" src="">
         <span class="completionMessage"></span>
     </div>
@@ -51,7 +46,7 @@ if ($this->mode != AFViewConfiguration::MODE_READ) {
 
     if ($this->withResultsPreview) {
         $resultsPreviewButton = <<<HTML
-            <button type="button" class="inputPreview btn" data-loading-text="$loadingText"
+            <button type="button" class="inputPreview btn btn-default" data-loading-text="$loadingText"
                 data-title="$resultsPreviewButtonHelp">
                 $resultsPreviewButtonLabel
             </button>
@@ -61,17 +56,17 @@ HTML;
     }
 
     $actionGroup->content = <<<HTML
-        <div class="alert alert-success alertFinishInput hide">
+        <div class="alert alert-success alertFinishInput">
             $inputCompleteMessage
         </div>
         $resultsPreviewButton
-        <button type="button" class="inputSave btn" data-loading-text="$loadingText">
+        <button type="button" class="inputSave btn btn-default" data-loading-text="$loadingText">
             $saveButtonLabel
         </button>
-        <button type="button" class="inputFinish btn">
+        <button type="button" class="inputFinish btn btn-default">
             $finishButtonLabel
         </button>
-        <button type="button" class="inputExit btn">
+        <button type="button" class="inputExit btn btn-default">
             <i class="fa fa-sign-out"></i>
             $quitButtonLabel
         </button>
@@ -85,7 +80,7 @@ HTML;
     $actionGroup = new UI_Form_Element_HTML('formActionGroup');
     $quitButtonLabel = __('UI', 'verb', 'quit');
     $actionGroup->content = <<<HTML
-        <button type="button" class="inputExit btn">
+        <button type="button" class="inputExit btn btn-default">
             $quitButtonLabel
         </button>
 HTML;
@@ -114,7 +109,7 @@ echo $form->render();
     var resultsPreviewUrl = "<?=$this->resultsPreviewUrl?>";
     var urlParams = <?=json_encode($this->urlParams)?>;
     // Saisie en cours
-    var input = new AF.Input(afId, "<?=$af->getRef()?>", "<?=$this->mode?>", inputSetId, exitURL, urlParams, resultsPreviewUrl);
+    var input = new AF.Input(afId, "af<?=$af->getId()?>", "<?=$this->mode?>", inputSetId, exitURL, urlParams, resultsPreviewUrl);
 
     // Traductions
     // Statut avancement saisie

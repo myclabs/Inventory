@@ -4,63 +4,55 @@ namespace Inventory\Command\PopulateDB;
 
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\TestDataSet\PopulateAF;
-use Inventory\Command\PopulateDB\TestDataSet\PopulateClassif;
+use Inventory\Command\PopulateDB\TestDataSet\PopulateClassification;
 use Inventory\Command\PopulateDB\TestDataSet\PopulateOrga;
-use Inventory\Command\PopulateDB\TestDataSet\PopulateTechno;
+use Inventory\Command\PopulateDB\TestDataSet\PopulateParameter;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Jeu de données de test.
+ *
+ * @Injectable(lazy=true)
  *
  * @author matthieu.napoli
  */
 class TestDataSet
 {
     /**
+     * @Inject
      * @var BasicDataSet
      */
     private $basicDataSet;
 
     /**
+     * @Inject
      * @var EntityManager
      */
     private $entityManager;
 
     /**
-     * @var PopulateClassif
+     * @Inject
+     * @var PopulateClassification
      */
-    private $populateClassif;
+    private $populateClassification;
 
     /**
-     * @var PopulateTechno
+     * @Inject
+     * @var PopulateParameter
      */
-    private $populateTechno;
+    private $populateParameter;
 
     /**
+     * @Inject
      * @var PopulateAF
      */
     private $populateAF;
 
     /**
+     * @Inject
      * @var PopulateOrga
      */
     private $populateOrga;
-
-    public function __construct(
-        BasicDataSet $basicDataSet,
-        EntityManager $entityManager,
-        PopulateClassif $populateClassif,
-        PopulateTechno $populateTechno,
-        PopulateAF $populateAF,
-        PopulateOrga $populateOrga
-    ) {
-        $this->basicDataSet = $basicDataSet;
-        $this->entityManager = $entityManager;
-        $this->populateClassif = $populateClassif;
-        $this->populateTechno = $populateTechno;
-        $this->populateAF = $populateAF;
-        $this->populateOrga = $populateOrga;
-    }
 
     public function run(OutputInterface $output)
     {
@@ -70,8 +62,8 @@ class TestDataSet
 
         $output->writeln('<comment>Populating with the test data set</comment>');
 
-        $this->populateClassif->run($output);
-        $this->populateTechno->run($output);
+        $this->populateClassification->run($output);
+        $this->populateParameter->run($output);
         $this->populateAF->run($output);
         $this->populateOrga->run($output);
     }

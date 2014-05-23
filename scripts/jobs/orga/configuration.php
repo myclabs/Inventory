@@ -3,6 +3,7 @@
 namespace Script\Jobs\Orga;
 
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use Orga_Model_Organization;
 
 define('RUN', false);
@@ -44,9 +45,8 @@ class RebuildConfiguration
 
 }
 
-/** @var \DI\Container $container */
+/** @var ContainerInterface $container */
 $container = \Core\ContainerSingleton::getContainer();
 
-/** @var RebuildExports $rebuildExports */
 $rebuildExports = $container->get(RebuildConfiguration::class);
 $rebuildExports->run();

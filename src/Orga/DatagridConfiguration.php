@@ -60,7 +60,7 @@ class Orga_DatagridConfiguration
      */
     protected function addAxis($axis, $cell)
     {
-        $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $axis->getLabel());
+        $columnAxis = new UI_Datagrid_Col_List($axis->getRef(), $this->translator->get($axis->getLabel()));
         $columnAxis->list = array();
 
         if ($axis->hasMembers()) {
@@ -76,7 +76,7 @@ class Orga_DatagridConfiguration
             }
             if (count($columnAxis->list) > 5) {
                 $sizeFilter = 5;
-            } else if (count($columnAxis->list) > 1) {
+            } elseif (count($columnAxis->list) > 1) {
                 $sizeFilter = 3;
             } else {
                 $sizeFilter = 2;
@@ -85,7 +85,6 @@ class Orga_DatagridConfiguration
             $columnAxis->entityAlias = Orga_Model_Member::getAlias();
             $columnAxis->withEmptyElement = false;
             $columnAxis->multipleFilters = true;
-            $columnAxis->multipleListSize = $sizeFilter;
             $columnAxis->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
         }
         $this->datagrid->addCol($columnAxis);

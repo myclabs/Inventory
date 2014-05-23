@@ -1,0 +1,82 @@
+<?php
+/** @var \Account\Domain\Account $account */
+$account = $this->account;
+/** @var \User\Domain\ACL\AdminRole[] $adminRoles */
+$adminRoles = $this->adminRoles;
+?>
+
+<div class="page-header">
+    <h1>
+        <i class="fa fa-fw fa-users"></i>
+        <?=__('Account', 'name', 'members')?>
+    </h1>
+</div>
+
+<p>
+    <?=__('Account', 'role', 'membersPageIntroduction')?>
+</p>
+
+<h2><?=__('Account', 'role', 'accountAdmins')?></h2>
+
+<table class="table">
+    <?php foreach ($adminRoles as $role) : ?>
+        <tr>
+            <td>
+                <?=$role->getSecurityIdentity()->getName()?>
+            </td>
+            <td>
+                <?=$role->getSecurityIdentity()->getEmail()?>
+            </td>
+            <td>
+                <a class="removeRole btn btn-xs btn-default" title="<?=__('UI', 'verb', 'delete')?>"
+                   href="account/members/remove-admin?account=<?=$account->getId()?>&role=<?=$role->getId()?>">
+                    <i class="fa fa-lg fa-trash-o"></i>
+                </a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+
+    <?php if (count($adminRoles) === 0) : ?>
+        <tr>
+            <td colspan="2" class="text-muted">
+                <?=__('Account', 'role', 'noAccountAdmin')?>
+            </td>
+        </tr>
+    <?php endif; ?>
+</table>
+
+<form class="input-group" method="post"
+      action="account/members/add-admin?account=<?=$account->getId()?>">
+    <input type="text" class="form-control" name="email"
+           placeholder="<?=__('Account', 'role', 'emailToAddRole')?>">
+    <div class="input-group-btn">
+        <button id="addAdminSubmit" class="btn btn-primary" type="submit"
+                data-loading-text="<?=__('UI', 'loading', 'loading')?>">
+            <i class="fa fa-plus-circle"></i>
+            <?=__('UI', 'verb', 'add')?>
+        </button>
+    </div>
+</form>
+<span class="help-block"></span>
+
+<div class="alert alert-info">
+    <p>
+        <?=__('Account', 'role', 'accountAdminHelp')?>
+    </p>
+</div>
+
+<script>
+    $(function() {
+        // Bouton d'ajout avec "loading..." pour faire patienter
+        $('#addAdminSubmit').click(function () {
+            $(this).button('loading');
+        });
+        // Bouton de suppression
+        $('.removeRole').confirm({
+            text: <?=json_encode(__('Account', 'role', 'confirmRemoveAdminRole'))?>,
+            confirmButton: <?=json_encode(__('UI', 'verb', 'confirm'))?>,
+            cancelButton: <?=json_encode(__('UI', 'verb', 'cancel'))?>,
+            post: true
+        });
+    });
+</script>

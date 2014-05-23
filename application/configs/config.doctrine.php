@@ -1,18 +1,20 @@
 <?php
 
 use Core\Log\QueryLogger;
-use DI\Container;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\Common\Proxy\Autoloader as DoctrineProxyAutoloader;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Mapping\Driver\DriverChain;
 use Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver;
 use Doctrine\ORM\Mapping\Driver\YamlDriver;
 use Gedmo\Loggable\LoggableListener;
-use Gedmo\Translatable\TranslatableListener;
+use Interop\Container\ContainerInterface;
+use MyCLabs\ACL\ACL;
+use MyCLabs\ACL\Doctrine\ACLSetup;
 
 return [
 
@@ -26,18 +28,15 @@ return [
 
     // Configuration Doctrine
     'doctrine.proxies.mode' => AbstractProxyFactory::AUTOGENERATE_FILE_NOT_EXISTS,
-    'doctrine.configuration' => DI\factory(function (Container $c) {
+    'doctrine.configuration' => DI\factory(function (ContainerInterface $c) {
         $doctrineConfig = new Doctrine\ORM\Configuration();
 
         $cache = $c->get(Cache::class);
 
         $paths = [
             APPLICATION_PATH . '/models/mappers',
-            APPLICATION_PATH . '/classif/models/mappers',
             APPLICATION_PATH . '/dw/models/mappers',
-            APPLICATION_PATH . '/social/models/mappers',
             APPLICATION_PATH . '/orga/models/mappers',
-            APPLICATION_PATH . '/simulation/models/mappers',
         ];
         $doctrineYAMLDriver = new YamlDriver($paths, '.yml');
 
@@ -52,14 +51,23 @@ return [
             $annotationReader // our annotation reader
         );
 
+        // Annotations pour MyCLabs\ACL
+        $annotationDriver = new AnnotationDriver(
+            new CachedReader(new AnnotationReader(), $cache),
+            [ PACKAGE_PATH . '/vendor/myclabs/acl/src/Model' ]
+        );
+        $driverChain->addDriver($annotationDriver, 'MyCLabs\ACL\Model');
+
         // Nouveaux packages utilisent le simplified driver
         $modules = [
             'Unit',
             'User',
-            'Techno',
+            'Classification',
+            'Parameter',
             'Doc',
             'AuditTrail',
             'AF',
+            'Account',
         ];
         foreach ($modules as $module) {
             $yamlDriver = new SimplifiedYamlDriver(
@@ -68,6 +76,13 @@ return [
             );
             $driverChain->addDriver($yamlDriver, $module . '\Domain');
         }
+
+        // Translation
+        $yamlDriver = new SimplifiedYamlDriver(
+            [PACKAGE_PATH . '/src/Core/Translation' => 'Core\Translation'],
+            '.yml'
+        );
+        $driverChain->addDriver($yamlDriver, 'Core\Translation');
 
         $doctrineConfig->setMetadataDriverImpl($driverChain);
 
@@ -93,7 +108,7 @@ return [
     }),
 
     // Entity manager
-    EntityManager::class => DI\factory(function (Container $c) {
+    EntityManager::class => DI\factory(function (ContainerInterface $c) {
         $connectionArray = [
             'driver'        => $c->get('db.driver'),
             'user'          => $c->get('db.user'),
@@ -110,23 +125,19 @@ return [
         // Création de l'EntityManager depuis la configuration de doctrine.
         $em = Core_ORM_EntityManager::create($connectionArray, $doctrineConfig);
 
-        // Extension de traduction de champs
-        $em->getEventManager()->addEventSubscriber($c->get(TranslatableListener::class));
+        $evm = $em->getEventManager();
+
         // Extension de versionnement de champs
-        $em->getEventManager()->addEventSubscriber($c->get(LoggableListener::class));
+        $evm->addEventSubscriber($c->get(LoggableListener::class));
+
+        // Configuration pour MyCLabs\ACL
+        /** @var ACLSetup $aclSetup */
+        $aclSetup = $c->get(ACLSetup::class);
+        $aclSetup->setUpEntityManager($em, function () use ($c) {
+            return $c->get(ACL::class);
+        });
 
         return $em;
-    }),
-    ManagerRegistry::class => DI\object(Core\ORM\ManagerRegistry::class),
-
-    // Extensions Doctrine
-    TranslatableListener::class => DI\factory(function (Container $c) {
-        $listener = new TranslatableListener();
-        $listener->setTranslatableLocale(Core_Locale::loadDefault()->getLanguage());
-        $listener->setDefaultLocale($c->get('translation.defaultLocale'));
-        $listener->setPersistDefaultLocaleTranslation(true);
-        $listener->setTranslationFallback(true);
-        return $listener;
     }),
 
 ];

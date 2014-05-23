@@ -119,7 +119,6 @@ Feature: AF numeric parameter algo feature
     When I set "Gaz naturel" for column "member" of row 1 of the "coordinatesFixed" datagrid
   # On ferme le popup pour aller fermer le message en arrière-plan
     And I click element "#algoNumericParameter_coordinates_popup .close:contains('×')"
-    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
     When I click "Coordonnées" in the row 1 of the "algoNumericParameter" datagrid
     Then the row 1 of the "coordinatesFixed" datagrid should contain:

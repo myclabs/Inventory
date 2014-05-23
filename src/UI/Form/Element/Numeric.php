@@ -44,6 +44,8 @@ class UI_Form_Element_Numeric extends Zend_Form_Element_Xhtml implements UI_Form
 
         $this->_element = new UI_Form_Element($this);
 
+        $this->setAttrib('class', 'form-control');
+
         if ($isTypeNumber) {
             $this->setAttrib('type', 'number');
             $this->setAttrib('step', 'any');

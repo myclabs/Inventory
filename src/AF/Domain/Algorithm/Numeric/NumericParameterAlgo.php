@@ -6,12 +6,12 @@ use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\ParameterCoordinate\ParameterCoordinate;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\ExecutionException;
-use Calc_UnitValue;
 use Core_Exception_NotFound;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Techno\Application\Service\TechnoService;
-use Techno\Domain\Family\Family;
+use Parameter\Application\Service\ParameterService;
+use Parameter\Domain\Family\Family;
+use Parameter\Domain\Family\FamilyReference;
 use Unit\UnitAPI;
 
 /**
@@ -22,9 +22,9 @@ use Unit\UnitAPI;
 class NumericParameterAlgo extends NumericAlgo
 {
     /**
-     * @var string
+     * @var FamilyReference
      */
-    protected $familyRef;
+    protected $familyReference;
 
     /**
      * @var ParameterCoordinate[]|Collection
@@ -49,15 +49,15 @@ class NumericParameterAlgo extends NumericAlgo
             $coordinates[$dimensionRef] = $parameterCoordinate->getMember($inputSet);
         }
 
-        /** @var TechnoService $technoService */
-        $technoService = \Core\ContainerSingleton::getContainer()->get(TechnoService::class);
+        /** @var ParameterService $parameterService */
+        $parameterService = \Core\ContainerSingleton::getContainer()->get(ParameterService::class);
 
-        $value = $technoService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
+        $value = $parameterService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
 
         if (!$value) {
             throw new ExecutionException(sprintf(
                 'No value was found for parameter %s and coordinates %s in algorithm %s',
-                $this->familyRef,
+                $this->familyReference->getFamilyRef(),
                 implode(', ', $coordinates),
                 $this->ref
             ));
@@ -73,18 +73,18 @@ class NumericParameterAlgo extends NumericAlgo
     {
         $errors = parent::checkConfig();
 
-        /** @var TechnoService $technoService */
-        $technoService = \Core\ContainerSingleton::getContainer()->get(TechnoService::class);
+        /** @var ParameterService $parameterService */
+        $parameterService = \Core\ContainerSingleton::getContainer()->get(ParameterService::class);
 
         // Vérifie que la famille liée est bien trouvable
         try {
-            $family = $technoService->getFamily($this->familyRef);
+            $family = $parameterService->getFamily($this->familyReference);
         } catch (Core_Exception_NotFound $e) {
             $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage(__('Algo', 'configControl', 'invalidFamily', [
                 'REF_ALGO'   => $this->ref,
-                'REF_FAMILY' => $this->familyRef
+                'REF_FAMILY' => $this->familyReference->getFamilyRef()
             ]), true);
             $errors[] = $configError;
             return $errors;
@@ -106,7 +106,7 @@ class NumericParameterAlgo extends NumericAlgo
                 $configError->isFatal(true);
                 $configError->setMessage(__('Algo', 'configControl', 'missingCoordinate', [
                     'REF_ALGO'      => $this->ref,
-                    'REF_DIMENSION' => $dimension->getLabel()
+                    'REF_DIMENSION' => $dimension->getRef()
                 ]), true);
                 $errors[] = $configError;
             }
@@ -140,10 +140,18 @@ class NumericParameterAlgo extends NumericAlgo
      */
     public function getFamily()
     {
-        /** @var TechnoService $technoService */
-        $technoService = \Core\ContainerSingleton::getContainer()->get(TechnoService::class);
+        /** @var ParameterService $parameterService */
+        $parameterService = \Core\ContainerSingleton::getContainer()->get(ParameterService::class);
 
-        return $technoService->getFamily($this->familyRef);
+        return $parameterService->getFamily($this->familyReference);
+    }
+
+    /**
+     * @return FamilyReference
+     */
+    public function getFamilyReference()
+    {
+        return $this->familyReference;
     }
 
     /**
@@ -151,7 +159,7 @@ class NumericParameterAlgo extends NumericAlgo
      */
     public function setFamily(Family $family)
     {
-        $this->familyRef = $family->getRef();
+        $this->familyReference = $family->getFamilyReference();
         // Supprime les coordonnées pour l'ancienne famille
         $this->parameterCoordinates->clear();
     }

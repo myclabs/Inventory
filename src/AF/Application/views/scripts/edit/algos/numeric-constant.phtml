@@ -43,23 +43,25 @@ $uncertainty->editable = true;
 $datagrid->addCol($uncertainty);
 
 // Context indicator
-$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classif', 'indicator', 'indicator'));
+$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classification', 'indicator', 'indicator'));
 $contextIndicatorColumn->addable = false;
 $contextIndicatorColumn->editable = true;
 $contextIndicatorColumn->dynamicList = true;
 $contextIndicatorColumn->list = $this->baseUrl(
-    '/af/datagrid_edit_algos_numeric-constant/get-context-indicator-list/');
+    'af/datagrid_edit_algos_numeric-constant/get-context-indicator-list'
+);
 $contextIndicatorColumn->withEmptyElement = true;
 $datagrid->addCol($contextIndicatorColumn);
 
 // Indexation
 $resultIndexColumn = new UI_Datagrid_Col_Popup('resultIndex', __('Algo', 'name', 'indexation'));
-$resultIndexColumn->popup->title = __('Algo', 'name', 'indexation');
-$resultIndexColumn->popup->addAttribute('class', 'large');
+$resultIndexColumn->popup->large();
 $datagrid->addCol($resultIndexColumn);
 
 echo $datagrid->render();
 ?>
-<script type="text/javascript">
-    $(document).ready(function() { refFromLabel('algoNumericConstant_label_addForm', 'algoNumericConstant_ref_addForm') });
+<script>
+    $(function() {
+        refFromLabel('algoNumericConstant_label_addForm', 'algoNumericConstant_ref_addForm')
+    });
 </script>

@@ -12,7 +12,6 @@
  */
 trait UI_Controller_Helper_Form
 {
-
     private $formResponse;
 
     /**

@@ -1,4 +1,7 @@
 <?php
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
+
 /**
  * Fichier de la classe Colonne Lien.
  *
@@ -135,21 +138,47 @@ class UI_Datagrid_Col_Link extends UI_Datagrid_Col_Generic
     public function getFilterFormElement($datagrid, $defaultValue=null)
     {
         if ($this->linkValue !== true) {
-            $filterFormElement = new UI_Form_Element_Text($this->getFilterFormId($datagrid));
-            $filterFormElement->setLabel($this->getFilterFormLabel());
-            $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
+            $colWrapper = new GenericTag('div');
+            $colWrapper->addClass('form-group');
 
+            $colLabel = new GenericTag('label', $this->getFilterFormLabel());
+            $colLabel->setAttribute('for', $this->getFilterFormId($datagrid));
+            $colLabel->addClass('col-sm-2');
+            $colLabel->addClass('control-label');
+            $colWrapper->appendContent($colLabel);
+
+            $linkWrapper = new GenericTag('div');
+            $linkWrapper->addClass('col-sm-10');
+
+            $linkInput = new GenericVoidTag('input');
+            $linkInput->setAttribute('type', 'text');
+            $linkInput->setAttribute('name', $this->getFilterFormId($datagrid));
+            $linkInput->setAttribute('id', $this->getFilterFormId($datagrid));
             // Récupération des valeurs par défaut.
             if (isset($defaultValue[$this->filterOperator])) {
-                $filterFormElement->setValue($defaultValue[$this->filterOperator]);
+                $linkInput->setAttribute('value', $defaultValue[$this->filterOperator]);
+            }
+            $linkInput->addClass('form-control');
+
+            $inputGroupWrapper = new GenericTag('div', $linkInput);
+            $inputGroupWrapper->addClass('input-group');
+
+            if (!empty($this->keywordFilterEqual)) {
+                $keywordFilterPrefix = new GenericTag('span', $this->keywordFilterEqual);
+                $keywordFilterPrefix->addClass('input-group-addon');
+                $inputGroupWrapper->prependContent($keywordFilterPrefix);
             }
 
-            $filterFormElement->getElement()->addSuffix($this->getResetFieldFilterFormSuffix($datagrid));
-        } else {
-            $filterFormElement = null;
+            $inputGroupWrapper->appendContent($this->getResetFieldFilterFormSuffix($datagrid));
+
+            $linkWrapper->appendContent($inputGroupWrapper);
+
+            $colWrapper->appendContent($linkWrapper);
+
+            return $colWrapper;
         }
 
-        return $filterFormElement;
+        return null;
     }
 
     /**
@@ -197,11 +226,30 @@ class UI_Datagrid_Col_Link extends UI_Datagrid_Col_Generic
     {
         // Le'ajout est possible uniquement sur les Colonne Lien (lorsque la valeur de la cellule est le texte).
         if ($this->linkValue !== true) {
-            $addFormElement = new UI_Form_Element_Text($this->getAddFormElementId($datagrid));
-            $addFormElement->setLabel($this->getAddFormElementLabel());
-            $addFormElement->setValue($this->defaultAddValue);
+            $colWrapper = new GenericTag('div');
+            $colWrapper->addClass('form-group');
 
-            return $addFormElement;
+            $colLabel = new GenericTag('label', $this->getAddFormElementLabel());
+            $colLabel->setAttribute('for', $this->getAddFormElementId($datagrid));
+            $colLabel->addClass('col-sm-2');
+            $colLabel->addClass('control-label');
+            $colLabel->addClass('field-label');
+            $colWrapper->appendContent($colLabel);
+
+            $linkWrapper = new GenericTag('div');
+            $linkWrapper->addClass('col-sm-10');
+
+            $linkInput = new GenericVoidTag('input');
+            $linkInput->setAttribute('type', 'text');
+            $linkInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+            $linkInput->setAttribute('id', $this->getAddFormElementId($datagrid));
+            $linkInput->setAttribute('value', $this->defaultAddValue);
+            $linkInput->addClass('form-control');
+            $linkWrapper->appendContent($linkInput);
+
+            $colWrapper->appendContent($linkWrapper);
+
+            return $colWrapper;
         } else {
             return null;
         }

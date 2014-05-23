@@ -2,11 +2,14 @@
 
 namespace UI\Datagrid\Column;
 
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
+use MyCLabs\MUIH\Icon;
 use UI\Datagrid\Datagrid;
 use UI_Form_Element_HTML;
 use UI_Form_Element_Radio;
 use UI_Form_Element_Option;
-use UI_HTML_Button;
 
 /**
  * Classe représentant une colonne contenant des booleens.
@@ -139,34 +142,60 @@ JS;
      */
     public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
-        $filterFormElement = new UI_Form_Element_Radio($this->getFilterFormId($datagrid));
-        $filterFormElement->setLabel($this->getFilterFormLabel());
+        $colWrapper = new GenericTag('div');
+        $colWrapper->addClass('form-group');
 
-        $optionTrue = new UI_Form_Element_Option($this->getFilterFormId($datagrid).'_true', 1);
-        $optionTrue->label = $this->keywordFilterEqual . ' '. $this->textTrue;
-        $filterFormElement->addOption($optionTrue);
+        $colLabel = new GenericTag('span', $this->getFilterFormLabel());
+        $colLabel->addClass('col-sm-2');
+        $colLabel->addClass('control-label');
+        $colLabel->addClass('static');
+        $colWrapper->appendContent($colLabel);
 
-        $optionFalse = new UI_Form_Element_Option($this->getFilterFormId($datagrid).'_false', 0);
-        $optionFalse->label = $this->keywordFilterEqual . ' '. $this->textFalse;
-        $filterFormElement->addOption($optionFalse);
+        $boolWrapper = new GenericTag('div');
+        $boolWrapper->addClass('col-sm-10');
 
+        $trueOption = new GenericVoidTag('input');
+        $trueOption->setAttribute('type', 'radio');
+        $trueOption->setAttribute('name', $this->getFilterFormId($datagrid));
+        $trueOption->setAttribute('id', $this->getFilterFormId($datagrid).'_true');
+        $trueOption->setAttribute('value', '1');
         // Récupération des valeurs par défaut.
-        if (isset($defaultValue[$this->criteriaFilterOperator])) {
-            $filterFormElement->setValue($defaultValue[$this->criteriaFilterOperator]);
+        if (isset($defaultValue[$this->criteriaFilterOperator]) && ($defaultValue[$this->criteriaFilterOperator]) == true) {
+            $trueOption->setBooleanAttribute('checked');
         }
 
-        $resetButton = new UI_HTML_Button();
-        $resetButton->icon = $datagrid->filterIconResetFieldSuffix;
-        $resetAction = '$(\'#'.$this->getFilterFormId($datagrid).' :checked\')';
-        $resetAction .= '.removeAttr(\'checked\');';
-        $resetButton->addAttribute('onclick', $resetAction);
+        $trueLabel = new GenericTag('label', $this->keywordFilterEqual . ' '. $this->textTrue);
+        $trueLabel->prependContent(' ');
+        $trueLabel->prependContent($trueOption);
+        $boolWrapper->appendContent($trueLabel);
 
-        $resetElement = new UI_Form_Element_HTML($this->getFilterFormId($datagrid).'_reset');
-        $resetElement->content = $resetButton->getHTML();
+        $falseOption = new GenericVoidTag('input');
+        $falseOption->setAttribute('type', 'radio');
+        $falseOption->setAttribute('name', $this->getFilterFormId($datagrid));
+        $falseOption->setAttribute('id', $this->getFilterFormId($datagrid).'_false');
+        $falseOption->setAttribute('value', '1');
+        // Récupération des valeurs par défaut.
+        if (isset($defaultValue[$this->criteriaFilterOperator]) && ($defaultValue[$this->criteriaFilterOperator]) == false) {
+            $falseOption->setBooleanAttribute('checked');
+        }
 
-        $filterFormElement->getElement()->addElement($resetElement);
+        $falseLabel = new GenericTag('label', $this->keywordFilterEqual . ' '. $this->textFalse);
+        $falseLabel->prependContent(' ');
+        $falseLabel->prependContent($falseOption);
+        $boolWrapper->appendContent(' ');
+        $boolWrapper->appendContent($falseLabel);
 
-        return $filterFormElement;
+        $resetFieldIcon = new Icon($datagrid->filterIconResetFieldSuffix);
+        $resetFieldIcon->addClass('reset');
+
+        $resetFieldSuffix = new Button($resetFieldIcon);
+        $resetFieldSuffix->setAttribute('onclick', '$(\'input[name=\\\''.$this->getFilterFormId($datagrid).'\\\']:checked\').removeAttr(\'checked\');');
+        $boolWrapper->appendContent(' ');
+        $boolWrapper->appendContent($resetFieldSuffix);
+
+        $colWrapper->appendContent($boolWrapper);
+
+        return $colWrapper;
     }
 
     /**
@@ -176,17 +205,17 @@ JS;
     {
         $filterValue = '';
 
-        $filterValue .= 'var inputOptions = $(\'#'.$this->getFilterFormId($datagrid).' :checked\');';
+        $filterValue .= 'var inputOptions = $(\'input[name="'.$this->getFilterFormId($datagrid).'"]:checked\');';
 
         // Condition de saisie du filtre.
         $filterValue .= 'if (inputOptions.length == 1) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
         $filterValue .= '\"'.$this->criteriaFilterOperator.'\":" + inputOptions.val() + "';
         $filterValue .= '},";';
 
-        $filterValue .= '}';
+        $filterValue .= '}}';
 
         return $filterValue;
     }
@@ -196,7 +225,11 @@ JS;
      */
     public function getResettingFilter(Datagrid $datagrid)
     {
-        return "$('#" . $this->getFilterFormId($datagrid) . " :checked').removeAttr('checked');";
+        $resetFields = '';
+
+        $resetFields .= '$(\'input[name="'.$this->getFilterFormId($datagrid).'"]:checked\').removeAttr(\'checked\');';
+
+        return $resetFields;
     }
 
     /**
@@ -204,19 +237,50 @@ JS;
      */
     public function getAddFormElement(Datagrid $datagrid)
     {
-        $addFormElement = new UI_Form_Element_Radio($this->getAddFormElementId($datagrid));
-        $addFormElement->setLabel($this->getAddFormElementLabel());
+        $colWrapper = new GenericTag('div');
+        $colWrapper->addClass('form-group');
 
-        $optionTrue = new UI_Form_Element_Option($this->getAddFormElementId($datagrid).'_true', 1);
-        $optionTrue->label = $this->textTrue;
-        $addFormElement->addOption($optionTrue);
+        $colLabel = new GenericTag('label', $this->getAddFormElementLabel());
+        $colLabel->setAttribute('for', $this->getAddFormElementId($datagrid));
+        $colLabel->addClass('col-sm-2');
+        $colLabel->addClass('control-label');
+        $colLabel->addClass('field-label');
+        $colWrapper->appendContent($colLabel);
 
-        $optionFalse = new UI_Form_Element_Option($this->getAddFormElementId($datagrid).'_false', 0);
-        $optionFalse->label = $this->textFalse;
-        $addFormElement->addOption($optionFalse);
+        $optionsWrapper = new GenericTag('div');
+        $optionsWrapper->setAttribute('id', $this->getAddFormElementId($datagrid));
+        $optionsWrapper->addClass('col-sm-10');
 
-        $addFormElement->setValue($this->defaultAddValue ? 1 : 0);
+        $trueInput = new GenericVoidTag('input');
+        $trueInput->setAttribute('type', 'radio');
+        $trueInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+        $trueInput->setAttribute('value', 1);
+        $trueInput->setAttribute('id', $this->getAddFormElementId($datagrid).'_true');
+        $trueOption = new GenericTag('label');
+        $trueOption->addClass('radio-inline');
+        $trueOption->appendContent($trueInput);
+        $trueOption->appendContent($this->textTrue);
+        $optionsWrapper->appendContent($trueOption);
 
-        return $addFormElement;
+        $falseInput = new GenericVoidTag('input');
+        $falseInput->setAttribute('type', 'radio');
+        $falseInput->setAttribute('name', $this->getAddFormElementId($datagrid));
+        $falseInput->setAttribute('value', 0);
+        $falseInput->setAttribute('id', $this->getAddFormElementId($datagrid).'_false');
+        $falseOption = new GenericTag('label');
+        $falseOption->addClass('radio-inline');
+        $falseOption->appendContent($falseInput);
+        $falseOption->appendContent($this->textFalse);
+        $optionsWrapper->appendContent($falseOption);
+
+        $colWrapper->appendContent($optionsWrapper);
+
+        if ($this->defaultAddValue) {
+            $trueInput->setBooleanAttribute('checked');
+        } else {
+            $falseInput->setBooleanAttribute('checked');
+        }
+
+        return $colWrapper;
     }
 }

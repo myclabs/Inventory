@@ -1,6 +1,6 @@
 <fieldset class="wrapper">
     <legend style="cursor: default;">
-        <?=___('Orga', 'role', 'organizationAdministrators')?></h2>
+        <?=___('Orga', 'role', 'organizationAdministrators')?>
     </legend>
 <?php
 $datagridUsers = new UI_Datagrid(
@@ -35,11 +35,11 @@ if ($this->display === false) {
 </fieldset>
 <fieldset class="wrapper">
     <legend style="cursor: default;">
-        <?=___('Orga', 'granularity', 'aclGranularities')?></h2>
+        <?=___('Orga', 'granularity', 'aclGranularities')?>
     </legend>
 <ul>
 <?php foreach ($this->aclGranularities as $aclGranularity) : ?>
-    <li><?=$aclGranularity->getLabel()?></li>
+    <li><?=$this->translate($aclGranularity->getLabel())?></li>
 <?php endforeach; ?>
 </ul>
 </fieldset>

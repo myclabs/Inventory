@@ -22,34 +22,66 @@
      </tu>
      <tu tuid="authorizedCharactersInOperands">
          <tuv xml:lang="fr">
-             <seg>Caractères autorisés pour les opérandes : "a..z", "0..9", et "_".</seg>
+             <seg>Caractères autorisés pour les opérandes</seg>
          </tuv>
          <tuv xml:lang="en">
-             <seg>Authorized characters in operands : "a..z", "0..9", et "_".</seg>
+             <seg>Authorized characters in operands</seg>
+         </tuv>
+     </tu>
+     <tu tuid="authorizedCharactersInOperandsExemple">
+         <tuv xml:lang="fr">
+             <seg>"a..z", "0..9", et "_"</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>"a..z", "0..9", et "_"</seg>
          </tuv>
      </tu>
      <tu tuid="arithmeticExpression">
          <tuv xml:lang="fr">
-             <seg>Expression arithmétique : <code>a + b * (c - d) - (e - f) / g</code></seg>
+             <seg>Expression arithmétique</seg>
          </tuv>
          <tuv xml:lang="en">
-             <seg>Arithmetic expression: <code>a + b * (c - d) - (e - f) / g</code></seg>
+             <seg>Arithmetic expression</seg>
+         </tuv>
+     </tu>
+     <tu tuid="arithmeticExpressionExemple">
+         <tuv xml:lang="fr">
+             <seg>a + b * (c - d) - (e - f) / g</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>a + b * (c - d) - (e - f) / g</seg>
          </tuv>
      </tu>
      <tu tuid="booleanExpression">
          <tuv xml:lang="fr">
-             <seg>Expression booléenne : <code>(salade | soupe) &amp; (viande | poisson) &amp; dessert</code></seg>
+             <seg>Expression booléenne</seg>
          </tuv>
          <tuv xml:lang="en">
-             <seg>Boolean expression: <code>(salad | soup) &amp; (meat | fish) &amp; dessert</code></seg>
+             <seg>Boolean expression</seg>
+         </tuv>
+     </tu>
+     <tu tuid="booleanExpressionExemple">
+         <tuv xml:lang="fr">
+             <seg>(salade | soupe) &amp; (viande | poisson) &amp; dessert</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>(salad | soup) &amp; (meat | fish) &amp; dessert</seg>
          </tuv>
      </tu>
      <tu tuid="selectionExpression">
          <tuv xml:lang="fr">
-             <seg>Sélection : <code>beau_temps : (soleil : chapeau_ &#59; chaleur : short) &#59; pluie : parapluie_ &#59; : chaussures</code></seg>
+             <seg>Sélection</seg>
          </tuv>
          <tuv xml:lang="en">
-             <seg>Selection: <code>nice_weather : (sun : hat &#59; heat : shorts) &#59; rain : umbrella &#59; : shoes</code></seg>
+             <seg>Selection</seg>
+         </tuv>
+     </tu>
+     <tu tuid="selectionExpressionExemple">
+         <tuv xml:lang="fr">
+             <seg>beau_temps : (soleil : chapeau_ &#59; chaleur : short) &#59; pluie : parapluie_ &#59; : chaussures</seg>
+         </tuv>
+         <tuv xml:lang="en">
+             <seg>nice_weather : (sun : hat &#59; heat : shorts) &#59; rain : umbrella &#59; : shoes</seg>
          </tuv>
      </tu>
      <tu tuid="incorrectExpressionMessage">

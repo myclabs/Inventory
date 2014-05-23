@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+use Account\Application\Command\CreateAccountCommand;
 use Inventory\Command\ClearCacheCommand;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\PopulateDBCommand;
@@ -24,6 +25,7 @@ $application->add($container->get(UpdateDBCommand::class));
 $application->add($container->get(PopulateDBCommand::class));
 $application->add($container->get(ClearCacheCommand::class));
 $application->add($container->get(RebuildExportsCommand::class));
+$application->add($container->get(CreateAccountCommand::class));
 $application->add($container->get(ExportCommand::class));
 $application->add($container->get(ImportCommand::class));
 

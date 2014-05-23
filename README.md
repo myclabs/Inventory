@@ -39,12 +39,6 @@ Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](h
 vagrant up
 ```
 
-There is an alternative configuration for continuous integration (only for running tests):
-
-```shell
-vagrant up tests
-```
-
 The website is accessible at [http://localhost:8000/inventory/](http://localhost:8000/inventory/).
 
 PhpMyAdmin is accessible at [http://localhost:8000/phpmyadmin/](http://localhost:8000/phpmyadmin/).
@@ -61,6 +55,18 @@ Destroy the VM:
 ```shell
 vagrant destroy
 ```
+
+## Commands
+
+Commands are run with `bin/inventory`, or `bin/tests` for the unit tests environment.
+
+- `account:create "My Company"`: creates a new account
+- `acl:rebuild`: rebuilds the ACL from the roles
+- `cache:clear`: clear the caches
+- `db:create`: creates the database (empty)
+- `db:update`: update the database schema
+- `db:populate [data-set]`: create and populates the database with a data set
+- `export:rebuild`: rebuilds the export files
 
 ## Tests
 

@@ -2,11 +2,16 @@
 
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
+use Core\Translation\TranslatedString;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Orga\Model\ACL\CellResourceTrait;
-use User\Domain\ACL\Resource\Resource;
+use MyCLabs\ACL\Model\EntityResource;
+use Orga\Model\ACL\AbstractCellRole;
+use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellObserverRole;
 
 /**
  * Definit une cellule organisationnelle.
@@ -14,10 +19,8 @@ use User\Domain\ACL\Resource\Resource;
  * @author valentin.claras
  * @author simon.rieu
  */
-class Orga_Model_Cell extends Core_Model_Entity implements Resource
+class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 {
-    use CellResourceTrait;
-
     // Constantes de tris et de filtres.
     const QUERY_GRANULARITY = 'granularity';
     const QUERY_TAG = 'tag';
@@ -67,7 +70,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @var Collection|Orga_Model_Member[]
      */
-    protected $members = array();
+    protected $members;
 
     /**
      * Représentation simplifié en chaine de caractère des membres de la cellule.
@@ -117,7 +120,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Tableau d'état des saisies de la cellule.
      *
-     * @var PrimaryInputSet
+     * @var PrimaryInputSet|null
      */
     protected $aFInputSetPrimary = null;
 
@@ -129,11 +132,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     protected $docLibraryForAFInputSetPrimary = null;
 
     /**
-     * Collection des SocialComment utilisés pour l'AFInputSetPrimary de la cellule.
+     * Commentaires de la saisie.
      *
-     * @var Collection|Social_Model_Comment[]
+     * @var Collection|Orga_Model_Cell_InputComment[]
      */
-    protected $socialCommentsForAFInputSetPrimary = null;
+    protected $commentsForAFInputSetPrimary = null;
 
     /**
      * Organization de DW généré par et propre à la Cell.
@@ -150,32 +153,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     protected $dWResults = null;
 
     /**
-     * Collection des GenericAction liées à la cellule.
+     * Liste des roles sur cette cellule.
      *
-     * @var Collection|Social_Model_Comment
+     * @var AbstractCellRole[]|Collection
      */
-    protected $socialGenericActions = null;
-
-    /**
-     * Collection des Docs des GenericAction liées à la cellule.
-     *
-     * @var Library
-     */
-    protected $docLibraryForSocialGenericActions = null;
-
-    /**
-     * Collection des ContextAction liées à la cellule.
-     *
-     * @var Collection|Social_Model_ContextAction
-     */
-    protected $socialContextActions = null;
-
-    /**
-     * Collection des Document liés aux ContextAction.
-     *
-     * @var Library
-     */
-    protected $docLibraryForSocialContextActions = null;
+    protected $roles;
 
 
     /**
@@ -187,11 +169,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     {
         $this->members = new ArrayCollection();
         $this->cellsGroups = new ArrayCollection();
-        $this->socialCommentsForAFInputSetPrimary = new ArrayCollection();
+        $this->commentsForAFInputSetPrimary = new ArrayCollection();
         $this->dWResults = new ArrayCollection();
-        $this->socialGenericActions = new ArrayCollection();
-        $this->socialContextActions = new ArrayCollection();
-        $this->constructACL();
+        $this->roles = new ArrayCollection();
 
         $this->granularity = $granularity;
         foreach ($members as $member) {
@@ -209,14 +189,6 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         }
         // Création de la Library des Input.
         $this->enableDocLibraryForAFInputSetPrimary();
-        // Création de la Library des GenericAction.
-        if ($this->granularity->getCellsWithSocialGenericActions()) {
-            $this->docLibraryForSocialGenericActions = new Library();
-        }
-        // Création de la Library des ContextAction.
-        if ($this->granularity->getCellsWithInputDocuments()) {
-            $this->docLibraryForSocialContextActions = new Library();
-        }
 
         $this->updateHierarchy();
     }
@@ -226,6 +198,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @param PrimaryInputSet $aFInputSetPrimary
      *
+     * @throws Core_Exception_NotFound
      * @return Orga_Model_Cell
      */
     public static function loadByAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary)
@@ -254,31 +227,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      */
     public static function loadByDocLibraryForAFInputSetsPrimary(Library $docLibrary)
     {
-        return self::getEntityRepository()->loadBy(array('docLibraryForAFInputSetsPrimary' => $docLibrary));
-    }
-
-    /**
-     * Charge la Cell correspondant à une Library de Doc utilisé pour les SocialGenericAction.
-     *
-     * @param Library $docLibrary
-     *
-     * @return Orga_Model_Cell
-     */
-    public static function loadByDocLibraryForSocialGenericAction(Library $docLibrary)
-    {
-        return self::getEntityRepository()->loadBy(array('docLibraryForSocialGenericAction' => $docLibrary));
-    }
-
-    /**
-     * Charge la Cell correspondant à une Library de Doc utilisé pour les SocialContextAction.
-     *
-     * @param Library $docLibrary
-     *
-     * @return Orga_Model_Cell
-     */
-    public static function loadByDocLibraryForSocialContextAction(Library $docLibrary)
-    {
-        return self::getEntityRepository()->loadBy(array('docLibraryForSocialContextAction' => $docLibrary));
+        return self::getEntityRepository()->loadBy(['docLibraryForAFInputSetPrimary' => $docLibrary]);
     }
 
     /**
@@ -541,20 +490,17 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                 $this->updateInventoryStatus(self::STATUS_NOTLAUNCHED);
             }
         }
-
-        // MAJ des ACL
-        $this->updateACL();
     }
 
     /**
      * Renvoie le label de la Cell. Basée sur les labels des Member.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         if ($this->members->isEmpty()) {
-            return __('Orga', 'navigation', 'labelGlobalCell');
+            return TranslatedString::untranslated(__('Orga', 'navigation', 'labelGlobalCell'));
         }
 
         $labels = [];
@@ -564,18 +510,18 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             $labels[] = $member->getLabel();
         }
 
-        return implode(self::LABEL_SEPARATOR, $labels);
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
      * Renvoie le label étendue de la Cell. Basée sur les labels étendues des Member.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getExtendedLabel()
     {
         if ($this->members->isEmpty()) {
-            return __('Orga', 'navigation', 'labelGlobalCellExtended');
+            return TranslatedString::untranslated(__('Orga', 'navigation', 'labelGlobalCellExtended'));
         }
 
         $labels = [];
@@ -585,7 +531,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             $labels[] = $member->getExtendedLabel();
         }
 
-        return implode(self::LABEL_SEPARATOR, $labels);
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
@@ -1005,7 +951,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Renvoie l'InputSetPrimary associé à la cellule.
      *
-     * @return \AF\Domain\InputSet\PrimaryInputSet
+     * @return PrimaryInputSet|null
      */
     public function getAFInputSetPrimary()
     {
@@ -1029,6 +975,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
                 )->getCellsGroupForInputGranularity($granularity)->getAF();
             }
         } catch (Core_Exception_UndefinedAttribute $e) {
+        } catch (Core_Exception_NotFound $e) {
             // Pas d'AF spécifié.
         }
         return null;
@@ -1073,36 +1020,36 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     /**
      * Vérifie si un SocialComment est utilisée par la cellule.
      *
-     * @param Social_Model_Comment $socialComment
+     * @param Orga_Model_Cell_InputComment $comment
      *
      * @return bool
      */
-    public function hasSocialCommentForInputSetPrimary(Social_Model_Comment $socialComment)
+    public function hasCommentForInputSetPrimary(Orga_Model_Cell_InputComment $comment)
     {
-        return $this->socialCommentsForAFInputSetPrimary->contains($socialComment);
+        return $this->commentsForAFInputSetPrimary->contains($comment);
     }
 
     /**
      * Ajoute un SocialComment à la Cellule.
      *
-     * @param Social_Model_Comment $socialComment
+     * @param Orga_Model_Cell_InputComment $comment
      */
-    public function addSocialCommentForInputSetPrimary(Social_Model_Comment $socialComment)
+    public function addCommentForInputSetPrimary(Orga_Model_Cell_InputComment $comment)
     {
-        if (!($this->hasSocialCommentForInputSetPrimary($socialComment))) {
-            $this->socialCommentsForAFInputSetPrimary->add($socialComment);
+        if (!($this->hasCommentForInputSetPrimary($comment))) {
+            $this->commentsForAFInputSetPrimary->add($comment);
         }
     }
 
     /**
      * Retire un SocialComment de la cellule.
      *
-     * @param Social_Model_Comment $socialComment
+     * @param Orga_Model_Cell_InputComment $comment
      */
-    public function removeSocialCommentForInputSetPrimary(Social_Model_Comment $socialComment)
+    public function removeCommentForInputSetPrimary(Orga_Model_Cell_InputComment $comment)
     {
-        if ($this->hasSocialCommentForInputSetPrimary($socialComment)) {
-            $this->socialCommentsForAFInputSetPrimary->removeElement($socialComment);
+        if ($this->hasCommentForInputSetPrimary($comment)) {
+            $this->commentsForAFInputSetPrimary->removeElement($comment);
         }
     }
 
@@ -1111,25 +1058,23 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      *
      * @return bool
      */
-    public function hasSocialCommentsForInputSetPrimary()
+    public function hasCommentsForInputSetPrimary()
     {
-        return !$this->socialCommentsForAFInputSetPrimary->isEmpty();
+        return !$this->commentsForAFInputSetPrimary->isEmpty();
     }
 
     /**
      * Renvoi l'ensemble des GeneriAction de la cellule.
      *
-     * @return Social_Model_Comment[]
+     * @return Orga_Model_Cell_InputComment[]
      */
-    public function getSocialCommentsForInputSetPrimary()
+    public function getCommentsForInputSetPrimary()
     {
-        return $this->socialCommentsForAFInputSetPrimary->toArray();
+        return $this->commentsForAFInputSetPrimary->toArray();
     }
 
     /**
-     * Créé le Organization pour la simulation.
-     *
-     * @return int Identifiant unique du Organization.
+     * Créé le Cube de DW pour la Cell.
      */
     public function createDWCube()
     {
@@ -1141,7 +1086,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
             $etlDataService = $container->get(Orga_Service_ETLData::class);
 
             $this->dWCube = new DW_model_cube();
-            $this->dWCube->setLabel($this->getLabel());
+            $this->dWCube->setLabel(clone $this->getLabel());
 
             $etlStructureService->populateCellDWCube($this);
             $etlStructureService->addGranularityDWReportsToCellDWCube($this);
@@ -1150,9 +1095,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Créé le Organization pour la simulation.
-     *
-     * @return int Identifiant unique du Organization.
+     * Supprime le Cube de DW pour la Cell.
      */
     public function deleteDWCube()
     {
@@ -1218,7 +1161,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         $populatingCells = [];
 
         foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
-            if (($inputGranularity === $this->getGranularity()) && ($this->isRelevant())){
+            if (($inputGranularity === $this->getGranularity()) && ($this->isRelevant())) {
                 $populatingCells[] = $this;
             } elseif ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {
@@ -1254,11 +1197,12 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
         }
 
         foreach ($this->getAFInputSetPrimary()->getOutputSet()->getElements() as $outputElement) {
-            $refClassifIndicator = $outputElement->getContextIndicator()->getIndicator()->getRef();
+            $refClassifIndicator = $outputElement->getContextIndicator()->getIndicator()->getLibrary()
+                . '_' . $outputElement->getContextIndicator()->getIndicator()->getRef();
             try {
                 $dWIndicator = DW_Model_Indicator::loadByRefAndCube($refClassifIndicator, $dWCube);
             } catch (Core_Exception_NotFound $e) {
-                // Indexation selon l'indicateur de classif non trouvée. Impossible de créer le résultat.
+                // Indexation selon l'indicateur de classification non trouvée. Impossible de créer le résultat.
                 continue;
             }
 
@@ -1267,20 +1211,27 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
 
             foreach ($outputElement->getIndexes() as $outputIndex) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndCube('c_'.$outputIndex->getRefAxis(), $dWCube);
+                    $classificationLibrary = $outputIndex->getAxis()->getLibrary();
+                    $dWAxis = DW_Model_Axis::loadByRefAndCube(
+                        'c_'.$classificationLibrary->getId().'_'.$outputIndex->getRefAxis(),
+                        $dWCube
+                    );
                     $dWMember = DW_Model_Member::loadByRefAndAxis($outputIndex->getRefMember(), $dWAxis);
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
-                    // Indexation selon classif non trouvée.
+                    // Indexation selon classification non trouvée.
                 }
 
                 foreach ($outputIndex->getMember()->getAllParents() as $classifParentMember) {
                     try {
-                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube('c_'.$classifParentMember->getAxis()->getRef(), $dWCube);
+                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube(
+                            'c_'.$classificationLibrary->getId().'_'.$classifParentMember->getAxis()->getRef(),
+                            $dWCube
+                        );
                         $dWParentMember = DW_Model_Member::loadByRefAndAxis($classifParentMember->getRef(), $dWBroaderAxis);
                         $dWResult->addMember($dWParentMember);
                     } catch (Core_Exception_NotFound $e) {
-                        // Indexation selon classif non trouvée.
+                        // Indexation selon classification non trouvée.
                     }
                 }
             }
@@ -1317,7 +1268,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
      */
     public function deleteDWResults()
     {
-        foreach ($this->dWResults->toArray() as $dWResult) {
+        foreach ($this->dWResults as $dWResult) {
             $this->dWResults->removeElement($dWResult);
             $dWResult->delete();
         }
@@ -1335,7 +1286,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
 //            Doctrine\Common\Collections\Criteria::expr()->eq('dWCube', $dWCube)
 //        );
 //        foreach ($this->dWResults->matching($criteria)->toArray() as $dWResult) {
-        foreach ($this->dWResults->toArray() as $dWResult) {
+        foreach ($this->dWResults as $dWResult) {
             if ($dWResult->getCube() === $dWCube) {
                 $this->dWResults->removeElement($dWResult);
                 $dWResult->delete();
@@ -1344,218 +1295,56 @@ class Orga_Model_Cell extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Vérifie si une GenericAction est utilisée par la cellule.
-     *
-     * @param Social_Model_GenericAction $socialGenericAction
-     *
-     * @return bool
+     * @return AbstractCellRole[]
      */
-    public function hasSocialGenericAction(Social_Model_GenericAction $socialGenericAction)
+    public function getAllRoles()
     {
-        return $this->socialGenericActions->contains($socialGenericAction);
+        return $this->roles->toArray();
+    }
+
+    public function addRole(AbstractCellRole $role)
+    {
+        $this->roles[] = $role;
     }
 
     /**
-     * Ajoute une GeneriAction à la Cellule.
-     *
-     * @param Social_Model_GenericAction $socialGenericAction
+     * @return CellAdminRole[]
      */
-    public function addSocialGenericAction(Social_Model_GenericAction $socialGenericAction)
+    public function getAdminRoles()
     {
-        if (!($this->hasSocialGenericAction($socialGenericAction))) {
-            $this->socialGenericActions->add($socialGenericAction);
-        }
+        return $this->roles->filter(function (AbstractCellRole $role) {
+            return $role instanceof CellAdminRole;
+        });
     }
 
     /**
-     * Retire une GeneriAction de la cellule.
-     *
-     * @param Social_Model_GenericAction $socialGenericAction
+     * @return CellManagerRole[]
      */
-    public function removeSocialGenericAction(Social_Model_GenericAction $socialGenericAction)
+    public function getManagerRoles()
     {
-        if ($this->hasSocialGenericAction($socialGenericAction)) {
-            $this->socialGenericActions->removeElement($socialGenericAction);
-        }
+        return $this->roles->filter(function (AbstractCellRole $role) {
+            return $role instanceof CellManagerRole;
+        });
     }
 
     /**
-     * Vérifie si au moins une GeneriAction est utilisée par la cellule pour l'InputSetPrimary.
-     *
-     * @return bool
+     * @return CellContributorRole[]
      */
-    public function hasSocialGenericActions()
+    public function getContributorRoles()
     {
-        return !$this->socialGenericActions->isEmpty();
+        return $this->roles->filter(function (AbstractCellRole $role) {
+            return $role instanceof CellContributorRole;
+        });
     }
 
     /**
-     * Renvoi l'ensemble des GeneriAction de la cellule.
-     *
-     * @return Social_Model_GenericAction[]
+     * @return CellObserverRole[]
      */
-    public function getSocialGenericActions()
+    public function getObserverRoles()
     {
-        return $this->socialGenericActions->toArray();
-    }
-
-    /**
-     * Spécifie la DocLibrary pour les SocialGenericAction de la cellule.
-     *
-     * @param Library $docLibrary
-     */
-    public function setDocLibraryForSocialGenericAction(Library $docLibrary = null)
-    {
-        if ($this->docLibraryForSocialGenericActions !== $docLibrary) {
-            if ($this->docLibraryForSocialGenericActions !== null) {
-                $this->docLibraryForSocialGenericActions->delete();
-                $this->docLibraryForSocialGenericActions = null;
-            }
-            $this->docLibraryForSocialGenericActions = $docLibrary;
-        }
-    }
-
-    /**
-     * Renvoi la DocLibrary pour les SocialGenericAction de la cellule.
-     *
-     * @throws Core_Exception_UndefinedAttribute
-     *
-     * @return Library
-     */
-    public function getDocLibraryForSocialGenericAction()
-    {
-        if ($this->docLibraryForSocialGenericActions === null) {
-            throw new Core_Exception_UndefinedAttribute('Doc Library for Social GenericActions has not be defined.');
-        }
-        return $this->docLibraryForSocialGenericActions;
-    }
-
-    /**
-     * Renvoi la première Library parente trouvé pour la Bibliography de les SocialGenericAction.
-     *
-     * @throws Core_Exception_NotFound
-     *
-     * @return Library
-     */
-    public function getParentDocLibraryForSocialGenericAction()
-    {
-        if ($this->getGranularity()->getCellsWithSocialGenericActions()) {
-            return $this->getDocLibraryForSocialGenericAction();
-        } else {
-            foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
-                if ($broaderGranularity->getCellsWithSocialGenericActions()) {
-                    return $this->getParentCellForGranularity($broaderGranularity)->getDocLibraryForSocialGenericAction();
-                }
-            }
-        }
-        throw new Core_Exception_NotFound('No broader Granularity provides a Library for the SocialGenericAction.');
-    }
-
-    /**
-     * Vérifie si un Doc est utilisé par la cellule pour les ContextAction.
-     *
-     * @param Social_Model_ContextAction $socialContextActon
-     *
-     * @return bool
-     */
-    public function hasSocialContextAction(Social_Model_ContextAction $socialContextActon)
-    {
-        return $this->socialContextActions->contains($socialContextActon);
-    }
-
-    /**
-     * Ajoute une ContextAction à la Cellule.
-     *
-     * @param Social_Model_ContextAction $socialContextAction
-     */
-    public function addSocialContextAction(Social_Model_ContextAction $socialContextAction)
-    {
-        if (!($this->hasSocialContextAction($socialContextAction))) {
-            $this->socialContextActions->add($socialContextAction);
-        }
-    }
-
-    /**
-     * Retire un ContextAction de la cellule.
-     *
-     * @param Social_Model_ContextAction $socialContextActon
-     */
-    public function removeSocialContextAction(Social_Model_ContextAction $socialContextActon)
-    {
-        if ($this->hasSocialContextActions($socialContextActon)) {
-            $this->socialContextActions->removeElement($socialContextActon);
-        }
-    }
-
-    /**
-     * Vérifie si au moins une ContextAction est utilisé par la cellule.
-     *
-     * @return bool
-     */
-    public function hasSocialContextActions()
-    {
-        return !$this->socialContextActions->isEmpty();
-    }
-
-    /**
-     * Renvoi l'ensemble des ContextAction de la cellule.
-     *
-     * @return Social_Model_ContextAction[]
-     */
-    public function getSocialContextActions()
-    {
-        return $this->socialContextActions->toArray();
-    }
-
-    /**
-     * Spécifie la DocLibrary pour les SocialContextAction de la cellule.
-     *
-     * @param Library $docLibrary
-     */
-    public function setDocLibraryForSocialContextAction(Library $docLibrary = null)
-    {
-        if ($this->docLibraryForSocialContextActions !== $docLibrary) {
-            if ($this->docLibraryForSocialContextActions !== null) {
-                $this->docLibraryForSocialContextActions->delete();
-            }
-            $this->docLibraryForSocialContextActions = $docLibrary;
-        }
-    }
-
-    /**
-     * Renvoi la DocLibrary pour les SocialContextAction de la cellule.
-     *
-     * @throws Core_Exception_UndefinedAttribute
-     *
-     * @return Library
-     */
-    public function getDocLibraryForSocialContextAction()
-    {
-        if ($this->docLibraryForSocialContextActions === null) {
-            throw new Core_Exception_UndefinedAttribute('Doc Library for Social ContextActions has not be defined.');
-        }
-        return $this->docLibraryForSocialContextActions;
-    }
-
-    /**
-     * Renvoi la première Library parente trouvé pour la Bibliography de l'SocialContextAction.
-     *
-     * @throws Core_Exception_NotFound
-     *
-     * @return Library
-     */
-    public function getParentDocLibraryForSocialContextAction()
-    {
-        if ($this->getGranularity()->getCellsWithSocialContextActions()) {
-            return $this->getDocLibraryForSocialContextAction();
-        } else {
-            foreach ($this->getGranularity()->getBroaderGranularities() as $broaderGranularity) {
-                if ($broaderGranularity->getCellsWithSocialContextActions()) {
-                    return $this->getParentCellForGranularity($broaderGranularity)->getDocLibraryForSocialContextAction();
-                }
-            }
-        }
-        throw new Core_Exception_NotFound('No broader Granularity provides a Library for the SocialContextAction.');
+        return $this->roles->filter(function (AbstractCellRole $role) {
+            return $role instanceof CellObserverRole;
+        });
     }
 
     /**

@@ -1,28 +1,11 @@
 <?php
-/**
- * Classe AF_Datagrid_Translate_AlgosController
- * @author valentin.claras
- * @package AF
- * @subpackage Controller
- */
 
+use AF\Domain\AFLibrary;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use Core\Annotation\Secure;
-use Gedmo\Translatable\TranslatableListener;
 
-/**
- * Classe du controller du datagrid des traductions des algos.
- * @package AF
- * @subpackage Controller
- */
 class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var TranslatableListener
-     */
-    private $translatableListener;
-
     /**
      * @Inject("translation.languages")
      * @var string[]
@@ -32,24 +15,28 @@ class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
     /**
      * Fonction renvoyant la liste des éléments peuplant la Datagrid.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getelementsAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
-        foreach (NumericAlgo::loadList($this->request) as $algo) {
-            $data = array();
-            $data['index'] = $algo->getId();
-            $data['identifier'] = $algo->getId();
+        $library = AFLibrary::load($this->getParam('library'));
 
-            foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $algo->reloadWithLocale($locale);
-                $data[$language] = $algo->getLabel();
+        foreach ($library->getAFList() as $af) {
+            foreach ($af->getAlgos() as $algo) {
+                if (! $algo instanceof NumericAlgo) {
+                    continue;
+                }
+
+                $data = array();
+                $data['index'] = $algo->getId();
+                $data['identifier'] = $algo->getId();
+
+                foreach ($this->languages as $language) {
+                    $data[$language] = $algo->getLabel()->get($language);
+                }
+                $this->addline($data);
             }
-            $this->addline($data);
         }
-        $this->totalElements = NumericAlgo::countTotal($this->request);
 
         $this->send();
     }
@@ -57,16 +44,14 @@ class AF_Datagrid_Translate_AlgosController extends UI_Controller_Datagrid
     /**
      * Fonction modifiant la valeur d'un élément.
      *
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function updateelementAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $algo = NumericAlgo::load($this->update['index']);
-        $algo->reloadWithLocale(Core_Locale::load($this->update['column']));
-        $algo->setLabel($this->update['value']);
-        $this->data = $algo->getLabel();
+        $algo->getLabel()->set($this->update['value'], $this->update['column']);
 
+        $this->data = $algo->getLabel()->get($this->update['column']);
         $this->send(true);
     }
 }

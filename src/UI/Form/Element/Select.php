@@ -50,6 +50,8 @@ class UI_Form_Element_Select extends Zend_Form_Element_Select
         }
         parent::__construct($name);
         $this->_element = new UI_Form_Element($this);
+
+        $this->setAttrib('class', 'form-control');
     }
 
     /**
@@ -131,6 +133,7 @@ class UI_Form_Element_Select extends Zend_Form_Element_Select
             'tag'   => 'select',
             'id'    => $this->getId(),
             'name'  => $this->getName(),
+            'class' => $this->getAttrib('class'),
         );
         if ($this->getElement()->disabled) {
             $selectOptions['disabled'] = 'disabled';

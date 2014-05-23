@@ -1,46 +1,25 @@
 <?php
-/**
- * @author     valentin.claras
- * @author     matthieu.napoli
- * @package    Core
- * @subpackage Model
- */
 
 /**
  * Entity class
  *
- * Design pattern multiton, entity pool.
- *
- * @package    Core
- * @subpackage Model
+ * @author valentin.claras
+ * @author matthieu.napoli
  */
 abstract class Core_Model_Entity
 {
-
     /**
-     * Array pointing wich EntityManager is used by each class.
-     *
-     * @var string[string] $_classMamanger[className] = refEntityManager
+     * Persiste l'objet.
      */
-    private static $_classManager = array();
-
-
-    /**
-     * Persiste l'objet métier.
-     *
-     * @return void
-     */
-    public final function save()
+    final public function save()
     {
         self::getEntityManager()->persist($this);
     }
 
     /**
-     * Supprime l'objet metier.
-     *
-     * @return void
+     * Supprime l'objet.
      */
-    public final function delete()
+    final public function delete()
     {
         self::getEntityManager()->remove($this);
     }
@@ -49,8 +28,6 @@ abstract class Core_Model_Entity
      * Returns the corresponding instance of the class for the given id.
      *
      * @param array|mixed $id
-     *
-     * @see getKey()
      *
      * @return static
      */
@@ -66,7 +43,7 @@ abstract class Core_Model_Entity
      *
      * @param Core_Model_Query $queryParameters Paramètres de la requête
      *
-     * @return Core_Model_Entity[]
+     * @return static[]
      */
     public static function loadList(Core_Model_Query $queryParameters = null)
     {

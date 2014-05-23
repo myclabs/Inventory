@@ -1,0 +1,64 @@
+Classification\Domain\Axis:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Classification_Axis
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    directNarrower:
+      targetEntity: Axis
+      inversedBy: directBroaders
+      joinColumn:
+        name: idDirectNarrower
+        referencedColumnName: id
+    library:
+      targetEntity: ClassificationLibrary
+      inversedBy: axes
+      joinColumn:
+        name: idLibrary
+        referencedColumnName: id
+        nullable: false
+
+  oneToMany:
+    directBroaders:
+      targetEntity: Axis
+      mappedBy: directNarrower
+      cascade: [ remove ]
+      orderBy:
+        position: ASC
+    members:
+      targetEntity: Member
+      mappedBy: axis
+      cascade: [ remove ]
+      orderBy:
+        position: ASC
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - idLibrary
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

@@ -1,35 +1,91 @@
-<div class="login-form">
+<div class="well no-padding">
+    <form action="user/register" method="post" class="smart-form client-form">
+        <header>
+            <?=__('User', 'register', 'register')?>
+        </header>
 
-    <h3><?=__('User', 'register', 'register')?></h3>
+        <fieldset>
 
-    <form action="user/register" method="post">
-        <input type="text" name="projectName" class="input-block-level" required
-               placeholder="<?=__('User', 'register', 'projectName')?>"
-               value="<?=$this->projectName?>">
-        <input type="text" name="email" class="input-block-level" required
-               placeholder="<?=__('User', 'user', 'emailAddress')?>"
-               value="<?=$this->email?>">
-        <input type="password" name="password" class="input-block-level" required autocomplete="off"
-               placeholder="<?=__('User', 'register', 'password')?>">
-        <input type="password" name="password2" class="input-block-level" required
-               placeholder="<?=__('User', 'register', 'passwordAgain')?>">
+            <section>
+                <label class="input">
+                    <i class="icon-append fa fa-inbox"></i>
 
-        <?php
-        $captcha = new UI_Form_Element_Captcha('captcha', 'user/captcha/newimage');
-        $captcha->setLabel(__('User', 'register', 'captchaFieldLabel'));
-        $captcha->setRequired();
-        echo $captcha->render();
-        ?>
+                    <input type="text" name="projectName" required
+                           placeholder="<?=__('User', 'register', 'projectName')?>"
+                           value="<?=$this->projectName?>">
+                    <b class="tooltip tooltip-top-right">
+                        <i class="fa fa-user txt-color-teal"></i>
+                        <?=__('User', 'register', 'projectName')?>
+                    </b>
+                </label>
+            </section>
 
-        <input type="submit" id="connection" class="btn btn-primary btn-block"
-               value="<?=__('User', 'register', 'register')?>">
+            <section>
+                <label class="input">
+                    <i class="icon-append fa fa-user"></i>
+                    <input type="email" name="email"
+                           placeholder="<?=__('User', 'user', 'emailAddress')?>">
+                    <b class="tooltip tooltip-top-right">
+                        <i class="fa fa-user txt-color-teal"></i>
+                        <?=__('User', 'user', 'emailAddress')?>
+                    </b>
+                </label>
+            </section>
 
-        <p>
-            <?=__('User', 'register', 'alreadyRegistered')?>
-        </p>
+            <section>
+                <label class="input">
+                    <i class="icon-append fa fa-lock"></i>
+                    <input type="password" name="password"
+                           placeholder="<?=__('User', 'register', 'password')?>">
+                    <b class="tooltip tooltip-top-right">
+                        <i class="fa fa-lock txt-color-teal"></i>
+                        <?=__('User', 'register', 'password')?>
+                    </b>
+                </label>
+            </section>
 
-        <a href="user/action/login" class="btn btn-block">
-            <?=__('User', 'login', 'connection')?></a>
+            <section>
+                <label class="input">
+                    <i class="icon-append fa fa-lock"></i>
+                    <input type="password" name="password2"
+                           placeholder="<?=__('User', 'register', 'passwordAgain')?>">
+                    <b class="tooltip tooltip-top-right">
+                        <i class="fa fa-lock txt-color-teal"></i>
+                        <?=__('User', 'register', 'passwordAgain')?>
+                    </b>
+                </label>
+            </section>
+
+            <section>
+                <?php
+                $captcha = new UI_Form_Element_Captcha('captcha', 'user/captcha/newimage');
+                $captcha->setLabel(__('User', 'register', 'captchaFieldLabel'));
+                $captcha->setRequired();
+                echo $captcha->render();
+                ?>
+            </section>
+
+        </fieldset>
+
+        <footer>
+
+            <button type="submit" id="connection" class="btn btn-primary">
+                <?=__('User', 'register', 'register')?>
+            </button>
+
+        </footer>
+
+        <footer>
+
+            <p>
+                <?=__('User', 'register', 'alreadyRegistered')?>
+            </p>
+
+            <a href="user/action/login" class="btn btn-default">
+                <?=__('User', 'login', 'connection')?>
+            </a>
+
+        </footer>
     </form>
 
 </div>

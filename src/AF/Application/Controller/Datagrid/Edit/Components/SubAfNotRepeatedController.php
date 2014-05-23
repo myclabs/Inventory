@@ -11,21 +11,14 @@ use AF\Domain\Component\Component;
 use AF\Domain\Component\SubAF\NotRepeatedSubAF;
 use Core\Annotation\Secure;
 
-/**
- * Conditions Controller
- * @package AF
- */
 class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
@@ -34,13 +27,14 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
         foreach ($subAFList as $subAF) {
             $data = [];
             $data['index'] = $subAF->getId();
-            $data['label'] = $subAF->getLabel();
+            $data['label'] = $this->cellTranslatedText($subAF->getLabel());
             $data['ref'] = $subAF->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $subAF->getId(),
-                                                ' af/datagrid_edit_components_sub-af-not-repeated/get-raw-help/id/'
-                                                    . $subAF->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $subAF->getId(),
+                'af/datagrid_edit_components_sub-af-not-repeated/get-raw-help?id=' . $af->getId()
+                . '&component=' . $subAF->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $subAF->isVisible();
             $data['targetAF'] = $subAF->getCalledAF()->getId();
             $data['foldaway'] = $subAF->getFoldaway();
@@ -56,7 +50,7 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
      */
     public function addelementAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         $ref = $this->getAddElementValue('ref');
         if (empty($ref)) {
@@ -77,10 +71,10 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
                 $this->send();
                 return;
             }
-            $subAF->setLabel($this->getAddElementValue('label'));
+            $this->translator->set($subAF->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($subAF->getHelp(), $this->getAddElementValue('help'));
             $subAF->setVisible($isVisible);
-            $subAF->setHelp($this->getAddElementValue('help'));
-            /** @var $calledAF \AF\Domain\AF */
+            /** @var $calledAF AF */
             $calledAF = AF::load($this->getAddElementValue('targetAF'));
             $subAF->setCalledAF($calledAF);
             $af->addComponent($subAF);
@@ -115,16 +109,12 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
                 $this->data = $subAF->getRef();
                 break;
             case 'label':
-                $subAF->setLabel($newValue);
-                $this->data = $subAF->getLabel();
+                $this->translator->set($subAF->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($subAF->getLabel());
                 break;
             case 'help':
-                $subAF->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $subAF->getId(),
-                                                  ' af/datagrid_edit_components_sub-af/get-raw-help/id/'
-                                                      . $subAF->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
+                $this->translator->set($subAF->getHelp(), $newValue);
+                $this->data = null;
                 break;
             case 'isVisible':
                 $subAF->setVisible($newValue);
@@ -170,10 +160,9 @@ class AF_Datagrid_Edit_Components_SubAfNotRepeatedController extends UI_Controll
      */
     public function getRawHelpAction()
     {
-        /** @var $subAF \AF\Domain\Component\SubAF\NotRepeatedSubAF */
-        $subAF = NotRepeatedSubAF::load($this->getParam('id'));
-        $this->data = $subAF->getHelp();
+        /** @var $subAF NotRepeatedSubAF */
+        $subAF = NotRepeatedSubAF::load($this->getParam('component'));
+        $this->data = (string) $this->translator->get($subAF->getHelp());
         $this->send();
     }
-
 }

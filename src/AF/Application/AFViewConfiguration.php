@@ -3,7 +3,7 @@
 namespace AF\Application;
 
 use Core_Exception_InvalidArgument;
-use UI_Tab;
+use MyCLabs\MUIH\Tab;
 
 /**
  * Configuration de la vue affichant un AF.
@@ -59,7 +59,7 @@ class AFViewConfiguration
 
     /**
      * The tabs to be shown
-     * @var array(UI_Tab|constant)
+     * @var array(Tab|constant)
      */
     protected $tabs = [];
 
@@ -139,15 +139,14 @@ class AFViewConfiguration
 
     /**
      * Check if the viewConfiguration is usable
-     * Usable iff: every tab is an instance of UI_Tab or a string
+     * Usable iff: every tab is an instance of Tab or a string
      *             the input tab is in the tabs list
-     *             the refTechnoDB and the ouputURL are specified
      * @return bool
      */
     public function isUsable()
     {
         foreach ($this->tabs as $tab) {
-            if ((is_array($tab) && !($tab['tab'] instanceof UI_Tab)) && !is_string($tab)) {
+            if ((is_array($tab) && !($tab['tab'] instanceof Tab)) && !is_string($tab)) {
                 return false;
             }
         }
@@ -159,10 +158,10 @@ class AFViewConfiguration
 
     /**
      * Add a tab
-     * @param UI_Tab $tab
-     * @param bool   $updateURL
+     * @param Tab  $tab
+     * @param bool $updateURL
      */
-    public function addTab(UI_Tab $tab, $updateURL = false)
+    public function addTab(Tab $tab, $updateURL = false)
     {
         $this->tabs[] = array('tab' => $tab, 'updateURL' => $updateURL);
     }
@@ -195,7 +194,7 @@ class AFViewConfiguration
 
     /**
      * Return the tabs in an array
-     * @return array(UI_Tab|string)
+     * @return array(Tab|string)
      */
     public function getTabs()
     {

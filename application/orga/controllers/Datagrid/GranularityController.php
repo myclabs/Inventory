@@ -1,8 +1,8 @@
 <?php
 
 use Core\Annotation\Secure;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
-use User\Domain\ACL\Role\Role;
+use Core\Work\ServiceCall\ServiceCallTask;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 
 /**
  * @author valentin.claras
@@ -11,7 +11,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
 {
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var SynchronousWorkDispatcher
      */
     private $workDispatcher;
 
@@ -71,30 +71,30 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
 
         $refAxes = $this->getAddElementValue('axes');
-        $axes = array();
-        $refGranularity = '';
         if (empty($refAxes)) {
-            $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'emptyGranularity'));
-        }
-
-        foreach ($refAxes as $refAxis) {
-            $refGranularity .= $refAxis . '|';
-            $axis = $organization->getAxisByRef($refAxis);
-            // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
-            if (!$axis->isTransverse($axes)) {
-                $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'hierarchicallyLinkedAxes'));
-                break;
-            } else {
-                $axes[] = $axis;
+            $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'emptyGranularity'), true);
+        } else {
+            $axes = [];
+            $refGranularity = '';
+            foreach ($refAxes as $refAxis) {
+                $refGranularity .= $refAxis . '|';
+                $axis = $organization->getAxisByRef($refAxis);
+                // On regarde si les axes précédement ajouter ne sont pas lié hierachiquement à l'axe actuel.
+                if (!$axis->isTransverse($axes)) {
+                    $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'hierarchicallyLinkedAxes'), true);
+                    break;
+                } else {
+                    $axes[] = $axis;
+                }
             }
-        }
-        $refGranularity = substr($refGranularity, 0, -1);
+            $refGranularity = substr($refGranularity, 0, -1);
 
-        try {
-            $organization->getGranularityByRef($refGranularity);
-            $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'granularityAlreadyExists'));
-        } catch (Core_Exception_NotFound $e) {
-            // La granularité n'existe pas déjà.
+            try {
+                $organization->getGranularityByRef($refGranularity);
+                $this->setAddElementErrorMessage('axes', __('Orga', 'granularity', 'granularityAlreadyExists'), true);
+            } catch (Core_Exception_NotFound $e) {
+                // La granularité n'existe pas déjà.
+            }
         }
 
         if (empty($this->_addErrorMessages)) {
@@ -109,7 +109,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             };
 
             // Lance la tache en arrière plan
-            $task = new \Core\Work\ServiceCall\ServiceCallTask(
+            $task = new ServiceCallTask(
                 'Orga_Service_OrganizationService',
                 'addGranularity',
                 [
@@ -123,7 +123,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
             );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
 
         $this->send();
@@ -159,15 +159,15 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             throw $e;
         };
         // Lance la tache en arrière plan
-        $task = new \Core\Work\ServiceCall\ServiceCallTask(
+        $task = new ServiceCallTask(
             'Orga_Service_OrganizationService',
             'removeGranularity',
-            [
-                $granularity,
-            ],
-            __('Orga', 'backgroundTasks', 'removeGranularity', ['LABEL' => $granularity->getLabel()])
+            [$granularity],
+            __('Orga', 'backgroundTasks', 'removeGranularity', [
+                'LABEL' => $this->translator->get($granularity->getLabel())
+            ])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
@@ -179,12 +179,8 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
     {
         $granularity = Orga_Model_Granularity::load($this->update['index']);
 
-        switch ($this->update['column']) {
-            case 'relevance':
-                $granularity->setCellsControlRelevance((bool) $this->update['value']);
-                $this->data = $granularity->getCellsControlRelevance();
-                break;
-            case 'acl':
+        if ($this->update['column'] !== 'input') {
+            if ($this->update['column'] === 'acl') {
                 if (!$this->update['value']) {
                     foreach ($granularity->getCells() as $cell) {
                         if (count($cell->getAllRoles()) > 0) {
@@ -192,23 +188,33 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                         }
                     }
                 }
-                $granularity->setCellsWithACL((bool) $this->update['value']);
-                $this->data = $granularity->getCellsWithACL();
-                break;
-            case 'input':
-                $granularity->setInputConfigGranularity();
-                $this->data = ['value' => $granularity->isInput(), 'editable' => false];
-                break;
-            case 'reports':
-                $granularity->setCellsGenerateDWCubes((bool) $this->update['value']);
-                $this->data = $granularity->getCellsGenerateDWCubes();
-                break;
-            default:
-                parent::updateelementAction();
-                break;
+            }
+
+            $success = function () {
+                $this->message = __('UI', 'message', 'updated');
+            };
+            $timeout = function () {
+                $this->message = __('UI', 'message', 'updatedLater');
+            };
+            $error = function (Exception $e) {
+                throw $e;
+            };
+            // Lance la tache en arrière plan
+            $task = new ServiceCallTask(
+                'Orga_Service_OrganizationService',
+                'editGranularity',
+                [$granularity, [ $this->update['column'] => (bool) $this->update['value'] ]],
+                __('Orga', 'backgroundTasks', 'editGranularity', [
+                    'LABEL' => $this->translator->get($granularity->getLabel())
+                ])
+            );
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
+        } else {
+            $granularity->setInputConfigGranularity();
+            $granularity->save();
+            $this->message = __('UI', 'message', 'updated');
+            $this->data = ['value' => $granularity->isInput(), 'editable' => false];
         }
-        $granularity->save();
-        $this->message = __('UI', 'message', 'updated', array('GRANULARITY' => $granularity->getLabel()));
 
         $this->send();
     }

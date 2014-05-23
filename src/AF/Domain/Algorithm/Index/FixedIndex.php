@@ -3,7 +3,7 @@
 namespace AF\Domain\Algorithm\Index;
 
 use AF\Domain\Algorithm\InputSet;
-use Classif_Model_Member;
+use Classification\Domain\Member;
 use Core_Exception_NotFound;
 
 /**
@@ -14,46 +14,46 @@ use Core_Exception_NotFound;
 class FixedIndex extends Index
 {
     /**
-     * The classif member associated to the index
+     * The classification member associated to the index
      * @var string|null
      */
-    protected $refClassifMember;
+    protected $refMember;
 
     /**
      * @param InputSet $inputSet
-     * @return Classif_Model_Member|null
+     * @return Member|null
      */
-    public function getClassifMember(InputSet $inputSet = null)
+    public function getClassificationMember(InputSet $inputSet = null)
     {
-        if ($this->refClassifMember === null) {
+        if ($this->axis === null || $this->refMember === null) {
             return null;
         }
         try {
-            return Classif_Model_Member::loadByRefAndAxis($this->refClassifMember, $this->getClassifAxis());
+            return $this->axis->getMemberByRef($this->refMember);
         } catch (Core_Exception_NotFound $e) {
             return null;
         }
     }
 
     /**
-     * @param Classif_Model_Member $member
+     * @param Member $member
      */
-    public function setClassifMember(Classif_Model_Member $member)
+    public function setClassificationMember(Member $member)
     {
-        $this->refClassifMember = $member->getRef();
+        $this->refMember = $member->getRef();
     }
 
     /**
      * Vérifie si un membre est associé à l'index
      * @return bool
      */
-    public function hasClassifMember()
+    public function hasClassificationMember()
     {
-        if ($this->refClassifMember === null) {
+        if ($this->axis === null || $this->refMember === null) {
             return false;
         }
         try {
-            Classif_Model_Member::loadByRefAndAxis($this->refClassifMember, $this->getClassifAxis());
+            $this->axis->getMemberByRef($this->refMember);
             return true;
         } catch (Core_Exception_NotFound $e) {
             return false;

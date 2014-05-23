@@ -5,7 +5,7 @@ namespace AF\Domain\Algorithm;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use Calc_UnitValue;
 use Calc_Value;
-use Classif_Model_Member;
+use Classification\Domain\Member;
 
 /**
  * This class is used to index a value output from numeric algo
@@ -35,19 +35,19 @@ class Output
 
     /**
      * Members indexing the value
-     * @var Classif_Model_Member[]
+     * @var Member[]
      */
-    protected $classifMembers = [];
+    protected $classificationMembers = [];
 
 
     /**
      * Create a new output with an indicator and (possibly) indexing members as an array.
      *
-     * @param Calc_UnitValue         $value
-     * @param NumericAlgo            $algo
-     * @param Classif_Model_Member[] $classifMembers
+     * @param Calc_UnitValue $value
+     * @param NumericAlgo    $algo
+     * @param Member[]       $classificationMembers
      */
-    public function __construct(Calc_UnitValue $value, NumericAlgo $algo, array $classifMembers)
+    public function __construct(Calc_UnitValue $value, NumericAlgo $algo, array $classificationMembers)
     {
         $this->sourceValue = clone $value;
         $this->algo = $algo;
@@ -59,8 +59,8 @@ class Output
             $value->getDigitalValue() * $conversionFactor,
             $value->getRelativeUncertainty()
         );
-        foreach ($classifMembers as $member) {
-            $this->classifMembers[] = $member;
+        foreach ($classificationMembers as $member) {
+            $this->classificationMembers[] = $member;
         }
     }
 
@@ -102,20 +102,20 @@ class Output
 
     /**
      * Add a member to the value index
-     * @param Classif_Model_Member $member
+     * @param Member $member
      */
-    public function addMember(Classif_Model_Member $member)
+    public function addMember(Member $member)
     {
-        $this->classifMembers[] = $member;
+        $this->classificationMembers[] = $member;
     }
 
     /**
      * Return the members indexing the value
-     * @return Classif_Model_Member[]
+     * @return Member[]
      */
-    public function getClassifMembers()
+    public function getClassificationMembers()
     {
-        return $this->classifMembers;
+        return $this->classificationMembers;
     }
 
     /**

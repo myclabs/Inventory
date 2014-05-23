@@ -8,113 +8,201 @@ use AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo;
 use AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 
-/**
- * @author  matthieu.napoli
- * @package AF
- */
+$locale = Core_Locale::loadDefault();
+
 /** @var $af AF */
 $af = $this->af;
 /** @var $algo ElementaryConditionAlgo */
 $algo = $this->algo;
 
-$form = new UI_Form('updateConditionElementary');
-$form->setAjax(false);
-$form->setAction('af/edit_algos/update-condition-elementary-submit/idAf/' . $af->getId()
-                     . '/idAlgo/' . $algo->getId());
+$allRelations = [
+    ElementaryConditionAlgo::RELATION_EQUAL       => __('AF', 'configInteractionDatagrid', 'equalOption'),
+    ElementaryConditionAlgo::RELATION_NOTEQUAL    => __('AF', 'configInteractionDatagrid', 'differentOption'),
+    ElementaryConditionAlgo::RELATION_GT          => __('AF', 'configInteractionDatagrid', 'greaterOption'),
+    ElementaryConditionAlgo::RELATION_LT          => __('AF', 'configInteractionDatagrid', 'lowerOption'),
+    ElementaryConditionAlgo::RELATION_GE          => __('AF', 'configInteractionDatagrid', 'greaterOrEqualOption'),
+    ElementaryConditionAlgo::RELATION_LE          => __('AF', 'configInteractionDatagrid', 'lowerOrEqualOption'),
+    ElementaryConditionAlgo::RELATION_CONTAINS    => __('AF', 'configInteractionDatagrid', 'containsOption'),
+    ElementaryConditionAlgo::RELATION_NOTCONTAINS => __('AF', 'configInteractionDatagrid', 'doesNotContainOption'),
+];
+?>
 
-// Relation
-$relationSelect = new UI_Form_Element_Select('relation');
-$relationSelect->setLabel(__('UI', 'name', 'relation'));
-$relationSelect->setValue($algo->getRelation());
-$form->addElement($relationSelect);
-// Options de la liste
-$optionEqual = new UI_Form_Element_Option('equal', ElementaryConditionAlgo::RELATION_EQUAL);
-$optionEqual->label = __('AF', 'configInteractionDatagrid', 'equalOption');
-$optionNotEqual = new UI_Form_Element_Option('nequal', ElementaryConditionAlgo::RELATION_NOTEQUAL);
-$optionNotEqual->label = __('AF', 'configInteractionDatagrid', 'differentOption');
-$optionSuperior = new UI_Form_Element_Option('gt', ElementaryConditionAlgo::RELATION_GT);
-$optionSuperior->label = __('AF', 'configInteractionDatagrid', 'greaterOption');
-$optionInferior = new UI_Form_Element_Option('lt', ElementaryConditionAlgo::RELATION_LT);
-$optionInferior->label = __('AF', 'configInteractionDatagrid', 'lowerOption');
-$optionSuperiorOrEqual = new UI_Form_Element_Option('ge', ElementaryConditionAlgo::RELATION_GE);
-$optionSuperiorOrEqual->label = __('AF', 'configInteractionDatagrid', 'greaterOrEqualOption');
-$optionInferiorOrEqual = new UI_Form_Element_Option('le', ElementaryConditionAlgo::RELATION_LE);
-$optionInferiorOrEqual->label = __('AF', 'configInteractionDatagrid', 'lowerOrEqualOption');
-$optionContains = new UI_Form_Element_Option('contains', ElementaryConditionAlgo::RELATION_CONTAINS);
-$optionContains->label = __('AF', 'configInteractionDatagrid', 'containsOption');
-$optionNotContains = new UI_Form_Element_Option('notcontains', ElementaryConditionAlgo::RELATION_NOTCONTAINS);
-$optionNotContains->label = __('AF', 'configInteractionDatagrid', 'doesNotContainOption');
+<form class="form-horizontal" method="post"
+      action="af/edit_algos/update-condition-elementary-submit?idAF=<?=$af->getId()?>&idAlgo=<?=$algo->getId()?>">
 
-if ($algo instanceof NumericConditionAlgo) {
-    /** @var $algo NumericConditionAlgo */
-    // Relation
-    $relationSelect->addOption($optionEqual);
-    $relationSelect->addOption($optionNotEqual);
-    $relationSelect->addOption($optionSuperior);
-    $relationSelect->addOption($optionInferior);
-    $relationSelect->addOption($optionSuperiorOrEqual);
-    $relationSelect->addOption($optionInferiorOrEqual);
-    // Value
-    $numericValueField = new UI_Form_Element_Text('value');
-    $numericValueField->setLabel(__('UI', 'name', 'referenceValue'));
-    $numericValueField->setValue($algo->getValue());
-    $form->addElement($numericValueField);
-}
+    <?php if ($algo instanceof NumericConditionAlgo) : ?>
+        <?php
+        /** @var $algo NumericConditionAlgo */
+        $relations = [];
+        $relations[ElementaryConditionAlgo::RELATION_EQUAL] = $allRelations[ElementaryConditionAlgo::RELATION_EQUAL];
+        $relations[ElementaryConditionAlgo::RELATION_NOTEQUAL] = $allRelations[ElementaryConditionAlgo::RELATION_NOTEQUAL];
+        $relations[ElementaryConditionAlgo::RELATION_GT] = $allRelations[ElementaryConditionAlgo::RELATION_GT];
+        $relations[ElementaryConditionAlgo::RELATION_LT] = $allRelations[ElementaryConditionAlgo::RELATION_LT];
+        $relations[ElementaryConditionAlgo::RELATION_GE] = $allRelations[ElementaryConditionAlgo::RELATION_GE];
+        $relations[ElementaryConditionAlgo::RELATION_LE] = $allRelations[ElementaryConditionAlgo::RELATION_LE];
+        ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="inputRelation">
+                <?=__('UI', 'name', 'relation')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="relation" id="inputRelation" class="form-control">
+                    <?php foreach ($relations as $relation => $label) : ?>
+                        <option value="<?=$relation?>"
+                            <?=$algo->getRelation() == $relation ? 'selected' : ''?>>
+                            <?=$label?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="inputValue">
+                <?=__('UI', 'name', 'referenceValue')?>
+            </label>
+            <div class="col-sm-10">
+                <input name="value" id="inputValue" type="text" class="form-control"
+                       value="<?=$locale->formatNumberForInput($algo->getValue())?>">
+            </div>
+        </div>
+    <?php endif; ?>
 
-if ($algo instanceof BooleanConditionAlgo) {
-    /** @var $algo \AF\Domain\Algorithm\Condition\BooleanConditionAlgo */
-    // Relation
-    $relationSelect->addOption($optionEqual);
-    // Value
-    $checkboxValueField = new UI_Form_Element_Select('value');
-    $checkboxValueField->setLabel(__('UI', 'name', 'referenceValue'));
-    $optionChecked = new UI_Form_Element_Option('checked', 1);
-    $optionChecked->label = __('UI', 'property', 'checked');
-    $checkboxValueField->addOption($optionChecked);
-    $optionUncheked = new UI_Form_Element_Option('unchecked', 0);
-    $optionUncheked->label = __('UI', 'property', 'unchecked');
-    $checkboxValueField->addOption($optionUncheked);
-    $checkboxValueField->setValue($algo->getValue());
-    $form->addElement($checkboxValueField);
-}
 
-if ($algo instanceof SelectSingleConditionAlgo) {
-    /** @var $algo \AF\Domain\Algorithm\Condition\Select\SelectSingleConditionAlgo */
-    // Relation
-    $relationSelect->addOption($optionEqual);
-    $relationSelect->addOption($optionNotEqual);
-    // Value
-    $selectSingleField = new UI_Form_Element_Select('value');
-    $selectSingleField->setLabel(__('UI', 'name', 'referenceValue'));
-    // Ajout d'une option vide
-    $selectSingleField->addNullOption('', null);
-    /** @var $field SelectSingle */
-    $field = SelectSingle::loadByRef($algo->getInputRef(), $af);
-    foreach ($field->getOptions() as $option) {
-        $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getRef(), $option->getRef());
-        $selectSingleField->addOption($uiOption);
-    }
-    $selectSingleField->setValue($algo->getValue());
-    $form->addElement($selectSingleField);
-}
+    <?php if ($algo instanceof BooleanConditionAlgo) : ?>
+        <?php
+        /** @var $algo BooleanConditionAlgo */
+        $relations = [];
+        $relations[ElementaryConditionAlgo::RELATION_EQUAL] = $allRelations[ElementaryConditionAlgo::RELATION_EQUAL];
+        ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="inputRelation">
+                <?=__('UI', 'name', 'relation')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="relation" id="inputRelation" class="form-control">
+                    <?php foreach ($relations as $relation => $label) : ?>
+                        <option value="<?=$relation?>"
+                            <?=$algo->getRelation() == $relation ? 'selected' : ''?>>
+                            <?=$label?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="inputValue">
+                <?=__('UI', 'name', 'referenceValue')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="value" id="inputValue" class="form-control">
+                    <option value="1" <?=$algo->getValue() ? 'selected' : ''?>>
+                        <?=__('UI', 'property', 'checked')?>
+                    </option>
+                    <option value="0" <?=!$algo->getValue() ? 'selected' : ''?>>
+                        <?=__('UI', 'property', 'unchecked')?>
+                    </option>
+                </select>
+            </div>
+        </div>
+    <?php endif; ?>
 
-if ($algo instanceof SelectMultiConditionAlgo) {
-    /** @var $algo \AF\Domain\Algorithm\Condition\Select\SelectMultiConditionAlgo */
-    // Relation
-    $relationSelect->addOption($optionContains);
-    $relationSelect->addOption($optionNotContains);
-    // Value
-    $selectField = new UI_Form_Element_Select('value');
-    $selectField->setLabel(__('UI', 'name', 'referenceValue'));
-    /** @var $field SelectMulti */
-    $field = SelectMulti::loadByRef($algo->getInputRef(), $af);
-    foreach ($field->getOptions() as $option) {
-        $uiOption = new UI_Form_Element_Option($option->getRef(), $option->getRef(), $option->getRef());
-        $selectField->addOption($uiOption);
-    }
-    $selectField->setValue($algo->getValue());
-    $form->addElement($selectField);
-}
 
-$form->addSubmitButton();
-echo $form->render();
+    <?php if ($algo instanceof SelectSingleConditionAlgo) : ?>
+        <?php
+        /** @var $algo SelectSingleConditionAlgo */
+        $relations = [];
+        $relations[ElementaryConditionAlgo::RELATION_EQUAL] = $allRelations[ElementaryConditionAlgo::RELATION_EQUAL];
+        $relations[ElementaryConditionAlgo::RELATION_NOTEQUAL] = $allRelations[ElementaryConditionAlgo::RELATION_NOTEQUAL];
+        ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="inputRelation">
+                <?=__('UI', 'name', 'relation')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="relation" id="inputRelation" class="form-control">
+                    <?php foreach ($relations as $relation => $label) : ?>
+                        <option value="<?=$relation?>"
+                            <?=$algo->getRelation() == $relation ? 'selected' : ''?>>
+                            <?=$label?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="inputValue">
+                <?=__('UI', 'name', 'referenceValue')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="value" id="inputValue" class="form-control">
+                    <?php
+                    /** @var $field SelectSingle */
+                    $field = SelectSingle::loadByRef($algo->getInputRef(), $af);
+                    $selected = $algo->getValue() ? $algo->getValue() : null;
+                    ?>
+                    <option value="" <?=$selected == null ? 'selected' : ''?>></option>
+                    <?php foreach ($field->getOptions() as $option) : ?>
+                        <option value="<?=$option->getRef()?>"
+                            <?=$option->getRef() == $selected ? 'selected' : ''?>>
+                            <?=$option->getRef()?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+    <?php if ($algo instanceof SelectMultiConditionAlgo) : ?>
+        <?php
+        /** @var $algo SelectMultiConditionAlgo */
+        $relations = [];
+        $relations[ElementaryConditionAlgo::RELATION_CONTAINS] = $allRelations[ElementaryConditionAlgo::RELATION_CONTAINS];
+        $relations[ElementaryConditionAlgo::RELATION_NOTCONTAINS] = $allRelations[ElementaryConditionAlgo::RELATION_NOTCONTAINS];
+        ?>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="inputRelation">
+                <?=__('UI', 'name', 'relation')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="relation" id="inputRelation" class="form-control">
+                    <?php foreach ($relations as $relation => $label) : ?>
+                        <option value="<?=$relation?>"
+                            <?=$algo->getRelation() == $relation ? 'selected' : ''?>>
+                            <?=$label?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="inputValue">
+                <?=__('UI', 'name', 'referenceValue')?>
+            </label>
+            <div class="col-sm-10">
+                <select name="value" id="inputValue" class="form-control">
+                    <?php
+                    /** @var $field SelectMulti */
+                    $field = SelectMulti::loadByRef($algo->getInputRef(), $af);
+                    $selected = $algo->getValue() ? $algo->getValue() : null;
+                    ?>
+                    <option value="" <?=$selected == null ? 'selected' : ''?>></option>
+                    <?php foreach ($field->getOptions() as $option) : ?>
+                        <option value="<?=$option->getRef()?>"
+                            <?=$option->getRef() == $selected ? 'selected' : ''?>>
+                            <?=$option->getRef()?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+    <?php endif; ?>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+        </div>
+    </div>
+
+</form>

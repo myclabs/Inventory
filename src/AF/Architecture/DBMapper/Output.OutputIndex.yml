@@ -10,12 +10,13 @@ AF\Domain\Output\OutputIndex:
         strategy: AUTO
 
   fields:
-    refAxis:
-      type: string
-      nullable: true
     refMember:
       type: string
       nullable: true
+
+  manyToOne:
+    axis:
+      targetEntity: Classification\Domain\Axis
 
   manyToMany:
     outputElements:

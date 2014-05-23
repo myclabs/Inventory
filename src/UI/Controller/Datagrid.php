@@ -7,6 +7,7 @@
  * @package    UI
  * @subpackage Controller
  */
+use Core\Translation\TranslatedString;
 
 /**
  * Description of Controller_Datagrid.
@@ -143,18 +144,20 @@ abstract class UI_Controller_Datagrid extends Core_Controller
 
                 /* Filtre */
                 // Récupération du filtre.
-                $filtres = Zend_Json::decode($this->_getParam('filters'), Zend_Json::TYPE_ARRAY);
-                foreach ($filtres as $filterName => $filterValue) {
-                    list($alias, $filterName) = explode('.', $filterName);
-                    $alias = (empty($alias)) ? null : $alias;
-                    foreach ($filterValue as $operator => $value) {
-                        if ($value !== null) {
-                            $this->request->filter->addCondition($filterName, urldecode($value), $operator, $alias);
+                $filters = Zend_Json::decode($this->_getParam('filters'));
+                foreach ($filters as $filter) {
+                    foreach ($filter as $filterName => $filterValue) {
+                        list($alias, $filterName) = explode('.', $filterName, 2);
+                        $alias = (empty($alias)) ? null : $alias;
+                        foreach ($filterValue as $operator => $value) {
+                            if ($value !== null) {
+                                $this->request->filter->addCondition($filterName, urldecode($value), $operator, $alias);
+                            }
                         }
                     }
                 }
                 // Sauvegarde du filtre.
-                $datagridSession['filters'] = $filtres;
+                $datagridSession['filters'] = $filters;
 
                 /* Tri */
                 // Définition de la colonne de tri et sauvegarde du tri.
@@ -301,6 +304,19 @@ abstract class UI_Controller_Datagrid extends Core_Controller
     }
 
     /**
+     * Formate les données à renvoyer pour un texte traduit.
+     *
+     * @param TranslatedString $text Valeur d'une colonne date.
+     * @param bool             $editable
+     *
+     * @return array
+     */
+    public function cellTranslatedText(TranslatedString $text, $editable = true)
+    {
+        return $this->baseCell($this->translator->get($text), null, $editable);
+    }
+
+    /**
      * Formate les données à renvoyer pour une cellule date.
      *
      * @param DateTime $date Valeur d'une colonne date.
@@ -409,6 +425,9 @@ abstract class UI_Controller_Datagrid extends Core_Controller
         }
         if ($percent < 0) {
             $percent = abs($percent);
+        }
+        if ($color != null) {
+            $color = 'progress-'.$color;
         }
         return $this->baseCell($percent, $color);
     }
@@ -534,11 +553,11 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      *
      * @param string $elementName
      *
-     * @return mixed
+     * @return string
      */
     public function getAddElementValue($elementName)
     {
-        return $this->_add[$this->id.'_'.$elementName.'_addForm']['value'];
+        return $this->getParam($this->id.'_'.$elementName.'_addForm');
     }
 
     /**
@@ -546,10 +565,16 @@ abstract class UI_Controller_Datagrid extends Core_Controller
      *
      * @param string $elementName
      * @param string $errorMessage
+     * @param bool   $multiple
      */
-    public function setAddElementErrorMessage($elementName, $errorMessage)
+    public function setAddElementErrorMessage($elementName, $errorMessage, $multiple=false)
     {
-        $this->_addErrorMessages[$this->id.'_'.$elementName.'_addForm'] = $errorMessage;
+        // Les select multiples doivent avoir un nom finissant par "[]" afin d'être décodés comme un tableau.
+        if ($multiple) {
+            $this->_addErrorMessages[$this->id.'_'.$elementName.'_addForm[]'] = $errorMessage;
+        } else {
+            $this->_addErrorMessages[$this->id.'_'.$elementName.'_addForm'] = $errorMessage;
+        }
     }
 
     /**

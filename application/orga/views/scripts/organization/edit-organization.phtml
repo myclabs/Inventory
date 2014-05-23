@@ -1,78 +1,72 @@
 <?php
-$organizationForm = new UI_Form('organizationDetails');
-$organizationForm->setAction('orga/organization/edit-organization-submit/idOrganization/'.$this->idOrganization);
-
-$labelElementForm = new UI_Form_Element_Text('label');
-$labelElementForm->setLabel(___('UI', 'name', 'label'));
-$labelElementForm->setValue($this->organizationLabel);
-$organizationForm->addElement($labelElementForm);
-
-if (!empty($this->granularities)) {
-    $granularityForInventoryStatusElementForm = new UI_Form_Element_Select('granularityForInventoryStatus');
-    $granularityForInventoryStatusElementForm->setLabel(___('Orga', 'configuration', 'granularityForInventoryStatus'));
-    $granularityForInventoryStatusElementForm->setValue($this->granularityRefForInventoryStatus);
-    $organizationForm->addElement($granularityForInventoryStatusElementForm);
-
-    if (empty($this->granularityRefForInventoryStatus)) {
-        $granularityForInventoryStatusElementForm->addNullOption('');
-    }
-    foreach ($this->granularities as $granularity) {
-        $granularityOption = new UI_Form_Element_Option(
-            $granularity->getId(),
-            $granularity->getRef(),
-            $granularity->getLabel()
-        );
-        $granularityForInventoryStatusElementForm->addOption($granularityOption);
-    }
-}
-
-$organizationForm->addSubmitButton();
 ?>
 
 <fieldset class="wrapper">
     <legend style="cursor:default"><?=___('UI', 'name', 'general')?></legend>
     <div>
-        <?php if ($this->display) { $organizationForm->display(); } else { echo $organizationForm->render(); } ?>
+        <form id="organizationDetails<?=$this->idOrganization?>" class="form-horizontal" method="POST" action="orga/organization/edit-organization-submit/idOrganization/<?=$this->idOrganization?>">
+            <div class="form-group">
+                <label for="organization_label" class="control-label col-xs-2">
+                    <?=___('UI', 'name', 'label')?>
+                </label>
+                <div class="col-xs-10">
+                    <input name="label" id="organization_label" type="text" class="form-control" value="<?=$this->organizationLabel?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                new AjaxForm('#organizationDetails<?=$this->idOrganization?>');
+            });
+        </script>
+    </div>
+</fieldset>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=___('Orga', 'organization', 'contextIndicators')?></legend>
+    <div>
+        <form id="organizationContextIndicators<?=$this->idOrganization?>" class="form-horizontal" method="POST" action="orga/organization/edit-context-indicators/idOrganization/<?=$this->idOrganization?>">
+            <div class="form-group">
+                <label for="contextIndicators" class="control-label col-xs-2">
+                    <?=___('Classification', 'contextIndicator', 'contextIndicators')?>
+                </label>
+                <div class="col-xs-10">
+                    <select name="contextIndicators[]" multiple id="contextIndicators">
+                        <?php foreach ($this->potentialContextIndicators as $contextIndicator) : ?>
+                            <option value="<?=$contextIndicator->getId()?>"<?=(in_array($contextIndicator, $this->selectedContextIndicators) ? ' selected' : '')?>>
+                                <?=$this->translate($contextIndicator->getLabel())?>
+                                (<?=$this->translate($contextIndicator->getLibrary()->getLabel())?>)
+                            </option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#contextIndicators').select2();
+                new AjaxForm('#organizationContextIndicators<?=$this->idOrganization?>');
+            });
+        </script>
     </div>
 </fieldset>
 
 
 <?php
-$bannerForm = new UI_Form('editBanner'. $this->idOrganization);
-
-$bannerForm->setAjax(false);
-$bannerForm->setAttrib('target', 'upload_iframe' . $this->idOrganization);
-$bannerForm->setEnctype('multipart/form-data');
-$bannerForm->setAction('orga/organization/edit-banner/idOrganization/' . $this->idOrganization);
-
-$fileField = new UI_Form_Element_File('file');
-$fileField->setLabel(__('Orga', 'organization', 'choiceBanner'));
-$bannerForm->addElement($fileField);
-
 $file = glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $this->idOrganization . '.*');
 $file = reset($file);
-$currentBannerElementForm = new UI_Form_Element_HTML('currentBanner', '<img src="' .
-    (($file !== false) ? 'workspaceBanners/'.pathinfo($file)['filename'] : '') .
-   '" alt="' . ___('Orga', 'organization', 'noBanner') . '">');
-$currentBannerElementForm->setLabel(___('Orga', 'organization', 'currentBanner'));
-$bannerForm->addElement($currentBannerElementForm);
-
-$uploadingBannerDiv = '<div class="uploading-banner hide alert alert-info">' .
-    $this->image('images/ui/ajax-loader.gif', '') . ' ' . __('Doc', 'library', 'uploading') . '</div>';
-$uploadingBannerElementForm = new UI_Form_Element_HTML('currentBanner', $uploadingBannerDiv, true);
-$bannerForm->addElement($uploadingBannerElementForm);
-
-$errorBannerDiv = '<div class="uploading-banner-errors hide alert alert-error"></div>';
-$errorBannerElementForm = new UI_Form_Element_HTML('currentBanner', $errorBannerDiv, true);
-$bannerForm->addElement($errorBannerElementForm);
-
-$deleteBannerDiv = '<button id="removeBanner' . $this->idOrganization .
-    '" class="btn btn-warning'.(($file !== false) ? '': ' hide').'" type="button">'
-    . __('UI', 'verb', 'delete') . '</button>';
-$deleteBannerElementForm = new UI_Form_Element_HTML('currentBanner', $deleteBannerDiv, true);
-
-$bannerForm->addSubmitButton();
-$bannerForm->addActionElement($deleteBannerElementForm)
 ?>
 
 <fieldset class="wrapper">
@@ -81,53 +75,93 @@ $bannerForm->addActionElement($deleteBannerElementForm)
         <small><?=___('Orga', 'organization', 'bannerExplanations')?></small>
     </legend>
     <div>
-        <?php if ($this->display) { $bannerForm->display(); } else { echo $bannerForm->render(); } ?>
+        <form id="editBanner<?=$this->idOrganization?>" class="form-horizontal" method="POST" action="orga/organization/edit-banner/idOrganization/<?=$this->idOrganization?>" enctype="multipart/form-data" target="upload_iframe<?=$this->idOrganization?>">
+            <div class="form-group">
+                <label for="organization_banner" class="control-label col-xs-2">
+                    <?=__('Orga', 'organization', 'choiceBanner')?>
+                </label>
+                <div class="col-xs-10">
+                    <input name="banner" id="organization_banner" type="file">
+                </div>
+            </div>
+            <div class="form-group">
+                <span class="form-control-static control-label col-xs-2">
+                    <?=___('Orga', 'organization', 'currentBanner')?>
+                </span>
+                <div class="col-xs-10">
+                    <img id="currentBanner<?=$this->idOrganization?>" width="100%" src="<?=(($file !== false) ? 'workspaceBanners/'.pathinfo($file)['filename'] : '')?>" alt="<?=___('Orga', 'organization', 'noBanner')?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                    <button id="removeBanner<?=$this->idOrganization?>" class="btn btn-warning<?=(($file !== false) ? '': ' hide')?>" type="button">
+                        <?=__('UI', 'verb', 'delete')?>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group hide">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <div class="uploading-banner-errors alert alert-danger"></div>
+                </div>
+            </div>
+            <div class="form-group hide">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <div class="uploading-banner alert alert-info">
+                        <?=$this->image('images/ui/ajax-loader.gif', '')?>
+                        <?=__('Doc', 'library', 'uploading')?>
+                    </div>
+                </div>
+            </div>
+        </form>
 
         <iframe id="upload_iframe<?=$this->idOrganization?>" name="upload_iframe<?=$this->idOrganization?>" src="#" class="hidden">
         </iframe>
 
         <script>
-            // Début de l'upload
-            $("#editBanner<?=$this->idOrganization?>").on('submit', function() {
-                $('#orga_organization .uploading-banner').show();
-                $('#orga_organization .uploading-banner-errors').hide();
-            });
+            $(document).ready(function() {
+                // Début de l'upload
+                $("#editBanner<?=$this->idOrganization?>").on('submit', function() {
+                    $('#organization .uploading-banner').closest('.form-group').removeClass('hide');
+                    $('#organization .uploading-banner-errors').closest('.form-group').addClass('hide');
+                });
 
-            // Callback appelée lorsque le téléchargement a réussi
-            fileUploadResult<?=$this->idOrganization?> = function(success, message) {
-                if (success) {
-                    $('#currentBanner img').attr('src', 'workspaceBanners/' + message + '?' + new Date().getTime());
-                    $("#removeBanner<?=$this->idOrganization?>").show();
-                } else {
-                    $('#orga_organization .uploading-banner-errors').html(message);
-                    $('#orga_organization .uploading-banner-errors').show();
-                }
-                $('#orga_organization .uploading-banner').hide();
-            }
-
-            // Suppression de la bannière
-            $("#removeBanner<?=$this->idOrganization?>").on('click', function(e) {
-                var button = $(this);
-                if (button.hasClass('disabled')) {
-                    return;
-                }
-                e.preventDefault();
-                button.addClass('disabled');
-                $.ajax({
-                    url: 'orga/organization/remove-banner/idOrganization/<?=$this->idOrganization?>',
-                    type: "POST",
-                    success: function(data) {
-                        addMessage(data.message, 'success');
-                        $('#currentBanner img').attr('src', '');
-                        $("#removeBanner<?=$this->idOrganization?>").hide();
-                    },
-                    error: function(jqXHR) {
-                        var data = $.parseJSON(jqXHR.responseText);
-                        addMessage(data.message, data.typeError);
-                    },
-                    complete: function(jqXHR) {
-                        button.removeClass('disabled');
+                // Callback appelée lorsque le téléchargement a réussi
+                fileUploadResult<?=$this->idOrganization?> = function(success, message) {
+                    if (success) {
+                        $('#currentBanner<?=$this->idOrganization?>').attr('src', 'workspaceBanners/' + message + '?' + new Date().getTime());
+                        $("#removeBanner<?=$this->idOrganization?>").removeClass('hide');
+                    } else {
+                        $('#organization .uploading-banner-errors').html(message);
+                        $('#organization .uploading-banner-errors').closest('.form-group').removeClass('hide');
                     }
+                    $('#organization .uploading-banner').closest('.form-group').addClass('hide');
+                }
+
+                // Suppression de la bannière
+                $("#removeBanner<?=$this->idOrganization?>").on('click', function(e) {
+                    var button = $(this);
+                    if (button.hasClass('disabled')) {
+                        return;
+                    }
+                    e.preventDefault();
+                    button.addClass('disabled');
+                    $.ajax({
+                        url: 'orga/organization/remove-banner/idOrganization/<?=$this->idOrganization?>',
+                        type: "POST",
+                        success: function(data) {
+                            addMessage(data.message, 'success');
+                            $('#currentBanner<?=$this->idOrganization?>').attr('src', '');
+                            $("#removeBanner<?=$this->idOrganization?>").addClass('hide')();
+                        },
+                        error: function(jqXHR) {
+                            var data = $.parseJSON(jqXHR.responseText);
+                            addMessage(data.message, data.typeError);
+                        },
+                        complete: function(jqXHR) {
+                            button.removeClass('disabled');
+                        }
+                    });
                 });
             });
         </script>

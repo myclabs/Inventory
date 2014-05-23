@@ -6,7 +6,7 @@ Feature: Classification context indicator feature
 
   @javascript
   Scenario: Creation of a classification context indicator
-    Given I am on "classif/contextindicator/manage"
+    Given I am on "classification/contextindicator/list?library=1"
     Then I should see the "editContextIndicators" datagrid
   # Ajout d'un indicateur contextualisé, Contexte et indicateurs vides
     When I click "Ajouter"
@@ -32,10 +32,14 @@ Feature: Classification context indicator feature
   # Vérification contenu datagrid
     When I click "Annuler"
     Then the row 4 of the "editContextIndicators" datagrid should contain:
-      | context       | indicator         | axes    |
-      | Déplacements | Chiffre d'affaires |   |
+      | context      | indicator          | axes |
+      | Déplacements | Chiffre d'affaires |      |
   # Suppression
     When I click "Supprimer" in the row 1 of the "editContextIndicators" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Impossible de supprimer ce context indicateur car il est utilisé par l'application."
+    When I click "Supprimer" in the row 4 of the "editContextIndicators" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
@@ -43,7 +47,7 @@ Feature: Classification context indicator feature
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un indicateur contextualisé"
     When I select "Général" from "editContextIndicators_context_addForm"
-    And I select "GES" from "editContextIndicators_indicator_addForm"
+    And I select "Axes hiérarchiquement reliés" from "editContextIndicators_indicator_addForm"
     And I additionally select "Poste article 75" from "editContextIndicators_axes_addForm"
     And I additionally select "Scope" from "editContextIndicators_axes_addForm"
     And I click "Valider"
@@ -51,7 +55,7 @@ Feature: Classification context indicator feature
 
   @javascript
   Scenario: Edition of the list of axes of a classification context indicator
-    Given I am on "classif/contextindicator/manage"
+    Given I am on "classification/contextindicator/list?library=1"
     Then I should see the "editContextIndicators" datagrid
   # Ajout d'un axe, relié hiérarchiquement à un axe existant
     When I additionally select "Scope" for column "axes" of row 1 of the "editContextIndicators" datagrid
@@ -59,15 +63,20 @@ Feature: Classification context indicator feature
   # Ajout d'un axe, non relié hiérarchiquement à un axe existant
     When I additionally select "Type de déplacement" for column "axes" of row 1 of the "editContextIndicators" datagrid
   # TODO : ajouter dans l'interface un message "Modification effectuée" non présent actuellement.
+    And I wait 1 seconds
     Then the row 1 of the "editContextIndicators" datagrid should contain:
       | axes                                       |
       | Gaz, Poste article 75, Type de déplacement |
 
   @javascript
   Scenario:  Deletion of a classification context indicator
-    Given I am on "classif/contextindicator/manage"
+    Given I am on "classification/contextindicator/list?library=1"
     Then I should see the "editContextIndicators" datagrid
     When I click "Supprimer" in the row 1 of the "editContextIndicators" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Impossible de supprimer ce context indicateur car il est utilisé par l'application."
+    When I click "Supprimer" in the row 2 of the "editContextIndicators" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."

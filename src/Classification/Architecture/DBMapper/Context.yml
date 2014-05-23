@@ -1,0 +1,44 @@
+Classification\Domain\Context:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Classification_Context
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    library:
+      targetEntity: ClassificationLibrary
+      inversedBy: contexts
+      joinColumn:
+        name: idLibrary
+        referencedColumnName: id
+        nullable: false
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - idLibrary
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

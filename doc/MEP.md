@@ -1,6 +1,58 @@
 # Mise en production
 
 
+## 3.0
+
+- Exporter les données en 2.12
+
+```
+sudo chmod 777 data/exports/migration-3.0/
+bin/inventory export -v
+```
+
+Les données sont exportées dans `data/exports/migration-3.0/`.
+
+- Déployer l'application en v3.0 **sans build update** (mais redémarrer le worker) :
+
+```
+sudo deploy --no-update-db 3.0.?
+```
+
+- Reconstruire la BDD from scratch :
+
+```
+bin/inventory db:populate
+```
+
+- Créer un nouveau compte client si besoin
+
+```
+bin/inventory account:create "Nom du compte"
+```
+
+- Réimporter les données
+
+Les bibliothèques seront créées en utilisant les noms donnés en ligne de commande, et ajoutées au compte donné.
+
+Les données seront importées des fichiers contenus dans `data/exports/migration-3.0/`.
+
+```
+bin/inventory import <id-account> "Bibliothèque de classification" "Bibliothèque de paramètres" "Bibliothèque de formulaires" -v
+```
+
+- Reconstruire les ACL
+
+```
+bin/inventory acl:rebuild
+```
+
+- Vider la table des versions
+
+```
+TRUNCATE TABLE ext_log_entries
+```
+
+
 ## 2.11
 
 - Déployer l'application **sans build update ni redémarrage du worker**

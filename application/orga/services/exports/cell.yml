@@ -8,42 +8,19 @@ sheets:
       - foreach: getCellNarrowerAxes(cell) as axis
         do:
           - type: VerticalTable
-            label: "{{ axis.label }}"
+            label: "{{ translateString(axis.label) }}"
             columns:
               - label: "{{ memberColumnLabel }}"
               - label: "{{ memberColumnRef }}"
               - foreach: axis.directBroaders as broaderAxis
                 do:
-                  - label: "{{ broaderAxis.label }}"
+                  - label: "{{ translateString(broaderAxis.label) }}"
             lines:
               - foreach: getCellNarrowerMembers(cell, axis) as member
                 do:
                   - cells:
-                      - "{{ member.label }}"
+                      - "{{ translateString(member.label) }}"
                       - "{{ member.ref }}"
                       - foreach: axis.directBroaders as broaderAxis
                         do:
                           - "{{ displayParentMemberForAxis(member, broaderAxis) }}"
-
-
-  - label: "{{ cellsRelevanceSheetLabel }}"
-
-    content:
-
-      - foreach: cell.granularity.narrowerGranularities as narrowerGranularity
-        do:
-          - type: VerticalTable
-            label: "{{ narrowerGranularity.label }}"
-            columns:
-              - foreach: narrowerGranularity.axes as axis
-                do:
-                  - label: "{{ axis.label }}"
-              - label: "{{ cellColumnRelevant }}"
-            lines:
-              - foreach: getChildCellsForGranularity(cell, narrowerGranularity) as childCell
-                do:
-                  - cells:
-                      - foreach: narrowerGranularity.axes as axis
-                        do:
-                          - "{{ displayCellMemberForAxis(childCell, axis) }}"
-                      - "{{ childCell.isRelevant }}"

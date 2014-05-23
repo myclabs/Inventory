@@ -1,8 +1,8 @@
-$.fn.eraseFormErrors = function (o)
-{
-	$('#' + $(this).attr('id') + ' .help-block.errorMessage').remove();
-	$('#' + $(this).attr('id') + ' .error').removeClass('error');
-	$('#' + $(this).attr('id') + ' .warning').removeClass('warning');
+$.fn.eraseFormErrors = function (o) {
+    $('#' + $(this).attr('id') + ' .help-block.errorMessage').remove();
+    $('#' + $(this).attr('id') + ' .error').removeClass('error');
+    $('#' + $(this).attr('id') + ' .warning').removeClass('warning');
+    $('#' + $(this).attr('id') + ' .has-error').removeClass('has-error');
 };
 
 $.fn.parseFormErrors = function (request)
@@ -10,10 +10,10 @@ $.fn.parseFormErrors = function (request)
     var response = $.parseJSON(request.responseText);
     if (typeof(response.errorMessages) !== 'undefined') {
         for (var x in response.errorMessages) {
-            var xElementLine = $('#' + $(this).attr('id') + ' #' + x + '-line .controls');
-            xElementLine.append('<span class="help-block errorMessage">' + response.errorMessages[x] + '</span>');
-            if (!(xElementLine.parent().hasClass('error'))) {
-                xElementLine.parent().addClass('error');
+            var xElementLine = $('#' + $(this).attr('id') + ' #' + x + '-line');
+            xElementLine.append('<span class="help-block col-md-offset-3 errorMessage">' + response.errorMessages[x] + '</span>');
+            if (!(xElementLine.hasClass('has-error'))) {
+                xElementLine.addClass('has-error');
             }
         }
     } else {
@@ -33,7 +33,7 @@ $.fn.parseFormData = function ()
 	var children = $(this).children('fieldset').children();
 	for(var key = 0; key < children.length; key++) {
 		var child = $(children[key]);
-		if (child.hasClass('control-group')) {
+		if (child.hasClass('form-group')) {
 			data += '"' + child.attr('id').replace('-line', '') + '": ' + child.parseFormLine() + ', ';
 		} else if (child.hasClass('subGroup')) {
 			data += '"' + child.attr('id') + '": ' + child.parseFormGroup() + ', ';
@@ -65,7 +65,7 @@ $.fn.parseFormGroup = function ()
         var childElements = $(this).children('div').children();
         for(var key = 0; key < childElements.length; key++) {
             var child = $(childElements[key]);
-            if (child.hasClass('control-group')) {
+            if (child.hasClass('form-group')) {
                 elements += '"' + child.attr('id').replace('-line', '') + '": ' + child.parseFormLine() + ', ';
             } else if (child.hasClass('subGroup')) {
                 elements += '"' + child.attr('id') + '": ' + child.parseFormGroup() + ', ';
@@ -108,16 +108,16 @@ $.fn.parseFormLine = function ()
 
 	element += '"name": "' + $(this).attr('id').replace('-line', '') + '", ';
 	element += '"hidden": ' + ($(this).hasClass('hide') ? 'true' : 'false') + ', ';
-	element += $(this).children('div.controls').children('div:first').getFormElementValue() + ', ';
+	element += $(this).children('div:first').getFormElementValue() + ', ';
 
-	var childElements = $(this).children('div.controls').children('div:not(:first)');
+	var childElements = $(this).children('div:not(:first)');
 	for(var key = 0; key < childElements.length; key++) {
 		children += '"' + $(childElements[key]).attr('id') + '": {' + $(childElements[key]).getFormElementValue() + '}, ';
 	}
 	if (children !== '{') {
 		children = children.slice(0, -2);
 	}
-	
+
 	children += '}';
 	element += '"children": ' + children;
 	element += '}';
@@ -135,51 +135,51 @@ $.fn.getFormElementValue = function ()
 		var child = $(children[key]);
 		switch (child.attr('type'))
 		{
-		case 'radio':
-			if (child.attr('checked') == 'checked') {
-				element = element.slice(0, -2) + '"' + child.encodeVal() + '"';
-			}
-			break;
-		case 'checkbox':
-			if ($(this).children('input[type=checkbox]').length == 1) {
-				element = element.slice(0, -2);
-				if (child.attr('checked') == 'checked') {
-					element += '1';
-				} else {
-					element += '0';
-				}
-			} else {
-				if (element == '"value": ""') {
-					element = element.slice(0, -2) + '[]';
-				}
-				if (child.attr('checked') == 'checked') {
-                    element = element.slice(0, -1);
-					if (element != '"value": [') {
-						element += ', ';
-					}
-					element += '"' + child.encodeVal() + '"]';
-				}
-			}
-			break;
-		case 'hidden':
-			hidden.push('"' + child.attr('id') + '": "' + child.encodeVal() + '"');
-			break;
-		default:
-            element = element.slice(0, -2);
-			if (typeof child.val() === 'object') {
-                element += '[';
-                if (child.val() != null) {
-                    element += '"';
-                    element += child.val().join('", "');
-                    element += '"';
+            case 'radio':
+                if (child.is(':checked')) {
+                    element = element.slice(0, -2) + '"' + child.encodeVal() + '"';
                 }
-                element += '], ';
-            } else if (child.val() != null) {
-                element += '"' + child.encodeVal() + '", ';
-			} else {
-				element += 'null, ';
-			}
-			element += '"disabled": ' + ((child.attr('disabled') == 'disabled') ? 'true' : 'false');
+                break;
+            case 'checkbox':
+                if ($(this).children('input[type=checkbox]').length == 1) {
+                    element = element.slice(0, -2);
+                    if (child.prop('checked')) {
+                        element += '1';
+                    } else {
+                        element += '0';
+                    }
+                } else {
+                    if (element == '"value": ""') {
+                        element = element.slice(0, -2) + '[]';
+                    }
+                    if (child.is(':checked')) {
+                        element = element.slice(0, -1);
+                        if (element != '"value": [') {
+                            element += ', ';
+                        }
+                        element += '"' + child.encodeVal() + '"]';
+                    }
+                }
+                break;
+            case 'hidden':
+                hidden.push('"' + child.attr('id') + '": "' + child.encodeVal() + '"');
+                break;
+            default:
+                element = element.slice(0, -2);
+                if (typeof child.val() === 'object') {
+                    element += '[';
+                    if (child.val() != null) {
+                        element += '"';
+                        element += child.val().join('", "');
+                        element += '"';
+                    }
+                    element += '], ';
+                } else if (child.val() != null) {
+                    element += '"' + child.encodeVal() + '", ';
+                } else {
+                    element += 'null, ';
+                }
+                element += '"disabled": ' + ((child.attr('disabled') == 'disabled') ? 'true' : 'false');
 		}
 	}
 

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
+    <body>
+
+        <!-- Titre de la page -->
+
+        <tu tuid="pageTitle">
+            <tuv xml:lang="fr">
+                <seg>Contrôle de validité du paramétrage</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Control of configuration validity</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="seekIssue">
+            <tuv xml:lang="fr">
+                <seg>Rechercher des anomalies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Seek issue</seg>
+            </tuv>
+        </tu>
+        <tu tuid="seekingIssue">
+            <tuv xml:lang="fr">
+                <seg>Recherche des anomalies en cours…</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Seeking issue…</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noIssue">
+            <tuv xml:lang="fr">
+                <seg>Aucune anomalies trouvée.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No issue found</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="seekedIssue">
+            <tuv xml:lang="fr">
+                <seg>Anomalie recherchée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Seeked issue</seg>
+            </tuv>
+        </tu>
+
+        <!-- Libellés des anomalies -->
+
+        <tu tuid="seekedIssue">
+            <tuv xml:lang="fr">
+                <seg>Anomalie recherchée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Seeked issue</seg>
+            </tuv>
+        </tu>
+        <tu tuid="abnormalItems">
+            <tuv xml:lang="fr">
+                <seg>Éléments présentant des anomalies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Abnormal items</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="axisWithNoMember">
+            <tuv xml:lang="fr">
+                <seg>Axe ne contenant aucun élément</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Axis containing no member</seg>
+            </tuv>
+        </tu>
+        <tu tuid="memberWithNoDirectChild">
+            <tuv xml:lang="fr">
+                <seg>Élément sans enfant d'un axe non situé à la racine</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Element with no child in an axis not placed at root</seg>
+            </tuv>
+        </tu>
+        <tu tuid="memberWithMissingDirectParent">
+            <tuv xml:lang="fr">
+                <seg>Élément pour lequel manque un élément parent</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Element for which a parent is missing</seg>
+            </tuv>
+        </tu>
+        <tu tuid="indicatorWithNoUnit">
+            <tuv xml:lang="fr">
+                <seg>Indicateur sans unité ou dont l'unité n'a pas été reconnue</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Indicator with no unit or uninterpreted unit</seg>
+            </tuv>
+        </tu>
+        <tu tuid="indicatorWithIncompatibleUnits">
+            <tuv xml:lang="fr">
+                <seg>Indicateur dont l'unité et l'unité pour ratio ne sont pas compatibles</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Indicator for which unit and ratio unit are incompatible</seg>
+            </tuv>
+        </tu>
+        <tu tuid="contextIndicatorsWithLinkedAxes">
+            <tuv xml:lang="fr">
+                <seg>Indicateur contextualisé dont certains des axes sont hiérarchiquement reliés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Context indicator having hierarchically linked axes</seg>
+            </tuv>
+        </tu>
+
+    </body>
+</tmx>

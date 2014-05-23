@@ -1,9 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\Component\Component;
@@ -14,14 +9,12 @@ use Core\Annotation\Secure;
 
 /**
  * Checkbox fields datagrid Controller
- * @package AF
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
  */
 class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -35,13 +28,14 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
         foreach ($checkboxFields as $checkboxField) {
             $data = [];
             $data['index'] = $checkboxField->getId();
-            $data['label'] = $checkboxField->getLabel();
+            $data['label'] = $this->cellTranslatedText($checkboxField->getLabel());
             $data['ref'] = $checkboxField->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $checkboxField->getId(),
-                                                ' af/datagrid_edit_components_checkbox-fields/get-raw-help/id/'
-                                                    . $checkboxField->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $checkboxField->getId(),
+                'af/datagrid_edit_components_checkbox-fields/get-raw-help?id=' . $af->getId()
+                . '&component=' . $checkboxField->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $checkboxField->isVisible();
             $data['enabled'] = $checkboxField->isEnabled();
             $data['defaultValue'] = $checkboxField->getDefaultValue();
@@ -51,8 +45,6 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
@@ -78,9 +70,9 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
                 $this->send();
                 return;
             }
-            $checkboxField->setLabel($this->getAddElementValue('label'));
+            $this->translator->set($checkboxField->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($checkboxField->getHelp(), $this->getAddElementValue('help'));
             $checkboxField->setVisible($isVisible);
-            $checkboxField->setHelp($this->getAddElementValue('help'));
             $checkboxField->setEnabled($this->getAddElementValue('enabled'));
             if ($this->getAddElementValue('defaultValue') == 'true') {
                 $checkboxField->setDefaultValue(true);
@@ -104,12 +96,12 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
      * @Secure("editAF")
      */
     public function updateelementAction()
     {
+        /** @var $af \AF\Domain\AF */
+        $af = AF::load($this->getParam('id'));
         /** @var $checkboxField Checkbox */
         $checkboxField = Checkbox::load($this->update['index']);
         $newValue = $this->update['value'];
@@ -119,16 +111,12 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
                 $this->data = $checkboxField->getRef();
                 break;
             case 'label':
-                $checkboxField->setLabel($newValue);
-                $this->data = $checkboxField->getLabel();
+                $this->translator->set($checkboxField->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($checkboxField->getLabel());
                 break;
             case 'help':
-                $checkboxField->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $checkboxField->getId(),
-                                                  ' af/datagrid_edit_components_checkbox-fields/get-raw-help/id/'
-                                                      . $checkboxField->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
+                $this->translator->set($checkboxField->getHelp(), $newValue);
+                $this->data = null;
                 break;
             case 'isVisible':
                 $checkboxField->setVisible($newValue);
@@ -154,8 +142,6 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -190,9 +176,8 @@ class AF_Datagrid_Edit_Components_CheckboxFieldsController extends UI_Controller
     public function getRawHelpAction()
     {
         /** @var $checkboxField Checkbox */
-        $checkboxField = Checkbox::load($this->getParam('id'));
-        $this->data = $checkboxField->getHelp();
+        $checkboxField = Checkbox::load($this->getParam('component'));
+        $this->data = (string) $this->translator->get($checkboxField->getHelp());
         $this->send();
     }
-
 }

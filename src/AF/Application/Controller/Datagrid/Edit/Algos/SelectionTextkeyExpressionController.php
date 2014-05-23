@@ -7,6 +7,7 @@
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo;
 use Core\Annotation\Secure;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use TEC\Exception\InvalidExpressionException;
 
 /**
@@ -30,11 +31,13 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
-                $data['expression'] = $this->cellLongText('af/edit_algos/popup-expression/id/' . $algo->getId(),
-                                                          'af/datagrid_edit_algos_selection-textkey-expression/'
-                                                              . 'get-expression/id/' . $algo->getId(),
-                                                          __('TEC', 'name', 'expression'),
-                                                          'zoom-in');
+                $data['expression'] = $this->cellLongText(
+                    'af/edit_algos/popup-expression/idAF/' . $af->getId() . '/algo/' . $algo->getId(),
+                    'af/datagrid_edit_algos_selection-textkey-expression/get-expression/idAF/' . $af->getId()
+                    . '/algo/' . $algo->getId(),
+                    __('TEC', 'name', 'expression'),
+                    'zoom-in'
+                );
                 $this->addLine($data);
             }
         }
@@ -78,7 +81,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
             $af->save();
             try {
                 $this->entityManager->flush();
-            } catch (Core_ORM_DuplicateEntryException $e) {
+            } catch (UniqueConstraintViolationException $e) {
                 $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
                 $this->send();
                 return;
@@ -110,17 +113,13 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
                     throw new Core_Exception_User('AF', 'configTreatmentMessage', 'invalidExpressionWithErrors',
                                                   ['ERRORS' => implode("<br>", $e->getErrors())]);
                 }
-                $this->data = $this->cellLongText('af/edit_algos/popup-expression/id/' . $algo->getId(),
-                                                  'af/datagrid_edit_algos_selection-textkey-expression/'
-                                                      . 'get-expression/id/' . $algo->getId(),
-                                                  __('TEC', 'name', 'expression'),
-                                                  'zoom-in');
+                $this->data = null;
                 break;
         }
         $algo->save();
         try {
             $this->entityManager->flush();
-        } catch (Core_ORM_DuplicateEntryException $e) {
+        } catch (UniqueConstraintViolationException $e) {
             throw new Core_Exception_User('UI', 'formValidation', 'alreadyUsedIdentifier');
         }
         $this->message = __('UI', 'message', 'updated');
@@ -155,7 +154,7 @@ class AF_Datagrid_Edit_Algos_SelectionTextkeyExpressionController extends UI_Con
     public function getExpressionAction()
     {
         /** @var $algo ExpressionSelectionAlgo */
-        $algo = ExpressionSelectionAlgo::load($this->getParam('id'));
+        $algo = ExpressionSelectionAlgo::load($this->getParam('algo'));
         $this->data = $algo->getExpression();
         $this->send();
     }

@@ -2,8 +2,8 @@
 
 namespace AF\Domain\Output;
 
-use Classif_Model_Axis;
-use Classif_Model_Member;
+use Classification\Domain\Axis;
+use Classification\Domain\Member;
 use Core_Model_Entity;
 
 /**
@@ -17,65 +17,59 @@ class OutputIndex extends Core_Model_Entity
     protected $id;
 
     /**
-     * Reference of the classif axis
-     * @var string
+     * @var Axis
      */
-    protected $refAxis;
+    protected $axis;
 
     /**
-     * Reference of the classif member
      * @var string
      */
     protected $refMember;
 
     /**
      * Variable nécessaire pour faire la relation inverse et faire marcher le delete cascade
-     * À supprimer quand le bug dans Doctrine aura disparu
+     * TODO À supprimer quand le bug dans Doctrine aura disparu
      * @var OutputElement[]
      */
     protected $outputElements;
 
 
-    /**
-     * @param Classif_Model_Axis   $axis
-     * @param Classif_Model_Member $member
-     */
-    public function __construct(Classif_Model_Axis $axis, Classif_Model_Member $member)
+    public function __construct(Axis $axis, Member $member)
     {
         $this->setAxis($axis);
         $this->setMember($member);
     }
 
     /**
-     * @return Classif_Model_Axis
+     * @return Axis
      */
     public function getAxis()
     {
-        return Classif_Model_Axis::loadByRef($this->refAxis);
+        return $this->axis;
     }
 
     /**
-     * @param Classif_Model_Axis $classifAxis
+     * @param Axis $axis
      */
-    public function setAxis(Classif_Model_Axis $classifAxis)
+    public function setAxis(Axis $axis)
     {
-        $this->refAxis = $classifAxis->getRef();
+        $this->axis = $axis;
     }
 
     /**
-     * @return Classif_Model_Member
+     * @return Member
      */
     public function getMember()
     {
-        return Classif_Model_Member::loadByRefAndAxis($this->refMember, $this->getAxis());
+        return $this->getAxis()->getMemberByRef($this->refMember);
     }
 
     /**
-     * @param Classif_Model_Member $classifMember
+     * @param Member $member
      */
-    public function setMember(Classif_Model_Member $classifMember)
+    public function setMember(Member $member)
     {
-        $this->refMember = $classifMember->getRef();
+        $this->refMember = $member->getRef();
     }
 
     /**
@@ -83,7 +77,7 @@ class OutputIndex extends Core_Model_Entity
      */
     public function getRefAxis()
     {
-        return $this->refAxis;
+        return $this->axis->getRef();
     }
 
     /**

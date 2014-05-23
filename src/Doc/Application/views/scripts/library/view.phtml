@@ -2,6 +2,9 @@
 /** @var $library Library */
 use Doc\Domain\Library;
 use Doc\Domain\Document;
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Modal;
 
 $library = $this->library;
 
@@ -36,20 +39,22 @@ echo $datagrid->render();
 $datagrid->addHeader();
 
 // Popup d'ajout
-$popup = new UI_Popup_Static('library'.$library->getId().'_add');
-$popup->title = __('Doc', 'library', 'addPanelTitle');
-$popup->body = $this->partial('library/upload.phtml', 'doc', ['library' => $library]);
-$validateButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
-$validateButton->addAttribute('class', 'btn-primary');
-$validateButton->addAttribute('class', 'validateNewDocument');
-$cancelButton = new UI_HTML_Button(__('UI', 'verb', 'cancel'));
-$cancelButton->addAttribute('data-dismiss', 'modal');
-$popup->footer = $validateButton->render() . ' ' . $cancelButton->render();
+$popup = new Modal();
+$popup->setAttribute('id', 'library'.$library->getId().'_add');
+$popup->addTitle(__('Doc', 'library', 'addPanelTitle'));
+$popup->setContent($this->partial('library/upload.phtml', 'doc', ['library' => $library]));
+$validateButton = new Button(__('UI', 'verb', 'add'), Button::TYPE_PRIMARY);
+$validateButton->addClass('validateNewDocument');
+$cancelButton = new Button(__('UI', 'verb', 'cancel'));
+$cancelButton->setAttribute('data-dismiss', 'modal');
+$popup->setFooterContent($validateButton->render() . ' ' . $cancelButton->render());
 $popup->display();
 
 // Bouton d'ajout
-$addButton = new UI_HTML_Button('<i class="fa fa-plus"></i> ' . __('Doc', 'library', 'addPanelTitle'));
-$addButton->addAttribute('id', 'addDocumentButton'.$library->getId());
+$addButton = new Button(__('Doc', 'library', 'addPanelTitle'));
+$addButton->prependContent(' ');
+$addButton->prependContent(new Icon('plus'));
+$addButton->setAttribute('id', 'addDocumentButton'.$library->getId());
 echo $addButton->render();
 ?>
 

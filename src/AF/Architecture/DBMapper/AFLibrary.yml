@@ -1,0 +1,33 @@
+AF\Domain\AFLibrary:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: AF_Library
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    public:
+      type: boolean
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    account:
+      targetEntity: Account\Domain\Account
+
+  oneToMany:
+    afList:
+      targetEntity: AF
+      mappedBy: library
+      orphanRemoval: true
+    categories:
+      targetEntity: Category
+      mappedBy: library
+      cascade: [ all ]
+      orphanRemoval: true

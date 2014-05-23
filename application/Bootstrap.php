@@ -12,6 +12,12 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\DBAL\Types\Type;
+use Mnapoli\Translated\Helper\Zend1\TranslateZend1Helper;
+use Mnapoli\Translated\Translator as DoctrineTranslator;
+use MyCLabs\MUIH\Collapse;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Tab;
 use Symfony\Component\Translation\Translator;
 use User\Application\ViewHelper\IsAllowedHelper;
 use User\Application\ViewHelper\TutorialHelper;
@@ -88,6 +94,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Modules
         $builder->addDefinitions(PACKAGE_PATH . '/src/User/Application/config.php');
         $builder->addDefinitions(APPLICATION_PATH . '/orga/config.php');
+        $builder->addDefinitions(PACKAGE_PATH . '/src/Account/Application/config.php');
 
         switch (APPLICATION_ENV) {
             case 'testsunitaires':
@@ -157,15 +164,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
-     * Session namespace
-     */
-    protected function _initSessionNamespace()
-    {
-        $auth = Zend_Auth::getInstance();
-        $auth->setStorage(new Zend_Auth_Storage_Session($this->container->get('application.name')));
-    }
-
-    /**
      * Enregistre les plugins de Core.
      */
     protected function _initPluginCore()
@@ -196,16 +194,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'Unit',
             'User',
             'TEC',
-            'Classif',
-            'Techno',
+            'Classification',
+            'Parameter',
             'Doc',
             'DW',
             'Algo',
             'AF',
             'Social',
             'Orga',
-            'Simulation',
             'AuditTrail',
+            'Account',
         ];
 
         foreach ($modules as $module) {
@@ -268,12 +266,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $locale = Core_Locale::loadDefault();
         Core_Locale::$minSignificantFigures = $this->container->get('locale.minSignificantFigures');
 
+        // Fichiers de traduction
         $translator = new Translator($locale->getId());
         $translator->addLoader('tmx', new TmxLoader());
         $translator->addResource('tmx', APPLICATION_PATH . '/languages', 'fr');
         $translator->addResource('tmx', APPLICATION_PATH . '/languages', 'en');
         $translator->setFallbackLocales(['fr']);
         $this->container->set(Translator::class, $translator);
+
+        // Traductions en BDD
+        /** @var DoctrineTranslator $doctrineTranslator */
+        $doctrineTranslator = $this->container->get(DoctrineTranslator::class);
+        $doctrineTranslator->setLanguage($locale->getLanguage());
     }
 
     /**
@@ -286,8 +290,24 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $view->addHelperPath(PACKAGE_PATH . '/src/Core/View/Helper', 'Core_View_Helper');
         $view->addHelperPath(PACKAGE_PATH . '/src/UI/View/Helper', 'UI_View_Helper');
+        $view->addHelperPath(PACKAGE_PATH . '/vendor/myclabs/muih/src/MyCLabs/MUIH/Bridge/ZendViewHelper/Zend1',
+            'MyCLabs\MUIH\Bridge\ZendViewHelper\Zend1');
         $view->registerHelper($this->container->get(IsAllowedHelper::class), 'isAllowed');
         $view->registerHelper($this->container->get(TutorialHelper::class), 'tutorial');
+        $view->registerHelper($this->container->get(TranslateZend1Helper::class), 'translate');
+    }
+
+    /**
+     * Enregistre les helpers de vue
+     */
+    protected function _initMUIH()
+    {
+        Icon::$defaultIconPrefix = Icon::FONT_AWESOME;
+        Tab::$defaultAjaxTabLoadingText = new GenericTag('p', __('UI', 'loading', 'loading'));
+        Tab::$defaultAjaxTabLoadingText->prependContent(' ');
+        Tab::$defaultAjaxTabLoadingText->prependContent(new Icon('spinner fa-spin'));
+        Collapse::$defaultOpenedIndicator = new Icon('chevron-down');
+        Collapse::$defaultClosedIndicator = new Icon('chevron-right');
     }
 
     /**
@@ -300,13 +320,22 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     /**
+     * Session namespace
+     */
+    protected function _initSessionNamespace()
+    {
+        $auth = Zend_Auth::getInstance();
+        $auth->setStorage(new Zend_Auth_Storage_Session($this->container->get('application.name')));
+    }
+
+    /**
      * Enregistrement du plugin pour les ACL
      */
     protected function _initPluginAcl()
     {
         if ($this->container->get('enable.acl')) {
             $front = Zend_Controller_Front::getInstance();
-            $front->registerPlugin($this->container->get(Inventory_Plugin_Acl::class));
+            $front->registerPlugin($this->container->get(Inventory_Plugin_ACL::class));
         }
     }
 
@@ -324,5 +353,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         if ($this->container->get('application.url') == '') {
             throw new RuntimeException("Il est nécessaire de définir 'application.url' dans parameters.php");
         }
+    }
+
+    /**
+     * Plugin qui gère le menu
+     */
+    protected function _initMenuPlugin()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $front->registerPlugin($this->container->get(Inventory_Plugin_MenuPlugin::class));
     }
 }

@@ -1,0 +1,56 @@
+<?php
+
+use Parameter\Domain\Family\Family;
+
+UI_Datagrid::addHeader();
+UI_TMD::addHeader();
+
+/** @var $family Family */
+$family = $this->family;
+?>
+
+<div class="page-header">
+    <h1><?=$this->escape($this->translate($family->getLabel()))?></h1>
+</div>
+
+<section id="widget-grid">
+
+    <div class="jarviswidget" <?=$this->edit ? 'data-widget-collapsed="true"' : ''?>>
+        <header>
+            <h2><?=__('Parameter', 'familyDetail', 'generalDataTitle')?></h2>
+        </header>
+        <div>
+            <?php
+            if ($this->edit) {
+                echo $this->partial('family/details/general-edit.phtml', ['family' => $family]);
+            } else {
+                echo $this->partial('family/details/general-view.phtml', ['family' => $family]);
+            }
+            ?>
+        </div>
+    </div>
+
+    <div class="jarviswidget">
+        <header>
+            <h2><?=__('Parameter', 'element', 'elements')?></h2>
+        </header>
+        <div>
+            <?=$this->partial('family/details/tmd.phtml', [
+                'family' => $family,
+                'edit'   => $this->edit,
+            ])?>
+        </div>
+    </div>
+
+    <?php if ($this->edit) : ?>
+        <div class="jarviswidget">
+            <header>
+                <h2><?=__('Parameter', 'name', 'dimensions')?></h2>
+            </header>
+            <div>
+                <?=$this->partial('family/details/edit-dimensions.phtml', ['family' => $family])?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+</section>

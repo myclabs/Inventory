@@ -28,5 +28,4 @@ class Orga_AxisController extends Core_Controller
             $this->view->display = true;
         }
     }
-
 }

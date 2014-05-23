@@ -1,0 +1,63 @@
+Parameter\Domain\Family\Family:
+  type: entity
+  repositoryClass: Parameter\Architecture\Repository\FamilyRepository
+  table: Parameter_Family
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+    position:
+      type: integer
+      nullable: false
+    refUnit:
+      type: string
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+    documentation:
+      class: Core\Translation\TranslatedString
+
+  oneToMany:
+    cells:
+      targetEntity: Parameter\Domain\Family\Cell
+      mappedBy: family
+      cascade: [ all ]
+      orphanRemoval: true
+    dimensions:
+      targetEntity: Parameter\Domain\Family\Dimension
+      mappedBy: family
+      cascade: [ all ]
+      orphanRemoval: true
+      orderBy:
+        orientation: DESC
+        position: ASC
+
+  manyToOne:
+    category:
+      targetEntity: Parameter\Domain\Category
+      inversedBy: families
+      joinColumn:
+        name: idCategory
+        referencedColumnName: id
+        nullable: true
+    library:
+      targetEntity: Parameter\Domain\ParameterLibrary
+      inversedBy: families
+
+  uniqueConstraints:
+    # ref unique dans une bibliothèque
+    ref:
+      columns: [library_id, ref]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

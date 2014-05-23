@@ -1,29 +1,44 @@
-<div class="page-header">
-    <h1><?=__('User', 'typeResettedPassword', 'pageTitle')?></h1>
+<div class="jarviswidget">
+
+    <header>
+        <h2><?=__('User', 'typeResettedPassword', 'pageTitle')?></h2>
+    </header>
+
+    <div>
+        <div class="widget-body no-padding">
+
+            <form class="smart-form" action="user/password/reset-submit/code/<?=$this->code?>" method="post">
+                <header>
+                    <?=__('User', 'typeResettedPassword', 'introductionSentence')?>
+                </header>
+
+                <fieldset>
+                    <section>
+                        <label class="input"> <i class="icon-append fa fa-lock"></i>
+                            <input type="password" name="password1" required
+                                   placeholder="<?=__('User', 'editPassword', 'newPassword')?>">
+                            <b class="tooltip tooltip-bottom-right"><?=__('User', 'editPassword', 'newPassword')?></b>
+                        </label>
+                    </section>
+
+                    <section>
+                        <label class="input"> <i class="icon-append fa fa-lock"></i>
+                            <input type="password" name="password2" required
+                                   placeholder="<?=__('User', 'editPassword', 'confirmNewPassword')?>">
+                            <b class="tooltip tooltip-bottom-right"><?=__('User', 'editPassword', 'confirmNewPassword')?></b>
+                        </label>
+                    </section>
+                </fieldset>
+
+                <footer>
+                    <button type="submit" class="btn btn-primary">
+                        <?=__('UI', 'verb', 'save')?>
+                    </button>
+                </footer>
+            </form>
+
+        </div>
+
+    </div>
+
 </div>
-<p><?=__('User', 'typeResettedPassword', 'introductionSentence')?></p>
-
-<?php
-$form = new UI_Form('editPassword');
-$form->setAction('user/password/reset-submit/code/' . $this->code);
-$form->setAjax(true, 'passwordUpdated');
-
-$password1 = new UI_Form_Element_Password('password1');
-$password1->setLabel(__('User', 'editPassword', 'newPassword'));
-$password1->setRequired();
-$form->addElement($password1);
-
-$password2 = new UI_Form_Element_Password('password2');
-$password2->setLabel(__('User', 'editPassword', 'confirmNewPassword'));
-$password2->setRequired();
-$form->addElement($password2);
-
-$form->addSubmitButton();
-$form->display();
-?>
-
-<script>
-    $.fn.passwordUpdated = function () {
-        window.location.href = "<?=$this->baseUrl()?>/";
-    };
-</script>

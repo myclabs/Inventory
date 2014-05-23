@@ -1,4 +1,11 @@
 <?php
+
+use Mnapoli\Translated\Translator;
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Collapse;
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
+
 /**
  * Classe DW_Form_configuration.
  * @author valentin.claras
@@ -12,718 +19,610 @@
  * @package    DW
  * @subpackage Form
  */
-class DW_Form_configuration extends UI_Form
+class DW_Form_configuration extends GenericTag
 {
+    /**
+     * @var Translator
+     */
+    private $translator;
+
     /**
      * Génération du formulaire
      *
-     * @param Classif_Model_Report $report
+     * @param DW_Model_Report   $report
+     * @param string            $hash
+     * @param Translator $translator
      */
-    public function __construct(DW_Model_Report $report, $hash)
+    public function __construct(DW_Model_Report $report, $hash, Translator $translator)
     {
-        $numeratorAxis1 = $report->getNumeratorAxis1();
-        $numeratorAxis2 = $report->getNumeratorAxis2();
-        $denominatorAxis1 = $report->getDenominatorAxis1();
-        $denominatorAxis2 = $report->getDenominatorAxis2();
+        $this->translator = $translator;
 
-        parent::__construct($hash);
+        $reportNumeratorIndicator = $report->getNumerator();
+        $reportDenominatorIndicator = $report->getDenominator();
+        $numeratorAxisOne = $report->getNumeratorAxis1();
+        $numeratorAxisTwo = $report->getNumeratorAxis2();
+        $denominatorAxisOne = $report->getDenominatorAxis1();
+        $denominatorAxisTwo = $report->getDenominatorAxis2();
+
         $idCube = $report->getCube()->getId();
-        $this->setAction('dw/report/applyconfiguration/idCube/'.$idCube.'/hashReport/'.$hash);
-        $this->setAjax(null, 'parseConfigurationForm');
+
+        parent::__construct('form');
+        $this->setAttribute('method', 'POST');
+        $this->setAttribute('action', 'dw/report/applyconfiguration/idCube/'.$idCube.'/hashReport/'.$hash);
+        $this->setAttribute('id', 'form_' . $hash);
 
 
-        // Groupe de sélection des Indicators.
+        // Fieldset de sélection des valeurs.
+        $valuesWrapper = new GenericTag('fieldset');
+        $valuesLegend = new GenericTag('legend', __('UI', 'name', 'values'));
+        $valuesWrapper->appendContent($valuesLegend);
+        $this->appendContent($valuesWrapper);
 
-        $groupValue = new UI_Form_Element_Group('value');
-        $groupValue->setLabel(__('UI', 'name', 'values'));
-        $groupValue->foldaway = false;
+        // Groupe de sélection du type de rapport.
+        $typeSumRatioGroup = new GenericTag('div');
+        $typeSumRatioGroup->addClass('form-group');
+        $valuesWrapper->appendContent($typeSumRatioGroup);
 
-        $radioIndicatorRatio = new UI_Form_Element_Radio('indicatorRatio');
+        $sumChoiceInput = new GenericVoidTag('input');
+        $sumChoiceInput->setAttribute('type', 'radio');
+        $sumChoiceInput->setAttribute('name', 'typeSumRatioChoice');
+        $sumChoiceInput->setAttribute('value', 'sum');
+        $sumChoiceLabel = new GenericTag('label', __('DW', 'name', 'indicator'));
+        $sumChoiceLabel->prependContent($sumChoiceInput);
+        $sumChoiceLabel->addClass('radio-inline');
+        $typeSumRatioGroup->appendContent($sumChoiceLabel);
 
-        $optionIndicator = new UI_Form_Element_Option('indicatorO', 'indicator', __('DW', 'name', 'indicator'));
-        $radioIndicatorRatio->addOption($optionIndicator);
+        $ratioChoiceInput = new GenericVoidTag('input');
+        $ratioChoiceInput->setAttribute('type', 'radio');
+        $ratioChoiceInput->setAttribute('name', 'typeSumRatioChoice');
+        $ratioChoiceInput->setAttribute('value', 'ratio');
+        $ratioChoiceLabel = new GenericTag('label', __('DW', 'name', 'ratio'));
+        $ratioChoiceLabel->prependContent($ratioChoiceInput);
+        $ratioChoiceLabel->addClass('radio-inline');
+        $typeSumRatioGroup->appendContent($ratioChoiceLabel);
 
-        $optionRatio = new UI_Form_Element_Option('ratioO', 'ratio', __('DW', 'name', 'ratio'));
-        $radioIndicatorRatio->addOption($optionRatio);
+        // Groupe de sélection de l'indicateur numérateur.
+        $numeratorIndicatorGroup = new GenericTag('div');
+        $numeratorIndicatorGroup->addClass('form-group');
+        $numeratorIndicatorGroup->addClass('hide');
+        $valuesWrapper->appendContent($numeratorIndicatorGroup);
 
-        if ($report->getDenominator() !== null) {
-            $radioIndicatorRatio->setValue($optionRatio->value);
-        } else if ($report->getNumerator() !== null) {
-            $radioIndicatorRatio->setValue($optionIndicator->value);
-        }
-        $groupValue->addElement($radioIndicatorRatio);
-
-        $selectIndicator = new UI_Form_Element_Select('indicator');
-        if (($report->getNumerator() === null) || ($report->getDenominator() !== null)) {
-            $selectIndicator->getElement()->hidden = true;
-        }
-
+        $numeratorIndicatorSelect = new GenericTag('select');
+        $numeratorIndicatorSelect->setAttribute('name', 'numeratorIndicator');
+        $numeratorIndicatorSelect->addClass('form-control');
         foreach ($report->getCube()->getIndicators() as $indicator) {
-            $indicatorOption = new UI_Form_Element_Option('indicator'.$indicator->getRef().'O', $indicator->getRef(), $indicator->getLabel());
-            $selectIndicator->addOption($indicatorOption);
+            $indicatorOption = new GenericTag('option', $this->translator->get($indicator->getLabel()));
+            $indicatorOption->setAttribute('value', $indicator->getRef());
+            $numeratorIndicatorSelect->appendContent($indicatorOption);
         }
+        $numeratorIndicatorGroup->appendContent($numeratorIndicatorSelect);
 
-        if (($report->getNumerator() !== null) && ($report->getDenominator() === null)) {
-            $selectIndicator->setValue($report->getNumerator()->getRef());
-        }
-        $groupValue->addElement($selectIndicator);
+        // Groupe de sélection de l'indicateur dénominateur.
+        $denominatorIndicatorGroup = new GenericTag('div');
+        $denominatorIndicatorGroup->addClass('form-group');
+        $denominatorIndicatorGroup->addClass('hide');
+        $valuesWrapper->appendContent($denominatorIndicatorGroup);
 
-        $optionIndicatorSelected = new UI_Form_Condition_Elementary(
-            'optionIndicatorSelected',
-            $radioIndicatorRatio,
-            UI_Form_Condition_Elementary::EQUAL,
-            $optionIndicator->value
-        );
+        $denominatorIndicatorLabel = new GenericTag('div', __('DW', 'config', 'denominatorSelect'));
+        $denominatorIndicatorLabel->addClass('form-control-static');
+        $denominatorIndicatorGroup->appendContent($denominatorIndicatorLabel);
 
-        $showSelectIndicator = new UI_Form_Action_Show('showSelectIndicator');
-        $showSelectIndicator->condition = $optionIndicatorSelected;
-        $selectIndicator->getElement()->addAction($showSelectIndicator);
-
-        $selectNumerator = new UI_Form_Element_Select('numerator');
-        if (($report->getNumerator() === null) || ($report->getDenominator() === null)) {
-            $selectNumerator->getElement()->hidden = true;
-        }
-
+        $denominatorIndicatorSelect = new GenericTag('select');
+        $denominatorIndicatorSelect->setAttribute('name', 'denominatorIndicator');
+        $denominatorIndicatorSelect->addClass('form-control');
         foreach ($report->getCube()->getIndicators() as $indicator) {
-            $indicatorOption = new UI_Form_Element_Option('numerator'.$indicator->getRef().'O', $indicator->getRef(), $indicator->getLabel());
-            $selectNumerator->addOption($indicatorOption);
+            $indicatorOption = new GenericTag('option', $this->translator->get($indicator->getLabel()));
+            $indicatorOption->setAttribute('value', $indicator->getRef());
+            $denominatorIndicatorSelect->appendContent($indicatorOption);
         }
+        $denominatorIndicatorGroup->appendContent($denominatorIndicatorSelect);
 
-        if (($report->getNumerator() !== null) && ($report->getDenominator() !== null)) {
-            $selectNumerator->setValue($report->getNumerator()->getRef());
+
+        // Fieldset de sélection de l'axe pour le type sum.
+        $sumAxisWrapper = new GenericTag('fieldset');
+        $sumAxisWrapper->addClass('hide');
+        $sumAxisLegend = new GenericTag('legend', __('UI', 'name', 'axes'));
+        $sumAxisWrapper->appendContent($sumAxisLegend);
+        $this->appendContent($sumAxisWrapper);
+
+        // Groupe de sélection du nombre d'axes pour le type sum.
+        $sumAxisNumberGroup = new GenericTag('div');
+        $sumAxisNumberGroup->addClass('form-group');
+        $sumAxisWrapper->appendContent($sumAxisNumberGroup);
+
+        $oneAxisSumChoiceInput = new GenericVoidTag('input');
+        $oneAxisSumChoiceInput->setAttribute('type', 'radio');
+        $oneAxisSumChoiceInput->setAttribute('name', 'sumAxisNumberChoice');
+        $oneAxisSumChoiceInput->setAttribute('value', 'one');
+        $oneAxisSumChoiceInput->setBooleanAttribute('checked');
+        $oneAxisSumChoiceLabel = new GenericTag('label', __('DW', 'config', 'oneAxisOption'));
+        $oneAxisSumChoiceLabel->prependContent($oneAxisSumChoiceInput);
+        $oneAxisSumChoiceLabel->addClass('radio-inline');
+        $sumAxisNumberGroup->appendContent($oneAxisSumChoiceLabel);
+
+        $twoAxesSumChoiceInput = new GenericVoidTag('input');
+        $twoAxesSumChoiceInput->setAttribute('type', 'radio');
+        $twoAxesSumChoiceInput->setAttribute('name', 'sumAxisNumberChoice');
+        $twoAxesSumChoiceInput->setAttribute('value', 'two');
+        $twoAxesSumChoiceLabel = new GenericTag('label', __('DW', 'config', 'twoAxesOption'));
+        $twoAxesSumChoiceLabel->prependContent($twoAxesSumChoiceInput);
+        $twoAxesSumChoiceLabel->addClass('radio-inline');
+        $sumAxisNumberGroup->appendContent($twoAxesSumChoiceLabel);
+
+        // Groupe de sélection de l'axe 1 du numérateur pour le type sum.
+        $sumAxisOneGroup = new GenericTag('div');
+        $sumAxisOneGroup->addClass('form-group');
+        $sumAxisWrapper->appendContent($sumAxisOneGroup);
+
+        $sumAxisOneSelect = new GenericTag('select');
+        $sumAxisOneSelect->setAttribute('name', 'sumAxisOne');
+        $sumAxisOneSelect->addClass('form-control');
+        foreach ($report->getCube()->getAxes() as $axis) {
+            $axisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
+            $axisOption->setAttribute('value', $axis->getRef());
+            $sumAxisOneSelect->appendContent($axisOption);
         }
-        $groupValue->addElement($selectNumerator);
+        $sumAxisOneGroup->appendContent($sumAxisOneSelect);
 
-        $selectDenominator = new UI_Form_Element_Select('denominator');
-        $selectDenominator->setLabel(__('DW', 'config', 'denominatorSelect'));
-        if (($report->getNumerator() === null) || ($report->getDenominator() === null)) {
-            $selectDenominator->getElement()->hidden = true;
+        // Groupe de sélection de l'axe 2 du numérateur pour le type sum.
+        $sumAxisTwoGroup = new GenericTag('div');
+        $sumAxisTwoGroup->addClass('form-group');
+        $sumAxisTwoGroup->addClass('hide');
+        $sumAxisWrapper->appendContent($sumAxisTwoGroup);
+
+        $sumAxisTwoSelect = new GenericTag('select');
+        $sumAxisTwoSelect->setAttribute('name', 'sumAxisTwo');
+        $sumAxisTwoSelect->addClass('form-control');
+        foreach ($report->getCube()->getAxes() as $axis) {
+            $axisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
+            $axisOption->setAttribute('value', $axis->getRef());
+            $sumAxisTwoSelect->appendContent($axisOption);
         }
+        $sumAxisTwoGroup->appendContent($sumAxisTwoSelect);
 
-        foreach ($report->getCube()->getIndicators() as $indicator) {
-            $indicatorOption = new UI_Form_Element_Option('denominator'.$indicator->getRef().'O', $indicator->getRef(), $indicator->getLabel());
-            $selectDenominator->addOption($indicatorOption);
+
+        // Fieldset de sélection de l'axe du numérateur pour le type ratio.
+        $ratioNumeratorAxisWrapper = new GenericTag('fieldset');
+        $ratioNumeratorAxisWrapper->addClass('hide');
+        $ratioNumeratorAxisLegend = new GenericTag('legend', __('DW', 'config', 'numeratorAxesGroup'));
+        $ratioNumeratorAxisWrapper->appendContent($ratioNumeratorAxisLegend);
+        $this->appendContent($ratioNumeratorAxisWrapper);
+
+        // Groupe de sélection du nombre d'axes pour le type ratio.
+        $ratioAxisNumberGroup = new GenericTag('div');
+        $ratioAxisNumberGroup->addClass('form-group');
+        $ratioNumeratorAxisWrapper->appendContent($ratioAxisNumberGroup);
+
+        $oneAxisRatioChoiceInput = new GenericVoidTag('input');
+        $oneAxisRatioChoiceInput->setAttribute('type', 'radio');
+        $oneAxisRatioChoiceInput->setAttribute('name', 'ratioAxisNumberChoice');
+        $oneAxisRatioChoiceInput->setAttribute('value', 'one');
+        $oneAxisRatioChoiceInput->setBooleanAttribute('checked');
+        $oneAxisRatioChoiceLabel = new GenericTag('label', __('DW', 'config', 'oneAxisOption'));
+        $oneAxisRatioChoiceLabel->prependContent($oneAxisRatioChoiceInput);
+        $oneAxisRatioChoiceLabel->addClass('radio-inline');
+        $ratioAxisNumberGroup->appendContent($oneAxisRatioChoiceLabel);
+
+        $twoAxesRatioChoiceInput = new GenericVoidTag('input');
+        $twoAxesRatioChoiceInput->setAttribute('type', 'radio');
+        $twoAxesRatioChoiceInput->setAttribute('name', 'ratioAxisNumberChoice');
+        $twoAxesRatioChoiceInput->setAttribute('value', 'two');
+        $twoAxesRatioChoiceLabel = new GenericTag('label', __('DW', 'config', 'twoAxesOption'));
+        $twoAxesRatioChoiceLabel->prependContent($twoAxesRatioChoiceInput);
+        $twoAxesRatioChoiceLabel->addClass('radio-inline');
+        $ratioAxisNumberGroup->appendContent($twoAxesRatioChoiceLabel);
+
+        // Groupe de sélection de l'axe 1 du numérateur pour le type ratio.
+        $ratioNumeratorAxisOneGroup = new GenericTag('div');
+        $ratioNumeratorAxisOneGroup->addClass('form-group');
+        $ratioNumeratorAxisWrapper->appendContent($ratioNumeratorAxisOneGroup);
+
+        $ratioNumeratorAxisOneSelect = new GenericTag('select');
+        $ratioNumeratorAxisOneSelect->setAttribute('name', 'ratioNumeratorAxisOne');
+        $ratioNumeratorAxisOneSelect->addClass('form-control');
+        foreach ($report->getCube()->getAxes() as $axis) {
+            $axisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
+            $axisOption->setAttribute('value', $axis->getRef());
+            $ratioNumeratorAxisOneSelect->appendContent($axisOption);
         }
+        $ratioNumeratorAxisOneGroup->appendContent($ratioNumeratorAxisOneSelect);
 
-        if ($report->getDenominator() !== null) {
-            $selectDenominator->setValue($report->getDenominator()->getRef());
+        // Groupe de sélection de l'axe 2 du numérateur pour le type ratio.
+        $ratioNumeratorAxisTwoGroup = new GenericTag('div');
+        $ratioNumeratorAxisTwoGroup->addClass('form-group');
+        $ratioNumeratorAxisTwoGroup->addClass('hide');
+        $ratioNumeratorAxisWrapper->appendContent($ratioNumeratorAxisTwoGroup);
+
+        $ratioNumeratorAxisTwoSelect = new GenericTag('select');
+        $ratioNumeratorAxisTwoSelect->setAttribute('name', 'ratioNumeratorAxisTwo');
+        $ratioNumeratorAxisTwoSelect->addClass('form-control');
+        foreach ($report->getCube()->getAxes() as $axis) {
+            $axisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
+            $axisOption->setAttribute('value', $axis->getRef());
+            $ratioNumeratorAxisTwoSelect->appendContent($axisOption);
         }
-        $groupValue->addElement($selectDenominator);
-
-        $optionRatioSelected = new UI_Form_Condition_Elementary(
-            'optionRatioSelected',
-            $radioIndicatorRatio,
-            UI_Form_Condition_Elementary::EQUAL,
-            $optionRatio->value
-        );
-
-        $showSelectNumerator = new UI_Form_Action_Show('showSelectNumerator');
-        $showSelectNumerator->condition = $optionRatioSelected;
-        $selectNumerator->getElement()->addAction($showSelectNumerator);
-
-        $showSelectDenominator = new UI_Form_Action_Show('showSelectDenominator');
-        $showSelectDenominator->condition = $optionRatioSelected;
-        $selectDenominator->getElement()->addAction($showSelectDenominator);
-
-        $this->addElement($groupValue);
+        $ratioNumeratorAxisTwoGroup->appendContent($ratioNumeratorAxisTwoSelect);
 
 
-        // Groupe des Axes de l'Indicator.
+        // Fieldset de sélection de l'axe du dénominateur pour le type ratio.
+        $ratioDenominatorAxisWrapper = new GenericTag('fieldset');
+        $ratioDenominatorAxisWrapper->addClass('hide');
+        $ratioDenominatorAxisLegend = new GenericTag('legend', __('DW', 'config', 'denominatorAxesGroup'));
+        $ratioDenominatorAxisWrapper->appendContent($ratioDenominatorAxisLegend);
+        $this->appendContent($ratioDenominatorAxisWrapper);
 
-        $groupIndicatorAxes = new UI_Form_Element_Group('indicatorAxes');
-        $groupIndicatorAxes->setLabel(__('UI', 'name', 'axes'));
-        $groupIndicatorAxes->foldaway = false;
-        if (($report->getNumerator() === null) || ($report->getDenominator() !== null)) {
-            $groupIndicatorAxes->getElement()->hidden = true;
+        // Groupe de sélection de l'axe 1 du dénominateur pour le type ratio.
+        $ratioDenominatorAxisOneGroup = new GenericTag('div');
+        $ratioDenominatorAxisOneGroup->addClass('form-group');
+        $ratioDenominatorAxisWrapper->appendContent($ratioDenominatorAxisOneGroup);
+
+        $ratioDenominatorAxisOneSelect = new GenericTag('select');
+        $ratioDenominatorAxisOneSelect->setAttribute('name', 'ratioDenominatorAxisOne');
+        $ratioDenominatorAxisOneSelect->addClass('form-control');
+        $emptyOption = new GenericTag('option', '');
+        $emptyOption->setAttribute('value', '');
+        $ratioDenominatorAxisOneSelect->appendContent($emptyOption);
+        foreach ($report->getCube()->getAxes() as $axis) {
+            $axisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
+            $axisOption->setAttribute('value', $axis->getRef());
+            $ratioDenominatorAxisOneSelect->appendContent($axisOption);
         }
+        $ratioDenominatorAxisOneGroup->appendContent($ratioDenominatorAxisOneSelect);
 
-        $radioIndicatorAxesNumber = new UI_Form_Element_Radio('indicatorAxesNumber');
+        // Groupe de sélection de l'axe 2 du dénominateur pour le type ratio.
+        $ratioDenominatorAxisTwoGroup = new GenericTag('div');
+        $ratioDenominatorAxisTwoGroup->addClass('form-group');
+        $ratioDenominatorAxisTwoGroup->addClass('hide');
+        $ratioDenominatorAxisWrapper->appendContent($ratioDenominatorAxisTwoGroup);
 
-        $optionIndicatorAxisOne = new UI_Form_Element_Option('indicatorAxesNumber1O', '1', __('DW', 'config', 'oneAxisOption'));
-        $radioIndicatorAxesNumber->addOption($optionIndicatorAxisOne);
-
-        $optionIndicatorAxesTwo = new UI_Form_Element_Option('indicatorAxesNumber2O', '2', __('DW', 'config', 'twoAxesOption'));
-        $radioIndicatorAxesNumber->addOption($optionIndicatorAxesTwo);
-
-        if (($report->getNumerator() !== null) && ($report->getDenominator() === null) && ($numeratorAxis2 !== null)) {
-            $radioIndicatorAxesNumber->setValue($optionIndicatorAxesTwo->value);
-        } else {
-            $radioIndicatorAxesNumber->setValue($optionIndicatorAxisOne->value);
+        $ratioDenominatorAxisTwoSelect = new GenericTag('select');
+        $ratioDenominatorAxisTwoSelect->setAttribute('name', 'ratioDenominatorAxisTwo');
+        $ratioDenominatorAxisTwoSelect->addClass('form-control');
+        $emptyOption = new GenericTag('option', '');
+        $emptyOption->setAttribute('value', '');
+        $ratioDenominatorAxisTwoSelect->appendContent($emptyOption);
+        foreach ($report->getCube()->getAxes() as $axis) {
+            $axisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
+            $axisOption->setAttribute('value', $axis->getRef());
+            $ratioDenominatorAxisTwoSelect->appendContent($axisOption);
         }
-        $groupIndicatorAxes->addElement($radioIndicatorAxesNumber);
-
-        $selectIndicatorAxisOne = new UI_Form_Element_Select('indicatorAxisOne');
-
-        foreach ($report->getCube()->getFirstOrderedAxes() as $axis) {
-            $axisOption = new UI_Form_Element_Option('indicatorAxisOne'.$axis->getRef(), $axis->getRef(), $axis->getLabel());
-            $selectIndicatorAxisOne->addOption($axisOption);
-        }
-
-        if (($report->getDenominator() === null) && ($numeratorAxis1 !== null)) {
-            $selectIndicatorAxisOne->setValue($numeratorAxis1->getRef());
-        }
-        $groupIndicatorAxes->addElement($selectIndicatorAxisOne);
-
-        $selectIndicatorAxisTwo = new UI_Form_Element_Select('indicatorAxisTwo');
-        if (($report->getNumerator() === null) || ($report->getDenominator() !== null) || ($numeratorAxis2 === null)) {
-            $selectIndicatorAxisTwo->getElement()->hidden = true;
-        }
-
-        foreach ($report->getCube()->getFirstOrderedAxes() as $axis) {
-            $axisOption = new UI_Form_Element_Option('indicatorAxisTwo'.$axis->getRef(), $axis->getRef(), $axis->getLabel());
-            $selectIndicatorAxisTwo->addOption($axisOption);
-        }
-
-        if ($numeratorAxis2 !== null) {
-            $selectIndicatorAxisTwo->setValue($numeratorAxis2->getRef());
-        }
-        $groupIndicatorAxes->addElement($selectIndicatorAxisTwo);
-
-        $optionIndicatorAxesTwoSelected = new UI_Form_Condition_Elementary(
-            'optionIndicatorTwoSelected',
-            $radioIndicatorAxesNumber,
-            UI_Form_Condition_Elementary::EQUAL,
-            $optionIndicatorAxesTwo->value
-        );
-
-        $showSelectAxisTwo = new UI_Form_Action_Show('showSelectIndicatorAxisTwo');
-        $showSelectAxisTwo->condition = $optionIndicatorAxesTwoSelected;
-        $selectIndicatorAxisTwo->getElement()->addAction($showSelectAxisTwo);
-
-        $this->addElement($groupIndicatorAxes);
-
-        $showGroupIndicatorAxes = new UI_Form_Action_Show('showGroupIndicatorAxes');
-        $showGroupIndicatorAxes->condition = $optionIndicatorSelected;
-        $groupIndicatorAxes->getElement()->addAction($showGroupIndicatorAxes);
-
-
-        // Groupe des Axes du Numerator.
-
-        $groupNumeratorAxes = new UI_Form_Element_Group('numeratorAxes');
-        $groupNumeratorAxes->setLabel(__('DW', 'config', 'numeratorAxesGroup'));
-        $groupNumeratorAxes->foldaway = false;
-        if ($report->getDenominator() === null) {
-            $groupNumeratorAxes->getElement()->hidden = true;
-        }
-
-        $radioNumeratorAxesNumber = new UI_Form_Element_Radio('numeratorAxesNumber');
-
-        $optionRatioAxisOne = new UI_Form_Element_Option('numeratorAxesNumber1O', '1', __('DW', 'config', 'oneAxisOption'));
-        $radioNumeratorAxesNumber->addOption($optionRatioAxisOne);
-
-        $optionRatioAxesTwo = new UI_Form_Element_Option('numeratorAxesNumber2O', '2', __('DW', 'config', 'twoAxesOption'));
-        $radioNumeratorAxesNumber->addOption($optionRatioAxesTwo);
-
-        if (($report->getDenominator() !== null) && ($numeratorAxis2 !== null)) {
-            $radioNumeratorAxesNumber->setValue($optionRatioAxesTwo->value);
-        } else {
-            $radioNumeratorAxesNumber->setValue($optionRatioAxisOne->value);
-        }
-        $groupNumeratorAxes->addElement($radioNumeratorAxesNumber);
-
-        $selectNumeratorAxisOne = new UI_Form_Element_Select('numeratorAxisOne');
-
-        foreach ($report->getCube()->getFirstOrderedAxes() as $axis) {
-            $axisOption = new UI_Form_Element_Option('numeratorAxisOne'.$axis->getRef(), $axis->getRef(), $axis->getLabel());
-            $selectNumeratorAxisOne->addOption($axisOption);
-        }
-
-        if (($report->getDenominator() !== null) && ($numeratorAxis1 !== null)) {
-            $selectNumeratorAxisOne->setValue($numeratorAxis1->getRef());
-        }
-        $groupNumeratorAxes->addElement($selectNumeratorAxisOne);
-
-        $selectNumeratorAxisTwo = new UI_Form_Element_Select('numeratorAxisTwo');
-        if (($report->getDenominator() === null) || ($numeratorAxis2 === null)) {
-            $selectNumeratorAxisTwo->getElement()->hidden = true;
-        }
-
-        foreach ($report->getCube()->getFirstOrderedAxes() as $axis) {
-            $axisOption = new UI_Form_Element_Option('numeratorAxisTwo'.$axis->getRef(), $axis->getRef(), $axis->getLabel());
-            $selectNumeratorAxisTwo->addOption($axisOption);
-        }
-
-        if (($report->getDenominator() !== null) && ($numeratorAxis2 !== null)) {
-            $selectNumeratorAxisTwo->setValue($numeratorAxis2->getRef());
-        }
-        $groupNumeratorAxes->addElement($selectNumeratorAxisTwo);
-
-        $optionRatioAxesTwoSelected = new UI_Form_Condition_Elementary(
-            'optionNumeratorTwoSelected',
-            $radioNumeratorAxesNumber,
-            UI_Form_Condition_Elementary::EQUAL,
-            $optionRatioAxesTwo->value
-        );
-
-        $showSelectAxisTwo = new UI_Form_Action_Show('showSelectNumeratorAxisTwo');
-        $showSelectAxisTwo->condition = $optionRatioAxesTwoSelected;
-        $selectNumeratorAxisTwo->getElement()->addAction($showSelectAxisTwo);
-
-        $this->addElement($groupNumeratorAxes);
-
-        $showGroupNumeratorAxes = new UI_Form_Action_Show('showGroupNumeratorAxes');
-        $showGroupNumeratorAxes->condition = $optionRatioSelected;
-        $groupNumeratorAxes->getElement()->addAction($showGroupNumeratorAxes);
-
-
-        // Groupe des Axes du Denominator.
-
-        $groupDenominatorAxes = new UI_Form_Element_Group('denominatorAxes');
-        $groupDenominatorAxes->setLabel(__('DW', 'config', 'denominatorAxesGroup'));
-        $groupDenominatorAxes->foldaway = false;
-        if ($report->getDenominator() === null) {
-            $groupDenominatorAxes->getElement()->hidden = true;
-        }
-
-        $selectDenominatorAxisOne = new UI_Form_Element_Select('denominatorAxisOne');
-        $selectDenominatorAxisOne->addNullOption('', null);
-
-        $numeratorAxisChange = new UI_Form_Condition_Elementary(
-            'numeratorAxisOneChange',
-            $selectNumeratorAxisOne,
-            UI_Form_Condition_Elementary::NEQUAL,
-            null
-        );
-
-        $setDenominatorAxisOneNullValue = new UI_Form_Action_SetValue('setDenominatorAxisOneNullValue');
-        $setDenominatorAxisOneNullValue->value = null;
-        $setDenominatorAxisOneNullValue->condition = $numeratorAxisChange;
-        $selectDenominatorAxisOne->getElement()->addAction($setDenominatorAxisOneNullValue);
-
-        if (($report->getDenominator() !== null) && ($numeratorAxis1 !== null)) {
-            $selectedNumeratorAxisOne = $numeratorAxis1;
-        } else {
-            $allAxes = $report->getCube()->getFirstOrderedAxes();
-            $selectedNumeratorAxisOne = array_shift($allAxes);
-        }
-        foreach ($report->getCube()->getFirstOrderedAxes() as $axis) {
-            $axisOption = new UI_Form_Element_Option('denominatorAxisOne'.$axis->getRef(), $axis->getRef(), $axis->getLabel());
-            if (!($selectedNumeratorAxisOne->isNarrowerThan($axis)) && ($selectedNumeratorAxisOne !== $axis)) {
-                $axisOption->hidden = true;
-            }
-            $selectDenominatorAxisOne->addOption($axisOption);
-
-            $broaderAxesOneSelected = new UI_Form_Condition_Expression('broaderAxesOne'.$axis->getRef().'Selected');
-            $broaderAxesOneSelected->expression = UI_Form_Condition_Expression::OR_SIGN;
-
-            $narrowerAxis = $axis;
-            while ($narrowerAxis !== null) {
-                $broaderAxisSelected = new UI_Form_Condition_Elementary(
-                    'option'.$axis->getRef().'NumeratorAxis'.$narrowerAxis->getRef().'Selected',
-                    $selectNumeratorAxisOne,
-                    UI_Form_Condition_Elementary::EQUAL,
-                    $narrowerAxis->getRef()
-                );
-                $broaderAxesOneSelected->addCondition($broaderAxisSelected);
-                $narrowerAxis = $narrowerAxis->getDirectNarrower();
-            }
-
-            $showOptionAxisOne = new UI_Form_Action_Show('showOptionAxisOne'.$axis->getRef());
-            $showOptionAxisOne->setOption($axisOption);
-            $showOptionAxisOne->condition = $broaderAxesOneSelected;
-            $selectDenominatorAxisOne->getElement()->addAction($showOptionAxisOne);
-        }
-
-        if ($denominatorAxis1 !== null) {
-            $selectDenominatorAxisOne->setValue($denominatorAxis1->getRef());
-        }
-        $groupDenominatorAxes->addElement($selectDenominatorAxisOne);
-
-        $selectDenominatorAxisTwo = new UI_Form_Element_Select('denominatorAxisTwo');
-        if (($report->getDenominator() === null) || ($numeratorAxis2 === null)) {
-            $selectDenominatorAxisTwo->getElement()->hidden = true;
-        }
-
-        $selectDenominatorAxisTwo->addNullOption('', null);
-
-        $numeratorAxisChange = new UI_Form_Condition_Elementary(
-            'numeratorAxisTwoChange',
-            $selectNumeratorAxisTwo,
-            UI_Form_Condition_Elementary::NEQUAL,
-            null
-        );
-
-        $setDenominatorAxisTwoNullValue = new UI_Form_Action_SetValue('setDenominatorAxisTwoNullValue');
-        $setDenominatorAxisTwoNullValue->value = null;
-        $setDenominatorAxisTwoNullValue->condition = $numeratorAxisChange;
-        $selectDenominatorAxisTwo->getElement()->addAction($setDenominatorAxisTwoNullValue);
-
-        if (($report->getDenominator() !== null) && ($numeratorAxis2 !== null)) {
-            $selectedNumeratorAxisTwo = $numeratorAxis2;
-        } else {
-            $allAxes = $report->getCube()->getFirstOrderedAxes();
-            $selectedNumeratorAxisTwo = array_shift($allAxes);
-        }
-        foreach ($report->getCube()->getFirstOrderedAxes() as $axis) {
-            $axisOption = new UI_Form_Element_Option('denominatorAxisTwo'.$axis->getRef(), $axis->getRef(), $axis->getLabel());
-            if (!($selectedNumeratorAxisTwo->isNarrowerThan($axis)) && ($selectedNumeratorAxisTwo !== $axis)) {
-                $axisOption->hidden = true;
-            }
-            $selectDenominatorAxisTwo->addOption($axisOption);
-
-            $broaderAxesTwoSelected = new UI_Form_Condition_Expression('broaderAxesTwo'.$axis->getRef().'Selected');
-            $broaderAxesTwoSelected->expression = UI_Form_Condition_Expression::OR_SIGN;
-
-            $narrowerAxis = $axis;
-            while ($narrowerAxis !== null) {
-                $broaderAxisSelected = new UI_Form_Condition_Elementary(
-                    'option'.$axis->getRef().'NumeratorAxis'.$narrowerAxis->getRef().'Selected',
-                    $selectNumeratorAxisTwo,
-                    UI_Form_Condition_Elementary::EQUAL,
-                    $narrowerAxis->getRef()
-                );
-                $broaderAxesTwoSelected->addCondition($broaderAxisSelected);
-                $narrowerAxis = $narrowerAxis->getDirectNarrower();
-            }
-
-            $showOptionAxisTwo = new UI_Form_Action_Show('showOptionAxisTwo'.$axis->getRef());
-            $showOptionAxisTwo->setOption($axisOption);
-            $showOptionAxisTwo->condition = $broaderAxesTwoSelected;
-            $selectDenominatorAxisTwo->getElement()->addAction($showOptionAxisTwo);
-        }
-
-        if ($denominatorAxis2 !== null) {
-            $selectDenominatorAxisTwo->setValue($denominatorAxis2->getRef());
-        }
-        $groupDenominatorAxes->addElement($selectDenominatorAxisTwo);
-
-        $showSelectAxisTwo = new UI_Form_Action_Show('showSelectDenominatorAxisTwo');
-        $showSelectAxisTwo->condition = $optionRatioAxesTwoSelected;
-        $selectDenominatorAxisTwo->getElement()->addAction($showSelectAxisTwo);
-
-        $this->addElement($groupDenominatorAxes);
-
-        $showGroupDenominatorAxes = new UI_Form_Action_Show('showGroupDenominatorAxes');
-        $showGroupDenominatorAxes->condition = $optionRatioSelected;
-        $groupDenominatorAxes->getElement()->addAction($showGroupDenominatorAxes);
-
-
-        // Groupe de sélection de l'affichage.
-
-        $groupDisplay = new UI_Form_Element_Group('display');
-        $groupDisplay->setLabel(__('UI', 'name', 'display'));
-        $groupDisplay->foldaway = false;
-
-        $twoAxisSelected = new UI_Form_Condition_Expression('twoAxisSelected');
-        $twoAxisSelected->expression = UI_Form_Condition_Expression::OR_SIGN;
-
-        $twoAxisIndicatorSelected = new UI_Form_Condition_Expression('twoAxisIndicatorSelected');
-        $twoAxisIndicatorSelected->expression = UI_Form_Condition_Expression::AND_SIGN;
-        $twoAxisIndicatorSelected->addCondition($optionIndicatorSelected);
-        $twoAxisIndicatorSelected->addCondition($optionIndicatorAxesTwoSelected);
-
-        $twoAxisRatioSelected = new UI_Form_Condition_Expression('twoAxisRatioSelected');
-        $twoAxisRatioSelected->expression = UI_Form_Condition_Expression::AND_SIGN;
-        $twoAxisRatioSelected->addCondition($optionRatioSelected);
-        $twoAxisRatioSelected->addCondition($optionRatioAxesTwoSelected);
-
-        $twoAxisSelected->addCondition($twoAxisIndicatorSelected);
-        $twoAxisSelected->addCondition($twoAxisRatioSelected);
-
-        $selectChartType = new UI_Form_Element_Select('chartType');
-        $selectChartType->addNullOption('', null);
-
-        $indicatorRatioChange = new UI_Form_Condition_Elementary(
-            'indicatorRatioChange',
-            $radioIndicatorRatio,
-            UI_Form_Condition_Elementary::NEQUAL,
-            null
-        );
-
-        $indicatorAxisNumberChange = new UI_Form_Condition_Elementary(
-            'indicatorAxisNumberChange',
-            $radioIndicatorAxesNumber,
-            UI_Form_Condition_Elementary::NEQUAL,
-            null
-        );
-
-        $numeratorAxisNumberChange = new UI_Form_Condition_Elementary(
-            'numeratorAxisNumberChange',
-            $radioNumeratorAxesNumber,
-            UI_Form_Condition_Elementary::NEQUAL,
-            null
-        );
-
-        $axisNumberChange = new UI_Form_Condition_Expression('axisNumberChange');
-        $axisNumberChange->expression = UI_Form_Condition_Expression::OR_SIGN;
-        $axisNumberChange->addCondition($indicatorRatioChange);
-        $axisNumberChange->addCondition($indicatorAxisNumberChange);
-        $axisNumberChange->addCondition($numeratorAxisNumberChange);
-
-        $setChartTypeNullValue = new UI_Form_Action_SetValue('setChartTypeNullValue');
-        $setChartTypeNullValue->value = null;
-        $setChartTypeNullValue->condition = $axisNumberChange;
-        $selectChartType->getElement()->addAction($setChartTypeNullValue);
-
-        // Camembert
-        $optionChartPie = new UI_Form_Element_Option(
-            'chartPie',
-            DW_Model_Report::CHART_PIE,
-            __('DW', 'config', 'chartTypePieOption')
-        );
-        $optionChartPie->hidden = ($numeratorAxis2 !== null);
-        $selectChartType->addOption($optionChartPie);
-
-        $showChartPieOneAxes = new UI_Form_Action_Hide('showChartPieOneAxes');
-        $showChartPieOneAxes->setOption($optionChartPie);
-        $showChartPieOneAxes->condition = $twoAxisSelected;
-        $selectChartType->getElement()->addAction($showChartPieOneAxes);
-
-        // Histogramme 1D vertical
-        $optionChartVertical = new UI_Form_Element_Option(
-            'chartVertical',
-            DW_Model_Report::CHART_VERTICAL,
-            __('DW', 'config', 'chartTypeVerticalOption')
-        );
-        $optionChartVertical->hidden = ($numeratorAxis2 !== null);
-        $selectChartType->addOption($optionChartVertical);
-
-        $showChartVerticalOneAxes = new UI_Form_Action_Hide('showChartVerticalOneAxes');
-        $showChartVerticalOneAxes->setOption($optionChartVertical);
-        $showChartVerticalOneAxes->condition = $twoAxisSelected;
-        $selectChartType->getElement()->addAction($showChartVerticalOneAxes);
-
-        // Histogramme 1D horizontal
-        $optionChartHorizontal = new UI_Form_Element_Option(
-            'chartHorizontal',
-            DW_Model_Report::CHART_HORIZONTAL,
-            __('DW', 'config', 'chartTypeHorizontalOption')
-        );
-        $optionChartHorizontal->hidden = ($numeratorAxis2 !== null);
-        $selectChartType->addOption($optionChartHorizontal);
-
-        $showChartHorizontalOneAxes = new UI_Form_Action_Hide('showChartHorizontalOneAxes');
-        $showChartHorizontalOneAxes->setOption($optionChartHorizontal);
-        $showChartHorizontalOneAxes->condition = $twoAxisSelected;
-        $selectChartType->getElement()->addAction($showChartHorizontalOneAxes);
-
-        // Histogramme 2D vertical empilé
-        $optionChartVerticalStacked = new UI_Form_Element_Option(
-            'chartVerticalStacked',
-            DW_Model_Report::CHART_VERTICAL_STACKED,
-            __('DW', 'config', 'chartTypeVerticalStackedOption')
-        );
-        $optionChartVerticalStacked->hidden = ($numeratorAxis2 === null);
-        $selectChartType->addOption($optionChartVerticalStacked);
-
-        $showChartVerticalStackedTwoAxes = new UI_Form_Action_Show('showChartVerticalStackedTwoAxes');
-        $showChartVerticalStackedTwoAxes->setOption($optionChartVerticalStacked);
-        $showChartVerticalStackedTwoAxes->condition = $twoAxisSelected;
-        $selectChartType->getElement()->addAction($showChartVerticalStackedTwoAxes);
-
-        // Histogramme 2D vertical groupé
-        $optionChartVerticalGrouped = new UI_Form_Element_Option(
-            'chartVerticalGrouped',
-            DW_Model_Report::CHART_VERTICAL_GROUPED,
-            __('DW', 'config', 'chartTypeVerticalGroupedOption')
-        );
-        $optionChartVerticalGrouped->hidden = ($numeratorAxis2 === null);
-        $selectChartType->addOption($optionChartVerticalGrouped);
-
-        $showChartVerticalGroupedTwoAxes = new UI_Form_Action_Show('showChartVerticalGroupedTwoAxes');
-        $showChartVerticalGroupedTwoAxes->setOption($optionChartVerticalGrouped);
-        $showChartVerticalGroupedTwoAxes->condition = $twoAxisSelected;
-        $selectChartType->getElement()->addAction($showChartVerticalGroupedTwoAxes);
-
-        // Histogramme 2D horizontal empilé
-        $optionChartHorizontalStacked = new UI_Form_Element_Option(
-            'chartHorizontalStacked',
-            DW_Model_Report::CHART_HORIZONTAL_STACKED,
-            __('DW', 'config', 'chartTypeHorizontalStackedOption')
-        );
-        $optionChartHorizontalStacked->hidden = ($numeratorAxis2 === null);
-        $selectChartType->addOption($optionChartHorizontalStacked);
-
-        $showChartHorizontalStackedTwoAxes = new UI_Form_Action_Show('showChartHorizontalStackedTwoAxes');
-        $showChartHorizontalStackedTwoAxes->setOption($optionChartHorizontalStacked);
-        $showChartHorizontalStackedTwoAxes->condition = $twoAxisSelected;
-        $selectChartType->getElement()->addAction($showChartHorizontalStackedTwoAxes);
-
-        // Histogramme 2D horizontal groupé
-        $optionChartHorizontalGrouped = new UI_Form_Element_Option(
-            'chartHorizontalGrouped',
-            DW_Model_Report::CHART_HORIZONTAL_GROUPED,
-            __('DW', 'config', 'chartTypeHorizontalGroupedOption')
-        );
-        $optionChartHorizontalGrouped->hidden = ($numeratorAxis2 === null);
-        $selectChartType->addOption($optionChartHorizontalGrouped);
-
-        $showChartHorizontalGroupedTwoAxes = new UI_Form_Action_Show('showChartHorizontalGroupedTwoAxes');
-        $showChartHorizontalGroupedTwoAxes->setOption($optionChartHorizontalGrouped);
-        $showChartHorizontalGroupedTwoAxes->condition = $twoAxisSelected;
-        $selectChartType->getElement()->addAction($showChartHorizontalGroupedTwoAxes);
-
-        $selectChartType->setValue($report->getChartType());
-        $groupDisplay->addElement($selectChartType);
-
-        $selectSortType = new UI_Form_Element_Select('sortType');
-        if (($report->getNumerator() === null) || ($report->getDenominator() !== null) || ($numeratorAxis2 !== null)) {
-            $selectSortType->getElement()->hidden = true;
-        }
-        $selectSortType->setValue($report->getSortType());
-
-        $optionSortByDecreasingValue = new UI_Form_Element_Option(
-            'sortByDecreasingValue',
-            DW_Model_Report::SORT_VALUE_DECREASING,
-            __('DW', 'config', 'sortByDecreasingValues')
-        );
-        $selectSortType->addOption($optionSortByDecreasingValue);
-
-        $optionSortByIncreasingValue = new UI_Form_Element_Option(
-            'sortByIncreasingValue',
-            DW_Model_Report::SORT_VALUE_INCREASING,
-            __('DW', 'config', 'sortByIncreasingValues')
-        );
-        $selectSortType->addOption($optionSortByIncreasingValue);
-
-        $optionSortByMembers = new UI_Form_Element_Option(
-            'sortByMembers',
-            DW_Model_Report::SORT_CONVENTIONAL,
-            __('DW', 'config', 'sortByMembers')
-        );
-        $selectSortType->addOption($optionSortByMembers);
-
-        $groupDisplay->addElement($selectSortType);
-
-        $hideSortType = new UI_Form_Action_Hide('hideSortType');
-        $hideSortType->condition = $twoAxisSelected;
-        $selectSortType->getElement()->addAction($hideSortType);
-
-        $checkboxWithUncertainty = new UI_Form_Element_MultiCheckbox('withUncertainty');
-        if ($report->getChartType() === DW_Model_Report::CHART_PIE) {
-            $checkboxWithUncertainty->getElement()->hidden = true;
-        }
-
-        $optionWithUncertainty = new UI_Form_Element_Option(
-            'uncertaintyO',
-            1,
-            __('DW', 'config', 'withUncertaintyCheckbox')
-        );
-        $checkboxWithUncertainty->addOption($optionWithUncertainty);
-
-        if ($report->getWithUncertainty()) {
-            $checkboxWithUncertainty->setValue(1);
-        }
-        $groupDisplay->addElement($checkboxWithUncertainty);
-
-        $chartPieSelected = new UI_Form_Condition_Elementary(
-            'chartPieSelected',
-            $selectChartType,
-            UI_Form_Condition_Elementary::EQUAL,
-            $optionChartPie->value
-        );
-
-        $hideWithUncertainty = new UI_Form_Action_Hide('hideWithUncertainty');
-        $hideWithUncertainty->condition = $chartPieSelected;
-        $checkboxWithUncertainty->getElement()->addAction($hideWithUncertainty);
-
-        $this->addElement($groupDisplay);
-
-
-        // Groupe des filtres.
-
-        $groupFilters = new UI_Form_Element_Group('filters');
-        $groupFilters->setLabel(__('UI', 'name', 'filters'));
-        $groupFilters->folded = !$report->hasFilters();
-
-        foreach ($report->getCube()->getFirstOrderedAxes() as $axis) {
-            $groupAxisFilter = new UI_Form_Element_Group('filter'.$axis->getRef());
-            $groupAxisFilter->setLabel($axis->getLabel());
-            $groupAxisFilter->foldaway = false;
-
-            $hiddenAxis = new UI_Form_Element_Hidden('refAxis');
-            $hiddenAxis->setValue($axis->getRef());
-            $groupAxisFilter->addElement($hiddenAxis);
-
-            $radioFilterAxisNumberMembers = new UI_Form_Element_Radio('filterAxis'.$axis->getRef().'NumberMembers');
-
-            $optionAll = new UI_Form_Element_Option('allO', 'all', __('UI', 'other', 'all'));
-            $radioFilterAxisNumberMembers->addOption($optionAll);
-
-            $optionOne = new UI_Form_Element_Option('oneO', 'one', __('UI', 'other', 'one'));
-            $radioFilterAxisNumberMembers->addOption($optionOne);
-
-            $optionSome = new UI_Form_Element_Option('someO', 'some', __('UI', 'other', 'several'));
-            $radioFilterAxisNumberMembers->addOption($optionSome);
-
-            $reportFilterAxis = $report->getFilterForAxis($axis);
-            if ($reportFilterAxis !== null) {
-                if (count($reportFilterAxis->getMembers()) > 1) {
-                    $radioFilterAxisNumberMembers->setValue($optionSome->value);
+        $ratioDenominatorAxisTwoGroup->appendContent($ratioDenominatorAxisTwoSelect);
+
+
+        // Fieldset de sélection du type d'affichage du rapport.
+        $displayWrapper = new GenericTag('fieldset');
+        $displayLegend = new GenericTag('legend', __('UI', 'name', 'display'));
+        $displayWrapper->appendContent($displayLegend);
+        $this->appendContent($displayWrapper);
+
+        // Groupe de sélection du type d'affichage du rapport.
+        $displayTypeGroup = new GenericTag('div');
+        $displayTypeGroup->addClass('form-group');
+        $displayWrapper->appendContent($displayTypeGroup);
+
+        $displayTypeSelect = new GenericTag('select');
+        $displayTypeSelect->setAttribute('name', 'displayType');
+        $displayTypeSelect->addClass('form-control');
+        $displayTypeGroup->appendContent($displayTypeSelect);
+        $emptyOption = new GenericTag('option', '');
+        $emptyOption->setAttribute('value', '');
+        $emptyOption->addClass('one');
+        $emptyOption->addClass('two');
+        $displayTypeSelect->appendContent($emptyOption);
+        // Camembert.
+        $displayTypePieOption = new GenericTag('option', __('DW', 'config', 'chartTypePieOption'));
+        $displayTypePieOption->setAttribute('value', DW_Model_Report::CHART_PIE);
+        $displayTypePieOption->addClass('one');
+        $displayTypeSelect->appendContent($displayTypePieOption);
+        // Histogramme 1D vertical.
+        $displayTypeVerticalOption = new GenericTag('option', __('DW', 'config', 'chartTypeVerticalOption'));
+        $displayTypeVerticalOption->setAttribute('value', DW_Model_Report::CHART_VERTICAL);
+        $displayTypeVerticalOption->addClass('one');
+        $displayTypeSelect->appendContent($displayTypeVerticalOption);
+        // Histogramme 1D horizontal.
+        $displayTypeHorizontalOption = new GenericTag('option', __('DW', 'config', 'chartTypeHorizontalOption'));
+        $displayTypeHorizontalOption->setAttribute('value', DW_Model_Report::CHART_HORIZONTAL);
+        $displayTypeHorizontalOption->addClass('one');
+        $displayTypeSelect->appendContent($displayTypeHorizontalOption);
+        // Histogramme 2D vertical empilé.
+        $displayTypeVerticalStackedOption = new GenericTag('option', __('DW', 'config', 'chartTypeVerticalStackedOption'));
+        $displayTypeVerticalStackedOption->setAttribute('value', DW_Model_Report::CHART_VERTICAL_STACKED);
+        $displayTypeVerticalStackedOption->addClass('two');
+        $displayTypeSelect->appendContent($displayTypeVerticalStackedOption);
+        // Histogramme 2D vertical groupé.
+        $displayTypeVerticalGroupedOption = new GenericTag('option', __('DW', 'config', 'chartTypeVerticalGroupedOption'));
+        $displayTypeVerticalGroupedOption->setAttribute('value', DW_Model_Report::CHART_VERTICAL_GROUPED);
+        $displayTypeVerticalGroupedOption->addClass('two');
+        $displayTypeSelect->appendContent($displayTypeVerticalGroupedOption);
+        // Histogramme 2D horizontal empilé.
+        $displayTypeHorizontalStackedOption = new GenericTag('option', __('DW', 'config', 'chartTypeHorizontalStackedOption'));
+        $displayTypeHorizontalStackedOption->setAttribute('value', DW_Model_Report::CHART_HORIZONTAL_STACKED);
+        $displayTypeHorizontalStackedOption->addClass('two');
+        $displayTypeSelect->appendContent($displayTypeHorizontalStackedOption);
+        // Histogramme 2D horizontal groupé.
+        $displayTypeHorizontalGroupedOption = new GenericTag('option', __('DW', 'config', 'chartTypeHorizontalGroupedOption'));
+        $displayTypeHorizontalGroupedOption->setAttribute('value', DW_Model_Report::CHART_HORIZONTAL_GROUPED);
+        $displayTypeHorizontalGroupedOption->addClass('two');
+        $displayTypeSelect->appendContent($displayTypeHorizontalGroupedOption);
+
+        // Groupe de sélection de l'ordre des résultats.
+        $resultsOrderGroup = new GenericTag('div');
+        $resultsOrderGroup->addClass('form-group');
+        $displayWrapper->appendContent($resultsOrderGroup);
+
+        $resultsOrderSelect = new GenericTag('select');
+        $resultsOrderSelect->setAttribute('name', 'resultsOrder');
+        $resultsOrderSelect->addClass('form-control');
+        $resultsOrderGroup->appendContent($resultsOrderSelect);
+        // Valeurs décroissantes.
+        $resultsOrderDecreasingOption = new GenericTag('option', __('DW', 'config', 'sortByDecreasingValues'));
+        $resultsOrderDecreasingOption->setAttribute('value', DW_Model_Report::SORT_VALUE_DECREASING);
+        $resultsOrderSelect->appendContent($resultsOrderDecreasingOption);
+        // Valeurs croissantes.
+        $resultsOrderIncreasingOption = new GenericTag('option', __('DW', 'config', 'sortByIncreasingValues'));
+        $resultsOrderIncreasingOption->setAttribute('value', DW_Model_Report::SORT_VALUE_INCREASING);
+        $resultsOrderSelect->appendContent($resultsOrderIncreasingOption);
+        // Valeurs décroissantes.
+        $resultOrderConventionalOption = new GenericTag('option', __('DW', 'config', 'sortByMembers'));
+        $resultOrderConventionalOption->setAttribute('value', DW_Model_Report::SORT_CONVENTIONAL);
+        $resultsOrderSelect->appendContent($resultOrderConventionalOption);
+
+        // Groupe de sélection de l'affichage de l'incertitude.
+        $uncertaintyGroup = new GenericTag('div');
+        $uncertaintyGroup->addClass('form-group');
+        $displayWrapper->appendContent($uncertaintyGroup);
+
+        $uncertaintyChoiceInput = new GenericVoidTag('input');
+        $uncertaintyChoiceInput->setAttribute('type', 'checkbox');
+        $uncertaintyChoiceInput->setAttribute('name', 'uncertaintyChoice');
+        $uncertaintyChoiceInput->setAttribute('value', 'withUncertainty');
+        $uncertaintyChoiceLabel = new GenericTag('label', __('DW', 'config', 'withUncertaintyCheckbox'));
+        $uncertaintyChoiceLabel->prependContent($uncertaintyChoiceInput);
+        $uncertaintyChoiceLabel->addClass('radio-inline');
+        $uncertaintyChoiceDiv = new GenericTag('div', $uncertaintyChoiceLabel);
+        $uncertaintyChoiceDiv->addClass('checkbox');
+        $uncertaintyGroup->appendContent($uncertaintyChoiceDiv);
+
+
+        // Collapse des filtres du rapport.
+        $filtersCollapse = new Collapse('filters'.$hash, __('UI', 'name', 'filters'));
+        $this->appendContent($filtersCollapse);
+
+        foreach ($report->getCube()->getAxes() as $axis) {
+            $axisFilterWrapper = new GenericTag('fieldset');
+            $axisFilterLegend = new GenericTag('legend', $this->translator->get($axis->getLabel()));
+            $axisFilterWrapper->appendContent($axisFilterLegend);
+            $filtersCollapse->appendContent($axisFilterWrapper);
+
+            // Groupe de séléction du nombre de membres pour le filtre suivant l'axe.
+            $memberNumberGroup = new GenericTag('div');
+            $memberNumberGroup->addClass('form-group');
+            $axisFilterWrapper->appendContent($memberNumberGroup);
+
+            $allMembersChoiceInput = new GenericVoidTag('input');
+            $allMembersChoiceInput->setAttribute('type', 'radio');
+            $allMembersChoiceInput->setAttribute('name', $axis->getRef().'_memberNumberChoice');
+            $allMembersChoiceInput->setAttribute('value', 'all');
+            $allMembersChoiceInput->addClass('filterMemberNumber');
+            $allMembersChoiceLabel = new GenericTag('label', __('UI', 'other', 'all'));
+            $allMembersChoiceLabel->prependContent($allMembersChoiceInput);
+            $allMembersChoiceLabel->addClass('radio-inline');
+            $memberNumberGroup->appendContent($allMembersChoiceLabel);
+
+            $oneMemberChoiceInput = new GenericVoidTag('input');
+            $oneMemberChoiceInput->setAttribute('type', 'radio');
+            $oneMemberChoiceInput->setAttribute('name', $axis->getRef().'_memberNumberChoice');
+            $oneMemberChoiceInput->setAttribute('value', 'one');
+            $oneMemberChoiceInput->addClass('filterMemberNumber');
+            $oneMemberChoiceLabel = new GenericTag('label', __('UI', 'other', 'one'));
+            $oneMemberChoiceLabel->prependContent($oneMemberChoiceInput);
+            $oneMemberChoiceLabel->addClass('radio-inline');
+            $memberNumberGroup->appendContent($oneMemberChoiceLabel);
+
+            $severalMembersChoiceInput = new GenericVoidTag('input');
+            $severalMembersChoiceInput->setAttribute('type', 'radio');
+            $severalMembersChoiceInput->setAttribute('name', $axis->getRef().'_memberNumberChoice');
+            $severalMembersChoiceInput->setAttribute('value', 'several');
+            $severalMembersChoiceInput->addClass('filterMemberNumber');
+            $severalMembersChoiceLabel = new GenericTag('label', __('UI', 'other', 'several'));
+            $severalMembersChoiceLabel->prependContent($severalMembersChoiceInput);
+            $severalMembersChoiceLabel->addClass('radio-inline');
+            $memberNumberGroup->appendContent($severalMembersChoiceLabel);
+
+            // Groupe de sélection du ou des membres de l'axe.
+            $membersGroup = new GenericTag('div');
+            $membersGroup->addClass('form-group');
+            $axisFilterWrapper->appendContent($membersGroup);
+
+            $membersSelect = new GenericTag('select');
+            $membersSelect->setAttribute('name', $axis->getRef().'_members');
+            $membersSelect->addClass('form-control');
+            $membersGroup->appendContent($membersSelect);
+
+            $reportFilterForAxis = $report->getFilterForAxis($axis);
+            if ($reportFilterForAxis !== null) {
+                $reportMembersFilteredForAxis = $reportFilterForAxis->getMembers()->toArray();
+                if (count($reportMembersFilteredForAxis) > 1) {
+                    $membersSelect->setBooleanAttribute('multiple');
+                    $severalMembersChoiceInput->setBooleanAttribute('checked');
                 } else {
-                    $radioFilterAxisNumberMembers->setValue($optionOne->value);
+                    $oneMemberChoiceInput->setBooleanAttribute('checked');
                 }
             } else {
-                $radioFilterAxisNumberMembers->setValue($optionAll->value);
-            }
-            $groupAxisFilter->addElement($radioFilterAxisNumberMembers);
-
-            $selectAxisFilterMember = new UI_Form_Element_Select('selectAxis'.$axis->getRef().'MemberFilter');
-            if ($radioFilterAxisNumberMembers->getValue() !== $optionOne->value) {
-                $selectAxisFilterMember->getElement()->hidden = true;
-            }
-
-            $selectAxisFilterMembers = new UI_Form_Element_MultiSelect('selectAxis'.$axis->getRef().'MembersFilter');
-            if ($radioFilterAxisNumberMembers->getValue() !== $optionSome->value) {
-                $selectAxisFilterMembers->getElement()->hidden = true;
+                $membersGroup->addClass('hide');
+                $allMembersChoiceInput->setBooleanAttribute('checked');
             }
 
             foreach ($axis->getMembers() as $member) {
-                $optionMember = new UI_Form_Element_Option($member->getRef().'O', $member->getRef(), $member->getLabel());
-                $selectAxisFilterMember->addOption($optionMember);
-                $selectAxisFilterMembers->addOption($optionMember);
-            }
+                $memberOption = new GenericTag('option', $this->translator->get($member->getLabel()));
+                $memberOption->setAttribute('value', $member->getRef());
+                $membersSelect->appendContent($memberOption);
 
-            if ($radioFilterAxisNumberMembers->getValue() === $optionOne->value) {
-                $selectAxisFilterMember->setValue($reportFilterAxis->getMembers()[0]->getRef());
-            }
-            $groupAxisFilter->addElement($selectAxisFilterMember);
-            if ($radioFilterAxisNumberMembers->getValue() === $optionSome->value) {
-                $refMembers = array();
-                foreach ($reportFilterAxis->getMembers() as $member) {
-                    $refMembers[] = $member->getRef();
+                if (($reportFilterForAxis !== null) && ($reportFilterForAxis->hasMember($member))) {
+                    $memberOption->setBooleanAttribute('selected');
                 }
-                $selectAxisFilterMembers->setValue($refMembers);
             }
-            $groupAxisFilter->addElement($selectAxisFilterMembers);
-
-            $groupFilters->addElement($groupAxisFilter);
-
-            $oneMemberSelected = new UI_Form_Condition_Elementary(
-                'oneMember'.$axis->getRef().'Selected',
-                $radioFilterAxisNumberMembers,
-                UI_Form_Condition_Elementary::EQUAL,
-                $optionOne->value
-            );
-
-            $showSelectAxisFilterMember = new UI_Form_Action_Show('showSelectAxis'.$axis->getRef().'FilterMember');
-            $showSelectAxisFilterMember->condition = $oneMemberSelected;
-            $selectAxisFilterMember->getElement()->addAction($showSelectAxisFilterMember);
-
-            $someMembersSelected = new UI_Form_Condition_Elementary(
-                'someMembers'.$axis->getRef().'Selected',
-                $radioFilterAxisNumberMembers,
-                UI_Form_Condition_Elementary::EQUAL,
-                $optionSome->value
-            );
-
-            $showSelectAxisFilterMembers = new UI_Form_Action_Show('showSelectAxis'.$axis->getRef().'FilterMembers');
-            $showSelectAxisFilterMembers->condition = $someMembersSelected;
-            $selectAxisFilterMembers->getElement()->addAction($showSelectAxisFilterMembers);
         }
 
-        $this->addElement($groupFilters);
+
+        // Groupe des boutons d'action.
+        $actionsGroup = new GenericTag('div');
+        $actionsGroup->addClass('form-group');
+        $actionsGroup->addClass('actions');
+        $actionsGroup->addClass('text-center');
+        $this->appendContent($actionsGroup);
+
+        $submitButton = new Button(__('UI', 'verb', 'launch'), Button::TYPE_PRIMARY);
+        $submitButton->setAttribute('type', 'submit');
+        $actionsGroup->appendContent($submitButton);
+
+        $actionsGroup->appendContent(' ');
+
+        $resetButton = new Button(__('UI', 'verb', 'reset'));
+        $resetButton->setAttribute('type', 'reset');
+        $actionsGroup->appendContent($resetButton);
 
 
-        // Groupe de validation du formulaire.
 
-        $saveButton = new UI_Form_Element_Submit('applyReportConfiguration');
-        $saveButton->setLabel(__('UI', 'verb', 'launch'));
-        $this->addActionElement($saveButton);
+        // Configuration initiale du rapport.
+        if ($reportNumeratorIndicator !== null) {
+            // Vérfication SUM / RATIO
+            if ($reportDenominatorIndicator !== null) {
+                $ratioChoiceInput->setBooleanAttribute('checked');
+                $denominatorIndicatorGroup->removeClass('hide');
+                $ratioNumeratorAxisWrapper->removeClass('hide');
+                $ratioDenominatorAxisWrapper->removeClass('hide');
+            } else {
+                $sumChoiceInput->setBooleanAttribute('checked');
+                $sumAxisWrapper->removeClass('hide');
+            }
 
-        $resetButton = new UI_Form_Element_Reset('resetReportConfiguration');
-        $resetButton->setLabel(__('UI', 'verb', 'reset'));
-        $this->addActionElement($resetButton);
+            $numeratorIndicatorGroup->removeClass('hide');
+            foreach ($numeratorIndicatorSelect->getContent() as $option) {
+                /** @var GenericTag $option */
+                if ($option->getAttribute('value') === $reportNumeratorIndicator->getRef()) {
+                    $option->setBooleanAttribute('selected');
+                    break;
+                }
+            }
+
+            if ($reportDenominatorIndicator !== null) {
+                $denominatorIndicatorGroup->removeClass('hide');
+                foreach ($denominatorIndicatorSelect->getContent() as $option) {
+                    /** @var GenericTag $option */
+                    if ($option->getAttribute('value') === $reportDenominatorIndicator->getRef()) {
+                        $option->setBooleanAttribute('selected');
+                        break;
+                    }
+                }
+            }
+
+            if (($numeratorAxisOne !== null) && ($numeratorAxisTwo !== null)) {
+                $twoAxesSumChoiceInput->setBooleanAttribute('checked');
+                $twoAxesRatioChoiceInput->setBooleanAttribute('checked');
+                $sumAxisTwoGroup->removeClass('hide');
+                $ratioNumeratorAxisTwoGroup->removeClass('hide');
+                $ratioDenominatorAxisTwoGroup->removeClass('hide');
+            }
+
+            if ($numeratorAxisOne !== null) {
+                foreach ($sumAxisOneSelect->getContent() as $option) {
+                    /** @var GenericTag $option */
+                    if ($option->getAttribute('value') === $numeratorAxisOne->getRef()) {
+                        $option->setBooleanAttribute('selected');
+                        break;
+                    }
+                }
+                foreach ($ratioNumeratorAxisOneSelect->getContent() as $option) {
+                    /** @var GenericTag $option */
+                    if ($option->getAttribute('value') === $numeratorAxisOne->getRef()) {
+                        $option->setBooleanAttribute('selected');
+                        break;
+                    }
+                }
+
+                if ($denominatorAxisOne !== null) {
+                    foreach ($ratioDenominatorAxisOneSelect->getContent() as $option) {
+                        /** @var GenericTag $option */
+                        if ($option->getAttribute('value') === $denominatorAxisOne->getRef()) {
+                            $option->setBooleanAttribute('selected');
+                            break;
+                        }
+                    }
+                }
+
+                if ($numeratorAxisTwo !== null) {
+                    foreach ($sumAxisTwoSelect->getContent() as $option) {
+                        /** @var GenericTag $option */
+                        if ($option->getAttribute('value') === $numeratorAxisTwo->getRef()) {
+                            $option->setBooleanAttribute('selected');
+                            break;
+                        }
+                    }
+                    foreach ($ratioNumeratorAxisTwoSelect->getContent() as $option) {
+                        /** @var GenericTag $option */
+                        if ($option->getAttribute('value') === $numeratorAxisTwo->getRef()) {
+                            $option->setBooleanAttribute('selected');
+                            break;
+                        }
+                    }
+
+                    if ($denominatorAxisTwo !== null) {
+                        foreach ($ratioDenominatorAxisOneSelect->getContent() as $option) {
+                            /** @var GenericTag $option */
+                            if ($option->getAttribute('value') === $denominatorAxisTwo->getRef()) {
+                                $option->setBooleanAttribute('selected');
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        switch ($report->getChartType()) {
+            case DW_Model_Report::CHART_PIE:
+                $uncertaintyGroup->addClass('hide');
+                $displayTypePieOption->setBooleanAttribute('selected');
+                break;
+            case DW_Model_Report::CHART_VERTICAL:
+                $displayTypeVerticalOption->setBooleanAttribute('selected');
+                break;
+            case DW_Model_Report::CHART_HORIZONTAL:
+                $displayTypeHorizontalOption->setBooleanAttribute('selected');
+                break;
+            case DW_Model_Report::CHART_VERTICAL_STACKED:
+                $displayTypeVerticalStackedOption->setBooleanAttribute('selected');
+                break;
+            case DW_Model_Report::CHART_VERTICAL_GROUPED:
+                $displayTypeVerticalGroupedOption->setBooleanAttribute('selected');
+                break;
+            case DW_Model_Report::CHART_HORIZONTAL_STACKED:
+                $displayTypeHorizontalStackedOption->setBooleanAttribute('selected');
+                break;
+            case DW_Model_Report::CHART_HORIZONTAL_GROUPED:
+                $displayTypeHorizontalGroupedOption->setBooleanAttribute('selected');
+                break;
+        }
+
+        switch ($report->getSortType()) {
+            case DW_Model_Report::SORT_VALUE_DECREASING:
+                $resultsOrderDecreasingOption->setBooleanAttribute('selected');
+                break;
+            case DW_Model_Report::SORT_VALUE_INCREASING:
+                $resultsOrderIncreasingOption->setBooleanAttribute('selected');
+                break;
+            case DW_Model_Report::SORT_CONVENTIONAL:
+                $resultOrderConventionalOption->setBooleanAttribute('selected');
+                break;
+        }
+
+        if ($report->getWithUncertainty()) {
+            $uncertaintyChoiceInput->setBooleanAttribute('checked');
+        }
+
+        if ($report->hasFilters()) {
+            $filtersCollapse->show();
+        }
     }
-
 }

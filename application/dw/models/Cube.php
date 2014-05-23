@@ -6,6 +6,10 @@
  * @package    DW
  * @subpackage Model
  */
+
+use Core\Translation\TranslatedString;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 
 /**
@@ -15,40 +19,38 @@ use Doctrine\Common\Collections\Criteria;
  */
 class DW_Model_Cube extends Core_Model_Entity
 {
-    use Core_Model_Entity_Translatable;
-
     /**
      * Identifiant unique du Cube.
      *
      * @var string
      */
     protected $id = null;
-    
+
     /**
      * Label du Cube.
      *
-     * @var string
+     * @var TranslatedString
      */
-    protected $label = null;
+    protected $label;
 
     /**
      * Collection des Axis du Cube.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection
      */
     protected $axes = null;
 
     /**
      * Collection des Indicator du Cube.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection
      */
     protected $indicators = null;
 
     /**
      * Collection des Reports du Cube.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection
      */
     protected $reports = null;
 
@@ -58,9 +60,10 @@ class DW_Model_Cube extends Core_Model_Entity
      */
     public function __construct()
     {
-        $this->axes = new Doctrine\Common\Collections\ArrayCollection();
-        $this->indicators = new Doctrine\Common\Collections\ArrayCollection();
-        $this->reports = new Doctrine\Common\Collections\ArrayCollection();
+        $this->label = new TranslatedString();
+        $this->axes = new ArrayCollection();
+        $this->indicators = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     /**
@@ -76,9 +79,9 @@ class DW_Model_Cube extends Core_Model_Entity
     /**
      * Définit le label du Cube.
      *
-     * @param String $label
+     * @param TranslatedString $label
      */
-    public function setLabel ($label)
+    public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
     }
@@ -86,7 +89,7 @@ class DW_Model_Cube extends Core_Model_Entity
     /**
      * Renvoie le label du Cube.
      *
-     * @return String
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -97,7 +100,7 @@ class DW_Model_Cube extends Core_Model_Entity
      * Ajoute un Axis à la collection du Cube.
      *
      * @param DW_Model_Axis $axis
-     * 
+     *
      * @throws Core_Exception_InvalidArgument
      */
     public function addAxis(DW_Model_Axis $axis)

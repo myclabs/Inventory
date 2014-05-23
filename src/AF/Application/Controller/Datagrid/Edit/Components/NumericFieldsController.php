@@ -1,9 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\Component\Component;
@@ -14,14 +9,12 @@ use Unit\UnitAPI;
 
 /**
  * Numeric fields datagrid Controller
- * @package AF
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
  */
 class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -35,17 +28,21 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
         foreach ($numericFields as $numericField) {
             $data = [];
             $data['index'] = $numericField->getId();
-            $data['label'] = $numericField->getLabel();
+            $data['label'] = $this->cellTranslatedText($numericField->getLabel());
             $data['ref'] = $numericField->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $numericField->getId(),
-                                                ' af/datagrid_edit_components_numeric-fields/get-raw-help/id/'
-                                                    . $numericField->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $numericField->getId(),
+                'af/datagrid_edit_components_numeric-fields/get-raw-help?id=' . $af->getId()
+                . '&component=' . $numericField->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $numericField->isVisible();
             $data['enabled'] = $numericField->isEnabled();
             $data['required'] = $numericField->getRequired();
-            $data['unit'] = $this->cellText($numericField->getUnit()->getRef(), $numericField->getUnit()->getSymbol());
+            $data['unit'] = $this->cellText(
+                $numericField->getUnit()->getRef(),
+                $this->translator->get($numericField->getUnit()->getSymbol())
+            );
             $data['unitSelection'] = $numericField->hasUnitSelection();
             $data['withUncertainty'] = $numericField->getWithUncertainty();
             $data['digitalValue'] = $this->cellNumber($numericField->getDefaultValue()->getDigitalValue());
@@ -102,9 +99,9 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 $this->send();
                 return;
             }
-            $numericField->setLabel($this->getAddElementValue('label'));
+            $this->translator->set($numericField->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($numericField->getHelp(), $this->getAddElementValue('help'));
             $numericField->setVisible($isVisible);
-            $numericField->setHelp($this->getAddElementValue('help'));
             $numericField->setEnabled($this->getAddElementValue('enabled'));
             $numericField->setRequired($this->getAddElementValue('required'));
             $numericField->setUnitSelection($this->getAddElementValue('unitSelection'));
@@ -144,20 +141,16 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $numericField->setLabel($newValue);
-                $this->data = $numericField->getLabel();
+                $this->translator->set($numericField->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($numericField->getLabel());
                 break;
             case 'ref':
                 $numericField->setRef($newValue);
                 $this->data = $numericField->getRef();
                 break;
             case 'help':
-                $numericField->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $numericField->getId(),
-                                                  ' af/datagrid_edit_components_numeric-fields/get-raw-help/id/'
-                                                      . $numericField->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
+                $this->translator->set($numericField->getHelp(), $newValue);
+                $this->data = null;
                 break;
             case 'isVisible':
                 $numericField->setVisible($newValue);
@@ -182,7 +175,10 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $numericField->setUnit($unit);
-                $this->data = $this->cellText($numericField->getUnit()->getRef(), $numericField->getUnit()->getSymbol());
+                $this->data = $this->cellText(
+                    $numericField->getUnit()->getRef(),
+                    $this->translator->get($numericField->getUnit()->getSymbol())
+                );
                 break;
             case 'unitSelection':
                 $numericField->setUnitSelection($newValue);
@@ -228,8 +224,6 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -250,8 +244,11 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $this->entityManager->flush();
         } catch (Core_ORM_ForeignKeyViolationException $e) {
             if ($e->isSourceEntityInstanceOf(ElementaryCondition::class)) {
-                throw new Core_Exception_User('AF', 'configComponentMessage',
-                                              'fieldUsedByInteractionConditionDeletionDenied');
+                throw new Core_Exception_User(
+                    'AF',
+                    'configComponentMessage',
+                    'fieldUsedByInteractionConditionDeletionDenied'
+                );
             }
             throw $e;
         }
@@ -265,10 +262,9 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
      */
     public function getRawHelpAction()
     {
-        /** @var $numeric \AF\Domain\Component\NumericField */
-        $numeric = NumericField::load($this->getParam('id'));
-        $this->data = $numeric->getHelp();
+        /** @var $numeric NumericField */
+        $numeric = NumericField::load($this->getParam('component'));
+        $this->data = (string) $this->translator->get($numeric->getHelp());
         $this->send();
     }
-
 }

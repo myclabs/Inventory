@@ -13,6 +13,10 @@ use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Collapse;
+use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Modal;
 
 /** @var $af AF */
 $af = $this->af;
@@ -41,24 +45,23 @@ if ($outputSet && count($outputSet->getIndicators()) == 0) {
 displayAF($af, $inputSet, __('AF', 'inputDocumentation', 'masterForm'));
 
 /**
- * @param \AF\Domain\AF       $af
- * @param \AF\Domain\InputSet\InputSet $inputSet
+ * @param AF       $af
+ * @param InputSet $inputSet
  * @param string   $title
  * @param string   $refPrefix
- * @return UI_HTML_Collapse
+ * @return Collapse
  */
-function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
+function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = 'collapse_')
 {
-    $collapse = new UI_HTML_Collapse($refPrefix . $af->getRef(), $title);
-    $collapse->foldedByDefault = true;
+    $collapse = new Collapse($refPrefix . $af->getId(), $title);
 
     /** @var $mainAlgo MainSelectionAlgo */
     $mainAlgo = $af->getAlgoByRef(AF::ALGO_MAIN_REF);
     $subAlgos = $mainAlgo->getSelectedNumericAlgos($inputSet);
 
     foreach ($subAlgos as $subAlgo) {
-        $algoCollapse = displayAlgo($subAlgo, $inputSet, $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR);
-        $collapse->body .= $algoCollapse->render();
+        $algoCollapse = displayAlgo($subAlgo, $inputSet, $refPrefix . $af->getId() . UI_Generic::REF_SEPARATOR);
+        $collapse->appendContent($algoCollapse->render());
     }
 
     if (count($subAlgos) > 0) {
@@ -67,11 +70,11 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
 
     // Sub-AF
     foreach (getSubAFInputSets($inputSet) as $array) {
-        /** @var $subInputSet \AF\Domain\InputSet\SubInputSet */
+        /** @var $subInputSet SubInputSet */
         $subInputSet = $array['subInputSet'];
         $componentRef = $array['componentRef'];
 
-        $newRefPrefix = $refPrefix . $af->getRef() . UI_Generic::REF_SEPARATOR
+        $newRefPrefix = $refPrefix . $af->getId() . UI_Generic::REF_SEPARATOR
             . $componentRef . UI_Generic::REF_SEPARATOR;
         if (isset($array['number'])) {
             $newRefPrefix .= $array['number'] . UI_Generic::REF_SEPARATOR;
@@ -83,11 +86,13 @@ function displayAF(AF $af, InputSet $inputSet, $title, $refPrefix = '')
 
 
 /**
- * @param \AF\Domain\InputSet\InputSet $inputSet
+ * @param InputSet $inputSet
  * @return SubInputSet[]
  */
 function getSubAFInputSets(InputSet $inputSet)
 {
+    $view = Zend_Controller_Action_HelperBroker::getStaticHelper('Layout')->getView();
+
     $subAFInputSets = [];
     foreach ($inputSet->getInputs() as $input) {
         if ($input->isHidden()) {
@@ -96,7 +101,7 @@ function getSubAFInputSets(InputSet $inputSet)
         if ($input instanceof NotRepeatedSubAFInput) {
             $subInputSet = $input->getValue();
             $subAFInputSets[] = array(
-                'title'        => $input->getComponent()->getLabel(),
+                'title'        => $view->translate($input->getComponent()->getLabel()),
                 'subInputSet'  => $subInputSet,
                 'componentRef' => $input->getRef(),
             );
@@ -105,7 +110,7 @@ function getSubAFInputSets(InputSet $inputSet)
         if ($input instanceof RepeatedSubAFInput) {
             $subInputSets = $input->getValue();
             foreach ($subInputSets as $number => $subInputSet) {
-                $title = $input->getComponent()->getLabel() . " #" . ($number + 1);
+                $title = $view->translate($input->getComponent()->getLabel()) . " #" . ($number + 1);
                 if ($subInputSet->getFreeLabel()) {
                     $title .= " - " . $subInputSet->getFreeLabel();
                 }
@@ -125,9 +130,9 @@ function getSubAFInputSets(InputSet $inputSet)
 
 /**
  * @param Algo     $algo
- * @param \AF\Domain\InputSet\InputSet $inputSet
+ * @param InputSet $inputSet
  * @param string   $refPrefix
- * @return UI_HTML_Collapse
+ * @return Collapse
  */
 function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
 {
@@ -137,10 +142,9 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
 
     $title = $algo->getRef();
     if ($algo instanceof NumericAlgo) {
-        $title .= " <small>" . $algo->getLabel() . "</small>";
+        $title .= " <small>" . $view->translate($algo->getLabel()) . "</small>";
     }
-    $collapse = new UI_HTML_Collapse($refPrefix . $algo->getRef(), $title);
-    $collapse->foldedByDefault = true;
+    $collapse = new Collapse($refPrefix . $algo->getRef(), $title);
 
     // Type
     switch(get_class($algo)) {
@@ -159,80 +163,80 @@ function displayAlgo(Algo $algo, InputSet $inputSet, $refPrefix = '')
         default:
             $type = get_class($algo);
     }
-    $collapse->body .= "<p><strong>" . __('UI', 'name', 'type') . __('UI', 'other', ':') . "</strong> $type</p>";
+    $collapse->appendContent("<p><strong>" . __('UI', 'name', 'type') . __('UI', 'other', ':') . "</strong> $type</p>");
 
     // Champ de saisie
     if ($algo instanceof NumericInputAlgo) {
-        $collapse->body .= "<p><strong>" . __('UI', 'name', 'field')  . __('UI', 'other', ':')
-            . "</strong> {$algo->getLabel()}</p>";
+        $label = $view->translate($algo->getLabel());
+        $collapse->appendContent("<p><strong>" . __('UI', 'name', 'field')  . __('UI', 'other', ':')
+            . "</strong> $label</p>");
     }
 
     // Paramètre
     if ($algo instanceof NumericParameterAlgo) {
         $family = $algo->getFamily();
-        $collapse->body .= '<p>';
-        $collapse->body .= '<strong>' . __('Techno', 'name', 'family') . __('UI', 'other', ':') . '</strong>';
-        $collapse->body .= '<a href="' . $view->baseUrl('techno/family/details/id/' . $family->getId()) . '">'
-            . $family->getLabel() . "</a>";
-        $collapse->body .= '</p>';
-        $collapse->body .= '<ul>';
+        $collapse->appendContent('<p>');
+        $collapse->appendContent('<strong>' . __('Parameter', 'name', 'family') . __('UI', 'other', ':') . '</strong>');
+        $collapse->appendContent('<a href="' . $view->baseUrl('parameter/family/details/id/' . $family->getId()) . '">'
+            . $view->translate($family->getLabel()) . "</a>");
+        $collapse->appendContent('</p>');
+        $collapse->appendContent('<ul>');
         foreach ($algo->getParameterCoordinates() as $parameterCoordinate) {
             $memberRef = $parameterCoordinate->getMember($inputSet);
             try {
                 $dimension = $family->getDimension($parameterCoordinate->getDimensionRef());
                 $member = $dimension->getMember($memberRef);
-                $dimensionLabel = $dimension->getLabel();
-                $memberLabel = $member->getLabel();
+                $dimensionLabel = $view->translate($dimension->getLabel());
+                $memberLabel = $view->translate($member->getLabel());
             } catch (Core_Exception_NotFound $e) {
                 $dimensionLabel = $parameterCoordinate->getDimensionRef();
                 $memberLabel = $memberRef;
             }
-            $collapse->body .= '<li>';
-            $collapse->body .= ucfirst($dimensionLabel) . __('UI', 'other', ':') . $memberLabel;
-            $collapse->body .= '</li>';
+            $collapse->appendContent('<li>');
+            $collapse->appendContent(ucfirst($dimensionLabel) . __('UI', 'other', ':') . $memberLabel);
+            $collapse->appendContent('</li>');
         }
-        $collapse->body .= '</ul>';
+        $collapse->appendContent('</ul>');
     }
 
     // Expression
     if ($algo instanceof NumericExpressionAlgo) {
-        $url = $view->url([
-                          'module' => 'af',
-                          'controller' => 'af',
-                          'action' => 'popup-expression-graph',
-                          'id' => $algo->getId(),
-                          ]);
-        $popup = new UI_Popup_Ajax('graph_' . $algo->getId(), $url);
-        $popup->title = $algo->getRef();
-        if ($algo->getLabel()) {
-            $popup->title .= ' (' . $algo->getLabel() . ')';
+        $url = 'af/af/popup-expression-graph?id=' . $algo->getId() . '&idAF=' . $inputSet->getAF()->getId();
+        $popup = new Modal();
+        $popup->addDefaultDismissButton();
+        $popup->ajax(true);
+        $popup->setAttribute('id', 'graph_' . $algo->getId());
+        $popup->addTitle($algo->getRef());
+        $algoLabel = $view->translate($algo->getLabel());
+        if ($algoLabel) {
+            $popup->getHeader()->appendContent(' (' . $algoLabel . ')');
         }
-        $popup->addAttribute('class', 'large');
-        $collapse->body .= $popup->render();
-        $helper = new UI_View_Helper_Button();
-        $buttonHTML = $helper->button("", 'search', ['class' => 'btn-mini'])
-            ->showPopup('graph_' . $algo->getId());
+        $popup->large();
+        $collapse->appendContent($popup->render());
+        $buttonHTML = new Button(new Icon('search'));
+        $buttonHTML->addClass('btn-xs');
+        $buttonHTML->showAjaxModal('graph_' . $algo->getId(), $url);
         $expression = $algo->getExpression();
-        $collapse->body .= "<p><strong>" . __('TEC', 'name', 'expression') . __('UI', 'other', ':')
-            . "</strong> $buttonHTML <code>$expression</code></p>";
+        $collapse->appendContent("<p><strong>" . __('TEC', 'name', 'expression') . __('UI', 'other', ':')
+            . "</strong> $buttonHTML <code>$expression</code></p>");
     }
 
     // Valeur
     if ($algo instanceof NumericAlgo) {
         $value = $algo->execute($inputSet);
         $stringValue = $locale->formatNumber($value->getDigitalValue(), 20)
-            . ' <strong>' . $value->getUnit()->getSymbol() . '</strong> ± '
+            . ' <strong>' . $view->translate($value->getUnit()->getSymbol()) . '</strong> ± '
             . $locale->formatNumber($value->getRelativeUncertainty()) . ' <strong>%</strong>';
-        $collapse->body .= "<p><strong>" . __('UI', 'name', 'value') . __('UI', 'other', ':')
-            . "</strong> $stringValue</p>";
+        $collapse->appendContent("<p><strong>" . __('UI', 'name', 'value') . __('UI', 'other', ':')
+            . "</strong> $stringValue</p>");
     }
 
     // Opérandes de l'expression
     if ($algo instanceof NumericExpressionAlgo) {
         // Opérandes de l'expression
         foreach ($algo->getSubAlgos() as $subAlgo) {
-            $collapse->body .= displayAlgo($subAlgo, $inputSet,
-                                           $refPrefix . $algo->getRef() . UI_Generic::REF_SEPARATOR)->render();
+            $collapse->appendContent(displayAlgo($subAlgo, $inputSet,
+               $refPrefix . $algo->getRef() . UI_Generic::REF_SEPARATOR)->render());
         }
     }
 

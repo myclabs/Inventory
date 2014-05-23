@@ -20,6 +20,14 @@
                 <seg>Levels</seg>
             </tuv>
         </tu>
+        <tu tuid="granularitiesSynthesis">
+            <tuv xml:lang="fr">
+                <seg>Niveaux (synthèse)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Levels (synthesis)</seg>
+            </tuv>
+        </tu>
         <tu tuid="aclGranularities">
             <tuv xml:lang="fr">
                 <seg>Niveaux contrôlant les accès utilisateurs</seg>
@@ -186,10 +194,10 @@
         </tu>
         <tu tuid="granularityAlreadyConfigured">
             <tuv xml:lang="fr">
-                <seg>Ce niveau est déjà configurée</seg>
+                <seg>Ce niveau est déjà présent.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>This level is already configured</seg>
+                <seg>This level is already configured.</seg>
             </tuv>
         </tu>
 

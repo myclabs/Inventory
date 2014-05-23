@@ -6,7 +6,17 @@
  */
 ?>
     <div class="page-header">
-        <h1><?=___('Orga', 'translate', 'organizationalMembers')?> <small><?=___('UI', 'name', 'translations')?></small></h1>
+        <h1>
+            <?=___('Orga', 'translate', 'organizationalMembers')?> <small><?=___('UI', 'name', 'translations')?></small>
+            <div class="pull-right">
+                <small>
+                    <?=$this->button(__('UI', 'other', 'backButton'))->prependIcon('arrow-left')->link('orga/organization/edit/idOrganization/'.$this->idOrganization.'/tab/translate/')?>
+                </small>
+            </div>
+        </h1>
+        <style>
+            h1 .pull-right small a { letter-spacing: normal; }
+        </style>
     </div>
 <?php
 foreach ($this->axes as $axis) {
@@ -29,11 +39,11 @@ foreach ($this->axes as $axis) {
     $datagrid->addParam('refAxis', $axis->getRef());
     $datagrid->initialLoading = false;
 
-    echo $this->collapse('translateMembers'.$axis->getRef(), $axis->getLabel(), $datagrid->getHTML())->collapsed();
+    echo $this->collapse('translateMembers'.$axis->getRef(), $this->translate($axis->getLabel()), $datagrid->getHTML());
 
     $script = '';
-    $script .= '$(\'#translateMembers'.$axis->getRef().'\').on(\'show\', function(e) {';
-    $script .= 'if ($(e.target).attr(\'id\') == \'translateMembers'.$axis->getRef().'_wrapper\') {';
+    $script .= '$(\'#translateMembers'.$axis->getRef().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'translateMembers'.$axis->getRef().'\') {';
     $script .= 'datagridTranslate_Orga_Model_Member_label_'.$axis->getRef().'.filter();';
     $script .= '}';
     $script .= '});';

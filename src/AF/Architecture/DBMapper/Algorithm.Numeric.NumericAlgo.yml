@@ -3,22 +3,13 @@ AF\Domain\Algorithm\Numeric\NumericAlgo:
   repositoryClass: \Core_Model_Repository_Ordered
   table: Algo_Numeric
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
-  fields:
+  embedded:
     label:
-      type: string
-      nullable: true
-      gedmo:
-        - translatable
-    refContext:
-      type: string
-      nullable: true
-    refIndicator:
-      type: string
-      nullable: true
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    contextIndicator:
+      targetEntity: Classification\Domain\ContextIndicator
 
   oneToMany:
     indexes:

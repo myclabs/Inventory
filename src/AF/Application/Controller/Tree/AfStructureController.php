@@ -1,9 +1,4 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\Component\Component;
@@ -12,21 +7,18 @@ use Core\Annotation\Secure;
 
 /**
  * Arbre de la structure d'un AF
- * @package AF
  */
 class AF_Tree_AfStructureController extends UI_Controller_Tree
 {
-
     use UI_Controller_Helper_Form;
 
     /**
-     * @see UI_Controller_Tree::getnodesAction()
      * @Secure("editAF")
      */
     public function getnodesAction()
     {
         if ($this->idNode !== null) {
-            /** @var $group \AF\Domain\Component\Group */
+            /** @var $group Group */
             $group = Group::load($this->idNode);
         } else {
             /** @var $af AF */
@@ -38,7 +30,8 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
             $isLeaf = (! $component instanceof Group);
             $this->addNode(
                 $component->getId(),
-                $component->getLabel() . ' <em>(' . $component->getRef() . ')</em>',
+                $this->translator->get($component->getLabel())
+                . ' <em>(' . $component->getRef() . ')</em>',
                 $isLeaf,
                 null,
                 false,
@@ -49,16 +42,12 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         $this->send();
     }
 
-    /**
-     * @see UI_Controller_Tree::addnodeAction()
-     */
     public function addnodeAction()
     {
         throw new Core_Exception_InvalidHTTPQuery("Action interdite");
     }
 
     /**
-     * @see UI_Controller_Tree::editnodeAction()
      * @Secure("editAF")
      */
     public function editnodeAction()
@@ -66,13 +55,10 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         /** @var $component Component */
         $component = Component::load($this->idNode);
 
-        $newParent = $this->_form[$this->id . '_changeParent']['value'];
-        $newPosition = $this->_form[$this->id . '_changeOrder']['value'];
-        $afterElement = $this->_form[$this->id . '_changeOrder']['children'][$this->id . '_selectAfter_child']['value'];
-
         // Groupe
+        $newParent = $this->getEditElementValue('changeParent');
         if ($newParent != 0) {
-            /** @var $group \AF\Domain\Component\Group */
+            /** @var $group Group */
             $group = Group::load($newParent);
 
             $component->getGroup()->removeSubComponent($component);
@@ -80,11 +66,13 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         }
 
         // Position
+        $newPosition = $this->getEditElementValue('changeOrder');
         if ($newPosition == 'first') {
             $component->setPosition(1);
         } elseif ($newPosition == 'last') {
             $component->setPosition($component->getLastEligiblePosition());
         } elseif ($newPosition == 'after') {
+            $afterElement = $this->getEditElementValue('selectAfter');
             /** @var $previousComponent Component */
             $previousComponent = Component::load($afterElement);
             $component->moveAfter($previousComponent);
@@ -97,23 +85,19 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         $this->send();
     }
 
-    /**
-     * @see UI_Controller_Tree::deletenodeAction()
-     */
     public function deletenodeAction()
     {
         throw new Core_Exception_InvalidHTTPQuery("Action interdite");
     }
 
     /**
-     * @see UI_Controller_Tree::getlistparentsAction()
      * @Secure("editAF")
      */
     public function getlistparentsAction()
     {
         /** @var $af AF */
         $af = AF::load($this->getParam('id'));
-        /** @var $component \AF\Domain\AF\Component\Component */
+        /** @var $component Component */
         if ($this->idNode != null) {
             $component = Component::load($this->idNode);
             $parentGroup = $component->getGroup();
@@ -145,7 +129,6 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
     }
 
     /**
-     * @see UI_Controller_Tree::getlistsiblingsAction()
      * @Secure("editAF")
      */
     public function getlistsiblingsAction()
@@ -173,7 +156,7 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
                     continue;
                 }
             }
-            $this->addElementList($sibling->getId(), $sibling->getLabel());
+            $this->addElementList($sibling->getId(), $this->translator->get($sibling->getLabel()));
         }
         $this->send();
     }
@@ -187,11 +170,10 @@ class AF_Tree_AfStructureController extends UI_Controller_Tree
         $groups = [];
         foreach ($group->getSubComponents() as $component) {
             if ($component instanceof Group) {
-                $groups[$component->getId()] = $component->getLabel();
+                $groups[$component->getId()] = $this->translator->get($component->getLabel());
                 $groups = $groups + $this->getAllAFGroups($component);
             }
         }
         return $groups;
     }
-
 }

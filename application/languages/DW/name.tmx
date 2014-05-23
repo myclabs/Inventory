@@ -44,7 +44,7 @@
                 <seg>denominator</seg>
             </tuv>
         </tu>
-        <tu tuid="indicator">   <!-- Car traduction dans Classif pas accessible depuis DW -->
+        <tu tuid="indicator">   <!-- Car traduction dans Classification pas accessible depuis DW -->
             <tuv xml:lang="fr">
                 <seg>Indicateur</seg>
             </tuv>

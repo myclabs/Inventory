@@ -10,8 +10,6 @@ use Core_Mail;
 use Core_Model_Query;
 use Core_Tools;
 use Psr\Log\LoggerInterface;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Role\UserRole;
 
 /**
  * Gestion des utilisateurs.
@@ -20,11 +18,6 @@ use User\Domain\ACL\Role\UserRole;
  */
 class UserService
 {
-    /**
-     * @var ACLService
-     */
-    private $aclService;
-
     /**
      * @var LoggerInterface
      */
@@ -39,14 +32,12 @@ class UserService
     private $applicationUrl;
 
     public function __construct(
-        ACLService $aclService,
         LoggerInterface $logger,
         $contactEmail,
         $noReplyEmail,
         $noReplyName,
         $applicationUrl
     ) {
-        $this->aclService = $aclService;
         $this->logger = $logger;
         $this->contactEmail = $contactEmail;
         $this->noReplyEmail = $noReplyEmail;
@@ -108,25 +99,18 @@ class UserService
         }
 
         $user = new User($email, $password);
-        // Ajoute le role utilisateur
-        $this->aclService->addRole($user, new UserRole($user));
-
         $user->save();
 
         return $user;
     }
 
     /**
-     * Supprime un utilisateur et sa ressource associée
+     * Supprime un utilisateur
      *
      * @param User $user
      */
     public function deleteUser(User $user)
     {
-        foreach ($user->getRoles() as $role) {
-            $this->aclService->removeRole($user, $role);
-        }
-
         $user->delete();
     }
 
@@ -175,6 +159,20 @@ class UserService
         $this->sendEmail($user, $emailSubject, $emailContent);
 
         return $user;
+    }
+
+    /**
+     * Return the user for the given email. If the user doesn't exist, invite him.
+     * @param string $email
+     * @return User
+     */
+    public function getOrInvite($email)
+    {
+        if (User::isEmailUsed($email)) {
+            return User::loadByEmail($email);
+        }
+
+        return $this->inviteUser($email);
     }
 
     /**

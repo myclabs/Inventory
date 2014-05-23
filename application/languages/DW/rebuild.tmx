@@ -71,14 +71,6 @@
                 <seg>You can rebuild all analysis data of the selected organizational unit and all its subunits by clicking on the button below. This operation may take time.</seg>
             </tuv>
         </tu>
-        <tu tuid="analysisDataRebuildWarningMessageSimulation">
-            <tuv xml:lang="fr">
-                <seg>Vous pouvez régénérer l'ensemble des données d'analyse de ce jeu de simulation en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>You can rebuild all analysis data of this simulation set by clicking on the button below. This operation may take time.</seg>
-            </tuv>
-        </tu>
         <tu tuid="outputDataRebuildWarningMessageOrganization">
             <tuv xml:lang="fr">
                 <seg>Vous pouvez relancer l'ensemble des calculs et régénérer l'ensemble des données d'analyse de l'unité organisationnelle séléctionnée et pour toutes ses sous-unités en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
@@ -87,15 +79,7 @@
                 <seg>You can restart all calculations and rebuild all analysis data of the selected organizational unit and all its subunits by clicking on the button below. This operation may take time.</seg>
             </tuv>
         </tu>
-        <tu tuid="outputDataRebuildWarningMessageSimulation">
-            <tuv xml:lang="fr">
-                <seg>Vous pouvez relancer l'ensemble des calculs et régénérer l'ensemble des données d'analyse pour ce jeu de simulation en cliquant sur le bouton ci-dessous. Attention, cette opération peut prendre du temps.</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>You can restart all calculations and rebuild all analysis data for this simulation set by clicking on the button below. This operation may take time.</seg>
-            </tuv>
-        </tu>
- 
+
          <!-- Boutons -->
         
         <tu tuid="analysisDataRebuildButton">

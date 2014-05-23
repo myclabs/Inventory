@@ -1,10 +1,25 @@
 <?php
 
-use DI\Container;
+use Account\Domain\ACL\AccountAdminRole;
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
+use Mnapoli\Translated\Translator;
+use MyCLabs\ACL\Doctrine\ACLSetup;
+use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
+use MyCLabs\ACL\ACL;
+use MyCLabs\ACL\CascadeStrategy\SimpleCascadeStrategy;
+use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellObserverRole;
+use Orga\Model\ACL\CellResourceGraphTraverser;
+use Orga\Model\ACL\OrganizationAdminRole;
+use Orga\Model\ACL\OrganizationResourceGraphTraverser;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use User\Domain\ACL\AdminRole;
+use User\Domain\User;
 
 return [
     // Nom de l'application installée
@@ -33,6 +48,12 @@ return [
     // Langues supportées par l'application
     'translation.defaultLocale' => 'fr',
     'translation.languages'     => ['fr', 'en'],
+    'translation.fallbacks'     => [
+        'fr' => ['en'],
+        'en' => ['fr'],
+    ],
+    Translator::class => DI\object()
+            ->constructor(DI\link('translation.defaultLocale'), DI\link('translation.fallbacks')),
 
     // ACL
     'enable.acl' => true,
@@ -45,7 +66,7 @@ return [
     'locale.minSignificantFigures' => null,
 
     // Event manager
-    EventDispatcher::class => DI\factory(function (Container $c) {
+    EventDispatcher::class => DI\factory(function (ContainerInterface $c) {
         $dispatcher = new EventDispatcher();
 
         // User events (plus prioritaire)
@@ -76,5 +97,35 @@ return [
     Orga_Service_ETLStructure::class => DI\object()
             ->constructorParameter('defaultLocale', DI\link('translation.defaultLocale'))
             ->constructorParameter('locales', DI\link('translation.languages')),
+
+    // ACL
+    ACL::class => DI\factory(function (ContainerInterface $c) {
+        $em = $c->get(EntityManager::class);
+
+        $cascadeStrategy = new SimpleCascadeStrategy($em);
+        $cascadeStrategy->setResourceGraphTraverser(
+            Orga_Model_Organization::class,
+            $c->get(OrganizationResourceGraphTraverser::class)
+        );
+        $cascadeStrategy->setResourceGraphTraverser(
+            Orga_Model_Cell::class,
+            $c->get(CellResourceGraphTraverser::class)
+        );
+
+        return new ACL($em, $cascadeStrategy);
+    }),
+    ACLSetup::class => DI\factory(function () {
+        $setup = new ACLSetup();
+        $setup->setSecurityIdentityClass(User::class);
+        $setup->setActionsClass(Actions::class);
+        $setup->registerRoleClass(AdminRole::class, 'superadmin');
+        $setup->registerRoleClass(AccountAdminRole::class, 'accountAdmin');
+        $setup->registerRoleClass(OrganizationAdminRole::class, 'organizationAdmin');
+        $setup->registerRoleClass(CellAdminRole::class, 'cellAdmin');
+        $setup->registerRoleClass(CellManagerRole::class, 'cellManager');
+        $setup->registerRoleClass(CellContributorRole::class, 'cellContributor');
+        $setup->registerRoleClass(CellObserverRole::class, 'cellObserver');
+        return $setup;
+    }),
 
 ];

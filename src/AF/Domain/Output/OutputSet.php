@@ -7,8 +7,8 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Algorithm\Output;
 use Calc_Calculation;
 use Calc_Calculation_Value;
-use Classif_Model_ContextIndicator;
-use Classif_Model_Indicator;
+use Classification\Domain\ContextIndicator;
+use Classification\Domain\Indicator;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,7 +24,7 @@ class OutputSet extends Core_Model_Entity
     protected $id;
 
     /**
-     * @var \AF\Domain\InputSet\PrimaryInputSet|null
+     * @var PrimaryInputSet|null
      */
     protected $inputSet;
 
@@ -46,7 +46,7 @@ class OutputSet extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\InputSet\InputSet $inputSet
+     * @param InputSet $inputSet
      * @param Output[] $algoOutputs
      */
     public function addAlgoOutputs(InputSet $inputSet, array $algoOutputs)
@@ -76,7 +76,7 @@ class OutputSet extends Core_Model_Entity
     }
 
     /**
-     * Calcule le total des outputs elements classé par indicateur de classif
+     * Calcule le total des outputs elements classé par indicateur de classification
      */
     public function calculateTotals()
     {
@@ -101,8 +101,8 @@ class OutputSet extends Core_Model_Entity
                 $calcValue->addComponents($outputElement->getValue(), Calc_Calculation::SUM);
             }
             $calcValue->setOperation(Calc_Calculation::ADD_OPERATION);
-            /** @var $indicator Classif_Model_Indicator */
-            $indicator = Classif_Model_Indicator::load($idIndicator);
+            /** @var $indicator Indicator */
+            $indicator = Indicator::load($idIndicator);
             // On créer l'outputTotal et on le sauvegarde
             $total = new OutputTotal($this);
             $total->setClassifIndicator($indicator);
@@ -121,11 +121,11 @@ class OutputSet extends Core_Model_Entity
     }
 
     /**
-     * Return the OutputTotal for a given Classif_Model_Indicator
-     * @param Classif_Model_Indicator $indicator
+     * Return the OutputTotal for a given Indicator
+     * @param Indicator $indicator
      * @return OutputTotal|null
      */
-    public function getTotalByIndicator(Classif_Model_Indicator $indicator)
+    public function getTotalByIndicator(Indicator $indicator)
     {
         foreach ($this->totals as $outputTotal) {
             if ($outputTotal->getClassifIndicator() === $indicator) {
@@ -136,7 +136,7 @@ class OutputSet extends Core_Model_Entity
     }
 
     /**
-     * @return Classif_Model_Indicator[]
+     * @return Indicator[]
      */
     public function getIndicators()
     {
@@ -151,10 +151,10 @@ class OutputSet extends Core_Model_Entity
     }
 
     /**
-     * @param Classif_Model_Indicator $indicator
-     * @return Classif_Model_ContextIndicator[]
+     * @param Indicator $indicator
+     * @return ContextIndicator[]
      */
-    public function getContextIndicatorsByIndicator(Classif_Model_Indicator $indicator)
+    public function getContextIndicatorsByIndicator(Indicator $indicator)
     {
         $contextIndicators = new ArrayCollection();
         foreach ($this->elements as $outputElement) {

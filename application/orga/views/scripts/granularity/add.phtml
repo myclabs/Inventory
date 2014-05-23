@@ -6,10 +6,10 @@ $organization = $this->organization;
       action="orga/organization/add-granularity-<?=$this->purpose?>/idOrganization/<?=$organization->getId()?>/">
     <select multiple name="axes[]" class="axes" style="min-width: 250px;">
         <?php foreach ($organization->getFirstOrderedAxes() as $axis) : ?>
-        <option value="<?=$axis->getRef()?>"><?=$axis->getLabel()?></option>
+            <option value="<?=$axis->getRef()?>"><?=$this->translate($axis->getLabel())?></option>
         <?php endforeach; ?>
     </select>
-    <?=$this->complementaryFields?>
+   <?=$this->complementaryFields?>
     <button class="btn btn-primary addGranularity">
         <i class="fa fa-plus-circle"></i>
         <?=___('UI', 'verb', 'add')?>
@@ -39,7 +39,6 @@ $organization = $this->organization;
             type: "POST",
             data: form.serialize(),
             success: function(data) {
-                $('.granularityLoading', granularityInfo).remove();
                 $('#addGranularity<?=$organization->getId()?>_<?=$this->purpose?>').trigger('granularityAdded', data);
                 form.attr('data-submitting', false);
             },
@@ -49,7 +48,7 @@ $organization = $this->organization;
                 if (typeof(response.typeError) == 'string') {
                     granularityInfo.addClass('alert-' + response.typeError);
                 } else {
-                    granularityInfo.addClass('alert-error');
+                    granularityInfo.addClass('alert-danger');
                 }
                 if (typeof(response.message) == 'string') {
                     granularityInfo.html(response.message);

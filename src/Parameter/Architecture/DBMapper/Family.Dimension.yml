@@ -1,0 +1,52 @@
+Parameter\Domain\Family\Dimension:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Parameter_Family_Dimension
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+    orientation:
+      type: integer
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    family:
+      targetEntity: Parameter\Domain\Family\Family
+      inversedBy: dimensions
+      joinColumn:
+        name: idFamily
+        referencedColumnName: id
+        nullable: false
+
+  oneToMany:
+    members:
+      targetEntity: Parameter\Domain\Family\Member
+      mappedBy: dimension
+      cascade: [ all ]
+      orphanRemoval: true
+      orderBy:
+        position: ASC
+
+  uniqueConstraints:
+    family_refDimension:
+      columns: [idFamily, ref]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

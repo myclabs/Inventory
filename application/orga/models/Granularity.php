@@ -7,11 +7,12 @@
  * @subpackage Model
  */
 
-use Doc\Domain\Library;
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
+use Doctrine\Common\Collections\Selectable;
 
 /**
  * Objet métier Granularité : ensemble d'Axis formant des Cell pour chaque association de Member.
@@ -285,20 +286,19 @@ class Orga_Model_Granularity extends Core_Model_Entity
     /**
      * Renvoie le label de la Granularity, dépendant des label de ces Axis.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         if (!$this->hasAxes()) {
-            $label = __('Orga', 'granularity', 'labelGlobalGranularity');
-        } else {
-            $labelParts = array();
-            foreach ($this->getAxes() as $axis) {
-                $labelParts[] = $axis->getLabel();
-            }
-            $label = implode(self::LABEL_SEPARATOR, $labelParts);
+            return TranslatedString::untranslated(__('Orga', 'granularity', 'labelGlobalGranularity'));
         }
-        return $label;
+
+        $labelParts = [];
+        foreach ($this->getAxes() as $axis) {
+            $labelParts[] = $axis->getLabel();
+        }
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labelParts);
     }
 
     /**
@@ -418,7 +418,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     /**
      * Renvoie un tableau des Cell de la Granularity.
      *
-     * @return Collection|Orga_Model_Cell[]
+     * @return Collection|Selectable|Orga_Model_Cell[]
      */
     public function getCells()
     {
@@ -460,7 +460,11 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 $membersRef[] = $member->getRef();
             }
             $membersHashKey = implode(self::REF_SEPARATOR, $membersRef);
-            throw new Core_Exception_NotFound('No Cell matching members "'.$membersHashKey.'" for "'.$this->getRef().'".');
+            throw new Core_Exception_NotFound(sprintf(
+                'No Cell matching members "%s" for "%s".',
+                $membersHashKey,
+                $this->getRef()
+            ));
         } elseif (count($matchingCells) > 1) {
             @usort($listMembers, [Orga_Model_Member::class, 'orderMembers']);
             $membersRef = [];
@@ -468,7 +472,11 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 $membersRef[] = $member->getRef();
             }
             $membersHashKey = implode(self::REF_SEPARATOR, $membersRef);
-            throw new Core_Exception_TooMany('Too many Cell matching members "'.$membersHashKey.'" for "'.$this->getRef().'".');
+            throw new Core_Exception_TooMany(sprintf(
+                'Too many Cell matching members "%s" for "%s".',
+                $membersHashKey,
+                $this->getRef()
+            ));
         }
 
         return array_pop($matchingCells);
@@ -777,15 +785,13 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Créé le Organization pour la simulation.
-     *
-     * @return int Identifiant unique du Organization.
+     * Créé le Cube de DW pour la Granularity.
      */
     protected function createDWCube()
     {
         if ($this->dWCube === null) {
             $this->dWCube = new DW_Model_Cube();
-            $this->dWCube->setLabel($this->getLabel());
+            $this->dWCube->setLabel(clone $this->getLabel());
 
             /** @var Orga_Service_ETLStructure $etlStructureService */
             $etlStructureService = \Core\ContainerSingleton::getContainer()->get(Orga_Service_ETLStructure::class);
@@ -795,9 +801,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Créé le Organization pour la simulation.
-     *
-     * @return int Identifiant unique du Organization.
+     * Supprime le Cube de DW pour la Granularity.
      */
     protected function deleteDWCube()
     {
@@ -860,34 +864,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
-     * Défini si les cellules de la granularité posséderont des GenericAction de Social.
-     *
-     * @param bool $bool
-     *
-     * @throws Core_Exception_User
-     */
-    public function setCellsWithSocialGenericActions($bool)
-    {
-        if ($this->cellsWithSocialGenericActions !== (bool) $bool) {
-            $this->cellsWithSocialGenericActions = (bool) $bool;
-            if ($this->cellsWithSocialGenericActions === false) {
-                foreach ($this->getCells() as $cell) {
-                    if ($cell->getDocLibraryForSocialGenericAction()->hasDocuments()) {
-                        throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialGenericActions');
-                    }
-                }
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialGenericAction();
-                }
-            } else {
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialGenericAction(new Library());
-                }
-            }
-        }
-    }
-
-    /**
      * Indique si les cellules de la granularité possédent des GenericAction de Social.
      *
      * @return bool
@@ -895,34 +871,6 @@ class Orga_Model_Granularity extends Core_Model_Entity
     public function getCellsWithSocialGenericActions()
     {
         return $this->cellsWithSocialGenericActions;
-    }
-
-    /**
-     * Défini si les cellules de la granularité posséderont des GenericAction de Social.
-     *
-     * @param bool $bool
-     *
-     * @throws Core_Exception_User
-     */
-    public function setCellsWithSocialContextActions($bool)
-    {
-        if ($this->cellsWithSocialContextActions !== (bool) $bool) {
-            $this->cellsWithSocialContextActions = (bool) $bool;
-            if ($this->cellsWithSocialContextActions === false) {
-                foreach ($this->getCells() as $cell) {
-                    if ($cell->getDocLibraryForSocialContextAction()->hasDocuments()) {
-                        throw new Core_Exception_User('Orga', 'exception', 'changeCellsWithSocialContextActions');
-                    }
-                }
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialContextAction();
-                }
-            } else {
-                foreach ($this->getCells() as $cell) {
-                    $cell->setDocLibraryForSocialContextAction(new Library());
-                }
-            }
-        }
     }
 
     /**

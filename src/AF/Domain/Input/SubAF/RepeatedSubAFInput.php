@@ -18,19 +18,19 @@ class RepeatedSubAFInput extends SubAFInput
 {
     /**
      * Array of SubSet
-     * @var \AF\Domain\InputSet\SubInputSet[]|Collection
+     * @var SubInputSet[]|Collection
      */
     protected $value;
 
     public function __construct(InputSet $inputSet, Component $component)
     {
-        parent::__construct($inputSet, $component);
         $this->value = new ArrayCollection();
+        parent::__construct($inputSet, $component);
     }
 
     /**
      * Get the value of the repeated subAF element, it means an array of subSet.
-     * @return \AF\Domain\InputSet\SubInputSet[]
+     * @return SubInputSet[]
      */
     public function getValue()
     {
@@ -38,23 +38,19 @@ class RepeatedSubAFInput extends SubAFInput
     }
 
     /**
-     * @param \AF\Domain\InputSet\SubInputSet $subSet
+     * @param SubInputSet $subSet
      */
     public function addSubSet(SubInputSet $subSet)
     {
-        if (!$this->value->contains($subSet)) {
-            $this->value->add($subSet);
-        }
+        $this->value->add($subSet);
     }
 
     /**
-     * @param \AF\Domain\InputSet\SubInputSet $subSet
+     * @param SubInputSet $subSet
      */
     public function removeSubSet(SubInputSet $subSet)
     {
-        if ($this->value->contains($subSet)) {
-            $this->value->removeElement($subSet);
-        }
+        $this->value->removeElement($subSet);
     }
 
     /**

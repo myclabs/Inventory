@@ -388,6 +388,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
      */
     public function getFilterFormElement($datagrid, $defaultValue=null)
     {
+        throw new Exception('Col Order needs to be refactored before being able to filter element.');
         $filterFormElement = new UI_Form_Element_Numeric($this->getFilterFormId($datagrid));
         $filterFormElement->setLabel($this->getFilterFormLabel());
         $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
@@ -441,6 +442,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
      */
     public function getFilterValue($datagrid)
     {
+        throw new Exception('Col Order needs to be refactored before being able to filter element.');
         $filterValue = '';
 
         // Condition de saisie du filtre.
@@ -450,7 +452,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
         $filterValue .= 'if ((valueEqu != \'\') || (valueInf != \'\') || (valueSup != \'\')) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {";';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {";';
         $filterValue .= 'if (valueEqu != \'\') {';
         $filterValue .= 'filter += "\"'.$this->filterOperator.'\":\"" + valueEqu + "\"";';
         $filterValue .= '}';
@@ -466,7 +468,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
         $filterValue .= '}';
         $filterValue .= 'filter += "\"'.$this->filterOperatorHigher.'\":\"" + valueSup + "\"";';
         $filterValue .= '}';
-        $filterValue .= 'filter += "},";';
+        $filterValue .= 'filter += "}},";';
 
         $filterValue .= '}';
 
@@ -482,6 +484,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
      */
     function getResettingFilter($datagrid)
     {
+        throw new Exception('Col Order needs to be refactored before being able to filter element.');
         $resetFields = '';
 
         $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\');';
@@ -500,6 +503,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
      */
     public function getAddFormElement($datagrid)
     {
+        throw new Exception('Col Order needs to be refactored before being able to add element.');
         $addFormElement = new UI_Form_Element_Radio($this->getAddFormElementId($datagrid));
         $addFormElement->setLabel($this->getAddFormElementLabel());
 

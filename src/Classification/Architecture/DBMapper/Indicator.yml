@@ -1,0 +1,50 @@
+Classification\Domain\Indicator:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Classification_Indicator
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+    unit:
+      type: unit_api
+      nullable: false
+    ratioUnit:
+      type: unit_api
+      nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    library:
+      targetEntity: ClassificationLibrary
+      inversedBy: indicators
+      joinColumn:
+        name: idLibrary
+        referencedColumnName: id
+        nullable: false
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - idLibrary
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

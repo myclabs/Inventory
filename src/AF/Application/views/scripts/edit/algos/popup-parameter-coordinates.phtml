@@ -1,12 +1,8 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package AF
- */
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
-use Techno\Domain\Family\Family;
+use Parameter\Domain\Family\Family;
 
 /** @var $af AF */
 $af = $this->af;
@@ -26,13 +22,13 @@ $datagridFixed->pagination = false;
 $datagridFixed->addElements = true;
 $datagridFixed->addPanelTitle = __('AF', 'configTreatmentDatagrid', 'fixedCoordinateAddPanelTitle');
 $datagridFixed->deleteElements = true;
-$datagridFixed->addParam('id', $af->getId());
+$datagridFixed->addParam('idAF', $af->getId());
 $datagridFixed->addParam('idAlgo', $algo->getId());
 // Colonne dimension
-$dimensionColumn = new UI_Datagrid_Col_List('dimension', __('Techno', 'name', 'dimension'));
+$dimensionColumn = new UI_Datagrid_Col_List('dimension', __('Parameter', 'name', 'dimension'));
 $dimensionColumn->list = [];
 foreach ($family->getDimensions() as $dimension) {
-    $dimensionColumn->list[$dimension->getId()] = $dimension->getLabel();
+    $dimensionColumn->list[$dimension->getId()] = $this->translate($dimension->getLabel());
 }
 $datagridFixed->addCol($dimensionColumn);
 // Colonne membre
@@ -40,7 +36,9 @@ $memberRef = new UI_Datagrid_Col_List('member', __('UI', 'name', 'element'));
 $memberRef->editable = true;
 $memberRef->addable = false;
 $memberRef->dynamicList = true;
-$memberRef->list = $this->baseUrl('af/datagrid_edit_algos_numeric-parameter_coordinates-fixed/get-member-list/');
+$memberRef->list = $this->baseUrl(
+    'af/datagrid_edit_algos_numeric-parameter_coordinates-fixed/get-member-list?idAF=' . $af->getId()
+);
 $datagridFixed->addCol($memberRef);
 
 // Datagrid des coordonnées déterminées par un algorithme

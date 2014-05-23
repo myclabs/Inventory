@@ -10,41 +10,36 @@ Feature: Connected user feature
     When I fill in "email" with "utilisateur.connecte@toto.com"
     And I fill in "password" with "utilisateur.connecte@toto.com"
     And I click "connection"
-    Then I should see "Vous ne disposez d'aucun droit d'accès à une unité organisationnelle."
+    Then I should see "Vous n'avez accès à aucun compte ou workspace"
   # Click sur "My C-Tool"
     When I click "My C-Tool"
-    Then I should see "Vous ne disposez d'aucun droit d'accès à une unité organisationnelle."
-  # Click sur "Accueil"
+    Then I should see "Vous n'avez accès à aucun compte ou workspace"
   # TODO…
-  # Click sur "Simulations"
-    When I am on "simulation/set/manage"
-    And I wait for the page to finish loading
-    Then I should see the "listSet" datagrid
-  # Accès à l'arbre des familles en consultation
-    When I am on "techno/family/tree"
-    And I wait for the page to finish loading
-    And I wait 3 seconds
-    Then I should see "Catégorie contenant une sous-catégorie"
-  # Accès à la liste des familles en consultation
-    When I am on "techno/family/list"
-    And I wait for the page to finish loading
-    Then I should see the "familyDatagrid" datagrid
-  # Accès à la page des unités standard
-    When I am on "unit/consult/standardunits"
-    And I wait for the page to finish loading
-    Then I should see the "ListStandardUnits" datagrid
-  # Accès à la page des unités étendues
-    When I am on "unit/consult/extendedunits"
-    And I wait for the page to finish loading
-    Then I should see the "ListExtendedUnit" datagrid
-  # Accès à la page des unités discrètes
-    When I am on "unit/consult/discreteunits"
-    And I wait for the page to finish loading
-    Then I should see the "ListDiscreteUnit" datagrid
-  # Accès à la page des grandeurs physiques
-    When I am on "unit/consult/physicalquantities"
-    And I wait for the page to finish loading
-    Then I should see the "ListPhysicalQuantity" datagrid
+#  # Accès à l'arbre des familles en consultation
+#    When I am on "parameter/family/tree"
+#    And I wait for the page to finish loading
+#    And I wait 3 seconds
+#    Then I should see "Catégorie contenant une sous-catégorie"
+#  # Accès à la liste des familles en consultation
+#    When I am on "parameter/family/list"
+#    And I wait for the page to finish loading
+#    Then I should see the "familyDatagrid" datagrid
+#  # Accès à la page des unités standard
+#    When I am on "unit/consult/standardunits"
+#    And I wait for the page to finish loading
+#    Then I should see the "ListStandardUnits" datagrid
+#  # Accès à la page des unités étendues
+#    When I am on "unit/consult/extendedunits"
+#    And I wait for the page to finish loading
+#    Then I should see the "ListExtendedUnit" datagrid
+#  # Accès à la page des unités discrètes
+#    When I am on "unit/consult/discreteunits"
+#    And I wait for the page to finish loading
+#    Then I should see the "ListDiscreteUnit" datagrid
+#  # Accès à la page des grandeurs physiques
+#    When I am on "unit/consult/physicalquantities"
+#    And I wait for the page to finish loading
+#    Then I should see the "ListPhysicalQuantity" datagrid
 
 
 

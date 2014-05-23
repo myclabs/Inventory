@@ -2,7 +2,12 @@
 use User\Domain\User;
 ?>
 
-<h2><?=__('User', 'list', 'pageTitle')?></h2>
+<div class="page-header">
+    <h1>
+        <i class="fa fa-fw fa-user"></i>
+        <?=__('User', 'list', 'pageTitle')?>
+    </h1>
+</div>
 
 <?php
 $datagrid = new UI_Datagrid('users', 'datagrid_user-list', 'user');
@@ -35,16 +40,8 @@ $datagrid->addCol($colEmail);
 // Date de création
 $colCreationDate = new UI_Datagrid_Col_Date('creationDate', __('UI', 'name', 'creationDate'));
 $colCreationDate->sortName = User::QUERY_CREATIONDATE;
-$colCreationDate->filterName = User::QUERY_CREATIONDATE;
 $colCreationDate->addable = false;
 $datagrid->addCol($colCreationDate);
-
-// 1ère connexion
-$colEmailValidated = new UI_Datagrid_Col_Bool('emailValidated', __('User', 'list', 'firstConnectionHeader'));
-$colEmailValidated->addable = false;
-$colEmailValidated->valueTrue = '<i class="fa fa-check"></i> '.__('User', 'property', 'performedFem');
-$colEmailValidated->valueFalse = '<i class="fa fa-times"></i> '.__('User', 'property', 'notPerformedFem');
-$datagrid->addCol($colEmailValidated);
 
 // Compte activé
 $colEnabled = new UI_Datagrid_Col_Bool('enabled', __('UI', 'name', 'activation'));

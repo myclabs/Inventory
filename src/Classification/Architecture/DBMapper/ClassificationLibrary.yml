@@ -1,0 +1,51 @@
+Classification\Domain\ClassificationLibrary:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Classification_Library
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    public:
+      type: boolean
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    account:
+      targetEntity: Account\Domain\Account
+      joinColumn:
+        nullable: false
+
+  oneToMany:
+    indicators:
+      targetEntity: Indicator
+      orphanRemoval: true
+      mappedBy: library
+      orderBy:
+        position: ASC
+      cascade: [ persist, remove ]
+    axes:
+      targetEntity: Axis
+      orphanRemoval: true
+      mappedBy: library
+      cascade: [ persist, remove ]
+    contexts:
+      targetEntity: Context
+      orphanRemoval: true
+      mappedBy: library
+      orderBy:
+        position: ASC
+      cascade: [ persist, remove ]
+    contextIndicators:
+      targetEntity: ContextIndicator
+      orphanRemoval: true
+      mappedBy: library
+      cascade: [ persist, remove ]

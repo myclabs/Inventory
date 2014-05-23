@@ -19,14 +19,12 @@ use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
 use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\Algorithm\AlgoSet;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
-use Core_Exception_User;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Model_Query;
 use Core_Strategy_Ordered;
-use Core_Tools;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use UI_Form;
@@ -43,11 +41,9 @@ use UI_Form_Element_Group;
 class AF extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     const ALGO_MAIN_REF = 'main';
 
-    const QUERY_REF = 'ref';
     const QUERY_LABEL = 'label';
 
     /**
@@ -56,12 +52,18 @@ class AF extends Core_Model_Entity
     protected $id;
 
     /**
-     * @var string
+     * @var AFLibrary
      */
-    protected $ref;
+    protected $library;
 
     /**
+     * @deprecated Sera supprimée dans la 3.1
      * @var string
+     */
+    private $ref;
+
+    /**
+     * @var TranslatedString
      */
     protected $label;
 
@@ -104,14 +106,15 @@ class AF extends Core_Model_Entity
 
 
     /**
-     * @param string $ref Identifiant
-     * @throws Core_Exception_User Ref invalide
+     * @param AFLibrary        $library
+     * @param TranslatedString $label
      */
-    public function __construct($ref)
+    public function __construct(AFLibrary $library, TranslatedString $label)
     {
         $this->components = new ArrayCollection();
         $this->conditions = new ArrayCollection();
-        $this->setRef($ref);
+        $this->library = $library;
+        $this->label = $label;
 
         // Crée un nouveau set d'algos
         $this->algoSet = new AlgoSet();
@@ -126,6 +129,16 @@ class AF extends Core_Model_Entity
         $this->rootGroup = new Group();
         $this->rootGroup->setRef(Group::ROOT_GROUP_REF);
         $this->rootGroup->setAf($this);
+    }
+
+    /**
+     * Get the ref attribute.
+     * @deprecated Sera supprimée dans la 3.1
+     * @return string
+     */
+    public function getRef()
+    {
+        return $this->ref;
     }
 
     /**
@@ -167,19 +180,19 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param string $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
-        $this->label = (string) $label;
+        $this->label = $label;
     }
 
     /**
-     * @return string label
+     * @return TranslatedString
      */
     public function getLabel()
     {
-        return ($this->label);
+        return $this->label;
     }
 
     /**
@@ -196,16 +209,6 @@ class AF extends Core_Model_Entity
     public function getDocumentation()
     {
         return $this->documentation;
-    }
-
-    /**
-     * @param string $ref
-     * @throws Core_Exception_User Ref invalide
-     */
-    public function setRef($ref)
-    {
-        Core_Tools::checkRef($ref);
-        $this->ref = (string) $ref;
     }
 
     /**
@@ -238,7 +241,7 @@ class AF extends Core_Model_Entity
         PrimaryInputSet $inputSet = null,
         $mode = AFViewConfiguration::MODE_WRITE
     ) {
-        $form = new UI_Form($this->ref);
+        $form = new UI_Form('af' . $this->id);
         $form->addClass('af');
 
         $generationHelper = new AFGenerationHelper($inputSet, $mode);
@@ -346,36 +349,19 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * Retourne un module par son référent textuel
-     * @param string $ref
-     * @throws Core_Exception_NotFound
-     * @return AF
-     */
-    public static function loadByRef($ref)
-    {
-        $query = new Core_Model_Query();
-        $query->filter->addCondition(self::QUERY_REF, $ref);
-        $afList = AF::loadList($query);
-        if (count($afList) == 0) {
-            throw new Core_Exception_NotFound("No AF matching ref='$ref' was found");
-        }
-        return current($afList);
-    }
-
-    /**
      * Cette méthode vérifie que les sous formulaire ne forment pas une boucle.
      * @param array $exploredSubAf
      * @return boolean
      */
     public function checkClosedLoop(array $exploredSubAf = [])
     {
-        if (!in_array($this->ref, $exploredSubAf)) {
-            $exploredSubAf[] = $this->ref;
+        if (!in_array($this->id, $exploredSubAf)) {
+            $exploredSubAf[] = $this->id;
         }
         foreach ($this->getSubAfList() as $subAf) {
             $af = $subAf->getCalledAF();
-            if (!in_array($af->getRef(), $exploredSubAf)) {
-                $exploredSubAf[] = $af->getRef();
+            if (!in_array($af->getId(), $exploredSubAf)) {
+                $exploredSubAf[] = $af->getId();
                 if ($af->checkClosedLoop($exploredSubAf)) {
                     return true;
                 }
@@ -401,14 +387,6 @@ class AF extends Core_Model_Entity
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRef()
-    {
-        return $this->ref;
     }
 
     /**
@@ -557,6 +535,14 @@ class AF extends Core_Model_Entity
     public function hasAlgoConditionOnInput(Component $component)
     {
         return $this->algoSet->hasConditionOnInputRef($component->getRef());
+    }
+
+    /**
+     * @return AFLibrary
+     */
+    public function getLibrary()
+    {
+        return $this->library;
     }
 
     /**

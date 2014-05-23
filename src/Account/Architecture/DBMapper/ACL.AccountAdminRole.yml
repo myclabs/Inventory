@@ -1,0 +1,11 @@
+Account\Domain\ACL\AccountAdminRole:
+  type: entity
+  table: Account_ACL_AccountAdminRole
+  readOnly: true
+
+  manyToOne:
+    account:
+      targetEntity: Account\Domain\Account
+      inversedBy: adminRoles
+      joinColumn:
+        nullable: false

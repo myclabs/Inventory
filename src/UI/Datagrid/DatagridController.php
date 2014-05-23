@@ -145,10 +145,12 @@ abstract class DatagridController extends Core_Controller
                 /* Filtre */
                 // Récupération du filtre.
                 $filters = Zend_Json::decode($this->getParam('filters'), Zend_Json::TYPE_ARRAY);
-                foreach ($filters as $attributeName => $filterValue) {
-                    foreach ($filterValue as $criteriaOperator => $value) {
-                        if ($value !== null) {
-                            $this->criteria->$attributeName->$criteriaOperator($value);
+                foreach ($filters as $filter) {
+                    foreach ($filter as $attributeName => $filterValue) {
+                        foreach ($filterValue as $criteriaOperator => $value) {
+                            if ($value !== null) {
+                                $this->criteria->$attributeName->$criteriaOperator($value);
+                            }
                         }
                     }
                 }
@@ -406,6 +408,9 @@ abstract class DatagridController extends Core_Controller
         if ($percent < 0) {
             $percent = abs($percent);
         }
+        if ($color != null) {
+            $color = 'progress-'.$color;
+        }
         return $this->baseCell($percent, $color);
     }
 
@@ -531,7 +536,7 @@ abstract class DatagridController extends Core_Controller
      */
     public function getAddElementValue($elementName)
     {
-        return $this->_add[$this->id.'_'.$elementName.'_addForm']['value'];
+        return $this->getParam($this->id.'_'.$elementName.'_addForm');
     }
 
     /**
@@ -539,10 +544,16 @@ abstract class DatagridController extends Core_Controller
      *
      * @param string $elementName
      * @param string $errorMessage
+     * @param bool   $multiple
      */
-    public function setAddElementErrorMessage($elementName, $errorMessage)
+    public function setAddElementErrorMessage($elementName, $errorMessage, $multiple=false)
     {
-        $this->_addErrorMessages[$this->id.'_'.$elementName.'_addForm'] = $errorMessage;
+        // Les select multiples doivent avoir un nom finissant par "[]" afin d'être décodés comme un tableau.
+        if ($multiple) {
+            $this->_addErrorMessages[$this->id.'_'.$elementName.'_addForm[]'] = $errorMessage;
+        } else {
+            $this->_addErrorMessages[$this->id.'_'.$elementName.'_addForm'] = $errorMessage;
+        }
     }
 
     /**

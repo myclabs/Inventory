@@ -1,22 +1,29 @@
 <?php
-/** @var $library Library */
-use Doc\Domain\Library;
-
+/** @var $library Doc\Domain\Library */
 $library = $this->library;
-
-$addForm = new UI_Form('addDocument'.$library->getId());
-
-$addForm->setAjax(false);
-$addForm->setAttrib('target', 'upload_iframe'.$library->getId());
-$addForm->setEnctype('multipart/form-data');
-$addForm->setAction('doc/library/add/id/' . $library->getId());
-
-$fileField = new UI_Form_Element_File('file');
-$fileField->setLabel(__('Doc', 'library', 'fileAddress'));
-$addForm->addElement($fileField);
-
-$addForm->display();
 ?>
+
+<form id="addDocument<?=$library->getId()?>" class="form-horizontal" method="post" enctype="multipart/form-data"
+      action="doc/library/add?id=<?=$library->getId()?>" target="upload_iframe<?=$library->getId()?>">
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">
+            <?=__('Doc', 'library', 'fileAddress')?>
+        </label>
+        <div class="col-sm-10">
+            <input name="file" type="file" class="form-control" required>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">
+                <?=__('UI', 'verb', 'add')?>
+            </button>
+        </div>
+    </div>
+
+</form>
 
 <iframe id="upload_iframe<?=$library->getId()?>" name="upload_iframe<?=$library->getId()?>" src="#" class="hidden">
 </iframe>
@@ -26,7 +33,7 @@ $addForm->display();
     <?=__('Doc', 'library', 'uploading')?>
 </div>
 
-<div class="uploadingErrors hide alert alert-error"></div>
+<div class="uploadingErrors hide alert alert-danger"></div>
 
 <script>
 

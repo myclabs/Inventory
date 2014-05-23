@@ -6,6 +6,8 @@
  * @subpackage Library
  */
 
+use Mnapoli\Translated\Translator;
+
 /**
  * Classe permettant de gérer en export spécifique au format pdf.
  * @package DW
@@ -13,18 +15,25 @@
 class DW_Export_Specific_Pdf extends Export_Pdf
 {
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
      * @var DW_Model_Report[]
      */
     private $reports = [];
 
     /**
-     * Constructeur de la classe.
-     *
-     * @param string $xmlPath
+     * @param string        $xmlPath
      * @param DW_Model_Cube $cube
+     * @param Translator    $translator
+     * @param string|null   $exportUrl
      */
-    public function __construct($xmlPath, $cube, $exportUrl=null)
+    public function __construct($xmlPath, DW_Model_Cube $cube, Translator $translator, $exportUrl = null)
     {
+        $this->translator = $translator;
+
         $isPreview = ($exportUrl !== null);
 
         //    Ajout du html
@@ -67,7 +76,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
         } else {
             $xmlSpecificExport = $xmlDocument->getElementsByTagName("specificExport")->item(0);
             $this->fileName = date('Y-m-d', time())
-                .'-'.Core_Tools::refactor($cube->getLabel())
+                .'-'.Core_Tools::refactor($this->translator->get($cube->getLabel()))
                 .'-'.Core_Tools::refactor($xmlSpecificExport->getAttribute('label'));
             if ($isPreview) {
                 UI_Chart_Generic::addHeader();
@@ -130,7 +139,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $this->html .= '</style>';
             $this->html .= '<body>';
             if ($isPreview) {
-                $this->html .= '<a id="exportAsPdfTop" href="'.$exportUrl.'" class="btn">';
+                $this->html .= '<a id="exportAsPdfTop" href="'.$exportUrl.'" class="btn btn-default">';
                 $this->html .= '<img src="images/dw/pdf.png" alt="pdf" /> ';
                 $this->html .= __('UI', 'verb','exportToPDF');
                 $this->html .= '</a>';
@@ -140,7 +149,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
             $locale = Core_Locale::loadDefault();
             $this->html .= '<h2>'
                 .$xmlSpecificExport->getAttribute("prefix")
-                .$cube->getLabel()
+                .$this->translator->get($cube->getLabel())
                 .$xmlSpecificExport->getAttribute("postfix")
                 .'</h2>';
 
@@ -184,11 +193,11 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                             $results = $report->getValues();
 
-                            $this->html .= $report->getLabel().' : '.
-                            $locale->formatNumber(array_pop($results)['value'], 3).
-                            // On n'affiche pas l'incertitude
-                            //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
-                            ' '.$report->getValuesUnitSymbol();
+                            $this->html .= $this->translator->get($report->getLabel())
+                                . ' : ' . $locale->formatNumber(array_pop($results)['value'], 3)
+                                // On n'affiche pas l'incertitude
+                                //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
+                                . ' ' . $this->translator->get($report->getValuesUnitSymbol());
 
                             if ($isMain) {
                                 $this->html .= '</h3>';
@@ -218,7 +227,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
                         $this->html .= '<div class="data">';
                         $this->html .= '<h4>';
-                        $this->html .= $report->getLabel();
+                        $this->html .= $this->translator->get($report->getLabel());
                         $this->html .= '</h4>';
 
                         if ($isPreview) {
@@ -249,7 +258,7 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
             $this->html .= '</div>';
             if ($isPreview) {
-                $this->html .= '<a id="exportAsPdfBottom" href="'.$exportUrl.'" class="btn">';
+                $this->html .= '<a id="exportAsPdfBottom" href="'.$exportUrl.'" class="btn btn-default">';
                 $this->html .= '<img src="images/dw/pdf.png" alt="pdf" /> ';
                 $this->html .= __('UI', 'verb','exportToPDF');
                 $this->html .= '</a>';
@@ -410,12 +419,12 @@ class DW_Export_Specific_Pdf extends Export_Pdf
 
         $label = $xmlReport->getAttribute('label');
         if ($label == '') {
-            $label = $report->getNumerator()->getLabel();
+            $label = $this->translator->get($report->getNumerator()->getLabel());
             if (($report->getDenominator() !== null)) {
-                $label .= ' / '.$report->getDenominator()->getLabel();
+                $label .= ' / '.$this->translator->get($report->getDenominator()->getLabel());
             }
         }
-        $report->setLabel($label);
+        $this->translator->set($report->getLabel(), $label);
         if ($xmlReport->hasAttribute('format')) {
             $report->setChartType($xmlReport->getAttribute('format'));
         }

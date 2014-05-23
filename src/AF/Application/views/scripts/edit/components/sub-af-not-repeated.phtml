@@ -1,15 +1,17 @@
 <?php
 use AF\Domain\AF;
+use AF\Domain\AFLibrary;
 use AF\Domain\Component\SubAF;
 
-/**
- * Sous-AF de l'onglet "Composants"
- * @author  matthieu.napoli
- * @author  yoann.croizer
- * @package AF
- */
-/** @var $af \AF\Domain\AF */
+/** @var $af AF */
 $af = $this->af;
+
+// Récupère la liste de tous les sous-formulaires possibles
+$subAFList = [];
+$account = $af->getLibrary()->getAccount();
+foreach (AFLibrary::loadUsableInAccount($account) as $library) {
+    $subAFList = array_merge($subAFList, $library->getAFList()->toArray());
+}
 
 // Datagrid
 $datagrid = new UI_Datagrid('subAfNotRepeatedDatagrid', 'datagrid_edit_components_sub-af-not-repeated', 'af');
@@ -31,10 +33,11 @@ $datagrid->addCol($subafRef);
 // Ref du formulaire associé
 $targetAF = new UI_Datagrid_Col_List('targetAF', __('AF', 'configComponentDatagrid', 'associatedFormHeader'));
 $targetAF->list = [];
-foreach (AF::loadList() as $currentAf) {
-    /** @var $currentAf \AF\Domain\AF */
+foreach ($subAFList as $currentAf) {
+    /** @var $currentAf AF */
     if ($currentAf->getId() != $af->getId()) {
-        $targetAF->list[$currentAf->getId()] = $currentAf->getLabel();
+        $targetAF->list[$currentAf->getId()] = $this->translate($currentAf->getLibrary()->getLabel())
+            . ' > ' . $this->translate($currentAf->getLabel());
     }
 }
 $targetAF->withEmptyElement = false;
@@ -43,7 +46,6 @@ $datagrid->addCol($targetAF);
 // Help
 $help = new UI_Datagrid_Col_LongText('help', __('UI', 'name', 'help'));
 $help->editable = true;
-$help->popup->title = __('UI', 'name', 'help');
 $datagrid->addCol($help);
 // Hidden / Show
 $isVisible = new UI_Datagrid_Col_Bool('isVisible', __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));

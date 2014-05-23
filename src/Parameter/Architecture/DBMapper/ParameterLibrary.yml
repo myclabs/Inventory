@@ -1,0 +1,35 @@
+Parameter\Domain\ParameterLibrary:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Parameter_ParameterLibrary
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    public:
+      type: boolean
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    account:
+      targetEntity: Account\Domain\Account
+      joinColumn:
+        nullable: false
+
+  oneToMany:
+    families:
+      targetEntity: Parameter\Domain\Family\Family
+      mappedBy: library
+      orphanRemoval: true
+    categories:
+      targetEntity: Category
+      mappedBy: library
+      cascade: [ all ]
+      orphanRemoval: true

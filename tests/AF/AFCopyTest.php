@@ -3,43 +3,32 @@
 namespace Tests\AF;
 
 use AF\Domain\AF;
-use AF\Domain\Component\Component;
+use AF\Domain\AFLibrary;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Condition\NumericFieldCondition;
 use AF\Domain\AFCopyService;
 use Core\Test\TestCase;
+use Core\Translation\TranslatedString;
 use Unit\UnitAPI;
 
 /**
  * Test de la copie d'un AF
+ *
+ * @covers \AF\Domain\AFCopyService
  */
 class AFCopyTest extends TestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-
-        foreach (Component::loadList() as $o) {
-            $o->delete();
-        }
-        foreach (AF::loadList() as $o) {
-            $o->delete();
-        }
-        $this->entityManager->flush();
-    }
-
     public function testCopyAF()
     {
-        $oldAF = new AF('old_ref');
-        $oldAF->setLabel('label');
+        $library = $this->getMock(AFLibrary::class, [], [], '', false);
+
+        $oldAF = new AF($library, new TranslatedString('label', 'fr'));
         $oldAF->setDocumentation('documentation');
-        $oldAF->save();
 
         $component = new NumericField();
         $component->setRef('component1');
         $component->setUnit(new UnitAPI('m'));
         $component->setAf($oldAF);
-        $component->save();
         $oldAF->addComponent($component);
 
         $condition = new NumericFieldCondition();
@@ -50,20 +39,18 @@ class AFCopyTest extends TestCase
         $condition->setValue(0);
         $oldAF->addCondition($condition);
 
-        $this->entityManager->flush();
-
         $afCopyService = new AFCopyService();
-        /** @var \AF\Domain\AF $newAF */
-        $newAF = $afCopyService->copyAF($oldAF, 'new_ref', 'new label');
+        /** @var AF $newAF */
+        $newAF = $afCopyService->copyAF($oldAF, new TranslatedString('new label', 'fr'));
 
         $this->assertInstanceOf(get_class($oldAF), $newAF);
 
         $this->assertNull($newAF->getId());
         $this->assertNull($newAF->getPosition());
-        $this->assertEquals('new_ref', $newAF->getRef());
-        $this->assertEquals('new label', $newAF->getLabel());
+        $this->assertEquals('new label', $newAF->getLabel()->get('fr'));
         $this->assertEquals($oldAF->getDocumentation(), $newAF->getDocumentation());
         $this->assertNull($newAF->getCategory());
+        $this->assertSame($library, $newAF->getLibrary());
 
         // Root group
         $this->assertNotSame($oldAF->getRootGroup(), $newAF->getRootGroup());
@@ -101,7 +88,7 @@ class AFCopyTest extends TestCase
 
         // Condition
         $this->assertSameSize($oldAF->getConditions(), $newAF->getConditions());
-        /** @var \AF\Domain\Condition\NumericFieldCondition $condition2 */
+        /** @var NumericFieldCondition $condition2 */
         $condition2 = $newAF->getConditions()[0];
         $this->assertNotSame($condition, $condition2);
         $this->assertNull($condition2->getId());
@@ -111,11 +98,7 @@ class AFCopyTest extends TestCase
         $this->assertSame($condition->getValue(), $condition2->getValue());
         $this->assertSame($condition->getRelation(), $condition2->getRelation());
 
-        $condition->delete();
-        $component->delete();
-        $this->entityManager->flush();
-
-        $oldAF->delete();
-        $this->entityManager->flush();
+        // Je sais pas ce qu'il se passe dans ce test, mais ça ajoute des objets dans l'entity manager
+        $this->entityManager->clear();
     }
 }

@@ -1,0 +1,72 @@
+<?php
+
+use Parameter\Domain\Family\Dimension;
+use Parameter\Domain\Family\Family;
+
+/** @var $family Family */
+$family = $this->family;
+
+// Prépare la liste des éléments existant pour le popup
+$members = $family->getDimensions()->map(function (Dimension $dimension) {
+    return $dimension->getMembers()->toArray();
+})->toArray();
+$product = Core_Tools::arrayCartesianProduct($members);
+
+$inputContent = '';
+foreach ($product as $members) {
+    foreach ($members as $member) {
+        $inputContent .= $member->getRef() . '; ';
+    }
+    $value = $family->getCell($members)->getValue();
+    if ($value) {
+        $inputContent .= $value->getDigitalValue() . '; ' . $value->getRelativeUncertainty() . PHP_EOL;
+    } else {
+        $inputContent .= '; ' . PHP_EOL;
+    }
+}
+?>
+
+<p>
+    <button class="btn btn-default editElementsButton" type="button">
+        <?=__('Parameter', 'element', 'editManyElements')?>
+    </button>
+</p>
+
+<div id="editElementsPopup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editElementsForm" action="parameter/edit-elements/edit-elements" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3><?=__('Parameter', 'element', 'editManyElements')?></h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea id="inputElementList" name="elements" class="pre col-sm-12" rows="12"><?=$inputContent?></textarea>
+                        <p class="help-block">
+                            <strong><span id="inputElementListValidationOK" class="text-success"></span></strong>
+                            <strong><span id="inputElementListValidationNOK" class="text-error"></span></strong>
+                        </p>
+                        <p><span class="help-block"><?=__('Parameter', 'import', 'editElementListHelp')?></span></p>
+                        <pre><code><?=__('Parameter', 'import', 'editElementListExample')?></code></pre>
+                    </div>
+                    <input type="hidden" name="idFamily" value="<?=$this->family->getId()?>">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'validate')?></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?=__('UI', 'verb', 'cancel')?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ajout de membres
+    $('.editElementsButton').click(function() {
+        $('#inputElementListValidationOK').text('');
+        $('#inputElementListValidationNOK').text('');
+
+        $('#editElementsPopup').modal('show');
+    });
+</script>

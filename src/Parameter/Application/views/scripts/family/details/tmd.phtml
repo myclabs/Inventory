@@ -1,0 +1,107 @@
+<?php
+
+use MyCLabs\MUIH\Icon;
+use MyCLabs\MUIH\Modal;
+use Parameter\Domain\Family\Family;
+use Parameter\Domain\Family\Dimension;
+
+/** @var $family Family */
+$family = $this->family;
+$dimensions = $family->getDimensions();
+
+if (count($dimensions) === 0) {
+    echo "<p class='text-muted'>" . __('UI', 'loading', 'empty') . "</p>";
+    return;
+}
+
+$tmd = new UI_TMD('elements');
+
+if ($this->edit) {
+    $tmd->formatCells = '<a href="{url}" data-target="#element_edit" data-remote="false" data-toggle="modal" data-element="{elementId}">{value}</a>';
+
+    $editPopup = new Modal();
+    $editPopup->setAttribute('id', 'element_edit');
+    $editPopup->addTitle(__('Parameter', 'element', 'element'));
+    $editPopup->addDefaultDismissButton();
+    $editPopup->large();
+    $editPopup->ajax(true);
+    $editPopup->setContent(new Icon('spinner fa-spin fa-3x'));
+    $editPopup->setFooterContent('<button class="btn btn-primary" onclick="$(\'#editElement\').submit();">'
+        .'<i class="fa fa-check"></i> '.__('UI', 'verb', 'save').'</button>'
+        .'<button class="btn btn-default" data-dismiss="modal">'
+        .'<i class="fa fa-times"></i> '.__('UI', 'verb', 'close').'</button>');
+    echo $editPopup->render();
+} else {
+    $tmd->formatCells = '{value}';
+}
+
+// Ajout des dimensions/colonnes
+foreach ($dimensions as $dimension) {
+    // Éléments de la dimension
+    $values = [];
+    foreach ($dimension->getMembers() as $member) {
+        $values[$member->getRef()] = $this->translate($member->getLabel());
+    }
+    // Ajoute la dimension
+    if ($dimension->getOrientation() == Dimension::ORIENTATION_HORIZONTAL) {
+        $tmd->addDimensionIndexCol(
+            $this->translate($dimension->getLabel()),
+            $values,
+            $dimension->getPosition()
+        );
+    } else {
+        $tmd->addDimensionIndexLine(
+            $this->translate($dimension->getLabel()),
+            $values,
+            $dimension->getPosition()
+        );
+    }
+}
+
+/**
+ * Callback pour remplir les cellules
+ * @param array $coordinates array(indexDimension => memberRef)
+ * Les coordonnées sont dans l'ordre de la position, les dimensions horizontales en premier
+ * @return array|null|string
+ */
+$tmd->cellValueCallback = function ($coordinates) use ($family, $dimensions) {
+    $locale = Core_Locale::loadDefault();
+    $members = [];
+    $membersCoordinates = [];
+    $index = 0;
+    foreach ($dimensions as $dimension) {
+        $memberRef = $coordinates[$index];
+        $member = $dimension->getMember($memberRef);
+        $members[] = $member;
+        $membersCoordinates[$member->getDimension()->getRef()] = $memberRef;
+        $index++;
+    }
+    $cell = $family->getCell($members);
+    $value = $cell->getValue();
+    if ($value !== null && $value->getDigitalValue() !== null) {
+        return [
+            'url'       => 'parameter/element/details/idFamily/' . $family->getId()
+                . '?coordinates=' . urlencode(json_encode($membersCoordinates)),
+            'elementId' => implode('-', $membersCoordinates),
+            'value'     => $locale->formatNumber($value->getDigitalValue(), 3)
+                . ' ± ' . $locale->formatUncertainty($value->getRelativeUncertainty()),
+            'unit'      => $this->translate($family->getValueUnit()->getSymbol()),
+        ];
+    }
+    return [
+        'url'       => 'parameter/element/details/idFamily/' . $family->getId()
+            . '?coordinates=' . urlencode(json_encode($membersCoordinates)),
+        'elementId' => implode('-', $membersCoordinates),
+        'value'     => '-',
+        'unit'      => $this->translate($family->getValueUnit()->getSymbol()),
+    ];
+};
+
+echo $tmd->render();
+?>
+
+<?php if ($this->edit) : ?>
+
+    <?=$this->partial('family/details/tmd-edit-elements.phtml', ['family' => $family])?>
+
+<?php endif; ?>

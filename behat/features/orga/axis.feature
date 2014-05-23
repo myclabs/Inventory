@@ -37,7 +37,7 @@ Feature: Organizational axis feature
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
+    When I click element "#editAxis_deletePanel .modal-footer .btn-primary"
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
 
   @javascript
@@ -137,14 +137,14 @@ Feature: Organizational axis feature
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
+    When I click element "#editAxis_deletePanel .modal-footer .btn-primary"
     Then the following message is shown and closed: "Pour pouvoir supprimer cet axe, merci de supprimer auparavant ses éléments."
   # Axe utilisé dans la définition d'une granularité
     When I click "Année"
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
+    When I click element "#editAxis_deletePanel .modal-footer .btn-primary"
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il intervient dans la définition de (au moins) un niveau organisationnel."
   # 
   # Remarque : axe associé à un axe parent : déjà testé dans le scénario "Creation"
@@ -154,7 +154,7 @@ Feature: Organizational axis feature
     Then I should see the popup "Édition d'un axe"
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
+    When I click element "#editAxis_deletePanel .modal-footer .btn-primary"
     And I wait 5 seconds
     Then the following message is shown and closed: "Suppression effectuée."
     And I should not see "Axe vide"

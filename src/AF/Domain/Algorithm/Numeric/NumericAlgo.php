@@ -6,11 +6,10 @@ use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Index\Index;
 use AF\Domain\Algorithm\Output;
-use Classif_Model_Axis;
-use Classif_Model_ContextIndicator;
-use Core_Exception_NotFound;
+use Classification\Domain\Axis;
+use Classification\Domain\ContextIndicator;
+use Core\Translation\TranslatedString;
 use Core_Exception_UndefinedAttribute;
-use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Unit\UnitAPI;
@@ -24,34 +23,24 @@ use Unit\UnitAPI;
  */
 abstract class NumericAlgo extends Algo
 {
-    use Core_Model_Entity_Translatable;
-
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
     /**
-     * @var string
+     * @var ContextIndicator
      */
-    protected $refContext;
-
-    /**
-     * @var string
-     */
-    protected $refIndicator;
+    protected $contextIndicator;
 
     /**
      * @var Collection|Index[]
      */
     protected $indexes;
 
-
-    /**
-     * Constructeur
-     */
     public function __construct()
     {
+        $this->label = new TranslatedString();
         $this->indexes = new ArrayCollection();
     }
 
@@ -66,7 +55,7 @@ abstract class NumericAlgo extends Algo
     /**
      * Execute and index the value
      * @param InputSet $inputSet
-     * @return \AF\Domain\Algorithm\Output
+     * @return Output
      * @throws Core_Exception_UndefinedAttribute If the numeric algo could not be indexed with an indicator
      */
     public function executeAndIndex(InputSet $inputSet)
@@ -75,57 +64,44 @@ abstract class NumericAlgo extends Algo
             throw new Core_Exception_UndefinedAttribute("The numeric algo can't be executed without an indicator");
         }
         $result = $this->execute($inputSet);
-        // On récupère les membres de classif
-        $classifMembers = [];
+        // On récupère les membres de classification
+        $members = [];
         foreach ($this->indexes as $resultIndex) {
-            $classifMembers[] = $resultIndex->getClassifMember($inputSet);
+            $member = $resultIndex->getClassificationMember($inputSet);
+            if ($member) {
+                $members[] = $member;
+            }
         }
-        return new Output($result, $this, $classifMembers);
+        return new Output($result, $this, $members);
     }
 
     /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         return $this->label;
     }
 
-    /**
-     * @param string $label
-     */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
     }
 
     /**
-     * @return Classif_Model_ContextIndicator
+     * @return ContextIndicator
      */
     public function getContextIndicator()
     {
-        if (!$this->refContext || !$this->refIndicator) {
-            return null;
-        }
-        try {
-            return Classif_Model_ContextIndicator::loadByRef($this->refContext, $this->refIndicator);
-        } catch (Core_Exception_NotFound $e) {
-            return null;
-        }
+        return $this->contextIndicator;
     }
 
     /**
-     * @param Classif_Model_ContextIndicator|null $contextIndicator
+     * @param ContextIndicator|null $contextIndicator
      */
-    public function setContextIndicator(Classif_Model_ContextIndicator $contextIndicator = null)
+    public function setContextIndicator(ContextIndicator $contextIndicator = null)
     {
-        if ($contextIndicator) {
-            $this->refContext = $contextIndicator->getContext()->getRef();
-            $this->refIndicator = $contextIndicator->getIndicator()->getRef();
-        } else {
-            $this->refContext = null;
-            $this->refIndicator = null;
-        }
+        $this->contextIndicator = $contextIndicator;
         // Supprime l'indexation dans l'ancien indicateur
         $this->indexes->clear();
     }
@@ -140,13 +116,13 @@ abstract class NumericAlgo extends Algo
 
     /**
      * Retourne l'index correspondant à l'axe passé en paramètre
-     * @param Classif_Model_Axis $axis
+     * @param Axis $axis
      * @return Index|null
      */
-    public function getIndexForAxis(Classif_Model_Axis $axis)
+    public function getIndexForAxis(Axis $axis)
     {
         foreach ($this->indexes as $index) {
-            if ($index->getClassifAxis() === $axis) {
+            if ($index->getClassificationAxis() === $axis) {
                 return $index;
             }
         }
@@ -191,11 +167,11 @@ abstract class NumericAlgo extends Algo
     }
 
     /**
-     * Indicate if the Algo could be indexed by Classif indicator and members
+     * Indicate if the Algo could be indexed by Classification indicator and members
      * @return bool
      */
     public function isIndexed()
     {
-        return ($this->getContextIndicator() !== null);
+        return ($this->contextIndicator !== null);
     }
 }

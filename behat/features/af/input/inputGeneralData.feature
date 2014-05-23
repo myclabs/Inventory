@@ -70,8 +70,8 @@ Feature: General data input feature
     When I fill in "chiffre_affaire" with "0,1236"
     And I click "Aperçu des résultats"
     Then I should see "0,124"
-  # Le clic sur "Aperçu des résultats" ne modifie pas le pourcentage d'avancement
-    And I should see "0%"
+  # Le clic sur "Aperçu des résultats" ne modifie pas l'avancement
+    And I should see "Saisie en cours"
   # Enregistrement, saisie complète
     When I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."

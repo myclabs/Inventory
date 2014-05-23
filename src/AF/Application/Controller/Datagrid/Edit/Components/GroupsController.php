@@ -16,34 +16,34 @@ use Core\Annotation\Secure;
  */
 class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagrid
 {
-
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
     {
-        /** @var $af \AF\Domain\AF */
+        /** @var $af AF */
         $af = AF::load($this->getParam('id'));
         // Filtre sur l'AF
         $this->request->filter->addCondition(Component::QUERY_AF, $af);
         // Filtre pour exclure le rootGroup
-        $this->request->filter->addCondition(Component::QUERY_REF,
-                                             Group::ROOT_GROUP_REF,
-                                             Core_Model_Filter::OPERATOR_NOT_EQUAL);
+        $this->request->filter->addCondition(
+            Component::QUERY_REF,
+            Group::ROOT_GROUP_REF,
+            Core_Model_Filter::OPERATOR_NOT_EQUAL
+        );
         /** @var $groups Group[] */
         $groups = Group::loadList($this->request);
         foreach ($groups as $group) {
             $data = [];
             $data['index'] = $group->getId();
-            $data['label'] = $group->getLabel();
+            $data['label'] = $this->cellTranslatedText($group->getLabel());
             $data['ref'] = $group->getRef();
-            $data['help'] = $this->cellLongText('af/edit_components/popup-help/id/' . $group->getId(),
-                                                ' af/datagrid_edit_components_groups/get-raw-help/id/'
-                                                    . $group->getId(),
-                                                __('UI', 'name', 'help'),
-                                                'zoom-in');
+            $data['help'] = $this->cellLongText(
+                'af/edit_components/popup-help?id=' . $af->getId() . '&component=' . $group->getId(),
+                'af/datagrid_edit_components_groups/get-raw-help?id=' . $af->getId()
+                . '&component=' . $group->getId(),
+                __('UI', 'name', 'help')
+            );
             $data['isVisible'] = $group->isVisible();
             $data['foldaway'] = $group->getFoldaway();
             $this->addLine($data);
@@ -75,9 +75,9 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
                 $this->send();
                 return;
             }
-            $group->setLabel($this->getAddElementValue('label'));
+            $this->translator->set($group->getLabel(), $this->getAddElementValue('label'));
+            $this->translator->set($group->getHelp(), $this->getAddElementValue('help'));
             $group->setVisible($isVisible);
-            $group->setHelp($this->getAddElementValue('help'));
             $group->save();
             $af->addComponent($group);
 
@@ -110,16 +110,12 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
                 $this->data = $group->getRef();
                 break;
             case 'label':
-                $group->setLabel($newValue);
-                $this->data = $group->getLabel();
+                $this->translator->set($group->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($group->getLabel());
                 break;
             case 'help':
-                $group->setHelp($newValue);
-                $this->data = $this->cellLongText('af/edit_components/popup-help/id/' . $group->getId(),
-                                                  ' af/datagrid_edit_components_groups/get-raw-help/id/'
-                                                      . $group->getId(),
-                                                  __('UI', 'name', 'help'),
-                                                  'zoom-in');
+                $this->translator->set($group->getHelp(), $newValue);
+                $this->data = null;
                 break;
             case 'isVisible':
                 $group->setVisible($newValue);
@@ -166,9 +162,8 @@ class AF_Datagrid_Edit_Components_GroupsController extends UI_Controller_Datagri
     public function getRawHelpAction()
     {
         /** @var $group Group */
-        $group = Group::load($this->getParam('id'));
-        $this->data = $group->getHelp();
+        $group = Group::load($this->getParam('component'));
+        $this->data = (string) $this->translator->get($group->getHelp());
         $this->send();
     }
-
 }

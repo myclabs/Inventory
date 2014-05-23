@@ -1,0 +1,30 @@
+Classification\Domain\ContextIndicator:
+  type: entity
+  repositoryClass: Classification\Architecture\Repository\ContextIndicatorRepository
+  table: Classification_ContextIndicator
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  manyToOne:
+    library:
+      targetEntity: ClassificationLibrary
+      inversedBy: contextIndicators
+      joinColumn:
+        name: idLibrary
+        referencedColumnName: id
+        nullable: false
+    context:
+      targetEntity: Context
+    indicator:
+      targetEntity: Indicator
+
+  manyToMany:
+    axes:
+      targetEntity: Axis
+      joinTable:
+        name: Classification_ContextIndicator_Axes

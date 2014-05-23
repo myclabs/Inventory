@@ -11,7 +11,7 @@ $entries = $this->entries;
 ?>
 
 <?php if (count($entries) === 0) : ?>
-    <p class="muted">
+    <p class="text-muted">
         <?=__('UI', 'history', 'noHistory')?>
     </p>
 <?php endif; ?>
@@ -54,7 +54,8 @@ $entries = $this->entries;
         }
 
         $inputUrl = $this->baseUrl('/orga/cell/input/idCell/' . $entryCell->getId() . '/fromIdCell/' . $idCell);
-        $inputLink = "<a href='$inputUrl''>{$entryCell->getLabel()}</a>";
+        $inputLabel = $this->translate($entryCell->getLabel());
+        $inputLink = "<a href='$inputUrl''>$inputLabel</a>";
 
         $text = __('Orga', 'auditTrail', $entry->getEventName(),
             [

@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 /**
  * Service responsable de la gestion des saisies
  *
- * @author  matthieu.napoli
+ * @author matthieu.napoli
  */
 class Orga_Service_InputService
 {
@@ -30,9 +30,9 @@ class Orga_Service_InputService
     private $workDispatcher;
 
     /**
-     * @param InputService $afInputService
-     * @param EventDispatcher         $eventDispatcher
-     * @param WorkDispatcher          $workDispatcher
+     * @param InputService    $afInputService
+     * @param EventDispatcher $eventDispatcher
+     * @param WorkDispatcher  $workDispatcher
      */
     public function __construct(
         InputService $afInputService,
@@ -48,7 +48,7 @@ class Orga_Service_InputService
      * Modifie la saisie d'une cellule et recalcule les résultats si la saisie est complète
      *
      * @param Orga_Model_Cell $cell
-     * @param \AF\Domain\InputSet\PrimaryInputSet $newValues Nouvelles valeurs pour les saisies
+     * @param PrimaryInputSet $newValues Nouvelles valeurs pour les saisies
      * @throws InvalidArgumentException
      */
     public function editInput(Orga_Model_Cell $cell, PrimaryInputSet $newValues)
@@ -90,16 +90,16 @@ class Orga_Service_InputService
         $this->eventDispatcher->dispatch($event::NAME, $event);
 
         // Regénère DW
-        $this->workDispatcher->runBackground(
+        $this->workDispatcher->run(
             new ServiceCallTask('Orga_Service_ETLData', 'clearDWResultsFromCell', [$cell])
         );
         if ($inputSet->isInputComplete()) {
-            $this->workDispatcher->runBackground(
+            $this->workDispatcher->run(
                 new ServiceCallTask('Orga_Service_ETLData', 'populateDWResultsFromCell', [$cell])
             );
         }
         // Regénère l'exports de la cellule.
-        $this->workDispatcher->runBackground(
+        $this->workDispatcher->run(
             new ServiceCallTask('Orga_Service_Export', 'saveCellInput', [$cell])
         );
     }
@@ -107,9 +107,9 @@ class Orga_Service_InputService
     /**
      * Met à jour les résultats d'une saisie
      *
-     * @param Orga_Model_Cell           $cell
-     * @param \AF\Domain\InputSet\PrimaryInputSet $inputSet
-     * @param \AF\Domain\AF|null          $af Permet d'uiliser un AF différent de celui de la saisie
+     * @param Orga_Model_Cell $cell
+     * @param PrimaryInputSet $inputSet
+     * @param AF|null         $af Permet d'uiliser un AF différent de celui de la saisie
      */
     public function updateResults(Orga_Model_Cell $cell, PrimaryInputSet $inputSet, AF $af = null)
     {

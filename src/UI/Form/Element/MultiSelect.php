@@ -57,6 +57,8 @@ class UI_Form_Element_MultiSelect extends Zend_Form_Element_Multiselect
         }
         parent::__construct($name);
         $this->_element = new UI_Form_Element($this);
+
+        $this->setAttrib('class', 'form-control');
     }
 
     /**
@@ -158,7 +160,8 @@ class UI_Form_Element_MultiSelect extends Zend_Form_Element_Multiselect
             'id'       => $this->getId(),
             'name'     => $this->getName().'[]',
             'size'     => $size,
-            'multiple' => 'multiple'
+            'multiple' => 'multiple',
+            'class'    => $this->getAttrib('class'),
         );
         if ($this->getElement()->disabled) {
             $selectOptions['disabled'] = 'disabled';

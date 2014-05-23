@@ -82,6 +82,15 @@
             </tuv>
         </tu>
 
+        <tu tuid="contextIndicators">
+            <tuv xml:lang="fr">
+                <seg>Liste des indicateurs contextualisés utilisés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>List of used contextual indicators</seg>
+            </tuv>
+        </tu>
+
         <tu tuid="banner">
             <tuv xml:lang="fr">
                 <seg>Bannière</seg>

@@ -2,9 +2,23 @@
 /*              Tree              */
 /*================================*/
 
-.tree { margin: 5px 0px; }
+.tree {
+    margin: 5px 0px;
+}
 
-.tree .ygtvitem a.ygtvspacer { display: none; }
+.tree .ygtvitem a.ygtvspacer {
+    display: none;
+}
 
-.tree_fold_link { cursor: pointer; color: #0088CC; }
-.tree_fold_link:hover { text-decoration: underline; }
+.tree_fold_link {
+    cursor: pointer;
+    color: #0088CC;
+}
+
+.tree_fold_link:hover {
+    text-decoration: underline;
+}
+
+.tree .ygtvlabel, .ygtvlabel:link, .tree .ygtvlabel:visited, .ygtvlabel:hover {
+    background: none;
+}

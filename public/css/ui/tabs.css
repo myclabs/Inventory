@@ -1,0 +1,7 @@
+.tab-pane {
+    background: white;
+    padding: 20px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-top: none;
+}

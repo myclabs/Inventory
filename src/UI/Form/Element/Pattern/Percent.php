@@ -25,7 +25,7 @@ class UI_Form_Element_Pattern_Percent extends UI_Form_Element_Numeric
     {
         parent::__construct($name, $isTypeNumber);
 
-        $this->setAttrib('class', 'incertitude');
+        $this->setAttrib('class', 'incertitude form-control');
         $this->setAttrib('size', 3);
 
         if ($isTypeNumber) {

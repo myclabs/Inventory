@@ -18,15 +18,18 @@ AF\Domain\InputSet\InputSet:
         strategy: AUTO
 
   fields:
-    refAF:
-      type: string
-      nullable: false
     completion:
       type: integer
       nullable: true
     contextValues:
       type: array
       nullable: true
+
+  manyToOne:
+    af:
+      targetEntity: AF\Domain\AF
+      joinColumn:
+        nullable: false
 
   oneToMany:
     inputs:

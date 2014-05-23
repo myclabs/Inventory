@@ -2,11 +2,6 @@
 use AF\Domain\AF;
 use AF\Domain\Component\Select\SelectSingle;
 
-/**
- * @author  matthieu.napoli
- * @author  yoann.croizer
- * @package AF
- */
 /** @var $af AF */
 $af = $this->af;
 
@@ -30,7 +25,6 @@ $selectDatagrid->addCol($ref);
 // Help
 $help = new UI_Datagrid_Col_LongText('help', __('UI', 'name', 'help'));
 $help->editable = true;
-$help->popup->title = __('UI', 'name', 'help');
 $selectDatagrid->addCol($help);
 // Hidden / Show
 $isVisible = new UI_Datagrid_Col_Bool('isVisible', __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));
@@ -81,8 +75,7 @@ $selectDatagrid->addCol($selectType);
 $selectOption = new UI_Datagrid_Col_Popup('options', __('UI', 'name', 'options'));
 $selectOption->addable = false;
 $selectOption->editable = true;
-$selectOption->popup->title = __('UI', 'name', 'options');
-$selectOption->popup->addAttribute('class', 'large');
+$selectOption->popup->large();
 $selectDatagrid->addCol($selectOption);
 
 echo $selectDatagrid->render();

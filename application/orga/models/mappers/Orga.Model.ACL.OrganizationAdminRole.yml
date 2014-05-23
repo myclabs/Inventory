@@ -1,0 +1,11 @@
+Orga\Model\ACL\OrganizationAdminRole:
+  type: entity
+  table: Orga_ACL_Role_OrganizationAdmin
+  readOnly: true
+
+  manyToOne:
+    organization:
+      targetEntity: \Orga_Model_Organization
+      inversedBy: adminRoles
+      joinColumn:
+        nullable: false

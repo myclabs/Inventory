@@ -1,0 +1,25 @@
+User\Domain\ACL\Actions:
+  type: embeddable
+
+  fields:
+    view:
+      type: boolean
+    create:
+      type: boolean
+    edit:
+      type: boolean
+    delete:
+      type: boolean
+    undelete:
+      type: boolean
+    allow:
+      type: boolean
+
+    traverse:
+      type: boolean
+    input:
+      type: boolean
+    analyze:
+      type: boolean
+    manageInventory:
+      type: boolean

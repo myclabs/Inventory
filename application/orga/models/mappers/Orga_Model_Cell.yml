@@ -1,4 +1,3 @@
-# orga\models\mappers\Orga_Model_Cell.yml
 Orga_Model_Cell:
   type: entity
   repositoryClass: Orga_Model_Repository_Cell
@@ -62,55 +61,20 @@ Orga_Model_Cell:
         unique: true
       orphanRemoval: true
       cascade: [ persist, remove ]
-    docLibraryForSocialGenericActions:
-      targetEntity: Doc\Domain\Library
-      joinColumn:
-        name: idDocLibraryForSocialGenericActions
-        referencedColumnName: id
-        nullable: true
-        unique: true
-      orphanRemoval: true
-      cascade: [ persist, remove ]
-    docLibraryForSocialContextActions:
-      targetEntity: Doc\Domain\Library
-      joinColumn:
-        name: idDocLibraryForSocialContextActions
-        referencedColumnName: id
-        nullable: true
-        unique: true
-      orphanRemoval: true
-      cascade: [ persist, remove ]
 
   oneToMany:
     cellsGroups:
       targetEntity: Orga_Model_CellsGroup
       mappedBy: containerCell
       cascade: [ persist, remove ]
-    acl:
-      targetEntity: Orga\Model\ACL\CellAuthorization
-      mappedBy: resource
-      cascade: [ all ]
-      orphanRemoval: true
-    adminRoles:
-      targetEntity: Orga\Model\ACL\Role\CellAdminRole
+    roles:
+      targetEntity: Orga\Model\ACL\AbstractCellRole
       mappedBy: cell
       cascade: [ all ]
-      orphanRemoval: true
-    managerRoles:
-      targetEntity: Orga\Model\ACL\Role\CellManagerRole
+    commentsForAFInputSetPrimary:
+      targetEntity: Orga_Model_Cell_InputComment
       mappedBy: cell
-      cascade: [ all ]
-      orphanRemoval: true
-    contributorRoles:
-      targetEntity: Orga\Model\ACL\Role\CellContributorRole
-      mappedBy: cell
-      cascade: [ all ]
-      orphanRemoval: true
-    observerRoles:
-      targetEntity: Orga\Model\ACL\Role\CellObserverRole
-      mappedBy: cell
-      cascade: [ all ]
-      orphanRemoval: true
+      cascade: [ persist, remove ]
 
   manyToOne:
     granularity:
@@ -134,48 +98,6 @@ Orga_Model_Cell:
         inverseJoinColumns:
           idMember:
             referencedColumnName: id
-    socialCommentsForAFInputSetPrimary:
-      targetEntity: Social_Model_Comment
-      joinTable:
-        name: Orga_Cell_AFInputSetPrimaryComments
-        joinColumns:
-          idCell:
-            referencedColumnName: id
-            nullable: false
-        inverseJoinColumns:
-          idSocialComment:
-            referencedColumnName: id
-            nullable: false
-            unique: true
-      cascade: [ persist, remove ]
-    socialGenericActions:
-      targetEntity: Social_Model_GenericAction
-      joinTable:
-        name: Orga_Cell_GenericActions
-        joinColumns:
-          idCell:
-            referencedColumnName: id
-            nullable: false
-        inverseJoinColumns:
-          idSocialGenericAction:
-            referencedColumnName: id
-            nullable: false
-            unique: true
-      cascade: [ persist, remove ]
-    socialContextActions:
-      targetEntity: Social_Model_ContextAction
-      joinTable:
-        name: Orga_Cell_ContextActions
-        joinColumns:
-          idCell:
-            referencedColumnName: id
-            nullable: false
-        inverseJoinColumns:
-          idSocialContextAction:
-            referencedColumnName: id
-            nullable: false
-            unique: true
-      cascade: [ persist, remove ]
     dWResults:
       targetEntity: DW_Model_Result
       joinTable:

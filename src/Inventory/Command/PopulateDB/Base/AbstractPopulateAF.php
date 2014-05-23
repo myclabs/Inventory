@@ -2,6 +2,7 @@
 
 namespace Inventory\Command\PopulateDB\Base;
 
+use Account\Domain\Account;
 use AF\Domain\Action\SetState;
 use AF\Domain\Action\SetAlgoValue;
 use AF\Domain\Action\SetValue\Select\SetSelectSingleValue;
@@ -9,6 +10,7 @@ use AF\Domain\Action\SetValue\SetCheckboxValue;
 use AF\Domain\Action\SetValue\SetNumericFieldValue;
 use AF\Domain\AF;
 use AF\Domain\Action\Action;
+use AF\Domain\AFLibrary;
 use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\Group;
 use AF\Domain\Component\Select\SelectMulti;
@@ -45,19 +47,26 @@ use AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo;
 use AF\Domain\Algorithm\Selection\TextKey\ContextValueSelectionAlgo;
 use Calc_UnitValue;
 use Calc_Value;
-use Classif_Model_Axis;
-use Classif_Model_ContextIndicator;
-use Classif_Model_Member;
+use Classification\Domain\ClassificationLibrary;
+use Core\Translation\TranslatedString;
 use Core_Exception;
-use Techno\Domain\Family\Family;
+use Parameter\Domain\ParameterLibrary;
 use Unit\UnitAPI;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Remplissage de la base de données avec des données de test
+ *
+ * @Injectable(lazy=true)
  */
 abstract class AbstractPopulateAF
 {
+    /**
+     * @Inject("account.myc-sense")
+     * @var Account
+     */
+    protected $publicAccount;
+
     // Création des catégories.
     //  + createCategory : -
     // Params : ref
@@ -121,34 +130,36 @@ abstract class AbstractPopulateAF
     abstract public function run(OutputInterface $output);
 
     /**
-     * @param string   $label
-     * @param Category $parent
+     * @param AFLibrary $library
+     * @param string    $label
+     * @param Category  $parent
      * @return Category
      */
-    protected function createCategory($label, Category $parent = null)
+    protected function createCategory(AFLibrary $library, $label, Category $parent = null)
     {
-        $category = new Category();
-        $category->setLabel($label);
+        $category = new Category($library);
+        $category->setLabel(new TranslatedString($label, 'fr'));
         if ($parent !== null) {
             $category->setParentCategory($parent);
         }
         $category->save();
+        $library->addCategory($category);
         return $category;
     }
 
     /**
-     * @param Category $category
-     * @param          $ref
-     * @param          $label
+     * @param AFLibrary $library
+     * @param Category  $category
+     * @param string    $label
      * @return AF
      */
-    protected function createAF(Category $category, $ref, $label)
+    protected function createAF(AFLibrary $library, Category $category, $label)
     {
-        $aF = new AF($ref);
-        $aF->setLabel($label);
-        $aF->save();
-        $category->addAF($aF);
-        return $aF;
+        $af = new AF($library, new TranslatedString($label, 'fr'));
+        $af->save();
+        $category->addAF($af);
+        $library->addAF($af);
+        return $af;
     }
 
     /**
@@ -229,7 +240,7 @@ abstract class AbstractPopulateAF
         $subAF->setCalledAF($calledAF);
         $subAF->setMinInputNumber($minimumRepetition);
         $subAF->setFoldaway($foldaway);
-        return $this->createComponent($subAF, $aF,$parentGroup ,$ref, $label, $help, $visible, $foldaway);
+        return $this->createComponent($subAF, $aF,$parentGroup, $ref, $label, $help, $visible, $foldaway);
     }
 
     /**
@@ -506,7 +517,7 @@ abstract class AbstractPopulateAF
             $option = new SelectOption();
             $option->setSelect($selectInput);
             $option->setRef($refOption);
-            $option->setLabel($labelOption);
+            $option->getLabel()->set($labelOption, 'fr');
         }
         return $this->createComponent($selectInput, $aF, $parentGroup, $ref, $label, $help, $visible);
     }
@@ -559,8 +570,8 @@ abstract class AbstractPopulateAF
     ) {
         $component->setAf($aF);
         $component->setRef($ref);
-        $component->setLabel($label);
-        $component->setHelp($help);
+        $component->getLabel()->set($label, 'fr');
+        $component->getHelp()->set($help, 'fr');
         $component->setVisible($visible);
         $component->save();
         $parentGroup->addSubComponent($component);
@@ -608,7 +619,7 @@ abstract class AbstractPopulateAF
     private function createAlgoNumeric(AF $aF, NumericAlgo $numeric, $ref, $label)
     {
         $numeric->setRef($ref);
-        $numeric->setLabel($label);
+        $numeric->getLabel()->set($label, 'fr');
         $numeric->save();
         $aF->addAlgo($numeric);
     }
@@ -621,11 +632,17 @@ abstract class AbstractPopulateAF
      */
     protected function createFixedIndexForAlgoNumeric(NumericAlgo $numeric, $refContext, $refIndicator, $indexes)
     {
-        $numeric->setContextIndicator(Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator));
+        // Moche : part du principe qu'il y'a 1 seule bibliothèque
+        $classificationLibrary = ClassificationLibrary::loadByAccount($this->publicAccount)[0];
+
+        $numeric->setContextIndicator(
+            $classificationLibrary->getContextIndicatorByRef($refContext, $refIndicator)
+        );
+
         foreach ($indexes as $refAxis => $refMember) {
-            $classifAxis = Classif_Model_Axis::loadByRef($refAxis);
-            $index = new FixedIndex(Classif_Model_Axis::loadByRef($refAxis));
-            $index->setClassifMember(Classif_Model_Member::loadByRefAndAxis($refMember, $classifAxis));
+            $classificationAxis = $classificationLibrary->getAxisByRef($refAxis);
+            $index = new FixedIndex($classificationAxis);
+            $index->setClassificationMember($classificationAxis->getMemberByRef($refMember));
             $index->setAlgoNumeric($numeric);
             $index->save();
         }
@@ -639,9 +656,16 @@ abstract class AbstractPopulateAF
      */
     protected function createAlgoIndexForAlgoNumeric(NumericAlgo $numeric, $refContext, $refIndicator, $indexes)
     {
-        $numeric->setContextIndicator(Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator));
+        // Moche : part du principe qu'il y'a 1 seule bibliothèque
+        $classificationLibrary = ClassificationLibrary::loadByAccount($this->publicAccount)[0];
+
+        $numeric->setContextIndicator(
+            $classificationLibrary->getContextIndicatorByRef($refContext, $refIndicator)
+        );
+
         foreach ($indexes as $refAxis => $algo) {
-            $index = new AlgoResultIndex(Classif_Model_Axis::loadByRef($refAxis));
+            $classificationAxis = $classificationLibrary->getAxisByRef($refAxis);
+            $index = new AlgoResultIndex($classificationAxis);
             $index->setAlgo($algo);
             $index->setAlgoNumeric($numeric);
             $index->save();
@@ -656,8 +680,11 @@ abstract class AbstractPopulateAF
      */
     protected function createAlgoNumericParameter(AF $aF, $ref, $label, $refFamily)
     {
+        // Moche : part du principe qu'il y'a 1 seule bibliothèque
+        $parameterLibrary = ParameterLibrary::loadByAccount($this->publicAccount)[0];
+
         $numericParameter = new NumericParameterAlgo();
-        $numericParameter->setFamily(Family::loadByRef($refFamily));
+        $numericParameter->setFamily($parameterLibrary->getFamily($refFamily));
         $this->createAlgoNumeric($aF, $numericParameter, $ref, $label);
     }
 

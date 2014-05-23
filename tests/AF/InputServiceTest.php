@@ -2,7 +2,10 @@
 
 namespace Tests\AF;
 
+use Account\Domain\Account;
+use Account\Domain\AccountRepository;
 use AF\Domain\AF;
+use AF\Domain\AFLibrary;
 use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Input\CheckboxInput;
@@ -10,26 +13,41 @@ use AF\Domain\Input\NumericFieldInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputService;
 use Core\Test\TestCase;
+use Core\Translation\TranslatedString;
 use Unit\UnitAPI;
 
+/**
+ * @covers \AF\Domain\InputService
+ */
 class InputServiceTest extends TestCase
 {
     /**
+     * @Inject
      * @var InputService
      */
     private $inputService;
+
+    /**
+     * @Inject
+     * @var AccountRepository
+     */
+    private $accountRepository;
+
     /**
      * @var AF
      */
     private $af;
+
     /**
      * @var NumericField
      */
     private $comp1;
+
     /**
      * @var Checkbox
      */
     private $comp2;
+
     /**
      * @var Checkbox
      */
@@ -78,10 +96,13 @@ class InputServiceTest extends TestCase
     {
         parent::setUp();
 
-        /** @var InputService $inputService */
-        $this->inputService = $this->get(InputService::class);
+        $account = new Account('foo');
+        $this->accountRepository->add($account);
 
-        $this->af = new AF('test');
+        $library = new AFLibrary($account, new TranslatedString());
+        $library->save();
+
+        $this->af = new AF($library, new TranslatedString());
 
         $this->comp1 = new NumericField();
         $this->comp1->setAf($this->af);
@@ -109,7 +130,12 @@ class InputServiceTest extends TestCase
         parent::tearDown();
 
         if ($this->af) {
+            $this->comp1->delete();
+            $this->comp2->delete();
+            $this->comp3->delete();
             $this->af->delete();
+            $this->af->getLibrary()->delete();
+            $this->accountRepository->remove($this->af->getLibrary()->getAccount());
             $this->entityManager->flush();
         }
     }

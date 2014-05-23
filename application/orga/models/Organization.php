@@ -7,49 +7,59 @@
  * @subpackage Model
  */
 
+use Account\Domain\Account;
+use Classification\Domain\ContextIndicator;
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
-use Orga\Model\ACL\OrganizationResourceTrait;
-use User\Domain\ACL\Resource\Resource;
+use MyCLabs\ACL\Model\EntityResource;
+use Orga\Model\ACL\OrganizationAdminRole;
 
 /**
  * Organization.
  * @package    Orga
  * @subpackage Model
  */
-class Orga_Model_Organization extends Core_Model_Entity implements Resource
+class Orga_Model_Organization extends Core_Model_Entity implements EntityResource
 {
-    use Core_Model_Entity_Translatable;
-    use OrganizationResourceTrait;
-
+    // Constantes de tris et de filtres.
+    const QUERY_ACCOUNT = 'account';
     // Constantes de path des Axis, Member, Granularity et Cell.
     const PATH_SEPARATOR = '/';
     const PATH_JOIN = '&';
 
     /**
-     * Identifiant unique du Organization.
+     * Identifiant unique de l'Organization.
      *
      * @var string
      */
     protected $id = null;
 
     /**
-     * Label du Organization.
+     * Account possédant l'organization.
      *
-     * @var string
+     * @var Account
      */
-    protected $label = '';
+    protected $account = null;
 
     /**
-     * Collection des Axis du Organization.
+     * Label de l'Organization.
+     *
+     * @var TranslatedString
+     */
+    protected $label;
+
+    /**
+     * Collection des Axis de l'Organization.
      *
      * @var Collection|Orga_Model_Axis[]
      */
     protected $axes = null;
 
     /**
-     * Collection des Granularity du Organization.
+     * Collection des Granularity de l'Organization.
      *
      * @var Collection|Orga_Model_Granularity[]
      */
@@ -62,20 +72,37 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
      */
     protected $granularityForInventoryStatus = null;
 
+    /**
+     * Collection des ContextIndicator utilisés par l'Organization
+     *
+     * @var Collection|ContextIndicator[]
+     */
+    protected $contextIndicators;
+
+    /**
+     * Liste des roles administrateurs sur cette organisation.
+     *
+     * @var OrganizationAdminRole[]|Collection
+     */
+    protected $adminRoles;
+
 
     /**
      * Constructeur de la classe Organization.
      */
-    public function __construct()
+    public function __construct(Account $account)
     {
+        $this->label = new TranslatedString();
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
+        $this->contextIndicators = new ArrayCollection();
+        $this->adminRoles = new ArrayCollection();
 
-        $this->constructACL();
+        $this->account = $account;
     }
 
     /**
-     * Renvoie l'id du Organization.
+     * Renvoie l'id de l'Organization.
      *
      * @return string
      */
@@ -85,21 +112,19 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Spécifie le label du Organization.
+     * Renvoie l'Account auquel appartient l'Organization.
      *
-     * @param string $label
-     *
-     * @throws Core_Exception_InvalidArgument
+     * @return Account
      */
-    public function setLabel($label)
+    public function getAccount()
     {
-        $this->label = $label;
+        return $this->account;
     }
 
     /**
      * Renvoie le label textuel du projet.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -107,7 +132,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Ajoute un Axis à la collection du Organization.
+     * Ajoute un Axis à la collection de l'Organization.
      *
      * @param Orga_Model_Axis $axis
      *
@@ -125,7 +150,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Vérifie si l'Axis donné appartient à ceux du Organization.
+     * Vérifie si l'Axis donné appartient à ceux de l'Organization.
      *
      * @param Orga_Model_Axis $axis
      *
@@ -154,7 +179,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
 
         if (count($axis) === 0) {
             throw new Core_Exception_NotFound('No Axis in Organization matching ref "'.$ref.'".');
-        } else if (count($axis) > 1) {
+        } elseif (count($axis) > 1) {
             throw new Core_Exception_TooMany('Too many Axis in Organization matching "'.$ref.'".');
         }
 
@@ -162,7 +187,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Retire un Axis de ceux du Organization.
+     * Retire un Axis de ceux de l'Organization.
      *
      * @param Orga_Model_Axis $axis
      */
@@ -207,9 +232,9 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Renvoie les Axis du Organization.
+     * Renvoie les Axis de l'Organization.
      *
-     * @return Collection|Orga_Model_Axis[]
+     * @return Collection|Selectable|Orga_Model_Axis[]
      */
     public function getAxes()
     {
@@ -217,7 +242,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Retourne un tableau contenant les Axis racines du Organization.
+     * Retourne un tableau contenant les Axis racines de l'Organization.
      *
      * @return Orga_Model_Axis[]
      */
@@ -230,7 +255,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Retourne un tableau contenant les Axis du Organization ordonnés par première exploration.
+     * Retourne un tableau contenant les Axis de l'Organization ordonnés par première exploration.
      *
      * @return Orga_Model_Axis[]
      */
@@ -242,7 +267,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Retourne un tableau contenant les Axis du Organization ordonnés par dernière exploration.
+     * Retourne un tableau contenant les Axis de l'Organization ordonnés par dernière exploration.
      *
      * @return Orga_Model_Axis[]
      */
@@ -306,7 +331,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Vérifie que la Granularity donnée appartient à celles du Organization.
+     * Vérifie que la Granularity donnée appartient à celles de l'Organization.
      *
      * @param Orga_Model_Granularity $granularity
      *
@@ -335,7 +360,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
 
         if (empty($granularity)) {
             throw new Core_Exception_NotFound('No Granularity in Organization matching ref "'.$ref.'".');
-        } else if (count($granularity) > 1) {
+        } elseif (count($granularity) > 1) {
             throw new Core_Exception_TooMany('Too many Granularity in Organization matching ref "'.$ref.'".');
         }
 
@@ -343,7 +368,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
-     * Retire la Granularity donnée de celles du Organization.
+     * Retire la Granularity donnée de celles de l'Organization.
      *
      * @param Orga_Model_Granularity $granularity
      */
@@ -405,7 +430,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function setGranularityForInventoryStatus(Orga_Model_Granularity $granularity=null)
+    public function setGranularityForInventoryStatus(Orga_Model_Granularity $granularity = null)
     {
         if ($this->granularityForInventoryStatus !== $granularity) {
             if ($this->granularityForInventoryStatus !== null) {
@@ -433,15 +458,147 @@ class Orga_Model_Organization extends Core_Model_Entity implements Resource
     }
 
     /**
+     * @param ContextIndicator $contextIndicator
+     */
+    public function addContextIndicator(ContextIndicator $contextIndicator)
+    {
+        if (!$this->hasContextIndicator($contextIndicator)) {
+            $this->contextIndicators->add($contextIndicator);
+        }
+    }
+
+    /**
+     * @param ContextIndicator $contextIndicator
+     * @return bool
+     */
+    public function hasContextIndicator(ContextIndicator $contextIndicator)
+    {
+        return $this->contextIndicators->contains($contextIndicator);
+    }
+
+    /**
+     * @param ContextIndicator $contextIndicator
+     */
+    public function removeContextIndicator(ContextIndicator $contextIndicator)
+    {
+        if ($this->hasContextIndicator($contextIndicator)) {
+            $this->contextIndicators->removeElement($contextIndicator);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasContextIndicators()
+    {
+        return !$this->contextIndicators->isEmpty();
+    }
+
+    /**
+     * @return Collection|ContextIndicator[]
+     */
+    public function getContextIndicators()
+    {
+        return $this->contextIndicators;
+    }
+
+    /**
+     * @return Classification\Domain\Axis[]
+     */
+    public function getClassificationAxes()
+    {
+        /** @var Classification\Domain\Axis[] $classificationAxes */
+        $classificationAxes = [];
+
+        foreach ($this->getContextIndicators() as $classificationContextIndicator) {
+            foreach ($classificationContextIndicator->getAxes() as $classificationAxis) {
+                $classificationAxes[] = $classificationAxis;
+            }
+        }
+
+        if (!empty($classificationAxes)) {
+            $classificationAxes = array_unique($classificationAxes);
+            foreach ($classificationAxes as $indexClassificationAxis => $classificationAxis) {
+                foreach ($classificationAxes as $checkClassificationAxis) {
+                    if ($classificationAxis->isBroaderThan($checkClassificationAxis)) {
+                        unset($classificationAxes[$indexClassificationAxis]);
+                        continue 2;
+                    }
+                }
+            }
+            usort(
+                $classificationAxes,
+                function ($a, $b) {
+                    /** @var Classification\Domain\Axis $a */
+                    /** @var Classification\Domain\Axis $b */
+                    if ($a->getLibrary()->getId() < $b->getLibrary()->getId()) {
+                        return -1;
+                    }
+                    if ($a->getLibrary()->getId() > $b->getLibrary()->getId()) {
+                        return 1;
+                    }
+                    if ($a->getPosition() < $b->getPosition()) {
+                        return -1;
+                    }
+                    if ($a->getPosition() > $b->getPosition()) {
+                        return 1;
+                    }
+                    return strcasecmp($a->getRef(), $b->getRef());
+                }
+            );
+        }
+
+        return $classificationAxes;
+    }
+
+    /**
      * Renvoie les Granularity de saisie.
      *
      * @return Orga_Model_Granularity[]
      */
     public function getInputGranularities()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
-        $criteria->where(Doctrine\Common\Collections\Criteria::expr()->neq('inputConfigGranularity', null));
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->neq('inputConfigGranularity', null));
         $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria)->toArray();
+    }
+
+    /**
+     * Retourne la cellule globale de la structure organisationelle.
+     *
+     * @return Orga_Model_Cell
+     */
+    public function getGlobalCell()
+    {
+        return $this->getGranularityByRef('global')->getCellByMembers([]);
+    }
+
+    /**
+     * @return OrganizationAdminRole[]
+     */
+    public function getAdminRoles()
+    {
+        return $this->adminRoles;
+    }
+
+    /**
+     * API utilisée uniquement par OrganizationAdminRole
+     *
+     * @param OrganizationAdminRole $adminRole
+     */
+    public function addAdminRole(OrganizationAdminRole $adminRole)
+    {
+        $this->adminRoles->add($adminRole);
+    }
+
+    /**
+     * API utilisée uniquement par OrganizationAdminRole
+     *
+     * @param OrganizationAdminRole $adminRole
+     */
+    public function removeAdminRole(OrganizationAdminRole $adminRole)
+    {
+        $this->adminRoles->removeElement($adminRole);
     }
 }

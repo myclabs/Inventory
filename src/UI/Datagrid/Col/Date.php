@@ -153,6 +153,7 @@ class UI_Datagrid_Col_Date extends UI_Datagrid_Col_Generic
      */
     public function getFilterFormElement($datagrid, $defaultValue=null)
     {
+        throw new Exception('Col Date needs to be refactored before being able to filter element.');
         // Champs pour le fitre >=.
         $filterFormElementSuperior = new UI_Form_Element_Pattern_Date($this->getFilterFormId($datagrid).'_higher');
         $filterFormElementSuperior->setLabel($this->getFilterFormLabel());
@@ -194,6 +195,7 @@ class UI_Datagrid_Col_Date extends UI_Datagrid_Col_Generic
      */
     public function getFilterValue($datagrid)
     {
+        throw new Exception('Col Date needs to be refactored before being able to filter element.');
         $filterValue = '';
 
         // Condition de saisie du filtre.
@@ -202,7 +204,7 @@ class UI_Datagrid_Col_Date extends UI_Datagrid_Col_Generic
         $filterValue .= 'if ((valueSup != \'\') || (valueInf != \'\')) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {";';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {";';
         $filterValue .= 'if (valueSup != \'\') {';
         $filterValue .= 'filter += "\"'.$this->filterOperatorHigher.'\":\"" + valueSup + "\"";';
         $filterValue .= '}';
@@ -212,7 +214,7 @@ class UI_Datagrid_Col_Date extends UI_Datagrid_Col_Generic
         $filterValue .= 'if (valueInf != \'\') {';
         $filterValue .= 'filter += "\"'.$this->filterOperatorLower.'\":\"" + valueInf + "\"";';
         $filterValue .= '}';
-        $filterValue .= 'filter += "},";';
+        $filterValue .= 'filter += "}},";';
 
         $filterValue .= '}';
 
@@ -228,6 +230,7 @@ class UI_Datagrid_Col_Date extends UI_Datagrid_Col_Generic
      */
     function getResettingFilter($datagrid)
     {
+        throw new Exception('Col Date needs to be refactored before being able to filter element.');
         $resetFields = '';
 
         $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).'_higher\').val(\'\');';
@@ -245,6 +248,7 @@ class UI_Datagrid_Col_Date extends UI_Datagrid_Col_Generic
      */
     public function getAddFormElement($datagrid)
     {
+        throw new Exception('Col Date needs to be refactored before being able to add element.');
         $addFormElement = new UI_Form_Element_Pattern_Date($this->getAddFormElementId($datagrid));
         $addFormElement->setLabel($this->getAddFormElementLabel());
         $addFormElement->setValue($this->defaultAddValue);

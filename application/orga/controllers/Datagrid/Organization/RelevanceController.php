@@ -1,9 +1,9 @@
 <?php
 
 use Core\Annotation\Secure;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
+use User\Domain\ACL\Actions;
 use Core\Work\ServiceCall\ServiceCallTask;
-use User\Domain\ACL\Action;
 use User\Domain\User;
 
 /**
@@ -13,7 +13,7 @@ class Orga_Datagrid_Organization_RelevanceController extends UI_Controller_Datag
 {
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var SynchronousWorkDispatcher
      */
     private $workDispatcher;
 
@@ -39,7 +39,7 @@ class Orga_Datagrid_Organization_RelevanceController extends UI_Controller_Datag
         $this->request->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
         $this->request->aclFilter->enabled = true;
         $this->request->aclFilter->user = $connectedUser;
-        $this->request->aclFilter->action = Action::EDIT();
+        $this->request->aclFilter->action = Actions::EDIT;
 
         $this->request->order->addOrder(Orga_Model_Cell::QUERY_TAG);
         /** @var Orga_Model_Cell $cell */
@@ -60,7 +60,7 @@ class Orga_Datagrid_Organization_RelevanceController extends UI_Controller_Datag
     /**
      * @Secure("editOrganizationAndCells")
      */
-    function updateelementAction()
+    public function updateelementAction()
     {
         if ($this->update['column'] !== 'relevant') {
             parent::updateelementAction();
@@ -83,11 +83,12 @@ class Orga_Datagrid_Organization_RelevanceController extends UI_Controller_Datag
             'Orga_Service_CellService',
             'setCellRelevance',
             [$cell, (bool) $this->update['value']],
-            __('Orga', 'backgroundTasks', 'setCellRelevance', ['LABEL' => $cell->getLabel()])
+            __('Orga', 'backgroundTasks', 'setCellRelevance', [
+                'LABEL' => $this->translator->get($cell->getLabel())
+            ])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
         $this->send();
     }
-
 }

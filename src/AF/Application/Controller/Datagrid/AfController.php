@@ -1,23 +1,20 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @author  hugo.charbonnier
- * @author  thibaud.rolland
- * @package AF
- */
 
 use AF\Domain\AF;
 use AF\Domain\AFDeletionService;
+use AF\Domain\AFLibrary;
 use AF\Domain\Category;
 use AF\Domain\Component\SubAF;
+use AF\Domain\InputSet\InputSet;
 use AF\Domain\Output\OutputElement;
+use Core\Translation\TranslatedString;
 use DI\Annotation\Inject;
 use Core\Annotation\Secure;
 
 /**
- * Conditions Controller
- * @package AF
- * @property $view
+ * @author matthieu.napoli
+ * @author hugo.charbonnier
+ * @author thibaud.rolland
  */
 class AF_Datagrid_AfController extends UI_Controller_Datagrid
 {
@@ -28,63 +25,57 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     private $afDeletionService;
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function getelementsAction()
     {
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
+
+        $this->request->filter->addCondition('library', $library);
+
+        $this->totalElements = AF::countTotal($this->request);
         $afList = AF::loadList($this->request);
+
         foreach ($afList as $af) {
-            /** @var $af AF */
             $data = [];
             $data['index'] = $af->getId();
             $data['category'] = $this->cellList($af->getCategory()->getId());
-            $data['ref'] = $af->getRef();
-            $data['label'] = $af->getLabel();
-            $data['configuration'] = $this->cellLink($this->view->url(array(
-                                                                           'module'     => 'af',
-                                                                           'controller' => 'edit',
-                                                                           'action'     => 'menu',
-                                                                           'id'         => $af->getId(),
-                                                                      )),
-                __('UI', 'name', 'configuration'), 'share-alt'
-            );
-            $data['test'] = $this->cellLink($this->view->url(array(
-                                                                  'module'     => 'af',
-                                                                  'controller' => 'af',
-                                                                  'action'     => 'test',
-                                                                  'id'         => $af->getId(),
-                                                             )),
-                __('UI', 'name', 'test'), 'share-alt'
-            );
-            $data['duplicate'] = $this->cellPopup($this->view->url(array(
-                                                                  'module'     => 'af',
-                                                                  'controller' => 'af',
-                                                                  'action'     => 'duplicate-popup',
-                                                                  'id'         => $af->getId(),
-                                                             )),
-                __('UI', 'verb', 'duplicate'), 'plus-circle'
-            );
+            $data['label'] = $this->cellTranslatedText($af->getLabel());
+            $data['configuration'] = $this->cellLink($this->view->url([
+                'module'     => 'af',
+                'controller' => 'edit',
+                'action'     => 'menu',
+                'id'         => $af->getId(),
+            ]), __('UI', 'name', 'configuration'));
+            $data['test'] = $this->cellLink($this->view->url([
+                'module'     => 'af',
+                'controller' => 'af',
+                'action'     => 'test',
+                'id'         => $af->getId(),
+            ]), __('UI', 'name', 'test'));
+            $data['duplicate'] = $this->cellPopup($this->view->url([
+                'module'     => 'af',
+                'controller' => 'af',
+                'action'     => 'duplicate-popup',
+                'idAF'       => $af->getId(),
+                'library'    => $library->getId(),
+            ]), __('UI', 'verb', 'duplicate'), 'plus-circle');
             $this->addLine($data);
         }
-        $this->totalElements = AF::countTotal($this->request);
         $this->send();
     }
 
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function addelementAction()
     {
+        /** @var $library AFLibrary */
+        $library = AFLibrary::load($this->getParam('library'));
+
         // Validation du formulaire
-        $ref = $this->getAddElementValue('ref');
-        if (empty($ref)) {
-            $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
         $idCategory = $this->getAddElementValue('category');
         if (empty($idCategory)) {
             $this->setAddElementErrorMessage('category', __('UI', 'formValidation', 'emptyRequiredField'));
@@ -99,33 +90,20 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             /** @var $category Category */
             $category = Category::load($idCategory);
 
-            try {
-                $af = new AF($ref);
-            } catch (Core_Exception_User $e) {
-                $this->setAddElementErrorMessage('ref', $e->getMessage());
-                $this->send();
-                return;
-            }
-            $af->setLabel($label);
+            $label = $this->translator->set(new TranslatedString(), $label);
+            $af = new AF($library, $label);
+            $library->addAF($af);
             $af->setCategory($category);
             $af->save();
 
-            try {
-                $this->entityManager->flush();
-            } catch (Core_ORM_DuplicateEntryException $e) {
-                $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'alreadyUsedIdentifier'));
-                $this->send();
-                return;
-            }
+            $this->entityManager->flush();
             $this->message = __('UI', 'message', 'added');
         }
         $this->send();
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function updateelementAction()
     {
@@ -143,12 +121,8 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 if (empty($newValue)) {
                     throw new Core_Exception_User('UI', 'formValidation', 'emptyRequiredField');
                 }
-                $af->setLabel($newValue);
-                $this->data = $af->getLabel();
-                break;
-            case 'ref':
-                $af->setRef($newValue);
-                $this->data = $af->getRef();
+                $this->translator->set($af->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($af->getLabel());
                 break;
         }
         $af->save();
@@ -162,9 +136,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
-     * @Secure("editAF")
+     * @Secure("editAFLibrary")
      */
     public function deleteelementAction()
     {
@@ -183,10 +155,12 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
             if ($e->isSourceEntityInstanceOf(OutputElement::class)) {
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
             }
+            if ($e->isSourceEntityInstanceOf(InputSet::class)) {
+                throw new Core_Exception_User('AF', 'formList', 'afUsedByInput');
+            }
             throw $e;
         }
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }
-
 }

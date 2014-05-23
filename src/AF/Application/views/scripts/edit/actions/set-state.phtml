@@ -4,11 +4,7 @@ use AF\Domain\AF;
 use AF\Domain\Condition\Condition;
 use AF\Domain\Component\Component;
 
-/**
- * @author  matthieu.napoli
- * @package AF
- */
-/** @var $af \AF\Domain\AF */
+/** @var $af AF */
 $af = $this->af;
 
 // Creation du datagrid
@@ -22,14 +18,16 @@ $datagrid->addPanelTitle = __('AF', 'configInteractionDatagrid', 'componentChang
 $datagrid->deleteElements = true;
 
 // Element de formulaire cible de l'action
-$targetComponentColumn = new UI_Datagrid_Col_List('targetComponent',
-                                             __('AF', 'configInteractionDatagrid', 'targetComponentHeader'));
+$targetComponentColumn = new UI_Datagrid_Col_List(
+    'targetComponent',
+    __('AF', 'configInteractionDatagrid', 'targetComponentHeader')
+);
 $targetComponentColumn->withEmptyElement = false;
 $list = [];
 foreach ($this->componentList as $component) {
     /** @var $component Component */
     if ($af->getRootGroup() !== $component) {
-        $list[$component->getId()] = $component->getLabel();
+        $list[$component->getId()] = $this->translate($component->getLabel());
     }
 }
 $targetComponentColumn->list = $list;
@@ -44,12 +42,11 @@ $typeStateColumn->list = [
     SetState::TYPE_HIDE    => __('UI', 'verb', 'hide'),
     SetState::TYPE_ENABLE  => __('UI', 'verb', 'enable'),
     SetState::TYPE_DISABLE => __('UI', 'verb', 'disable'),
-    ];
+];
 $datagrid->addCol($typeStateColumn);
 
 // Condition déclenchant l'action
-$conditionColumn = new UI_Datagrid_Col_List('condition',
-                                         __('UI', 'name', 'condition'));
+$conditionColumn = new UI_Datagrid_Col_List('condition', __('UI', 'name', 'condition'));
 $conditionColumn->editable = true;
 $conditionColumn->withEmptyElement = true;
 $list = [];

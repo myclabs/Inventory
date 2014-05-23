@@ -1,6 +1,6 @@
 machine:
   php:
-    version: 5.5.3
+    version: 5.5.8
 
 checkout:
   post:
@@ -33,11 +33,11 @@ dependencies:
 
 database:
   override:
-    - bin/tests db:populate
+    - bin/tests db:populate -v
 
 test:
   override:
     - phpunit
     # Test des scripts populate
-    - bin/inventory db:populate test
-    - bin/inventory db:populate testDW
+    - bin/inventory db:populate test -v
+    - bin/inventory db:populate testDW -v

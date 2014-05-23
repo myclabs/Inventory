@@ -2,8 +2,8 @@
 
 namespace Core;
 
-use DI\Container;
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 
 /**
  * Singleton access to the container.
@@ -13,12 +13,12 @@ use Doctrine\ORM\EntityManager;
 class ContainerSingleton
 {
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     private static $container;
 
     /**
-     * @return Container
+     * @return ContainerInterface
      */
     public static function getContainer()
     {
@@ -33,7 +33,7 @@ class ContainerSingleton
         return self::$container->get(EntityManager::class);
     }
 
-    public static function setContainer(Container $container)
+    public static function setContainer(ContainerInterface $container)
     {
         self::$container = $container;
     }

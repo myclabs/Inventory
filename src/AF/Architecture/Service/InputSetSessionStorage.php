@@ -3,7 +3,22 @@
 namespace AF\Architecture\Service;
 
 use AF\Domain\AF;
+use AF\Domain\Algorithm\Algo;
+use AF\Domain\Algorithm\Numeric\NumericAlgo;
+use AF\Domain\InputSet\InputSet;
 use AF\Domain\InputSet\PrimaryInputSet;
+use AF\Domain\Output\OutputElement;
+use AF\Domain\Output\OutputIndex;
+use AF\Domain\Output\OutputTotal;
+use Calc_UnitValue;
+use Calc_Value;
+use Classification\Domain\Axis;
+use Classification\Domain\ContextIndicator;
+use Classification\Domain\Indicator;
+use Core\Translation\TranslatedString;
+use Doctrine\ORM\EntityManager;
+use Serializer\Serializer;
+use Unit\UnitAPI;
 use Zend_Session_Namespace;
 
 /**
@@ -16,6 +31,23 @@ class InputSetSessionStorage
     const SESSION_EXPIRATION = 3600;
 
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @var Serializer
+     */
+    private $serializer;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        $this->serializer = new Serializer($this->getConfig());
+    }
+
+    /**
      * @param AF   $af
      * @param bool $createIfNotFound Si l'InputSet n'est pas trouvé, en crée un nouveau automatiquement
      * @return PrimaryInputSet|null
@@ -24,17 +56,21 @@ class InputSetSessionStorage
     {
         // On cherche la saisie en session
         $session = $this->getSessionStorage();
+
         if (!isset($session->inputSet[$af->getId()])) {
             if ($createIfNotFound) {
                 $inputSet = new PrimaryInputSet($af);
                 /** @noinspection PhpUndefinedFieldInspection */
-                $session->inputSet[$af->getId()] = $inputSet;
+                $session->inputSet[$af->getId()] = $this->serializer->serialize($inputSet);
             } else {
                 $inputSet = null;
             }
         } else {
-            $inputSet = $session->inputSet[$af->getId()];
+            $json = $session->inputSet[$af->getId()];
+            $inputSet = $this->serializer->unserialize($json);
+            $inputSet = reset($inputSet);
         }
+
         return $inputSet;
     }
 
@@ -46,7 +82,7 @@ class InputSetSessionStorage
     {
         $session = $this->getSessionStorage();
         /** @noinspection PhpUndefinedFieldInspection */
-        $session->inputSet[$af->getId()] = $inputSet;
+        $session->inputSet[$af->getId()] = $this->serializer->serialize($inputSet);
     }
 
     /**
@@ -61,5 +97,103 @@ class InputSetSessionStorage
             $session->inputSet = [];
         }
         return $session;
+    }
+
+    private function getConfig()
+    {
+        return [
+            InputSet::class => [
+                'properties' => [
+                    'af' => [
+                        'serialize' => function (AF $af) {
+                            return $af->getId();
+                        },
+                        'unserialize' => function ($id) {
+                            return $this->entityManager->find(AF::class, $id);
+                        },
+                    ],
+                ],
+            ],
+            NumericAlgo::class => [
+                'properties' => [
+                    'contextIndicator' => [
+                        'serialize' => function (ContextIndicator $contextIndicator = null) {
+                            return $contextIndicator ? $contextIndicator->getId() : null;
+                        },
+                        'unserialize' => function ($id = null) {
+                            return $id ? $this->entityManager->find(ContextIndicator::class, $id) : null;
+                        },
+                    ],
+                ],
+            ],
+            OutputElement::class => [
+                'properties' => [
+                    'algo' => [
+                        'serialize' => function (Algo $algo) {
+                            return $algo->getId();
+                        },
+                        'unserialize' => function ($id) {
+                            return $this->entityManager->find(Algo::class, $id);
+                        },
+                    ],
+                ],
+            ],
+            OutputIndex::class => [
+                'properties' => [
+                    'axis' => [
+                        'serialize' => function (Axis $axis) {
+                            return $axis->getId();
+                        },
+                        'unserialize' => function ($id) {
+                            return $this->entityManager->find(Axis::class, $id);
+                        },
+                    ],
+                ],
+            ],
+            OutputTotal::class => [
+                'properties' => [
+                    'indicator' => [
+                        'serialize' => function (Indicator $indicator) {
+                            return $indicator->getId();
+                        },
+                        'unserialize' => function ($id) {
+                            return $this->entityManager->find(Indicator::class, $id);
+                        },
+                    ],
+                ],
+            ],
+            UnitAPI::class => [
+                'serialize' => function (UnitAPI $unit) {
+                    return $unit->getRef();
+                },
+                'unserialize' => function ($ref) {
+                    return new UnitAPI($ref);
+                },
+            ],
+            Calc_Value::class => [
+                'serialize' => function (Calc_Value $object) {
+                    return $object->exportToString();
+                },
+                'unserialize' => function ($str) {
+                    return Calc_Value::createFromString($str);
+                },
+            ],
+            Calc_UnitValue::class => [
+                'serialize' => function (Calc_UnitValue $object) {
+                    return $object->exportToString();
+                },
+                'unserialize' => function ($str) {
+                    return Calc_UnitValue::createFromString($str);
+                },
+            ],
+            TranslatedString::class => [
+                'serialize' => function (TranslatedString $str) {
+                    return serialize($str);
+                },
+                'unserialize' => function ($str) {
+                    return unserialize($str);
+                },
+            ],
+        ];
     }
 }

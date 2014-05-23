@@ -1,22 +1,123 @@
-<?php
-if ($this->isUserAbleToComment) {
-    echo $this->partial(
-        'comment/list.phtml',
-        'social',
-        [
-            'comments'       => $this->comments,
-            'currentUser'    => $this->currentUser,
-            'endpointAdd'    => 'orga/cell/input-comment-add/idCell/' . $this->idCell,
-            'endpointDelete' => 'orga/cell/input-comment-delete/idCell/' . $this->idCell,
-        ]
-    );
-} else {
-    echo $this->partial(
-        'comment/list.phtml',
-        'social',
-        [
-            'comments'    => $this->comments,
-            'currentUser' => $this->currentUser,
-        ]
-    );
-}
+<div ng-app="Comments" ng-controller="CommentsController">
+
+    <blockquote ng-repeat="comment in comments">
+        <div ng-show="!comment.edition">
+            <div ng-bind-html="comment.html | rawHtml"></div>
+            <small>
+                <?=__('Social', 'comment', 'by')?> <strong>{{ comment.author }}</strong>
+                <?=__('Social', 'comment', 'dated')?> {{ comment.date }}
+            </small>
+        </div>
+        <div ng-if="comment.canBeEdited">
+
+            <div ng-if="!comment.edition">
+                <button ng-click="comment.edition = true" type="button" class="btn btn-default btn-xs">
+                    <i class="fa fa-pencil-square-o"></i>
+                    <?=__('UI', 'verb', 'edit')?>
+                </button>
+                <button ng-click="deleteComment(comment)" type="button" class="btn btn-default btn-xs">
+                    <i class="fa fa-trash-o"></i>
+                    <?=__('UI', 'verb', 'delete')?>
+                </button>
+            </div>
+
+            <form ng-if="comment.edition" ng-submit="editComment(comment)">
+                <div class="form-group">
+                    <textarea ng-model="comment.text" class="form-control" rows="5"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <?=__('UI', 'verb', 'save')?>
+                </button>
+                <button ng-click="comment.edition = false" type="button" class="btn btn-default">
+                    <?=__('UI', 'verb', 'cancel')?>
+                </button>
+            </form>
+
+        </div>
+    </blockquote>
+
+    <p ng-if="comments.length == 0" class="text-muted">
+        <?=__('Social', 'comment', 'noComment')?>
+    </p>
+
+    <?php if ($this->isUserAbleToComment) : ?>
+        <form ng-submit="addComment()">
+            <div class="form-group">
+                <textarea ng-model="newComment" name="newComment" class="form-control" rows="5"
+                          placeholder="<?=__('Social', 'comment', 'comment')?>"></textarea>
+            </div>
+            <button type="submit" class="btn btn-default">
+                <?=__('Social', 'comment', 'addComment')?>
+            </button>
+        </form>
+    <?php endif; ?>
+
+</div>
+
+<script>
+    var app = angular.module('Comments', []);
+
+    // Configure Angular pour poster en "form data" plutôt qu'en JSON
+    app.config(function ($httpProvider) {
+        $httpProvider.defaults.transformRequest = function(data){
+            if (data === undefined) {
+                return data;
+            }
+            return $.param(data);
+        };
+        $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+    });
+
+    app.filter('rawHtml', function($sce){
+        return function(text) {
+            return $sce.trustAsHtml(text);
+        };
+    });
+
+    app.controller('CommentsController', function ($scope, $http) {
+        $scope.comments = [];
+
+        $scope.refresh = function() {
+            $http.get('orga/comment/list?idCell=<?=$this->idCell?>')
+            .success(function(data) {
+                $scope.comments = data;
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.addComment = function() {
+            $http.post('orga/comment/new?idCell=<?=$this->idCell?>', { text: $scope.newComment })
+            .success(function(data) {
+                addMessage(JSON.parse(data), 'success');
+                $scope.refresh();
+                $scope.newComment = '';
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.editComment = function(comment) {
+            $http.post('orga/comment/edit?idCell=<?=$this->idCell?>', { id: comment.id, text: comment.text })
+            .success(function(data) {
+                addMessage(JSON.parse(data), 'success');
+                $scope.refresh();
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.deleteComment = function(comment) {
+            $http.post('orga/comment/delete?idCell=<?=$this->idCell?>', { id: comment.id })
+            .success(function(data) {
+                addMessage(JSON.parse(data), 'success');
+                $scope.refresh();
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.refresh();
+    });
+</script>
+

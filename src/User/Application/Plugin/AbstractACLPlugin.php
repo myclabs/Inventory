@@ -4,13 +4,15 @@ namespace User\Application\Plugin;
 
 use ArrayObject;
 use Core_Exception_NotFound;
+use Core_Exception_User;
 use Core_View_Helper_GetUrl;
 use Exception;
+use MyCLabs\ACL\ACL;
 use Psr\Log\LoggerInterface;
 use UI_Message;
 use User\Application\ForbiddenException;
+use User\Application\HttpNotFoundException;
 use User\Domain\User;
-use User\Domain\ACL\ACLService;
 use User\Application\Service\ControllerSecurityService;
 use Zend_Auth;
 use Zend_Controller_Plugin_Abstract;
@@ -30,9 +32,9 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
     protected $controllerSecurityService;
 
     /**
-     * @var ACLService
+     * @var ACL
      */
-    protected $aclService;
+    protected $acl;
 
     /**
      * @var LoggerInterface
@@ -41,11 +43,11 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
 
     public function __construct(
         ControllerSecurityService $controllerSecurityService,
-        ACLService $aclService,
+        ACL $acl,
         LoggerInterface $logger
     ) {
         $this->controllerSecurityService = $controllerSecurityService;
-        $this->aclService = $aclService;
+        $this->acl = $acl;
         $this->logger = $logger;
     }
 
@@ -73,9 +75,12 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
         // Vérifie si l'utilisateur est connecté.
         $identity = $this->getLoggedInUser();
 
-        if ($this->isAuthorized($identity, $module, $controller, $action, $request)) {
-            // L'utilisateur est autorisé
-            return;
+        try {
+            if ($this->isAuthorized($identity, $module, $controller, $action, $request)) {
+                // L'utilisateur est autorisé
+                return;
+            }
+        } catch (ForbiddenException $e) {
         }
 
         // Si l'utilisateur n'a pas accès et qu'il n'est pas connecté : redirection sur la page de login.
@@ -118,6 +123,8 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
     {
         try {
             $securityRule = $this->controllerSecurityService->getSecurityRule($module, $controller, $action);
+        } catch (Core_Exception_User $e) {
+            throw $e;
         } catch (Exception $e) {
             // En cas d'erreur, on loggue et on refuse l'accès.
             $this->logger->error(
@@ -144,6 +151,8 @@ abstract class AbstractACLPlugin extends Zend_Controller_Plugin_Abstract
         $methodName = $securityRule . 'Rule';
         try {
             return $this->$methodName($user, $request);
+        } catch (HttpNotFoundException $e) {
+            throw $e;
         } catch (Exception $e) {
             // En cas d'erreur, on loggue et on refuse l'accès.
             $this->logger->error(

@@ -2,6 +2,7 @@
 
 namespace UI\Datagrid\Column;
 
+use Exception;
 use UI\Datagrid\Datagrid;
 use UI_Form_Element_Pattern_Date;
 
@@ -116,6 +117,7 @@ JS;
      */
     public function getFilterFormElement(Datagrid $datagrid, $defaultValue = null)
     {
+        throw new Exception('Col Date needs to be refactored before being able to filter element.');
         // Champs pour le fitre >=.
         $filterFormElementSuperior = new UI_Form_Element_Pattern_Date($this->getFilterFormId($datagrid).'_higher');
         $filterFormElementSuperior->setLabel($this->getFilterFormLabel());
@@ -153,6 +155,7 @@ JS;
      */
     public function getFilterValue(Datagrid $datagrid)
     {
+        throw new Exception('Col Date needs to be refactored before being able to filter element.');
         $filterValue = '';
 
         // Condition de saisie du filtre.
@@ -161,7 +164,7 @@ JS;
         $filterValue .= 'if ((valueSup != \'\') || (valueInf != \'\')) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {";';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {";';
         $filterValue .= 'if (valueSup != \'\') {';
         $filterValue .= 'filter += "\"'.$this->criteriaFilterOperatorHigher.'\":\"" + valueSup + "\"";';
         $filterValue .= '}';
@@ -171,7 +174,7 @@ JS;
         $filterValue .= 'if (valueInf != \'\') {';
         $filterValue .= 'filter += "\"'.$this->criteriaFilterOperatorLower.'\":\"" + valueInf + "\"";';
         $filterValue .= '}';
-        $filterValue .= 'filter += "},";';
+        $filterValue .= 'filter += "}},";';
 
         $filterValue .= '}';
 
@@ -183,6 +186,7 @@ JS;
      */
     public function getResettingFilter(Datagrid $datagrid)
     {
+        throw new Exception('Col Date needs to be refactored before being able to filter element.');
         $resetFields = '';
 
         $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).'_higher\').val(\'\');';
@@ -196,6 +200,7 @@ JS;
      */
     public function getAddFormElement(Datagrid $datagrid)
     {
+        throw new Exception('Col Date needs to be refactored before being able to add element.');
         $addFormElement = new UI_Form_Element_Pattern_Date($this->getAddFormElementId($datagrid));
         $addFormElement->setLabel($this->getAddFormElementLabel());
         $addFormElement->setValue($this->defaultAddValue);

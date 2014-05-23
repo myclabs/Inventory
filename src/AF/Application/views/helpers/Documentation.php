@@ -3,7 +3,8 @@
 use AF\Domain\AF;
 use AF\Domain\Component\SubAF\RepeatedSubAF;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
-use Techno\Domain\Family\Family;
+use MyCLabs\MUIH\Collapse;
+use Parameter\Domain\Family\Family;
 
 /**
  * Génère la documentation d'un AF.
@@ -25,7 +26,11 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
         foreach ($af->getSubAfList() as $subAFComponent) {
             $repeatedSubAf = ($subAFComponent instanceof RepeatedSubAF);
 
-            $html .= $this->renderAf($subAFComponent->getCalledAF(), $subAFComponent->getLabel(), $repeatedSubAf);
+            $html .= $this->renderAf(
+                $subAFComponent->getCalledAF(),
+                $this->view->translate($subAFComponent->getLabel()),
+                $repeatedSubAf
+            );
         }
 
         return $html;
@@ -40,10 +45,10 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
      */
     protected function renderAf(AF $af, $title, $repeatedSubAf = false)
     {
-        $collapse = new UI_HTML_Collapse($af->getRef(), $title);
+        $collapse = new Collapse($af->getId(), $title);
 
         // Lien vers la saisie en test
-        $html = __('AF', 'inputDocumentation', 'calledForm') . ' ' . $af->getLabel();
+        $html = __('AF', 'inputDocumentation', 'calledForm') . ' ' . $this->view->translate($af->getLabel());
         if ($repeatedSubAf) {
             $html .= ' (' . __('AF', 'inputDocumentation', 'repeated') . ')';
         }
@@ -60,20 +65,21 @@ class AF_View_Helper_Documentation extends Zend_View_Helper_Abstract
         } else {
             $html .= '<ul>';
             foreach ($families as $family) {
-                $url = $this->view->baseUrl("techno/family/details/id/" . $family->getId());
-                $html .= "<li><a href=\"$url\" target=\"_blank\">{$family->getLabel()}</a></li>";
+                $url = $this->view->baseUrl("parameter/family/details/id/" . $family->getId());
+                $label = $this->view->translate($family->getLabel());
+                $html .= "<li><a href=\"$url\" target=\"_blank\">$label</a></li>";
             }
             $html .= '</ul>';
         }
         $html .= "</p>";
 
-        $collapse->body = $html;
+        $collapse->setContent($html);
 
         return $collapse->render();
     }
 
     /**
-     * Permet de récupérer la liste des familles de paramètres de techno
+     * Permet de récupérer la liste des familles de paramètres de parameter
      * @param AF $af
      * @return Family[]
      */

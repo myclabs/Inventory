@@ -115,7 +115,7 @@
 				<seg>Input saved (complete input).</seg>
 			</tuv>
 		</tu>
-        <tu tuid="completeInputSavedCalculationErrorUnknownTechnoMember">
+        <tu tuid="completeInputSavedCalculationErrorUnknownParameterFamilyMember">
             <tuv xml:lang="fr">
                 <seg>
                     Enregistrement effectué.

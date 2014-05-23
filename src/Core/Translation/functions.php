@@ -1,7 +1,5 @@
 <?php
 
-use DI\Container;
-
 /**
  * Alias de la fonction statique de traduction.
  * Permet de gagner du temps dans les vues.

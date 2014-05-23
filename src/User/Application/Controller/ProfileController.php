@@ -1,10 +1,10 @@
 <?php
 
 use Core\Annotation\Secure;
+use MyCLabs\ACL\ACL;
+use User\Domain\ACL\Actions;
+use MyCLabs\ACL\Model\ClassResource;
 use User\Application\ForbiddenException;
-use User\Domain\ACL\Action;
-use User\Domain\ACL\ACLService;
-use User\Domain\ACL\Resource\NamedResource;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -23,9 +23,9 @@ class User_ProfileController extends Core_Controller
 
     /**
      * @Inject
-     * @var ACLService
+     * @var ACL
      */
-    private $aclService;
+    private $acl;
 
     /**
      * @Inject("emails.noreply.name")
@@ -49,11 +49,10 @@ class User_ProfileController extends Core_Controller
     public function listAction()
     {
         $loggedInUser = $this->_helper->auth();
-        $resourceAllUsers = NamedResource::loadByName(User::class);
-        $this->view->canCreateUsers = $this->aclService->isAllowed(
+        $this->view->canCreateUsers = $this->acl->isAllowed(
             $loggedInUser,
-            Action::CREATE(),
-            $resourceAllUsers
+            Actions::CREATE,
+            new ClassResource(User::class)
         );
     }
 
@@ -86,14 +85,14 @@ class User_ProfileController extends Core_Controller
         $this->view->canEditPassword = ($user === $loggedInUser);
 
         // Est-ce que l'utilisateur peut désactiver le compte
-        $this->view->canDisable = $this->aclService->isAllowed(
+        $this->view->canDisable = $this->acl->isAllowed(
             $loggedInUser,
-            Action::DELETE(),
+            Actions::DELETE,
             $user
         );
-        $this->view->canEnable = $this->aclService->isAllowed(
+        $this->view->canEnable = $this->acl->isAllowed(
             $loggedInUser,
-            Action::UNDELETE(),
+            Actions::UNDELETE,
             $user
         );
 
@@ -116,9 +115,8 @@ class User_ProfileController extends Core_Controller
             $user = $this->_helper->auth();
         }
 
-        $formData = $this->getFormData('userProfile');
-        $user->setFirstName($formData->getValue('firstName'));
-        $user->setLastName($formData->getValue('lastName'));
+        $user->setFirstName($this->getParam('firstName'));
+        $user->setLastName($this->getParam('lastName'));
         $user->save();
         $this->entityManager->flush();
 
@@ -178,7 +176,7 @@ class User_ProfileController extends Core_Controller
         $content = __('User', 'email', 'bodyAccountActivated', [ 'APPLICATION_NAME' => $this->emailNoReplyName ]);
         $this->userService->sendEmail($user, $subject, $content);
 
-        $message = __('User', 'messages', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
+        $message = __('User', 'editProfile', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
         UI_Message::addMessageStatic($message, UI_Message::TYPE_SUCCESS);
 
         $this->redirect('user/profile/edit/id/' . $user->getId());
@@ -197,21 +195,12 @@ class User_ProfileController extends Core_Controller
         $editSelfEmail = ($user === $loggedInUser);
 
         if ($this->getRequest()->isPost()) {
-            $formData = $this->getFormData('editEmail');
-            $oldEmail = $formData->getValue('oldEmail');
-            $email = $formData->getValue('email');
-            $email2 = $formData->getValue('email2');
-            $password = $formData->getValue('password');
+            $email = $this->getParam('email');
+            $password = $this->getParam('password');
 
             // Validation
             if (empty($email)) {
                 $this->addFormError('email', __('UI', 'formValidation', 'emptyRequiredField'));
-            }
-            if (empty($email2)) {
-                $this->addFormError('email2', __('UI', 'formValidation', 'emptyRequiredField'));
-            }
-            if ($email && ($email != $email2)) {
-                $this->addFormError('email2', __('User', 'editEmail', 'emailsAreNotIdentical'));
             }
             if ($editSelfEmail) {
                 if (empty($password)) {
@@ -228,13 +217,13 @@ class User_ProfileController extends Core_Controller
                 $subject = __('User', 'email', 'subjectEmailModified');
                 if ($user === $this->_helper->auth()) {
                     $content = __('User', 'email', 'bodyEmailModifiedByUser', [
-                        'OLD_EMAIL_ADDRESS' => $oldEmail,
+                        'OLD_EMAIL_ADDRESS' => $user->getEmail(),
                         'NEW_EMAIL_ADDRESS' => $email,
                         'APPLICATION_NAME'  => $this->emailNoReplyName
                     ]);
                 } else {
                     $content = __('User', 'email', 'bodyEmailModifiedByAdmin', [
-                        'OLD_EMAIL_ADDRESS' => $oldEmail,
+                        'OLD_EMAIL_ADDRESS' => $user->getEmail(),
                         'NEW_EMAIL_ADDRESS' => $email,
                         'APPLICATION_NAME'  => $this->emailNoReplyName
                     ]);
@@ -249,14 +238,15 @@ class User_ProfileController extends Core_Controller
                 // Envoi de l'email à la nouvelle adresse
                 $this->userService->sendEmail($user, $subject, $content);
 
-                if ($user === $this->_helper->auth()) {
+                if ($editSelfEmail) {
                     $message = __('UI', 'message', 'updated');
                 } else {
                     $message = __('UI', 'message', 'updated') . __('User', 'editEmail', 'userInformedByEmail');
                 }
-                UI_Message::addMessageStatic($message, UI_Message::TYPE_SUCCESS);
+                $this->setFormMessage($message, UI_Message::TYPE_SUCCESS);
             }
             $this->sendFormResponse();
+            return;
         }
         $this->view->editSelfEmail = $editSelfEmail;
         $this->view->user = $user;
@@ -278,10 +268,9 @@ class User_ProfileController extends Core_Controller
         }
 
         if ($this->getRequest()->isPost()) {
-            $formData = $this->getFormData('editPassword');
-            $oldPassword = $formData->getValue('oldPassword');
-            $password = $formData->getValue('password');
-            $password2 = $formData->getValue('password2');
+            $oldPassword = $this->getParam('oldPassword');
+            $password = $this->getParam('password');
+            $password2 = $this->getParam('password2');
 
             // Validation
             if (empty($oldPassword)) {
@@ -303,7 +292,7 @@ class User_ProfileController extends Core_Controller
             if (! $this->hasFormError()) {
                 $user->setPassword($password);
                 $this->entityManager->flush();
-                UI_Message::addMessageStatic(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
+                $this->setFormMessage(__('UI', 'message', 'updated'), UI_Message::TYPE_SUCCESS);
             }
 
             $this->sendFormResponse();

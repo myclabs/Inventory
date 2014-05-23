@@ -6,8 +6,10 @@
  * @subpackage Model
  */
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Mnapoli\Translated\Translator;
 
 /**
  * Permet de gérer un report
@@ -18,7 +20,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 class DW_Model_Report extends Core_Model_Entity
 {
     use Core_Event_ObservableTrait;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_CUBE = 'cube';
@@ -52,7 +53,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Label de l'Indicator.
      *
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -154,6 +155,7 @@ class DW_Model_Report extends Core_Model_Entity
 
     public function __construct(DW_Model_Cube $cube)
     {
+        $this->label = new TranslatedString();
         $this->filters = new ArrayCollection();
 
         $this->cube = $cube;
@@ -218,9 +220,9 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Définit le label.
      *
-     * @param string $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
     }
@@ -228,7 +230,7 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoie le label.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -549,12 +551,16 @@ class DW_Model_Report extends Core_Model_Entity
     /**
      * Renvoie le symbol des unités associées aux valeurs du rapport.
      *
-     * @return String
+     * @return TranslatedString
      */
     public function getValuesUnitSymbol()
     {
         if (($this->getDenominator() !== null)) {
-            return $this->getNumerator()->getRatioUnit()->getSymbol() . ' / ' . $this->getDenominator()->getRatioUnit()->getSymbol();
+            return TranslatedString::join([
+                $this->getNumerator()->getRatioUnit()->getSymbol(),
+                ' / ',
+                $this->getDenominator()->getRatioUnit()->getSymbol()
+            ]);
         } else {
             return $this->getNumerator()->getUnit()->getSymbol();
         }
@@ -574,6 +580,9 @@ class DW_Model_Report extends Core_Model_Entity
         if ($this->getNumeratorAxis1() === null) {
             throw new Core_Exception_InvalidArgument('At least one numerator axis is needed to drow a chart');
         }
+        //@todo Trouver une meilleur solution !
+        /** @var Translator $translator */
+        $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
 
         $chartType = $this->getChartType();
         if ($chartType === DW_Model_Report::CHART_PIE) {
@@ -581,7 +590,7 @@ class DW_Model_Report extends Core_Model_Entity
             $chart->addAttribute('chartArea', '{width:"85%", height:"85%"}');
 
             foreach ($this->getValues() as $value) {
-                $serie = new UI_Chart_Serie($value['members'][0]->getLabel());
+                $serie = new UI_Chart_Serie($translator->get($value['members'][0]->getLabel()));
                 $serie->values[] = $value['value'];
                 $chart->addSerie($serie);
             }
@@ -603,10 +612,12 @@ class DW_Model_Report extends Core_Model_Entity
                 || ($chartType === DW_Model_Report::CHART_HORIZONTAL_STACKEDGROUPED)) {
                 $chart->vertical = false;
                 $chart->addAttribute('chartArea', '{top:"5%", left:"25%", width:"50%", height:"75%"}');
-                $chart->addAttribute('hAxis', '{title: \''.$this->getValuesUnitSymbol().'\',  titleTextStyle: {color: \'#9E0000\'}}');
+                $chart->addAttribute('hAxis', '{title: \''.
+                    $translator->get($this->getValuesUnitSymbol()).'\',  titleTextStyle: {color: \'#9E0000\'}}');
             } else {
                 $chart->addAttribute('chartArea', '{top:"5%", left:"15%", width:"50%", height:"65%"}');
-                $chart->addAttribute('vAxis', '{title: \''.$this->getValuesUnitSymbol().'\',  titleTextStyle: {color: \'#9E0000\'}}');
+                $chart->addAttribute('vAxis', '{title: \''.
+                    $translator->get($this->getValuesUnitSymbol()).'\',  titleTextStyle: {color: \'#9E0000\'}}');
             }
 
             if ($this->numeratorAxis2 === null) {
@@ -617,7 +628,7 @@ class DW_Model_Report extends Core_Model_Entity
                 $serieValues = new UI_Chart_Serie('');
                 $numberValues = 0;
                 foreach ($this->getValues() as $position => $value) {
-                    $serieAxis->values[] = $value['members'][0]->getLabel();
+                    $serieAxis->values[] = $translator->get($value['members'][0]->getLabel());
                     $serieValues->values[] = $value['value'];
                     $serieValues->uncertainties[] = $value['uncertainty'];
                     $numberValues++;
@@ -644,7 +655,7 @@ class DW_Model_Report extends Core_Model_Entity
                     $numeratorAxis1MembersUsed[$value['members'][0]->getId()] = $value['members'][0];
                     $numeratorAxis2MembersUsed[$value['members'][1]->getId()] = $value['members'][1];
 
-                    $seriesAxisLabel[$value['members'][0]->getId()] = $value['members'][0]->getLabel();
+                    $seriesAxisLabel[$value['members'][0]->getId()] = $translator->get($value['members'][0]->getLabel());
 
                     $serieValueId = 'serieValue'.$value['members'][1]->getId();
                     if (!isset($seriesValues[$serieValueId])) {
@@ -690,7 +701,7 @@ class DW_Model_Report extends Core_Model_Entity
 
                 foreach ($seriesValues as $serieValueId => $values) {
                     $serie = new UI_Chart_Serie(
-                        $numeratorAxis2MembersUsed[explode('serieValue', $serieValueId)[1]]->getLabel()
+                        $translator->get($numeratorAxis2MembersUsed[explode('serieValue', $serieValueId)[1]]->getLabel())
                     );
                     $numberValues = 0;
                     foreach ($values as $memberIndex => $value) {
@@ -729,7 +740,10 @@ class DW_Model_Report extends Core_Model_Entity
         }
 
         // Label.
-        $stdReport->label = $this->label;
+        $stdReport->label = new StdClass();
+        foreach ($this->label->getAll() as $language => $translatedLabel) {
+            $stdReport->label->$language = $translatedLabel;
+        }
 
         // Numerator Indicator.
         if ($this->numerator !== null) {
@@ -811,7 +825,7 @@ class DW_Model_Report extends Core_Model_Entity
         }
 
         // Label.
-        $report->setLabel($stdReport->label);
+        $report->setLabel(TranslatedString::fromArray((array) $stdReport->label));
 
         // Numerator Indicator.
         if ($stdReport->refNumerator !== null) {

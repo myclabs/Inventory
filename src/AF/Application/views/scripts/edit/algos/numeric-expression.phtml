@@ -1,5 +1,4 @@
 <?php
-use AF\Domain\AF;
 
 /**
  * Datagrid des algos expressions numériques
@@ -31,7 +30,6 @@ $datagrid->addCol($refColumn);
 $expressionColumn = new UI_Datagrid_Col_LongText('expression', __('TEC', 'name', 'expression'));
 $expressionColumn->editable = true;
 $expressionColumn->textileEditor = false;
-$expressionColumn->popup->title = __('TEC', 'name', 'expression');
 $datagrid->addCol($expressionColumn);
 
 // Unité
@@ -40,23 +38,26 @@ $unitColumn->editable = true;
 $datagrid->addCol($unitColumn);
 
 // Context indicator
-$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classif', 'indicator', 'indicator'));
+$contextIndicatorColumn = new UI_Datagrid_Col_List('contextIndicator', __('Classification', 'indicator', 'indicator'));
 $contextIndicatorColumn->addable = false;
 $contextIndicatorColumn->editable = true;
 $contextIndicatorColumn->dynamicList = true;
 $contextIndicatorColumn->list = $this->baseUrl(
-    '/af/datagrid_edit_algos_numeric-expression/get-context-indicator-list/');
+    'af/datagrid_edit_algos_numeric-expression/get-context-indicator-list'
+);
 $contextIndicatorColumn->withEmptyElement = true;
 $datagrid->addCol($contextIndicatorColumn);
 
 // Indexation
 $resultIndexColumn = new UI_Datagrid_Col_Popup('resultIndex', __('Algo', 'name', 'indexation'));
-$resultIndexColumn->popup->title = __('Algo', 'name', 'indexation');
-$resultIndexColumn->popup->addAttribute('class', 'large');
+$resultIndexColumn->popup->large();
 $datagrid->addCol($resultIndexColumn);
 
 echo $datagrid->render();
 ?>
-<script type="text/javascript">
-    $(document).ready(function() { refFromLabel('algoNumericExpression_label_addForm', 'algoNumericExpression_ref_addForm') });
+
+<script>
+    $(function() {
+        refFromLabel('algoNumericExpression_label_addForm', 'algoNumericExpression_ref_addForm')
+    });
 </script>

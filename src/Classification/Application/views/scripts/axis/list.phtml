@@ -1,0 +1,145 @@
+<?php
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
+?>
+<div class="page-header">
+    <h1><?=__('Classification', 'axis', 'pageTitle')?></h1>
+</div>
+
+<?
+$tree = new UI_Tree('editAxis', 'tree_axis', 'classification');
+$tree->addParam('library', $this->library->getId());
+
+// Caractéristiques du popup d'édition
+$editLabelInput = new GenericVoidTag('input');
+$editLabelInput->setAttribute('name', 'editAxis_label');
+$editLabelInput->setAttribute('type', 'text');
+$editLabelInput->setAttribute('id', 'editAxis_label');
+$editLabelInput->addClass('form-control');
+$editLabelWrapper = new GenericTag('div', $editLabelInput);
+$editLabelWrapper->addClass('col-xs-10');
+$editLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+$editLabelLabel->setAttribute('for', 'editAxis_label');
+$editLabelLabel->addClass('control-label');
+$editLabelLabel->addClass('col-xs-2');
+$editLabelGroup = new GenericTag('div');
+$editLabelGroup->addClass('form-group');
+$editLabelGroup->appendContent($editLabelLabel);
+$editLabelGroup->appendContent($editLabelWrapper);
+
+$editRefInput = new GenericVoidTag('input');
+$editRefInput->setAttribute('name', 'editAxis_ref');
+$editRefInput->setAttribute('type', 'text');
+$editRefInput->setAttribute('id', 'editAxis_ref');
+$editRefInput->setBooleanAttribute('required');
+$editRefInput->addClass('form-control');
+$editRefWrapper = new GenericTag('div', $editRefInput);
+$editRefWrapper->addClass('col-xs-10');
+$editRefLabel = new GenericTag('ref', ___('UI', 'name', 'identifier'));
+$editRefLabel->setAttribute('for', 'editAxis_ref');
+$editRefLabel->addClass('control-label');
+$editRefLabel->addClass('col-xs-2');
+$editRefGroup = new GenericTag('div');
+$editRefGroup->addClass('form-group');
+$editRefGroup->appendContent($editRefLabel);
+$editRefGroup->appendContent($editRefWrapper);
+
+$addForm = new GenericTag('form');
+
+$addLabelInput = new GenericVoidTag('input');
+$addLabelInput->setAttribute('name', 'label');
+$addLabelInput->setAttribute('type', 'text');
+$addLabelInput->setAttribute('id', 'addAxis_label');
+$addLabelInput->addClass('form-control');
+$addLabelWrapper = new GenericTag('div', $addLabelInput);
+$addLabelWrapper->addClass('col-xs-10');
+$addLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+$addLabelLabel->setAttribute('for', 'addAxis_label');
+$addLabelLabel->addClass('control-label');
+$addLabelLabel->addClass('col-xs-2');
+$addLabelGroup = new GenericTag('div');
+$addLabelGroup->addClass('form-group');
+$addLabelGroup->appendContent($addLabelLabel);
+$addLabelGroup->appendContent($addLabelWrapper);
+$addForm->appendContent($addLabelGroup);
+
+$addRefInput = new GenericVoidTag('input');
+$addRefInput->setAttribute('name', 'ref');
+$addRefInput->setAttribute('type', 'text');
+$addRefInput->setAttribute('id', 'addAxis_ref');
+$addRefInput->setBooleanAttribute('required');
+$addRefInput->addClass('form-control');
+$addRefWrapper = new GenericTag('div', $addRefInput);
+$addRefWrapper->addClass('col-xs-10');
+$addRefLabel = new GenericTag('ref', ___('UI', 'name', 'identifier'));
+$addRefLabel->setAttribute('for', 'addAxis_ref');
+$addRefLabel->addClass('control-label');
+$addRefLabel->addClass('col-xs-2');
+$addRefGroup = new GenericTag('div');
+$addRefGroup->addClass('form-group');
+$addRefGroup->appendContent($addRefLabel);
+$addRefGroup->appendContent($addRefWrapper);
+$addForm->appendContent($addRefGroup);
+
+$addParentInput = new GenericTag('select');
+$addParentInput->setAttribute('name', 'parent');
+$addParentInput->setAttribute('type', 'text');
+$addParentInput->setAttribute('id', 'addAxis_parent');
+$addParentInput->addClass('form-control');
+$optionParent = new GenericTag('option');
+$optionParent->setAttribute('value', '');
+$addParentInput->appendContent($optionParent);
+foreach ($this->listParents as $parentAxis) {
+    /** @var Orga_Model_Axis $parentAxis */
+    $optionParent = new GenericTag('option', $this->translate($parentAxis->getLabel()));
+    $optionParent->setAttribute('value', $parentAxis->getRef());
+    $addParentInput->appendContent($optionParent);
+}
+$addParentWrapper = new GenericTag('div', $addParentInput);
+$addParentWrapper->addClass('col-xs-10');
+$addParentLabel = new GenericTag('label', ___('Orga', 'axis', 'parentAxisLabel'));
+$addParentLabel->setAttribute('for', 'addAxis_parent');
+$addParentLabel->addClass('control-label');
+$addParentLabel->addClass('col-xs-2');
+$addParentGroup = new GenericTag('div');
+$addParentGroup->addClass('form-group');
+$addParentGroup->appendContent($addParentLabel);
+$addParentGroup->appendContent($addParentWrapper);
+$addForm->appendContent($addParentGroup);
+
+$tree->setEditNode(true, true, [$editLabelGroup, $editRefGroup]);
+$tree->addPanelTitle = __('Classification', 'axis', 'addPanelTitle');
+$tree->editPanelTitle = __('Classification', 'axis', 'editPanelTitle');
+$tree->changeParentLabel = __('Classification', 'axis', 'parentAxisLabel');
+$tree->addNode = true;
+$tree->addPanelForm = $addForm;
+$tree->deleteNode = true;
+$tree->expandAll = false;
+$tree->collapseAll = false;
+$tree->display();
+
+$script = '';
+$script .= '$(\'#editAxis_element\').change(function(e) {';
+$script .= 'var idNode = $(this).val();';
+$script .= '$.get(';
+$script .= '\'classification/tree_axis/getinfoedit?library='.$this->library->getId().'&idNode=\' + idNode, ';
+$script .= 'function(o){';
+$script .= '$(\'#editAxis_ref\').val(o.ref);';
+$script .= '$(\'#editAxis_label\').val(o.label);';
+$script .= '}';
+$script .= ').error(function(o) {';
+$script .= 'errorHandler(o);';
+$script .= '});';
+$script .= '});';
+$script .= '$(\'#editAxis_addPanel\').on(\'show.bs.modal\', function(e) {';
+$script .= '$.get(';
+$script .= '\'classification/tree_axis/getlistparents?library='.$this->library->getId().'&idNode=\', ';
+$script .= 'function(o){';
+$script .= '$(\'#addAxis_parent\').formActionSetOptions(o);';
+$script .= '}';
+$script .= ').error(function(o) {';
+$script .= 'errorHandler(o);';
+$script .= '});';
+$script .= '});';
+$script .= 'refFromLabel(\'addAxis_label\', \'addAxis_ref\');';
+$this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');

@@ -18,12 +18,12 @@ class Orga_Datagrid_Organization_ReportsController extends UI_Controller_Datagri
         $dWCube = $granularity->getDWCube();
 
         $this->request->filter->addCondition(DW_Model_Report::QUERY_CUBE, $dWCube);
-        $this->request->order->addOrder(DW_Model_Report::QUERY_LABEL);
+        $this->request->order->addTranslatedOrder(DW_Model_Report::QUERY_LABEL);
         /** @var DW_Model_Report $report */
         foreach (DW_Model_Report::loadList($this->request) as $report) {
             $data = array();
             $data['index'] = $report->getId();
-            $data['report'] = $report->getLabel();
+            $data['report'] = $this->cellTranslatedText($report->getLabel());
             $urlDetails = 'orga/granularity/view-report/idGranularity/'.$idGranularity.'/idReport/'.$data['index'].'/';
             $data['link'] = $this->cellLink($urlDetails);
             $this->addline($data);

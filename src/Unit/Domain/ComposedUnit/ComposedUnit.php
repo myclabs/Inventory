@@ -2,7 +2,9 @@
 
 namespace Unit\Domain\ComposedUnit;
 
+use Core\Translation\TranslatedString;
 use Core_Tools;
+use Doctrine\Common\Util\ClassUtils;
 use Unit\Domain\Unit\Unit;
 use Unit\Domain\Unit\ExtendedUnit;
 use Unit\Domain\PhysicalQuantity;
@@ -176,42 +178,45 @@ class ComposedUnit
 
     /**
      * Récupère le symbole d'une unité.
-     * @return string
+     * @return TranslatedString
      */
     public function getSymbol()
     {
-        $leftPart = '';
-        $rightPart = '';
+        $leftPart = [];
+        $rightPart = [];
         foreach ($this->components as $unitArray) {
             // Pour les exposants positifs on construit le numérateur du symbole de l'unité.
             if ($unitArray['exponent'] > 0) {
-                $leftPart .= $unitArray['unit']->getSymbol();
+                $leftPart[] = $unitArray['unit']->getSymbol();
                 if ($unitArray['exponent'] > 1) {
-                    $leftPart .= $unitArray['exponent'];
+                    $leftPart[] = (string) $unitArray['exponent'];
                 }
-                $leftPart .= '.';
+                $leftPart[] = '.';
             } // Pour les exposants négatifs on construite le dénominateur du symbole de l'unité.
             else {
                 if ($unitArray['exponent'] < 0) {
-                    $rightPart .= $unitArray['unit']->getSymbol();
+                    $rightPart[] = $unitArray['unit']->getSymbol();
                     if ($unitArray['exponent'] < -1) {
                         // pour un exposant négatif on prend la valeur absolue de celui ci.
-                        $rightPart .= abs($unitArray['exponent']);
+                        $rightPart[] = (string) abs($unitArray['exponent']);
                     }
-                    $rightPart .= '.';
+                    $rightPart[] = '.';
                 }
             }
         }
         // On supprime le dernier point de séparation à la fin de chaques parties du symbole.
-        // Dans le cas ou une des parties est une chaine vide, cela renvoi une chaine vide.
-        $leftPart = substr($leftPart, 0, -1);
-        $rightPart = substr($rightPart, 0, -1);
+        array_pop($leftPart);
+        array_pop($rightPart);
         // Si on a une partie négative on sépare le numérateur et le dénominateur avec un trait de fraction
-        if ($rightPart != '') {
-            return $leftPart . '/' . $rightPart;
+        if (count($rightPart) > 0) {
+            return TranslatedString::join([
+                TranslatedString::join($leftPart),
+                '/',
+                TranslatedString::join($rightPart)
+            ]);
         } else {
             // Sinon on ne retourne que la partie positive.
-            return $leftPart;
+            return TranslatedString::join($leftPart);
         }
     }
 
@@ -271,7 +276,7 @@ class ComposedUnit
                     $normalizedUnit->components[] = $unitArray;
                 }
             }
-            usort($normalizedUnit->components, array('Unit\Domain\ComposedUnit\ComposedUnit', 'orderComponents'));
+            usort($normalizedUnit->components, [$this, 'orderComponents']);
             $normalizedUnit->setRef();
             return $normalizedUnit;
         }
@@ -353,9 +358,10 @@ class ComposedUnit
             if ($unitArrayA['exponent'] < $unitArrayB['exponent']) {
                 return 1;
             }
+            return 0;
         } else {
-            $classA = get_class($unitArrayA['unit']);
-            $classB = get_class($unitArrayB['unit']);
+            $classA = ClassUtils::getClass($unitArrayA['unit']);
+            $classB = ClassUtils::getClass($unitArrayB['unit']);
 
             if ($classA == $classB) {
                 $idA = $unitArrayA['unit']->getKey();
@@ -369,16 +375,16 @@ class ComposedUnit
                 return 0;
             }
 
-            if ($classA == 'Unit\Domain\DiscreteUnit') {
+            if ($classA == DiscreteUnit::class) {
                 return -1;
             }
-            if ($classA == 'Unit\Domain\StandardUnit') {
+            if ($classA == StandardUnit::class) {
                 return 1;
             }
-            if ($classB == 'Unit\Domain\StandardUnit') {
+            if ($classB == StandardUnit::class) {
                 return -1;
             }
-            if ($classB == 'Unit\Domain\DiscreteUnit') {
+            if ($classB == DiscreteUnit::class) {
                 return 1;
             }
             return 0;

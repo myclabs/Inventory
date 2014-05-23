@@ -11,18 +11,22 @@ Feature: Cell contributor feature
     And I click "connection"
   # On tombe sur la page de la cellule
     Then I should see "Workspace avec données"
-    Then I should see "Europe | Marque A"
+    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    And I wait for the page to finish loading
+    Then I should see "Workspace avec données"
+    And I should see "Europe | Marque A"
   # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)
     When I wait 5 seconds
-    And I click element ".current-cell .input-actions a"
+    And I click element "div[id='currentGranularity'] a.go-input"
     And I click element "#chiffre_affaireHistory .btn"
     Then I should see "Historique des valeurs"
     And I should see a "code:contains('10 k€ ± 15 %')" element
   # Accès à l'onglet "Commentaires"
     When I open tab "Commentaires"
     And I click "Ajouter un commentaire"
-    And I fill in "addContent" with "Blabla"
-    And I click element "#Ajouter"
+    And I fill in "newComment" with "Blabla"
+    And I click "Ajouter un commentaire"
+    And I wait 2 seconds
     Then I should see "Blabla"
   # Accès à l'onglet "Documents" (pb de configuration, pas de bibliothèque associée…)
     When I open tab "Documents"
@@ -43,8 +47,12 @@ Feature: Cell contributor feature
     And I fill in "password" with "contributeur.site@toto.com"
     And I click "connection"
   # On tombe sur le datagrid des cellules
-    Then I should see "Contributeur Annecy"
+    Then I should see "Workspace avec données"
+    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    And I wait for the page to finish loading
+    Then I should see "Workspace avec données"
+    And I should see "Contributeur Annecy"
     And I should see "Contributeur Chambéry"
   # Accès à une des cellules
     When I click "Contributeur Annecy"
-    Then I should see "2012 | Annecy | Énergie"
+    Then I should see "Annecy"

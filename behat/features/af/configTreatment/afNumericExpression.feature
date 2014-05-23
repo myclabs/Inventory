@@ -54,12 +54,10 @@ Feature: AF numeric expression algo feature
   # Ajout, identifiant avec caractères non autorisés, expression vide, unité valide
     When I fill in "algoNumericExpression_unit_addForm" with "t_co2e.m3^-1"
     And I click "Valider"
-    And I wait 5 seconds
     Then the field "algoNumericExpression_ref_addForm" should have error: "Merci d'utiliser seulement les caractères : \"a..z\", \"0..9\", et \"_\"."
   # Ajout, identifiant déjà utilisé, expression vide, unité valide
     When I fill in "algoNumericExpression_ref_addForm" with "c_n"
     And I click "Valider"
-    And I wait 5 seconds
     Then the field "algoNumericExpression_expression_addForm" should have error: "L'expression saisie présente les erreurs de syntaxe suivantes :"
     And the field "algoNumericExpression_expression_addForm" should have error: "Il manque un opérateur dans l'expression «  »."
   # Ajout, identifiant identifiant déjà utilisé, expression invalide, unité valide
@@ -118,7 +116,7 @@ Feature: AF numeric expression algo feature
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "algoNumericExpression" datagrid
-    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression «  »."
+    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression"
   # Modification de l'expression, saisie invalide
     When I set "a+(b+(c+d)" for column "expression" of row 1 of the "algoNumericExpression" datagrid
     Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."

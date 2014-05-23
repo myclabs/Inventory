@@ -1,4 +1,6 @@
 <?php
+use MyCLabs\MUIH\Button;
+
 /**
  * @author valentin.claras
  * @package UI
@@ -15,7 +17,7 @@
 class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
 {
     const OCCURRENCE_SEPARATOR = '__';
-    
+
     /**
      * @param string $content
      * @see Zend/Form/Decorator/Zend_Form_Decorator_Abstract::render()
@@ -44,8 +46,8 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         );
         $htmlElementTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlElementTagDecorator->setOptions($elementOptions);
-        $deleteButton = new UI_HTML_Button(__('UI', 'verb', 'delete'));
-        $deleteButton->addAttribute('class', 'deleteRow');
+        $deleteButton = new Button(__('UI', 'verb', 'delete'));
+        $deleteButton->addClass('deleteRow');
 
 
         // Header.
@@ -83,7 +85,7 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
                  * @var Zend_Form_Element $childZendElement
                  */
                 $this->initZendElement($childZendElement, $occurrence);
-                
+
                 $htmlElementTagDecorator->setOption('id', $childZendElement->getId().'-line');
                 $elements .= $htmlElementTagDecorator->render($childZendElement->render());
                 $htmlElementTagDecorator->removeOption('id');
@@ -102,16 +104,15 @@ class UI_Form_Decorator_GroupRepeated extends Zend_Form_Decorator_Abstract
         $tableOptions = array(
             'tag'   => 'table',
             'class' => 'table table-condensed repeatedGroup',
-            'id'    => $this->getElement()->getId(),
         );
         $htmlTagDecorator = new Zend_Form_Decorator_HtmlTag();
         $htmlTagDecorator->setOptions($tableOptions);
         $content = $htmlTagDecorator->render($headerRow.$elementsRow);
 
         // Add Button
-        $addButton = new UI_HTML_Button(__('UI', 'verb', 'add'));
-        $addButton->addAttribute('id', $this->getElement()->getId().'_add');
-        $addButton->addAttribute('class', 'addRow');
+        $addButton = new Button(__('UI', 'verb', 'add'));
+        $addButton->setAttribute('id', $this->getElement()->getId().'_add');
+        $addButton->addClass('addRow');
         $content .= $addButton->render();
 
         $addScript = '';

@@ -94,7 +94,6 @@ Feature: AF composed condition for treatment feature
     Then I should see the "algoConditionExpression" datagrid
   # Modification de l'identifiant, identifiant vide
     When I set "" for column "ref" of row 1 of the "algoConditionExpression" datagrid
-    And I wait 2 seconds
     Then the following message is shown and closed: "Merci de renseigner ce champ."
   # Modification de l'identifiant, identifiant avec caractères non autorisés
     When I set "bépo" for column "ref" of row 1 of the "algoConditionExpression" datagrid
@@ -104,7 +103,7 @@ Feature: AF composed condition for treatment feature
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
   # Modification de l'expression, saisie vide
     When I set "" for column "expression" of row 1 of the "algoConditionExpression" datagrid
-    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression «  »."
+    Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Il manque un opérateur dans l'expression"
   # Modification de l'expression, saisie invalide
     When I set "a|(b|(c|d)" for column "expression" of row 1 of the "algoConditionExpression" datagrid
     Then the following message is shown and closed: "L'expression saisie présente les erreurs de syntaxe suivantes : Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."

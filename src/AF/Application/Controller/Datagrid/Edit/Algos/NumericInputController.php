@@ -8,6 +8,8 @@
 
 use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
+use Classification\Domain\ClassificationLibrary;
+use Classification\Domain\ContextIndicator;
 use Core\Annotation\Secure;
 
 /**
@@ -17,8 +19,6 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
 {
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::getelementsAction()
      * @Secure("editAF")
      */
     public function getelementsAction()
@@ -31,20 +31,23 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
-                $data['label'] = $algo->getLabel();
+                $data['label'] = $this->cellTranslatedText($algo->getLabel());
                 $data['input'] = $algo->getInputRef();
-                $data['unit'] = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
+                $data['unit'] = $this->cellText(
+                    $algo->getUnit()->getRef(),
+                    $this->translator->get($algo->getUnit()->getSymbol())
+                );
                 $contextIndicator = $algo->getContextIndicator();
                 if ($contextIndicator) {
-                    $ref = $contextIndicator->getContext()->getRef()
-                        . "#" . $contextIndicator->getIndicator()->getRef();
-                    $data['contextIndicator'] = $this->cellList($ref);
+                    $data['contextIndicator'] = $this->cellList($contextIndicator->getId());
                 }
-                $data['resultIndex'] = $this->cellPopup($this->_helper->url('popup-indexation',
-                                                                            'edit_algos',
-                                                                            'af',
-                                                                            ['id' => $algo->getId()]),
-                    '<i class="fa fa-search-plus"></i> '.__('Algo', 'name', 'indexation'));
+                $data['resultIndex'] = $this->cellPopup(
+                    $this->_helper->url('popup-indexation', 'edit_algos', 'af', [
+                        'idAF' => $af->getId(),
+                        'algo' => $algo->getId(),
+                    ]),
+                    '<i class="fa fa-search-plus"></i> ' . __('Algo', 'name', 'indexation')
+                );
                 $this->addLine($data);
             }
         }
@@ -52,8 +55,6 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::addelementAction()
      * @Secure("editAF")
      */
     public function addelementAction()
@@ -62,8 +63,6 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::updateelementAction()
      * @Secure("editAF")
      */
     public function updateelementAction()
@@ -73,16 +72,14 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
         $newValue = $this->update['value'];
         switch ($this->update['column']) {
             case 'label':
-                $algo->setLabel($newValue);
-                $this->data = $algo->getLabel();
+                $this->translator->set($algo->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($algo->getLabel());
                 break;
             case 'contextIndicator':
                 if ($newValue) {
-                    $contextIndicator = $this->getContextIndicatorByRef($newValue);
+                    $contextIndicator = ContextIndicator::load($newValue);
                     $algo->setContextIndicator($contextIndicator);
-                    $ref = $contextIndicator->getContext()->getRef()
-                        . "#" . $contextIndicator->getIndicator()->getRef();
-                    $this->data = $this->cellList($ref);
+                    $this->data = $this->cellList($contextIndicator->getId());
                 } else {
                     $algo->setContextIndicator(null);
                 }
@@ -95,8 +92,6 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
     }
 
     /**
-     * (non-PHPdoc)
-     * @see UI_Controller_Datagrid::deleteelementAction()
      * @Secure("editAF")
      */
     public function deleteelementAction()
@@ -110,46 +105,22 @@ class AF_Datagrid_Edit_Algos_NumericInputController extends UI_Controller_Datagr
      */
     public function getContextIndicatorListAction()
     {
+        /** @var $af AF */
+        $af = AF::load($this->getParam('id'));
+        $classificationLibraries = ClassificationLibrary::loadUsableInAccount($af->getLibrary()->getAccount());
+
         $this->addElementList(null, '');
-        /** @var $contextIndicators Classif_Model_ContextIndicator[] */
-        $contextIndicators = Classif_Model_ContextIndicator::loadList();
-        foreach ($contextIndicators as $contextIndicator) {
-            $this->addElementList($this->getContextIndicatorRef($contextIndicator),
-                                  $this->getContextIndicatorLabel($contextIndicator));
+
+        foreach ($classificationLibraries as $library) {
+            foreach ($library->getContextIndicators() as $contextIndicator) {
+                $this->addElementList(
+                    $contextIndicator->getId(),
+                    $this->translator->get($library->getLabel()) . ' > '
+                    . $this->translator->get($contextIndicator->getLabel())
+                );
+            }
         }
+
         $this->send();
     }
-
-    /**
-     * @param Classif_Model_ContextIndicator $contextIndicator
-     * @return string
-     */
-    private function getContextIndicatorRef(Classif_Model_ContextIndicator $contextIndicator)
-    {
-        return $contextIndicator->getContext()->getRef()
-            . '#' . $contextIndicator->getIndicator()->getRef();
-    }
-
-    /**
-     * @param string $ref
-     * @return Classif_Model_ContextIndicator
-     */
-    private function getContextIndicatorByRef($ref)
-    {
-        if (empty($ref)) {
-            return null;
-        }
-        list($refContext, $refIndicator) = explode('#', $ref);
-        return Classif_Model_ContextIndicator::loadByRef($refContext, $refIndicator);
-    }
-
-    /**
-     * @param Classif_Model_ContextIndicator $contextIndicator
-     * @return string
-     */
-    private function getContextIndicatorLabel(Classif_Model_ContextIndicator $contextIndicator)
-    {
-        return $contextIndicator->getIndicator()->getLabel() . ' - ' . $contextIndicator->getContext()->getLabel();
-    }
-
 }

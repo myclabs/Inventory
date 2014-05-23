@@ -1,14 +1,16 @@
 <?php
 
-use AF\Domain\Algorithm\Index\AlgoResultIndex;
-use AF\Domain\Algorithm\Index\FixedIndex;
+use AF\Domain\AF;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 
+/** @var $af AF */
+$af = $this->af;
 /** @var $algo NumericExpressionAlgo */
 $algo = $this->algo;
 
 $datagrid = new UI_Datagrid('algoResultIndexes', 'datagrid_edit_algos_indexation', 'af');
 $datagrid->pagination = false;
+$datagrid->addParam('idAF', $af->getId());
 $datagrid->addParam('idAlgo', $algo->getId());
 
 // Colonne Axe
@@ -24,7 +26,7 @@ $typeColumn->list = [
 ];
 $datagrid->addCol($typeColumn);
 
-// Colonne liste des membre de classif ou algo en fonction du type
+// Colonne liste des membre de classification ou algo en fonction du type
 $valueColumn = new UI_Datagrid_Col_List('value', __('UI', 'name', 'value'));
 $valueColumn->dynamicList = true;
 $valueColumn->list = $this->baseUrl('af/datagrid_edit_algos_indexation/get-value-list');

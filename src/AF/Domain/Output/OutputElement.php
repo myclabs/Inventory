@@ -6,8 +6,9 @@ use AF\Domain\InputSet\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Algorithm\Output;
 use Calc_Value;
-use Classif_Model_Axis;
-use Classif_Model_ContextIndicator;
+use Classification\Domain\Axis;
+use Classification\Domain\ContextIndicator;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\Collection;
@@ -82,7 +83,7 @@ class OutputElement extends Core_Model_Entity
             $this->algo = $algoOutput->getAlgo();
             $this->value = $algoOutput->getValue();
 
-            foreach ($algoOutput->getClassifMembers() as $member) {
+            foreach ($algoOutput->getClassificationMembers() as $member) {
                 $index = new OutputIndex($member->getAxis(), $member);
                 $this->indexes->add($index);
             }
@@ -92,7 +93,7 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @return Classif_Model_ContextIndicator
+     * @return ContextIndicator
      */
     public function getContextIndicator()
     {
@@ -108,11 +109,11 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @param Classif_Model_Axis $axis
+     * @param Axis $axis
      * @throws Core_Exception_NotFound
      * @return OutputIndex
      */
-    public function getIndexForAxis(Classif_Model_Axis $axis)
+    public function getIndexForAxis(Axis $axis)
     {
         foreach ($this->indexes as $index) {
             if ($index->getAxis() === $axis) {
@@ -128,7 +129,7 @@ class OutputElement extends Core_Model_Entity
 
     /**
      * Retourne le libellé de l'algo
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -136,7 +137,7 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @return \AF\Domain\InputSet\InputSet
+     * @return InputSet
      */
     public function getInputSet()
     {
@@ -144,7 +145,7 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\InputSet\InputSet $set
+     * @param InputSet $set
      */
     public function setInputSet($set)
     {

@@ -1,0 +1,18 @@
+<?=$this->translateDatagrid('Orga_Model_Organization', 'label', 'datagrid_translate_organizations', 'orga')->simple()->addParam('idOrganization', $this->idOrganization)->disablePagination()->getDatagrid()->render()?>
+<ul>
+    <li>
+        <a href="orga/translate/axes/idOrganization/<?=$this->idOrganization?>/">
+            <?=___('Orga', 'translate', 'translateOrganizationalAxes')?>
+        </a>
+    </li>
+    <li>
+        <a href="orga/translate/members/idOrganization/<?=$this->idOrganization?>/">
+            <?=___('Orga', 'translate', 'translateOrganizationalMembers')?>
+        </a>
+    </li>
+    <li>
+        <a href="orga/translate/granularity-reports/idOrganization/<?=$this->idOrganization?>/">
+            <?=___('Orga', 'translate', 'translateGranularityReports')?>
+        </a>
+    </li>
+</ul>

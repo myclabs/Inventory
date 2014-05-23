@@ -1,5 +1,5 @@
 <?php
-use Orga\Model\ACL\Role\AbstractCellRole;
+use Orga\Model\ACL\AbstractCellRole;
 /** @var AbstractCellRole[] $cellUsers */
 $cellUsers = $this->cellUsers;
 ?>
@@ -26,13 +26,13 @@ $cellUsers = $this->cellUsers;
         <?php foreach ($cellUsers as $cellRole): ?>
         <tr>
             <td>
-                <?=$cellRole->getUser()->getFirstName()?>
+                <?=$cellRole->getSecurityIdentity()->getFirstName()?>
             </td>
             <td>
-                <?=$cellRole->getUser()->getLastName()?>
+                <?=$cellRole->getSecurityIdentity()->getLastName()?>
             </td>
             <td>
-                <?=$cellRole->getUser()->getEmail()?>
+                <?=$cellRole->getSecurityIdentity()->getEmail()?>
             </td>
             <td>
                 <?=$cellRole->getLabel()?>

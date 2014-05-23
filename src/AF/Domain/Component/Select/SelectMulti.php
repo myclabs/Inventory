@@ -65,8 +65,8 @@ class SelectMulti extends Select
             default:
                 throw new Core_Exception_UndefinedAttribute("The type must be defined and valid");
         }
-        $uiElement->setLabel($this->label);
-        $uiElement->getElement()->help = $this->help;
+        $uiElement->setLabel($this->uglyTranslate($this->label));
+        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         $uiElement->setRequired($this->getRequired());
         // Liste des options
         foreach ($this->options as $option) {
@@ -78,7 +78,7 @@ class SelectMulti extends Select
         // Remplit avec les options saisies
         $input = null;
         if ($generationHelper->getInputSet()) {
-            /** @var $input \AF\Domain\Input\Select\SelectMultiInput */
+            /** @var $input SelectMultiInput */
             $input = $generationHelper->getInputSet()->getInputForComponent($this);
         }
         if ($input) {

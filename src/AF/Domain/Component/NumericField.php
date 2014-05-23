@@ -77,8 +77,8 @@ class NumericField extends Field
         $locale = Core_Locale::loadDefault();
 
         $uiElement = new UI_Form_Element_Pattern_Value($this->ref, false);
-        $uiElement->setLabel($this->label);
-        $uiElement->getElement()->help = $this->help;
+        $uiElement->setLabel($this->uglyTranslate($this->label));
+        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         $uiElement->setRequired($this->getRequired());
         if ($generationHelper->isReadOnly()) {
             $uiElement->getElement()->setReadOnly();
@@ -149,7 +149,7 @@ class NumericField extends Field
             $uiElement->setDescription(sprintf(
                 "Valeur par défaut : %s %s ± %d%%",
                 $locale->formatNumber((float) $this->defaultValue->getDigitalValue()),
-                $this->unit->getSymbol(),
+                $this->uglyTranslate($this->unit->getSymbol()),
                 (float) $this->defaultValue->getRelativeUncertainty()
             ));
         }
@@ -325,7 +325,7 @@ class NumericField extends Field
         $option = new UI_Form_Element_Option(
             $this->ref . '_unit_' . $baseUnit->getRef(),
             $baseUnit->getRef(),
-            $baseUnit->getSymbol()
+            $this->uglyTranslate($baseUnit->getSymbol())
         );
         $unitComponent->addOption($option);
 
@@ -334,7 +334,7 @@ class NumericField extends Field
             $option = new UI_Form_Element_Option(
                 $this->ref . '_unit_' . $compatibleUnit->getRef(),
                 $compatibleUnit->getRef(),
-                $compatibleUnit->getSymbol()
+                $this->uglyTranslate($compatibleUnit->getSymbol())
             );
             $unitComponent->addOption($option);
         }

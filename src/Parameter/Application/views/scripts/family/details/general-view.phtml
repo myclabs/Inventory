@@ -1,0 +1,39 @@
+<?php
+/** @var $family Parameter\Domain\Family\Family */
+$family = $this->family;
+?>
+
+<p>
+    <strong><?=__('UI', 'name', 'category') . __('UI', 'other', ':')?></strong>
+    <?php
+    $category = $family->getCategory();
+    if ($category) {
+        $categories = '';
+        while ($category) {
+            $categories = $this->translate($category->getLabel()) . ' / ' . $categories;
+            $category = $category->getParentCategory();
+        }
+        echo substr($categories, 0, -3);
+    } else {
+        echo '<span class="text-muted">'.__('UI', 'other', 'noneFem').'</span>';
+    }
+    ?>
+</p>
+
+<p>
+    <strong><?=__('Unit', 'name', 'unit') . __('UI', 'other', ':')?></strong>
+    <?=$this->translate($family->getValueUnit()->getSymbol())?>
+</p>
+
+<p>
+    <strong><?=__('UI', 'name', 'documentation') . __('UI', 'other', ':')?></strong>
+</p>
+
+<?php
+$documentation = $this->translate($family->getDocumentation());
+if ($documentation) {
+    $displayedDocumentation = Core_Tools::textile($documentation);
+} else {
+    $displayedDocumentation = '<p class="text-muted">' . __('Parameter', 'familyDetail', 'noDocumentation') . '</p>';
+}
+echo $displayedDocumentation;

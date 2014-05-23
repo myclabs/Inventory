@@ -92,19 +92,19 @@ Feature: History of values of a field feature
   # Enregistrement, complétude
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
-    And the "#tabs_tabInput .inputProgress .bar" element should contain "100%"
+    And the "#tabs_tabInput .inputProgress .progress .progress-bar" element should contain "100%"
   # Ajout d'une répétition, enregistrement, vérification pourcentage avancement
     When I click "Ajouter"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
-    And the "#tabs_tabInput .inputProgress .bar" element should contain "50%"
+    And the "#tabs_tabInput .inputProgress .progress .progress-bar" element should contain "50%"
   # Historiques des différents champs
     When I reload the page
     And I wait for the page to finish loading
   # Champ numérique
     When I click element "#s_f_r_t_t_c__c_nHistory__1 .btn"
     Then I should see a "code:contains('10 kg équ. CO2/m³ ± 15 %')" element
-  # Champs de sélection simple
+  # Champs de sélection simplek
     And I click element "#s_f_r_t_t_c__c_nHistory__1 .btn"
     And I click element "#s_f_r_t_t_c__c_s_s_listeHistory__1 .btn"
     Then I should see a "code:contains('Option 1')" element
@@ -136,7 +136,7 @@ Feature: History of values of a field feature
     And I fill in "s_f_r_t_t_c__percentc_n__2" with "30"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
-    And the "#tabs_tabInput .inputProgress .bar" element should contain "57%"
+    And the "#tabs_tabInput .inputProgress .progress .progress-bar" element should contain "57%"
   # Popups des valeurs saisies pour cette 2ème ligne
     When I click element "#s_f_r_t_t_c__c_nHistory__2 .btn"
     Then I should see a "code:contains('20 kg équ. CO2/m³ ± 30 %')" element

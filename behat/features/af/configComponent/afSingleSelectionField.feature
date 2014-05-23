@@ -207,7 +207,6 @@ Feature: AF single selection field feature
     And I click "Coordonnées" in the row 1 of the "algoNumericParameter" datagrid
     And I set "c_s_s" for column "algo" of row 1 of the "coordinatesAlgo" datagrid
     And I click element "#algoNumericParameter_coordinates_popup .close:contains('×')"
-    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Tentative de suppression du champ de sélection simple
     When I open tab "Composants"
@@ -233,7 +232,6 @@ Feature: AF single selection field feature
     Then I should see the "algoResultIndexes" datagrid
     And I set "c_s_s" for column "value" of row 2 of the "algoResultIndexes" datagrid
     And I click element "#algoNumericInput_resultIndex_popup .close:contains('×')"
-    And I wait 5 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Tentative de suppression du champ de sélection simple
     When I open tab "Composants"

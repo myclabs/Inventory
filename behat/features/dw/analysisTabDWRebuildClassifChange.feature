@@ -12,7 +12,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     And I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Ajout axe
-    When I am on "classif/axis/manage"
+    When I am on "classification/axis/manage"
     And I wait for the page to finish loading
     And I wait 3 seconds
     And I click "Ajouter"
@@ -33,7 +33,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification du libellé d'un axe
-    When I am on "classif/axis/manage"
+    When I am on "classification/axis/manage"
     And I wait 5 seconds
     And I click "Test"
     Then I should see the popup "Édition d'un axe"
@@ -52,7 +52,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification de l'identifiant d'un axe
-    When I am on "classif/axis/manage"
+    When I am on "classification/axis/manage"
     And I wait 5 seconds
     And I click "Test modifié"
     Then I should see the popup "Édition d'un axe"
@@ -71,7 +71,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification de l'axe plus grossier direct d'un axe (déplacement à la racine)
-    When I am on "classif/axis/manage"
+    When I am on "classification/axis/manage"
     And I wait 7 seconds
     And I click "Scope"
     Then I should see the popup "Édition d'un axe"
@@ -90,7 +90,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification de la position (numéro d'ordre) d'un axe (modification non détectée)
-    When I am on "classif/axis/manage"
+    When I am on "classification/axis/manage"
     And I wait 5 seconds
     And I click "Test modifié"
     Then I should see the popup "Édition d'un axe"
@@ -104,7 +104,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     And I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Suppression axe
-    When I am on "classif/axis/manage"
+    When I am on "classification/axis/manage"
     And I wait 5 seconds
     And I click "Test modifié"
     Then I should see the popup "Édition d'un axe"
@@ -132,7 +132,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     And I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Ajout d'un élément
-    When I am on "classif/member/manage"
+    When I am on "classification/member/manage"
     And I wait 5 seconds
     And I open collapse "Poste article 75"
     And I click "Ajouter"
@@ -153,7 +153,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification du libellé d'un élément
-    When I am on "classif/member/manage"
+    When I am on "classification/member/manage"
     And I wait 5 seconds
     And I open collapse "Poste article 75"
     When I set "Test modifié" for column "label" of row 1 of the "membersposte_article_75" datagrid with a confirmation message
@@ -168,7 +168,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification de l'identifiant d'un élément
-    When I am on "classif/member/manage"
+    When I am on "classification/member/manage"
     And I wait 5 seconds
     And I open collapse "Poste article 75"
     When I set "test_modifie" for column "ref" of row 1 of the "membersposte_article_75" datagrid with a confirmation message
@@ -183,7 +183,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification élément parent d'un élément
-    When I am on "classif/member/manage"
+    When I am on "classification/member/manage"
     And I wait 5 seconds
     And I open collapse "Poste article 75"
     When I set "2" for column "broaderscope" of row 1 of the "membersposte_article_75" datagrid with a confirmation message
@@ -198,7 +198,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Suppression d'un élément
-    When I am on "classif/member/manage"
+    When I am on "classification/member/manage"
     And I wait 5 seconds
     And I open collapse "Poste article 75"
     And I click "Supprimer" in the row 1 of the "membersposte_article_75" datagrid
@@ -224,7 +224,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     And I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Ajout d'un indicateur
-    When I am on "classif/indicator/manage"
+    When I am on "classification/indicator/manage"
     And I wait for the page to finish loading
     Then I should see the "editIndicators" datagrid
     When I click "Ajouter"
@@ -246,7 +246,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification du libellé d'un indicateur
-    When I am on "classif/indicator/manage"
+    When I am on "classification/indicator/manage"
     And I wait for the page to finish loading
     And I set "Test modifié" for column "label" of row 2 of the "editIndicators" datagrid with a confirmation message
   # Détection modification
@@ -260,7 +260,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification de l'identifiant d'un indicateur
-    When I am on "classif/indicator/manage"
+    When I am on "classification/indicator/manage"
     And I wait for the page to finish loading
     And I set "test_modifie" for column "ref" of row 2 of the "editIndicators" datagrid with a confirmation message
   # Détection modification
@@ -276,7 +276,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
   # TODO : Modification du numéro d'ordre d'un indicateur
   # Modification de l'unité d'un indicateur
   # Modification de l'identifiant d'un indicateur
-    When I am on "classif/indicator/manage"
+    When I am on "classification/indicator/manage"
     And I wait for the page to finish loading
     And I set "kg" for column "unit" of row 2 of the "editIndicators" datagrid with a confirmation message
   # Détection modification
@@ -290,7 +290,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Modification de l'unité pour ratio d'un indicateur
-    When I am on "classif/indicator/manage"
+    When I am on "classification/indicator/manage"
     And I wait for the page to finish loading
     And I set "kg" for column "ratioUnit" of row 2 of the "editIndicators" datagrid with a confirmation message
   # Détection modification
@@ -304,7 +304,7 @@ Feature: Analysis data rebuild after a change in classification data feature (an
     When I click "Tester si la structure des données d'analyse est à jour"
     Then I should see "La structure des données d'analyse de l'organisation est à jour."
   # Suppression d'un indicateur
-    When I am on "classif/indicator/manage"
+    When I am on "classification/indicator/manage"
     And I wait for the page to finish loading
     And I click "Supprimer" in the row 2 of the "editIndicators" datagrid
     Then I should see the popup "Demande de confirmation"

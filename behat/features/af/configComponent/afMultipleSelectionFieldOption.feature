@@ -143,6 +143,7 @@ Feature: AF multiple selection field option feature
     When I click "Supprimer" in the row 1 of the "optionDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
+    And I wait for 1 seconds
     Then the following message is shown and closed: "Suppression effectuée."
   # On doit rouvrir le popup des options, car les deux popups sont fermés d'un coup
     When I click "Options" in the row 1 of the "selectMultiFieldDatagrid" datagrid

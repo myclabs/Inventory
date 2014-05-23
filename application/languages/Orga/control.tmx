@@ -3,7 +3,7 @@
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
-        <!-- Les traductions suivantes sont répliquées à l'identique dans Classif -->
+        <!-- Les traductions suivantes sont répliquées à l'identique dans Classification -->
 
         <tu tuid="seekedIssue">
             <tuv xml:lang="fr">

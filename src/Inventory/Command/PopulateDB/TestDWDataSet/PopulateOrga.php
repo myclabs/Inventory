@@ -2,11 +2,14 @@
 
 namespace Inventory\Command\PopulateDB\TestDWDataSet;
 
+use Account\Domain\Account;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateOrga;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Remplissage de la base de données avec des données de test
+ *
+ * @Injectable(lazy=true)
  */
 class PopulateOrga extends AbstractPopulateOrga
 {
@@ -14,9 +17,13 @@ class PopulateOrga extends AbstractPopulateOrga
     {
         $output->writeln('  <info>Populating Orga</info>');
 
+        // Création d'un compte client
+        $account = new Account('The fantastic pizza factory');
+        $this->accountRepository->add($account);
+
         // Création d'une organisation.
         // Param : label
-        $organization = $this->createOrganization('Workspace avec données');
+        $organization = $this->createOrganization($account, 'Workspace avec données');
 
         // Création des axes.
         // Params : Organization, ref, label

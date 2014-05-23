@@ -1,0 +1,69 @@
+<?php
+/**
+ * @author valentin.claras
+ * @author cyril.perraud
+ * @package Classification
+ * Contenu de l'onglet des membres
+ */
+use Classification\Domain\Member;
+
+?>
+<div class="page-header">
+	<h1><?=__('Classification', 'member', 'pageTitle')?></h1>
+</div>
+<?
+//on parcoure tous les axis du version, à chaque axis son datagrid
+foreach ($this->listAxes as $axis) {
+
+    $datagridAxis = new UI_Datagrid('members'.$axis->getRef(), 'datagrid_member', 'classification');
+
+    // Label du membre de l'axe.
+    $columnLabel = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+    $columnLabel->editable = true;
+    $datagridAxis->addCol($columnLabel);
+
+    // Ref du membre de l'axe.
+    $columnRef = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+    $columnRef->editable = true;
+    $datagridAxis->addCol($columnRef);
+
+    // Membres broaders pour chaque axe broader.
+    foreach ($axis->getDirectBroaders() as $broaderAxis) {
+        // Construction de la liste de membres.
+        $columnBroader = new UI_Datagrid_Col_List(
+            'broader'.$broaderAxis->getId(),
+            $this->translate($broaderAxis->getLabel())
+        );
+        $columnBroader->list = 'classification/datagrid_member/getparents/parentAxis/'.$broaderAxis->getId();
+        $columnBroader->dynamicList = true;
+        $columnBroader->editable = true;
+        $datagridAxis->addCol($columnBroader);
+    }
+
+    // Position du membre dans l'axe.
+    $columnPosition = new UI_Datagrid_Col_Order('position');
+    $columnPosition->editable = true;
+    $columnPosition->addable = false;
+    $columnPosition->sortName = Member::QUERY_POSITION;
+    $datagridAxis->addCol($columnPosition);
+
+    $datagridAxis->deleteElements = true;
+    $datagridAxis->addParam('axis', $axis->getId());
+    $datagridAxis->addParam('library', $this->library->getId());
+    $datagridAxis->initialLoading = false;
+    $datagridAxis->setDefaultSorting($columnPosition->id);
+    $datagridAxis->addElements = true;
+    $datagridAxis->addPanelTitle = __('Classification', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));
+
+    echo $this->collapse($axis->getRef(), $this->translate($axis->getLabel()), $datagridAxis->getHTML());
+    UI_Datagrid::addHeader($datagridAxis);
+
+    $script = '';
+    $script .= '$(\'#'.$axis->getRef().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \''.$axis->getRef().'\') {';
+    $script .= 'members'.$axis->getRef().'.filter();';
+    $script .= '}';
+    $script .= '});';
+    $script .= 'refFromLabel(\'members'.$axis->getRef().'_label_addForm\', \'members'.$axis->getRef().'_ref_addForm\');';
+    $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
+}

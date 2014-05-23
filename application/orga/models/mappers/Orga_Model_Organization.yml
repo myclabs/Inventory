@@ -1,12 +1,7 @@
-# orga\models\mappers\Orga_Model_Organization.yml
 Orga_Model_Organization:
   type: entity
   repositoryClass: Core_Model_Repository
   table: Orga_Organization
-
-  gedmo:
-    translation:
-      locale: translationLocale
 
   id:
     id:
@@ -15,14 +10,9 @@ Orga_Model_Organization:
       generator:
         strategy: AUTO
 
-  fields:
+  embedded:
     label:
-      column: label
-      type: string
-      length: 255
-      nullable: false
-      gedmo:
-        - translatable
+      class: Core\Translation\TranslatedString
 
   oneToOne:
     granularityForInventoryStatus:
@@ -32,6 +22,14 @@ Orga_Model_Organization:
         referencedColumnName: id
         nullable: true
         unique: true
+
+  manyToOne:
+    account:
+      targetEntity: Account\Domain\Account
+      joinColumn:
+        name: idAccount
+        referencedColumnName: id
+        nullable: false
 
   oneToMany:
     axes:
@@ -48,13 +46,14 @@ Orga_Model_Organization:
         position: ASC
       orphanRemoval: true
       cascade: [ persist, remove ]
-    acl:
-      targetEntity: Orga\Model\ACL\OrganizationAuthorization
-      mappedBy: resource
-      cascade: [ all ]
-      orphanRemoval: true
     adminRoles:
-      targetEntity: Orga\Model\ACL\Role\OrganizationAdminRole
+      targetEntity: Orga\Model\ACL\OrganizationAdminRole
       mappedBy: organization
       cascade: [ all ]
       orphanRemoval: true
+
+  manyToMany:
+    contextIndicators:
+      targetEntity: Classification\Domain\ContextIndicator
+      joinTable:
+        name: Orga_Organization_Contextindicator

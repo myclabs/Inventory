@@ -8,8 +8,8 @@
 
 namespace Unit\Domain;
 
+use Core\Translation\TranslatedString;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Unit\Domain\PhysicalQuantity\Component;
@@ -23,9 +23,6 @@ use Unit\Domain\Unit\Unit;
  */
 class PhysicalQuantity extends Core_Model_Entity
 {
-
-    use Core_Model_Entity_Translatable;
-
     // Constantes de tri et filtres.
     const QUERY_ID = 'id';
     const QUERY_NAME = 'name';
@@ -48,7 +45,7 @@ class PhysicalQuantity extends Core_Model_Entity
     /**
      *
      * Nom d'une grandeur physique
-     * @var string
+     * @var TranslatedString
      */
     protected $name;
 
@@ -81,6 +78,7 @@ class PhysicalQuantity extends Core_Model_Entity
 
     public function __construct()
     {
+        $this->name = new TranslatedString();
         $this->physicalQuantityComponents = new ArrayCollection();
     }
 
@@ -136,17 +134,8 @@ class PhysicalQuantity extends Core_Model_Entity
     }
 
     /**
-     * Défini le nom de la grandeur physique.
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
      * Renvoi le nom de la grandeur textuel.
-     * @return string
+     * @return TranslatedString
      */
     public function getName()
     {

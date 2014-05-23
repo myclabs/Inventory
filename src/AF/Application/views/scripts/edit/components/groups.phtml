@@ -31,7 +31,6 @@ $groupDatagrid->addCol($groupRef);
 // Help
 $groupHelp = new UI_Datagrid_Col_LongText('help', __('UI', 'name', 'help'));
 $groupHelp->editable = true;
-$groupHelp->popup->title = __('UI', 'name', 'help');
 $groupDatagrid->addCol($groupHelp);
 // Hidden / Show
 $isVisible = new UI_Datagrid_Col_Bool('isVisible', __('AF', 'configComponentDatagrid', 'initialVisibilityHeader'));

@@ -6,7 +6,7 @@ Feature: Classification context feature
 
   @javascript
   Scenario: Creation of a classification context (not a context indicator)
-    Given I am on "classif/context/manage"
+    Given I am on "classification/context/list?library=1"
     Then I should see the "editContexts" datagrid
   # Ajout d'un contexte, identifiant vide
     When I click "Ajouter"
@@ -23,8 +23,8 @@ Feature: Classification context feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the row 4 of the "editContexts" datagrid should contain:
-      | label       | ref         |
-      | Test | test |
+      | label | ref  |
+      | Test  | test |
   # Ajout d'un contexte, identifiant déjà utilisé
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un contexte"
@@ -38,7 +38,7 @@ Feature: Classification context feature
   @javascript
   Scenario: Edition of a classification context
     # TODO : position
-    Given I am on "classif/context/manage"
+    Given I am on "classification/context/list?library=1"
     Then I should see the "editContexts" datagrid
   # Modification des différents attributs, saisie correcte
     When I set "Général modifié" for column "label" of row 1 of the "editContexts" datagrid with a confirmation message
@@ -58,7 +58,7 @@ Feature: Classification context feature
 
   @javascript
   Scenario:  Deletion of a classification context
-    Given I am on "classif/context/manage"
+    Given I am on "classification/context/list?library=1"
     Then I should see the "editContexts" datagrid
     And the row 3 of the "editContexts" datagrid should contain:
       | label                         | ref                           |

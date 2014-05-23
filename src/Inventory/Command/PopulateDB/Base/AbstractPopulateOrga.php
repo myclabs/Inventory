@@ -2,7 +2,10 @@
 
 namespace Inventory\Command\PopulateDB\Base;
 
+use Account\Domain\Account;
+use Account\Domain\AccountRepository;
 use AF\Domain\AF;
+use AF\Domain\AFLibrary;
 use AF\Domain\InputService;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\Group;
@@ -27,11 +30,12 @@ use DW_Model_Filter;
 use DW_Model_Indicator;
 use DW_Model_Member;
 use DW_Model_Report;
-use Orga\Model\ACL\Role\CellAdminRole;
-use Orga\Model\ACL\Role\CellManagerRole;
-use Orga\Model\ACL\Role\CellContributorRole;
-use Orga\Model\ACL\Role\CellObserverRole;
-use Orga\Model\ACL\Role\OrganizationAdminRole;
+use MyCLabs\ACL\ACL;
+use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellObserverRole;
+use Orga\Model\ACL\OrganizationAdminRole;
 use Orga_Model_Axis;
 use Orga_Model_Granularity;
 use Orga_Model_Member;
@@ -39,7 +43,6 @@ use Orga_Model_Organization;
 use Orga_Service_ETLData;
 use Orga_Service_OrganizationService;
 use Symfony\Component\Console\Output\OutputInterface;
-use User\Domain\ACL\ACLService;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -49,34 +52,52 @@ use User\Domain\UserService;
 abstract class AbstractPopulateOrga
 {
     /**
+     * @Inject
      * @var EntityManager
      */
     protected $entityManager;
 
     /**
-     * @var ACLService
+     * @Inject
+     * @var ACL
      */
-    protected $aclService;
+    protected $acl;
 
     /**
+     * @Inject
      * @var Orga_Service_OrganizationService
      */
     protected $organizationService;
 
     /**
+     * @Inject
      * @var InputService
      */
     protected $inputService;
 
     /**
+     * @Inject
      * @var Orga_Service_ETLData
      */
     protected $etlDataService;
 
     /**
+     * @Inject
      * @var UserService
      */
     protected $userService;
+
+    /**
+     * @Inject
+     * @var AccountRepository
+     */
+    protected $accountRepository;
+
+    /**
+     * @Inject("account.myc-sense")
+     * @var Account
+     */
+    protected $publicAccount;
 
     // Création d'une organisation.
     //  + createOrganization : -
@@ -136,29 +157,14 @@ abstract class AbstractPopulateOrga
 
     abstract public function run(OutputInterface $output);
 
-    public function __construct(
-        EntityManager $entityManager,
-        Orga_Service_OrganizationService $organizationService,
-        ACLService $aclService,
-        InputService $inputService,
-        Orga_Service_ETLData $etlDataService,
-        UserService $userService
-    ) {
-        $this->entityManager = $entityManager;
-        $this->organizationService = $organizationService;
-        $this->aclService = $aclService;
-        $this->inputService = $inputService;
-        $this->etlDataService = $etlDataService;
-        $this->userService = $userService;
-    }
-
     /**
+     * @param Account $account
      * @param string $label
      * @return Orga_Model_Organization
      */
-    protected function createOrganization($label)
+    protected function createOrganization(Account $account, $label)
     {
-        return $this->organizationService->createOrganization($label);
+        return $this->organizationService->createOrganization($account, $label);
     }
 
     /**
@@ -171,7 +177,7 @@ abstract class AbstractPopulateOrga
     protected function createAxis(Orga_Model_Organization $organization, $ref, $label, Orga_Model_Axis $narrower = null)
     {
         $axis = new Orga_Model_Axis($organization, $ref, $narrower);
-        $axis->setLabel($label);
+        $axis->getLabel()->set($label, 'fr');
         $axis->save();
         return $axis;
     }
@@ -186,7 +192,7 @@ abstract class AbstractPopulateOrga
     protected function createMember(Orga_Model_Axis $axis, $ref, $label, array $parents = [])
     {
         $member = new Orga_Model_Member($axis, $ref, $parents);
-        $member->setLabel($label);
+        $member->getLabel()->set($label, 'fr');
         $member->save();
         return $member;
     }
@@ -232,19 +238,18 @@ abstract class AbstractPopulateOrga
 
     /**
      * @param Orga_Model_Granularity $granularity
-     * @param Orga_Model_Member[] $members
+     * @param Orga_Model_Member[]    $members
      * @param Orga_Model_Granularity $inputGranularity
-     * @param string                 $refAF
+     * @param string                 $afLabel
      */
     protected function setAFForChildCells(
         Orga_Model_Granularity $granularity,
         array $members,
         Orga_Model_Granularity $inputGranularity,
-        $refAF
+        $afLabel
     ) {
-        $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)->setAF(
-            AF::loadByRef($refAF)
-        );
+        $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)
+            ->setAF($this->getAF($afLabel));
     }
 
     /**
@@ -315,7 +320,7 @@ abstract class AbstractPopulateOrga
     private function createReport(DW_Model_Cube $cube, $label, $chartType, $displayUncertainty, $filters = array())
     {
         $report = new DW_Model_Report($cube);
-        $report->setLabel($label);
+        $report->getLabel()->set($label, 'fr');
         $report->setChartType($chartType);
         $report->setWithUncertainty($displayUncertainty);
         foreach ($filters as $refAxis => $membersFiltered) {
@@ -472,7 +477,7 @@ abstract class AbstractPopulateOrga
     protected function addOrganizationAdministrator($email, Orga_Model_Organization $organization)
     {
         $user = User::loadByEmail($email);
-        $this->aclService->addRole($user, new OrganizationAdminRole($user, $organization));
+        $this->acl->grant($user, new OrganizationAdminRole($user, $organization));
     }
 
     /**
@@ -483,7 +488,7 @@ abstract class AbstractPopulateOrga
     protected function addCellAdministrator($email, Orga_Model_Granularity $granularity, array $members)
     {
         $user = User::loadByEmail($email);
-        $this->aclService->addRole($user, new CellAdminRole($user, $granularity->getCellByMembers($members)));
+        $this->acl->grant($user, new CellAdminRole($user, $granularity->getCellByMembers($members)));
     }
 
     /**
@@ -494,7 +499,7 @@ abstract class AbstractPopulateOrga
     protected function addCellManager($email, Orga_Model_Granularity $granularity, array $members)
     {
         $user = User::loadByEmail($email);
-        $this->aclService->addRole($user, new CellManagerRole($user, $granularity->getCellByMembers($members)));
+        $this->acl->grant($user, new CellManagerRole($user, $granularity->getCellByMembers($members)));
     }
 
     /**
@@ -505,7 +510,7 @@ abstract class AbstractPopulateOrga
     protected function addCellContributor($email, Orga_Model_Granularity $granularity, array $members)
     {
         $user = User::loadByEmail($email);
-        $this->aclService->addRole($user, new CellContributorRole($user, $granularity->getCellByMembers($members)));
+        $this->acl->grant($user, new CellContributorRole($user, $granularity->getCellByMembers($members)));
     }
 
     /**
@@ -516,6 +521,22 @@ abstract class AbstractPopulateOrga
     protected function addCellObserver($email, Orga_Model_Granularity $granularity, array $members)
     {
         $user = User::loadByEmail($email);
-        $this->aclService->addRole($user, new CellObserverRole($user, $granularity->getCellByMembers($members)));
+        $this->acl->grant($user, new CellObserverRole($user, $granularity->getCellByMembers($members)));
+    }
+
+    /**
+     * @param string $label
+     * @return AF
+     */
+    protected function getAF($label)
+    {
+        // Moche : par du principe qu'il y'a 1 seule bibliothèque
+        $afLibrary = AFLibrary::loadByAccount($this->publicAccount)[0];
+
+        $query = new \Core_Model_Query();
+        $query->filter->addCondition('library', $afLibrary);
+        $query->filter->addCondition('label.fr', $label);
+
+        return AF::loadList($query)[0];
     }
 }

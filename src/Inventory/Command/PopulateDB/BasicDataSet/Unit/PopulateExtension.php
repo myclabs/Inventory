@@ -2,7 +2,6 @@
 
 namespace Inventory\Command\PopulateDB\BasicDataSet\Unit;
 
-use Core_Locale;
 use Doctrine\ORM\EntityManager;
 use DOMDocument;
 use DOMElement;
@@ -72,11 +71,10 @@ class PopulateExtension
             /** @var $node DOMNode */
             $symbol = trim($node->nodeValue);
 
-            $extension->setTranslationLocale(Core_Locale::load($lang));
-            $extension->setName($name);
-            $extension->setSymbol($symbol);
-            $extension->save();
-            $this->entityManager->flush();
+            $extension->getName()->set($name, $lang);
+            $extension->getSymbol()->set($symbol, $lang);
         }
+        $extension->save();
+        $this->entityManager->flush();
     }
 }

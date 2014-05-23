@@ -12,15 +12,15 @@
             <directory>./tests/Calc</directory>
             <directory>./tests/TEC</directory>
             <directory>./tests/Exec</directory>
-            <directory>./tests/Classif</directory>
+            <directory>./tests/Classification</directory>
             <directory>./tests/Export</directory>
-            <directory>./tests/Techno</directory>
+            <directory>./tests/Parameter</directory>
             <directory>./tests/Algo</directory>
             <directory>./tests/AF</directory>
             <directory>./tests/Social</directory>
             <directory>./tests/Orga</directory>
-            <directory>./tests/Simulation</directory>
             <directory>./tests/AuditTrail</directory>
+            <directory>./tests/Account</directory>
             <exclude>./tests/Unit</exclude>
         </testsuite>
 

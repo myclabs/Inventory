@@ -2,8 +2,6 @@
 
 namespace Core\Work;
 
-use Core\Work\TaskContext;
-
 /**
  * Représente une tâche abstraite
  *

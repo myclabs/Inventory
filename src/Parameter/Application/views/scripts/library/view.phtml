@@ -1,0 +1,163 @@
+<?php
+use MyCLabs\MUIH\GenericTag;
+use MyCLabs\MUIH\GenericVoidTag;
+use Parameter\Domain\Category;
+use Parameter\Domain\ParameterLibrary;
+
+/** @var ParameterLibrary $library */
+$library = $this->library;
+?>
+
+<div class="page-header">
+    <h1>
+        <?=$this->translate($library->getLabel())?>
+        <small><?=__('Parameter', 'familyList', 'familyList')?></small>
+    </h1>
+</div>
+
+<?php
+$datagrid = new UI_Datagrid('familyDatagrid', 'datagrid_family-datagrid', 'parameter');
+$datagrid->addParam('library', $library->getId());
+$datagrid->addButtonLabel = __('Parameter', 'familyList', 'addFamily');
+
+$columns = [];
+
+$columns['category'] = new UI_Datagrid_Col_List('category', __('UI', 'name', 'category'));
+$list = [];
+/** @var $categories Category[] */
+$categories = $library->getCategories();
+foreach ($categories as $category) {
+    $list[$category->getId()] = $this->translate($category->getLabel());
+}
+$columns['category']->list = $list;
+$columns['category']->fieldType = UI_Datagrid_Col_List::FIELD_LIST;
+$columns['category']->addable = true;
+
+$columns['label'] = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
+$columns['label']->addable = true;
+
+$columns['ref'] = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$columns['ref']->addable = true;
+
+$columns['unit'] = new UI_Datagrid_Col_Text('unit', __('Unit', 'name', 'unit'));
+$columns['unit']->addable = true;
+
+$columns['detail'] = new UI_Datagrid_Col_Link('detail', __('UI', 'name', 'details'));
+$columns['detail']->addable = false;
+
+foreach ($columns as $column) {
+    $column->editable = false;
+    $datagrid->addCol($column);
+}
+
+if ($this->edit) {
+    $datagrid->addElements = true;
+    $datagrid->addPanelTitle = __('Parameter', 'familyList', 'addPanelTitle');
+}
+
+$datagrid->display();
+?>
+
+<h2><?=__('UI', 'name', 'tree')?></h2>
+
+<?php
+$tree = new UI_Tree('familyTree', 'tree_family-tree', 'parameter');
+$tree->addParam('library', $library->getId());
+$tree->expandAll = false;
+$tree->collapseAll = false;
+
+if ($this->edit) {
+    // Ajout.
+    $tree->addNode = true;
+
+    $addLabelInput = new GenericVoidTag('input');
+    $addLabelInput->setAttribute('name', 'label');
+    $addLabelInput->setAttribute('type', 'text');
+    $addLabelInput->setAttribute('id', 'addAxis_label');
+    $addLabelInput->addClass('form-control');
+    $addLabelWrapper = new GenericTag('div', $addLabelInput);
+    $addLabelWrapper->addClass('col-xs-10');
+    $addLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+    $addLabelLabel->setAttribute('for', 'addAxis_label');
+    $addLabelLabel->addClass('control-label');
+    $addLabelLabel->addClass('col-xs-2');
+    $addLabelGroup = new GenericTag('div');
+    $addLabelGroup->addClass('form-group');
+    $addLabelGroup->appendContent($addLabelLabel);
+    $addLabelGroup->appendContent($addLabelWrapper);
+    $addForm = new GenericTag('form', $addLabelGroup);
+
+    $tree->addPanelForm = $addForm;
+    $tree->addPanelTitle = __('Parameter', 'familyTree', 'addCategoryPopupTitle');
+    $tree->addButtonLabel = __('Parameter', 'familyTree', 'addCategoryButton');
+    // Édition.
+    $editLabelInput = new GenericVoidTag('input');
+    $editLabelInput->setAttribute('name', 'familyTree_labelEdit');
+    $editLabelInput->setAttribute('type', 'text');
+    $editLabelInput->setAttribute('id', 'familyTree_labelEdit');
+    $editLabelInput->addClass('form-control');
+    $editLabelWrapper = new GenericTag('div', $editLabelInput);
+    $editLabelWrapper->addClass('col-xs-10');
+    $editLabelLabel = new GenericTag('label', ___('UI', 'name', 'label'));
+    $editLabelLabel->setAttribute('for', 'familyTree_labelEdit');
+    $editLabelLabel->addClass('control-label');
+    $editLabelLabel->addClass('col-xs-2');
+    $editLabelGroup = new GenericTag('div');
+    $editLabelGroup->addClass('form-group');
+    $editLabelGroup->appendContent($editLabelLabel);
+    $editLabelGroup->appendContent($editLabelWrapper);
+
+    $htmlComplementWrapper = new GenericTag('div');
+    $htmlComplementWrapper->setAttribute('id', 'familyTree_htmlComplement');
+    $htmlComplementWrapper->addClass('col-xs-10 col-xs-offset-2');
+    $htmlComplementGroup = new GenericTag('div', $htmlComplementWrapper);
+    $htmlComplementGroup->addClass('form-group');
+
+    $tree->setEditNode(true, true, [$editLabelGroup, $htmlComplementGroup]);
+    $tree->editPanelTitle = __('Parameter', 'familyTree', 'editCategoryPopupTitle');
+    // Suppression.
+    $tree->deleteNode = true;
+}
+
+$tree->display();
+
+
+if ($this->edit) {
+    ?>
+    <script>
+        $(function() {
+            $('#familyTree_element').change(function(e) {
+                var idNode = $(this).val();
+                $.get('parameter/tree_family-tree/getinfoedit?idNode=' + idNode
+                        + '&library=' + <?=$library->getId()?>,
+                    function(o){
+                        $('#familyTree_labelEdit').val(o.label);
+                        $('#familyTree_htmlComplement').html(o.htmlComplement);
+                        $('#familyTree_editPanel > div.modal-header > h3').html(o.titlePopup);
+                    }
+                ).error(function(o) {
+                    errorHandler(o);
+                });
+            });
+            $('#familyTree_addPanel').on('show.bs.modal', function(e) {
+                $.get('parameter/tree_family-tree/getlistparents?library=' + <?=$library->getId()?>,
+                    function(o){
+                        $('#addAxis_parent').formActionSetOptions(o);
+                    }
+                ).error(function(o) {
+                    errorHandler(o);
+                });
+            });
+        });
+    </script>
+    <?php
+}
+?>
+
+<h2><?=__('UI', 'name', 'translations')?></h2>
+
+<p>
+    <a href="parameter/translate?library=<?=$library->getId()?>">
+        <?=__('UI', 'message', 'editTranslations')?>
+    </a>
+</p>

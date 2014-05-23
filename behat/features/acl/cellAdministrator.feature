@@ -11,7 +11,10 @@ Feature: Cell administrator feature
     And I click "connection"
   # On tombe sur la page de la cellule globale
     Then I should see "Workspace avec données"
-    Then I should see "Vue globale"
+    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    And I wait for the page to finish loading
+    Then I should see "Workspace avec données"
+    And I should see "Vue globale"
   # Vérification onglets visibles et invisibles
     When I click element "h1 small a"
     And I wait for the page to finish loading
@@ -34,9 +37,11 @@ Feature: Cell administrator feature
     And I click "connection"
   # On tombe sur la page de la cellule
     Then I should see "Workspace avec données"
+    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    And I wait for the page to finish loading
     Then I should see "Europe | Marque A"
   # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)
-    When I click element ".current-cell .input-actions a"
+    When I click element "div[id='currentGranularity'] a.go-input"
     And I click element "#chiffre_affaireHistory .btn"
     Then I should see "Historique des valeurs"
     And I should see a "code:contains('10 k€ ± 15 %')" element
@@ -50,6 +55,9 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.site@toto.com"
     And I click "connection"
   # On tombe sur le datagrid des cellules
+    Then I should see "Workspace avec données"
+    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    And I wait for the page to finish loading
     Then I should see "Administrateur Annecy"
     And I should see "Administrateur Chambéry"
   # Accès à une des cellules
@@ -57,7 +65,7 @@ Feature: Cell administrator feature
     Then I should see "Workspace avec données"
     Then I should see "Annecy"
   # Accès à l'onglet "Analyses", vérification que l'utilisateur peut bien voir les analyses préconfigurées
-    When I click element ".current-cell i.fa-bar-chart-o"
+    When I click element "div[id='currentGranularity'] i.fa-bar-chart-o"
     And I wait 5 seconds
     Then I should see "Chiffre d'affaire, par année"
     When I click "Chiffre d'affaire, par année"
@@ -81,6 +89,9 @@ Feature: Cell administrator feature
     And I click "connection"
     And I wait 5 seconds
     Then I should see "Workspace avec données"
+    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    And I wait for the page to finish loading
+    Then I should see "Workspace avec données"
     Then I should see "Europe | Marque A"
   # Vérification qu'on a bien accès à l'onglet "Paramétrage" et à ses sous-onglets
     When I click element "h1 small a"
@@ -92,8 +103,8 @@ Feature: Cell administrator feature
     Then I should see the popup "Ajout d'un élément à l'axe « Site »"
     When I fill in "listMemberssite_label_addForm" with "AAA"
     And I fill in "listMemberssite_ref_addForm" with "aaa"
-    And I fill in "listMemberssite_broaderpays_addForm" with "france#da39a3ee5e6b4b0d3255bfef95601890afd80709"
-    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    And I select "France" in s2 "listMemberssite_broaderpays_addForm"
+    And I select "Marque A" in s2 "listMemberssite_broadermarque_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the row 1 of the "listMemberssite" datagrid should contain:
@@ -114,14 +125,17 @@ Feature: Cell administrator feature
     When I fill in "email" with "administrateur.zone-marque@toto.com"
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
+    Then I should see "Workspace avec données"
+    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    And I wait for the page to finish loading
     When I click element "h1 small a"
   # Ajout et suppression d'un élément à l'axe "Pays"
     And I open collapse "Site"
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un élément à l'axe « Site »"
     When I fill in "listMemberssite_label_addForm" with "AAA"
-    And I fill in "listMemberssite_broaderpays_addForm" with "france#da39a3ee5e6b4b0d3255bfef95601890afd80709"
-    And I fill in "listMemberssite_broadermarque_addForm" with "marque_a#da39a3ee5e6b4b0d3255bfef95601890afd80709"
+    And I select "France" in s2 "listMemberssite_broaderpays_addForm"
+    And I select "Marque A" in s2 "listMemberssite_broadermarque_addForm"
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the "listMemberssite" datagrid should contain 3 row

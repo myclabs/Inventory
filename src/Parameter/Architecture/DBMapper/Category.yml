@@ -1,0 +1,51 @@
+Parameter\Domain\Category:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Parameter_Category
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    position:
+      type: integer
+      nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    library:
+      targetEntity: ParameterLibrary
+      inversedBy: categories
+    parentCategory:
+      targetEntity: Category
+      inversedBy: childCategories
+      joinColumn:
+        name: idParentCategory
+        referencedColumnName: id
+        nullable: true
+
+  oneToMany:
+    childCategories:
+      targetEntity: Category
+      mappedBy: parentCategory
+      orderBy:
+        position: ASC
+      cascade: [ persist ]
+    families:
+      targetEntity: Parameter\Domain\Family\Family
+      mappedBy: category
+      orderBy:
+        position: ASC
+      cascade: [ persist ]
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

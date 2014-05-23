@@ -4,9 +4,8 @@ namespace AF\Domain\Algorithm\Index;
 
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
-use Classif_Model_Axis;
-use Classif_Model_Member;
-use Core_Exception_NotFound;
+use Classification\Domain\Axis;
+use Classification\Domain\Member;
 use Core_Model_Entity;
 
 /**
@@ -22,10 +21,9 @@ abstract class Index extends Core_Model_Entity
     protected $id;
 
     /**
-     * The classif axis
-     * @var string|null
+     * @var Axis|null
      */
-    protected $refClassifAxis;
+    protected $axis;
 
     /**
      * @var NumericAlgo|null
@@ -33,46 +31,30 @@ abstract class Index extends Core_Model_Entity
     protected $algoNumeric;
 
 
-    /**
-     * @param Classif_Model_Axis|null $classifAxis
-     * @param NumericAlgo|null        $algoNumeric
-     */
-    public function __construct(Classif_Model_Axis $classifAxis = null, NumericAlgo $algoNumeric = null)
+    public function __construct(Axis $classificationAxis = null, NumericAlgo $algoNumeric = null)
     {
-        if ($classifAxis) {
-            $this->refClassifAxis = $classifAxis->getRef();
-        }
+        $this->axis = $classificationAxis;
         $this->algoNumeric = $algoNumeric;
     }
 
     /**
-     * Return the Classif member associated with the Result index
+     * Return the Classification member associated with the Result index
      * @param InputSet $inputSet
-     * @return Classif_Model_Member|null
+     * @return Member|null
      */
-    abstract public function getClassifMember(InputSet $inputSet = null);
+    abstract public function getClassificationMember(InputSet $inputSet = null);
 
     /**
-     * @return Classif_Model_Axis|null The classif axis associated to the value index
+     * @return Axis|null The classification axis associated to the value index
      */
-    public function getClassifAxis()
+    public function getClassificationAxis()
     {
-        if ($this->refClassifAxis === null) {
-            return null;
-        }
-        try {
-            return Classif_Model_Axis::loadByRef($this->refClassifAxis);
-        } catch (Core_Exception_NotFound $e) {
-            return null;
-        }
+        return $this->axis;
     }
 
-    /**
-     * @param Classif_Model_Axis $classifAxis
-     */
-    public function setClassifAxis(Classif_Model_Axis $classifAxis)
+    public function setClassificationAxis(Axis $axis)
     {
-        $this->refClassifAxis = $classifAxis->getRef();
+        $this->axis = $axis;
     }
 
     /**
@@ -83,9 +65,6 @@ abstract class Index extends Core_Model_Entity
         return $this->algoNumeric;
     }
 
-    /**
-     * @param NumericAlgo $algoNumeric
-     */
     public function setAlgoNumeric(NumericAlgo $algoNumeric)
     {
         if ($algoNumeric != $this->algoNumeric) {

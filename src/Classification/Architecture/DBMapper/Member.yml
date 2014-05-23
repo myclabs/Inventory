@@ -1,0 +1,61 @@
+Classification\Domain\Member:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Classification_Member
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      type: string
+      nullable: false
+    position:
+      type: integer
+      nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    axis:
+      targetEntity: Classification\Domain\Axis
+      inversedBy: members
+      joinColumn:
+        name: idAxis
+        referencedColumnName: id
+
+  manyToMany:
+    directChildren:
+      targetEntity: Classification\Domain\Member
+      inversedBy: directParents
+      joinTable:
+        name: Classification_Member_Association
+        joinColumns:
+          idParent:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idChild:
+            referencedColumnName: id
+    directParents:
+      targetEntity: Classification\Domain\Member
+      mappedBy: directChildren
+      orderBy:
+        position: ASC
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - idAxis
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]

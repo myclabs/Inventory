@@ -3,6 +3,14 @@
     <header adminlang="en" creationtool="locale4j"
             creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
+        <tu tuid="translateOrganizationalAxes">
+            <tuv xml:lang="fr">
+                <seg>Traduire les axes organisationnels</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Translate organizational axes</seg>
+            </tuv>
+        </tu>
         <tu tuid="organizationalAxes">
             <tuv xml:lang="fr">
                 <seg>Axes organisationnels</seg>
@@ -11,12 +19,28 @@
                 <seg>Organizational axes</seg>
             </tuv>
         </tu>
+        <tu tuid="translateOrganizationalMembers">
+            <tuv xml:lang="fr">
+                <seg>Traduire les éléments des axes organisationnels</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Translate organizational elements</seg>
+            </tuv>
+        </tu>
         <tu tuid="organizationalMembers">
             <tuv xml:lang="fr">
                 <seg>Éléments des axes organisationnels</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Organizational elements</seg>
+            </tuv>
+        </tu>
+        <tu tuid="translateGranularityReports">
+            <tuv xml:lang="fr">
+                <seg>Traduire les analyses préconfigurées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Translate preconfigured analyses</seg>
             </tuv>
         </tu>
         <tu tuid="granularityReports">
