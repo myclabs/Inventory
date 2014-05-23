@@ -602,7 +602,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 var reportsPopup = '';
                 if (this.showReports) {
                     reportsP +=
-                        '<a class="show-reports btn btn-default btn-sm withTooltip" data-toggle="modal" data-target="#reports' + this.id + '" href="orga/cell/view-reports/idCell/' + this.id + '/" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body">' +
+                        '<a class="show-reports btn btn-default btn-sm withTooltip" data-toggle="modal" data-target="#reports' + this.id + '" href="orga/cell/view-reports/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body">' +
                             '<i class="fa fa-bar-chart-o fa-fw"></i>' +
                         '</a>';
                     reportsPopup +=
@@ -620,7 +620,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                         '</div>' +
                                     '</div>' +
                                     '<div class="modal-footer">' +
-                                        '<a href="orga/cell/view-report/idCell/' + this.id + '/" class="btn btn-primary">' +
+                                        '<a href="orga/cell/view-report/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" class="btn btn-primary">' +
                                             '<i class="fa fa-plus fa-fw"></i> ' +
                                             '<?=___('UI', 'verb', 'add')?>' +
                                         '</a>' +
