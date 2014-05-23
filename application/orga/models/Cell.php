@@ -229,7 +229,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      */
     public static function loadByDocLibraryForAFInputSetsPrimary(Library $docLibrary)
     {
-        return self::getEntityRepository()->loadBy(array('docLibraryForAFInputSetsPrimary' => $docLibrary));
+        return self::getEntityRepository()->loadBy(['docLibraryForAFInputSetPrimary' => $docLibrary]);
     }
 
     /**

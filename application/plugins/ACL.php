@@ -931,4 +931,18 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
     {
         return $this->acl->isAllowed($identity, Actions::VIEW, new ClassResource(User::class));
     }
+
+    protected function viewLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $cell = $this->getCellFromLibrary($request);
+
+        return $this->acl->isAllowed($identity, Actions::INPUT, $cell);
+    }
+
+    protected function editLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        $cell = $this->getCellFromLibrary($request);
+
+        return $this->acl->isAllowed($identity, Actions::INPUT, $cell);
+    }
 }
