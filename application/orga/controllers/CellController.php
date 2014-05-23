@@ -535,6 +535,8 @@ class Orga_CellController extends Core_Controller
                 if (!empty($filter['value'])) {
                     if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
                         $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
+                    } else if ($filter['name'] === ($filterPrefix . 'inputStatus')) {
+                        $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inputStatus', $filter['value']));
                     } else {
                         $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
                     }
@@ -567,6 +569,8 @@ class Orga_CellController extends Core_Controller
                 if (!empty($filter['value'])) {
                     if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
                         $childCellsQuery->filter->addCondition('inventoryStatus', $filter['value']);
+                    } else if ($filter['name'] === ($filterPrefix . 'inputStatus')) {
+                        $childCellsQuery->filter->addCondition('inputStatus', $filter['value']);
                     } else {
                         $childCellsQuery->filter->addCondition('tag', $filter['value'], Core_Model_Filter::OPERATOR_CONTAINS);
                     }
@@ -1262,10 +1266,10 @@ class Orga_CellController extends Core_Controller
         $this->sendJsonResponse([
             'status' => $inventoryStatus,
             'label' => $this->cellVMFactory->inventoryStatusList[$inventoryStatus],
-            'mainActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_ACTIVE) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_ACTIVE,
-            'mainActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction')),
-            'otherActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_NOTLAUNCHED,
-            'otherActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction')),
+            'mainActionStatus' => ($inventoryStatus === Orga_Model_Cell::INVENTORY_STATUS_ACTIVE) ? Orga_Model_Cell::INVENTORY_STATUS_CLOSED : Orga_Model_Cell::INVENTORY_STATUS_ACTIVE,
+            'mainActionLabel' => ($inventoryStatus === Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction')),
+            'otherActionStatus' => ($inventoryStatus === Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED) ? Orga_Model_Cell::INVENTORY_STATUS_CLOSED : Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED,
+            'otherActionLabel' => ($inventoryStatus === Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction')),
         ]);
     }
 
@@ -1320,7 +1324,7 @@ class Orga_CellController extends Core_Controller
         );
 
         $aFViewConfiguration = new AFViewConfiguration();
-        if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::STATUS_CLOSED)) {
+        if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::INVENTORY_STATUS_CLOSED)) {
             $aFViewConfiguration->setMode(AFViewConfiguration::MODE_WRITE);
         } else {
             $aFViewConfiguration->setMode(AFViewConfiguration::MODE_READ);

@@ -306,6 +306,7 @@ abstract class AbstractPopulateOrga
         $inputSetPrimary->save();
 
         $inputCell->setAFInputSetPrimary($inputSetPrimary);
+        $inputCell->updateInputStatus();
         $this->etlDataService->populateDWResultsFromCell($inputCell);
     }
 

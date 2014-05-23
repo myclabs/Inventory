@@ -642,11 +642,13 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 $configGranularity->addInputGranularity($this);
                 foreach ($this->getCells() as $cell) {
                     $cell->enableDocLibraryForAFInputSetPrimary();
+                    $cell->updateInputStatus();
                 }
             } else {
                 foreach ($this->getCells() as $cell) {
                     $cell->disableDocLibraryForAFInputSetPrimary();
                     $cell->setAFInputSetPrimary();
+                    $cell->updateInputStatus();
                 }
             }
         }

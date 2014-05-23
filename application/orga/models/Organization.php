@@ -433,7 +433,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
         if ($this->granularityForInventoryStatus !== $granularity) {
             if ($this->granularityForInventoryStatus !== null) {
                 foreach ($this->granularityForInventoryStatus->getCells() as $cell) {
-                    $cell->setInventoryStatus(Orga_Model_Cell::STATUS_NOTLAUNCHED);
+                    $cell->setInventoryStatus(Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED);
                 }
             }
             $this->granularityForInventoryStatus = $granularity;

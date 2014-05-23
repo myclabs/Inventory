@@ -7,9 +7,6 @@ namespace Orga\ViewModel;
  */
 class CellViewModel
 {
-    const AF_STATUS_AF_NOT_CONFIGURED = 'statusAFNotConfigured';
-    const AF_STATUS_NOT_STARTED = 'statusNotStarted';
-
     /**
      * @var int
      */

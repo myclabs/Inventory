@@ -76,6 +76,7 @@ class Orga_Service_InputService
             // Sauvegarde et attache à la cellule
             $inputSet->save();
             $cell->setAFInputSetPrimary($inputSet);
+            $cell->updateInputStatus();
             $this->afInputService->updateResults($inputSet);
 
             $event = new Orga_Service_InputCreatedEvent($cell);

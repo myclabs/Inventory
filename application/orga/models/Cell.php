@@ -36,21 +36,28 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     const  REF_SEPARATOR = '|';
     const  LABEL_SEPARATOR = ' | ';
 
+    // Constantes des statuts de saisie.
+    const INPUT_STATUS_AF_NOT_CONFIGURED = 'statusAFNotConfigured';
+    const INPUT_STATUS_NOT_STARTED = 'statusNotStarted';
+    const INPUT_STATUS_INPUT_INCOMPLETE = "statusInputIncomplete";
+    const INPUT_STATUS_CALCULATION_INCOMPLETE = "statusCalculationIncomplete";
+    const INPUT_STATUS_COMPLETE = "statusComplete";
+    const INPUT_STATUS_FINISHED = "statusFinished";
 
     /**
      * Etat non débuté de l'inventaire.
      */
-    const STATUS_NOTLAUNCHED = 'notLaunched';
+    const INVENTORY_STATUS_NOTLAUNCHED = 'notLaunched';
 
     /**
      * Etat actif de l'inventaire.
      */
-    const STATUS_ACTIVE = 'active';
+    const INVENTORY_STATUS_ACTIVE = 'active';
 
     /**
      * Etat terminé de l'inventaire.
      */
-    const STATUS_CLOSED = 'closed';
+    const INVENTORY_STATUS_CLOSED = 'closed';
 
 
     /**
@@ -103,14 +110,14 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     protected $allParentsRelevant = true;
 
     /**
-     * Status de l'inventaire.
+     * Statut de l'inventaire.
      *
      * @var string
      * @see STATUS_NOTLAUNCHED;
      * @see STATUS_ACTIVE;
      * @see STATUS_CLOSED;
      */
-    protected $inventoryStatus = self::STATUS_NOTLAUNCHED;
+    protected $inventoryStatus = self::INVENTORY_STATUS_NOTLAUNCHED;
 
     /**
      * Collection des CellsGroup utilisant cette Cell comme container.
@@ -118,6 +125,13 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      * @var Collection|Orga_Model_CellsGroup[]
      */
     protected $cellsGroups = null;
+
+    /**
+     * Statut de la saisie.
+     *
+     * @var string
+     */
+    protected $inputStatus = self::INPUT_STATUS_AF_NOT_CONFIGURED;
 
     /**
      * Tableau d'état des saisies de la cellule.
@@ -489,7 +503,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
                 $this->updateInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
             } catch (Core_Exception_NotFound $e) {
                 // Il n'y a pas de cellules parentes.
-                $this->updateInventoryStatus(self::STATUS_NOTLAUNCHED);
+                $this->updateInventoryStatus(self::INVENTORY_STATUS_NOTLAUNCHED);
             }
         }
     }
@@ -801,9 +815,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      * @throws Core_Exception
      * @throws Core_Exception_InvalidArgument
      *
-     * @see self::STATUS_ACTIVE
-     * @see self::STATUS_CLOSED
-     * @see self::STATUS_NOTLAUNCHED
+     * @see self::INVENTORY_STATUS_ACTIVE
+     * @see self::INVENTORY_STATUS_CLOSED
+     * @see self::INVENTORY_STATUS_NOTLAUNCHED
      */
     public function setInventoryStatus($inventoryStatus)
     {
@@ -812,9 +826,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
         }
 
         if ($this->inventoryStatus !== $inventoryStatus) {
-            $acceptedStatus = [self::STATUS_ACTIVE, self::STATUS_CLOSED, self::STATUS_NOTLAUNCHED];
+            $acceptedStatus = [self::INVENTORY_STATUS_ACTIVE, self::INVENTORY_STATUS_CLOSED, self::INVENTORY_STATUS_NOTLAUNCHED];
             if (! in_array($inventoryStatus, $acceptedStatus)) {
-                throw new Core_Exception_InvalidArgument('Inventory status must be a class constant (STATUS_[..]).');
+                throw new Core_Exception_InvalidArgument('Inventory status must be a class constant (INVENTORY_STATUS_[..]).');
             }
 
             $this->inventoryStatus = $inventoryStatus;
@@ -840,9 +854,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      *
      * @return string
      *
-     * @see self::STATUS_ACTIVE
-     * @see self::STATUS_CLOSED
-     * @see self::STATUS_NOTLAUNCHED
+     * @see self::INVENTORY_STATUS_ACTIVE
+     * @see self::INVENTORY_STATUS_CLOSED
+     * @see self::INVENTORY_STATUS_NOTLAUNCHED
      */
     public function getInventoryStatus()
     {
@@ -932,6 +946,62 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     public function getCellsGroups()
     {
         return $this->cellsGroups->toArray();
+    }
+
+    /**
+     * Spécifie la statut de la saisie de la cellule.
+     *
+     * @see self::INPUT_STATUS_AF_NOT_CONFIGURED
+     * @see self::INPUT_STATUS_NOT_STARTED
+     * @see self::INPUT_STATUS_INPUT_INCOMPLETE
+     * @see self::INPUT_STATUS_CALCULATION_INCOMPLETE
+     * @see self::INPUT_STATUS_COMPLETE
+     * @see self::INPUT_STATUS_FINISHED
+     */
+    public function updateInputStatus()
+    {
+        if ($this->aFInputSetPrimary !== null) {
+            switch ($this->aFInputSetPrimary->getStatus()) {
+                case PrimaryInputSet::STATUS_FINISHED:
+                    $this->inputStatus = self::INPUT_STATUS_FINISHED;
+                    break;
+                case PrimaryInputSet::STATUS_COMPLETE:
+                    $this->inputStatus = self::INPUT_STATUS_COMPLETE;
+                    break;
+                case PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE:
+                    $this->inputStatus = self::INPUT_STATUS_CALCULATION_INCOMPLETE;
+                    break;
+                case PrimaryInputSet::STATUS_INPUT_INCOMPLETE:
+                    $this->inputStatus = self::INPUT_STATUS_INPUT_INCOMPLETE;
+                    break;
+                default:
+                    $this->inputStatus = self::INPUT_STATUS_NOT_STARTED;
+                    break;
+            }
+        } else {
+            if (($this->getGranularity()->isInput()) && ($this->getInputAFUsed() === null)) {
+                $this->inputStatus = self::INPUT_STATUS_NOT_STARTED;
+            } else {
+                $this->inputStatus = self::INPUT_STATUS_AF_NOT_CONFIGURED;
+            }
+        }
+    }
+
+    /**
+     * Renvoi la statut de la saisie de la cellule.
+     *
+     * @return string
+     *
+     * @see self::INPUT_STATUS_AF_NOT_CONFIGURED
+     * @see self::INPUT_STATUS_NOT_STARTED
+     * @see self::INPUT_STATUS_INPUT_INCOMPLETE
+     * @see self::INPUT_STATUS_CALCULATION_INCOMPLETE
+     * @see self::INPUT_STATUS_COMPLETE
+     * @see self::INPUT_STATUS_FINISHED
+     */
+    public function getInputStatus()
+    {
+        return $this->inputStatus;
     }
 
     /**

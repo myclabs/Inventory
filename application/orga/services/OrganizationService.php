@@ -621,7 +621,7 @@ class Orga_Service_OrganizationService
 
         // Lance l'inventaire 2013
         $granularityYear->getCellByMembers([$year2013])
-            ->setInventoryStatus(Orga_Model_Cell::STATUS_ACTIVE);
+            ->setInventoryStatus(Orga_Model_Cell::INVENTORY_STATUS_ACTIVE);
 
         $organization->save();
         // Flush pour persistence des cellules avant l'ajout du role et ajout des rapports préconfigurés.
