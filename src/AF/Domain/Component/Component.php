@@ -19,8 +19,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Mnapoli\Translated\Translator;
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Icon;
-use UI_Form_Element_HTML;
-use UI_Form_ZendElement;
+use AF\Application\Form\Element\HTMLElement;
+use AF\Application\Form\Element\ZendFormElement;
 use Zend_Form_Element;
 
 /**
@@ -89,7 +89,7 @@ abstract class Component extends Core_Model_Entity
     /**
      * Génère un élément UI
      * @param AFGenerationHelper $generationHelper
-     * @return UI_Form_ZendElement|Zend_Form_Element
+     * @return ZendFormElement|Zend_Form_Element
      */
     abstract public function getUIElement(AFGenerationHelper $generationHelper);
 
@@ -346,7 +346,7 @@ abstract class Component extends Core_Model_Entity
     /**
      * Retourne le composant UI pour l'historique des valeurs de la saisie
      * @param Input $input
-     * @return UI_Form_Element_HTML
+     * @return HTMLElement
      */
     protected function getHistoryComponent(Input $input)
     {
@@ -357,7 +357,7 @@ abstract class Component extends Core_Model_Entity
         $historyButton->setAttribute('data-toggle', 'button');
         $historyButton->setAttribute('data-container', 'body');
 
-        return new UI_Form_Element_HTML($this->ref . 'History', $historyButton->render());
+        return new HTMLElement($this->ref . 'History', $historyButton->render());
     }
 
     /**

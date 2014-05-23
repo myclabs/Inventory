@@ -149,7 +149,6 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function addAction()
     {
-        UI_Form::addHeader();
         $this->view->assign('account', $this->getParam('account'));
         $this->view->assign('templates', $this->organizationService->getOrganizationTemplates());
     }
@@ -457,7 +456,6 @@ class Orga_OrganizationController extends Core_Controller
         $this->view->assign('tabView', $tabView);
         UI_Datagrid::addHeader();
         UI_Tree::addHeader();
-        UI_Form::addHeader();
         $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
         $this->setActiveMenuItemOrganization($organization->getId());
     }

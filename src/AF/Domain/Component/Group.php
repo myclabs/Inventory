@@ -9,7 +9,7 @@ use AF\Domain\Input\GroupInput;
 use Core_Exception_User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use UI_Form_Element_Group;
+use AF\Application\Form\Element\Group as FormGroup;
 
 /**
  * Gestion des groupements de champs.
@@ -72,7 +72,7 @@ class Group extends Component
     public function getUIElement(AFGenerationHelper $generationHelper)
     {
         $isRootGroup = false;
-        $uiElement = new UI_Form_Element_Group($this->ref);
+        $uiElement = new FormGroup($this->ref);
         $uiElement->setLabel($this->uglyTranslate($this->label));
         $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         $uiElement->getElement()->hidden = !$this->visible;
@@ -89,7 +89,7 @@ class Group extends Component
             $isRootGroup = true;
             $uiElement->foldaway = false;
             $uiElement->folded = false;
-            $uiElement->removeDecorator('Group');
+            $uiElement->removeDecorator('GroupDecorator');
         }
         // Récupère la saisie correspondant à cet élément
         if ($generationHelper->getInputSet()) {

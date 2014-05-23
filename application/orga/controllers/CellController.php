@@ -1373,6 +1373,8 @@ class Orga_CellController extends Core_Controller
 
         $this->setActiveMenuItemOrganization($cell->getOrganization()->getId());
 
+        \AF\Application\Form\Form::addHeader();
+
         $this->forward('display', 'af', 'af', [
             'id' => $cell->getInputAFUsed()->getId(),
             'viewConfiguration' => $aFViewConfiguration

@@ -4,7 +4,7 @@ namespace AF\Domain\Action;
 
 use AF\Domain\AFGenerationHelper;
 use AF\Domain\Algorithm\Algo;
-use UI_Form_Action_SetValue;
+use AF\Application\Form\Action\SetValue as FormSetValue;
 
 /**
  * @author matthieu.napoli
@@ -38,7 +38,7 @@ class SetAlgoValue extends Action
      */
     public function getUIAction(AFGenerationHelper $generationHelper)
     {
-        $uiAction = new UI_Form_Action_SetValue($this->id);
+        $uiAction = new FormSetValue($this->id);
         if (!empty($this->condition)) {
             $uiAction->condition = $generationHelper->getUICondition($this->condition);
         }

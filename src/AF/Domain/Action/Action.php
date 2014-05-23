@@ -2,11 +2,11 @@
 
 namespace AF\Domain\Action;
 
+use AF\Application\Form\Action\FormAction;
 use AF\Domain\AFGenerationHelper;
 use Core_Model_Entity;
 use AF\Domain\Condition\Condition;
 use AF\Domain\AFConfigurationError;
-use UI_Form_Action;
 use AF\Domain\Component\Component;
 
 /**
@@ -34,12 +34,12 @@ abstract class Action extends Core_Model_Entity
     protected $id;
 
     /**
-     * @var \AF\Domain\Condition\Condition|null
+     * @var Condition|null
      */
     protected $condition;
 
     /**
-     * @var \AF\Domain\Component\Component
+     * @var Component
      */
     protected $targetComponent;
 
@@ -47,7 +47,7 @@ abstract class Action extends Core_Model_Entity
     /**
      * Génère une action UI
      * @param AFGenerationHelper $generationHelper
-     * @return UI_Form_Action
+     * @return FormAction
      */
     abstract public function getUIAction(AFGenerationHelper $generationHelper);
 
@@ -61,7 +61,7 @@ abstract class Action extends Core_Model_Entity
 
     /**
      * Get the condition of the action
-     * @return \AF\Domain\Condition\Condition
+     * @return Condition
      */
     public function getCondition()
     {
@@ -70,7 +70,7 @@ abstract class Action extends Core_Model_Entity
 
     /**
      * Set the condition for the action
-     * @param \AF\Domain\Condition\Condition|null $condition
+     * @param Condition|null $condition
      */
     public function setCondition(Condition $condition = null)
     {
@@ -78,7 +78,7 @@ abstract class Action extends Core_Model_Entity
     }
 
     /**
-     * @return \AF\Domain\Component\Component
+     * @return Component
      */
     public function getTargetComponent()
     {
@@ -86,7 +86,7 @@ abstract class Action extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\Component\Component $targetComponent
+     * @param Component $targetComponent
      */
     public function setTargetComponent(Component $targetComponent)
     {

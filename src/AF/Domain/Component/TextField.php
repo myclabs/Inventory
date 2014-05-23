@@ -5,8 +5,8 @@ namespace AF\Domain\Component;
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\AFGenerationHelper;
 use AF\Domain\Input\TextFieldInput;
-use UI_Form_Element_Text;
-use UI_Form_Element_Textarea;
+use AF\Application\Form\Element\TextField as FormTextField;
+use AF\Application\Form\Element\Textarea;
 
 /**
  * Gestion des champs de type texte.
@@ -44,9 +44,9 @@ class TextField extends Field
     public function getUIElement(AFGenerationHelper $generationHelper)
     {
         if ($this->type == self::TYPE_SHORT) {
-            $uiElement = new UI_Form_Element_Text($this->ref);
+            $uiElement = new FormTextField($this->ref);
         } else {
-            $uiElement = new UI_Form_Element_Textarea($this->ref);
+            $uiElement = new Textarea($this->ref);
         }
         $uiElement->setLabel($this->uglyTranslate($this->label));
         $uiElement->getElement()->help = $this->uglyTranslate($this->help);

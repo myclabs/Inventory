@@ -8,8 +8,8 @@ use AF\Domain\Component\Select;
 use Core_Exception_UndefinedAttribute;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use UI_Form_Element_MultiCheckbox;
-use UI_Form_Element_MultiSelect;
+use AF\Application\Form\Element\MultiCheckbox;
+use AF\Application\Form\Element\MultiSelect;
 
 /**
  * @author matthieu.napoli
@@ -57,10 +57,10 @@ class SelectMulti extends Select
     {
         switch ($this->type) {
             case self::TYPE_MULTICHECKBOX:
-                $uiElement = new UI_Form_Element_MultiCheckbox($this->ref);
+                $uiElement = new MultiCheckbox($this->ref);
                 break;
             case self::TYPE_MULTISELECT:
-                $uiElement = new UI_Form_Element_MultiSelect($this->ref);
+                $uiElement = new MultiSelect($this->ref);
                 break;
             default:
                 throw new Core_Exception_UndefinedAttribute("The type must be defined and valid");

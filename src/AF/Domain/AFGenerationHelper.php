@@ -8,10 +8,10 @@ use AF\Domain\InputSet\InputSet;
 use AF\Domain\Condition\Condition;
 use AF\Domain\Component\Component;
 use AF\Application\AFViewConfiguration;
-use UI_Form_Action;
-use UI_Form_Condition;
-use UI_Form_Element_Option;
-use UI_Form_ZendElement;
+use AF\Application\Form\Action\FormAction;
+use AF\Application\Form\Condition\FormCondition;
+use AF\Application\Form\Element\Option;
+use AF\Application\Form\Element\ZendFormElement;
 use Zend_Form_Element;
 
 /**
@@ -38,17 +38,17 @@ class AFGenerationHelper
     private $uiElements = [];
 
     /**
-     * @var UI_Form_Element_Option[]
+     * @var Option[]
      */
     private $uiOptions = [];
 
     /**
-     * @var UI_Form_Action[]
+     * @var FormAction[]
      */
     private $uiActions = [];
 
     /**
-     * @var UI_Form_Condition[]
+     * @var FormCondition[]
      */
     private $uiConditions = [];
 
@@ -63,17 +63,17 @@ class AFGenerationHelper
     }
 
     /**
-     * @param Component           $component
-     * @param UI_Form_ZendElement $uiElement
+     * @param Component       $component
+     * @param ZendFormElement $uiElement
      */
-    public function setUIElement(Component $component, UI_Form_ZendElement $uiElement)
+    public function setUIElement(Component $component, ZendFormElement $uiElement)
     {
         $this->uiElements[$component->getId()] = $uiElement;
     }
 
     /**
      * @param Component $component
-     * @return UI_Form_ZendElement
+     * @return ZendFormElement
      */
     public function getUIElement(Component $component)
     {
@@ -84,17 +84,17 @@ class AFGenerationHelper
     }
 
     /**
-     * @param SelectOption           $option
-     * @param UI_Form_Element_Option $uiOption
+     * @param SelectOption $option
+     * @param Option       $uiOption
      */
-    public function setUIOption(SelectOption $option, UI_Form_Element_Option $uiOption)
+    public function setUIOption(SelectOption $option, Option $uiOption)
     {
         $this->uiOptions[$option->getId()] = $uiOption;
     }
 
     /**
      * @param SelectOption $option
-     * @return UI_Form_Element_Option
+     * @return Option
      */
     public function getUIOption(SelectOption $option)
     {
@@ -105,17 +105,17 @@ class AFGenerationHelper
     }
 
     /**
-     * @param Action         $action
-     * @param UI_Form_Action $uiAction
+     * @param Action     $action
+     * @param FormAction $uiAction
      */
-    public function setUIAction(Action $action, UI_Form_Action $uiAction)
+    public function setUIAction(Action $action, FormAction $uiAction)
     {
         $this->uiActions[$action->getId()] = $uiAction;
     }
 
     /**
      * @param Action $action
-     * @return UI_Form_Action
+     * @return FormAction
      */
     public function getUIAction(Action $action)
     {
@@ -126,17 +126,17 @@ class AFGenerationHelper
     }
 
     /**
-     * @param Condition         $condition
-     * @param UI_Form_Condition $uiCondition
+     * @param Condition     $condition
+     * @param FormCondition $uiCondition
      */
-    public function setUICondition(Condition $condition, UI_Form_Condition $uiCondition)
+    public function setUICondition(Condition $condition, FormCondition $uiCondition)
     {
         $this->uiConditions[$condition->getId()] = $uiCondition;
     }
 
     /**
      * @param Condition $condition
-     * @return UI_Form_Condition
+     * @return FormCondition
      */
     public function getUICondition(Condition $condition)
     {

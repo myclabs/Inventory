@@ -4,7 +4,6 @@ namespace UI\Datagrid\Column;
 
 use MyCLabs\MUIH\GenericTag;
 use UI\Datagrid\Datagrid;
-use UI_Form_Element_Textarea;
 
 /**
  * Classe représentant une colonne contenant des textes longs.

@@ -6,7 +6,7 @@ use AF\Domain\AF;
 use AF\Domain\AFGenerationHelper;
 use Core_Model_Entity;
 use Core_Tools;
-use UI_Form_Condition;
+use AF\Application\Form\Condition\FormCondition;
 
 /**
  * @author matthieu.napoli
@@ -38,7 +38,7 @@ abstract class Condition extends Core_Model_Entity
     /**
      * Génère une condition UI
      * @param AFGenerationHelper $generationHelper
-     * @return UI_Form_Condition
+     * @return FormCondition
      */
     abstract public function getUICondition(AFGenerationHelper $generationHelper);
 
@@ -87,16 +87,6 @@ abstract class Condition extends Core_Model_Entity
     }
 
     /**
-     * Retourne la condition correspondant à la référence.
-     * @param string $ref
-     * @return self
-     */
-    public static function loadByRef($ref)
-    {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref));
-    }
-
-    /**
      * Permet de charger une Condition élémentaire par son ref et son AF
      * @param string $ref
      * @param AF     $af
@@ -104,6 +94,6 @@ abstract class Condition extends Core_Model_Entity
      */
     public static function loadByRefAndAF($ref, $af)
     {
-        return self::getEntityRepository()->loadBy(array('ref' => $ref, 'af' => $af));
+        return self::getEntityRepository()->loadBy(['ref' => $ref, 'af' => $af]);
     }
 }

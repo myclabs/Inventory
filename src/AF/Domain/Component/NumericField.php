@@ -10,10 +10,10 @@ use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use Calc_Value;
 use Core_Exception_NotFound;
 use Core_Locale;
-use UI_Form_Element_Option;
-use UI_Form_Element_Pattern_Percent;
-use UI_Form_Element_Pattern_Value;
-use UI_Form_Element_Select;
+use AF\Application\Form\Element\Option;
+use AF\Application\Form\Element\Pattern\PercentPattern;
+use AF\Application\Form\Element\Pattern\ValuePattern;
+use AF\Application\Form\Element\Select as FormSelect;
 use Unit\UnitAPI;
 use Zend_Form_Element;
 
@@ -76,7 +76,7 @@ class NumericField extends Field
     {
         $locale = Core_Locale::loadDefault();
 
-        $uiElement = new UI_Form_Element_Pattern_Value($this->ref, false);
+        $uiElement = new ValuePattern($this->ref, false);
         $uiElement->setLabel($this->uglyTranslate($this->label));
         $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         $uiElement->setRequired($this->getRequired());
@@ -113,7 +113,7 @@ class NumericField extends Field
             $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $selectedUnit));
             // Incertitude
             if ($this->withUncertainty) {
-                $uiUncertaintyElement = new UI_Form_Element_Pattern_Percent('percent' . $this->ref);
+                $uiUncertaintyElement = new PercentPattern('percent' . $this->ref);
                 if ($value) {
                     $uiUncertaintyElement->setValue($locale->formatNumberForInput($value->getRelativeUncertainty()));
                 }
@@ -132,7 +132,7 @@ class NumericField extends Field
             }
             // Incertitude
             if ($this->withUncertainty) {
-                $uiUncertaintyElement = new UI_Form_Element_Pattern_Percent('percent' . $this->ref);
+                $uiUncertaintyElement = new PercentPattern('percent' . $this->ref);
                 $uiUncertaintyElement->setValue(
                     $locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty())
                 );
@@ -319,10 +319,10 @@ class NumericField extends Field
      */
     protected function getUnitComponent(UnitAPI $baseUnit, UnitAPI $selectedUnit)
     {
-        $unitComponent = new UI_Form_Element_Select($this->ref . '_unit');
+        $unitComponent = new FormSelect($this->ref . '_unit');
 
         // Ajoute l'unité de base
-        $option = new UI_Form_Element_Option(
+        $option = new Option(
             $this->ref . '_unit_' . $baseUnit->getRef(),
             $baseUnit->getRef(),
             $this->uglyTranslate($baseUnit->getSymbol())
@@ -331,7 +331,7 @@ class NumericField extends Field
 
         // Ajoute les unités compatibles
         foreach ($baseUnit->getCompatibleUnits() as $compatibleUnit) {
-            $option = new UI_Form_Element_Option(
+            $option = new Option(
                 $this->ref . '_unit_' . $compatibleUnit->getRef(),
                 $compatibleUnit->getRef(),
                 $this->uglyTranslate($compatibleUnit->getSymbol())

@@ -1,4 +1,6 @@
 <?php
+use AF\Application\Form\Element\Option;
+use AF\Application\Form\Element\Select;
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
@@ -8,7 +10,6 @@ use MyCLabs\MUIH\Modal;
 /**
  * Fichier de la classe Tree.
  *
- * @author     valentin.claras
  * @package    UI
  * @subpackage Tree
  */
@@ -18,10 +19,7 @@ use MyCLabs\MUIH\Modal;
  *
  * Une classe permettant de génèrer un arbre très simplement.
  *
- * @package    UI
- * @subpackage Tree
- *
- * @see   UI_Controller_Tree
+ * @author     valentin.claras
  */
 class UI_Tree extends UI_Generic
 {
@@ -514,7 +512,7 @@ class UI_Tree extends UI_Generic
     /**
      * Initialise le formulaire d'édition.
      *
-     * @return UI_Form
+     * @return GenericTag
      */
     protected function initEditForm()
     {
@@ -594,9 +592,9 @@ class UI_Tree extends UI_Generic
             $changeOrderGroup->appendContent($changeOrderWrapper);
             $editForm->appendContent($changeOrderGroup);
 
-            $selectAfter = new UI_Form_Element_Select($this->id.'_selectAfter');
+            $selectAfter = new Select($this->id.'_selectAfter');
 
-            $optionLoadingAfter = new UI_Form_Element_Option($this->id.'_load');
+            $optionLoadingAfter = new Option($this->id.'_load');
             $optionLoadingAfter->label = $this->changeOrderLoadingOption;
             $selectAfter->addOption($optionLoadingAfter);
             $selectAfter->getElement()->hidden = true;
@@ -1092,8 +1090,6 @@ class UI_Tree extends UI_Generic
         $broker->view->headScript()->appendFile('yui/build/treeview/treeview-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/connection/connection-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/json/json-min.js', 'text/javascript');
-
-        UI_Form::addHeader();
 
         parent::addHeader($instance);
     }
