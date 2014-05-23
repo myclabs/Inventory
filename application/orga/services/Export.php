@@ -429,7 +429,7 @@ class Orga_Service_Export
         $inputs = [];
         foreach ($aFInputSetPrimary->getInputs() as $input) {
             if (!$input instanceof GroupInput) {
-                $inputs = array_merge($inputs, getInputsDetails($input));
+                $inputs = array_merge($inputs, getInputsDetails($input, $this->translator));
             }
         }
 
@@ -797,10 +797,11 @@ class Orga_Service_Export
 
 }
 
-function getInputsDetails(Input $input, $path = '')
+function getInputsDetails(Input $input,  Translator $translator, $path = '')
 {
     if (($input->getComponent() !== null) && (!$input->isHidden())) {
-        $componentLabel = $input->getComponent()->getLabel();
+
+        $componentLabel = $translator->get($input->getComponent()->getLabel());
         $componentRef = $input->getComponent()->getRef();
     } else {
         return [];
@@ -811,7 +812,7 @@ function getInputsDetails(Input $input, $path = '')
             if (!$subInput instanceof GroupInput) {
                 $subInputs = array_merge(
                     $subInputs,
-                    getInputsDetails($subInput, $path . $componentLabel . '/')
+                    getInputsDetails($subInput, $translator, $path . $componentLabel . '/')
                 );
             }
         }
@@ -824,7 +825,7 @@ function getInputsDetails(Input $input, $path = '')
                     $label = ($number + 1) . ' - ' . $subInputSet->getFreeLabel();
                     $subInputs = array_merge(
                         $subInputs,
-                        getInputsDetails($subInput, $path . $componentLabel . '/' . $label . '/')
+                        getInputsDetails($subInput, $translator, $path . $componentLabel . '/' . $label . '/')
                     );
                 }
             }
@@ -841,7 +842,7 @@ function getInputsDetails(Input $input, $path = '')
                 'label' => $componentLabel,
                 'ref' => $componentRef,
                 'type' => getInputType($input),
-                'values' => getInputValues($input)
+                'values' => getInputValues($input, $translator)
             ]
         ];
     }
@@ -864,7 +865,7 @@ function getInputType(Input $input) {
     }
 }
 
-function getInputValues(Input $input)
+function getInputValues(Input $input, Translator $translator)
 {
     $inputValue = $input->getValue();
     switch (get_class($input)) {
@@ -881,15 +882,15 @@ function getInputValues(Input $input)
                     return [
                         $inputDigitalValue,
                         $inputValue->getRelativeUncertainty(),
-                        $inputValue->getUnit()->getSymbol(),
+                        $translator->get($inputValue->getUnit()->getSymbol()),
                         $baseConvertedValue->getDigitalValue(),
-                        $input->getComponent()->getUnit()->getSymbol(),
+                        $translator->get($input->getComponent()->getUnit()->getSymbol()),
                     ];
                 } catch (\Unit\IncompatibleUnitsException $e) {
                     return [
                         $inputDigitalValue,
                         $inputValue->getRelativeUncertainty(),
-                        $inputValue->getUnit()->getSymbol(),
+                        $translator->get($inputValue->getUnit()->getSymbol()),
                     ];
                 }
             }
@@ -907,7 +908,7 @@ function getInputValues(Input $input)
                         if (empty($value)) {
                             $labels[] = '';
                         } else {
-                            $labels[] = $input->getComponent()->getOptionByRef($value)->getLabel();
+                            $labels[] = $translator->get($input->getComponent()->getOptionByRef($value)->getLabel());
                         }
                     }
                     return [implode(', ', $labels)];
@@ -919,7 +920,7 @@ function getInputValues(Input $input)
             if (empty($inputValue)) {
                 return [''];
             } elseif ($input->getComponent() !== null) {
-                return [$input->getComponent()->getOptionByRef($inputValue)->getLabel()];
+                return [$translator->get($input->getComponent()->getOptionByRef($inputValue)->getLabel())];
             }
             return [$value];
         case CheckboxInput::class:
