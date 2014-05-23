@@ -1008,7 +1008,7 @@ class Orga_CellController extends Core_Controller
             ' <small>'.$this->translator->get($cell->getExtendedLabel()).'</small>'
         );
         $viewConfiguration->setOutputUrl('orga/cell/view/idCell/'.$fromIdCell.'/');
-        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$fromIdCell);
+        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell);
         $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
         $viewConfiguration->setCanBeSavedAs(true);
 
