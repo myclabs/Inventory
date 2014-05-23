@@ -16,7 +16,7 @@ class UI_Form_Condition_Elementary extends UI_Form_Condition
     /**
      * Type of Validator
      *
-     * @var const
+     * @var int
      */
     public $relation;
 
@@ -35,13 +35,11 @@ class UI_Form_Condition_Elementary extends UI_Form_Condition
     public $value;
 
     /**
-     * Constructor
-     *
      * @param string $ref
      * @param Zend_Form_Element $element
-     * @param const $relation
-     * @param unknow $value
-     * @throws Core_Exception_Systeme
+     * @param int $relation
+     * @param mixed $value
+     * @throws Core_Exception
      *             if $ref is unvalid
      */
     public function __construct($ref, $element = null, $relation = null, $value = null)
@@ -69,7 +67,9 @@ class UI_Form_Condition_Elementary extends UI_Form_Condition
                 $scriptListener .= '.change(formAction_'.$actionRef.');';
         }
 
-        if (($this->element instanceof UI_Form_Element_Radio) || ($this->element instanceof UI_Form_Element_MultiCheckbox)) {
+        if (($this->element instanceof UI_Form_Element_Radio)
+            || ($this->element instanceof UI_Form_Element_MultiCheckbox)
+        ) {
             foreach ($this->element->getOptions() as $option) {
                 $scriptListener .= '$(\'#'.$this->element->getId().'_'.$option->value.'\')';
                 $scriptListener .= '.change(function(e) {';
@@ -91,15 +91,17 @@ class UI_Form_Condition_Elementary extends UI_Form_Condition
      *
      * @param string $actionRef unique reference of the action using the condition.
      *
-     * @return String
+     * @throws Core_Exception
+     * @return string
      */
     public function getScriptCondition($actionRef)
     {
         $scriptCondition = '';
 
         $jQueryId = '$(\'#' . $this->element->getId() . '\')';
-        switch (get_class($this->element)) {
-            case 'UI_Form_Element_Pattern_Value':
+
+        switch (true) {
+            case $this->element instanceof UI_Form_Element_Pattern_Value:
                 // On test le cas ou un champ n'a pas été rempli (utile pour les condtions composées
                 $scriptCondition .= 'parseInt('.$jQueryId.'.val()) ' . $this->relation . ' ';
                 if (empty($this->value)) {
@@ -108,30 +110,30 @@ class UI_Form_Condition_Elementary extends UI_Form_Condition
                     $scriptCondition .= $this->value;
                 }
                 break;
-            case 'UI_Form_Element_Text':
-            case 'UI_Form_Element_Select':
-            case 'UI_Form_Element_MultiSelect':
+            case $this->element instanceof UI_Form_Element_Text:
+            case $this->element instanceof UI_Form_Element_Select:
+            case $this->element instanceof UI_Form_Element_MultiSelect:
                 $scriptCondition .= $jQueryId.'.val() ' . $this->relation . ' \'' . $this->value . '\'';
                 break;
-            case 'UI_Form_Element_Checkbox':
+            case $this->element instanceof UI_Form_Element_Checkbox:
                 $checked = $this->value ? 'true' : 'false';
                 $scriptCondition .= $jQueryId.'.prop(\'checked\') ' . $this->relation . ' ' . $checked;
                 break;
-            case 'UI_Form_Element_Radio':
+            case $this->element instanceof UI_Form_Element_Radio:
                 $jQueryId = '$(\'#' . $this->element->getId() . '_' . $this->value . '\')';
-                $scriptCondition .= $jQueryId . '.attr(\'checked\') ' . $this->relation . ' \'checked\'';
+                $scriptCondition .= $jQueryId . '.prop(\'checked\') ' . $this->relation . ' true';
                 break;
-            case 'UI_Form_Element_MultiCheckbox':
+            case $this->element instanceof UI_Form_Element_MultiCheckbox:
                 if ($this->value !== null) {
                     $jQueryId = '$(\'#' . $this->element->getId() . '_' . $this->value . '\')';
-                    $scriptCondition .= $jQueryId.'.attr(\'checked\') ' . $this->relation . ' \'checked\'';
+                    $scriptCondition .= $jQueryId.'.prop(\'checked\') ' . $this->relation . ' true';
                 } else {
                     $jQueryId = '$(\'input[name=' . $this->element->getName() . ']:selected\')';
                     $scriptCondition .= $jQueryId . '.length ' . $this->relation . ' ' . $this->value;
                 }
                 break;
             default:
-                throw new Core_Exception_Systeme('Condition error');
+                throw new Core_Exception('Condition error');
         }
 
         return $scriptCondition;
@@ -149,27 +151,28 @@ class UI_Form_Condition_Elementary extends UI_Form_Condition
         $scriptParam = '';
 
         $jQueryId = '$(\'#' . $this->element->getId() . '\')';
-        switch (get_class($this->element)) {
-            case 'UI_Form_Element_Pattern_Value':
+
+        switch (true) {
+            case $this->element instanceof UI_Form_Element_Pattern_Value:
                 $scriptParam .= $this->element->getId() . '=\' + ' . $jQueryId . '.val() + \'';
                 if (!is_null($this->element->getPercent())) {
                     $scriptParam .= '&' . $this->element->getPercent()->getId()
                                  . '=\' + $(\'#' . $this->element->getPercent()->getId() . '\').val() + \'';
                 }
                 break;
-            case 'UI_Form_Element_Text':
-            case 'UI_Form_Element_Select':
-            case 'UI_Form_Element_MultiSelect':
+            case $this->element instanceof UI_Form_Element_Text:
+            case $this->element instanceof UI_Form_Element_Select:
+            case $this->element instanceof UI_Form_Element_MultiSelect:
                 $scriptParam .= $this->element->getId() . '=\' + ' . $jQueryId . '.val()+\'';
                 break;
-            case 'UI_Form_Element_Checkbox':
+            case $this->element instanceof UI_Form_Element_Checkbox:
                 $scriptParam .= $this->element->getId() . '=\' + ' . $jQueryId . '.attr(\'checked\') + \'';
                 break;
-            case 'UI_Form_Element_Radio':
+            case $this->element instanceof UI_Form_Element_Radio:
                 $jQueryId = '$(\'#' . $this->element->getId() . $this->value . '\')';
                 $scriptParam .= $this->element->getId().$this->value . '=\' + ' . $jQueryId . '.attr(\'checked\') + \'';
                 break;
-            case 'UI_Form_Element_MultiCheckbox':
+            case $this->element instanceof UI_Form_Element_MultiCheckbox:
                 if ($this->value !== null) {
                     $jQueryId = '$(\'#'.$this->element->getId().$this->value.'\')';
                     $scriptParam .= $this->element->getId().$this->value
