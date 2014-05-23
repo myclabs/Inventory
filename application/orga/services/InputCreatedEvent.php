@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class Orga_Service_InputCreatedEvent extends Event implements UserEvent
 {
-    use \User\Domain\Event\UserEventTrait;
+    use UserEventTrait;
 
     const NAME = 'orga.inputCreated';
 
@@ -21,9 +21,6 @@ class Orga_Service_InputCreatedEvent extends Event implements UserEvent
      */
     private $cell;
 
-    /**
-     * @param Orga_Model_Cell $cell
-     */
     public function __construct(Orga_Model_Cell $cell)
     {
         $this->cell = $cell;

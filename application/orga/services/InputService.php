@@ -29,11 +29,6 @@ class Orga_Service_InputService
      */
     private $workDispatcher;
 
-    /**
-     * @param InputService    $afInputService
-     * @param EventDispatcher $eventDispatcher
-     * @param WorkDispatcher  $workDispatcher
-     */
     public function __construct(
         InputService $afInputService,
         EventDispatcher $eventDispatcher,
