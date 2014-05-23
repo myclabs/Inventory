@@ -2,6 +2,7 @@
 
 namespace Inventory\Command;
 
+use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use AF\Domain\Category as AFCategory;
 use Serializer\CustomSerializerForMigration;
 use Symfony\Component\Console\Command\Command;
@@ -30,6 +31,15 @@ class ExportCommand extends Command
         $root = PACKAGE_PATH . '/data/exports/migration-3.0';
 
         $serializer = new CustomSerializerForMigration([
+            \AF\Domain\Output\OutputElement::class => [
+                'properties' => [
+                    'algo' => [
+                        'transform' => function (NumericAlgo $algo) {
+                                return $algo->getRef();
+                            },
+                    ],
+                ],
+            ],
             \Orga\Model\ACL\Role\OrganizationAdminRole::class => [ 'exclude' => true ],
             \Orga\Model\ACL\Role\CellAdminRole::class => [ 'exclude' => true ],
             \Orga\Model\ACL\Role\CellManagerRole::class => [ 'exclude' => true ],
@@ -59,6 +69,36 @@ class ExportCommand extends Command
                         'exclude' => true,
                     ],
                 ],
+            ],
+            \Social_Model_Comment::class => [
+                'properties' => [
+                    'author' => [
+                        'transform' => function (User $author) {
+                                return $author->getEmail();
+                            },
+                    ],
+                ],
+            ],
+            \Orga_Model_Cell::class => [
+                'properties' => [
+                    'acl' => [ 'exclude' => true ],
+                    'dwResults' => [ 'exclude' => true ],
+                ],
+            ],
+            \Orga_Model_CellsGroup::class => [
+                'properties' => [
+                    'aF' => [
+                        'transform' => function (\AF\Domain\AF $af) {
+                                return $af->getRef();
+                            },
+                    ],
+                ],
+            ],
+            \Calc_UnitValue::class => [
+                'serialize' => true,
+            ],
+            \Calc_Value::class => [
+                'serialize' => true,
             ],
         ]);
 
@@ -115,7 +155,7 @@ class ExportCommand extends Command
                         foreach ($cell->getContributorRoles() as $cellContributor) {
                             $cellContributors[] = $cellContributor->getUser()->getEmail();
                         }
-                        $cellObserver = [];
+                        $cellObservers = [];
                         foreach ($cell->getObserverRoles() as $cellObserver) {
                             $cellObservers[] = $cellObserver->getUser()->getEmail();
                         }
@@ -230,8 +270,7 @@ class ExportCommand extends Command
                         ],
                     ],
                 ],
-            ],
-            false
+            ]
         );
         file_put_contents($root . '/reports.json', $reportsSerializer->serialize($reportsData));
 
