@@ -77,11 +77,6 @@ class DW_Model_Member extends Core_Model_Entity
     private $results = null;
 
 
-    /**
-     * Constructeur de la classe Member.
-     *
-     * @param DW_Model_Axis $axis
-     */
     public function __construct(DW_Model_Axis $axis)
     {
         $this->label = new TranslatedString();
@@ -101,7 +96,7 @@ class DW_Model_Member extends Core_Model_Entity
      */
     protected function getContext()
     {
-        return array('axis' => $this->axis);
+        return ['axis' => $this->axis];
     }
 
     /**
@@ -231,7 +226,7 @@ class DW_Model_Member extends Core_Model_Entity
      *
      * @param DW_Model_Member $parentMember
      */
-    public function removeDirectParent($parentMember)
+    public function removeDirectParent(DW_Model_Member $parentMember)
     {
         if ($this->hasDirectParent($parentMember)) {
             $this->directParents->removeElement($parentMember);
@@ -285,12 +280,12 @@ class DW_Model_Member extends Core_Model_Entity
      *
      * @return DW_Model_Member
      */
-    public function getParentForAxis($axis)
+    public function getParentForAxis(DW_Model_Axis $axis)
     {
         foreach ($this->directParents as $directParent) {
             if ($directParent->getAxis() === $axis) {
                 return $directParent;
-            } else if ($axis->isBroaderThan($directParent->getAxis())) {
+            } elseif ($axis->isBroaderThan($directParent->getAxis())) {
                 return $directParent->getParentForAxis($axis);
             }
         }
@@ -327,7 +322,7 @@ class DW_Model_Member extends Core_Model_Entity
      *
      * @param DW_Model_Member $childMember
      */
-    public function removeDirectChild($childMember)
+    public function removeDirectChild(DW_Model_Member $childMember)
     {
         if ($this->hasDirectChild($childMember)) {
             $this->directChildren->removeElement($childMember);
@@ -362,7 +357,7 @@ class DW_Model_Member extends Core_Model_Entity
      */
     public function getAllChildren()
     {
-        $children = array();
+        $children = [];
         foreach ($this->directChildren as $directChild) {
             $children[] = $directChild;
             foreach ($directChild->getAllChildren() as $recursiveChildren) {
@@ -379,17 +374,16 @@ class DW_Model_Member extends Core_Model_Entity
      *
      * @return DW_Model_Member[]
      */
-    public function getChildrenForAxis($axis)
+    public function getChildrenForAxis(DW_Model_Axis $axis)
     {
         if ($this->getAxis()->getDirectNarrower() === $axis) {
             return $this->getDirectChildren();
         } else {
-            $children = array();
+            $children = [];
             foreach ($this->directChildren as $directChild) {
                 $children = array_merge($children, $directChild->getChildrenForAxis($axis));
             }
             return array_unique($children, SORT_REGULAR);
         }
     }
-
 }

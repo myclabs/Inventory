@@ -4,6 +4,7 @@
  * @package    DW
  * @subpackage Model
  */
+
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -14,7 +15,6 @@ use Doctrine\ORM\QueryBuilder;
  */
 class DW_Model_Repository_Report extends Core_Model_Repository
 {
-
     /**
      * Renvoie un tableau des valeurs du Report donnés.
      *
@@ -22,7 +22,7 @@ class DW_Model_Repository_Report extends Core_Model_Repository
      *
      * @return array
      */
-    public function getValuesForReport($report)
+    public function getValuesForReport(DW_Model_Report $report)
     {
         $numerator = $report->getNumerator();
         $denominator = $report->getDenominator();
@@ -33,8 +33,12 @@ class DW_Model_Repository_Report extends Core_Model_Repository
 
         if ($denominator !== null) {
             $isRatio = true;
-            $numeratorConversionFactor = $numerator->getRatioUnit()->getConversionFactor($numerator->getUnit()->getRef());
-            $denominatorConversionFactor = $denominator->getRatioUnit()->getConversionFactor($denominator->getUnit()->getRef());
+            $numeratorConversionFactor = $numerator->getRatioUnit()->getConversionFactor(
+                $numerator->getUnit()->getRef()
+            );
+            $denominatorConversionFactor = $denominator->getRatioUnit()->getConversionFactor(
+                $denominator->getUnit()->getRef()
+            );
             $conversionFactor = $numeratorConversionFactor / $denominatorConversionFactor;
             // Tableau des identifiants des valeurs du dénominateurs indexées par l'identifiant de celle du numérateur.
             $membersLink = [];
@@ -71,12 +75,12 @@ class DW_Model_Repository_Report extends Core_Model_Repository
                     $parentMembersId = '';
                     if (($numeratorAxis1 !== null) && ($numeratorAxis1 === $denominatorAxis1)) {
                         $parentMembersId .= $numeratorMember1->getId();
-                    } else if (($numeratorAxis1 !== null) && ($denominatorAxis1 !== null)) {
+                    } elseif (($numeratorAxis1 !== null) && ($denominatorAxis1 !== null)) {
                         $parentMembersId .= $numeratorMember1->getParentForAxis($denominatorAxis1)->getId();
                     }
                     if (($numeratorAxis2 !== null) && ($numeratorAxis2 === $denominatorAxis2)) {
                         $parentMembersId .= '#'.$numeratorMember2->getId();
-                    } else if (($numeratorAxis2 !== null) && ($denominatorAxis2 !== null)) {
+                    } elseif (($numeratorAxis2 !== null) && ($denominatorAxis2 !== null)) {
                         $parentMembersId .= '#'.$numeratorMember2->getParentForAxis($denominatorAxis2)->getId();
                     }
                     $membersLink[$identifierValue] = $parentMembersId;
@@ -140,7 +144,9 @@ class DW_Model_Repository_Report extends Core_Model_Repository
             // Calcul des ratios.
             foreach ($values as $numeratorIdentifier => $value) {
                 $denominatorIdentifier = $membersLink[$numeratorIdentifier];
-                if ((isset($ratioValues[$denominatorIdentifier])) && ($ratioValues[$denominatorIdentifier]['value'] != 0)) {
+                if ((isset($ratioValues[$denominatorIdentifier]))
+                    && ($ratioValues[$denominatorIdentifier]['value'] != 0)
+                ) {
                     $values[$numeratorIdentifier]['value'] /= $ratioValues[$denominatorIdentifier]['value'];
                     $values[$numeratorIdentifier]['uncertainty'] = sqrt(
                         pow($values[$numeratorIdentifier]['uncertainty'], 2)
@@ -160,7 +166,7 @@ class DW_Model_Repository_Report extends Core_Model_Repository
         if (($report->getNumeratorAxis2() === null)
             && ($report->getSortType() === DW_Model_Report::SORT_VALUE_INCREASING)) {
             usort($values, ['DW_Model_Repository_Report', 'orderResultByIncreasingValue']);
-        } else if (($report->getNumeratorAxis2() === null)
+        } elseif (($report->getNumeratorAxis2() === null)
             && ($report->getSortType() === DW_Model_Report::SORT_VALUE_DECREASING)) {
             usort($values, ['DW_Model_Repository_Report', 'orderResultByDecreasingValue']);
         } else {
@@ -179,7 +185,7 @@ class DW_Model_Repository_Report extends Core_Model_Repository
      *
      * @return DW_Model_Result[]
      */
-    protected function getResultForIndicatorAndAxes(DW_Model_Indicator $indicator, array $axes, $filters=[])
+    protected function getResultForIndicatorAndAxes(DW_Model_Indicator $indicator, array $axes, $filters = [])
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
 
@@ -287,17 +293,17 @@ class DW_Model_Repository_Report extends Core_Model_Repository
      *
      * @return int
      */
-    protected function orderResultByValue($a, $b, $increasing=true)
+    protected function orderResultByValue($a, $b, $increasing = true)
     {
         $multiplier = ($increasing) ? 1 : -1;
 
         if ($a['value'] > $b['value']) {
             return $multiplier * 1;
-        } else if ($a['value'] < $b['value']) {
+        } elseif ($a['value'] < $b['value']) {
             return - $multiplier * 1;
-        } else if ($a['uncertainty'] > $b['uncertainty']) {
+        } elseif ($a['uncertainty'] > $b['uncertainty']) {
             return $multiplier * 1;
-        } else if ($a['uncertainty'] < $b['uncertainty']) {
+        } elseif ($a['uncertainty'] < $b['uncertainty']) {
             return - $multiplier * 1;
         } else {
             return 0;
@@ -319,5 +325,4 @@ class DW_Model_Repository_Report extends Core_Model_Repository
         }
         return $a['members'][0]->getPosition() - $b['members'][0]->getPosition();
     }
-
 }
