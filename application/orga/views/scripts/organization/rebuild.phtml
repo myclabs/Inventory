@@ -4,45 +4,35 @@
 <div>
     <form action="orga/organization/rebuild-data/idOrganization/<?=$this->organization->getId()?>/" class="rebuild-data">
         <div class="input-group">
-            <?php if (count($this->cellsData) > 1) : ?>
-                <select name="cell">
-                    <?php foreach ($this->cellsData as $cellIndex => $cellData) : ?>
-                        <?php if ($cellData instanceof Orga_Model_Organization) : ?>
-                            <option value=""><?=$this->translate($cellData->getLabel())?></option>
+            <?php if (count($this->granularitiesData) > 1) : ?>
+                <span class="input-group-addon granularity-label">Sélection d'un niveau</span>
+                <select name="granularity" style="width: 100%;">
+                    <?php foreach ($this->granularitiesData as $granularityData) : ?>
+                        <?php if ($granularityData instanceof Orga_Model_Organization) : ?>
+                            <option value=""><?=$this->translate($granularityData->getLabel())?></option>
                         <?php else : ?>
-                            <option value="<?=$cellData->getId()?>"><?=$this->translate($cellData->getLabel())?></option>
+                            <option value="<?=$granularityData->getRef()?>"><?=$this->translate($granularityData->getLabel())?></option>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </select>
+                <span class="input-group-addon cell-label<?=(($this->canEditOrganization) ? ' hide' : '')?>">Choix de la cellule</span>
+                <input type="text" name="cell" class="cell<?=(($this->canEditOrganization) ? ' hide' : '')?>" style="width: 100%;">
             <?php else : ?>
-                <input type="text" name="cell" class="disabled" disabled value="<?=$this->translate(reset($this->cellsData)->getLabel())?>" class="form-control">
+                <input type="hidden" name="granularity" value="<?=reset($this->granularitiesData)->getId()?>">
+                <span class="input-group-addon cell-label">Choix de la cellule</span>
+                <input type="text" name="cell" class="cell" style="width: 100%;">
             <?php endif; ?>
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary dw-action">
-                        <i class="fa fa-refresh"></i>
-                        <span>
-                            <?=___('DW', 'rebuild', 'analysisDataRebuildButton')?>
-                        </span>
-                    </button>
-                </span>
-            <?php if (count($this->cellsData) > 1) : ?>
-            <?php endif; ?>
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary dw-action">
+                    <i class="fa fa-refresh"></i>
+                    <span>
+                        <?=___('DW', 'rebuild', 'analysisDataRebuildButton')?>
+                    </span>
+                </button>
+            </span>
         </div>
     </form>
     <script type="text/javascript">
-        $('.rebuild-data  select[name="cell"]').select2({
-            matcher: function(term, text) {
-                var terms = term.split(' ');
-                for (var termIndex in terms) {
-                    if ((terms[termIndex] != '')
-                        && (text.toUpperCase().indexOf(terms[termIndex].toUpperCase()) < 0)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        });
-        $('.rebuild-data .select2-container').css('width', '100%');
         $('body').on('submit', '.rebuild-data', function(e) {
             e.preventDefault();
             var form = $(this);
@@ -90,41 +80,25 @@
     <p><?=___('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
     <form action="orga/organization/rebuild-results/idOrganization/<?=$this->organization->getId()?>/" class="rebuild-results">
         <div class="input-group">
-            <?php if (count($this->cellsResults) > 1) : ?>
-                <select name="cell">
-                    <?php foreach ($this->cellsResults as $cellResults) : ?>
-                        <option value="<?=$cellResults->getId()?>"><?=$this->translate($cellResults->getLabel())?></option>
-                    <?php endforeach; ?>
-                </select>
-            <?php else : ?>
-                <input type="text" name="cell" class="disabled" disabled value="<?=$this->translate(reset($this->cellsResults)->getLabel())?>" class="form-control">
-            <?php endif; ?>
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary dw-action">
-                        <i class="fa fa-refresh"></i>
-                        <span>
+            <span class="input-group-addon granularity-label">Sélection d'un niveau</span>
+            <select name="granularity" style="width: 100%;">
+                <?php foreach ($this->granularitiesResults as $granularityResults) : ?>
+                    <option value="<?=$granularityResults->getRef()?>"><?=$this->translate($granularityResults->getLabel())?></option>
+                <?php endforeach; ?>
+            </select>
+            <span class="input-group-addon cell-label hide">Choix de la cellule</span>
+            <input type="text" name="cell" class="cell hide" style="width: 100%;">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary dw-action">
+                    <i class="fa fa-refresh"></i>
+                    <span>
                             <?=___('DW', 'rebuild', 'outputDataRebuildButton')?>
-                        </span>
-                    </button>
-                </span>
-            <?php if (count($this->cellsResults) > 1) : ?>
-            <?php endif; ?>
+                    </span>
+                </button>
+            </span>
         </div>
     </form>
     <script type="text/javascript">
-        $('.rebuild-results  select[name="cell"]').select2({
-            matcher: function(term, text) {
-                var terms = term.split(' ');
-                for (var termIndex in terms) {
-                    if ((terms[termIndex] != '')
-                        && (text.toUpperCase().indexOf(terms[termIndex].toUpperCase()) < 0)) {
-                        return false;
-                    }
-                }
-                return true;
-            }
-        });
-        $('.rebuild-results .select2-container').css('width', '100%');
         $('body').on('submit', '.rebuild-results', function(e) {
             e.preventDefault();
             var form = $(this);
@@ -165,3 +139,49 @@
     </script>
 </fieldset>
 <?php endif; ?>
+
+<script type="text/javascript">
+    $('select[name="granularity"]').on('change', function () {
+        $('.cell', $(this).closest('form')).select2('val', '');
+        if (($(this).val() == '') || ($(this).val() == 'global')) {
+            $('.cell-label, .cell', $(this).closest('form')).addClass('hide');
+        } else {
+            $('.cell-label, .cell', $(this).closest('form')).removeClass('hide');
+        }
+    });
+    $('[name="granularity"]').select2({
+        matcher: function(term, text) {
+            var terms = term.split(' ');
+            for (var termIndex in terms) {
+                if ((terms[termIndex] != '')
+                    && (text.toUpperCase().indexOf(terms[termIndex].toUpperCase()) < 0)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    });
+    $('[name="cell"]').select2({
+        placeholder: "Rechercher une cellule",
+        minimumInputLength: 1,
+        ajax: {
+            url: function () {
+                $(this);
+                return 'orga/organization/rebuild-list-cell/idOrganization/<?=$this->organization->getId()?>/refGranularity/'
+                    + $('select[name="granularity"]', $(this).closest('form')).val()
+                    + '/';
+            },
+            dataType: 'json',
+            data: function (term) {
+                return {
+                    q: term
+                };
+            },
+            results: function (data) {
+                return { results: data };
+            }
+        },
+        dropdownCssClass: "bigdrop",
+        escapeMarkup: function (m) { return m; }
+    });
+</script>

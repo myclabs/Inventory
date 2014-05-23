@@ -1048,40 +1048,58 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign('organization', $organization);
 
-        $cellsData = [];
+        $granularities = [];
 
         $userCanEditOrganization = $this->acl->isAllowed($connectedUser, Actions::EDIT, $organization);
         $this->view->assign('canEditOrganization', $userCanEditOrganization);
         if ($userCanEditOrganization) {
-            $cellsData[] = $organization;
             $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
-            $cellsResults = [$globalCell];
+            $granularitesResults = [$globalCell->getGranularity()];
             foreach ($globalCell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-                foreach ($narrowerGranularity->getCells() as $childCell) {
-                    $cellsResults[] = $childCell;
-                }
+                $granularitesResults[] = $narrowerGranularity;
             }
-            $this->view->assign('cellsResults', $cellsResults);
+            $this->view->assign('granularitiesResults', $granularitesResults);
 
             $topCells = [$globalCell];
         } else {
             /** @var Orga_Model_Cell[] $topCells */
-            $topCells = $this->acl->getTopCellsWithAccessForOrganization(
+            $topCells = $this->orgaACLManager->getTopCellsWithAccessForOrganization(
                 $connectedUser,
                 $organization,
                 [CellAdminRole::class]
             )['cells'];
 
         }
+
         foreach ($topCells as $topCell) {
-            $cellsData[$topCell->getId()] = $topCell;
-            foreach ($topCell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-                foreach ($topCell->getChildCellsForGranularity($narrowerGranularity) as $childCell) {
-                    $cellsData[$childCell->getId()] = $childCell;
+            $granularity = $topCell->getGranularity();
+            if ($granularity->getDWCube()) {
+                $granularities[$granularity->getId()] = $granularity;
+            }
+            foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {
+                if ($narrowerGranularity->getCellsGenerateDWCubes()) {
+                    $granularities[$narrowerGranularity->getId()] = $narrowerGranularity;
                 }
             }
         }
-        $this->view->assign('cellsData', $cellsData);
+
+        $granularitiesData = [];
+        foreach ($granularities as $idGranularity => $granularity) {
+            $granularitiesData[$idGranularity] = $granularity;
+            foreach ($granularity->getBroaderGranularities() as $broaderGranularity) {
+                $granularitiesData[$broaderGranularity->getId()] = $broaderGranularity;
+            }
+        }
+        @uasort(
+            $granularitiesData,
+            function (Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
+                return $a->getPosition() - $b->getPosition();
+            }
+        );
+        if ($userCanEditOrganization) {
+            array_unshift($granularities, $organization);
+        }
+        $this->view->assign('granularitiesData', $granularities);
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
@@ -1094,22 +1112,69 @@ class Orga_OrganizationController extends Core_Controller
     /**
      * @Secure("editOrganizationAndCells")
      */
+    public function rebuildListCellAction()
+    {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $refGranularity = $this->getParam('refGranularity');
+        /** @var Orga_Model_Granularity $granularity */
+        $granularity = $organization->getGranularityByRef($refGranularity);
+
+        $searches = array_map('strtolower', explode(' ', $this->getParam('q')));
+        $querySearch = new Core_Model_Query();
+        $querySearch->filter->addCondition('granularity', $granularity);
+        $querySearch->aclFilter->enable($connectedUser, Actions::VIEW);
+
+        $cells = [];
+        foreach (Orga_Model_Cell::loadList($querySearch) as $cell) {
+            $cellLabel = $this->translator->get($cell->getLabel());
+            $lowerCellLabel = strtolower($cellLabel);
+            foreach ($searches as $search) {
+                if (!empty($search) && (strpos(strtolower($cellLabel), $search) === false)) {
+                    continue 2;
+                }
+            }
+            $cells[] = ['id' => $cell->getId(), 'text' => $cellLabel];
+        }
+
+        $this->sendJsonResponse($cells);
+    }
+
+    /**
+     * @Secure("editOrganizationAndCells")
+     */
     public function rebuildDataAction()
     {
         $idOrganization = $this->getParam('idOrganization');
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        $idCell = $this->getParam('cell');
-        if (empty($idCell)) {
+        $refGranularity = $this->getParam('granularity');
+        if (empty($refGranularity)) {
             $taskName = 'resetOrganizationDWCubes';
             $taskParameters = [$organization];
             $organizationalUnit = __('Orga', 'organization', 'forWorkspace', [
                 'LABEL' => $this->translator->get($organization->getLabel())
             ]);
         } else {
+            $idCell = $this->getParam('cell');
+            if (empty($idCell) && ($refGranularity !== 'global')) {
+                throw new Core_Exception_User('DW', 'rebuild', 'noCubeSelected');
+            }
+            if ($refGranularity === 'global') {
+                /** @var Orga_Model_Granularity $granularity */
+                $granularity = $organization->getGranularityByRef($refGranularity);
+                $cell = $granularity->getCellByMembers([]);
+            } else {
+                $cell = Orga_Model_Cell::load($idCell);
+            }
+
             $taskName = 'resetCellAndChildrenDWCubes';
-            $cell = Orga_Model_Cell::load($this->getParam('cell'));
             $taskParameters = [$cell];
             $organizationalUnit = __('Orga', 'organization', 'forOrganizationalUnit', [
                 'LABEL' => $this->translator->get($cell->getLabel())
@@ -1141,7 +1206,23 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function rebuildResultsAction()
     {
-        $cell = Orga_Model_Cell::load($this->getParam('cell'));
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $refGranularity = $this->getParam('granularity');
+        $idCell = $this->getParam('cell');
+        if (empty($idCell) && ($refGranularity !== 'global')) {
+            throw new Core_Exception_User('DW', 'rebuild', 'noCubeSelected');
+        }
+
+        if ($refGranularity === 'global') {
+            /** @var Orga_Model_Granularity $granularity */
+            $granularity = $organization->getGranularityByRef($refGranularity);
+            $cell = $granularity->getCellByMembers([]);
+        } else {
+            $cell = Orga_Model_Cell::load($idCell);
+        }
 
         $success = function () {
             $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage')]);
