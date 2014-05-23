@@ -552,7 +552,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
         data: { firstCell: $(this).attr('data-first-cell'), showCells: $('.cells-filter :input[name="show-cells"]', $(this)).val(), filters: $('.cells-filter :input[name!="show-cells"]', $(this)).serializeArray() },
         success: function(data) {
             granularity.attr('data-filtered-cells', data.totalCells);
-            granularityInfo.html(granularity.attr('data-filtered-cells') + ' / ' + granularity.closest('.collapse').attr('data-total-cells'));
+            granularityInfo.html(granularity.attr('data-filtered-cells') + ' / ' + granularity.parent().attr('data-total-cells'));
             $(data.childCells).each(function() {
                 var cellTitle = '';
                 for (var refAxis in this.members) {
