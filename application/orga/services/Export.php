@@ -440,7 +440,7 @@ class Orga_Service_Export
         $inputs = [];
         foreach ($aFInputSetPrimary->getInputs() as $input) {
             if (!$input instanceof GroupInput) {
-                $inputs = array_merge($inputs, $this->getInputsDetails($input));
+                $inputs = array_merge($inputs, $this->getInputsDetails($input, $this->translator));
             }
         }
 
@@ -816,10 +816,10 @@ class Orga_Service_Export
         );
     }
 
-    private function getInputsDetails(Input $input, $path = '')
+    private function getInputsDetails(Input $input, Translator $translator, $path = '')
     {
         if (($input->getComponent() !== null) && (!$input->isHidden())) {
-            $componentLabel = $input->getComponent()->getLabel();
+            $componentLabel = $translator->get($input->getComponent()->getLabel());
             $componentRef = $input->getComponent()->getRef();
         } else {
             return [];
@@ -830,7 +830,7 @@ class Orga_Service_Export
                 if (!$subInput instanceof GroupInput) {
                     $subInputs = array_merge(
                         $subInputs,
-                        $this->getInputsDetails($subInput, $path . $this->translator->get($componentLabel) . '/')
+                        $this->getInputsDetails($subInput, $translator, $path . $this->translator->get($componentLabel) . '/')
                     );
                 }
             }
@@ -863,7 +863,7 @@ class Orga_Service_Export
                     'label' => $componentLabel,
                     'ref' => $componentRef,
                     'type' => $this->getInputType($input),
-                    'values' => $this->getInputValues($input)
+                    'values' => $this->getInputValues($input, $translator)
                 ]
             ];
         }
@@ -891,7 +891,7 @@ class Orga_Service_Export
         }
     }
 
-    private function getInputValues(Input $input)
+    private function getInputValues(Input $input, Translator $translator)
     {
         $inputValue = $input->getValue();
 
@@ -911,15 +911,15 @@ class Orga_Service_Export
                         return [
                             $inputDigitalValue,
                             $inputValue->getRelativeUncertainty(),
-                            $inputValue->getUnit()->getSymbol(),
+                            $translator->get($inputValue->getUnit()->getSymbol()),
                             $baseConvertedValue->getDigitalValue(),
-                            $component->getUnit()->getSymbol(),
+                            $translator->get($component->getUnit()->getSymbol()),
                         ];
                     } catch (IncompatibleUnitsException $e) {
                         return [
                             $inputDigitalValue,
                             $inputValue->getRelativeUncertainty(),
-                            $inputValue->getUnit()->getSymbol(),
+                            $translator->get($inputValue->getUnit()->getSymbol()),
                         ];
                     }
                 }
@@ -939,7 +939,7 @@ class Orga_Service_Export
                             if (empty($value)) {
                                 $labels[] = '';
                             } else {
-                                $labels[] = $component->getOptionByRef($value)->getLabel();
+                                $labels[] = $translator->get($component->getOptionByRef($value)->getLabel());
                             }
                         }
                         return [implode(', ', $labels)];
@@ -954,7 +954,7 @@ class Orga_Service_Export
                 if (empty($inputValue)) {
                     return [''];
                 } elseif ($component !== null) {
-                    return [$component->getOptionByRef($inputValue)->getLabel()];
+                    return [$translator->get($component->getOptionByRef($inputValue)->getLabel())];
                 }
                 return [$inputValue];
 
