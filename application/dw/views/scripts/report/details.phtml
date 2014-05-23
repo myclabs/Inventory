@@ -323,6 +323,18 @@ $(document).ready(function() {
         selectDisplayType.trigger('change');
     });
     $('input[name="sumAxisNumberChoice"], input[name="ratioAxisNumberChoice"]').trigger('change');
+    $('select[name="ratioNumeratorAxisOne"], select[name="ratioNumeratorAxisTwo"]').on('change', function() {
+        var denominatorSelect = $('select[name="' + $(this).attr('name').replace(/Numerator/g, 'Denominator') + '"]');
+        if ((typeof(denominatorSelect.attr('data-options')) === 'undefined')
+            || (denominatorSelect.attr('data-options') === false)) {
+            denominatorSelect.attr('data-options', denominatorSelect.html());
+        }
+        denominatorSelect.html(denominatorSelect.attr('data-options'));
+        $('option:not(.' + $(this).val() + ')', denominatorSelect).remove();
+        denominatorSelect.prepend('<option value=""></option>');
+        denominatorSelect.val('');
+    });
+    $('select[name="ratioNumeratorAxisOne"], select[name="ratioNumeratorAxisTwo"]').trigger('change');
     $('select[name="displayType"]').on('change', function() {
         var currentForm = $(this).closest('form');
 
