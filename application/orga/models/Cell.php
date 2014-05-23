@@ -6,6 +6,7 @@ use Core\Translation\TranslatedString;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Selectable;
 use MyCLabs\ACL\Model\EntityResource;
 use Orga\Model\ACL\AbstractCellRole;
 use Orga\Model\ACL\CellAdminRole;
@@ -648,7 +649,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      * @param Orga_Model_Granularity $narrowerGranularity
      *
      * @throws Core_Exception_InvalidArgument The given granularity is not narrower than the current
-     * @return Collection|Orga_Model_Cell[]
+     * @return Collection|Selectable|Orga_Model_Cell[]
      */
     public function getChildCellsForGranularity(Orga_Model_Granularity $narrowerGranularity)
     {

@@ -1,5 +1,8 @@
 <?php
 
+use AF\Domain\Component\NumericField;
+use AF\Domain\Component\Select\SelectMulti;
+use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Input\Input;
 use AF\Domain\Input\TextFieldInput;
 use AF\Domain\Input\NumericFieldInput;
@@ -17,6 +20,7 @@ use Classification\Domain\Indicator;
 use Mnapoli\Translated\AbstractTranslatedString;
 use Mnapoli\Translated\Translator;
 use Orga\Model\ACL\AbstractCellRole;
+use Unit\IncompatibleUnitsException;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
@@ -38,7 +42,7 @@ class Orga_Service_Export
     {
         $this->translator = $translator;
 
-        ini_set('memory_limit','2G');
+        ini_set('memory_limit', '2G');
     }
 
     /**
@@ -59,9 +63,18 @@ class Orga_Service_Export
         $modelBuilder->bind('organizationSheetLabel', __('Orga', 'configuration', 'generalInfoTab'));
 
         $modelBuilder->bind('organizationColumnLabel', __('UI', 'name', 'label'));
-        $modelBuilder->bind('organizationColumnGranularityForInventoryStatus', __('Orga', 'configuration', 'granularityForInventoryStatus'));
-        $modelBuilder->bind('organizationInputGranularityColumnInput', __('Orga', 'inputGranularities', 'inputGranularity'));
-        $modelBuilder->bind('organizationInputGranularityColumnInputConfig', __('Orga', 'inputGranularities', 'inputConfigGranularity'));
+        $modelBuilder->bind(
+            'organizationColumnGranularityForInventoryStatus',
+            __('Orga', 'configuration', 'granularityForInventoryStatus')
+        );
+        $modelBuilder->bind(
+            'organizationInputGranularityColumnInput',
+            __('Orga', 'inputGranularities', 'inputGranularity')
+        );
+        $modelBuilder->bind(
+            'organizationInputGranularityColumnInputConfig',
+            __('Orga', 'inputGranularities', 'inputConfigGranularity')
+        );
 
         // Feuille des Axis.
         $modelBuilder->bind('axesSheetLabel', __('UI', 'name', 'axes'));
@@ -427,7 +440,7 @@ class Orga_Service_Export
         $inputs = [];
         foreach ($aFInputSetPrimary->getInputs() as $input) {
             if (!$input instanceof GroupInput) {
-                $inputs = array_merge($inputs, getInputsDetails($input));
+                $inputs = array_merge($inputs, $this->getInputsDetails($input));
             }
         }
 
@@ -475,7 +488,7 @@ class Orga_Service_Export
                     case PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE:
                         return __('AF', 'inputInput', 'statusCalculationIncomplete');
                         break;
-                    case PrimaryInputSet::STATUS_INPUT_INCOMPLETE;
+                    case PrimaryInputSet::STATUS_INPUT_INCOMPLETE:
                         return __('AF', 'inputInput', 'statusInputIncomplete');
                         break;
                     default:
@@ -581,7 +594,8 @@ class Orga_Service_Export
                 $criteria->where($criteria->expr()->eq('relevant', true));
                 $criteria->where($criteria->expr()->eq('allParentsRelevant', true));
                 $criteria->orderBy(['tag' => 'ASC']);
-                $childCells = $cell->getChildCellsForGranularity($granularity)->matching($criteria)->toArray();
+                /** @var Orga_Model_Cell[] $childCells */
+                $childCells = $cell->getChildCellsForGranularity($granularity)->matching($criteria);
             }
             foreach ($childCells as $childCell) {
                 $childCellFile = $inputsExportsDirectory . $childCell->getId() . '.' . $format;
@@ -593,15 +607,18 @@ class Orga_Service_Export
                 if ($childCellInputsEndDataRow < 2) {
                     continue;
                 }
-                $childCellInputsEndData = $childCellInputsPHPExcel->getActiveSheet()->getHighestColumn() . $childCellInputsEndDataRow;
-                $childCellInputsData = $childCellInputsPHPExcel->getActiveSheet()->rangeToArray('A2:' . $childCellInputsEndData);
+                $childCellInputsEndData = $childCellInputsPHPExcel->getActiveSheet()->getHighestColumn()
+                    . $childCellInputsEndDataRow;
+                $childCellInputsData = $childCellInputsPHPExcel->getActiveSheet()
+                    ->rangeToArray('A2:' . $childCellInputsEndData);
                 $granularitySheet->fromArray($childCellInputsData, null, 'A' . ($granularitySheet->getHighestRow() + 1), true);
                 $childCellInputsPHPExcel->disconnectWorksheets();
                 unset($childCellInputsPHPExcel);
             }
 
             foreach (array_values($columns) as $columnIndex => $column) {
-                $granularitySheet->getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($columnIndex))->setAutoSize(true);
+                $granularitySheet->getColumnDimension(PHPExcel_Cell::stringFromColumnIndex($columnIndex))
+                    ->setAutoSize(true);
             }
         }
 
@@ -640,7 +657,10 @@ class Orga_Service_Export
         $modelBuilder->bind('indicators', $indicators);
 
         $queryOrganizationAxes = new Core_Model_Query();
-        $queryOrganizationAxes->filter->addCondition(Orga_Model_Axis::QUERY_ORGANIZATION, $cell->getGranularity()->getOrganization());
+        $queryOrganizationAxes->filter->addCondition(
+            Orga_Model_Axis::QUERY_ORGANIZATION,
+            $cell->getGranularity()->getOrganization()
+        );
         $queryOrganizationAxes->order->addOrder(Orga_Model_Axis::QUERY_NARROWER);
         $queryOrganizationAxes->order->addOrder(Orga_Model_Axis::QUERY_POSITION);
         $orgaAxes = [];
@@ -669,7 +689,9 @@ class Orga_Service_Export
             'getOutputsForIndicator',
             function (Orga_Model_Cell $cell, Indicator $indicator) {
                 $results = [];
-                if (($cell->getAFInputSetPrimary() !== null) && ($cell->getAFInputSetPrimary()->getOutputSet() !== null)) {
+                if (($cell->getAFInputSetPrimary() !== null)
+                    && ($cell->getAFInputSetPrimary()->getOutputSet() !== null)
+                ) {
                     foreach ($cell->getAFInputSetPrimary()->getOutputSet()->getElements() as $result) {
                         if ($result->getContextIndicator()->getIndicator() === $indicator) {
                             $results[] = $result;
@@ -686,7 +708,7 @@ class Orga_Service_Export
                 foreach ($cell->getMembers() as $cellMember) {
                     if ($cellMember->getAxis() === $axis) {
                         return $this->translator->get($cellMember->getExtendedLabel());
-                    } else if ($cellMember->getAxis()->isNarrowerThan($axis)) {
+                    } elseif ($cellMember->getAxis()->isNarrowerThan($axis)) {
                         try {
                             return $this->translator->get($cellMember->getParentForAxis($axis)->getExtendedLabel());
                         } catch (Core_Exception_NotFound $e) {
@@ -732,7 +754,7 @@ class Orga_Service_Export
                     case PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE:
                         return __('AF', 'inputInput', 'statusCalculationIncomplete');
                         break;
-                    case PrimaryInputSet::STATUS_INPUT_INCOMPLETE;
+                    case PrimaryInputSet::STATUS_INPUT_INCOMPLETE:
                         return __('AF', 'inputInput', 'statusInputIncomplete');
                         break;
                     default:
@@ -744,8 +766,9 @@ class Orga_Service_Export
         $modelBuilder->bindFunction(
             'displayFreeLabel',
             function (OutputElement $output) {
-                if ($output->getInputSet() instanceof SubInputSet) {
-                    return $output->getInputSet()->getFreeLabel();
+                $inputSet = $output->getInputSet();
+                if ($inputSet instanceof SubInputSet) {
+                    return $inputSet->getFreeLabel();
                 }
                 return '';
             }
@@ -793,137 +816,152 @@ class Orga_Service_Export
         );
     }
 
-}
-
-function getInputsDetails(Input $input, $path = '')
-{
-    if (($input->getComponent() !== null) && (!$input->isHidden())) {
-        $componentLabel = $input->getComponent()->getLabel();
-        $componentRef = $input->getComponent()->getRef();
-    } else {
-        return [];
-    }
-    if ($input instanceof NotRepeatedSubAFInput) {
-        $subInputs = [];
-        foreach ($input->getValue()->getInputs() as $subInput) {
-            if (!$subInput instanceof GroupInput) {
-                $subInputs = array_merge(
-                    $subInputs,
-                    getInputsDetails($subInput, $path . $componentLabel . '/')
-                );
-            }
+    private function getInputsDetails(Input $input, $path = '')
+    {
+        if (($input->getComponent() !== null) && (!$input->isHidden())) {
+            $componentLabel = $input->getComponent()->getLabel();
+            $componentRef = $input->getComponent()->getRef();
+        } else {
+            return [];
         }
-        return $subInputs;
-    } elseif ($input instanceof RepeatedSubAFInput) {
-        $subInputs = [];
-        foreach ($input->getValue() as $number => $subInputSet) {
-            foreach ($subInputSet->getInputs() as $subInput) {
+        if ($input instanceof NotRepeatedSubAFInput) {
+            $subInputs = [];
+            foreach ($input->getValue()->getInputs() as $subInput) {
                 if (!$subInput instanceof GroupInput) {
-                    $label = ($number + 1) . ' - ' . $subInputSet->getFreeLabel();
                     $subInputs = array_merge(
                         $subInputs,
-                        getInputsDetails($subInput, $path . $componentLabel . '/' . $label . '/')
+                        $this->getInputsDetails($subInput, $path . $this->translator->get($componentLabel) . '/')
                     );
                 }
             }
-        }
-        return $subInputs;
-    } else {
-        if (!$input->hasValue()) {
-            return [];
-        }
-        return [
-            [
-                'ancestors' => $path,
-                'status' => '',
-                'label' => $componentLabel,
-                'ref' => $componentRef,
-                'type' => getInputType($input),
-                'values' => getInputValues($input)
-            ]
-        ];
-    }
-}
-
-function getInputType(Input $input) {
-    switch (get_class($input)) {
-        case CheckboxInput::class:
-            return __('Orga', 'export', 'checkboxField');
-        case SelectSingleInput::class:
-            return __('Orga', 'export', 'singleSelectField');
-        case SelectMultiInput::class:
-            return __('Orga', 'export', 'multiSelectField');
-        case TextFieldInput::class:
-            return __('Orga', 'export', 'textField');
-        case NumericFieldInput::class:
-            return __('Orga', 'export', 'numericField');
-        default:
-            return __('Orga', 'export', 'unknownFieldType');
-    }
-}
-
-function getInputValues(Input $input)
-{
-    $inputValue = $input->getValue();
-    switch (get_class($input)) {
-        case NumericFieldInput::class:
-            /** @var NumericFieldInput $input */
-            $inputDigitalValue = $inputValue->getDigitalValue();
-            if (preg_match('{\.\d+}', $inputDigitalValue, $matches)===1) {
-                $inputDigitalValue = number_format($inputDigitalValue, (strlen($matches[0]) - 1), '.', '');
-            }
-            if ($input->getComponent() !== null) {
-                try {
-                    $conversionFactor = $input->getComponent()->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
-                    $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
-                    return [
-                        $inputDigitalValue,
-                        $inputValue->getRelativeUncertainty(),
-                        $inputValue->getUnit()->getSymbol(),
-                        $baseConvertedValue->getDigitalValue(),
-                        $input->getComponent()->getUnit()->getSymbol(),
-                    ];
-                } catch (\Unit\IncompatibleUnitsException $e) {
-                    return [
-                        $inputDigitalValue,
-                        $inputValue->getRelativeUncertainty(),
-                        $inputValue->getUnit()->getSymbol(),
-                    ];
+            return $subInputs;
+        } elseif ($input instanceof RepeatedSubAFInput) {
+            $subInputs = [];
+            foreach ($input->getValue() as $number => $subInputSet) {
+                foreach ($subInputSet->getInputs() as $subInput) {
+                    if (!$subInput instanceof GroupInput) {
+                        $label = ($number + 1) . ' - ' . $subInputSet->getFreeLabel();
+                        $subInputs = array_merge(
+                            $subInputs,
+                            $this->getInputsDetails(
+                                $subInput,
+                                $path . $this->translator->get($componentLabel) . '/' . $label . '/'
+                            )
+                        );
+                    }
                 }
+            }
+            return $subInputs;
+        } else {
+            if (!$input->hasValue()) {
+                return [];
             }
             return [
-                $inputDigitalValue,
-                $inputValue->getRelativeUncertainty(),
-                $inputValue->getUnit()->getSymbol(),
+                [
+                    'ancestors' => $path,
+                    'status' => '',
+                    'label' => $componentLabel,
+                    'ref' => $componentRef,
+                    'type' => $this->getInputType($input),
+                    'values' => $this->getInputValues($input)
+                ]
             ];
-        case SelectMultiInput::class:
-            /** @var \AF\Domain\Input\Select\SelectMultiInput $input */
-            if (is_array($inputValue)) {
-                if ($input->getComponent() !== null) {
-                    $labels = [];
-                    foreach ($inputValue as $value) {
-                        if (empty($value)) {
-                            $labels[] = '';
-                        } else {
-                            $labels[] = $input->getComponent()->getOptionByRef($value)->getLabel();
-                        }
-                    }
-                    return [implode(', ', $labels)];
+        }
+    }
+
+    /**
+     * @param Input $input
+     * @return string
+     */
+    private function getInputType(Input $input)
+    {
+        switch (get_class($input)) {
+            case CheckboxInput::class:
+                return __('Orga', 'export', 'checkboxField');
+            case SelectSingleInput::class:
+                return __('Orga', 'export', 'singleSelectField');
+            case SelectMultiInput::class:
+                return __('Orga', 'export', 'multiSelectField');
+            case TextFieldInput::class:
+                return __('Orga', 'export', 'textField');
+            case NumericFieldInput::class:
+                return __('Orga', 'export', 'numericField');
+            default:
+                return __('Orga', 'export', 'unknownFieldType');
+        }
+    }
+
+    private function getInputValues(Input $input)
+    {
+        $inputValue = $input->getValue();
+
+        switch (true) {
+            case $input instanceof NumericFieldInput:
+                /** @var Calc_UnitValue $inputValue */
+                $inputDigitalValue = $inputValue->getDigitalValue();
+                if (preg_match('{\.\d+}', $inputDigitalValue, $matches)===1) {
+                    $inputDigitalValue = number_format($inputDigitalValue, (strlen($matches[0]) - 1), '.', '');
                 }
-                return [implode(', ', $inputValue)];
-            }
-        case SelectSingleInput::class:
-            /** @var SelectSingleInput $input */
-            if (empty($inputValue)) {
-                return [''];
-            } elseif ($input->getComponent() !== null) {
-                return [$input->getComponent()->getOptionByRef($inputValue)->getLabel()];
-            }
-            return [$value];
-        case CheckboxInput::class:
-            /** @var \AF\Domain\Input\CheckboxInput $input */
-            return [($inputValue) ? __('UI', 'property', 'checked') : __('UI', 'property', 'unchecked')];
-        default:
-            return [$inputValue];
+                /** @var NumericField $component */
+                $component = $input->getComponent();
+                if ($component !== null) {
+                    try {
+                        $conversionFactor = $component->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
+                        $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
+                        return [
+                            $inputDigitalValue,
+                            $inputValue->getRelativeUncertainty(),
+                            $inputValue->getUnit()->getSymbol(),
+                            $baseConvertedValue->getDigitalValue(),
+                            $component->getUnit()->getSymbol(),
+                        ];
+                    } catch (IncompatibleUnitsException $e) {
+                        return [
+                            $inputDigitalValue,
+                            $inputValue->getRelativeUncertainty(),
+                            $inputValue->getUnit()->getSymbol(),
+                        ];
+                    }
+                }
+                return [
+                    $inputDigitalValue,
+                    $inputValue->getRelativeUncertainty(),
+                    $inputValue->getUnit()->getSymbol(),
+                ];
+
+            case $input instanceof SelectMultiInput:
+                /** @var SelectMulti $component */
+                $component = $input->getComponent();
+                if (is_array($inputValue)) {
+                    if ($component !== null) {
+                        $labels = [];
+                        foreach ($inputValue as $value) {
+                            if (empty($value)) {
+                                $labels[] = '';
+                            } else {
+                                $labels[] = $component->getOptionByRef($value)->getLabel();
+                            }
+                        }
+                        return [implode(', ', $labels)];
+                    }
+                    return [implode(', ', $inputValue)];
+                }
+                break;
+
+            case $input instanceof SelectSingleInput:
+                /** @var SelectSingle $component */
+                $component = $input->getComponent();
+                if (empty($inputValue)) {
+                    return [''];
+                } elseif ($component !== null) {
+                    return [$component->getOptionByRef($inputValue)->getLabel()];
+                }
+                return [$inputValue];
+
+            case $input instanceof CheckboxInput:
+                return [($inputValue) ? __('UI', 'property', 'checked') : __('UI', 'property', 'unchecked')];
+        }
+
+        return [$inputValue];
     }
 }
