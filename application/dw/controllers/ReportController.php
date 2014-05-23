@@ -311,8 +311,8 @@ class DW_ReportController extends Core_Controller
             );
         } else {
             if (($this->getParam('isNew') != '1')
-                && ($this->hasParam('saveType'))
-                && ($this->getParam('saveType') == 'saveAs')
+                && ($this->hasParam('saveReportType'))
+                && ($this->getParam('saveReportType') == 'duplicate')
             ) {
                 $clonedReport = clone $report;
                 $this->entityManager->refresh($report);

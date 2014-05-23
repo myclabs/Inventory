@@ -19,6 +19,8 @@ Orga_Model_CellReport:
         nullable: false
         unique: true
         onDelete: CASCADE
+
+  manyToOne:
     owner:
       targetEntity: User\Domain\User
       joinColumn:

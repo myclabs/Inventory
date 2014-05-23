@@ -105,6 +105,7 @@ use MyCLabs\MUIH\Tabs;
                     $updateReportOptionInput = new GenericVoidTag('input');
                     $updateReportOptionInput->setAttribute('type', 'radio');
                     $updateReportOptionInput->setAttribute('name', 'saveReportType');
+                    $updateReportOptionInput->setAttribute('value', 'update');
                     $updateReportOptionLabel = new GenericTag('label', __('DW', 'config', 'updateReportOption'));
                     $updateReportOptionLabel->prependContent($updateReportOptionInput);
                     $updateReportOptionWrapper = new GenericTag('div', $updateReportOptionLabel);
@@ -116,6 +117,7 @@ use MyCLabs\MUIH\Tabs;
                     $saveReportAsOptionInput = new GenericVoidTag('input');
                     $saveReportAsOptionInput->setAttribute('type', 'radio');
                     $saveReportAsOptionInput->setAttribute('name', 'saveReportType');
+                    $saveReportAsOptionInput->setAttribute('value', 'duplicate');
                     $saveReportAsOptionLabel = new GenericTag('label', __('DW', 'config', 'saveReportAsOption'));
                     $saveReportAsOptionLabel->prependContent($saveReportAsOptionInput);
                     $saveReportAsOptionWrapper = new GenericTag('div', $saveReportAsOptionLabel);
@@ -323,6 +325,18 @@ $(document).ready(function() {
         selectDisplayType.trigger('change');
     });
     $('input[name="sumAxisNumberChoice"], input[name="ratioAxisNumberChoice"]').trigger('change');
+    $('select[name="ratioNumeratorAxisOne"], select[name="ratioNumeratorAxisTwo"]').on('change', function() {
+        var denominatorSelect = $('select[name="' + $(this).attr('name').replace(/Numerator/g, 'Denominator') + '"]');
+        if ((typeof(denominatorSelect.attr('data-options')) === 'undefined')
+            || (denominatorSelect.attr('data-options') === false)) {
+            denominatorSelect.attr('data-options', denominatorSelect.html());
+        }
+        denominatorSelect.html(denominatorSelect.attr('data-options'));
+        $('option:not(.' + $(this).val() + ')', denominatorSelect).remove();
+        denominatorSelect.prepend('<option value=""></option>');
+        denominatorSelect.val('');
+    });
+    $('select[name="ratioNumeratorAxisOne"], select[name="ratioNumeratorAxisTwo"]').trigger('change');
     $('select[name="displayType"]').on('change', function() {
         var currentForm = $(this).closest('form');
 

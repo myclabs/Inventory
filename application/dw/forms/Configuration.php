@@ -265,6 +265,10 @@ class DW_Form_configuration extends GenericTag
         foreach ($report->getCube()->getAxes() as $axis) {
             $axisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
             $axisOption->setAttribute('value', $axis->getRef());
+            $axisOption->addClass($axis->getRef());
+            foreach ($axis->getAllNarrowers() as $narrowerAxis) {
+                $axisOption->addClass($narrowerAxis->getRef());
+            }
             $ratioDenominatorAxisOneSelect->appendContent($axisOption);
         }
         $ratioDenominatorAxisOneGroup->appendContent($ratioDenominatorAxisOneSelect);

@@ -40,6 +40,18 @@ Les données seront importées des fichiers contenus dans `data/exports/migratio
 bin/inventory import <id-account> "Bibliothèque de classification" "Bibliothèque de paramètres" "Bibliothèque de formulaires" -v
 ```
 
+- Exécuter le job de rebuild des exports (long)
+
+```
+bin/inventory export:rebuild
+```
+
+- En cas de dépassement de mémoire, ré-exécuter le script avec l'option --no-clear (ou -c)
+
+```
+bin/inventory export:rebuild --no-clear
+```
+
 - Reconstruire les ACL
 
 ```
