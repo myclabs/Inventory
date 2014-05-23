@@ -228,6 +228,20 @@ class DW_Model_Axis extends Core_Model_Entity
     }
 
     /**
+     * @return DW_Model_Axis[]
+     */
+    public function getAllNarrowers()
+    {
+        $narrowers = [];
+        $axis = $this;
+        while ($axis->getDirectNarrower() !== null) {
+            $narrowers[] = $axis->getDirectNarrower();
+            $axis = $axis->getDirectNarrower();
+        }
+        return $narrowers;
+    }
+
+    /**
      * Ajoute un Axis broader à l'axe courant.
      *
      * @param DW_Model_Axis $broaderAxis
@@ -301,7 +315,7 @@ class DW_Model_Axis extends Core_Model_Entity
      */
     public function getAllBroadersFirstOrdered()
     {
-        $broaders = array();
+        $broaders = [];
         foreach ($this->directBroaders as $directBroader) {
             $broaders[] = $directBroader;
             foreach ($directBroader->getAllBroadersFirstOrdered() as $recursiveBroader) {
@@ -318,7 +332,7 @@ class DW_Model_Axis extends Core_Model_Entity
      */
     public function getAllBroadersLastOrdered()
     {
-        $broaders = array();
+        $broaders = [];
         foreach ($this->directBroaders as $directBroader) {
             foreach ($directBroader->getAllBroadersLastOrdered() as $recursiveBroader) {
                 $broaders[] = $recursiveBroader;
