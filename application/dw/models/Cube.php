@@ -55,9 +55,6 @@ class DW_Model_Cube extends Core_Model_Entity
     protected $reports = null;
 
 
-    /**
-     * Constructeur de la classe Cube.
-     */
     public function __construct()
     {
         $this->label = new TranslatedString();
@@ -144,7 +141,7 @@ class DW_Model_Cube extends Core_Model_Entity
 
         if (count($axis) === 0) {
             throw new Core_Exception_NotFound("No 'DW_Model_Axis' matching " . $ref);
-        } else if (count($axis) > 1) {
+        } elseif (count($axis) > 1) {
             throw new Core_Exception_TooMany("Too many 'DW_Model_Axis' matching " . $ref);
         }
 
@@ -190,14 +187,14 @@ class DW_Model_Cube extends Core_Model_Entity
      */
     public function getRootAxes()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create()->where(
-            Doctrine\Common\Collections\Criteria::expr()->isNull('directNarrower')
-        );
+        $criteria = Criteria::create()->where(Criteria::expr()->isNull('directNarrower'));
         $rootAxes = $this->axes->matching($criteria)->toArray();
 
         uasort(
             $rootAxes,
-            function ($a, $b) { return $a->getPosition() - $b->getPosition(); }
+            function (DW_Model_Axis $a, DW_Model_Axis $b) {
+                return $a->getPosition() - $b->getPosition();
+            }
         );
 
         return $rootAxes;
@@ -338,7 +335,7 @@ class DW_Model_Cube extends Core_Model_Entity
      *
      * @param DW_Model_Report $report
      */
-    public function removeReport($report)
+    public function removeReport(DW_Model_Report $report)
     {
         if ($this->hasReport($report)) {
             $this->reports->removeElement($report);
@@ -364,5 +361,4 @@ class DW_Model_Cube extends Core_Model_Entity
     {
         return $this->reports->toArray();
     }
-
 }
