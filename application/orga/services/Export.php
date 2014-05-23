@@ -440,7 +440,7 @@ class Orga_Service_Export
         $inputs = [];
         foreach ($aFInputSetPrimary->getInputs() as $input) {
             if (!$input instanceof GroupInput) {
-                $inputs = array_merge($inputs, $this->getInputsDetails($input, $this->translator));
+                $inputs = array_merge($inputs, getInputsDetails($input, $this->translator));
             }
         }
 

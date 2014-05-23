@@ -128,12 +128,12 @@ class ElementaryCondition extends FormCondition
                 break;
             case Radio::class:
                 $jQueryId = '$(\'#' . $this->element->getId() . '_' . $this->value . '\')';
-                $scriptCondition .= $jQueryId . '.attr(\'checked\') ' . $this->relation . ' \'checked\'';
+                $scriptCondition .= $jQueryId . '.prop(\'checked\') ' . $this->relation . ' true';
                 break;
             case MultiCheckbox::class:
                 if ($this->value !== null) {
                     $jQueryId = '$(\'#' . $this->element->getId() . '_' . $this->value . '\')';
-                    $scriptCondition .= $jQueryId . '.attr(\'checked\') ' . $this->relation . ' \'checked\'';
+                    $scriptCondition .= $jQueryId.'.prop(\'checked\') ' . $this->relation . ' true';
                 } else {
                     $jQueryId = '$(\'input[name=' . $this->element->getName() . ']:selected\')';
                     $scriptCondition .= $jQueryId . '.length ' . $this->relation . ' ' . $this->value;
