@@ -619,14 +619,10 @@ class Orga_Model_Granularity extends Core_Model_Entity
                 try {
                     $granularityForInventoryStatus = $this->getOrganization()->getGranularityForInventoryStatus();
                 } catch (Core_Exception_UndefinedAttribute $e) {
-                    throw new Core_Exception_UndefinedAttribute(
-                        'You need to set a granularity for inventory status before monitoring it'
-                    );
+                    throw new Core_Exception_User('Orga', 'inventory', 'monitoringInventoryWithoutGranularity');
                 }
                 if (!$this->isNarrowerThan($granularityForInventoryStatus)) {
-                    throw new Core_Exception_InvalidArgument(
-                        'This granularity needs to be narrower than tho one for inventory status'
-                    );
+                    throw new Core_Exception_User('Orga', 'inventory', 'monitoringNotNarrowerThanGranularity');
                 }
             }
             $this->cellsMonitorInventory = $bool;

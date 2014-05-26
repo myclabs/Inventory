@@ -188,37 +188,8 @@ class Orga_CellController extends Core_Controller
                 $purpose .= __('User', 'user', 'users');
             }
             // Inventory purpose.
-            $isNarrowerGranularityInventory = (($granularityForInventoryStatus !== null)
-                && (($narrowerGranularity === $granularityForInventoryStatus)
-                    || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
-            if ($isNarrowerGranularityInventory) {
-                $narrowerGranularityHasACLParent = $narrowerGranularity->getCellsWithACL();
-                if (!$narrowerGranularityHasACLParent) {
-                    foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
-                        if ($broaderInventoryGranularity->getCellsWithACL()) {
-                            foreach ($narrowerGranularity->getAxes() as $narrowerGranularityAxis) {
-                                if (!$granularityForInventoryStatus->hasAxis($narrowerGranularityAxis)
-                                    && !$broaderInventoryGranularity->hasAxis($narrowerGranularityAxis)) {
-                                    continue 2;
-                                }
-                            }
-                            $narrowerGranularityHasACLParent = true;
-                            break;
-                        }
-                    }
-                }
-                $isNarrowerGranularityInventory = $isNarrowerGranularityInventory && $narrowerGranularityHasACLParent;
-            }
-            if ($isNarrowerGranularityInventory) {
-                $narrowerGranularityHasSubInputGranlarities = false;
-                foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
-                    if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
-                        $narrowerGranularityHasSubInputGranlarities = true;
-                        break;
-                    }
-                }
-                $isNarrowerGranularityInventory = $isNarrowerGranularityInventory && $narrowerGranularityHasSubInputGranlarities;
-            }
+            $isNarrowerGranularityInventory = $narrowerGranularity->getCellsMonitorInventory()
+                || ($narrowerGranularity === $granularityForInventoryStatus);
             if ($isNarrowerGranularityInventory) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
@@ -482,40 +453,15 @@ class Orga_CellController extends Core_Controller
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
             && $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell)
             && $this->acl->isAllowed($connectedUser, Actions::INPUT, $cell));
-        $showInventory = $editInventory
-            || ($narrowerGranularity === $granularityForInventoryStatus)
-            || ($showInput && (($granularityForInventoryStatus !== null)
-                    && (($narrowerGranularity === $granularityForInventoryStatus)
-                        || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus)))));
-
-        $showInventoryProgress = $showInventory;
+        $showInventory = $narrowerGranularity->getCellsMonitorInventory() || $editInventory;
+        $showInventoryProgress = false;
         if ($showInventoryProgress) {
-            $narrowerGranularityHasACLParent = $narrowerGranularity->getCellsWithACL();
-            if (!$narrowerGranularityHasACLParent) {
-                foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
-                    if ($broaderInventoryGranularity->getCellsWithACL()) {
-                        foreach ($narrowerGranularity->getAxes() as $narrowerGranularityAxis) {
-                            if (!$granularityForInventoryStatus->hasAxis($narrowerGranularityAxis)
-                                && !$broaderInventoryGranularity->hasAxis($narrowerGranularityAxis)) {
-                                continue 2;
-                            }
-                        }
-                        $narrowerGranularityHasACLParent = true;
-                        break;
-                    }
-                }
-            }
-            $showInventoryProgress = $showInventoryProgress && $narrowerGranularityHasACLParent;
-        }
-        if ($showInventoryProgress) {
-            $narrowerGranularityHasSubInputGranlarities = false;
-            foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
-                if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
-                    $narrowerGranularityHasSubInputGranlarities = true;
+            foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInputGranularity) {
+                if ($narrowerInputGranularity->isInput()) {
+                    $showInventoryProgress = true;
                     break;
                 }
             }
-            $showInventoryProgress = $showInventoryProgress && $narrowerGranularityHasSubInputGranlarities;
         }
 
         // Uniquement les sous-cellules pertinentes.

@@ -28,6 +28,14 @@
                 <seg>Levels (synthesis)</seg>
             </tuv>
         </tu>
+        <tu tuid="inventoryGranularity">
+            <tuv xml:lang="fr">
+                <seg>Niveau d'édition des collectes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Levels editing inventory status</seg>
+            </tuv>
+        </tu>
         <tu tuid="aclGranularities">
             <tuv xml:lang="fr">
                 <seg>Niveaux contrôlant les accès utilisateurs</seg>
@@ -114,7 +122,7 @@
         </tu>
         <tu tuid="addGranularitySelectAxesInventoryLevel">
             <tuv xml:lang="fr">
-                <seg>Niveau pour le suive des collectes</seg>
+                <seg>Niveau pour le suivi des collectes</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Inventory monitoring level</seg>

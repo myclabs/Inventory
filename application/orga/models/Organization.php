@@ -437,6 +437,11 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
                 }
             }
             $this->granularityForInventoryStatus = $granularity;
+            foreach ($this->getGranularities() as $organizationGranularity) {
+                if (($granularity === null) || (!$organizationGranularity->isNarrowerThan($granularity))) {
+                    $organizationGranularity->setCellsMonitorInventory(false);
+                }
+            }
         }
     }
 

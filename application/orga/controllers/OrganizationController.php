@@ -522,28 +522,6 @@ class Orga_OrganizationController extends Core_Controller
             $updated = true;
         }
 
-        //@todo Faire une action à part ?
-//        $refGranularityForInventoryStatus = $formData->getValue('granularityForInventoryStatus');
-//        if (!empty($refGranularityForInventoryStatus)) {
-//            $newGranularityForInventoryStatus = $organization->getGranularityByRef($refGranularityForInventoryStatus);
-//            try {
-//                $currentGranularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
-//            } catch (Core_Exception_UndefinedAttribute $e) {
-//                $currentGranularityForInventoryStatus = null;
-//            }
-//            if ($currentGranularityForInventoryStatus !== $newGranularityForInventoryStatus) {
-//                try {
-//                    $organization->setGranularityForInventoryStatus($newGranularityForInventoryStatus);
-//                    $updated = true;
-//                } catch (Core_Exception_InvalidArgument $e) {
-//                    $this->addFormError(
-//                        'granularityForInventoryStatus',
-//                        __('Orga', 'exception', 'broaderInputGranularity')
-//                    );
-//                }
-//            }
-//        }
-
         if ($this->hasFormError() || !$updated) {
             $this->setFormMessage(__('UI', 'message', 'nullUpdated'));
         } else {
@@ -790,6 +768,15 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $this->view->assign('organization', $organization);
+        $this->view->assign('idOrganization', $organization->getId());
+
+        try {
+            $granularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $granularityForInventoryStatus = null;
+        }
+        $this->view->assign('granularityForInventoryStatus', $granularityForInventoryStatus);
+
         $criteria = Doctrine\Common\Collections\Criteria::create();
         $criteria->where(Doctrine\Common\Collections\Criteria::expr()->eq('cellsMonitorInventory', true));
         $criteria->orderBy(['position' => 'ASC']);
@@ -807,6 +794,50 @@ class Orga_OrganizationController extends Core_Controller
     /**
      * @Secure("editOrganization")
      */
+    public function editInventorySubmitAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $updated = false;
+
+        try {
+            $newGranularityForInventoryStatus = Orga_Model_Granularity::load($this->getParam('granularityForInventoryStatus'));
+        } catch (Core_Exception_NotFound $e) {
+            $newGranularityForInventoryStatus = null;
+        }
+
+        try {
+            $currentGranularityForInventoryStatus = $organization->getGranularityForInventoryStatus();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $currentGranularityForInventoryStatus = null;
+        }
+
+        if ($currentGranularityForInventoryStatus !== $newGranularityForInventoryStatus) {
+            try {
+                $organization->setGranularityForInventoryStatus($newGranularityForInventoryStatus);
+                $updated = true;
+            } catch (Core_Exception_InvalidArgument $e) {
+                $this->addFormError(
+                    'granularityForInventoryStatus',
+                    __('Orga', 'exception', 'broaderInputGranularity')
+                );
+            }
+        }
+
+        if (!$updated) {
+            $this->setFormMessage(__('UI', 'message', 'nullUpdated'));
+        } else {
+            $this->setFormMessage(__('UI', 'message', 'updated'));
+        }
+
+        $this->sendFormResponse(['updated' => $updated]);
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
     public function addGranularityInventoryAction()
     {
         $idOrganization = $this->getParam('idOrganization');
@@ -817,7 +848,7 @@ class Orga_OrganizationController extends Core_Controller
 
         try {
             $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
-            if ($granularity->getCellsWithACL()) {
+            if ($granularity->getCellsMonitorInventory()) {
                 throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
             $granularity->setCellsMonitorInventory(true);

@@ -18,7 +18,7 @@
 class UI_Message
 {
     const TYPE_WARNING = 'warning';
-    const TYPE_ERROR = 'error';
+    const TYPE_ERROR = 'danger';
     const TYPE_INFO = 'info';
     const TYPE_SUCCESS = 'success';
 

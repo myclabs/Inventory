@@ -1,7 +1,36 @@
 <fieldset class="wrapper">
     <legend style="cursor: default;">
-        <?=___('Orga', 'role', 'organizationAdministrators')?>
+        <?=___('Orga', 'inventory', 'editInventories')?>
     </legend>
+    <form id="organizationInventory<?=$this->idOrganization?>" class="form-horizontal" method="POST" action="orga/organization/edit-inventory-submit/idOrganization/<?=$this->idOrganization?>">
+        <div class="form-group">
+            <label for="organization_granularityForInventoryStatus" class="control-label col-xs-2 withTooltip" title="<?=___('Orga', 'inventory', 'editInventoryExplanation')?>">
+                <?=___('Orga', 'granularity', 'inventoryGranularity')?>
+                <i class="fa fa-question-circle"></i>
+            </label>
+            <div class="col-xs-10">
+                <select id="organization_granularityForInventoryStatus" name="granularityForInventoryStatus" class="form-control">
+                    <option value=""></option>
+                    <?php foreach ($this->organization->getGranularities() as $granularity) : ?>
+                        <option value="<?=$granularity->getId()?>"<?php if ($granularity === $this->granularityForInventoryStatus): ?> selected<?php endif; ?>>
+                            <?=$this->translate($granularity->getLabel())?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-10 col-xs-offset-2">
+                <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                new AjaxForm('#organizationInventory<?=$this->idOrganization?>');
+            });
+        </script>
+    </form>
 </fieldset>
 <fieldset class="wrapper">
     <legend style="cursor: default;">
@@ -23,18 +52,25 @@ echo $this->partial(
     'granularity/add.phtml',
     [
         'organization' => $this->organization,
-        'purpose' => 'acl',
+        'purpose' => 'inventory',
         'complementaryFields' => '',
         'selectAxesPlaceholder' => ___('Orga', 'granularity', 'addGranularitySelectAxesInventoryLevel')
     ]
 );
-if ($this->display === true) :
 ?>
 <script>
-    $('#addGranularity<?=$this->organization->getId()?>_acl').on('granularityAdded', function(e) {
+<?php if ($this->display === true) : ?>
+    $('#organizationInventory<?=$this->idOrganization?>').on('successSubmit', function(e, data) {
+        if (data.data.updated) {
+            location.reload(true);
+        }
+    });
+    $('#addGranularity<?=$this->organization->getId()?>_inventory').on('granularityAdded', function(e) {
         location.reload(true);
     });
+<?php else : ?>
+    $('#organizationInventory<?=$this->idOrganization?>').on('successSubmit', function(e, data) {
+        $(this).parent().trigger('successSubmit', data);
+    });
+<?php endif; ?>
 </script>
-<?php
-endif;
-?>

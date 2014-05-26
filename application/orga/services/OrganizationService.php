@@ -307,9 +307,6 @@ class Orga_Service_OrganizationService
                 $granularityForInventoryStatus =  $granularity->getOrganization()->getGranularityForInventoryStatus();
                 if ($granularityForInventoryStatus === $granularity) {
                     $granularity->getOrganization()->setGranularityForInventoryStatus();
-                    foreach ($granularity->getOrganization()->getGranularities() as $organizationGranularity) {
-                        $organizationGranularity->setCellsMonitorInventory(false);
-                    }
                 }
             } catch (Core_Exception_UndefinedAttribute $e) {
                 // Pas de granularité des inventares.
