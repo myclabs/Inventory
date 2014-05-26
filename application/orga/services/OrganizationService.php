@@ -204,6 +204,9 @@ class Orga_Service_OrganizationService
                 case 'relevance':
                     $granularity->setCellsControlRelevance($value);
                     break;
+                case 'inventory':
+                    $granularity->setCellsMonitorInventory($value);
+                    break;
                 case 'afs':
                     try {
                         $inputConfigGranularity = $organization->getGranularityByRef(
@@ -253,6 +256,9 @@ class Orga_Service_OrganizationService
                 case 'relevance':
                     $granularity->setCellsControlRelevance($value);
                     break;
+                case 'inventory':
+                    $granularity->setCellsMonitorInventory($value);
+                    break;
                 case 'afs':
                     try {
                         $inputConfigGranularity = $granularity->getOrganization()->getGranularityByRef(
@@ -301,6 +307,9 @@ class Orga_Service_OrganizationService
                 $granularityForInventoryStatus =  $granularity->getOrganization()->getGranularityForInventoryStatus();
                 if ($granularityForInventoryStatus === $granularity) {
                     $granularity->getOrganization()->setGranularityForInventoryStatus();
+                    foreach ($granularity->getOrganization()->getGranularities() as $organizationGranularity) {
+                        $organizationGranularity->setCellsMonitorInventory(false);
+                    }
                 }
             } catch (Core_Exception_UndefinedAttribute $e) {
                 // Pas de granularité des inventares.

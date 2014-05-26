@@ -1,0 +1,40 @@
+<fieldset class="wrapper">
+    <legend style="cursor: default;">
+        <?=___('Orga', 'role', 'organizationAdministrators')?>
+    </legend>
+</fieldset>
+<fieldset class="wrapper">
+    <legend style="cursor: default;">
+        <?=___('Orga', 'inventory', 'viewInventories')?>
+    </legend>
+<ul>
+<?php foreach ($this->inventoryGranularities as $inventoryGranularity) : ?>
+    <li><?=$this->translate($inventoryGranularity->getLabel())?></li>
+<?php endforeach; ?>
+</ul>
+</fieldset>
+<hr>
+<?php
+if (count($this->granularities) > 0) :
+echo '<hr>';
+endif;
+echo '<h4>'.__('Orga', 'granularity', 'addGranularityInventory').'</h4>';
+echo $this->partial(
+    'granularity/add.phtml',
+    [
+        'organization' => $this->organization,
+        'purpose' => 'acl',
+        'complementaryFields' => '',
+        'selectAxesPlaceholder' => ___('Orga', 'granularity', 'addGranularitySelectAxesInventoryLevel')
+    ]
+);
+if ($this->display === true) :
+?>
+<script>
+    $('#addGranularity<?=$this->organization->getId()?>_acl').on('granularityAdded', function(e) {
+        location.reload(true);
+    });
+</script>
+<?php
+endif;
+?>
