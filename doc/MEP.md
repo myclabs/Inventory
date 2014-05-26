@@ -52,12 +52,6 @@ bin/inventory export:rebuild
 bin/inventory export:rebuild --no-clear
 ```
 
-- Reconstruire les ACL
-
-```
-bin/inventory acl:rebuild
-```
-
 - Vider la table des versions
 
 ```
