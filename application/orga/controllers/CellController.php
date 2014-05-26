@@ -956,7 +956,8 @@ class Orga_CellController extends Core_Controller
                 'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$cellReport->getCellDWReport()->getId(),
                 'type' => 'userReport',
                 'owner' => $cellReport->getOwner(),
-                'delete' => ($cellReport->getOwner() === $connectedUser)
+                'delete' => ($cellReport->getOwner() === $connectedUser),
+                'idReport' => $cellReport->getCellDWReport()->getId()
             ];
             if ($cellReport->getOwner() !== $connectedUser) {
                 $otherUsers[$cellReport->getOwner()->getId()] = $cellReport->getOwner()->getName();

@@ -978,7 +978,7 @@ $('body').on('click', '.delete-report', function(e) {
         return false;
     }
     $('.report-message').remove();
-    $(this).parent().after(
+    $(this).closest('tr').after(
         '<tr class="info report-message">' +
             '<td colspan="3">' +
                 '<?=___('Orga', 'view', 'askConfirmDeleteReport')?>' +
@@ -991,7 +991,7 @@ $('body').on('click', '.delete-report', function(e) {
 });
 $('body').on('click', 'tr.report-message .confirm', function(e) {
     e.preventDefault();
-    var row = $(this).parent();
+    var row = $(this).closest('tr');
     var deleteReport = $('.delete-report', row.prev());
     if (deleteReport.attr('data-submitting') === 'true') {
         return false;
@@ -1035,7 +1035,7 @@ $('body').on('click', 'tr.report-message .confirm', function(e) {
 });
 $('body').on('click', 'tr.report-message .close-report-message', function(e) {
     e.preventDefault();
-    $(this).parent().remove();
+    $(this).closest('tr').remove();
 });
 $('body').on('keyup change', 'select[name="reportType"]', function(e) {
     var select = $(this);
