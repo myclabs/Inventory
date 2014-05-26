@@ -2,9 +2,9 @@
 
 namespace Parameter\Domain;
 
+use Core\Translation\TranslatedString;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Model_Filter;
 use Core_Model_Query;
 use Core_Strategy_Ordered;
@@ -21,7 +21,6 @@ use Parameter\Domain\Family\Family;
 class Category extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     const QUERY_POSITION = 'position';
     const QUERY_PARENT_CATEGORY = 'parentCategory';
@@ -38,8 +37,7 @@ class Category extends Core_Model_Entity
     protected $library;
 
     /**
-     * label de la catégorie
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -60,15 +58,15 @@ class Category extends Core_Model_Entity
 
 
     /**
-     * @param ParameterLibrary $library
-     * @param string|null      $label
+     * @param ParameterLibrary      $library
+     * @param TranslatedString|null $label
      */
-    public function __construct(ParameterLibrary $library, $label = null)
+    public function __construct(ParameterLibrary $library, TranslatedString $label = null)
     {
         $this->library = $library;
         $this->childCategories = new ArrayCollection();
         $this->families = new ArrayCollection();
-        $this->label = $label;
+        $this->label = $label ?: new TranslatedString();
     }
 
     /**
@@ -80,21 +78,11 @@ class Category extends Core_Model_Entity
     }
 
     /**
-     * Retourne le nom de la catégorie
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         return $this->label;
-    }
-
-    /**
-     * Modifie le nom de la catégorie
-     * @param string $newLabel
-     */
-    public function setLabel($newLabel)
-    {
-        $this->label = $newLabel;
     }
 
     /**

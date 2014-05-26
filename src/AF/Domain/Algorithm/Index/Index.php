@@ -6,7 +6,6 @@ use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Numeric\NumericAlgo;
 use Classification\Domain\Axis;
 use Classification\Domain\Member;
-use Core_Exception_NotFound;
 use Core_Model_Entity;
 
 /**
@@ -22,10 +21,9 @@ abstract class Index extends Core_Model_Entity
     protected $id;
 
     /**
-     * The classification axis
-     * @var string|null
+     * @var Axis|null
      */
-    protected $refClassificationAxis;
+    protected $axis;
 
     /**
      * @var NumericAlgo|null
@@ -33,15 +31,9 @@ abstract class Index extends Core_Model_Entity
     protected $algoNumeric;
 
 
-    /**
-     * @param Axis|null $classificationAxis
-     * @param NumericAlgo|null   $algoNumeric
-     */
     public function __construct(Axis $classificationAxis = null, NumericAlgo $algoNumeric = null)
     {
-        if ($classificationAxis) {
-            $this->refClassificationAxis = $classificationAxis->getRef();
-        }
+        $this->axis = $classificationAxis;
         $this->algoNumeric = $algoNumeric;
     }
 
@@ -57,22 +49,12 @@ abstract class Index extends Core_Model_Entity
      */
     public function getClassificationAxis()
     {
-        if ($this->refClassificationAxis === null) {
-            return null;
-        }
-        try {
-            return Axis::loadByRef($this->refClassificationAxis);
-        } catch (Core_Exception_NotFound $e) {
-            return null;
-        }
+        return $this->axis;
     }
 
-    /**
-     * @param Axis $axis
-     */
     public function setClassificationAxis(Axis $axis)
     {
-        $this->refClassificationAxis = $axis->getRef();
+        $this->axis = $axis;
     }
 
     /**
@@ -83,9 +65,6 @@ abstract class Index extends Core_Model_Entity
         return $this->algoNumeric;
     }
 
-    /**
-     * @param NumericAlgo $algoNumeric
-     */
     public function setAlgoNumeric(NumericAlgo $algoNumeric)
     {
         if ($algoNumeric != $this->algoNumeric) {

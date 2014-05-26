@@ -177,7 +177,7 @@ abstract class AbstractPopulateOrga
     protected function createAxis(Orga_Model_Organization $organization, $ref, $label, Orga_Model_Axis $narrower = null)
     {
         $axis = new Orga_Model_Axis($organization, $ref, $narrower);
-        $axis->setLabel($label);
+        $axis->getLabel()->set($label, 'fr');
         $axis->save();
         return $axis;
     }
@@ -192,7 +192,7 @@ abstract class AbstractPopulateOrga
     protected function createMember(Orga_Model_Axis $axis, $ref, $label, array $parents = [])
     {
         $member = new Orga_Model_Member($axis, $ref, $parents);
-        $member->setLabel($label);
+        $member->getLabel()->set($label, 'fr');
         $member->save();
         return $member;
     }
@@ -306,6 +306,7 @@ abstract class AbstractPopulateOrga
         $inputSetPrimary->save();
 
         $inputCell->setAFInputSetPrimary($inputSetPrimary);
+        $inputCell->updateInputStatus();
         $this->etlDataService->populateDWResultsFromCell($inputCell);
     }
 
@@ -320,7 +321,7 @@ abstract class AbstractPopulateOrga
     private function createReport(DW_Model_Cube $cube, $label, $chartType, $displayUncertainty, $filters = array())
     {
         $report = new DW_Model_Report($cube);
-        $report->setLabel($label);
+        $report->getLabel()->set($label, 'fr');
         $report->setChartType($chartType);
         $report->setWithUncertainty($displayUncertainty);
         foreach ($filters as $refAxis => $membersFiltered) {
@@ -535,7 +536,7 @@ abstract class AbstractPopulateOrga
 
         $query = new \Core_Model_Query();
         $query->filter->addCondition('library', $afLibrary);
-        $query->filter->addCondition('label', $label);
+        $query->filter->addCondition('label.fr', $label);
 
         return AF::loadList($query)[0];
     }

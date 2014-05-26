@@ -12,32 +12,32 @@ Feature: General info of an organization feature
     And I open tab "Informations générales"
   # Modification du libellé
     When I fill in "Libellé" with "Workspace avec données modifiée"
-    And I click element "#organizationDetails #Enregistrer"
+    And I click element "#organizationDetails1 .btn-primary"
     Then the following message is shown and closed: "Modification effectuée."
   # Vérification modification prise en compte
     When I reload the page
     And I wait for the page to finish loading
     Then I should see "Workspace avec données modifiée"
 
-  @javascript
-  Scenario: Edit organization inventory granularity
-  # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/idOrganization/1"
-    And I wait for the page to finish loading
-    And I open tab "Informations générales"
-  # Modification du niveau organisationnel des collectes
-    And I select "Année" from "Niveau organisationnel des collectes"
-    And I click element "#organizationDetails #Enregistrer"
-    Then the following message is shown and closed: "Modification effectuée."
-  # Vérification modification prise en compte
-    And I click "Données"
-    And I wait for the page to finish loading
-    Then I should see "Collectes Année"
-    Then I should see "Collectes Année | Catégorie"
-    Then I should see "Collectes Année | Zone | Marque"
-    Then I should see "Collectes - Saisies Année | Site"
-  # Modification du niveau organisationnel des collectes, choix d'un niveau organisationnel plus fin que certaines saisies
-  # TODO…
+#  @javascript
+#  Scenario: Edit organization inventory granularity
+#  # Accès à l'onglet "Informations générales"
+#    Given I am on "orga/organization/edit/idOrganization/1"
+#    And I wait for the page to finish loading
+#    And I open tab "Informations générales"
+#  # Modification du niveau organisationnel des collectes
+#    And I select "Année" from "Niveau organisationnel des collectes"
+#    And I click element "#organizationDetails .btn-primary"
+#    Then the following message is shown and closed: "Modification effectuée."
+#  # Vérification modification prise en compte
+#    And I click "Données"
+#    And I wait for the page to finish loading
+#    Then I should see "Collectes Année"
+#    Then I should see "Collectes Année | Catégorie"
+#    Then I should see "Collectes Année | Zone | Marque"
+#    Then I should see "Collectes - Saisies Année | Site"
+#  # Modification du niveau organisationnel des collectes, choix d'un niveau organisationnel plus fin que certaines saisies
+#  # TODO…
 
   @javascript
   Scenario: Add input granularity, incorrect input

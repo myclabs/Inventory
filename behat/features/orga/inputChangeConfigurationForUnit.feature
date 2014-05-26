@@ -1,5 +1,5 @@
 @dbFull
-Feature: Organization input input feature
+Feature: Organization input change configuration feature
 
   Background:
     Given I am logged in

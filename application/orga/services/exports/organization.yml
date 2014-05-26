@@ -11,8 +11,8 @@ sheets:
           - label: "{{ organizationColumnGranularityForInventoryStatus }}"
         lines:
           - cells:
-              - "{{ organization.label }}"
-              - "{{ organization.granularityForInventoryStatus.label }}"
+              - "{{ translateString(organization.label) }}"
+              - "{{ translateString(organization.granularityForInventoryStatus.label) }}"
 
       - type: VerticalTable
         title: "{{ organizationInputGranularities }}"
@@ -23,8 +23,8 @@ sheets:
           - foreach: organization.inputGranularities as inputGranularity
             do:
               - cells:
-                  - "{{ inputGranularity.label }}"
-                  - "{{ inputGranularity.inputConfigGranularity.label }}"
+                  - "{{ translateString(inputGranularity.label) }}"
+                  - "{{ translateString(inputGranularity.inputConfigGranularity.label) }}"
 
 
   - label: "{{ axesSheetLabel }}"
@@ -40,7 +40,7 @@ sheets:
           - foreach: organization.firstOrderedAxes as axis
             do:
               - cells:
-                  - "{{ axis.label }}"
+                  - "{{ translateString(axis.label) }}"
                   - "{{ axis.ref }}"
                   - "{{ displayAxisDirectNarrower(axis) }}"
 
@@ -57,21 +57,17 @@ sheets:
           - label: "{{ granularityColumnACL }}"
           - label: "{{ granularityColumnAFTab }}"
           - label: "{{ granularityColumnDW }}"
-          - label: "{{ granularityColumnGenericActions }}"
-          - label: "{{ granularityColumnContextActions }}"
           - label: "{{ granularityColumnInputDocuments }}"
         lines:
           - foreach: organization.granularities as granularity
             do:
               - cells:
-                  - "{{ granularity.label }}"
+                  - "{{ translateString(granularity.label) }}"
                   - "{{ granularity.navigable }}"
                   - "{{ granularity.cellsWithOrgaTab }}"
                   - "{{ granularity.cellsWithACL }}"
                   - "{{ granularity.cellsWithAFConfigTab }}"
                   - "{{ granularity.cellsGenerateDWCubes }}"
-                  - "{{ granularity.cellsWithSocialGenericActions }}"
-                  - "{{ granularity.cellsWithSocialContextActions }}"
                   - "{{ granularity.cellsWithInputDocs }}"
 
 
@@ -82,18 +78,18 @@ sheets:
       - foreach: organization.lastOrderedAxes as axis
         do:
           - type: VerticalTable
-            label: "{{ axis.label }}"
+            label: "{{ translateString(axis.label) }}"
             columns:
               - label: "{{ memberColumnLabel }}"
               - label: "{{ memberColumnRef }}"
               - foreach: axis.directBroaders as broaderAxis
                 do:
-                  - label: "{{ broaderAxis.label }}"
+                  - label: "{{ translateString(broaderAxis.label) }}"
             lines:
               - foreach: axis.members as member
                 do:
                   - cells:
-                      - "{{ member.label }}"
+                      - "{{ translateString(member.label) }}"
                       - "{{ member.ref }}"
                       - foreach: axis.directBroaders as broaderAxis
                         do:
@@ -104,20 +100,20 @@ sheets:
 
     content:
 
-      - foreach: organization.granularities as granularity
+      - foreach: filterRelevanceGranularities(organization.granularities) as granularity
         do:
           - type: VerticalTable
-            label: "{{ granularity.label }}"
+            label: "{{ translateString(granularity.label) }}"
             columns:
               - foreach: granularity.axes as axis
                 do:
-                  - label: "{{ axis.label }}"
+                  - label: "{{ translateString(axis.label) }}"
               - label: "{{ cellColumnRelevant }}"
             lines:
-              - foreach: granularity.cells as cell
+              - foreach: filterAllParentsRelevantCells(granularity.cells) as cell
                 do:
                   - cells:
                       - foreach: granularity.axes as axis
                         do:
                           - "{{ displayCellMemberForAxis(cell, axis) }}"
-                      - "{{ cell.isRelevant }}"
+                      - "{{ cell.relevant }}"

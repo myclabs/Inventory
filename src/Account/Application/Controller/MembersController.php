@@ -3,11 +3,10 @@
 use Account\Application\Service\AccountRoleManager;
 use Account\Domain\Account;
 use Account\Domain\AccountRepository;
-use Account\Domain\ACL\AccountAdminRole;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\ACL\Model\Role;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 
 /**
  * @author matthieu.napoli
@@ -22,7 +21,7 @@ class Account_MembersController extends Core_Controller
 
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var SynchronousWorkDispatcher
      */
     private $workDispatcher;
 
@@ -86,7 +85,7 @@ class Account_MembersController extends Core_Controller
                 }
                 throw $e;
             };
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
 
         $this->redirect('account/members?account=' . $account->getId());
@@ -123,7 +122,7 @@ class Account_MembersController extends Core_Controller
             $error = function (Exception $e) {
                 throw $e;
             };
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
 
         $this->redirect('account/members?account=' . $account->getId());

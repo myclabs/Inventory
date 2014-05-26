@@ -5,8 +5,8 @@ namespace UI\Datagrid\Column;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
 use UI\Datagrid\Datagrid;
-use UI_Form_Element_Text;
-use UI_Form_Element_Numeric;
+use AF\Application\Form\Element\TextField;
+use AF\Application\Form\Element\NumericField;
 
 /**
  * Classe représentant une colonne contenant des nombres.
@@ -224,7 +224,7 @@ JS;
         $filterValue .= 'if ((valueEqu != \'\') || (valueInf != \'\') || (valueSup != \'\')) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {";';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {";';
         $filterValue .= 'if (valueEqu != \'\') {';
         $filterValue .= 'filter += "\"'.$this->criteriaFilterOperator.'\":\"" + valueEqu + "\"";';
         $filterValue .= '}';
@@ -240,7 +240,7 @@ JS;
         $filterValue .= '}';
         $filterValue .= 'filter += "\"'.$this->filterOperatorHigher.'\":\"" + valueSup + "\"";';
         $filterValue .= '}';
-        $filterValue .= 'filter += "},";';
+        $filterValue .= 'filter += "}},";';
 
         $filterValue .= '}';
 

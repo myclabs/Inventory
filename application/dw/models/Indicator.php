@@ -6,6 +6,8 @@
  * @package    DW
  * @subpackage Model
  */
+
+use Core\Translation\TranslatedString;
 use Unit\UnitAPI;
 
 /**
@@ -16,7 +18,6 @@ use Unit\UnitAPI;
 class DW_Model_Indicator extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Constantes de tris et de filtres.
     const QUERY_REF = 'ref';
@@ -37,12 +38,12 @@ class DW_Model_Indicator extends Core_Model_Entity
      *
      * @var string
      */
-    protected  $ref = null;
+    protected $ref = null;
 
     /**
      * Label de l'Indicator.
      *
-     * @var string
+     * @var TranslatedString
      */
     protected $label = null;
 
@@ -58,7 +59,7 @@ class DW_Model_Indicator extends Core_Model_Entity
      *
      * @var UnitAPI
      */
-    protected  $unit;
+    protected $unit;
 
     /**
      * Unité utilisé pour les ratios.
@@ -68,9 +69,6 @@ class DW_Model_Indicator extends Core_Model_Entity
     protected $ratioUnit;
 
 
-    /**
-     * Constructeur de la classe Indicator.
-     */
     public function __construct(DW_Model_Cube $cube)
     {
         $this->cube = $cube;
@@ -85,7 +83,7 @@ class DW_Model_Indicator extends Core_Model_Entity
      */
     protected function getContext()
     {
-        return array('cube' => $this->cube);
+        return ['cube' => $this->cube];
     }
 
     /**
@@ -158,9 +156,9 @@ class DW_Model_Indicator extends Core_Model_Entity
     /**
      * Modifie le label de l'Indicator.
      *
-     * @param string $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
     }
@@ -168,7 +166,7 @@ class DW_Model_Indicator extends Core_Model_Entity
     /**
      * Retourne le label de l'Indicator.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -190,9 +188,9 @@ class DW_Model_Indicator extends Core_Model_Entity
      *
      * @param UnitAPI $unit
      */
-    public function setUnit($unit)
+    public function setUnit(UnitAPI $unit)
     {
-        $this->unit = $unit;
+        $this->unit = $unit->getRef();
     }
 
     /**
@@ -210,9 +208,9 @@ class DW_Model_Indicator extends Core_Model_Entity
      *
      * @param UnitAPI $ratioUnit
      */
-    public function setRatioUnit($ratioUnit)
+    public function setRatioUnit(UnitAPI $ratioUnit)
     {
-        $this->ratioUnit = $ratioUnit;
+        $this->ratioUnit = $ratioUnit->getRef();
     }
 
     /**
@@ -224,5 +222,4 @@ class DW_Model_Indicator extends Core_Model_Entity
     {
         return new UnitAPI($this->ratioUnit);
     }
-
 }

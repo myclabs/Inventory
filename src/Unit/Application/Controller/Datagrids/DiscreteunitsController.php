@@ -26,7 +26,7 @@ class Unit_Datagrids_DiscreteunitsController extends UI_Controller_Datagrid
 
             $element = array();
             $element['index'] = $unit->id;
-            $element['label'] = $unit->label;
+            $element['label'] = $this->cellTranslatedText($unit->label);
             $element['id'] = $unit->id;
 
             $this->addLine($element);

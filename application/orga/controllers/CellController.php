@@ -1,5 +1,6 @@
 <?php
 
+use Account\Application\Service\OrganizationViewFactory;
 use AF\Application\InputFormParser;
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
@@ -10,8 +11,8 @@ use MyCLabs\MUIH\GenericVoidTag;
 use MyCLabs\MUIH\Icon;
 use MyCLabs\ACL\ACL;
 use MyCLabs\MUIH\Tab;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 use User\Domain\ACL\Actions;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\ViewModel\CellViewModelFactory;
 use AuditTrail\Domain\Context\OrganizationContext;
 use AuditTrail\Domain\EntryRepository;
@@ -44,13 +45,13 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var SynchronousWorkDispatcher
      */
     private $workDispatcher;
 
     /**
      * @Inject
-     * @var \Account\Application\Service\OrganizationViewFactory
+     * @var OrganizationViewFactory
      */
     private $organizationVMFactory;
 
@@ -144,7 +145,7 @@ class Orga_CellController extends Core_Controller
         $currentAxes = $granularity->getAxes();
         $this->view->assign(
             'refAxes',
-            json_encode(array_map(function ($axis) { return $axis->getRef(); }, $currentAxes))
+            array_map(function ($axis) { return $axis->getRef(); }, $currentAxes)
         );
         $this->setActiveMenuItemOrganization($organization->getId());
 
@@ -274,12 +275,17 @@ class Orga_CellController extends Core_Controller
                 $relevantQuery->filter->addCondition(Orga_Model_Cell::QUERY_ALLPARENTSRELEVANT, true);
                 $totalChildCells = $cell->countTotalChildCellsForGranularity($narrowerGranularity, $relevantQuery);
 
+                $showInventoryFilter = $isNarrowerGranularityInput
+                    && ($granularityForInventoryStatus !== null)
+                    && ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus));
+
                 $narrowerGranularities[] = [
                     'granularity' => $narrowerGranularity,
                     'purpose' => $purpose,
                     'filterAxes' => $filterAxes,
                     'isAcl' => $isNarrowerGranularityACL,
                     'isInventory' => $isNarrowerGranularityInventory,
+                    'showInventory' => $showInventoryFilter,
                     'isGranularityForInventoryStatus' => ($narrowerGranularity === $granularityForInventoryStatus),
                     'isInput' => $isNarrowerGranularityInput,
                     'isAnalyses' => $isNarrowerGranularityAnalyses,
@@ -325,7 +331,7 @@ class Orga_CellController extends Core_Controller
             $axisChoiceNullOption->setAttribute('value', '');
             $axisChoiceInput->appendContent($axisChoiceNullOption);
             foreach ($axesCanEdit as $axis) {
-                $axisOption = new GenericTag('option', $axis->getLabel());
+                $axisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
                 $axisOption->setAttribute('value', $axis->getRef());
                 $axisChoiceInput->appendContent($axisOption);
 
@@ -337,7 +343,7 @@ class Orga_CellController extends Core_Controller
                     $parentMemberGroup->addClass($axis->getRef());
                     $addMemberForm->appendContent($parentMemberGroup);
 
-                    $parentMemberChoiceLabel = new GenericTag('label', $broaderAxis->getLabel());
+                    $parentMemberChoiceLabel = new GenericTag('label', $this->translator->get($broaderAxis->getLabel()));
                     $parentMemberChoiceLabel->setAttribute('for', 'addMember_axis_'.$broaderAxis->getId());
                     $parentMemberChoiceLabel->addClass('control-label');
                     $parentMemberChoiceLabel->addClass('col-xs-2');
@@ -371,7 +377,7 @@ class Orga_CellController extends Core_Controller
                         $members = $broaderAxis->getMembers();
                     }
                     foreach ($members as $parentMember) {
-                        $parentMemberOption = new GenericTag('option', $parentMember->getLabel());
+                        $parentMemberOption = new GenericTag('option', $this->translator->get($parentMember->getLabel()));
                         $parentMemberOption->setAttribute('value', $parentMember->getId());
                         $parentMemberChoiceInput->appendContent($parentMemberOption);
                     }
@@ -415,7 +421,9 @@ class Orga_CellController extends Core_Controller
     protected function getFilterAxisOptions(Orga_Model_Axis $axis, Orga_Model_Cell $cell)
     {
         $memberOptions = [];
-        $memberOptions[''] = __('Orga', 'view', 'allMembers', ['AXIS' => $axis->getLabel()]);
+        $memberOptions[''] = __('Orga', 'view', 'allMembers', [
+            'AXIS' => $this->translator->get($axis->getLabel())
+        ]);
 
         $filter = $cell->getChildMembersForAxes([$axis]);
         /** @var Orga_Model_Member[] $members */
@@ -425,7 +433,7 @@ class Orga_CellController extends Core_Controller
             $members = $axis->getOrderedMembers()->toArray();
         }
         foreach ($members as $member) {
-            $memberOptions[$member->getTag()] = $member->getLabel();
+            $memberOptions[$member->getTag()] = $this->translator->get($member->getLabel());
         }
 
         return $memberOptions;
@@ -461,6 +469,9 @@ class Orga_CellController extends Core_Controller
         // Exports
         $showExports = $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell);
 
+        // Input.
+        $showInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
+
         // Inventory.
         try {
             $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()
@@ -471,10 +482,14 @@ class Orga_CellController extends Core_Controller
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
             && $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell)
             && $this->acl->isAllowed($connectedUser, Actions::INPUT, $cell));
-        $showInventory = (($granularityForInventoryStatus !== null)
-            && (($narrowerGranularity === $granularityForInventoryStatus)
-                || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus))));
-        if ($showInventory) {
+        $showInventory = $editInventory
+            || ($narrowerGranularity === $granularityForInventoryStatus)
+            || ($showInput && (($granularityForInventoryStatus !== null)
+                    && (($narrowerGranularity === $granularityForInventoryStatus)
+                        || ($narrowerGranularity->isNarrowerThan($granularityForInventoryStatus)))));
+
+        $showInventoryProgress = $showInventory;
+        if ($showInventoryProgress) {
             $narrowerGranularityHasACLParent = $narrowerGranularity->getCellsWithACL();
             if (!$narrowerGranularityHasACLParent) {
                 foreach ($narrowerGranularity->getBroaderGranularities() as $broaderInventoryGranularity) {
@@ -490,9 +505,9 @@ class Orga_CellController extends Core_Controller
                     }
                 }
             }
-            $showInventory = $showInventory && $narrowerGranularityHasACLParent;
+            $showInventoryProgress = $showInventoryProgress && $narrowerGranularityHasACLParent;
         }
-        if ($showInventory) {
+        if ($showInventoryProgress) {
             $narrowerGranularityHasSubInputGranlarities = false;
             foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
                 if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
@@ -500,21 +515,8 @@ class Orga_CellController extends Core_Controller
                     break;
                 }
             }
-
+            $showInventoryProgress = $showInventoryProgress && $narrowerGranularityHasSubInputGranlarities;
         }
-        if ($showInventory) {
-            $narrowerGranularityHasSubInputGranlarities = false;
-            foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInventoryGranularity) {
-                if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
-                    $narrowerGranularityHasSubInputGranlarities = true;
-                    break;
-                }
-            }
-            $showInventory = $showInventory && $narrowerGranularityHasSubInputGranlarities;
-        }
-
-        // Input.
-        $showInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
 
         // Uniquement les sous-cellules pertinentes.
         $childCellsCriteria = new Criteria();
@@ -525,6 +527,7 @@ class Orga_CellController extends Core_Controller
         }
         $childCellsCriteria->setFirstResult($this->getParam('firstCell'));
         $childCellsCriteria->setMaxResults($this->getParam('showCells'));
+        $childCellsCriteria->orderBy(['tag' => Criteria::ASC]);
         if ($this->hasParam('filters')) {
             $filters = $this->getParam('filters');
             $filterPrefix = 'granularity' . $idNarrowerGranularity . '_';
@@ -532,6 +535,8 @@ class Orga_CellController extends Core_Controller
                 if (!empty($filter['value'])) {
                     if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
                         $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
+                    } else if ($filter['name'] === ($filterPrefix . 'inputStatus')) {
+                        $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inputStatus', $filter['value']));
                     } else {
                         $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
                     }
@@ -550,6 +555,7 @@ class Orga_CellController extends Core_Controller
                 $showReports,
                 $showExports,
                 $showInventory,
+                $showInventoryProgress,
                 $editInventory,
                 $showInput
             );
@@ -563,6 +569,8 @@ class Orga_CellController extends Core_Controller
                 if (!empty($filter['value'])) {
                     if ($filter['name'] === ($filterPrefix . 'inventoryStatus')) {
                         $childCellsQuery->filter->addCondition('inventoryStatus', $filter['value']);
+                    } else if ($filter['name'] === ($filterPrefix . 'inputStatus')) {
+                        $childCellsQuery->filter->addCondition('inputStatus', $filter['value']);
                     } else {
                         $childCellsQuery->filter->addCondition('tag', $filter['value'], Core_Model_Filter::OPERATOR_CONTAINS);
                     }
@@ -594,7 +602,7 @@ class Orga_CellController extends Core_Controller
             $eventText = __('Orga', 'auditTrail', $entry->getEventName(), [
                 'INPUT' => '<a href="orga/cell/input/idCell/' . $entry->getContext()->getCell()->getId()
                                 . '/fromIdCell/' . $cell->getId() . '/">'
-                                . $entry->getContext()->getCell()->getLabel()
+                                . $this->translator->get($entry->getContext()->getCell()->getLabel())
                             . '</a>',
                 'USER' => '<b>'.$entry->getUser()->getName().'</b>'
             ]);
@@ -628,11 +636,11 @@ class Orga_CellController extends Core_Controller
         $comments = [];
         /** @var Orga_Model_Cell_InputComment $comment */
         foreach ($cellRepository->getLatestComments($cell, 10) as $comment) {
-            $commentText = __('Social', 'comment', 'by') . ' <b>' . $comment->getAuthor()->getName() . '</b> '
+            $commentText = __('Orga', 'comment', 'by') . ' <b>' . $comment->getAuthor()->getName() . '</b> '
                 . __('Orga', 'input', 'aboutInput')
                 . ' <a href="orga/cell/input/idCell/' . $comment->getCell()->getId()
                     . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
-                    . $comment->getCell()->getLabel()
+                    . $this->translator->get($comment->getCell()->getLabel())
                 . '</a>' . __('UI', 'other', ':')
                 . '« '
                 . Core_Tools::truncateString(Core_Tools::removeTextileMarkUp($comment->getText()), 150)
@@ -721,9 +729,12 @@ class Orga_CellController extends Core_Controller
             'Orga_Service_OrganizationService',
             'addMember',
             [$axis, $ref, $label, $parentMembers],
-            __('Orga', 'backgroundTasks', 'addMember', ['MEMBER' => $label, 'AXIS' => $axis->getLabel()])
+            __('Orga', 'backgroundTasks', 'addMember', [
+                'MEMBER' => $label,
+                'AXIS' => $this->translator->get($axis->getLabel()),
+            ])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -740,7 +751,9 @@ class Orga_CellController extends Core_Controller
         usort(
             $usersLinked,
             function (AbstractCellRole $a, AbstractCellRole $b) {
+                /** @var User $aUser */
                 $aUser = $a->getSecurityIdentity();
+                /** @var User $bUser */
                 $bUser = $b->getSecurityIdentity();
                 if (get_class($a) === get_class($b)) {
                     if ($aUser->getFirstName() === $bUser->getFirstName()) {
@@ -845,7 +858,7 @@ class Orga_CellController extends Core_Controller
             [$cell, $role, $userEmail, false],
             __('Orga', 'backgroundTasks', 'addRoleToUser', ['ROLE' => $role::getLabel(), 'USER' => $userEmail])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -878,7 +891,7 @@ class Orga_CellController extends Core_Controller
                 ['ROLE' => $role->getLabel(), 'USER' => $user->getEmail()]
             )
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -920,7 +933,10 @@ class Orga_CellController extends Core_Controller
         $usersReports = [];
         $dWReports = $cell->getDWCube()->getReports();
         usort($dWReports, function (DW_Model_Report $a, DW_Model_Report $b) {
-            return strcmp($a->getLabel(), $b->getLabel());
+            return strcmp(
+                $this->translator->get($a->getLabel()),
+                $this->translator->get($b->getLabel())
+            );
         });
         foreach ($dWReports as $dWReport) {
             try {
@@ -930,7 +946,7 @@ class Orga_CellController extends Core_Controller
                 // Rapport Copié.
             }
             $cellReports[] = [
-                'label' => $dWReport->getLabel(),
+                'label' => $this->translator->get($dWReport->getLabel()),
                 'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$dWReport->getId(),
                 'type' => 'copiedReport',
             ];
@@ -940,7 +956,7 @@ class Orga_CellController extends Core_Controller
         foreach ($usersReports as $cellReport) {
             /** @var DW_Model_Report $dWReport */
             $cellReports[] = [
-                'label' => $cellReport->getCellDWReport()->getLabel(),
+                'label' => $this->translator->get($cellReport->getCellDWReport()->getLabel()),
                 'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$cellReport->getCellDWReport()->getId(),
                 'type' => 'userReport',
                 'owner' => $cellReport->getOwner(),
@@ -992,9 +1008,11 @@ class Orga_CellController extends Core_Controller
         }
 
         $viewConfiguration = new DW_ViewConfiguration();
-        $viewConfiguration->setComplementaryPageTitle(' <small>'.$cell->getExtendedLabel().'</small>');
+        $viewConfiguration->setComplementaryPageTitle(
+            ' <small>'.$this->translator->get($cell->getExtendedLabel()).'</small>'
+        );
         $viewConfiguration->setOutputUrl('orga/cell/view/idCell/'.$fromIdCell.'/');
-        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$fromIdCell);
+        $viewConfiguration->setSaveURL('orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell);
         $viewConfiguration->setCanBeUpdated($reportCanBeUpdated);
         $viewConfiguration->setCanBeSavedAs(true);
 
@@ -1033,6 +1051,7 @@ class Orga_CellController extends Core_Controller
         $specificReports = new DW_Export_Specific_Pdf(
             $specificReportsDirectoryPath.$this->getParam('report').'.xml',
             $cell->getDWCube(),
+            $this->translator,
             $exportUrl
         );
 
@@ -1228,7 +1247,7 @@ class Orga_CellController extends Core_Controller
         Zend_Layout::getMvcInstance()->disableLayout();
         Zend_Controller_Front::getInstance()->setParam('noViewRenderer', true);
 
-        $exportService = new Orga_Service_Export();
+        $exportService = new Orga_Service_Export($this->translator);
         $exportService->$streamFunction($format, $cell);
     }
 
@@ -1247,10 +1266,10 @@ class Orga_CellController extends Core_Controller
         $this->sendJsonResponse([
             'status' => $inventoryStatus,
             'label' => $this->cellVMFactory->inventoryStatusList[$inventoryStatus],
-            'mainActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_ACTIVE) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_ACTIVE,
-            'mainActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction')),
-            'otherActionStatus' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? Orga_Model_Cell::STATUS_CLOSED : Orga_Model_Cell::STATUS_NOTLAUNCHED,
-            'otherActionLabel' => ($inventoryStatus === Orga_Model_Cell::STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($inventoryStatus == Orga_Model_Cell::STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction')),
+            'mainActionStatus' => ($inventoryStatus === Orga_Model_Cell::INVENTORY_STATUS_ACTIVE) ? Orga_Model_Cell::INVENTORY_STATUS_CLOSED : Orga_Model_Cell::INVENTORY_STATUS_ACTIVE,
+            'mainActionLabel' => ($inventoryStatus === Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedMainAction') : (($inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveMainAction') : ___('Orga', 'view', 'inventoryClosedMainAction')),
+            'otherActionStatus' => ($inventoryStatus === Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED) ? Orga_Model_Cell::INVENTORY_STATUS_CLOSED : Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED,
+            'otherActionLabel' => ($inventoryStatus === Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED) ? ___('Orga', 'view', 'inventoryNotLaunchedOtherAction') : (($inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_ACTIVE) ? ___('Orga', 'view', 'inventoryActiveOtherAction') : ___('Orga', 'view', 'inventoryClosedOtherAction')),
         ]);
     }
 
@@ -1305,12 +1324,14 @@ class Orga_CellController extends Core_Controller
         );
 
         $aFViewConfiguration = new AFViewConfiguration();
-        if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::STATUS_CLOSED)) {
+        if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::INVENTORY_STATUS_CLOSED)) {
             $aFViewConfiguration->setMode(AFViewConfiguration::MODE_WRITE);
         } else {
             $aFViewConfiguration->setMode(AFViewConfiguration::MODE_READ);
         }
-        $aFViewConfiguration->setPageTitle(__('UI', 'name', 'input').' <small>'.$cell->getLabel().'</small>');
+        $aFViewConfiguration->setPageTitle(
+            __('UI', 'name', 'input').' <small>'.$this->translator->get($cell->getLabel()).'</small>'
+        );
         $aFViewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $idCell]);
         $aFViewConfiguration->setResultsPreviewUrl('orga/cell/input-preview');
         $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $fromIdCell . '/');
@@ -1322,7 +1343,7 @@ class Orga_CellController extends Core_Controller
         }
 
         $tabComments = new Tab('inputComments');
-        $tabComments->setTitle(__('Social', 'comment', 'comments'));
+        $tabComments->setTitle(__('Orga', 'comment', 'comments'));
         $commentView = new Zend_View();
         $commentView->setScriptPath(__DIR__ . '/../views/scripts');
         $commentView->assign('idCell', $idCell);
@@ -1351,6 +1372,8 @@ class Orga_CellController extends Core_Controller
         $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
 
         $this->setActiveMenuItemOrganization($cell->getOrganization()->getId());
+
+        \AF\Application\Form\Form::addHeader();
 
         $this->forward('display', 'af', 'af', [
             'id' => $cell->getInputAFUsed()->getId(),

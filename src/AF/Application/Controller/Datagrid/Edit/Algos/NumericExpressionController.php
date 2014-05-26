@@ -23,8 +23,11 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
-                $data['label'] = $algo->getLabel();
-                $data['unit'] = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
+                $data['label'] = $this->cellTranslatedText($algo->getLabel());
+                $data['unit'] = $this->cellText(
+                    $algo->getUnit()->getRef(),
+                    $this->translator->get($algo->getUnit()->getSymbol())
+                );
                 $data['expression'] = $this->cellLongText(
                     'af/edit_algos/popup-expression/idAF/' . $af->getId() . '/algo/' . $algo->getId(),
                     'af/datagrid_edit_algos_numeric-expression/get-expression/idAF/' . $af->getId() . '/algo/'
@@ -74,7 +77,7 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->send();
                 return;
             }
-            $algo->setLabel($this->getAddElementValue('label'));
+            $this->translator->set($algo->getLabel(), $this->getAddElementValue('label'));
             try {
                 $algo->setExpression($this->getAddElementValue('expression'));
             } catch (InvalidExpressionException $e) {
@@ -117,8 +120,8 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                 $this->data = $algo->getRef();
                 break;
             case 'label':
-                $algo->setLabel($newValue);
-                $this->data = $algo->getLabel();
+                $this->translator->set($algo->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($algo->getLabel());
                 break;
             case 'unit':
                 $unit = new UnitAPI($newValue);
@@ -126,7 +129,10 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $algo->setUnit($unit);
-                $this->data = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
+                $this->data = $this->cellText(
+                    $algo->getUnit()->getRef(),
+                    $this->translator->get($algo->getUnit()->getSymbol())
+                );
                 break;
             case 'expression':
                 try {
@@ -200,7 +206,8 @@ class AF_Datagrid_Edit_Algos_NumericExpressionController extends UI_Controller_D
             foreach ($library->getContextIndicators() as $contextIndicator) {
                 $this->addElementList(
                     $contextIndicator->getId(),
-                    $library->getLabel() . ' > ' . $contextIndicator->getLabel()
+                    $this->translator->get($library->getLabel()) . ' > '
+                    . $this->translator->get($contextIndicator->getLabel())
                 );
             }
         }

@@ -5,7 +5,7 @@ namespace AF\Domain\Component;
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\AFGenerationHelper;
 use AF\Domain\Input\CheckboxInput;
-use UI_Form_Element_Checkbox;
+use AF\Application\Form\Element\Checkbox as FormCheckbox;
 
 /**
  * @author matthieu.napoli
@@ -24,9 +24,9 @@ class Checkbox extends Field
      */
     public function getUIElement(AFGenerationHelper $generationHelper)
     {
-        $uiElement = new UI_Form_Element_Checkbox($this->ref);
-        $uiElement->setLabel($this->label);
-        $uiElement->getElement()->help = $this->help;
+        $uiElement = new FormCheckbox($this->ref);
+        $uiElement->setLabel($this->uglyTranslate($this->label));
+        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         if ($generationHelper->isReadOnly()) {
             $uiElement->getElement()->setReadOnly();
         }

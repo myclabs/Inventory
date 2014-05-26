@@ -2,9 +2,12 @@
 
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
+use Core\Translation\TranslatedString;
 use Doc\Domain\Library;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Selectable;
 use MyCLabs\ACL\Model\EntityResource;
 use Orga\Model\ACL\AbstractCellRole;
 use Orga\Model\ACL\CellAdminRole;
@@ -33,21 +36,28 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     const  REF_SEPARATOR = '|';
     const  LABEL_SEPARATOR = ' | ';
 
+    // Constantes des statuts de saisie.
+    const INPUT_STATUS_AF_NOT_CONFIGURED = 'statusAFNotConfigured';
+    const INPUT_STATUS_NOT_STARTED = 'statusNotStarted';
+    const INPUT_STATUS_INPUT_INCOMPLETE = "statusInputIncomplete";
+    const INPUT_STATUS_CALCULATION_INCOMPLETE = "statusCalculationIncomplete";
+    const INPUT_STATUS_COMPLETE = "statusComplete";
+    const INPUT_STATUS_FINISHED = "statusFinished";
 
     /**
      * Etat non débuté de l'inventaire.
      */
-    const STATUS_NOTLAUNCHED = 'notLaunched';
+    const INVENTORY_STATUS_NOTLAUNCHED = 'notLaunched';
 
     /**
      * Etat actif de l'inventaire.
      */
-    const STATUS_ACTIVE = 'active';
+    const INVENTORY_STATUS_ACTIVE = 'active';
 
     /**
      * Etat terminé de l'inventaire.
      */
-    const STATUS_CLOSED = 'closed';
+    const INVENTORY_STATUS_CLOSED = 'closed';
 
 
     /**
@@ -69,7 +79,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      *
      * @var Collection|Orga_Model_Member[]
      */
-    protected $members = array();
+    protected $members;
 
     /**
      * Représentation simplifié en chaine de caractère des membres de la cellule.
@@ -100,21 +110,28 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     protected $allParentsRelevant = true;
 
     /**
-     * Status de l'inventaire.
+     * Statut de l'inventaire.
      *
      * @var string
      * @see STATUS_NOTLAUNCHED;
      * @see STATUS_ACTIVE;
      * @see STATUS_CLOSED;
      */
-    protected $inventoryStatus = self::STATUS_NOTLAUNCHED;
+    protected $inventoryStatus = self::INVENTORY_STATUS_NOTLAUNCHED;
 
     /**
      * Collection des CellsGroup utilisant cette Cell comme container.
      *
      * @var Collection|Orga_Model_CellsGroup[]
      */
-    private $cellsGroups = null;
+    protected $cellsGroups = null;
+
+    /**
+     * Statut de la saisie.
+     *
+     * @var string
+     */
+    protected $inputStatus = self::INPUT_STATUS_AF_NOT_CONFIGURED;
 
     /**
      * Tableau d'état des saisies de la cellule.
@@ -226,7 +243,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      */
     public static function loadByDocLibraryForAFInputSetsPrimary(Library $docLibrary)
     {
-        return self::getEntityRepository()->loadBy(array('docLibraryForAFInputSetsPrimary' => $docLibrary));
+        return self::getEntityRepository()->loadBy(['docLibraryForAFInputSetPrimary' => $docLibrary]);
     }
 
     /**
@@ -325,7 +342,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      *
      * @return string
      */
-    public static function buildMembersHashKey($listMembers)
+    public static function buildMembersHashKey(array $listMembers)
     {
         @usort($listMembers, [Orga_Model_Member::class, 'orderMembers']);
         $membersRef = [];
@@ -486,7 +503,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
                 $this->updateInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
             } catch (Core_Exception_NotFound $e) {
                 // Il n'y a pas de cellules parentes.
-                $this->updateInventoryStatus(self::STATUS_NOTLAUNCHED);
+                $this->updateInventoryStatus(self::INVENTORY_STATUS_NOTLAUNCHED);
             }
         }
     }
@@ -494,12 +511,12 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     /**
      * Renvoie le label de la Cell. Basée sur les labels des Member.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
         if ($this->members->isEmpty()) {
-            return __('Orga', 'navigation', 'labelGlobalCell');
+            return TranslatedString::untranslated(__('Orga', 'navigation', 'labelGlobalCell'));
         }
 
         $labels = [];
@@ -509,18 +526,18 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $labels[] = $member->getLabel();
         }
 
-        return implode(self::LABEL_SEPARATOR, $labels);
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
      * Renvoie le label étendue de la Cell. Basée sur les labels étendues des Member.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getExtendedLabel()
     {
         if ($this->members->isEmpty()) {
-            return __('Orga', 'navigation', 'labelGlobalCellExtended');
+            return TranslatedString::untranslated(__('Orga', 'navigation', 'labelGlobalCellExtended'));
         }
 
         $labels = [];
@@ -530,7 +547,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $labels[] = $member->getExtendedLabel();
         }
 
-        return implode(self::LABEL_SEPARATOR, $labels);
+        return TranslatedString::implode(self::LABEL_SEPARATOR, $labels);
     }
 
     /**
@@ -647,7 +664,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      * @param Orga_Model_Granularity $narrowerGranularity
      *
      * @throws Core_Exception_InvalidArgument The given granularity is not narrower than the current
-     * @return Collection|Orga_Model_Cell[]
+     * @return Collection|Selectable|Orga_Model_Cell[]
      */
     public function getChildCellsForGranularity(Orga_Model_Granularity $narrowerGranularity)
     {
@@ -707,8 +724,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      * @throws Core_Exception_InvalidArgument The given granularity is not narrower than the current
      * @return Orga_Model_Cell[]
      */
-    public function loadChildCellsForGranularity($narrowerGranularity, Core_Model_Query $queryParameters = null)
-    {
+    public function loadChildCellsForGranularity(
+        Orga_Model_Granularity $narrowerGranularity,
+        Core_Model_Query $queryParameters = null
+    ) {
         if (!($this->getGranularity()->isBroaderThan($narrowerGranularity))) {
             throw new Core_Exception_InvalidArgument('The given granularity is not narrower than the current');
         }
@@ -744,8 +763,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      * @throws Core_Exception_InvalidArgument The given granularity is not narrower than the current
      * @return int
      */
-    public function countTotalChildCellsForGranularity($narrowerGranularity, Core_Model_Query $queryParameters = null)
-    {
+    public function countTotalChildCellsForGranularity(
+        Orga_Model_Granularity $narrowerGranularity,
+        Core_Model_Query $queryParameters = null
+    ) {
         if (!($this->getGranularity()->isBroaderThan($narrowerGranularity))) {
             throw new Core_Exception_InvalidArgument('The given granularity is not narrower than the current.');
         }
@@ -794,9 +815,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      * @throws Core_Exception
      * @throws Core_Exception_InvalidArgument
      *
-     * @see self::STATUS_ACTIVE
-     * @see self::STATUS_CLOSED
-     * @see self::STATUS_NOTLAUNCHED
+     * @see self::INVENTORY_STATUS_ACTIVE
+     * @see self::INVENTORY_STATUS_CLOSED
+     * @see self::INVENTORY_STATUS_NOTLAUNCHED
      */
     public function setInventoryStatus($inventoryStatus)
     {
@@ -805,9 +826,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
         }
 
         if ($this->inventoryStatus !== $inventoryStatus) {
-            $acceptedStatus = [self::STATUS_ACTIVE, self::STATUS_CLOSED, self::STATUS_NOTLAUNCHED];
+            $acceptedStatus = [self::INVENTORY_STATUS_ACTIVE, self::INVENTORY_STATUS_CLOSED, self::INVENTORY_STATUS_NOTLAUNCHED];
             if (! in_array($inventoryStatus, $acceptedStatus)) {
-                throw new Core_Exception_InvalidArgument('Inventory status must be a class constant (STATUS_[..]).');
+                throw new Core_Exception_InvalidArgument('Inventory status must be a class constant (INVENTORY_STATUS_[..]).');
             }
 
             $this->inventoryStatus = $inventoryStatus;
@@ -833,9 +854,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      *
      * @return string
      *
-     * @see self::STATUS_ACTIVE
-     * @see self::STATUS_CLOSED
-     * @see self::STATUS_NOTLAUNCHED
+     * @see self::INVENTORY_STATUS_ACTIVE
+     * @see self::INVENTORY_STATUS_CLOSED
+     * @see self::INVENTORY_STATUS_NOTLAUNCHED
      */
     public function getInventoryStatus()
     {
@@ -881,7 +902,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      */
     public function getCellsGroupForInputGranularity(Orga_Model_Granularity $inputGranularity)
     {
-        $criteria = \Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('inputGranularity', $inputGranularity));
         $cellsGroup = $this->cellsGroups->matching($criteria)->toArray();
 
@@ -925,6 +946,62 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     public function getCellsGroups()
     {
         return $this->cellsGroups->toArray();
+    }
+
+    /**
+     * Spécifie la statut de la saisie de la cellule.
+     *
+     * @see self::INPUT_STATUS_AF_NOT_CONFIGURED
+     * @see self::INPUT_STATUS_NOT_STARTED
+     * @see self::INPUT_STATUS_INPUT_INCOMPLETE
+     * @see self::INPUT_STATUS_CALCULATION_INCOMPLETE
+     * @see self::INPUT_STATUS_COMPLETE
+     * @see self::INPUT_STATUS_FINISHED
+     */
+    public function updateInputStatus()
+    {
+        if ($this->aFInputSetPrimary !== null) {
+            switch ($this->aFInputSetPrimary->getStatus()) {
+                case PrimaryInputSet::STATUS_FINISHED:
+                    $this->inputStatus = self::INPUT_STATUS_FINISHED;
+                    break;
+                case PrimaryInputSet::STATUS_COMPLETE:
+                    $this->inputStatus = self::INPUT_STATUS_COMPLETE;
+                    break;
+                case PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE:
+                    $this->inputStatus = self::INPUT_STATUS_CALCULATION_INCOMPLETE;
+                    break;
+                case PrimaryInputSet::STATUS_INPUT_INCOMPLETE:
+                    $this->inputStatus = self::INPUT_STATUS_INPUT_INCOMPLETE;
+                    break;
+                default:
+                    $this->inputStatus = self::INPUT_STATUS_NOT_STARTED;
+                    break;
+            }
+        } else {
+            if (($this->getGranularity()->isInput()) && ($this->getInputAFUsed() === null)) {
+                $this->inputStatus = self::INPUT_STATUS_NOT_STARTED;
+            } else {
+                $this->inputStatus = self::INPUT_STATUS_AF_NOT_CONFIGURED;
+            }
+        }
+    }
+
+    /**
+     * Renvoi la statut de la saisie de la cellule.
+     *
+     * @return string
+     *
+     * @see self::INPUT_STATUS_AF_NOT_CONFIGURED
+     * @see self::INPUT_STATUS_NOT_STARTED
+     * @see self::INPUT_STATUS_INPUT_INCOMPLETE
+     * @see self::INPUT_STATUS_CALCULATION_INCOMPLETE
+     * @see self::INPUT_STATUS_COMPLETE
+     * @see self::INPUT_STATUS_FINISHED
+     */
+    public function getInputStatus()
+    {
+        return $this->inputStatus;
     }
 
     /**
@@ -974,6 +1051,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
                 )->getCellsGroupForInputGranularity($granularity)->getAF();
             }
         } catch (Core_Exception_UndefinedAttribute $e) {
+        } catch (Core_Exception_NotFound $e) {
             // Pas d'AF spécifié.
         }
         return null;
@@ -1016,7 +1094,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
-     * Vérifie si un SocialComment est utilisée par la cellule.
+     * Vérifie si un Comment est utilisée par la cellule.
      *
      * @param Orga_Model_Cell_InputComment $comment
      *
@@ -1028,7 +1106,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
-     * Ajoute un SocialComment à la Cellule.
+     * Ajoute un Comment à la Cellule.
      *
      * @param Orga_Model_Cell_InputComment $comment
      */
@@ -1040,7 +1118,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
-     * Retire un SocialComment de la cellule.
+     * Retire un Comment de la cellule.
      *
      * @param Orga_Model_Cell_InputComment $comment
      */
@@ -1052,7 +1130,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
-     * Vérifie si au moins un SocialComment est utilisée par la cellule pour l'InputSetPrimary.
+     * Vérifie si au moins un Comment est utilisée par la cellule pour l'InputSetPrimary.
      *
      * @return bool
      */
@@ -1084,7 +1162,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $etlDataService = $container->get(Orga_Service_ETLData::class);
 
             $this->dWCube = new DW_model_cube();
-            $this->dWCube->setLabel($this->getLabel());
+            $this->dWCube->setLabel(clone $this->getLabel());
 
             $etlStructureService->populateCellDWCube($this);
             $etlStructureService->addGranularityDWReportsToCellDWCube($this);
@@ -1159,7 +1237,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
         $populatingCells = [];
 
         foreach ($this->getGranularity()->getOrganization()->getInputGranularities() as $inputGranularity) {
-            if (($inputGranularity === $this->getGranularity()) && ($this->isRelevant())){
+            if (($inputGranularity === $this->getGranularity()) && ($this->isRelevant())) {
                 $populatingCells[] = $this;
             } elseif ($inputGranularity->isNarrowerThan($this->getGranularity())) {
                 foreach ($this->getChildCellsForGranularity($inputGranularity) as $inputChildCell) {
@@ -1266,7 +1344,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      */
     public function deleteDWResults()
     {
-        foreach ($this->dWResults->toArray() as $dWResult) {
+        foreach ($this->dWResults as $dWResult) {
             $this->dWResults->removeElement($dWResult);
             $dWResult->delete();
         }
@@ -1284,7 +1362,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 //            Doctrine\Common\Collections\Criteria::expr()->eq('dWCube', $dWCube)
 //        );
 //        foreach ($this->dWResults->matching($criteria)->toArray() as $dWResult) {
-        foreach ($this->dWResults->toArray() as $dWResult) {
+        foreach ($this->dWResults as $dWResult) {
             if ($dWResult->getCube() === $dWCube) {
                 $this->dWResults->removeElement($dWResult);
                 $dWResult->delete();

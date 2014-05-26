@@ -7,10 +7,6 @@ namespace Orga\ViewModel;
  */
 class CellViewModel
 {
-    const AF_STATUS_INVENTORY_NOT_STARTED = 'statusInventoryNotStarted';
-    const AF_STATUS_AF_NOT_CONFIGURED = 'statusAFNotConfigured';
-    const AF_STATUS_NOT_STARTED = 'statusNotStarted';
-
     /**
      * @var int
      */
@@ -70,6 +66,11 @@ class CellViewModel
      * @var boolean
      */
     public $showInventory = false;
+
+    /**
+     * @var boolean
+     */
+    public $showInventoryProgress = false;
 
     /**
      * @var bool

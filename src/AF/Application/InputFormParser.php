@@ -171,7 +171,7 @@ class InputFormParser
                 }
             }
             if (!isset($selectedUnit)) {
-                throw new Exception("Il est temps de refactoriser un peu le parsing des soumissions de UI_Form");
+                throw new Exception("Il est temps de refactoriser un peu le parsing des soumissions de AF\Application\Form\UI_Form");
             }
             $input->setValue(
                 new Calc_UnitValue($selectedUnit, $value, $relativeUncertainty)

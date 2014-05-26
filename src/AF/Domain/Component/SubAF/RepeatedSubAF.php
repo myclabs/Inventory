@@ -7,9 +7,9 @@ use AF\Domain\AFGenerationHelper;
 use AF\Domain\Component\SubAF;
 use AF\Domain\Input\SubAF\RepeatedSubAFInput;
 use AF\Domain\InputSet\SubInputSet;
-use UI_Form_Element_Group;
-use UI_Form_Element_GroupRepeated;
-use UI_Form_Element_Text;
+use AF\Application\Form\Element\Group;
+use AF\Application\Form\Element\RepeatedGroup;
+use AF\Application\Form\Element\TextField;
 
 /**
  * Gestion des sous formulaires et des repetitions de sous formulaires.
@@ -57,9 +57,9 @@ class RepeatedSubAF extends SubAF
     public function getUIElement(AFGenerationHelper $generationHelper)
     {
         // Groupe contenant une liste de sous-formulaires
-        $uiElement = new UI_Form_Element_GroupRepeated($this->ref);
-        $uiElement->setLabel($this->label);
-        $uiElement->getElement()->help = $this->help;
+        $uiElement = new RepeatedGroup($this->ref);
+        $uiElement->setLabel($this->uglyTranslate($this->label));
+        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         $uiElement->getElement()->hidden = !$this->visible;
         switch ($this->foldaway) {
             case self::FOLDAWAY:
@@ -73,7 +73,7 @@ class RepeatedSubAF extends SubAF
         }
 
         // Ajoute les en-têtes du tableau
-        $label = new UI_Form_Element_Text('freeLabel');
+        $label = new TextField('freeLabel');
         $label->setLabel(__('AF', 'inputInput', 'freeLabel'));
         $uiElement->addElement($label);
         foreach ($this->calledAF->getRootGroup()->getSubComponentsRecursive() as $component) {
@@ -116,17 +116,17 @@ class RepeatedSubAF extends SubAF
      * Génère un groupe contenant un seul sous-AF
      * @param AFGenerationHelper $generationHelper
      * @param SubInputSet|null   $inputSet
-     * @return UI_Form_Element_Group
+     * @return Group
      */
     private function getSingleSubAFUIElement(
         AFGenerationHelper $generationHelper,
         SubInputSet $inputSet = null
     ) {
         // On crée un groupe qui contient un sous-formulaire
-        $afGroup = new UI_Form_Element_Group($this->ref);
+        $afGroup = new Group($this->ref);
 
         // Pour chaque sous af, on peut ajouter un label choisi librement par l'utilisateur
-        $label = new UI_Form_Element_Text('freeLabel');
+        $label = new TextField('freeLabel');
         $label->setLabel(__('AF', 'inputInput', 'freeLabel'));
         if ($inputSet) {
             $label->setValue($inputSet->getFreeLabel());

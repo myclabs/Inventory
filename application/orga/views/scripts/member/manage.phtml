@@ -19,7 +19,10 @@ foreach ($this->axes as $axis) {
     // Membres broaders pour chaque axe broader.
     foreach ($axis->getDirectBroaders() as $broaderAxis) {
         // Construction de la liste de membres.
-        $columnBroader = new UI_Datagrid_Col_List('broader'.$broaderAxis->getRef(), $broaderAxis->getLabel());
+        $columnBroader = new UI_Datagrid_Col_List(
+            'broader'.$broaderAxis->getRef(),
+            $this->translate($broaderAxis->getLabel())
+        );
         $columnBroader->list = 'orga/datagrid_member/get-parents/refParentAxis/'.$broaderAxis->getRef();
         $columnBroader->dynamicList = true;
         $columnBroader->editable = true;
@@ -39,9 +42,12 @@ foreach ($this->axes as $axis) {
     $datagridAxisMembers->addParam('refAxis', $axis->getRef());
     $datagridAxisMembers->initialLoading = false;
     $datagridAxisMembers->addElements = true;
-    $datagridAxisMembers->addPanelTitle = ___('Orga', 'member', 'addPanelTitle', array('AXIS_LABEL' => $axis->getLabel()));
+    $datagridAxisMembers->addPanelTitle = ___('Orga', 'member', 'addPanelTitle', [
+        'AXIS_LABEL' => $this->translate($axis->getLabel())
+    ]);
 
-    echo $this->collapse('members'.$axis->getRef(), $axis->getLabel(), $datagridAxisMembers->getHTML())->addClass('collapse-wrapper');
+    echo $this->collapse('members'.$axis->getRef(), $this->translate($axis->getLabel()), $datagridAxisMembers->getHTML())
+        ->addClass('collapse-wrapper');
 
     $script = '';
     $script .= '$(\'#members'.$axis->getRef().'\').on(\'show.bs.collapse\', function(e) {';

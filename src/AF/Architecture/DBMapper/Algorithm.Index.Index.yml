@@ -17,11 +17,6 @@ AF\Domain\Algorithm\Index\Index:
       generator:
         strategy: AUTO
 
-  fields:
-    refClassificationAxis:
-      type: string
-      nullable: true
-
   manyToOne:
     algoNumeric:
       targetEntity: AF\Domain\Algorithm\Numeric\NumericAlgo
@@ -30,3 +25,5 @@ AF\Domain\Algorithm\Index\Index:
         name: idAlgoNumeric
         referencedColumnName: id
         nullable: true
+    axis:
+      targetEntity: Classification\Domain\Axis

@@ -4,15 +4,16 @@ namespace AF\Domain\Component\Select;
 
 use AF\Domain\Component\Select;
 use AF\Domain\Algorithm\Condition\SelectConditionAlgo;
+use Core\Translation\TranslatedString;
 use Core_Exception_InvalidArgument;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Model_Query;
 use Core_ORM_ForeignKeyViolationException;
 use Core_Strategy_Ordered;
 use Core_Tools;
-use UI_Form_Element_Option;
+use Mnapoli\Translated\Translator;
+use AF\Application\Form\Element\Option;
 
 /**
  * Gestion des options associées aux composants de type select.
@@ -25,7 +26,6 @@ use UI_Form_Element_Option;
 class SelectOption extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     // Constant used for query sorting and filtering
     const QUERY_SELECT = 'select';
@@ -41,7 +41,7 @@ class SelectOption extends Core_Model_Entity
     protected $ref;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -62,16 +62,20 @@ class SelectOption extends Core_Model_Entity
      */
     protected $select;
 
+    public function __construct()
+    {
+        $this->label = new TranslatedString();
+    }
 
     /**
      * Génère un élément UI
-     * @return UI_Form_Element_Option
+     * @return Option
      */
     public function getUIElement()
     {
-        $uiElement = new UI_Form_Element_Option($this->ref);
+        $uiElement = new Option($this->ref);
         $uiElement->value = $this->ref;
-        $uiElement->label = $this->label;
+        $uiElement->label = $this->uglyTranslate($this->label);
         $uiElement->disabled = !$this->enabled;
         $uiElement->hidden = !$this->visible;
         return $uiElement;
@@ -103,7 +107,7 @@ class SelectOption extends Core_Model_Entity
     }
 
     /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -111,11 +115,11 @@ class SelectOption extends Core_Model_Entity
     }
 
     /**
-     * @param string $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
-        $this->label = (string) $label;
+        $this->label = $label;
     }
 
     /**
@@ -231,5 +235,19 @@ class SelectOption extends Core_Model_Entity
         return [
             'select' => $this->select,
         ];
+    }
+
+    /**
+     * @deprecated Moche, très moche
+     * @todo À supprimer quand la génération UI est sortie du modèle
+     * @param TranslatedString $string
+     * @return string
+     */
+    protected function uglyTranslate(TranslatedString $string)
+    {
+        /** @var Translator $translator */
+        $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
+
+        return $translator->get($string);
     }
 }

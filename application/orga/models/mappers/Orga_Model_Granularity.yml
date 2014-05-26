@@ -1,4 +1,3 @@
-# orga\models\mappers\Orga_Model_Granularity.yml
 Orga_Model_Granularity:
   type: entity
   repositoryClass: Core_Model_Repository_Ordered
@@ -35,14 +34,6 @@ Orga_Model_Granularity:
       nullable: false
     cellsGenerateDWCubes:
       column: cellsGenerateDWCubes
-      type: boolean
-      nullable: false
-    cellsWithSocialGenericActions:
-      column: cellsWithSocialGenericActions
-      type: boolean
-      nullable: false
-    cellsWithSocialContextActions:
-      column: cellsWithSocialContextActions
       type: boolean
       nullable: false
     cellsWithInputDocs:

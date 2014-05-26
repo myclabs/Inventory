@@ -17,7 +17,7 @@ class FixedIndex extends Index
      * The classification member associated to the index
      * @var string|null
      */
-    protected $refClassificationMember;
+    protected $refMember;
 
     /**
      * @param InputSet $inputSet
@@ -25,11 +25,11 @@ class FixedIndex extends Index
      */
     public function getClassificationMember(InputSet $inputSet = null)
     {
-        if ($this->refClassificationMember === null) {
+        if ($this->axis === null || $this->refMember === null) {
             return null;
         }
         try {
-            return $this->getClassificationAxis()->getMemberByRef($this->refClassificationMember);
+            return $this->axis->getMemberByRef($this->refMember);
         } catch (Core_Exception_NotFound $e) {
             return null;
         }
@@ -40,7 +40,7 @@ class FixedIndex extends Index
      */
     public function setClassificationMember(Member $member)
     {
-        $this->refClassificationMember = $member->getRef();
+        $this->refMember = $member->getRef();
     }
 
     /**
@@ -49,11 +49,11 @@ class FixedIndex extends Index
      */
     public function hasClassificationMember()
     {
-        if ($this->refClassificationMember === null) {
+        if ($this->axis === null || $this->refMember === null) {
             return false;
         }
         try {
-            $this->getClassificationAxis()->getMemberByRef($this->refClassificationMember);
+            $this->axis->getMemberByRef($this->refMember);
             return true;
         } catch (Core_Exception_NotFound $e) {
             return false;

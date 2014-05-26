@@ -136,6 +136,15 @@
 
          <!-- Messages d'erreur -->
         
+        <tu tuid="noCubeSelected">
+            <tuv xml:lang="fr">
+                <seg>Merci de séléctionner une cellule à regénérer.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Please, select a cell in order to rebuild.</seg>
+            </tuv>
+        </tu>
+
         <tu tuid="analysisDataRebuildFailMessage">
             <tuv xml:lang="fr">
                 <seg>La régénération des données du cube d'analyse a été interrompue, car certains résultats ne sont pas compatibles avec le référentiel de classification. Merci d'essayer de relancer les calculs (bouton suivant) ou de vérifier la cohérence des différents référentiels.</seg>

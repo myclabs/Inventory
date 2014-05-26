@@ -23,7 +23,7 @@ class UnitAPITest extends TestCase
     {
         //Traitement d'un cas assez complexe utilisant tout les types d'unité (discrète, étendue et standard)
         $o = new UnitAPI('m^2.animal^-1.m^-2.g.g_co2e^2');
-        $this->assertSame('m2.g.g equ. CO22/animal.m2', $o->getSymbol());
+        $this->assertSame('m2.g.g equ. CO22/animal.m2', $o->getSymbol()->get('fr'));
     }
 
     /**

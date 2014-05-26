@@ -12,7 +12,7 @@ use User\Domain\User;
 interface UserEvent
 {
     /**
-     * @param \User\Domain\User $user
+     * @param User $user
      * @return mixed
      */
     public function setUser(User $user);

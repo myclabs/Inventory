@@ -2,6 +2,7 @@
 
 use DI\Annotation\Inject;
 use Doctrine\ORM\EntityManager;
+use Mnapoli\Translated\Translator;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -13,7 +14,6 @@ use Psr\Log\LoggerInterface;
  */
 abstract class Core_Controller extends Zend_Controller_Action
 {
-
     /**
      * @Inject
      * @var EntityManager
@@ -27,9 +27,15 @@ abstract class Core_Controller extends Zend_Controller_Action
     protected $logger;
 
     /**
+     * @Inject
+     * @var Translator
+     */
+    protected $translator;
+
+    /**
      * Helper pour les redirections.
      *
-     * @var $this->_helper->getHelper('Redirector');
+     * @var Zend_Controller_Action_Helper_Redirector
      */
     protected $redirector;
 

@@ -1,29 +1,11 @@
 <?php
-/**
- * Classe Classification_Datagrid_Translate_MembersController
- * @author valentin.claras
- * @package Classification
- * @subpackage Controller
- */
 
 use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Member;
 use Core\Annotation\Secure;
-use Gedmo\Translatable\TranslatableListener;
 
-/**
- * Classe du controller du datagrid des traductions des members.
- * @package Classification
- * @subpackage Controller
- */
 class Classification_Datagrid_Translate_MembersController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var TranslatableListener
-     */
-    private $translatableListener;
-
     /**
      * @Inject("translation.languages")
      * @var string[]
@@ -31,14 +13,10 @@ class Classification_Datagrid_Translate_MembersController extends UI_Controller_
     private $languages;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
      * @Secure("editClassificationLibrary")
      */
     public function getelementsAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
-
         $library = ClassificationLibrary::load($this->getParam('library'));
 
         $count = 0;
@@ -49,9 +27,7 @@ class Classification_Datagrid_Translate_MembersController extends UI_Controller_
                 $data['identifier'] = $member->getAxis()->getRef().' | '.$member->getRef();
 
                 foreach ($this->languages as $language) {
-                    $locale = Core_Locale::load($language);
-                    $member->reloadWithLocale($locale);
-                    $data[$language] = $member->getLabel();
+                    $data[$language] = $member->getLabel()->get($language);
                 }
                 $this->addline($data);
                 $count++;
@@ -64,18 +40,14 @@ class Classification_Datagrid_Translate_MembersController extends UI_Controller_
     }
 
     /**
-     * Fonction modifiant la valeur d'un élément.
-     *
      * @Secure("editClassificationLibrary")
      */
     public function updateelementAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $member = Member::load($this->update['index']);
-        $member->reloadWithLocale(Core_Locale::load($this->update['column']));
-        $member->setLabel($this->update['value']);
-        $this->data = $member->getLabel();
+        $member->getLabel()->set($this->update['value'], $this->update['column']);
 
+        $this->data = $member->getLabel()->get($this->update['column']);
         $this->send(true);
     }
 }

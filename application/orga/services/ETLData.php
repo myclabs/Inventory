@@ -23,7 +23,7 @@ class Orga_Service_ETLData
      *
      * @param Orga_Model_Cell $cell
      */
-    public function clearDWResultsFromCell($cell)
+    public function clearDWResultsFromCell(Orga_Model_Cell $cell)
     {
         $cell->deleteDWResults();
     }
@@ -33,7 +33,7 @@ class Orga_Service_ETLData
      *
      * @param Orga_Model_Cell $cell
      */
-    public function populateDWResultsFromCell($cell)
+    public function populateDWResultsFromCell(Orga_Model_Cell $cell)
     {
         $cell->createDWResults();
     }
@@ -43,7 +43,7 @@ class Orga_Service_ETLData
      *
      * @param Orga_Model_Cell $cell
      */
-    public function clearDWResultsForCell($cell)
+    public function clearDWResultsForCell(Orga_Model_Cell $cell)
     {
         foreach ($cell->getPopulatingCells() as $populatingCell) {
             $populatingCell->deleteDWResultsForDWCube($cell->getDWCube());
@@ -55,7 +55,7 @@ class Orga_Service_ETLData
      *
      * @param Orga_Model_Cell $cell
      */
-    public function populateDWResultsForCell($cell)
+    public function populateDWResultsForCell(Orga_Model_Cell $cell)
     {
         foreach ($cell->getPopulatingCells() as $populatingCell) {
             $populatingCell->createDWResultsForDWCube($cell->getDWCube());
@@ -67,7 +67,7 @@ class Orga_Service_ETLData
      *
      * @param Orga_Model_Cell $cell
      */
-    public function calculateResultsForCellAndChildren($cell)
+    public function calculateResultsForCellAndChildren(Orga_Model_Cell $cell)
     {
         $granularity = $cell->getGranularity();
 

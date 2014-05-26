@@ -49,9 +49,9 @@ class Orga_Model_GranularityReport extends Core_Model_Entity
      *
      * @return Orga_Model_GranularityReport
      */
-    public static function loadByGranularityDWReport($dWReport)
+    public static function loadByGranularityDWReport(DW_Model_Report $dWReport)
     {
-        return self::getEntityRepository()->loadBy(array('granularityDWReport' => $dWReport));
+        return self::getEntityRepository()->loadBy(['granularityDWReport' => $dWReport]);
     }
 
     /**
@@ -101,7 +101,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity
      *
      * @param DW_Model_Report $cellDWReport
      */
-    public function removeCellDWReport($cellDWReport)
+    public function removeCellDWReport(DW_Model_Report $cellDWReport)
     {
         if ($this->hasCellDWReport($cellDWReport)) {
             $this->cellDWReports->removeElement($cellDWReport);

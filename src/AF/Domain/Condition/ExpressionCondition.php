@@ -9,8 +9,8 @@ use TEC\Component\Component;
 use TEC\Component\Composite;
 use TEC\Component\Leaf;
 use TEC\Exception\InvalidExpressionException;
-use UI_Form_Condition;
-use UI_Form_Condition_Expression;
+use AF\Application\Form\Condition\FormCondition;
+use AF\Application\Form\Condition\ExpressionCondition as FormExpressionCondition;
 
 /**
  * @author matthieu.napoli
@@ -81,19 +81,19 @@ class ExpressionCondition extends Condition
      * Construit la condition UI Expression en parcourant l'arbre de l'expression TEC
      * @param Component          $currentNode
      * @param AFGenerationHelper $generationHelper
-     * @return UI_Form_Condition
+     * @return FormCondition
      */
     private function buildUICondition(Component $currentNode, AFGenerationHelper $generationHelper)
     {
         if ($currentNode instanceof Composite) {
             // Noeud de l'arbre : une sous-expression
-            $uiCondition = new UI_Form_Condition_Expression($this->id . '_' . $currentNode->getId());
+            $uiCondition = new FormExpressionCondition($this->id . '_' . $currentNode->getId());
             switch ($currentNode->getOperator()) {
                 case Composite::LOGICAL_AND:
-                    $uiCondition->expression = UI_Form_Condition_Expression::AND_SIGN;
+                    $uiCondition->expression = FormExpressionCondition::AND_SIGN;
                     break;
                 case Composite::LOGICAL_OR:
-                    $uiCondition->expression = UI_Form_Condition_Expression::OR_SIGN;
+                    $uiCondition->expression = FormExpressionCondition::OR_SIGN;
                     break;
             }
             foreach ($currentNode->getChildren() as $child) {

@@ -13,7 +13,7 @@ use User\Domain\UserService;
 class EmailTaskNotifier implements TaskNotifier
 {
     /**
-     * @var \User\Domain\UserService
+     * @var UserService
      */
     private $userService;
 

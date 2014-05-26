@@ -1,6 +1,6 @@
 sheets:
 
-  - label: "{{ cell.granularity.label }}"
+  - label: "{{ translateString(cell.granularity.label) }}"
 
     content:
 
@@ -9,10 +9,10 @@ sheets:
         columns:
           - foreach: cell.granularity.axes as axis
             do:
-              - label: "{{ axis.label }}"
+              - label: "{{ translateString(axis.label) }}"
               - foreach: axis.allBroadersFirstOrdered as broaderAxis
                 do:
-                  - label: "{{ broaderAxis.label }}"
+                  - label: "{{ translateString(broaderAxis.label) }}"
           - label: "{{ inputAncestor }}"
           - label: "{{ inputStatus }}"
           - label: "{{ inputLabel }}"

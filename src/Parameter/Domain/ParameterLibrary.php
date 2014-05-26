@@ -3,8 +3,8 @@
 namespace Parameter\Domain;
 
 use Account\Domain\Account;
+use Core\Translation\TranslatedString;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Model_Filter;
 use Core_Model_Query;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,8 +22,6 @@ use Parameter\Domain\Family\Family;
  */
 class ParameterLibrary extends Core_Model_Entity implements EntityResource, CascadingResource
 {
-    use Core_Model_Entity_Translatable;
-
     /**
      * @var int
      */
@@ -35,7 +33,7 @@ class ParameterLibrary extends Core_Model_Entity implements EntityResource, Casc
     protected $account;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -55,11 +53,11 @@ class ParameterLibrary extends Core_Model_Entity implements EntityResource, Casc
     protected $public = false;
 
     /**
-     * @param Account $account
-     * @param string  $label
-     * @param bool    $public
+     * @param Account          $account
+     * @param TranslatedString $label
+     * @param bool             $public
      */
-    public function __construct(Account $account, $label, $public = false)
+    public function __construct(Account $account, TranslatedString $label, $public = false)
     {
         $this->account = $account;
         $this->label = $label;
@@ -78,7 +76,7 @@ class ParameterLibrary extends Core_Model_Entity implements EntityResource, Casc
     }
 
     /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {

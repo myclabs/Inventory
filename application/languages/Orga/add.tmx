@@ -29,14 +29,6 @@
                 <seg>Reporting template</seg>
             </tuv>
         </tu>
-        <tu tuid="docLibraryForSocialAction">
-            <tuv xml:lang="fr">
-                <seg>Documents des actions</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Documents of actions</seg>
-            </tuv>
-        </tu>
 
         <!-- Onglets -->
         <tu tuid="organization">

@@ -7,7 +7,7 @@ use AF\Domain\Action\SetValue;
 use AF\Domain\Component\Select\SelectOption;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use UI_Form_Action_SetValue;
+use AF\Application\Form\Action\SetValue as FormSetValue;
 
 /**
  * @author matthieu.napoli
@@ -31,7 +31,7 @@ class SetSelectMultiValue extends SetValue
      */
     public function getUIAction(AFGenerationHelper $generationHelper)
     {
-        $uiAction = new UI_Form_Action_SetValue($this->id);
+        $uiAction = new FormSetValue($this->id);
         if (!empty($this->condition)) {
             $uiAction->condition = $generationHelper->getUICondition($this->condition);
         }
@@ -45,7 +45,7 @@ class SetSelectMultiValue extends SetValue
 
     /**
      * Get the options.
-     * @return \AF\Domain\Component\Select\SelectOption[]
+     * @return SelectOption[]
      */
     public function getOptions()
     {
@@ -53,7 +53,7 @@ class SetSelectMultiValue extends SetValue
     }
 
     /**
-     * @param \AF\Domain\Component\Select\SelectOption $option
+     * @param SelectOption $option
      * @return bool
      */
     public function hasOption(SelectOption $option)
@@ -72,7 +72,7 @@ class SetSelectMultiValue extends SetValue
     }
 
     /**
-     * @param \AF\Domain\Component\Select\SelectOption $option
+     * @param SelectOption $option
      */
     public function removeOption(SelectOption $option)
     {

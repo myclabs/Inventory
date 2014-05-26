@@ -14,6 +14,7 @@ require_once __DIR__ . '/../../../application/init.php';
 
 require_once 'DatabaseFeatureContext.php';
 require_once 'DatagridFeatureContext.php';
+require_once 'OrgaViewFeatureContext.php';
 require_once 'PopupFeatureContext.php';
 
 /**
@@ -25,6 +26,7 @@ class FeatureContext extends MinkContext
     use DatagridFeatureContext;
     use PopupFeatureContext;
     use AccountFeatureContext;
+    use OrgaViewFeatureContext;
 
     /**
      * @BeforeScenario
@@ -32,14 +34,6 @@ class FeatureContext extends MinkContext
     public function setWindowSize()
     {
         $this->getSession()->resizeWindow(1600, 1024);
-    }
-
-    /**
-     * @BeforeScenario
-     */
-    public function setLanguage()
-    {
-//        $this->getSession()->setRequestHeader('Accept-Language', 'fr');
     }
 
     /**
@@ -55,6 +49,10 @@ class FeatureContext extends MinkContext
      */
     public function assertMessageShown($message)
     {
+        $this->spin(function () use ($message) {
+            $this->assertElementContainsText('#messageZone', $message);
+        });
+
         return [
             new Step\Then('the "#messageZone" element should contain "' . $message . '"'),
             new Step\Then('I click element "#messageZone button.close"'),
@@ -99,18 +97,19 @@ class FeatureContext extends MinkContext
         $field = $this->fixStepArgument($field);
         $error = $this->fixStepArgument($error);
 
-        $node = $this->assertSession()->fieldExists($field);
+        try {
+            $node = $this->assertSession()->fieldExists($field);
 
-        // Anciens formulaires Bootstrap 2
-        $fieldId = $node->getAttribute('id');
-        $expression = '$("#' . $fieldId . '").parents(".controls").children(".errorMessage").text()';
-        $errorMessage = $this->getSession()->evaluateScript("return $expression;");
-
-        // Nouveaux formulaires
-        if ($errorMessage == '') {
             $fieldName = $node->getAttribute('name');
-            $expression = '$(\'[name="' . $fieldName . '"]\').parents(".form-group").find(".errorMessage").text()';
+            $expression = '$(\'[name="' . $fieldName . '"]\').parents(".has-error").find(".errorMessage").text()';
             $errorMessage = $this->getSession()->evaluateScript("return $expression;");
+        } catch (ElementNotFoundException $e) {
+            // Select2
+            $expression = '$(\'#s2id_' . $field . '\').parents(".has-error").find(".errorMessage").text()';
+            $errorMessage = $this->getSession()->evaluateScript("return $expression;");
+            if ($errorMessage == '') {
+                throw $e;
+            }
         }
 
         if (strpos($errorMessage, $error) === false) {
@@ -215,6 +214,61 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * @When /^(?:|I )select "(?P<value>(?:[^"]|\\")*)" in s2 "(?P<id>(?:[^"]|\\")*)"$/
+     */
+    public function selectS2($value, $id)
+    {
+        $value = $this->fixStepArgument($value);
+
+        $selector = "#s2id_$id";
+
+        /** @var NodeElement[] $nodes */
+        $nodes = $this->getSession()->getPage()->findAll('css', $selector . ' .select2-arrow');
+        if (count($nodes) === 0) {
+            throw new ExpectationException(
+                "No s2 select with id '$id'found.",
+                $this->getSession()
+            );
+        }
+
+        $nodes = array_filter(
+            $nodes,
+            function (NodeElement $node) {
+                return $this->isElementVisible($node);
+            }
+        );
+        if (count($nodes) === 0) {
+            throw new ExpectationException(
+                "No s2 select with id '$id' is visible.",
+                $this->getSession()
+            );
+        }
+
+        if (count($nodes) > 1) {
+            $nb = count($nodes);
+            throw new ExpectationException(
+                "Too many ($nb) s2 select with id '$id' are visible.",
+                $this->getSession()
+            );
+        }
+
+        $node = current($nodes);
+        $node->click();
+
+        $this->wait(2);
+
+        $element = $this->getSession()->getPage()->find(
+            'xpath',
+            '//*[@class="select2-results"]//*[@class="select2-result-label"][text()[contains(., "'. $value .'")]]'
+        );
+        if ($element === null) {
+            throw new \InvalidArgumentException(sprintf('Cannot find s2 option with text "%s"', $value));
+        }
+
+        $element->click();
+    }
+
+    /**
      * Open a collapse with specified text.
      *
      * @When /^(?:|I )open collapse "(?P<collapse>(?:[^"]|\\")*)"$/
@@ -225,7 +279,7 @@ class FeatureContext extends MinkContext
         $label = $this->fixStepArgument($label);
 
         /** @var NodeElement[] $nodes */
-        $nodes = $this->getSession()->getPage()->findAll('css', 'legend:contains("' . $label . '")');
+        $nodes = $this->getSession()->getPage()->findAll('css', 'legend a:contains("' . $label . '")');
         $nodes = array_filter($nodes, function (NodeElement $node) {
             return $this->isElementVisible($node);
         });

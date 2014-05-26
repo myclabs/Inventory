@@ -3,13 +3,13 @@
 namespace AF\Domain\Component\Select;
 
 use AF\Domain\Input\Select\SelectSingleInput;
-use UI_Form_Element_Select;
+use AF\Application\Form\Element\Select as FormSelect;
 use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\AFGenerationHelper;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
 use AF\Domain\Component\Select;
-use UI_Form_Element_Radio;
+use AF\Application\Form\Element\Radio;
 
 /**
  * @author matthieu.napoli
@@ -51,18 +51,18 @@ class SelectSingle extends Select
     {
         switch ($this->type) {
             case self::TYPE_RADIO:
-                $uiElement = new UI_Form_Element_Radio($this->ref);
+                $uiElement = new Radio($this->ref);
                 break;
             case self::TYPE_LIST:
-                $uiElement = new UI_Form_Element_Select($this->ref);
+                $uiElement = new FormSelect($this->ref);
                 // Ajout d'un choix vide à la liste déroulante
                 $uiElement->addNullOption('');
                 break;
             default:
                 throw new Core_Exception_UndefinedAttribute("The type must be defined and valid");
         }
-        $uiElement->setLabel($this->label);
-        $uiElement->getElement()->help = $this->help;
+        $uiElement->setLabel($this->uglyTranslate($this->label));
+        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         $uiElement->setRequired($this->getRequired());
         // Liste des options
         foreach ($this->options as $option) {

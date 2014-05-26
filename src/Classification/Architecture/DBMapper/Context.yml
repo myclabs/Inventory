@@ -3,10 +3,6 @@ Classification\Domain\Context:
   repositoryClass: \Core_Model_Repository_Ordered
   table: Classification_Context
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       column: id
@@ -17,23 +13,29 @@ Classification\Domain\Context:
   fields:
     ref:
       type: string
-      unique: true
       nullable: false
-    label:
-      type: string
-      nullable: false
-      gedmo:
-        - translatable
     position:
       type: integer
       nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     library:
       targetEntity: ClassificationLibrary
       inversedBy: contexts
       joinColumn:
+        name: idLibrary
+        referencedColumnName: id
         nullable: false
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - idLibrary
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

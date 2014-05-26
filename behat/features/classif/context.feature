@@ -23,8 +23,8 @@ Feature: Classification context feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
     And the row 4 of the "editContexts" datagrid should contain:
-      | label       | ref         |
-      | Test | test |
+      | label | ref  |
+      | Test  | test |
   # Ajout d'un contexte, identifiant déjà utilisé
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un contexte"

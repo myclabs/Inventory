@@ -8,6 +8,7 @@ use AF\Domain\Algorithm\Output;
 use Calc_Value;
 use Classification\Domain\Axis;
 use Classification\Domain\ContextIndicator;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\Collection;
@@ -92,7 +93,7 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @return \Classification\Domain\ContextIndicator
+     * @return ContextIndicator
      */
     public function getContextIndicator()
     {
@@ -128,7 +129,7 @@ class OutputElement extends Core_Model_Entity
 
     /**
      * Retourne le libellé de l'algo
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -136,7 +137,7 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @return \AF\Domain\InputSet\InputSet
+     * @return InputSet
      */
     public function getInputSet()
     {
@@ -144,7 +145,7 @@ class OutputElement extends Core_Model_Entity
     }
 
     /**
-     * @param \AF\Domain\InputSet\InputSet $set
+     * @param InputSet $set
      */
     public function setInputSet($set)
     {

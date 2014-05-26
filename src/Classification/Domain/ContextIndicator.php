@@ -2,13 +2,12 @@
 
 namespace Classification\Domain;
 
+use Core\Translation\TranslatedString;
 use Core_Exception_InvalidArgument;
-use Core_Exception_NotFound;
 use Core_Model_Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine;
-use Doctrine\ORM\NoResultException;
 
 /**
  * Indicateur de classification contextualisé.
@@ -89,11 +88,11 @@ class ContextIndicator extends Core_Model_Entity
     }
 
     /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
-        return $this->indicator->getLabel() . ' - ' . $this->context->getLabel();
+        return $this->indicator->getLabel()->concat(' - ', $this->context->getLabel());
     }
 
     /**

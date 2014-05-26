@@ -6,6 +6,10 @@
  * @package    DW
  * @subpackage Model
  */
+
+use Core\Translation\TranslatedString;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 
 /**
@@ -15,52 +19,48 @@ use Doctrine\Common\Collections\Criteria;
  */
 class DW_Model_Cube extends Core_Model_Entity
 {
-    use Core_Model_Entity_Translatable;
-
     /**
      * Identifiant unique du Cube.
      *
      * @var string
      */
     protected $id = null;
-    
+
     /**
      * Label du Cube.
      *
-     * @var string
+     * @var TranslatedString
      */
-    protected $label = null;
+    protected $label;
 
     /**
      * Collection des Axis du Cube.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection
      */
     protected $axes = null;
 
     /**
      * Collection des Indicator du Cube.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection
      */
     protected $indicators = null;
 
     /**
      * Collection des Reports du Cube.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var Collection
      */
     protected $reports = null;
 
 
-    /**
-     * Constructeur de la classe Cube.
-     */
     public function __construct()
     {
-        $this->axes = new Doctrine\Common\Collections\ArrayCollection();
-        $this->indicators = new Doctrine\Common\Collections\ArrayCollection();
-        $this->reports = new Doctrine\Common\Collections\ArrayCollection();
+        $this->label = new TranslatedString();
+        $this->axes = new ArrayCollection();
+        $this->indicators = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     /**
@@ -76,9 +76,9 @@ class DW_Model_Cube extends Core_Model_Entity
     /**
      * Définit le label du Cube.
      *
-     * @param String $label
+     * @param TranslatedString $label
      */
-    public function setLabel ($label)
+    public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
     }
@@ -86,7 +86,7 @@ class DW_Model_Cube extends Core_Model_Entity
     /**
      * Renvoie le label du Cube.
      *
-     * @return String
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -97,7 +97,7 @@ class DW_Model_Cube extends Core_Model_Entity
      * Ajoute un Axis à la collection du Cube.
      *
      * @param DW_Model_Axis $axis
-     * 
+     *
      * @throws Core_Exception_InvalidArgument
      */
     public function addAxis(DW_Model_Axis $axis)
@@ -141,7 +141,7 @@ class DW_Model_Cube extends Core_Model_Entity
 
         if (count($axis) === 0) {
             throw new Core_Exception_NotFound("No 'DW_Model_Axis' matching " . $ref);
-        } else if (count($axis) > 1) {
+        } elseif (count($axis) > 1) {
             throw new Core_Exception_TooMany("Too many 'DW_Model_Axis' matching " . $ref);
         }
 
@@ -187,14 +187,14 @@ class DW_Model_Cube extends Core_Model_Entity
      */
     public function getRootAxes()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create()->where(
-            Doctrine\Common\Collections\Criteria::expr()->isNull('directNarrower')
-        );
+        $criteria = Criteria::create()->where(Criteria::expr()->isNull('directNarrower'));
         $rootAxes = $this->axes->matching($criteria)->toArray();
 
         uasort(
             $rootAxes,
-            function ($a, $b) { return $a->getPosition() - $b->getPosition(); }
+            function (DW_Model_Axis $a, DW_Model_Axis $b) {
+                return $a->getPosition() - $b->getPosition();
+            }
         );
 
         return $rootAxes;
@@ -335,7 +335,7 @@ class DW_Model_Cube extends Core_Model_Entity
      *
      * @param DW_Model_Report $report
      */
-    public function removeReport($report)
+    public function removeReport(DW_Model_Report $report)
     {
         if ($this->hasReport($report)) {
             $this->reports->removeElement($report);
@@ -361,5 +361,4 @@ class DW_Model_Cube extends Core_Model_Entity
     {
         return $this->reports->toArray();
     }
-
 }

@@ -38,12 +38,16 @@ Feature: Classification context indicator feature
     When I click "Supprimer" in the row 1 of the "editContextIndicators" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
+    Then the following message is shown and closed: "Impossible de supprimer ce context indicateur car il est utilisé par l'application."
+    When I click "Supprimer" in the row 4 of the "editContextIndicators" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
   # Ajout d'un indicateur contextualisé, avec axes non deux à deux transverses
     When I click "Ajouter"
     Then I should see the popup "Ajout d'un indicateur contextualisé"
     When I select "Général" from "editContextIndicators_context_addForm"
-    And I select "GES" from "editContextIndicators_indicator_addForm"
+    And I select "Axes hiérarchiquement reliés" from "editContextIndicators_indicator_addForm"
     And I additionally select "Poste article 75" from "editContextIndicators_axes_addForm"
     And I additionally select "Scope" from "editContextIndicators_axes_addForm"
     And I click "Valider"
@@ -59,6 +63,7 @@ Feature: Classification context indicator feature
   # Ajout d'un axe, non relié hiérarchiquement à un axe existant
     When I additionally select "Type de déplacement" for column "axes" of row 1 of the "editContextIndicators" datagrid
   # TODO : ajouter dans l'interface un message "Modification effectuée" non présent actuellement.
+    And I wait 1 seconds
     Then the row 1 of the "editContextIndicators" datagrid should contain:
       | axes                                       |
       | Gaz, Poste article 75, Type de déplacement |
@@ -68,6 +73,10 @@ Feature: Classification context indicator feature
     Given I am on "classification/contextindicator/list?library=1"
     Then I should see the "editContextIndicators" datagrid
     When I click "Supprimer" in the row 1 of the "editContextIndicators" datagrid
+    Then I should see the popup "Demande de confirmation"
+    When I click "Confirmer"
+    Then the following message is shown and closed: "Impossible de supprimer ce context indicateur car il est utilisé par l'application."
+    When I click "Supprimer" in the row 2 of the "editContextIndicators" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."

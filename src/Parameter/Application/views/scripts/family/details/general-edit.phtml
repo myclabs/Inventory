@@ -9,7 +9,8 @@ $family = $this->family;
             <?=__('UI', 'name', 'label')?>
         </label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" id="inputLabel" name="label" value="<?=$family->getLabel()?>">
+            <input type="text" class="form-control" id="inputLabel" name="label"
+                   value="<?=$this->translate($family->getLabel())?>">
         </div>
     </div>
     <div class="form-group">
@@ -35,7 +36,7 @@ $family = $this->family;
         </label>
         <div class="col-sm-10">
             <textarea class="form-control" id="inputDocumentation" name="documentation"
-                      rows="4"><?=$family->getDocumentation()?></textarea>
+                      rows="4"><?=$this->translate($family->getDocumentation())?></textarea>
         </div>
     </div>
     <div class="form-actions">

@@ -2,7 +2,6 @@
 
 namespace AF\Domain\Algorithm\Selection\TextKey;
 
-use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
 use Core_Exception_NotFound;
@@ -45,11 +44,14 @@ class ExpressionSelectionAlgo extends TextKeySelectionAlgo implements ValueInter
         try {
             // Si l'opérande est le ref d'un algo, alors on renvoie le résultat de cet algo
             $algo = $this->getSet()->getAlgoByRef($ref);
-            return $algo->execute($this->inputSet);
+            if ($algo instanceof TextKeySelectionAlgo) {
+                return $algo->execute($this->inputSet);
+            }
         } catch (Core_Exception_NotFound $e) {
-            // Sinon on renvoie le ref
-            return $ref;
         }
+
+        // Sinon on renvoie le ref
+        return $ref;
     }
 
     /**
@@ -70,26 +72,7 @@ class ExpressionSelectionAlgo extends TextKeySelectionAlgo implements ValueInter
      */
     public function checkValueForExecution($ref)
     {
-        $errors = [];
-
-        try {
-            // Si l'opérande est le ref d'un algo, on vérifie que c'est bien un algo de sélection
-            $algo = $this->getSet()->getAlgoByRef($ref);
-            if (!$algo instanceof TextKeySelectionAlgo) {
-                $configError = new AlgoConfigurationError();
-                $configError->isFatal(true);
-                $configError->setMessage(__('Algo', 'configControl', 'nonSelectOperandInSelectAlgorithm', [
-                    'REF_ALGO' => $this->ref,
-                    'EXPRESSION' => $this->expression,
-                    'REF_OPERAND' => $ref
-                ]));
-                $errors[] = $configError;
-            }
-        } catch (Core_Exception_NotFound $e) {
-            // L'opérande n'est pas le ref d'un algo
-        }
-
-        return $errors;
+        return [];
     }
 
     /**

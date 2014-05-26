@@ -7,6 +7,8 @@
  * @subpackage Model
  */
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Definit une cellule organisationnelle.
  * @package    DW
@@ -43,9 +45,9 @@ class DW_Model_Result extends Core_Model_Entity
     /**
      * Collection des Member indexant le Result.
      *
-     * @var Doctrine\Common\Collections\ArrayCollection
+     * @var ArrayCollection|DW_Model_Member[]
      */
-    protected $members = array();
+    protected $members = [];
 
     /**
      * Calc_Value du Result.
@@ -55,12 +57,9 @@ class DW_Model_Result extends Core_Model_Entity
     protected $value = null;
 
 
-    /**
-     * Constructeur de la classe Result.
-     */
     public function __construct(DW_Model_Indicator $indicator)
     {
-        $this->members = new Doctrine\Common\Collections\ArrayCollection();
+        $this->members = new ArrayCollection();
 
         $this->cube = $indicator->getCube();
         $this->indicator = $indicator;
@@ -70,20 +69,20 @@ class DW_Model_Result extends Core_Model_Entity
      * Charge une Result en fonction de sa Cube et de ses Member.
      *
      * @param DW_Model_Cube $cube
-     * @param DW_Model_Members[] $listMembers
+     * @param DW_Model_Member[] $listMembers
      *
      * @return DW_Model_Result
      */
-    public static function loadByCubeAndListMembers($cube, $listMembers)
+    public static function loadByCubeAndListMembers(DW_Model_Cube $cube, $listMembers)
     {
-        $listArrayMembers = array();
-        foreach($listMembers as $member) {
-            $listArrayMembers[] = array($member);
+        $listArrayMembers = [];
+        foreach ($listMembers as $member) {
+            $listArrayMembers[] = [$member];
         }
-        $members = array(
-            'cube' => $cube,
-            'members'     => $listArrayMembers
-        );
+        $members = [
+            'cube'    => $cube,
+            'members' => $listArrayMembers
+        ];
 
         return self::getEntityRepository()->loadOneByMembers($members);
     }
@@ -137,7 +136,7 @@ class DW_Model_Result extends Core_Model_Entity
      *
      * @param DW_Model_Member $member
      */
-    public function removeMember($member)
+    public function removeMember(DW_Model_Member $member)
     {
         if ($this->hasMember($member)) {
             $this->members->removeElement($member);
@@ -171,7 +170,7 @@ class DW_Model_Result extends Core_Model_Entity
      *
      * @return DW_Model_Member
      */
-    public function getMemberForAxis($axis)
+    public function getMemberForAxis(DW_Model_Axis $axis)
     {
         foreach ($this->members as $member) {
             if ($member->getAxis() === $axis) {
@@ -210,5 +209,4 @@ class DW_Model_Result extends Core_Model_Entity
     {
         return $this->value;
     }
-    
 }

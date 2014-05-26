@@ -1,6 +1,8 @@
 <?php
 
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Cache\Cache;
+use Mnapoli\Translated\Translator as DoctrineTranslator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Translator;
 
@@ -26,11 +28,21 @@ class Core_Translate
      */
     private $cache;
 
-    public function __construct(Translator $translator, LoggerInterface $logger, Cache $cache)
-    {
+    /**
+     * @var DoctrineTranslator
+     */
+    private $doctrineTranslator;
+
+    public function __construct(
+        Translator $translator,
+        LoggerInterface $logger,
+        Cache $cache,
+        DoctrineTranslator $doctrineTranslator
+    ) {
         $this->translator = $translator;
         $this->logger = $logger;
         $this->cache = $cache;
+        $this->doctrineTranslator = $doctrineTranslator;
     }
 
     /**
@@ -48,6 +60,13 @@ class Core_Translate
     public function get($package, $file, $ref, $replacements = [], $locale = null)
     {
         $id = $package . '.' . $file . '.' . $ref;
+
+        $replacements = array_map(function ($replacement) {
+            if ($replacement instanceof TranslatedString) {
+                return $this->doctrineTranslator->get($replacement);
+            }
+            return $replacement;
+        }, $replacements);
 
         $message = $this->getFromCache($id, $replacements, $locale);
 

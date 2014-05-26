@@ -82,11 +82,11 @@ class PopulateOrga extends AbstractPopulateOrga
 
         // Statut des inventaires
         // 2012 ouvert pour Europe marque A
-        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::STATUS_ACTIVE);
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::INVENTORY_STATUS_ACTIVE);
         // 2012 clôturé pour Europe marque B
-        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_b], Orga_Model_Cell::STATUS_CLOSED);
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_b], Orga_Model_Cell::INVENTORY_STATUS_CLOSED);
         // 2013 ouvert pour Europe marque A
-        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2013, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::STATUS_ACTIVE);
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2013, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::INVENTORY_STATUS_ACTIVE);
         // 2013 non lancé pour Europe marque B (par défaut)
 
         // Sélection des formulaires

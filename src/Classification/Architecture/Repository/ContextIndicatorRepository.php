@@ -22,8 +22,10 @@ class ContextIndicatorRepository extends Core_Model_Repository
      * @param QueryBuilder     $queryBuilder
      * @param Core_Model_Query $queryParameters
      */
-    protected function addCustomParametersToQueryBuilder($queryBuilder, Core_Model_Query $queryParameters = null)
-    {
+    protected function addCustomParametersToQueryBuilder(
+        QueryBuilder $queryBuilder,
+        Core_Model_Query $queryParameters = null
+    ) {
         if ($queryParameters === null) {
             return;
         }

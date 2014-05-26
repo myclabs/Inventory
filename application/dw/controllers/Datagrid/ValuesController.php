@@ -32,9 +32,9 @@ class DW_Datagrid_ValuesController extends UI_Controller_Datagrid
         $report = DW_Model_Report::getFromString($zendSessionReport->$hash);
 
         foreach ($report->getValues() as $value) {
-            $data = array();
+            $data = [];
             foreach ($value['members'] as $member) {
-                $data['valueAxis'.$member->getAxis()->getRef()] = $member->getLabel();
+                $data['valueAxis'.$member->getAxis()->getRef()] = $this->translator->get($member->getLabel());
             }
             $data['valueDigital'] = $locale->formatNumber($value['value'], 3);
             $data['valueUncertainty'] = $value['uncertainty'];

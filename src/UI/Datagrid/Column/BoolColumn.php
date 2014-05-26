@@ -7,9 +7,9 @@ use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
 use MyCLabs\MUIH\Icon;
 use UI\Datagrid\Datagrid;
-use UI_Form_Element_HTML;
-use UI_Form_Element_Radio;
-use UI_Form_Element_Option;
+use AF\Application\Form\Element\HTMLElement;
+use AF\Application\Form\Element\Radio;
+use AF\Application\Form\Element\Option;
 
 /**
  * Classe représentant une colonne contenant des booleens.
@@ -211,11 +211,11 @@ JS;
         $filterValue .= 'if (inputOptions.length == 1) {';
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
         $filterValue .= '\"'.$this->criteriaFilterOperator.'\":" + inputOptions.val() + "';
         $filterValue .= '},";';
 
-        $filterValue .= '}';
+        $filterValue .= '}}';
 
         return $filterValue;
     }

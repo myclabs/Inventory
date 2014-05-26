@@ -3,10 +3,10 @@
 namespace Classification\Domain;
 
 use Account\Domain\Account;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Core_Exception_TooMany;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Model_Filter;
 use Core_Model_Query;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,8 +23,6 @@ use MyCLabs\ACL\Model\EntityResource;
  */
 class ClassificationLibrary extends Core_Model_Entity implements EntityResource, CascadingResource
 {
-    use Core_Model_Entity_Translatable;
-
     /**
      * @var int
      */
@@ -36,7 +34,7 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
     protected $account;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -67,11 +65,11 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
 
 
     /**
-     * @param Account $account
-     * @param string  $label
-     * @param bool    $public
+     * @param Account          $account
+     * @param TranslatedString $label
+     * @param bool             $public
      */
-    public function __construct(Account $account, $label, $public = false)
+    public function __construct(Account $account, TranslatedString $label, $public = false)
     {
         $this->account = $account;
         $this->label = $label;
@@ -92,7 +90,7 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
     }
 
     /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -296,7 +294,7 @@ class ClassificationLibrary extends Core_Model_Entity implements EntityResource,
 
         $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('context', $context));
-        $criteria->where($criteria->expr()->eq('indicator', $indicator));
+        $criteria->andWhere($criteria->expr()->eq('indicator', $indicator));
         $context = $this->contextIndicators->matching($criteria);
 
         if ($context->isEmpty()) {

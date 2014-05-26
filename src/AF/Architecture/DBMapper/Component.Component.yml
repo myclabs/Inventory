@@ -3,10 +3,6 @@ AF\Domain\Component\Component:
   repositoryClass: \Core_Model_Repository_Ordered
   table: AF_Component
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   inheritanceType: joined
   discriminatorColumn:
     name: type_component
@@ -34,22 +30,18 @@ AF\Domain\Component\Component:
     ref:
       type: string
       nullable: false
-    label:
-      type: string
-      nullable: true
-      gedmo:
-        - translatable
-    help:
-      type: text
-      nullable: true
-      gedmo:
-        - translatable
     visible:
       type: boolean
       nullable: false
     position:
       type: integer
       nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+    help:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     af:

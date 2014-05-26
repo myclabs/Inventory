@@ -5,7 +5,7 @@ namespace UI\Datagrid\Column;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
 use UI\Datagrid\Datagrid;
-use UI_Form_ZendElement;
+use AF\Application\Form\Element\ZendFormElement;
 
 /**
  * Classe abstraite représentant une colonne de datagrid.
@@ -436,9 +436,9 @@ abstract class GenericColumn
         $filterValue .= "if ($('#".$this->getFilterFormId($datagrid)."').val() != '') {";
 
         // Ajout au filtre.
-        $filterValue .= 'filter += "\"'.$this->getFullFilterName($datagrid).'\": {';
+        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {';
         $filterValue .= '\"'.$this->criteriaFilterOperator.'\":\"" + $(\'#'.$this->getFilterFormId($datagrid).'\').val() + "\"';
-        $filterValue .= '},";';
+        $filterValue .= '}},";';
 
         $filterValue .= '}';
 

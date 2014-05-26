@@ -7,7 +7,7 @@ Feature: Edit granularity analysis label translations feature
   @javascript
   Scenario: Edit granularity analysis label translations scenario
   # Accès au datagrid des analyses préconfigurées au niveau global
-    Given I am on "orga/translate/granularityreports/idOrganization/1"
+    Given I am on "orga/translate/granularity-reports/idOrganization/1/"
     And I wait for the page to finish loading
     Then I should see "Analyses préconfigurées Traductions"
     When I open collapse "Niveau organisationnel global"

@@ -30,6 +30,13 @@ class Core_Model_ACLFilter
      */
     public $action;
 
+    public function enable(User $user, $action)
+    {
+        $this->enabled = true;
+        $this->user = $user;
+        $this->action = $action;
+    }
+
     /**
      * Valide les attributs de la classe.
      *

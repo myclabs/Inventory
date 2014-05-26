@@ -1,29 +1,11 @@
 <?php
-/**
- * Classe Classification_Datagrid_Translate_AxesController
- * @author valentin.claras
- * @package Classification
- * @subpackage Controller
- */
 
 use Classification\Domain\Axis;
 use Classification\Domain\ClassificationLibrary;
 use Core\Annotation\Secure;
-use Gedmo\Translatable\TranslatableListener;
 
-/**
- * Classe du controller du datagrid des traductions des axes.
- * @package Classification
- * @subpackage Controller
- */
 class Classification_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var TranslatableListener
-     */
-    private $translatableListener;
-
     /**
      * @Inject("translation.languages")
      * @var string[]
@@ -31,14 +13,10 @@ class Classification_Datagrid_Translate_AxesController extends UI_Controller_Dat
     private $languages;
 
     /**
-     * Fonction renvoyant la liste des éléments peuplant la Datagrid.
-     *
      * @Secure("editClassificationLibrary")
      */
     public function getelementsAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
-
         $library = ClassificationLibrary::load($this->getParam('library'));
         $this->request->filter->addCondition('library', $library);
 
@@ -48,9 +26,7 @@ class Classification_Datagrid_Translate_AxesController extends UI_Controller_Dat
             $data['identifier'] = $axis->getRef();
 
             foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $axis->reloadWithLocale($locale);
-                $data[$language] = $axis->getLabel();
+                $data[$language] = $axis->getLabel()->get($language);
             }
             $this->addline($data);
         }
@@ -60,17 +36,13 @@ class Classification_Datagrid_Translate_AxesController extends UI_Controller_Dat
     }
 
     /**
-     * Fonction modifiant la valeur d'un élément.
-     *
      * @Secure("editClassificationLibrary")
      */
     public function updateelementAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $axis = Axis::load($this->update['index']);
-        $axis->reloadWithLocale(Core_Locale::load($this->update['column']));
-        $axis->setLabel($this->update['value']);
-        $this->data = $axis->getLabel();
+        $axis->getLabel()->set($this->update['value'], $this->update['column']);
+        $this->data = $axis->getLabel()->get($this->update['column']);
 
         $this->send(true);
     }

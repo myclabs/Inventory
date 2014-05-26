@@ -31,9 +31,9 @@ class Unit_Datagrids_StandardunitsController extends UI_Controller_Datagrid
 
             $data = array();
             $data['index'] = $unit->id;
-            $data['name'] = $unit->label;
+            $data['name'] = $this->cellTranslatedText($unit->label);
             $data['ref'] = $unit->id;
-            $data['symbol'] = $unit->symbol;
+            $data['symbol'] = $this->cellTranslatedText($unit->symbol);
             $data['physicalQuantity'] = $this->cellList($unit->physicalQuantity);
             $data['unitSystem'] = $this->cellList($unit->unitSystem);
 

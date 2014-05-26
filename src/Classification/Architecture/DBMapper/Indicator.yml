@@ -3,10 +3,6 @@ Classification\Domain\Indicator:
   repositoryClass: \Core_Model_Repository_Ordered
   table: Classification_Indicator
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       column: id
@@ -17,13 +13,7 @@ Classification\Domain\Indicator:
   fields:
     ref:
       type: string
-      unique: true
       nullable: false
-    label:
-      type: string
-      nullable: false
-      gedmo:
-        - translatable
     position:
       type: integer
       nullable: false
@@ -34,12 +24,24 @@ Classification\Domain\Indicator:
       type: unit_api
       nullable: false
 
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
   manyToOne:
     library:
       targetEntity: ClassificationLibrary
       inversedBy: indicators
       joinColumn:
+        name: idLibrary
+        referencedColumnName: id
         nullable: false
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - idLibrary
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

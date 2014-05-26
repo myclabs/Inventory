@@ -23,7 +23,7 @@ $inputColumn = new UI_Datagrid_Col_List('input', __('UI', 'name', 'field'));
 $inputColumn->list = [];
 foreach ($this->numericInputList as $numericInput) {
     /** @var $numericInput NumericField */
-    $inputColumn->list[$numericInput->getRef()] = $numericInput->getLabel();
+    $inputColumn->list[$numericInput->getRef()] = $this->translate($numericInput->getLabel());
 }
 $datagrid->addCol($inputColumn);
 

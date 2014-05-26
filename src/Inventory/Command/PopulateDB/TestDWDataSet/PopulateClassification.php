@@ -4,6 +4,7 @@ namespace Inventory\Command\PopulateDB\TestDWDataSet;
 
 use Account\Domain\Account;
 use Classification\Domain\ClassificationLibrary;
+use Core\Translation\TranslatedString;
 use Doctrine\ORM\EntityManager;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateClassification;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,7 +37,11 @@ class PopulateClassification extends AbstractPopulateClassification
     {
         $output->writeln('  <info>Populating Classification</info>');
 
-        $library = new ClassificationLibrary($this->publicAccount, 'Classification My C-Sense');
+        $library = new ClassificationLibrary(
+            $this->publicAccount,
+            new TranslatedString('Classification My C-Sense', 'fr'),
+            true
+        );
         $library->save();
 
         // Création des axes.

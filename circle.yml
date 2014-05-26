@@ -33,11 +33,11 @@ dependencies:
 
 database:
   override:
-    - bin/tests db:populate
+    - bin/tests db:populate -v
 
 test:
   override:
     - phpunit
     # Test des scripts populate
-    - bin/inventory -v db:populate test
-    - bin/inventory -v db:populate testDW
+    - bin/inventory db:populate test -v
+    - bin/inventory db:populate testDW -v

@@ -8,7 +8,9 @@
  */
 
 use Account\Domain\Account;
+use Classification\Domain\Axis;
 use Classification\Domain\ContextIndicator;
+use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -23,8 +25,6 @@ use Orga\Model\ACL\OrganizationAdminRole;
  */
 class Orga_Model_Organization extends Core_Model_Entity implements EntityResource
 {
-    use Core_Model_Entity_Translatable;
-
     // Constantes de tris et de filtres.
     const QUERY_ACCOUNT = 'account';
     // Constantes de path des Axis, Member, Granularity et Cell.
@@ -48,9 +48,9 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     /**
      * Label de l'Organization.
      *
-     * @var string
+     * @var TranslatedString
      */
-    protected $label = '';
+    protected $label;
 
     /**
      * Collection des Axis de l'Organization.
@@ -75,7 +75,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
 
     /**
      * Collection des ContextIndicator utilisés par l'Organization
-     * 
+     *
      * @var Collection|ContextIndicator[]
      */
     protected $contextIndicators;
@@ -88,11 +88,9 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     protected $adminRoles;
 
 
-    /**
-     * Constructeur de la classe Organization.
-     */
     public function __construct(Account $account)
     {
+        $this->label = new TranslatedString();
         $this->axes = new ArrayCollection();
         $this->granularities = new ArrayCollection();
         $this->contextIndicators = new ArrayCollection();
@@ -122,21 +120,9 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * Spécifie le label de l'Organization.
-     *
-     * @param string $label
-     *
-     * @throws Core_Exception_InvalidArgument
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
-
-    /**
      * Renvoie le label textuel du projet.
      *
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -185,7 +171,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function getAxisByRef($ref)
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('ref', $ref));
         $axis = $this->axes->matching($criteria)->toArray();
 
@@ -246,7 +232,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     /**
      * Renvoie les Axis de l'Organization.
      *
-     * @return Collection|Orga_Model_Axis[]
+     * @return Collection|Selectable|Orga_Model_Axis[]
      */
     public function getAxes()
     {
@@ -260,8 +246,8 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function getRootAxes()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
-        $criteria->where(Doctrine\Common\Collections\Criteria::expr()->isNull('directNarrower'));
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->isNull('directNarrower'));
         $criteria->orderBy(['position' => 'ASC']);
         return $this->axes->matching($criteria)->toArray();
     }
@@ -273,7 +259,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function getFirstOrderedAxes()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->orderBy(['narrowerTag' => 'ASC']);
         return $this->axes->matching($criteria)->toArray();
     }
@@ -366,7 +352,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function getGranularityByRef($ref)
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('ref', $ref));
         $granularity = $this->granularities->matching($criteria)->toArray();
 
@@ -430,7 +416,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      */
     public function getOrderedGranularities()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria);
     }
@@ -442,12 +428,12 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      *
      * @throws Core_Exception_InvalidArgument
      */
-    public function setGranularityForInventoryStatus(Orga_Model_Granularity $granularity=null)
+    public function setGranularityForInventoryStatus(Orga_Model_Granularity $granularity = null)
     {
         if ($this->granularityForInventoryStatus !== $granularity) {
             if ($this->granularityForInventoryStatus !== null) {
                 foreach ($this->granularityForInventoryStatus->getCells() as $cell) {
-                    $cell->setInventoryStatus(Orga_Model_Cell::STATUS_NOTLAUNCHED);
+                    $cell->setInventoryStatus(Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED);
                 }
             }
             $this->granularityForInventoryStatus = $granularity;
@@ -515,11 +501,11 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     }
 
     /**
-     * @return Classification\Domain\Axis[]
+     * @return Axis[]
      */
     public function getClassificationAxes()
     {
-        /** @var Classification\Domain\Axis[] $classificationAxes */
+        /** @var Axis[] $classificationAxes */
         $classificationAxes = [];
 
         foreach ($this->getContextIndicators() as $classificationContextIndicator) {
@@ -540,9 +526,9 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
             }
             usort(
                 $classificationAxes,
-                function($a, $b) {
-                    /** @var Classification\Domain\Axis $a */
-                    /** @var Classification\Domain\Axis $b */
+                function ($a, $b) {
+                    /** @var Axis $a */
+                    /** @var Axis $b */
                     if ($a->getLibrary()->getId() < $b->getLibrary()->getId()) {
                         return -1;
                     }

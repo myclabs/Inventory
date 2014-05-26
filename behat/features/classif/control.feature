@@ -6,17 +6,10 @@ Feature: Control of classification data
 
   @javascript @readOnly
   Scenario: Control of classification data scenario
-    When I am on "classification/consistency/check"
-    Then I should see the "coherence" datagrid
-    And the row 1 of the "coherence" datagrid should contain:
-      | control                        | diag       | fail      |
-      | Axe ne contenant aucun élément | NOT OK     | Axe vide  |
-    And the row 2 of the "coherence" datagrid should contain:
-      | control                                            | diag         | fail                                  |
-      | Élément sans enfant d'un axe non situé à la racine | NOT OK       | scope : { Poste article 75 : [2, 3] } |
-    And the row 3 of the "coherence" datagrid should contain:
-      | control                                      | diag         | fail                                                |
-      | Élément pour lequel manque un élément parent | NOT OK       | Poste article 75 : { scope : [Élément sans parent] } |
-    And the row 4 of the "coherence" datagrid should contain:
-      | control                                                                      | diag | fail |
-      | Indicateur contextualisé dont certains des axes sont hiérarchiquement reliés | OK   |      |
+    When I am on "classification/library/view/id/1"
+    Then I should see "Contrôle de validité du paramétrage"
+    When I click "Rechercher des anomalies"
+    And I wait 2 seconds
+    Then I should see "Axe ne contenant aucun élément : Axe vide"
+    And I should see "Élément sans enfant d'un axe non situé à la racine : Scope : { Poste article 75 : [2, 3] }"
+    And I should see "Élément pour lequel manque un élément parent : Poste article 75 : { Scope : [Élément sans parent] }"

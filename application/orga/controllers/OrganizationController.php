@@ -1,10 +1,10 @@
 <?php
 
+use Account\Domain\AccountRepository;
 use AF\Domain\AFLibrary;
-use AF\Domain\AF;
 use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\ContextIndicator;
-use Parameter\Domain\ParameterLibrary;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 use Core\Annotation\Secure;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\Common\Collections\Criteria;
@@ -14,7 +14,6 @@ use MyCLabs\MUIH\Tabs;
 use Orga\OrganizationViewFactory;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
-use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\Model\ACL\CellAdminRole;
 use Orga\ViewModel\CellViewModelFactory;
 use User\Domain\User;
@@ -58,13 +57,13 @@ class Orga_OrganizationController extends Core_Controller
 
     /**
      * @Inject
-     * @var Orga_Service_ETLStructure
+     * @var AccountRepository
      */
-    private $etlStructureService;
+    private $accountRepository;
 
     /**
      * @Inject
-     * @var WorkDispatcher
+     * @var SynchronousWorkDispatcher
      */
     private $workDispatcher;
 
@@ -150,7 +149,7 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function addAction()
     {
-        UI_Form::addHeader();
+        $this->view->assign('account', $this->getParam('account'));
         $this->view->assign('templates', $this->organizationService->getOrganizationTemplates());
     }
 
@@ -160,14 +159,13 @@ class Orga_OrganizationController extends Core_Controller
     public function addSubmitAction()
     {
         $user = $this->_helper->auth();
-        $formData = json_decode($this->getRequest()->getParam('addOrganization'), true);
-        $label = $formData['organization']['elements']['organizationLabel']['value'];
+        $label = $this->getParam('oranizationLabel');
 
         $success = function () {
             $this->sendJsonResponse(
                 [
                     'message' => __('UI', 'message', 'added'),
-                    'typeMessage' => 'success',
+                    'type' => 'success',
                     'info' => __('Orga', 'add', 'complementaryInfo')
                 ]
             );
@@ -176,7 +174,7 @@ class Orga_OrganizationController extends Core_Controller
             $this->sendJsonResponse(
                 [
                     'message' => __('UI', 'message', 'addedLater'),
-                    'typeMessage' => 'info',
+                    'type' => 'info',
                     'info' => __('Orga', 'add', 'complementaryInfo')
                 ]
             );
@@ -189,10 +187,10 @@ class Orga_OrganizationController extends Core_Controller
         $task = new ServiceCallTask(
             'Orga_Service_OrganizationService',
             'createOrganizationFromTemplatesForm',
-            [$user, $formData],
+            [$user, $this->accountRepository->get($this->getParam('account')), $this->getRequest()->getPost()],
             __('Orga', 'backgroundTasks', 'createOrganization', ['LABEL' => $label])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -218,9 +216,9 @@ class Orga_OrganizationController extends Core_Controller
             'deleteOrganization',
             [$organization]
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
-        $this->redirect('orga/organization/manage');
+        $this->redirect('account/dashboard/');
     }
 
     /**
@@ -458,7 +456,6 @@ class Orga_OrganizationController extends Core_Controller
         $this->view->assign('tabView', $tabView);
         UI_Datagrid::addHeader();
         UI_Tree::addHeader();
-        UI_Form::addHeader();
         $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
         $this->setActiveMenuItemOrganization($organization->getId());
     }
@@ -473,7 +470,7 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $this->view->assign('idOrganization', $idOrganization);
-        $this->view->assign('organizationLabel', $organization->getLabel());
+        $this->view->assign('organizationLabel', $this->translator->get($organization->getLabel()));
 
         $potentialContextIndicators = [];
         foreach (ClassificationLibrary::loadUsableInAccount($organization->getAccount()) as $classificationLibrary) {
@@ -510,8 +507,8 @@ class Orga_OrganizationController extends Core_Controller
                 'label',
                 __('UI', 'formValidation', 'emptyRequiredField')
             );
-        } elseif ($organization->getLabel() !== $label) {
-            $organization->setLabel($label);
+        } elseif ($this->translator->get($organization->getLabel()) !== $label) {
+            $this->translator->set($organization->getLabel(), $label);
             $updated = true;
         }
 
@@ -702,6 +699,10 @@ class Orga_OrganizationController extends Core_Controller
         $organization = Orga_Model_Organization::load($idOrganization);
 
         $this->view->assign('organization', $organization);
+        $this->view->assign(
+            'topCellsWithAccess',
+            $this->orgaACLManager->getTopCellsWithAccessForOrganization($connectedUser, $organization)['cells']
+        );
 
         $isUserAllowedToEditOrganization = $this->acl->isAllowed(
             $connectedUser,
@@ -765,7 +766,7 @@ class Orga_OrganizationController extends Core_Controller
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
             );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
     }
 
@@ -785,7 +786,8 @@ class Orga_OrganizationController extends Core_Controller
         /** @var \AF\Domain\AF $af */
         foreach (AFLibrary::loadUsableInAccount($organization->getAccount()) as $afLibrary) {
             foreach ($afLibrary->getAFList() as $af) {
-                $afs[$af->getId()] = $af->getLabel() . ' (' . $afLibrary->getLabel() . ')';
+                $afs[$af->getId()] = $this->translator->get($af->getLabel())
+                    . ' (' . $this->translator->get($afLibrary->getLabel()) . ')';
             }
         }
         $this->view->assign('afs', $afs);
@@ -876,7 +878,7 @@ class Orga_OrganizationController extends Core_Controller
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $inputAxes)])
             );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
     }
 
@@ -944,7 +946,7 @@ class Orga_OrganizationController extends Core_Controller
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
             );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
     }
 
@@ -1026,7 +1028,7 @@ class Orga_OrganizationController extends Core_Controller
                 ],
                 __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
             );
-            $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
     }
 
@@ -1044,44 +1046,58 @@ class Orga_OrganizationController extends Core_Controller
 
         $this->view->assign('organization', $organization);
 
-        $cellsData = [];
+        $granularities = [];
 
         $userCanEditOrganization = $this->acl->isAllowed($connectedUser, Actions::EDIT, $organization);
         $this->view->assign('canEditOrganization', $userCanEditOrganization);
         if ($userCanEditOrganization) {
-            $cellsData[] = $organization;
             $globalCell = $organization->getGranularityByRef('global')->getCellByMembers([]);
-            $cellsResults = [$globalCell];
+            $granularitesResults = [$globalCell->getGranularity()];
             foreach ($globalCell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
-                if ($narrowerGranularity->getCellsGenerateDWCubes()) {
-                    foreach ($narrowerGranularity->getCells() as $childCell) {
-                        $cellsResults[] = $childCell;
-                    }
-                }
+                $granularitesResults[] = $narrowerGranularity;
             }
-            $this->view->assign('cellsResults', $cellsResults);
+            $this->view->assign('granularitiesResults', $granularitesResults);
 
             $topCells = [$globalCell];
         } else {
             /** @var Orga_Model_Cell[] $topCells */
-            $topCells = $this->acl->getTopCellsWithAccessForOrganization(
+            $topCells = $this->orgaACLManager->getTopCellsWithAccessForOrganization(
                 $connectedUser,
                 $organization,
                 [CellAdminRole::class]
             )['cells'];
 
         }
+
         foreach ($topCells as $topCell) {
-            $cellsData[$topCell->getId()] = $topCell;
-            foreach ($topCell->getGranularity()->getNarrowerGranularities() as $narrowerGranularity) {
+            $granularity = $topCell->getGranularity();
+            if ($granularity->getDWCube()) {
+                $granularities[$granularity->getId()] = $granularity;
+            }
+            foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {
                 if ($narrowerGranularity->getCellsGenerateDWCubes()) {
-                    foreach ($topCell->getChildCellsForGranularity($narrowerGranularity) as $childCell) {
-                        $cellsData[$childCell->getId()] = $childCell;
-                    }
+                    $granularities[$narrowerGranularity->getId()] = $narrowerGranularity;
                 }
             }
         }
-        $this->view->assign('cellsData', $cellsData);
+
+        $granularitiesData = [];
+        foreach ($granularities as $idGranularity => $granularity) {
+            $granularitiesData[$idGranularity] = $granularity;
+            foreach ($granularity->getBroaderGranularities() as $broaderGranularity) {
+                $granularitiesData[$broaderGranularity->getId()] = $broaderGranularity;
+            }
+        }
+        @uasort(
+            $granularitiesData,
+            function (Orga_Model_Granularity $a, Orga_Model_Granularity $b) {
+                return $a->getPosition() - $b->getPosition();
+            }
+        );
+        if ($userCanEditOrganization) {
+            array_unshift($granularities, $organization);
+        }
+        $this->view->assign('granularitiesData', $granularities);
 
         if ($this->hasParam('display') && ($this->getParam('display') === 'render')) {
             $this->_helper->layout()->disableLayout();
@@ -1094,7 +1110,7 @@ class Orga_OrganizationController extends Core_Controller
     /**
      * @Secure("editOrganizationAndCells")
      */
-    public function rebuildDataAction()
+    public function rebuildListCellAction()
     {
         /** @var User $connectedUser */
         $connectedUser = $this->_helper->auth();
@@ -1103,16 +1119,64 @@ class Orga_OrganizationController extends Core_Controller
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        $idCell = $this->getParam('cell');
-        if (empty($idCell)) {
+        $refGranularity = $this->getParam('refGranularity');
+        /** @var Orga_Model_Granularity $granularity */
+        $granularity = $organization->getGranularityByRef($refGranularity);
+
+        $searches = array_map('strtolower', explode(' ', $this->getParam('q')));
+        $querySearch = new Core_Model_Query();
+        $querySearch->filter->addCondition('granularity', $granularity);
+        $querySearch->aclFilter->enable($connectedUser, Actions::VIEW);
+
+        $cells = [];
+        foreach (Orga_Model_Cell::loadList($querySearch) as $cell) {
+            $cellLabel = $this->translator->get($cell->getLabel());
+            $lowerCellLabel = strtolower($cellLabel);
+            foreach ($searches as $search) {
+                if (!empty($search) && (strpos(strtolower($cellLabel), $search) === false)) {
+                    continue 2;
+                }
+            }
+            $cells[] = ['id' => $cell->getId(), 'text' => $cellLabel];
+        }
+
+        $this->sendJsonResponse($cells);
+    }
+
+    /**
+     * @Secure("editOrganizationAndCells")
+     */
+    public function rebuildDataAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $refGranularity = $this->getParam('granularity');
+        if (empty($refGranularity)) {
             $taskName = 'resetOrganizationDWCubes';
             $taskParameters = [$organization];
-            $organizationalUnit = __('Orga', 'organization', 'forWorkspace', ['LABEL' => $organization->getLabel()]);
+            $organizationalUnit = __('Orga', 'organization', 'forWorkspace', [
+                'LABEL' => $this->translator->get($organization->getLabel())
+            ]);
         } else {
+            $idCell = $this->getParam('cell');
+            if (empty($idCell) && ($refGranularity !== 'global')) {
+                throw new Core_Exception_User('DW', 'rebuild', 'noCubeSelected');
+            }
+            if ($refGranularity === 'global') {
+                /** @var Orga_Model_Granularity $granularity */
+                $granularity = $organization->getGranularityByRef($refGranularity);
+                $cell = $granularity->getCellByMembers([]);
+            } else {
+                $cell = Orga_Model_Cell::load($idCell);
+            }
+
             $taskName = 'resetCellAndChildrenDWCubes';
-            $cell = Orga_Model_Cell::load($this->getParam('cell'));
             $taskParameters = [$cell];
-            $organizationalUnit = __('Orga', 'organization', 'forOrganizationalUnit', ['LABEL' => $cell->getLabel()]);
+            $organizationalUnit = __('Orga', 'organization', 'forOrganizationalUnit', [
+                'LABEL' => $this->translator->get($cell->getLabel())
+            ]);
         }
 
         $success = function () {
@@ -1132,7 +1196,7 @@ class Orga_OrganizationController extends Core_Controller
             $taskParameters,
             __('Orga', 'backgroundTasks', 'resetDWOrga', ['FOR_ORGANIZATIONAL_UNIT' => $organizationalUnit])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -1140,14 +1204,23 @@ class Orga_OrganizationController extends Core_Controller
      */
     public function rebuildResultsAction()
     {
-        /** @var User $connectedUser */
-        $connectedUser = $this->_helper->auth();
-
         $idOrganization = $this->getParam('idOrganization');
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
-        $cell = Orga_Model_Cell::load($this->getParam('cell'));
+        $refGranularity = $this->getParam('granularity');
+        $idCell = $this->getParam('cell');
+        if (empty($idCell) && ($refGranularity !== 'global')) {
+            throw new Core_Exception_User('DW', 'rebuild', 'noCubeSelected');
+        }
+
+        if ($refGranularity === 'global') {
+            /** @var Orga_Model_Granularity $granularity */
+            $granularity = $organization->getGranularityByRef($refGranularity);
+            $cell = $granularity->getCellByMembers([]);
+        } else {
+            $cell = Orga_Model_Cell::load($idCell);
+        }
 
         $success = function () {
             $this->sendJsonResponse(['message' => __('DW', 'rebuild', 'analysisDataRebuildConfirmationMessage')]);
@@ -1164,9 +1237,11 @@ class Orga_OrganizationController extends Core_Controller
             'Orga_Service_ETLStructure',
             'resetCellAndChildrenCalculationsAndDWCubes',
             [$cell],
-            __('Orga', 'backgroundTasks', 'resetDWCellAndResults', ['LABEL' => $cell->getLabel()])
+            __('Orga', 'backgroundTasks', 'resetDWCellAndResults', [
+                'LABEL' => $this->translator->get($cell->getLabel())
+            ])
         );
-        $this->workDispatcher->runBackground($task, $this->waitDelay, $success, $timeout, $error);
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**

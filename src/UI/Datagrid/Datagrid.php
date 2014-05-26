@@ -11,8 +11,6 @@ use UI\Datagrid\Column\GenericColumn;
 use UI\Datagrid\Column\ListColumn;
 use UI\Datagrid\Column\LongTextColumn;
 use UI_Generic;
-use UI_Form;
-use UI_Form_Element_HTML;
 use Core_Exception_InvalidArgument;
 use Zend_Json;
 use Zend_Json_Expr;
@@ -114,9 +112,9 @@ class Datagrid extends UI_Generic
     public $addPanelTitle;
 
     /**
-     * Définition du formulaire affiché dans le popup d'ajout. Null = UI_Form par défaut.
+     * Définition du formulaire affiché dans le popup d'ajout. Null = form par défaut.
      *
-     * @var UI_Form
+     * @var GenericTag
      */
     public $addPanelForm;
 
@@ -1024,7 +1022,7 @@ JS;
         $datagridScript .= '}';
         // Ajout du filtre à la requete.
         $datagridScript .= 'var filter = \'\';';
-        $datagridScript .= 'filter += "{ ";';
+        $datagridScript .= 'filter += "[ ";';
         if ($this->hasFilter() === true) {
             $filters = array_merge($this->columns, $this->customFilters);
             /** @var Column\GenericColumn $column */
@@ -1035,7 +1033,7 @@ JS;
             }
             $datagridScript .= 'filter = filter.substr(0, filter.length-1);';
         }
-        $datagridScript .= 'filter += "}";';
+        $datagridScript .= 'filter += "]";';
         // Mise à jour de l'indicateur de présence du filtre.
         $datagridScript .= '$(\'#'.$this->id.'_filter legend i.filterActive\').remove();';
         $datagridScript .= 'if (filter != \'{}\') {';
@@ -1050,7 +1048,7 @@ JS;
         $datagridScript .= '/sortDirection/" + dir + "';
         $datagridScript .= '/nbElements/" + results + "';
         $datagridScript .= '/startIndex/" + startIndex + "';
-        $datagridScript .= '/filters/" + encodeURIComponent(filter);';
+        $datagridScript .= '?filters=" + encodeURIComponent(filter);';
         $datagridScript .= '};';
 
         // Création d'une variable permettant de savoir si la requête Initiale a déjà été envoyé.
@@ -1613,8 +1611,6 @@ JS;
         $view->headScript()->appendFile('yui/build/datatable/datatable-min.js', 'text/javascript');
         $view->headScript()->appendFile('yui/build/paginator/paginator-min.js', 'text/javascript');
         $view->headScript()->appendFile('yui/build/calendar/calendar-min.js', 'text/javascript');
-
-        UI_Form::addHeader();
 
         parent::addHeader($instance);
     }

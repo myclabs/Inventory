@@ -50,12 +50,6 @@ class DW_Model_Filter extends Core_Model_Entity
     protected $members = null;
 
 
-    /**
-     * Constructeur de l'objet
-     *
-     * @param DW_Model_Report $report
-     * @param DW_Model_Axis $axis
-     */
     public function __construct(DW_Model_Report $report, DW_Model_Axis $axis)
     {
         $this->members = new ArrayCollection();
@@ -123,7 +117,7 @@ class DW_Model_Filter extends Core_Model_Entity
      *
      * @param DW_Model_Member $member
      */
-    public function removeMember($member)
+    public function removeMember(DW_Model_Member $member)
     {
         if ($this->hasMember($member)) {
             $this->members->removeElement($member);
@@ -144,11 +138,10 @@ class DW_Model_Filter extends Core_Model_Entity
     /**
      * Renvoie un tableau contenant tous les Member du Report.
      *
-     * @return DW_Model_Member[]
+     * @return Collection|DW_Model_Member[]
      */
     public function getMembers()
     {
-        return $this->members->toArray();
+        return $this->members;
     }
-
 }

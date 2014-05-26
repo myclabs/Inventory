@@ -19,7 +19,7 @@ Feature: Cell comment tab feature
     When I open tab "Saisie"
     And I click "Quitter"
   # Ajout second commentaire
-    And I click element ".cell[data-tag='/1-zone:europe/&/2-marque:marque_a/'] .input-actions a"
+    And I go input the "/1-zone:europe/&/2-marque:marque_a/" cell
     And I open tab "Commentaires"
     And I fill in "newComment" with "h2. Commentaire cellule _Europe Marque A_."
     And I click "Ajouter un commentaire"

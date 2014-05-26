@@ -3,6 +3,7 @@
 use Account\Domain\ACL\AccountAdminRole;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\Doctrine\ACLSetup;
 use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
@@ -51,6 +52,12 @@ return [
     // Langues supportées par l'application
     'translation.defaultLocale' => 'fr',
     'translation.languages'     => ['fr', 'en'],
+    'translation.fallbacks'     => [
+        'fr' => ['en'],
+        'en' => ['fr'],
+    ],
+    Translator::class => DI\object()
+            ->constructor(DI\link('translation.defaultLocale'), DI\link('translation.fallbacks')),
 
     // ACL
     'enable.acl' => true,

@@ -1,8 +1,8 @@
-$.fn.eraseFormErrors = function (o)
-{
-	$('#' + $(this).attr('id') + ' .help-block.errorMessage').remove();
-	$('#' + $(this).attr('id') + ' .error').removeClass('error');
-	$('#' + $(this).attr('id') + ' .warning').removeClass('warning');
+$.fn.eraseFormErrors = function (o) {
+    $('#' + $(this).attr('id') + ' .help-block.errorMessage').remove();
+    $('#' + $(this).attr('id') + ' .error').removeClass('error');
+    $('#' + $(this).attr('id') + ' .warning').removeClass('warning');
+    $('#' + $(this).attr('id') + ' .has-error').removeClass('has-error');
 };
 
 $.fn.parseFormErrors = function (request)
@@ -143,7 +143,7 @@ $.fn.getFormElementValue = function ()
             case 'checkbox':
                 if ($(this).children('input[type=checkbox]').length == 1) {
                     element = element.slice(0, -2);
-                    if (child.attr('checked') == 'checked') {
+                    if (child.prop('checked')) {
                         element += '1';
                     } else {
                         element += '0';

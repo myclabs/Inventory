@@ -124,7 +124,7 @@ class UI_Datagrid extends UI_Generic
     public $addPanelTitle = null;
 
     /**
-     * Définition du formulaire affiché dans le popup d'ajout. Null = UI_Form par défaut.
+     * Définition du formulaire affiché dans le popup d'ajout. Null = form par défaut.
      *
      * @var   GenericTag
      */
@@ -1039,7 +1039,7 @@ class UI_Datagrid extends UI_Generic
         $datagridScript .= '}';
         // Ajout du filtre à la requete.
         $datagridScript .= 'var filter = \'\';';
-        $datagridScript .= 'filter += "{ ";';
+        $datagridScript .= 'filter += "[ ";';
         if ($this->hasFilter() === true) {
             $filters = array_merge($this->_cols, $this->_customFilters);
             foreach ($filters as $column) {
@@ -1049,7 +1049,7 @@ class UI_Datagrid extends UI_Generic
             }
             $datagridScript .= 'filter = filter.substr(0, filter.length-1);';
         }
-        $datagridScript .= 'filter += "}";';
+        $datagridScript .= 'filter += "]";';
         // Mise à jour de l'indicateur de présence du filtre.
         $datagridScript .= '$(\'#'.$this->id.'_filter legend i.filterActive\').remove();';
         $datagridScript .= 'if (filter != \'{}\') {';
@@ -1064,7 +1064,7 @@ class UI_Datagrid extends UI_Generic
         $datagridScript .= '/sortDirection/" + dir + "';
         $datagridScript .= '/nbElements/" + results + "';
         $datagridScript .= '/startIndex/" + startIndex + "';
-        $datagridScript .= '/filters/" + encodeURIComponent(filter);';
+        $datagridScript .= '?filters=" + encodeURIComponent(filter);';
         $datagridScript .= '};';
 
         // Création d'une variable permettant de savoir si la requête Initiale a déjà été envoyé.
@@ -1638,8 +1638,6 @@ class UI_Datagrid extends UI_Generic
         $broker->view->headScript()->appendFile('yui/build/datatable/datatable-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/paginator/paginator-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/calendar/calendar-min.js', 'text/javascript');
-
-        UI_Form::addHeader();
 
         parent::addHeader($instance);
     }

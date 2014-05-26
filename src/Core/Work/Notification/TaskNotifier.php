@@ -14,16 +14,16 @@ interface TaskNotifier
     /**
      * Notify a user that a task has finished.
      *
-     * @param \User\Domain\User $user
-     * @param string          $taskLabel
+     * @param User   $user
+     * @param string $taskLabel
      */
-    function notifyTaskFinished(User $user, $taskLabel);
+    public function notifyTaskFinished(User $user, $taskLabel);
 
     /**
      * Notify a user that a task has errored.
      *
-     * @param \User\Domain\User $user
-     * @param string          $taskLabel
+     * @param User   $user
+     * @param string $taskLabel
      */
-    function notifyTaskError(User $user, $taskLabel);
+    public function notifyTaskError(User $user, $taskLabel);
 }

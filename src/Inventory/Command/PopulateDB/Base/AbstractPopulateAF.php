@@ -47,9 +47,8 @@ use AF\Domain\Algorithm\Selection\TextKey\ExpressionSelectionAlgo;
 use AF\Domain\Algorithm\Selection\TextKey\ContextValueSelectionAlgo;
 use Calc_UnitValue;
 use Calc_Value;
-use Classification\Domain\Axis;
 use Classification\Domain\ClassificationLibrary;
-use Classification\Domain\ContextIndicator;
+use Core\Translation\TranslatedString;
 use Core_Exception;
 use Parameter\Domain\ParameterLibrary;
 use Unit\UnitAPI;
@@ -139,7 +138,7 @@ abstract class AbstractPopulateAF
     protected function createCategory(AFLibrary $library, $label, Category $parent = null)
     {
         $category = new Category($library);
-        $category->setLabel($label);
+        $category->setLabel(new TranslatedString($label, 'fr'));
         if ($parent !== null) {
             $category->setParentCategory($parent);
         }
@@ -156,7 +155,7 @@ abstract class AbstractPopulateAF
      */
     protected function createAF(AFLibrary $library, Category $category, $label)
     {
-        $af = new AF($library, $label);
+        $af = new AF($library, new TranslatedString($label, 'fr'));
         $af->save();
         $category->addAF($af);
         $library->addAF($af);
@@ -518,7 +517,7 @@ abstract class AbstractPopulateAF
             $option = new SelectOption();
             $option->setSelect($selectInput);
             $option->setRef($refOption);
-            $option->setLabel($labelOption);
+            $option->getLabel()->set($labelOption, 'fr');
         }
         return $this->createComponent($selectInput, $aF, $parentGroup, $ref, $label, $help, $visible);
     }
@@ -571,8 +570,8 @@ abstract class AbstractPopulateAF
     ) {
         $component->setAf($aF);
         $component->setRef($ref);
-        $component->setLabel($label);
-        $component->setHelp($help);
+        $component->getLabel()->set($label, 'fr');
+        $component->getHelp()->set($help, 'fr');
         $component->setVisible($visible);
         $component->save();
         $parentGroup->addSubComponent($component);
@@ -620,7 +619,7 @@ abstract class AbstractPopulateAF
     private function createAlgoNumeric(AF $aF, NumericAlgo $numeric, $ref, $label)
     {
         $numeric->setRef($ref);
-        $numeric->setLabel($label);
+        $numeric->getLabel()->set($label, 'fr');
         $numeric->save();
         $aF->addAlgo($numeric);
     }
@@ -633,7 +632,7 @@ abstract class AbstractPopulateAF
      */
     protected function createFixedIndexForAlgoNumeric(NumericAlgo $numeric, $refContext, $refIndicator, $indexes)
     {
-        // Moche : par du principe qu'il y'a 1 seule bibliothèque
+        // Moche : part du principe qu'il y'a 1 seule bibliothèque
         $classificationLibrary = ClassificationLibrary::loadByAccount($this->publicAccount)[0];
 
         $numeric->setContextIndicator(
@@ -657,7 +656,7 @@ abstract class AbstractPopulateAF
      */
     protected function createAlgoIndexForAlgoNumeric(NumericAlgo $numeric, $refContext, $refIndicator, $indexes)
     {
-        // Moche : par du principe qu'il y'a 1 seule bibliothèque
+        // Moche : part du principe qu'il y'a 1 seule bibliothèque
         $classificationLibrary = ClassificationLibrary::loadByAccount($this->publicAccount)[0];
 
         $numeric->setContextIndicator(
@@ -681,7 +680,7 @@ abstract class AbstractPopulateAF
      */
     protected function createAlgoNumericParameter(AF $aF, $ref, $label, $refFamily)
     {
-        // Moche : par du principe qu'il y'a 1 seule bibliothèque
+        // Moche : part du principe qu'il y'a 1 seule bibliothèque
         $parameterLibrary = ParameterLibrary::loadByAccount($this->publicAccount)[0];
 
         $numericParameter = new NumericParameterAlgo();

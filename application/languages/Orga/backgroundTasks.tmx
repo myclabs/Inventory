@@ -28,6 +28,14 @@
                 <seg>Creation of granularity: [LABEL]</seg>
             </tuv>
         </tu>
+        <tu tuid="editGranularity">
+            <tuv xml:lang="fr">
+                <seg>Modification de la granularité : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Modification of granularity: [LABEL]</seg>
+            </tuv>
+        </tu>
         <tu tuid="removeGranularity">
             <tuv xml:lang="fr">
                 <seg>Suppression de la granularité : [LABEL]</seg>

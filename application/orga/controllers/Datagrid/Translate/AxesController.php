@@ -7,7 +7,6 @@
  */
 
 use Core\Annotation\Secure;
-use Gedmo\Translatable\TranslatableListener;
 
 /**
  * Classe du controller du datagrid des traductions des axes.
@@ -16,12 +15,6 @@ use Gedmo\Translatable\TranslatableListener;
  */
 class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
 {
-    /**
-     * @Inject
-     * @var TranslatableListener
-     */
-    private $translatableListener;
-
     /**
      * @Inject("translation.languages")
      * @var string[]
@@ -35,7 +28,6 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
      */
     public function getelementsAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $this->request->filter->addCondition(
             Orga_Model_Axis::QUERY_ORGANIZATION,
             Orga_Model_Organization::load($this->getParam('idOrganization'))
@@ -47,9 +39,7 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
             $data['identifier'] = $axis->getRef();
 
             foreach ($this->languages as $language) {
-                $locale = Core_Locale::load($language);
-                $axis->reloadWithLocale($locale);
-                $data[$language] = $axis->getLabel();
+                $data[$language] = $axis->getLabel()->get($language);
             }
             $this->addline($data);
         }
@@ -65,11 +55,9 @@ class Orga_Datagrid_Translate_AxesController extends UI_Controller_Datagrid
      */
     public function updateelementAction()
     {
-        $this->translatableListener->setTranslationFallback(false);
         $axis = Orga_Model_Organization::load($this->getParam('idOrganization'))->getAxisByRef($this->update['index']);
-        $axis->reloadWithLocale(Core_Locale::load($this->update['column']));
-        $axis->setLabel($this->update['value']);
-        $this->data = $axis->getLabel();
+        $axis->getLabel()->set($this->update['value'], $this->update['column']);
+        $this->data = $axis->getLabel()->get($this->update['column']);
 
         $this->send(true);
     }

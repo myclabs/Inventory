@@ -5,14 +5,14 @@
  * @subpackage ORM
  */
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /**
  * Class representing a DB duplicate entry for a key
  * @package    Core
  * @subpackage ORM
  */
-class Core_ORM_DuplicateEntryException extends DBALException
+class Core_ORM_DuplicateEntryException extends UniqueConstraintViolationException
 {
 
     /**
@@ -38,7 +38,7 @@ class Core_ORM_DuplicateEntryException extends DBALException
         $previousMessage = $previous ? $previous->getMessage() : '';
         $message = "Duplicate entry '$entry' for key '$key'."
             . PHP_EOL . PHP_EOL . $previousMessage;
-        parent::__construct($message, 0, $previous);
+        Exception::__construct($message, 0, $previous);
         $this->entry = $entry;
         $this->key = $key;
     }

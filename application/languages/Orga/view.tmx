@@ -42,6 +42,33 @@
             </tuv>
         </tu>
 
+        <!-- Désignation des granularités -->
+
+        <tu tuid="actionsColumn">
+            <tuv xml:lang="fr">
+                <seg>Actions</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Actions</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inventoryColumn">
+            <tuv xml:lang="fr">
+                <seg>Collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inventory</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputColumn">
+            <tuv xml:lang="fr">
+                <seg>Saisie</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Input</seg>
+            </tuv>
+        </tu>
+
         <!-- Lien d'accès à la saisie -->
 
         <tu tuid="inputLinkDetail">
@@ -380,7 +407,7 @@
         </tu>
         <tu tuid="statusNotStarted">
             <tuv xml:lang="fr">
-                <seg>Non démarrée</seg>
+                <seg>Saisie non démarrée</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Input not started</seg>
@@ -412,50 +439,66 @@
         </tu>
         <tu tuid="inputsNotStartedSingle">
             <tuv xml:lang="fr">
-                <seg>Non démarrée</seg>
+                <seg>Saisie non démarrée</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>not started</seg>
+                <seg>Input not started</seg>
             </tuv>
         </tu>
         <tu tuid="inputsNotStartedMany">
             <tuv xml:lang="fr">
-                <seg>Non démarrées</seg>
+                <seg>Saisies non démarrées</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>not started</seg>
+                <seg>Inputs not started</seg>
             </tuv>
         </tu>
         <tu tuid="inputsStartedSingle">
             <tuv xml:lang="fr">
-                <seg>Non terminée</seg>
+                <seg>Saisie non terminée</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>not finished</seg>
+                <seg>Input not finished</seg>
             </tuv>
         </tu>
         <tu tuid="inputsStartedMany">
             <tuv xml:lang="fr">
-                <seg>Non terminées</seg>
+                <seg>Saisie non terminées</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>not finished</seg>
+                <seg>Inputs not finished</seg>
             </tuv>
         </tu>
         <tu tuid="inputsCompletedSingle">
             <tuv xml:lang="fr">
-                <seg>terminée</seg>
+                <seg>Saisie terminée</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>finished</seg>
+                <seg>Input finished</seg>
             </tuv>
         </tu>
         <tu tuid="inputsCompletedMany">
             <tuv xml:lang="fr">
-                <seg>terminées</seg>
+                <seg>Saisies terminées</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>finished</seg>
+                <seg>Inputs finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noInputsCompleted">
+            <tuv xml:lang="fr">
+                <seg>Aucune saisie terminée</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>no input finished</seg>
+            </tuv>
+        </tu>
+        <tu tuid="percentInputsCompleted">
+            <tuv xml:lang="fr">
+                <seg>des saisies terminées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>inputs finished</seg>
             </tuv>
         </tu>
 

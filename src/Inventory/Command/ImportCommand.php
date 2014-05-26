@@ -12,26 +12,41 @@ use AF\Domain\Algorithm\Numeric\NumericConstantAlgo;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use AF\Domain\Algorithm\Numeric\NumericParameterAlgo;
+use AF\Domain\Input\Select\SelectMultiInput;
+use AF\Domain\InputSet\PrimaryInputSet;
+use AF\Domain\InputSet\SubInputSet;
+use AF\Domain\Output\OutputElement;
+use AF\Domain\Output\OutputIndex;
+use AF\Domain\Output\OutputTotal;
 use Classification\Domain\Axis;
 use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Context;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Exception;
+use Orga\Model\ACL\CellAdminRole;
+use Orga\Model\ACL\CellContributorRole;
+use Orga\Model\ACL\CellManagerRole;
+use Orga\Model\ACL\CellObserverRole;
+use Orga\Model\ACL\OrganizationAdminRole;
 use Parameter\Domain\Family\Cell;
 use Parameter\Domain\Family\Dimension;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Family\FamilyReference;
 use Parameter\Domain\Family\Member;
 use Parameter\Domain\ParameterLibrary;
-use Serializer\Serializer;
+use Serializer\CustomSerializerForMigration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
 use User\Domain\User;
+use MyCLabs\ACL\ACL;
 
 /**
  * Importe les données.
@@ -45,6 +60,18 @@ class ImportCommand extends Command
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     * @Inject
+     * @var ACL
+     */
+    private $acl;
+
+    /**
+     * @Inject("translation.defaultLocale")
+     * @var string
+     */
+    private $defaultLanguage;
 
     protected function configure()
     {
@@ -68,19 +95,22 @@ class ImportCommand extends Command
         // Create the classification library
         $label = $input->getArgument('classificationLibrary');
         $output->writeln("<comment>Creating library '$label'</comment>");
-        $classificationLibrary = new ClassificationLibrary($account, $label);
+        $classificationLibrary = new ClassificationLibrary(
+            $account,
+            new TranslatedString($label, $this->defaultLanguage)
+        );
         $classificationLibrary->save();
 
         // Create the parameter library
         $label = $input->getArgument('parameterLibrary');
         $output->writeln("<comment>Creating library '$label'</comment>");
-        $parameterLibrary = new ParameterLibrary($account, $label);
+        $parameterLibrary = new ParameterLibrary($account, new TranslatedString($label, $this->defaultLanguage));
         $parameterLibrary->save();
 
         // Create the AF library
         $label = $input->getArgument('afLibrary');
         $output->writeln("<comment>Creating library '$label'</comment>");
-        $afLibrary = new AFLibrary($account, $label);
+        $afLibrary = new AFLibrary($account, new TranslatedString($label, $this->defaultLanguage));
         $afLibrary->save();
 
 
@@ -88,13 +118,15 @@ class ImportCommand extends Command
             $refContext = $data['refContext'];
             $refIndicator = $data['refIndicator'];
             if ($refContext && $refIndicator) {
-                $algo->setContextIndicator(
+                $this->setProperty(
+                    $algo,
+                    'contextIndicator',
                     $classificationLibrary->getContextIndicatorByRef($refContext, $refIndicator)
                 );
             }
         };
 
-        $serializer = new Serializer([
+        $serializer = new CustomSerializerForMigration([
             'Classif_Model_Indicator' => [
                 'class' => Indicator::class,
                 'properties' => [
@@ -160,22 +192,36 @@ class ImportCommand extends Command
             \AF\Domain\Category::class => [
                 'callbacks' => function (\AF\Domain\Category $category) use ($afLibrary) {
                     $this->setProperty($category, 'library', $afLibrary);
+                    $afLibrary->addCategory($category);
                 },
             ],
             AF::class => [
                 'callbacks' => function (AF $af) use ($afLibrary) {
                     $this->setProperty($af, 'library', $afLibrary);
+                    $afLibrary->addAF($af);
                 },
             ],
             FixedIndex::class => [
                 'properties' => [
-                    'refClassifMember' => [ 'name' => 'refClassificationMember' ],
-                    'refClassifAxis' => [ 'name' => 'refClassificationAxis' ],
+                    'refClassifMember' => [ 'name' => 'refMember' ],
+                    'refClassifAxis' => [ 'exclude' => true ],
+                ],
+                'callbacks' => [
+                    function (FixedIndex $algo, array $data) use ($classificationLibrary) {
+                        $axis = $classificationLibrary->getAxisByRef($data['refClassifAxis']);
+                        $this->setProperty($algo, 'axis', $axis);
+                    },
                 ],
             ],
             AlgoResultIndex::class => [
                 'properties' => [
-                    'refClassifAxis' => [ 'name' => 'refClassificationAxis' ],
+                    'refClassifAxis' => [ 'exclude' => true ],
+                ],
+                'callbacks' => [
+                    function (AlgoResultIndex $algo, array $data) use ($classificationLibrary) {
+                        $axis = $classificationLibrary->getAxisByRef($data['refClassifAxis']);
+                        $this->setProperty($algo, 'axis', $axis);
+                    },
                 ],
             ],
             NumericInputAlgo::class => [
@@ -213,6 +259,179 @@ class ImportCommand extends Command
                     },
                 ],
             ],
+            \Orga_Model_Organization::class => [
+                'callbacks' => function (\Orga_Model_Organization $object) use ($account, $classificationLibrary) {
+                        $this->setProperty($object, 'account', $account);
+                        $this->setProperty($object, 'contextIndicators', new ArrayCollection());
+                        foreach ($classificationLibrary->getContextIndicators() as $contextIndicator) {
+                            $object->addContextIndicator($contextIndicator);
+                        }
+                    },
+                'properties' => [
+                    'acl' => [ 'exclude' => true ],
+                    'adminRoles' => [ 'exclude' => true ],
+                ],
+            ],
+            \Orga_Model_Axis::class => [],
+            \Orga_Model_Member::class => [],
+            \Orga_Model_Granularity::class => [
+                'properties' => [
+                    'dWCube' => [ 'exclude' => true ],
+                ],
+            ],
+            \Orga_Model_Cell::class => [
+                'properties' => [
+                    'dWCube' => [ 'exclude' => true ],
+                    'dWResults' => [ 'exclude' => true ],
+                    'socialCommentsForAFInputSetPrimary' => [ 'name' => 'commentsForAFInputSetPrimary' ],
+                    'socialGenericActions' => [ 'exclude' => true ],
+                    'docLibraryForSocialGenericActions' => [ 'exclude' => true ],
+                    'socialContextActions' => [ 'exclude' => true ],
+                    'docLibraryForSocialContextActions' => [ 'exclude' => true ],
+                    'acl' => [ 'exclude' => true ],
+                    'adminRoles' => [ 'exclude' => true ],
+                    'managerRoles' => [ 'exclude' => true ],
+                    'contributorRoles' => [ 'exclude' => true ],
+                    'observerRoles' => [ 'exclude' => true ],
+                ],
+                'callbacks' => function (\Orga_Model_Cell $object) {
+                    foreach ($object->getCommentsForInputSetPrimary() as $comment) {
+                        $this->setProperty($comment, 'cell', $object);
+                    }
+                },
+            ],
+            \Orga_Model_CellsGroup::class => [
+                'properties' => [
+                    'aF' => [
+                        'callback' => function ($var) use ($afLibrary) {
+                            if ($var === null) {
+                                return null;
+                            }
+                            foreach ($afLibrary->getAFList() as $af) {
+                                if ($af->getRef() == $var) {
+                                    return $af;
+                                }
+                            }
+                            throw new Exception('AF "' . $var . '" NOT FOUND !');
+                        },
+                    ],
+                ],
+            ],
+            PrimaryInputSet::class => [
+                'properties' => [
+                    'refAF' => [ 'name' => 'af' ],
+                    'af' => [
+                        'callback' => function ($var) use ($afLibrary) {
+                            foreach ($afLibrary->getAFList() as $af) {
+                                if ($af->getRef() == $var) {
+                                    return $af;
+                                }
+                            }
+                            throw new Exception('AF "' . $var . '" NOT FOUND !');
+                        },
+                    ]
+                ],
+            ],
+            SubInputSet::class => [
+                'properties' => [
+                    'refAF' => [ 'name' => 'af' ],
+                    'af' => [
+                        'callback' => function ($var) use ($afLibrary) {
+                            foreach ($afLibrary->getAFList() as $af) {
+                                if ($af->getRef() == $var) {
+                                    return $af;
+                                }
+                            }
+                            throw new Exception('AF "' . $var . '" NOT FOUND !');
+                        },
+                    ]
+                ],
+            ],
+            SelectMultiInput::class => [
+                'properties' => [
+                    'value' => [
+                        'callback' => function ($array) {
+                            return new ArrayCollection($array);
+                        },
+                    ]
+                ],
+            ],
+            OutputTotal::class => [
+                'properties' => [
+                    'refIndicator' => [ 'name' => 'indicator' ],
+                    'indicator' => [
+                        'callback' => function ($var) use ($classificationLibrary) {
+                            return $classificationLibrary->getIndicatorByRef($var);
+                        },
+                    ]
+                ],
+            ],
+            OutputIndex::class => [
+                'properties' => [
+                    'refAxis' => [ 'name' => 'axis' ],
+                    'axis' => [
+                        'callback' => function ($var) use ($classificationLibrary) {
+                            return $classificationLibrary->getAxisByRef($var);
+                        },
+                    ]
+                ],
+            ],
+            OutputElement::class => [
+                'properties' => [
+                    'algo' => [
+                        'exclude' => true,
+                    ],
+                ],
+                'callbacks' => [
+                    function (OutputElement $outputElement, array $data) use ($parameterLibrary) {
+                        $algo = $outputElement->getInputSet()->getAF()->getAlgoByRef($data['algo']);
+                        $this->setProperty($outputElement, 'algo', $algo);
+                    },
+                ],
+            ],
+            'Social_Model_Comment' => [
+                'class' => \Orga_Model_Cell_InputComment::class,
+                'properties' => [
+                    'author' => [
+                        'callback' => function ($var) {
+                            return User::loadByEmail($var);
+                        },
+                    ]
+                ],
+            ],
+            \Orga_Model_GranularityReport::class => [ 'exclude' => true ],
+            \Orga_Model_CellReport::class => [ 'exclude' => true ],
+            \DW_Model_Cube::class => [
+                'properties' => [
+                    'axes' => [ 'exclude' => true ],
+                    'indicators' => [ 'exclude' => true ],
+                    'reports' => [ 'exclude' => true ],
+                ],
+            ],
+            \DW_Model_Axis::class => [ 'exclude' => true ],
+            \DW_Model_Member::class => [ 'exclude' => true ],
+            \DW_Model_Indicator::class => [ 'exclude' => true ],
+            \DW_Model_Result::class => [ 'exclude' => true ],
+            \DW_Model_Report::class => [
+                'exclude' => true
+            ],
+            \DW_Model_Filter::class => [
+                'exclude' => true
+            ],
+            'User\Domain\ACL\Role\AdminRole' => [
+                'exclude' => true,
+            ],
+            'User\Domain\ACL\Authorization\NamedResourceAuthorization' => [ 'exclude' => true ],
+            'User\Domain\ACL\Resource\NamedResource' => [ 'exclude' => true ],
+            'User\Domain\ACL\Role\UserRole' => [ 'exclude' => true ],
+            'User\Domain\ACL\Authorization\UserAuthorization' => [ 'exclude' => true ],
+            'Orga\Model\ACL\OrganizationAuthorization' => [ 'exclude' => true ],
+            'Orga\Model\ACL\Role\OrganizationAdminRole' => [ 'exclude' => true ],
+            'Orga\Model\ACL\CellAuthorization' => [ 'exclude' => true ],
+            'Orga\Model\ACL\Role\CellAdminRole' => [ 'exclude' => true ],
+            'Orga\Model\ACL\Role\CellManagerRole' => [ 'exclude' => true ],
+            'Orga\Model\ACL\Role\CellContributorRole' => [ 'exclude' => true ],
+            'Orga\Model\ACL\Role\CellObserverRole' => [ 'exclude' => true ],
         ]);
 
         // Import users
@@ -247,7 +466,7 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/parameters.json'));
         foreach ($objects as $object) {
             if ($object instanceof Family) {
-                $output->writeln(sprintf('<info>Imported family: %s</info>', $object->getLabel()));
+                $output->writeln(sprintf('<info>Imported family: %s</info>', $object->getLabel()->get('fr')));
             }
             if ($object instanceof \Core_Model_Entity) {
                 $object->save();
@@ -259,14 +478,293 @@ class ImportCommand extends Command
         $objects = $serializer->unserialize(file_get_contents($root . '/af.json'));
         foreach ($objects as $object) {
             if ($object instanceof \AF\Domain\AF) {
-                $output->writeln(sprintf('<info>Imported AF: %s</info>', $object->getLabel()));
+                $output->writeln(sprintf('<info>Imported AF: %s</info>', $object->getLabel()->get('fr')));
             }
             if ($object instanceof \Core_Model_Entity) {
                 $object->save();
             }
         }
-
         $this->entityManager->flush();
+
+        // Import Orga
+        $output->writeln('<comment>Importing Orga</comment>');
+        $objects = $serializer->unserialize(file_get_contents($root . '/orga.json'), $output);
+        $output->writeln('<info>unserialization done</info>');
+        foreach ($objects as $object) {
+            if (($object instanceof \Core_Model_Entity) && !($object instanceof User)) {
+                $object->save();
+            }
+        }
+
+        $output->writeln('<info>flushing</info>');
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
+
+        // Managing Orga.
+        /** @var \Orga_Model_Organization $organization */
+        $account = $this->entityManager->find(Account::class, $input->getArgument('account'));
+
+        // Regenerate DW cubes.
+        $output->writeln('<comment>Regenerating DW Cubes</comment>');
+        $queryOrgaAccount = new \Core_Model_Query();
+        $queryOrgaAccount->filter->addCondition('account', $account);
+        /** @var \Orga_Model_Organization $organization */
+        foreach (\Orga_Model_Organization::loadList($queryOrgaAccount) as $organization) {
+            foreach ($organization->getGranularities() as $granularity) {
+                $granularity->setCellsGenerateDWCubes($granularity->getCellsGenerateDWCubes());
+            }
+            $organization->save();
+            $this->entityManager->flush();
+        }
+        $this->entityManager->flush();
+
+        // Import DW reports and filter
+        $serializer = new CustomSerializerForMigration([]);
+        $output->writeln('<comment>Importing Reports</comment>');
+        $objects = $serializer->unserialize(file_get_contents($root . '/reports.json'));
+        foreach ($objects as $object) {
+            if (($object instanceof \StdClass) && ($object->type === "organization")) {
+                $organization = $this->getOrganizationByLabel($object->label['fr']);
+                foreach ($object->granularitiesReports as $granularityObject) {
+                    $granularityAxes = [];
+                    foreach ($granularityObject->granularityAxes as $refAxis) {
+                        $granularityAxes[] = $organization->getAxisByRef($refAxis);
+                    }
+                    $granularity = $organization->getGranularityByRef(
+                        \Orga_Model_Granularity::buildRefFromAxes($granularityAxes)
+                    );
+
+                    $dwCube = $granularity->getDWCube();
+                    /** @var \DW_Model_Report $reportObject */
+                    foreach ($granularityObject->granularityReports as $reportObject) {
+                        $report = new \DW_Model_Report($dwCube);
+
+                        $errorHappened = 0;
+
+                        $report->setLabel(clone $reportObject->getLabel());
+                        $report->setChartType($reportObject->getChartType());
+                        $report->setSortType($reportObject->getSortType());
+                        $report->setWithUncertainty($reportObject->getWithUncertainty());
+
+                        if ($reportObject->getNumerator() != null) {
+                            try {
+                                $report->setNumerator(
+                                    $dwCube->getIndicatorByRef(
+                                        $classificationLibrary->getId() . '_' . $reportObject->getNumerator()
+                                    )
+                                );
+                            } catch (\Core_Exception_NotFound $e) {
+                                $errorHappened++;
+                            }
+                        }
+                        if (!$errorHappened) {
+                            if ($reportObject->getNumeratorAxis1() != null) {
+                                $numeratorAxisRef = $reportObject->getNumeratorAxis1();
+                                if (strpos($numeratorAxisRef, 'c_') === 0) {
+                                    $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                        . substr($reportObject->getNumeratorAxis1(), 2);
+                                }
+                                try {
+                                    $report->setNumeratorAxis1(
+                                        $dwCube->getAxisByRef($numeratorAxisRef)
+                                    );
+                                } catch (\Core_Exception_NotFound $e) {
+                                    $errorHappened = true;
+                                    $output->writeln(
+                                        '<error>'.
+                                        "\n".
+                                        $numeratorAxisRef.
+                                        "\n".
+                                        '</error>'
+                                    );
+                                }
+                            }
+                            if (!$errorHappened) {
+                                if ($reportObject->getNumeratorAxis2() != null) {
+                                    $numeratorAxisRef = $reportObject->getNumeratorAxis2();
+                                    if (strpos($numeratorAxisRef, 'c_') === 0) {
+                                        $numeratorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                            . substr($reportObject->getNumeratorAxis2(), 2);
+                                    }
+                                    try {
+                                        $report->setNumeratorAxis2(
+                                            $dwCube->getAxisByRef($numeratorAxisRef)
+                                        );
+                                    } catch (\Core_Exception_NotFound $e) {
+                                        $errorHappened = true;
+                                        $output->writeln(
+                                            '<error>'.
+                                            "\n".
+                                            $numeratorAxisRef.
+                                            "\n".
+                                            '</error>'
+                                        );
+                                    }
+                                }
+                            }
+                            if ($reportObject->getDenominator() != null) {
+                                try {
+                                    $report->setDenominator(
+                                        $dwCube->getIndicatorByRef(
+                                            $classificationLibrary->getId() . '_' . $reportObject->getDenominator()
+                                        )
+                                    );
+                                } catch (\Core_Exception_NotFound $e) {
+                                    $errorHappened++;
+                                }
+                                if (!$errorHappened) {
+                                    if ($reportObject->getDenominatorAxis1() != null) {
+                                        $denominatorAxisRef = $reportObject->getDenominatorAxis1();
+                                        if (strpos($denominatorAxisRef, 'c_') === 0) {
+                                            $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                                . substr($reportObject->getDenominatorAxis1(), 2);
+                                        }
+                                        try {
+                                            $report->setDenominatorAxis1(
+                                                $dwCube->getAxisByRef($denominatorAxisRef)
+                                            );
+                                        } catch (\Core_Exception_NotFound $e) {
+                                            $errorHappened = true;
+                                        }
+                                    }
+                                    if (!$errorHappened) {
+                                        if ($reportObject->getDenominatorAxis2() != null) {
+                                            $denominatorAxisRef = $reportObject->getDenominatorAxis2();
+                                            if (strpos($denominatorAxisRef, 'c_') === 0) {
+                                                $denominatorAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                                    . substr($reportObject->getDenominatorAxis2(), 2);
+                                            }
+                                            try {
+                                                $report->setDenominatorAxis2(
+                                                    $dwCube->getAxisByRef($denominatorAxisRef)
+                                                );
+                                            } catch (\Core_Exception_NotFound $e) {
+                                                $errorHappened = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        foreach ($reportObject->getFilters() as $filterObject) {
+                            $filterAxisRef = $filterObject->getAxis();
+                            if (strpos($filterAxisRef, 'c_') === 0) {
+                                $filterAxisRef = 'c_' . $classificationLibrary->getId() . '_'
+                                    . substr($filterObject->getAxis(), 2);
+                            }
+                            try {
+                                $axis = $dwCube->getAxisByRef($filterAxisRef);
+                            } catch (\Core_Exception_NotFound $e) {
+                                $errorHappened = true;
+                                continue;
+                            }
+                            $filter = new \DW_Model_Filter($report, $axis);
+                            foreach ($filterObject->getMembers() as $refMember) {
+                                try {
+                                    $filter->addMember(
+                                        $axis->getMemberByRef($refMember)
+                                    );
+                                } catch (\Core_Exception_NotFound $e) {
+                                    $errorHappened = true;
+                                }
+                            }
+                        }
+                        if ($errorHappened) {
+                            $output->writeln(
+                                '<error>'.
+                                'Configuration broken while migrating report '.
+                                '"' . $report->getLabel()->get('fr') . '"'.
+                                '</error>'
+                            );
+                        }
+                        $report->save();
+                    }
+                }
+            }
+        }
+        $this->entityManager->flush();
+
+        $output->writeln('<comment>Importing ACL</comment>');
+        $objects = $serializer->unserialize(file_get_contents($root . '/acl.json'));
+        foreach ($objects as $object) {
+            if (($object instanceof \StdClass) && ($object->type === "organization")) {
+                $organization = $this->getOrganizationByLabel($object->label['fr']);
+
+                foreach ($object->admins as $adminEmail) {
+                    $output->writeln(sprintf(
+                        '<comment>%s admin of organization %s</comment>',
+                        $adminEmail,
+                        $organization->getLabel()->get('fr')
+                    ));
+                    $this->acl->grant(
+                        User::loadByEmail($adminEmail),
+                        new OrganizationAdminRole(
+                            User::loadByEmail($adminEmail),
+                            $organization
+                        )
+                    );
+                }
+
+                foreach ($object->granularitiesACL as $granularityObject) {
+                    $granularityAxes = [];
+                    foreach ($granularityObject->granularityAxes as $refAxis) {
+                        $granularityAxes[] = $organization->getAxisByRef($refAxis);
+                    }
+                    $granularity = $organization->getGranularityByRef(
+                        \Orga_Model_Granularity::buildRefFromAxes($granularityAxes)
+                    );
+
+                    foreach ($granularityObject->cellsACL as $cellObject) {
+                        $members = [];
+                        foreach ($cellObject->members as $refAxisMember) {
+                            list($refAxis, $refMember) = explode(';', $refAxisMember);
+                            $axis = $organization->getAxisByRef($refAxis);
+                            $members[] = $axis->getMemberByCompleteRef($refMember);
+                        }
+                        $cell = $granularity->getCellByMembers($members);
+
+                        foreach ($cellObject->admins as $adminEmail) {
+                            $output->writeln(
+                                '<comment>'.$adminEmail.' admin of cell '.$cell->getLabel()->get('fr').'</comment>'
+                            );
+                            $this->acl->grant(
+                                User::loadByEmail($adminEmail),
+                                new CellAdminRole(User::loadByEmail($adminEmail), $cell)
+                            );
+                        }
+                        foreach ($cellObject->managers as $managerEmail) {
+                            $output->writeln(
+                                '<comment>'.$managerEmail.' manager of cell '.$cell->getLabel()->get('fr').'</comment>'
+                            );
+                            $this->acl->grant(
+                                User::loadByEmail($managerEmail),
+                                new CellManagerRole(User::loadByEmail($managerEmail), $cell)
+                            );
+                        }
+                        foreach ($cellObject->contributors as $contributorEmail) {
+                            $output->writeln(
+                                '<comment>'.$contributorEmail.' contributor of cell '.$cell->getLabel()->get('fr').'</comment>'
+                            );
+                            $this->acl->grant(
+                                User::loadByEmail($contributorEmail),
+                                new CellContributorRole(User::loadByEmail($contributorEmail), $cell)
+                            );
+                        }
+                        foreach ($cellObject->observers as $observerEmail) {
+                            $output->writeln(
+                                '<comment>'.$observerEmail.' observer of cell '.$cell->getLabel()->get('fr').'</comment>'
+                            );
+                            $this->acl->grant(
+                                User::loadByEmail($observerEmail),
+                                new CellObserverRole(User::loadByEmail($observerEmail), $cell)
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
         $this->entityManager->commit();
     }
 
@@ -275,5 +773,19 @@ class ImportCommand extends Command
         $refl = new \ReflectionProperty($object, $property);
         $refl->setAccessible(true);
         $refl->setValue($object, $value);
+    }
+
+    /**
+     * @param string $label
+     * @return \Orga_Model_Organization
+     */
+    private function getOrganizationByLabel($label)
+    {
+        foreach (\Orga_Model_Organization::loadList() as $organization) {
+            if ($organization->getLabel()->get('fr') === $label) {
+                return $organization;
+            }
+        }
+        throw new Exception;
     }
 }

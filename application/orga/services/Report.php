@@ -1,5 +1,6 @@
 <?php
 
+use User\Application\ForbiddenException;
 use User\Domain\User;
 
 /**
@@ -15,10 +16,10 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
     private static $copiedReports = [];
 
     /**
-     * @param string $event
+     * @param string          $event
      * @param DW_Model_Report $subject
-     * @param array $arguments
-     * @throws Core_Exception_InvalidArgument
+     * @param array           $arguments
+     * @throws ForbiddenException
      */
     public static function applyEvent($event, $subject, $arguments = [])
     {
@@ -42,6 +43,13 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
                 } catch (Core_Exception_NotFound $e) {
                     if (!in_array(spl_object_hash($subject), self::$copiedReports)) {
                         // Le Report n'est pas issue d'un Cube de Granularity.
+                        $auth = Zend_Auth::getInstance();
+                        if (!$auth->hasIdentity()) {
+                            throw new ForbiddenException();
+                        }
+                        $connectedUser = User::load($auth->getIdentity());
+                        $cellReport = new Orga_Model_CellReport($subject, $connectedUser);
+                        $cellReport->save();
                     }
                 }
                 break;
@@ -76,5 +84,4 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
                 break;
         }
     }
-
 }

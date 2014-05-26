@@ -22,7 +22,7 @@ class OutputTotal extends Core_Model_Entity
     protected $outputSet;
 
     /**
-     * @var string
+     * @var Indicator
      */
     protected $indicator;
 

@@ -5,7 +5,7 @@ namespace UI\Datagrid\Column;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
 use UI\Datagrid\Datagrid;
-use UI_Form_Element_Text;
+use AF\Application\Form\Element\TextField;
 
 /**
  * Classe représentant une colonne contenant des textes.

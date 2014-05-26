@@ -10,6 +10,7 @@ use Account\Domain\Account;
 use AF\Domain\AFLibrary;
 use Classification\Domain\ClassificationLibrary;
 use Core_Model_Query;
+use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use Orga_Model_Organization;
@@ -33,10 +34,19 @@ class AccountViewFactory
      */
     private $acl;
 
-    public function __construct(OrganizationViewFactory $organizationViewFactory, ACL $acl)
-    {
+    /**
+     * @var Translator
+     */
+    private $translator;
+
+    public function __construct(
+        OrganizationViewFactory $organizationViewFactory,
+        ACL $acl,
+        Translator $translator
+    ) {
         $this->organizationViewFactory = $organizationViewFactory;
         $this->acl = $acl;
+        $this->translator = $translator;
     }
 
     /**
@@ -52,9 +62,7 @@ class AccountViewFactory
         // Organisations
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
-        $query->aclFilter->enabled = true;
-        $query->aclFilter->user = $user;
-        $query->aclFilter->action = Actions::TRAVERSE;
+        $query->aclFilter->enable($user, Actions::TRAVERSE);
         foreach (Orga_Model_Organization::loadList($query) as $organization) {
             /** @var Orga_Model_Organization $organization */
             $accountView->organizations[] = $this->organizationViewFactory->createOrganizationView(
@@ -66,10 +74,14 @@ class AccountViewFactory
         // Bibliothèques d'AF
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
+        $query->aclFilter->enable($user, Actions::VIEW);
         foreach (AFLibrary::loadList($query) as $library) {
             /** @var AFLibrary $library */
 
-            $libraryView = new AFLibraryView($library->getId(), $library->getLabel());
+            $libraryView = new AFLibraryView(
+                $library->getId(),
+                $this->translator->get($library->getLabel())
+            );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
             $accountView->afLibraries[] = $libraryView;
@@ -78,10 +90,14 @@ class AccountViewFactory
         // Bibliothèques de paramètres
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
+        $query->aclFilter->enable($user, Actions::VIEW);
         foreach (ParameterLibrary::loadList($query) as $library) {
             /** @var ParameterLibrary $library */
 
-            $libraryView = new ParameterLibraryView($library->getId(), $library->getLabel());
+            $libraryView = new ParameterLibraryView(
+                $library->getId(),
+                $this->translator->get($library->getLabel())
+            );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
             $accountView->parameterLibraries[] = $libraryView;
@@ -90,10 +106,14 @@ class AccountViewFactory
         // Bibliothèques de classification
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
+        $query->aclFilter->enable($user, Actions::VIEW);
         foreach (ClassificationLibrary::loadList($query) as $library) {
             /** @var ClassificationLibrary $library */
 
-            $libraryView = new ClassificationLibraryView($library->getId(), $library->getLabel());
+            $libraryView = new ClassificationLibraryView(
+                $library->getId(),
+                $this->translator->get($library->getLabel())
+            );
             $libraryView->canDelete = $this->acl->isAllowed($user, Actions::DELETE, $library);
 
             $accountView->classificationLibraries[] = $libraryView;

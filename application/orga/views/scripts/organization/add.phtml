@@ -1,14 +1,9 @@
 <style>
-    #organizationSteps { border: none; }
-    #organizationSteps.nav a { border: none; }
-    #organizationSteps.nav a:hover { border: none; }
-    #organizationSteps.nav li.active a { font-weight: bolder; }
-    #organizationSteps .step-separator { color: #999999; line-height: 20px; padding-top: 8px; padding-bottom: 8px; }
-    .navigation-buttons .control-label { padding-top: 0px; }
-    #addOrganization.form .subGroup { margin-left: 0px; }
+    #organizationSteps .step-separator { color: #999999; line-height: 20px; padding: 9px 10px 10px; }
+    .navigation-buttons { margin: 10px 0; }
 </style>
 
-<form class="form form-horizontal" id="addOrganization" action="orga/organization/add-submit">
+<form class="form form-horizontal" id="addOrganization" action="orga/organization/add-submit/account/<?=$this->account?>/">
     <ul class="nav nav-tabs" id="organizationSteps">
         <li class="active"><a href="#organization"><?=___('Orga', 'add', 'organization')?></a></li>
         <li class="step-separator hide">>>></li>
@@ -27,164 +22,134 @@
 
     <div>
 
-        <div class="form-group navigation-buttons">
-            <div class="control-label">
-                <button class="btn btn-warning navigation-previous hide" type="button">
-                    <i class="fa fa-chevron-left"></i> <?=___('Orga', 'add', 'navigationPrevious')?>
-                </button>
-            </div>
-            <button class="btn btn-primary navigation-next" type="button">
+        <div class="navigation-buttons">
+            <button class="btn btn-default btn-sm navigation-previous hide" type="button">
+                <i class="fa fa-chevron-left"></i> <?=___('Orga', 'add', 'navigationPrevious')?>
+            </button>
+            <button class="btn btn-primary btn-sm navigation-next" type="button">
                 <?=___('Orga', 'add', 'navigationNext')?> <i class="fa fa-chevron-right"></i>
             </button>
-            <button class="btn btn-primary navigation-end hide" type="button">
+            <button class="btn btn-primary btn-sm navigation-end hide" type="button">
                 <?=___('Orga', 'add', 'navigationEnd')?> <i class="fa fa-check"></i>
             </button>
         </div>
 
         <div class="tab-content">
-            <div class="tab-pane active subGroup" id="organization">
-                <div>
-                    <div id="organizationLabel-line" class="form-group">
-                        <label class="control-label" for="label"><?=___('Orga', 'add', 'organizationLabel')?></label>
-                        <div class="input">
-                            <input type="text" id="organizationLabel" name="organizationLabel" placeholder="<?=___('Orga', 'add', 'organizationLabelPlaceholder')?>" class="form-control">
-                        </div>
+            <div class="tab-pane active" id="organization">
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="organizationLabel">
+                        <?=___('Orga', 'add', 'organizationLabel')?>
+                    </label>
+                    <div class="col-sm-10">
+                        <input type="text" id="organizationLabel" name="organizationLabel" placeholder="<?=___('Orga', 'add', 'organizationLabelPlaceholder')?>" class="form-control">
                     </div>
-                    <div id="organizationTemplate-line" class="form-group">
-                        <label class="control-label" for="organizationTemplate">
-                            <?=___('Orga', 'add', 'organizationTemplate')?>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="<?=___('Orga', 'add', 'organizationTemplateExplanation')?>">
-                                <i class="fa fa-question-circle"></i>
-                            </a>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="organizationTemplate">
+                        <?=___('Orga', 'add', 'organizationTemplate')?>
+                        <a href="#" data-toggle="tooltip" data-placement="top" title="<?=___('Orga', 'add', 'organizationTemplateExplanation')?>">
+                            <i class="fa fa-question-circle"></i>
+                        </a>
+                    </label>
+                    <div class="col-sm-10">
+                        <select id="organizationTemplate" name="organizationTemplate" class="form-control">
+                            <? foreach ($this->templates as $templateRef => $templateName) : ?>
+                            <option value="<?=$templateRef?>"><?=$templateName?></option>
+                            <? endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="axes">
+                <div class="alert alert-warning">
+                    <strong><?=___('Orga', 'add', 'warning')?> :</strong>
+                    <?=___('Orga', 'add', 'resetAfterAxesStep')?>
+                </div>
+                <fieldset>
+                    <legend><?=___('Orga', 'add', 'organizationMainAxisTitle')?></legend>
+                    <div class="form-group" data-level="1">
+                        <label class="control-label col-sm-2" for="mainAxis">
+                            <?=___('Orga', 'add', 'organizationMainAxisLabel')?>
                         </label>
-                        <div class="input">
-                            <select id="organizationTemplate" name="organizationTemplate" class="form-control">
-                                <? foreach ($this->templates as $templateRef => $templateName) : ?>
-                                <option value="<?=$templateRef?>"><?=$templateName?></option>
-                                <? endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane subGroup" id="axes">
-                <div>
-                    <div class="alert">
-                        <strong><?=___('Orga', 'add', 'warning')?> :</strong>
-                        <?=___('Orga', 'add', 'resetAfterAxesStep')?>
-                    </div>
-                    <fieldset id="mainAxisGroup" class=subGroup>
-                        <legend><?=___('Orga', 'add', 'organizationMainAxisTitle')?></legend>
-                        <div>
-                            <div id="mainAxis-line" class="form-group" data-level="1">
-                                <label class="control-label" for="mainAxis">
-                                    <?=___('Orga', 'add', 'organizationMainAxisLabel')?>
-                                </label>
-                                <div class="input">
-                                    <input type="text" id="mainAxis" name="mainAxis" placeholder="<?=___('Orga', 'add', 'organizationMainAxisPlaceholder')?>" class="form-control" required>
-                                </div>
-                                <div class="input">
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input type="text" id="mainAxis" name="mainAxis" placeholder="<?=___('Orga', 'add', 'organizationMainAxisPlaceholder')?>" class="form-control" required>
+                                <span class="input-group-btn">
                                     <button class="btn btn-default addAggregation"><i class="fa fa-plus"></i> <?=___('Orga', 'add', 'organizationAddMainSubAxis')?></button>
-                                </div>
+                                </span>
                             </div>
                         </div>
-                    </fieldset>
-                    <fieldset id="timeAxisGroup" class="subGroup">
-                        <legend><?=___('Orga', 'add', 'organizationTimeAxisTitle')?></legend>
-                        <div>
-                            <div id="timeAxis-line" class="form-group">
-                            <label class="control-label" for="timeAxis"><?=___('Orga', 'add', 'organizationTimeAxisLabel')?></label>
-                                <div class="input">
-                                    <input type="text" id="timeAxis" name="timeAxis" placeholder="<?=___('Orga', 'add', 'organizationTimeAxisPlaceholder')?>" class="form-control" required>
-                                </div>
-                            </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend><?=___('Orga', 'add', 'organizationTimeAxisTitle')?></legend>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="timeAxis"><?=___('Orga', 'add', 'organizationTimeAxisLabel')?></label>
+                        <div class="col-sm-10">
+                            <input type="text" id="timeAxis" name="timeAxis" placeholder="<?=___('Orga', 'add', 'organizationTimeAxisPlaceholder')?>" class="form-control" required>
                         </div>
-                    </fieldset>
-                    <fieldset id="subdivisionAxisGroup" class="subGroup">
-                        <legend><?=___('Orga', 'add', 'organizationInputsAxisTitle')?></legend>
-                        <div>
-                            <div id="subdivisionAxis-line" class="form-group">
-                                <label class="control-label" for="subdivisionAxis"><?=___('Orga', 'add', 'organizationInputsAxisLabel')?></label>
-                                <div class="input">
-                                    <input type="text" id="subdivisionAxis" name="subdivisionAxis" placeholder="<?=___('Orga', 'add', 'organizationInputsAxisPlaceholder')?>" class="form-control">
-                                </div>
-                            </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend><?=___('Orga', 'add', 'organizationInputsAxisTitle')?></legend>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="subdivisionAxis"><?=___('Orga', 'add', 'organizationInputsAxisLabel')?></label>
+                        <div class="col-sm-10">
+                            <input type="text" id="subdivisionAxis" name="subdivisionAxis" placeholder="<?=___('Orga', 'add', 'organizationInputsAxisPlaceholder')?>" class="form-control">
                         </div>
-                    </fieldset>
-                </div>
+                    </div>
+                </fieldset>
             </div>
-            <div class="tab-pane subGroup" id="members">
-                <div></div>
+            <div class="tab-pane" id="members">
             </div>
-            <div class="tab-pane subGroup" id="inventory">
-                <div>
-                    <fieldset id="inventoryGranularityGroup" class="subGroup">
-                        <legend><?=___('Orga', 'add', 'inventoryGranularityTitle')?></legend>
-                        <div>
-                            <div id="inventoryGranularity-line" class="form-group">
-                                <div class="input" style="margin-top: 5px;">
-                                    <div id="inventoryGranularity"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
+            <div class="tab-pane" id="inventory">
+                <fieldset>
+                    <legend><?=___('Orga', 'add', 'inventoryGranularityTitle')?></legend>
+                    <div class="form-group">
+                        <div class="col-sm-12"></div>
+                    </div>
+                </fieldset>
             </div>
-            <div class="tab-pane subGroup" id="acl">
-                <div>
-                    <fieldset id="aclGranularitiesGroup" class="subGroup">
-                        <legend><?=___('Orga', 'add', 'aclGranularitiesTitle')?></legend>
-                        <div>
-                            <div id="aclGranularities-line" class="form-group">
-                                <div class="input" style="margin-top: 5px;">
-                                    <div id="aclGranularities"></div>
-                                </div>
-                            </div>
+            <div class="tab-pane" id="acl">
+                <fieldset>
+                    <legend><?=___('Orga', 'add', 'aclGranularitiesTitle')?></legend>
+                    <div>
+                        <div class="form-group">
+                            <div class="col-sm-12"></div>
                         </div>
-                    </fieldset>
-                </div>
+                    </div>
+                </fieldset>
             </div>
-            <div class="tab-pane subGroup" id="reports">
-                <div>
-                    <fieldset id="reportsGranularitiesGroup" class="subGroup">
-                        <legend><?=___('Orga', 'add', 'reportsGranularitiesTitle')?></legend>
-                        <div>
-                            <div id="reportsGranularities-line" class="form-group">
-                                <div class="input" style="margin-top: 5px;">
-                                    <div id="reportsGranularities"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
+            <div class="tab-pane" id="reports">
+                <fieldset>
+                    <legend><?=___('Orga', 'add', 'reportsGranularitiesTitle')?></legend>
+                    <div class="form-group">
+                        <div class="col-sm-12"></div>
+                    </div>
+                </fieldset>
             </div>
             <div class="tab-pane" id="validation">
                 <div class="alert alert-info"><?=___('Orga', 'add', 'addValidationMessage')?></div>
-                <div id="validationOrganization">
-                    <fieldset>
-                        <legend><?=___('Orga', 'add', 'addValidationTitle')?></legend>
-                        <ul>
-                        </ul>
-                    </fieldset>
+                <fieldset class="organization-summary">
+                    <legend><?=___('Orga', 'add', 'addValidationTitle')?></legend>
+                    <ul>
+                    </ul>
+                </fieldset>
+                <div class="members-summary">
                 </div>
-                <div id="validationMembers">
-                </div>
-                <div id="validationGranularities">
-                    <ul></ul>
+                <div class="granularities-summary">
                 </div>
             </div>
         </div>
 
-        <div class="form-group navigation-buttons">
-            <div class="control-label">
-                <button class="btn btn-warning navigation-previous hide" type="button">
-                    <i class="fa fa-chevron-left"></i> <?=___('Orga', 'add', 'navigationPrevious')?>
-                </button>
-            </div>
-            <button class="btn btn-primary navigation-next" type="button">
+        <div class="navigation-buttons">
+            <button class="btn btn-default btn-sm navigation-previous hide" type="button">
+                <i class="fa fa-chevron-left"></i> <?=___('Orga', 'add', 'navigationPrevious')?>
+            </button>
+            <button class="btn btn-primary btn-sm navigation-next" type="button">
                 <?=___('Orga', 'add', 'navigationNext')?> <i class="fa fa-chevron-right"></i>
             </button>
-            <button class="btn btn-primary navigation-end hide" type="button">
+            <button class="btn btn-primary btn-sm navigation-end hide" type="button">
                 <?=___('Orga', 'add', 'navigationEnd')?> <i class="fa fa-check"></i>
             </button>
         </div>
@@ -227,7 +192,7 @@
             $('#organizationSteps li.active').addClass('disabled');
             $('#organizationSteps li.active').nextAll(':not(.hide):not(.step-separator):first').children('a').tab('show');
             $('#organizationSteps li.active').removeClass('disabled');
-            window.scrollTo(0, 0);
+            $("html, body").animate({ scrollTop: 0 }, "slow");
         }
     });
     $('#addOrganization .navigation-end').on('click', function(e) {
@@ -239,20 +204,24 @@
             data: parseFormData(),
             success: function(data){
                 $('#addOrganization').parseFormValidation(data);
-                $('#organizationBuilding .modal-body').html(
-                    '<div class="alert alert-' + data.typeMessage + '">' +
+                $('#organizationBuilding .modal-content .modal-body').html(
+                    '<div class="alert alert-' + data.type + '">' +
                         data.message +
                     '</div>' +
                     '<hr />' +
-                    '<p>' + data.info + '</p>' +
-                    '<a class="btn btn-primary pull-left" href="orga/organization">' +
-                        '<i class="fa fa-home"></i> ' +
-                        '<?=___('Orga', 'add', 'organizationBuildingGoHome')?>' +
-                    '</a> ' +
-                    '<a class="btn btn-default pull-right" href="orga/organization/add">' +
-                        '<i class="fa fa-plus"></i> ' +
-                        '<?=___('Orga', 'add', 'organizationBuildingAddMore')?>' +
-                    '</a> '
+                    '<p>' + data.info + '</p>'
+                );
+                $('#organizationBuilding .modal-content').append(
+                    '<div class="modal-footer">' +
+                        '<a class="btn btn-primary pull-left" href="account/dashboard/">' +
+                            '<i class="fa fa-home"></i> ' +
+                            '<?=___('Orga', 'add', 'organizationBuildingGoHome')?>' +
+                        '</a> ' +
+                        '<a class="btn btn-default pull-right" href="orga/organization/add/account/<?=$this->account?>/">' +
+                            '<i class="fa fa-plus"></i> ' +
+                            '<?=___('Orga', 'add', 'organizationBuildingAddMore')?>' +
+                        '</a> ' +
+                    '</div>'
                 );
             },
             error: function(jqXHR) {
@@ -289,7 +258,7 @@
             }
         });
     });
-    $('#organizationBuilding').on('hidden', function() {
+    $('#organizationBuilding').on('hidden.bs.modal', function() {
         $('#organizationBuilding .modal-body').html(
             '<div class="alert alert-info">' +
                 '<i class="fa fa-spinner fa-spin"></i>' +
@@ -298,7 +267,7 @@
         );
     });
 
-    $('#organizationSteps a').on('shown', function (e) {
+    $('#organizationSteps a').on('shown.bs.tab', function (e) {
         var currentTab = $(this);
         var firstTab = $('#organizationSteps li:first a');
         var lastTab = $('#organizationSteps li:not(.hide):last a');
@@ -361,33 +330,52 @@
     $('#addOrganization').on('click', '.addAggregation', function(e) {
         e.preventDefault();
         globalAxisCounter++;
-        var row = $(this).parent().parent().parent();
-        var parentAxisId = $('input[type="text"]', $(this).parent().parent()).attr('id');
+        var row = $(this).closest('.form-group');
+        var parentAxisId = $('input[type="text"]', row).attr('id');
         var level = row.attr('data-level') * 1;
         var identifier = 'mainAxis' + globalAxisCounter;
         row.after(
-            '<div id="' + identifier + '-line" class="form-group" style="padding-left: ' + (level * 45) + 'px" data-level="' + (level + 1) + '">' +
-                '<label class="control-label" for="' + identifier + '"><?=___('Orga', 'add', 'organizationMainSubAxisLabel')?></label>' +
-                '<div class="input">' +
-                    '<input type="text" id="' + identifier + '" name="' + identifier + '" placeholder="<?=___('Orga', 'add', 'organizationMainSubAxisPlaceholder')?>" class="form-control">' +
-                    '<input type="hidden" id="' + identifier + '-parent" name="' + identifier + '-parent" value="' + parentAxisId + '">' +
-                '</div>' +
-                '<div class="input">' +
-                    '<button class="btn btn-default addAggregation"><i class="fa fa-plus"></i></button>' +
-                '</div>' +
-                '<div class="input">' +
-                    '<button class="btn btn-default removeAggregation"><i class="fa fa-minus"></i></button>' +
+            '<div class="form-group" data-level="' + (level + 1) + '">' +
+                '<label class="control-label col-sm-2 col-sm-offset-' + level + '" for="' + identifier + '"><?=___('Orga', 'add', 'organizationMainSubAxisLabel')?></label>' +
+                '<div class="col-sm-' + (10 - level) + '">' +
+                    '<input type="hidden" id="' + identifier + '" name="' + identifier + '-parent" value="' + parentAxisId + '">' +
+                    '<div class="input-group">' +
+                        '<input type="text" id="' + identifier + '" name="' + identifier + '" placeholder="<?=___('Orga', 'add', 'organizationMainSubAxisPlaceholder')?>" class="form-control">' +
+                        '<span class="input-group-btn">' +
+                            '<button class="btn btn-default removeAggregation"><i class="fa fa-minus"></i></button>' +
+                        '</span>' +
+                        ((level < 8) ?
+                            (
+                            '<span class="input-group-btn">' +
+                                '<button class="btn btn-default addAggregation"><i class="fa fa-plus"></i></button>' +
+                            '</span>'
+                            )
+                            : ''
+                        ) +
+                    '</div>' +
                 '</div>' +
             '</div>'
         );
     });
     $('#addOrganization').on('click', '.removeAggregation', function(e) {
         e.preventDefault();
-        var row = $(this).parent().parent().parent();
+        var row = $(this).closest('.form-group');
         row.nextUntil('[data-level="' + row.attr('data-level') + '"]').each(function() {
             if ($(this).attr('data-level') >= row.attr('data-level')) {
-                    $(this).attr('data-level', ($(this).attr('data-level') * 1 - 1));
-                $(this).attr('style', 'padding-left: ' + (($(this).attr('data-level') - 1) * 45) + 'px');
+                $(this).attr('data-level', ($(this).attr('data-level') * 1 - 1));
+                var label = $('label', $(this));
+                label.removeClass('col-sm-offset-' + $(this).attr('data-level'));
+                label.addClass('col-sm-offset-' + ($(this).attr('data-level') * 1 - 1));
+                var div = $('div.col-sm-' + (10 - $(this).attr('data-level') * 1), $(this));
+                div.removeClass('col-sm-' + (10 - $(this).attr('data-level') * 1));
+                div.addClass('col-sm-' + (10 - $(this).attr('data-level') * 1 + 1));
+                if ($('.addAggregation', $(this)).length == 0) {
+                    $('div.input-group', $(this)).append(
+                        '<span class="input-group-btn">' +
+                            '<button class="btn btn-default addAggregation"><i class="fa fa-plus"></i></button>' +
+                        '</span>'
+                    );
+                }
             }
         });
         row.remove();
@@ -395,21 +383,23 @@
     $('#addOrganization').on('click', '.addMember', function(e) {
         e.preventDefault();
         globalMemberCounter++;
-        var row = $(this).parent().parent().parent();
+        var row = $(this).closest('.form-group');
         var identifier = 'member' + globalMemberCounter;
+        var parentMembersNumber = 0;
         var parentMembers = '';
         $.each($(this).attr('data-parent-axes').split('|'), function() {
             if (this != '') {
+                parentMembersNumber++;
                 parentMembers +=
-                    '<div id="parentMember' + globalMemberCounter + this + '" class="input">' +
-                        '<select data-axis="' + this + '" name="parentMember' + globalMemberCounter + this + '" class="form-control">' +
+                    '<div class="col-sm-2">' +
+                        '<select data-axis="' + this + '" name="' + identifier+ '-parent][' + this + '" class="form-control">' +
                         '</select>' +
                     '</div>';
             }
         });
         row.before(
-            '<div id="' + identifier + '-line" class="form-group">' +
-                '<div class="input">' +
+            '<div class="form-group">' +
+                '<div class="col-sm-' + (12 - 2 * parentMembersNumber) + '">' +
                     '<input type="text" name="' + identifier + '" class="form-control">' +
                 '</div>' +
                 parentMembers +
@@ -422,7 +412,7 @@
         });
     });
     $('#members').on('change', 'input', function(e) {
-        var fieldset = $(this).parent().parent().parent().parent().parent();
+        var fieldset = $(this).closest('fieldset');
         if ($('#members select[data-axis="' + fieldset.attr('data-axis') + '"]').length > 0) {
             var options = '<option value=""></option>';
             $('input', fieldset).each(function() {
@@ -440,8 +430,8 @@
 
     var validateActiveTab = function () {
         $('form span.help-block').remove();
-        $('#addOrganization div.form-group').removeClass('error');
-        $('#addOrganization div.form-group').removeClass('warning');
+        $('#addOrganization div.form-group').removeClass('has-error');
+        $('#addOrganization div.form-group').removeClass('has-warning');
 
         var organizationTemplate = $('#organizationTemplate').val();
 
@@ -451,17 +441,16 @@
             case '#organization':
                 var organization = $('#organizationLabel');
                 if (organization.val() == '') {
-                    $('#organizationLabel-line').addClass('error');
-                    organization.after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    organization.closest('.form-group').addClass('has-error');
+                    organization.closest('.col-sm-10').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                     state = false;
                 }
 
                 if (state == true) {
-                    $('#validationMembers').html('');
-                    $('#validationGranularities').html('');
-                    $('#validationOrganization ul li.organizationLabel').remove();
-                    $('#validationOrganization ul li.inventoryGranularity').remove();
-                    $('#validationOrganization ul').prepend(
+                    $('#validation .organization-summary ul').html('');
+                    $('#validation .members-summary').html('');
+                    $('#validation .granularities-summary').html('');
+                    $('#validation .organization-summary ul').prepend(
                         '<li class="organizationLabel">' +
                             '<strong><?=___('Orga', 'add', 'organizationLabel')?> : </strong>' +
                             $('#organizationLabel').val() +
@@ -476,71 +465,71 @@
             case '#axes':
                 var mainAxis = $('#mainAxis');
                 if (mainAxis.val() == '') {
-                    $('#mainAxis-line').addClass('error');
-                    mainAxis.after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    mainAxis.closest('.form-group').addClass('has-error');
+                    mainAxis.closest('.col-sm-10').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                     state = false;
                 }
-                $('#mainAxisGroup input').each(function() {
+                $('input[id!="mainAxis"]', mainAxis.closest('fieldset')).each(function() {
                     if ($(this).val() == '') {
                         var input = $(this);
-                        var parentLine = $('#' + $(this).attr('id') + '-line');
-                        parentLine.nextUntil('[data-level="' + parentLine.attr('data-level') + '"]').each(function() {
-                            var childInput = $('input', $(this));
-                            if (childInput.val() != '') {
-                                parentLine.addClass('warning');
-                                input.after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                        var formGroup = input.closest('.form-group');
+                        formGroup.nextUntil('[data-level="' + formGroup.attr('data-level') + '"]').each(function() {
+                            var parentInput = $('input', $(this));
+                            if (parentInput.val() != '') {
+                                formGroup.addClass('has-warning');
+                                input.closest('.col-sm-' + (10 - formGroup.attr('data-level') * 1 + 1)).append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                                 state = false;
                                 return false;
                             }
                         });
-                        if (!parentLine.hasClass('warning') && (parentLine.attr('data-level') != '1')) {
-                            parentLine.nextUntil('[data-level="' + parentLine.attr('data-level') + '"]').remove();
-                            parentLine.remove();
+                        if (!formGroup.hasClass('has-warning') && (formGroup.attr('data-level') != '1')) {
+                            formGroup.nextUntil('[data-level="' + formGroup.attr('data-level') + '"]').remove();
+                            formGroup.remove();
                         }
                     }
                 });
                 var timeAxis = $('#timeAxis');
                 if (timeAxis.val() == '') {
-                    timeAxis.parent().parent().parent().addClass('error');
-                    timeAxis.after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    timeAxis.closest('.form-group').addClass('has-error');
+                    timeAxis.closest('.col-sm-10').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                     state = false;
                 }
 
                 if (state == true) {
-                    $('#members > div').html('');
+                    $('#members').html('');
                     $('#axes input[type="text"]').each(function() {
                         if ($(this).val() != '') {
+                            var parentAxesNumber = 0;
                             var parentAxes = '';
                             var parentMembersSelect = '';
-                            var parentLine = $('#' + $(this).attr('id') + '-line');
-                            parentLine.nextUntil('[data-level="' + parentLine.attr('data-level') + '"]', '[data-level="' + (parentLine.attr('data-level') * 1 + 1) + '"]').each(function() {
-                                var parentAxis = $(this).attr('id').substr(0, $(this).attr('id').length - 5);
+                            var formGroup = $(this).closest('.form-group');
+                            formGroup.nextUntil('[data-level="' + formGroup.attr('data-level') + '"]', '[data-level="' + (formGroup.attr('data-level') * 1 + 1) + '"]').each(function() {
+                                parentAxesNumber++;
+                                var parentAxis = $('input', $(this)).attr('id');
                                 parentAxes += parentAxis + '|';
                                 parentMembersSelect +=
-                                    '<div id="parentMember' + globalMemberCounter + parentAxis + '" class="input">' +
-                                        '<select data-axis="' + parentAxis + '" name="parentMember' + globalMemberCounter + parentAxis + '" class="form-control">' +
+                                    '<div class="col-sm-2">' +
+                                        '<select data-axis="' + parentAxis + '" name="member' + globalMemberCounter + '-parent][' + parentAxis + '" class="form-control">' +
                                         '</select>' +
                                     '</div>'
                             });
-                            if (parentAxes.length > 0) {
+                            if (parentAxesNumber > 0) {
                                 parentAxes = parentAxes.substr(0, parentAxes.length - 1);
                             }
-                            $('#members > div').prepend(
-                                '<fieldset id="' + $(this).attr('name') + '-members" class="subGroup" data-axis="' + $(this).attr('id') + '">' +
+                            $('#members').prepend(
+                                '<fieldset data-axis="' + $(this).attr('id') + '">' +
                                     '<legend>' + $(this).val() + '</legend>' +
-                                    '<div>' +
-                                        '<div id="member' + globalMemberCounter + '-line" class="form-group">' +
-                                            '<div class="input">' +
-                                                '<input type="text" name="member' + globalMemberCounter + '" class="form-control">' +
-                                            '</div>' +
-                                            parentMembersSelect +
+                                    '<div class="form-group">' +
+                                        '<div class="col-sm-' + (12 - 2 * parentAxesNumber) + '">' +
+                                            '<input type="text" name="member' + globalMemberCounter + '" class="form-control">' +
                                         '</div>' +
-                                        '<div id="addMember' + $(this).attr('name') + '" class="form-group">' +
-                                            '<div class="input">' +
-                                                '<button class="btn btn-default addMember" data-parent-axes="' + parentAxes + '">' +
-                                                    '<i class="fa fa-plus"></i> <?=___('Orga', 'add', 'addMember')?>' +
-                                                '</button>' +
-                                            '</div>' +
+                                        parentMembersSelect +
+                                    '</div>' +
+                                    '<div class="form-group">' +
+                                        '<div class="col-sm-12">' +
+                                            '<button class="btn btn-default addMember" data-parent-axes="' + parentAxes + '">' +
+                                                '<i class="fa fa-plus"></i> <?=___('Orga', 'add', 'addMember')?>' +
+                                            '</button>' +
                                         '</div>' +
                                     '</div>' +
                                 '</fieldset>'
@@ -568,40 +557,46 @@
                     while ($('#axes div[data-level="' + level + '"]').length > 0) {
                         var granularityAxes = '';
                         var granularityLabel = '';
-                        $('#axes div.[data-level="' + level + '"]').each(function() {
-                            inventoryGranularitiesList.push({ 'ref': $('input', $(this)).attr('name') + '|' + timeAxisRef, 'label': $('input', $(this)).val() + ' | ' + timeAxisLabel, 'checked': ''});
-                            granularityAxes += $('input', $(this)).attr('name') + '|';
-                            granularityLabel += $('input', $(this)).val() + ' | ';
+                        $('#axes div[data-level="' + level + '"]').each(function() {
+                            inventoryGranularitiesList.push({ 'ref': $('input[type="text"]', $(this)).attr('name') + '|' + timeAxisRef, 'label': $('input[type="text"]', $(this)).val() + ' | ' + timeAxisLabel, 'checked': ''});
+                            granularityAxes += $('input[type="text"]', $(this)).attr('name') + '|';
+                            granularityLabel += $('input[type="text"]', $(this)).val() + ' | ';
                         });
                         aclGranularitiesList.push({ 'ref': granularityAxes.substr(0, (granularityAxes.length - 1)), 'label': granularityLabel.substr(0, (granularityLabel.length - 3))});
                         reportsGranularitiesList.push({ 'ref': granularityAxes.substr(0, (granularityAxes.length - 1)), 'label': granularityLabel.substr(0, (granularityLabel.length - 3))});
                         level++;
                     }
-                    $('#inventoryGranularity-line .input > div').html('');
+                    $('#inventory .col-sm-12').html('');
                     $(inventoryGranularitiesList).each(function() {
-                        $('#inventoryGranularity-line .input > div').append(
-                            '<label for="inventoryGranularity' + this.ref + '" class="radio">' +
-                                '<input id="inventoryGranularity' + this.ref + '" name="inventoryGranularity" type="radio" value="' + this.ref  + '"' + this.checked + ' class="form-control">' +
-                                ' <span>' + this.label + '</span>' +
-                            '</label>'
+                        $('#inventory .col-sm-12').append(
+                            '<div class="radio">' +
+                                '<label>' +
+                                    '<input name="inventoryGranularity" type="radio" value="' + this.ref  + '"' + this.checked + '>' +
+                                    '<span>' + this.label + '</span>' +
+                                '</label>' +
+                            '</div>'
                         );
                     });
-                    $('#aclGranularities-line .input > div').html('');
-                    $(aclGranularitiesList).each(function(index) {
-                        $('#aclGranularities-line .input > div').append(
-                            '<label for="aclGranularity' + this.ref + '" class="checkbox">' +
-                                '<input id="aclGranularity' + this.ref + '" name="aclGranularities" type="checkbox" value="' + this.ref  + '"' + (((index == 0) || (index == 1)) ? ' checked' : '') + ' class="form-control">' +
-                                ' <span>' + this.label + '</span>' +
-                            '</label>'
+                    $('#acl .col-sm-12').html('');
+                    $(aclGranularitiesList).each(function() {
+                        $('#acl .col-sm-12').append(
+                            '<div class="checkbox">' +
+                                '<label>' +
+                                    '<input name="aclGranularities[]" type="checkbox" value="' + this.ref  + '">' +
+                                    '<span>' + this.label + '</span>' +
+                                '</label>' +
+                            '</div>'
                         );
                     });
-                    $('#reportsGranularities-line .input > div').html('');
+                    $('#reports .col-sm-12').html('');
                     $(reportsGranularitiesList).each(function() {
-                        $('#reportsGranularities-line .input > div').append(
-                            '<label for="reportsGranularity' + this.ref + '" class="checkbox">' +
-                                '<input id="reportsGranularity' + this.ref + '" name="reportsGranularities" type="checkbox" value="' + this.ref  + '" class="form-control">' +
-                                ' <span>' + this.label + '</span>' +
-                            '</label>'
+                        $('#reports .col-sm-12').append(
+                            '<div class="checkbox">' +
+                                '<label>' +
+                                    '<input name="reportsGranularities[]" type="checkbox" value="' + this.ref  + '">' +
+                                    '<span>' + this.label + '</span>' +
+                                '</label>' +
+                            '</div>'
                         );
                     });
                 }
@@ -610,21 +605,21 @@
             case '#members':
                 $('#members select').each(function() {
                     var inputVal = $(this).val();
-                    if (($('input', $(this).parent().parent()).val() != '') && ((inputVal == '') || (inputVal == null))) {
-                        $(this).parent().parent().parent().addClass('error');
+                    if (($('input', $(this).closest('.form-group')).val() != '') && ((inputVal == '') || (inputVal == null))) {
+                        $(this).closest('.form-group').addClass('has-error');
                         $(this).after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                         state = false;
                     } else if ($('input[name="' + $(this).val() + '"]').val() == '') {
-                        $(this).parent().parent().parent().addClass('warning');
+                        $(this).closest('.form-group').addClass('has-warning');
                         $(this).after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
-                        $('input[name="' + $(this).val() + '"]').parent().parent().parent().addClass('warning');
+                        $('input[name="' + $(this).val() + '"]').closest('.form-group').addClass('has-warning');
                         $('input[name="' + $(this).val() + '"]').after('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                         state = false;
                     }
                 });
 
                 if (state == true) {
-                    $('#validationMembers').html(
+                    $('#validation .members-summary').html(
                         '<fieldset>' +
                             '<legend><?=___('Orga', 'add', 'members')?></legend>' +
                             '<ul>' +
@@ -634,11 +629,11 @@
                     $('#axes input[type="text"]').each(function() {
                         if ($(this).val() != '') {
                             var members = '';
-                            $('#' + $(this).attr('name') + '-members input').each(function() {
+                            $('fieldset[data-axis="' + $(this).attr('name') + '"] input').each(function() {
                                 if ($(this).val() != '') {
                                     members += $(this).val();
                                     var parentMembers = '';
-                                    $('select', $(this).parent().parent()).each(function () {
+                                    $('select', $(this).closest('.form-group')).each(function () {
                                         parentMembers += $('input[name="' + $(this).val() + '"]').val() + ', ';
                                     });
                                     if (parentMembers.length > 0) {
@@ -650,7 +645,7 @@
                             if (members.length > 0) {
                                 members = members.substr(0, (members.length - 2))
                             }
-                            $('#validationMembers ul').append(
+                            $('#validation .members-summary ul').append(
                                 '<li>' +
                                     '<strong>' + $(this).val() + ' : </strong>'
                                     + members +
@@ -664,15 +659,15 @@
             case '#inventory':
                 var inventoryGranularity = $('#inventory input[name="inventoryGranularity"]:checked');
                 if (inventoryGranularity.length == 0) {
-                    $('#inventoryGranularity-line').addClass('error');
-                    $('#inventoryGranularity-line').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    $('#inventory .form-group').addClass('has-error');
+                    $('#inventory .form-group .col-sm-12').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                     state = false;
                 }
 
                 if (state == true) {
-                    $('#validationOrganization ul li.inventoryGranularity').remove();
-                    $('#validationOrganization ul').append(
-                        '<li class="inventoryGranularity">' +
+                    $('#validation .organization-summary ul li.inventory-granularity').remove();
+                    $('#validation .organization-summary ul').append(
+                        '<li class="inventory-granularity">' +
                             '<strong><?=___('Orga', 'add', 'inventoryGranularityLabel')?> : </strong>' +
                             $('#inventory input[name="inventoryGranularity"]:checked').next().html() +
                         '</li>'
@@ -681,24 +676,24 @@
             break;
 
             case '#acl':
-                var aclGranularity = $('#acl input[name="aclGranularities"]:checked');
+                var aclGranularity = $('#acl input[name="aclGranularities[]"]:checked');
                 if (aclGranularity.length == 0) {
-                    $('#acl fieldset:first .form-group').addClass('error');
-                    $('#acl fieldset:first').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    $('#acl .form-group').addClass('has-error');
+                    $('#acl .form-group .col-sm-12').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                     state = false;
                 }
 
                 if (state == true) {
-                    $('#reports fieldset:first input[name="reportsGranularities"]').prop('checked', false);
+                    $('#reports input[name="reportsGranularities[]"]').prop('checked', false);
 
                     var aclGranularities = '';
-                    $('#acl fieldset:first input[name="aclGranularities"]:checked').each(function() {
-                        $('#reports fieldset:first input[name="reportsGranularities"][value="' + $(this).val() + '"]').prop('checked', true);
+                    $('#acl input[name="aclGranularities[]"]:checked').each(function() {
+                        $('#reports input[name="reportsGranularities[]"][value="' + $(this).val() + '"]').prop('checked', true);
                         aclGranularities += '<li>' + $(this).next().html() + '</li>';
                     });
-                    $('#validationGranularities .aclGranularities').remove();
-                    $('#validationGranularities').append(
-                        '<fieldset class="aclGranularities">' +
+                    $('#validation .granularities-summary .acl-granularities').remove();
+                    $('#validation .granularities-summary').append(
+                        '<fieldset class="acl-granularities">' +
                             '<legend><?=___('Orga', 'add', 'aclGranularitiesLabel')?></legend>' +
                             '<ul>' +
                                 aclGranularities +
@@ -709,21 +704,21 @@
             break;
 
             case '#reports':
-                var reportsGranularity = $('#reports input[name="reportsGranularities"]:checked');
+                var reportsGranularity = $('#reports input[name="reportsGranularities[]"]:checked');
                 if (reportsGranularity.length == 0) {
-                    $('#reports fieldset:first .form-group').addClass('error');
-                    $('#reports fieldset:first').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
+                    $('#reports .form-group').addClass('has-error');
+                    $('#reports .form-group .col-sm-12').append('<span class="help-block"><?=___('UI', 'formValidation', 'emptyRequiredField')?></span>');
                     state = false;
                 }
 
                 if (state == true) {
                     var reportsGranularities = '';
-                    $('#reports fieldset:first input[name="reportsGranularities"]:checked').each(function() {
+                    $('#reports input[name="reportsGranularities[]"]:checked').each(function() {
                         reportsGranularities += '<li>' + $(this).next().html() + '</li>';
                     });
-                    $('#validationGranularities .reportsGranularities').remove();
-                    $('#validationGranularities').append(
-                        '<fieldset class="reportsGranularities">' +
+                    $('#validation .granularities-summary .reports-granularities').remove();
+                    $('#validation .granularities-summary').append(
+                        '<fieldset class="reports-granularities">' +
                             '<legend><?=___('Orga', 'add', 'reportsGranularitiesLabel')?></legend>' +
                             '<ul>' +
                             reportsGranularities +
@@ -739,21 +734,18 @@
 
     var parseFormData = function ()
     {
-        var data = 'addOrganization={';
-
-        var children = $('#addOrganization div.tab-content').children();
-        for(var key = 0; key < children.length; key++) {
-            var child = $(children[key]);
-            if (child.hasClass('form-group')) {
-                data += '"' + child.attr('id').replace('-line', '') + '": ' + child.parseFormLine() + ', ';
-            } else if (child.hasClass('subGroup')) {
-                data += '"' + child.attr('id') + '": ' + child.parseFormGroup() + ', ';
+        var data = $('#addOrganization .tab-content > div[id!="axes"][id!="members"] :input').serialize();
+        $('#addOrganization .tab-content > div[id="axes"] :input:not(:button)').each(function() {
+            if ($(this).val() != '') {
+                data += '&axes[' + $(this).attr('name') + ']=' + $(this).val();
             }
-        }
-        if (data.substring(data.length, data.length-1) !== '{') {
-            data = data.slice(0, -2);
-        }
-        data += '}';
+        });
+        $('#addOrganization .tab-content > div[id="members"] fieldset').each(function() {
+            var axisId = $(this).attr('data-axis');
+            $('input, select', $(this)).each(function() {
+                data += '&members[' + axisId + '][' + $(this).attr('name') + ']=' + $(this).val();
+            });
+        });
         return data;
     };
 

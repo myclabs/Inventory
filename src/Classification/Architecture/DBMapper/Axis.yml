@@ -3,10 +3,6 @@ Classification\Domain\Axis:
   repositoryClass: \Core_Model_Repository_Ordered
   table: Classification_Axis
 
-  gedmo:
-    translation:
-      locale: translationLocale
-
   id:
     id:
       column: id
@@ -17,16 +13,14 @@ Classification\Domain\Axis:
   fields:
     ref:
       type: string
-      unique: true
       nullable: false
-    label:
-      type: string
-      nullable: false
-      gedmo:
-        - translatable
     position:
       type: integer
       nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
 
   manyToOne:
     directNarrower:
@@ -39,6 +33,8 @@ Classification\Domain\Axis:
       targetEntity: ClassificationLibrary
       inversedBy: axes
       joinColumn:
+        name: idLibrary
+        referencedColumnName: id
         nullable: false
 
   oneToMany:
@@ -54,6 +50,12 @@ Classification\Domain\Axis:
       cascade: [ remove ]
       orderBy:
         position: ASC
+
+  uniqueConstraints:
+    memberRefUniquenessInAxis:
+      columns:
+        - ref
+        - idLibrary
 
   lifecycleCallbacks:
     prePersist: [ preSave ]

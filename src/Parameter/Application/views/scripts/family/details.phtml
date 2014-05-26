@@ -10,7 +10,7 @@ $family = $this->family;
 ?>
 
 <div class="page-header">
-    <h1><?=$this->escape($family->getLabel())?></h1>
+    <h1><?=$this->escape($this->translate($family->getLabel()))?></h1>
 </div>
 
 <section id="widget-grid">

@@ -3,6 +3,7 @@
 namespace Account\Application\Service;
 
 use Account\Application\ViewModel\OrganizationView;
+use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
 use Orga_Model_Organization;
@@ -22,22 +23,29 @@ class OrganizationViewFactory
      * @var ACL
      */
     private $acl;
+
     /**
      * @var Orga_Service_ACLManager
      */
     private $orgaACLManager;
 
-    public function __construct(ACL $acl, Orga_Service_ACLManager $orgaACLManager)
+    /**
+     * @var Translator
+     */
+    private $translator;
+
+    public function __construct(ACL $acl, Orga_Service_ACLManager $orgaACLManager, Translator $translator)
     {
         $this->acl = $acl;
         $this->orgaACLManager = $orgaACLManager;
+        $this->translator = $translator;
     }
 
     public function createOrganizationView(Orga_Model_Organization $organization, User $connectedUser)
     {
         $viewModel = new OrganizationView();
         $viewModel->id = $organization->getId();
-        $viewModel->label = $organization->getLabel();
+        $viewModel->label = $this->translator->get($organization->getLabel());
         if ($viewModel->label == '') {
             $viewModel->label = __('Orga', 'navigation', 'defaultOrganizationLabel');
         }

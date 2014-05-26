@@ -2,6 +2,7 @@
 
 namespace Parameter\Domain\Family;
 
+use Core\Translation\TranslatedString;
 use Core_Exception_InvalidArgument;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
@@ -29,7 +30,7 @@ class Member extends Core_Model_Entity
     protected $ref;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -47,11 +48,11 @@ class Member extends Core_Model_Entity
     protected $cells;
 
     /**
-     * @param Dimension  $dimension
-     * @param string     $ref
-     * @param string     $label
+     * @param Dimension        $dimension
+     * @param string           $ref
+     * @param TranslatedString $label
      */
-    public function __construct(Dimension $dimension, $ref, $label)
+    public function __construct(Dimension $dimension, $ref, TranslatedString $label)
     {
         $this->dimension = $dimension;
         Core_Tools::checkRef($ref);
@@ -93,15 +94,7 @@ class Member extends Core_Model_Entity
     }
 
     /**
-     * @param string $label
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
-
-    /**
-     * @return string
+     * @return TranslatedString
      */
     public function getLabel()
     {
@@ -121,7 +114,7 @@ class Member extends Core_Model_Entity
      */
     public function __toString()
     {
-        return $this->getLabel();
+        return $this->getRef();
     }
 
     /**

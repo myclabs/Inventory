@@ -3,30 +3,34 @@
         "psr-0": {
             "": "src/"
         },
-        "psr-4": {
-            "Tests\\": "tests/"
-        },
         "files": [
             "src/Core/Translation/functions.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "require": {
         "zendframework/zendframework1": "1.12.*",
+        "doctrine/common": "dev-master as 2.4.99",
         "doctrine/orm": "2.5.*@dev",
         "doctrine/annotations": "~1.0",
-        "gedmo/doctrine-extensions": "dev-OptimizedTranslatable as 2.99",
+        "gedmo/doctrine-extensions": "~2.3",
         "symfony/event-dispatcher": "~2.3",
         "symfony/finder": "~2.3",
         "symfony/translation": "~2.3",
         "symfony/yaml": "~2.3",
-        "myclabs/acl": "0.4.*",
+        "myclabs/acl": "~1.0.0",
         "myclabs/array-comparator": "1.0.*",
         "myclabs/xport": "0.2.*",
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
         "myclabs/units-api": "dev-master",
         "myclabs/muih": "0.1.*",
-        "myclabs/work": "~0.2.0",
+        "myclabs/work": "~0.3.0",
+        "mnapoli/doctrine-translated": "dev-master",
         "mnapoli/number-two": "~0.2.0",
         "mnapoli/php-di": "~4.1",
         "mnapoli/php-di-zf1": "*",

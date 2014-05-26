@@ -19,16 +19,16 @@ use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
 use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\Algorithm\AlgoSet;
+use Core\Translation\TranslatedString;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
-use Core_Model_Entity_Translatable;
 use Core_Model_Query;
 use Core_Strategy_Ordered;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use UI_Form;
-use UI_Form_Element_Group;
+use AF\Application\Form\Form;
+use AF\Application\Form\Element\Group as FormGroup;
 
 /**
  * Accounting form.
@@ -41,7 +41,6 @@ use UI_Form_Element_Group;
 class AF extends Core_Model_Entity
 {
     use Core_Strategy_Ordered;
-    use Core_Model_Entity_Translatable;
 
     const ALGO_MAIN_REF = 'main';
 
@@ -64,7 +63,7 @@ class AF extends Core_Model_Entity
     private $ref;
 
     /**
-     * @var string
+     * @var TranslatedString
      */
     protected $label;
 
@@ -107,10 +106,10 @@ class AF extends Core_Model_Entity
 
 
     /**
-     * @param AFLibrary $library
-     * @param string    $label
+     * @param AFLibrary        $library
+     * @param TranslatedString $label
      */
-    public function __construct(AFLibrary $library, $label)
+    public function __construct(AFLibrary $library, TranslatedString $label)
     {
         $this->components = new ArrayCollection();
         $this->conditions = new ArrayCollection();
@@ -130,6 +129,16 @@ class AF extends Core_Model_Entity
         $this->rootGroup = new Group();
         $this->rootGroup->setRef(Group::ROOT_GROUP_REF);
         $this->rootGroup->setAf($this);
+    }
+
+    /**
+     * Get the ref attribute.
+     * @deprecated Sera supprimée dans la 3.1
+     * @return string
+     */
+    public function getRef()
+    {
+        return $this->ref;
     }
 
     /**
@@ -171,19 +180,19 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * @param string $label
+     * @param TranslatedString $label
      */
-    public function setLabel($label)
+    public function setLabel(TranslatedString $label)
     {
-        $this->label = (string) $label;
+        $this->label = $label;
     }
 
     /**
-     * @return string label
+     * @return TranslatedString
      */
     public function getLabel()
     {
-        return ($this->label);
+        return $this->label;
     }
 
     /**
@@ -223,16 +232,16 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * Generate a UI_Form to render it in a view
+     * Generate a form to render it in a view
      * @param PrimaryInputSet|null $inputSet
      * @param string               $mode read, write or test (default is write)
-     * @return UI_Form
+     * @return Form
      */
     public function generateForm(
         PrimaryInputSet $inputSet = null,
         $mode = AFViewConfiguration::MODE_WRITE
     ) {
-        $form = new UI_Form('af' . $this->id);
+        $form = new Form('af' . $this->id);
         $form->addClass('af');
 
         $generationHelper = new AFGenerationHelper($inputSet, $mode);
@@ -243,10 +252,10 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * Génère un composant UI_Form de cet AF en tant que sous-AF
+     * Génère un composant form de cet AF en tant que sous-AF
      * @param AFGenerationHelper $generationHelper
      * @param InputSet|null      $inputSet
-     * @return UI_Form_Element_Group
+     * @return FormGroup
      */
     public function generateSubForm(AFGenerationHelper $generationHelper, InputSet $inputSet = null)
     {

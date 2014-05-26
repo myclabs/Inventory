@@ -1,38 +1,25 @@
 <?php
-/**
- * @author     valentin.claras
- * @package    Core
- * @subpackage Model
- */
+
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Repository class
  *
- * @package    Core
- * @subpackage Model
+ * @author valentin.claras
  */
 class Core_Model_Repository extends Doctrine\ORM\EntityRepository
 {
     /**
-     * Récupère la requête depuis le query builder et lui applique des paramètres :
-     *  - Ajout des jointures pour les traductions.
+     * Récupère la requête depuis le query builder.
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder $queryBuilder
      *
-     * @return \Doctrine\ORM\Query
+     * @return Query
      */
-    public function getQueryFromQueryBuilder(\Doctrine\ORM\QueryBuilder $queryBuilder)
+    public function getQueryFromQueryBuilder(QueryBuilder $queryBuilder)
     {
         $query = $queryBuilder->getQuery();
-        
-        $query->setHint(
-            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            'Gedmo\Translatable\Query\TreeWalker\TranslationWalker'
-        );
-        $query->setHint(
-            \Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
-            Core_Locale::loadDefault()->getLanguage()
-        );
 
         return $query;
     }
@@ -81,8 +68,9 @@ class Core_Model_Repository extends Doctrine\ORM\EntityRepository
             throw new Core_Exception_NotFound("No '$entityName' matching " . $this->criteriaToString($criteria));
         } else {
             if (count($entities) > 1) {
-                throw new Core_Exception_TooMany("Too many '$entityName' matching "
-                                                     . $this->criteriaToString($criteria));
+                throw new Core_Exception_TooMany(
+                    "Too many '$entityName' matching " . $this->criteriaToString($criteria)
+                );
             }
         }
 
@@ -137,11 +125,13 @@ class Core_Model_Repository extends Doctrine\ORM\EntityRepository
     /**
      * Ajoute des paramètres personnalisés au QueryBuilder utilisé par le loadList et le countTotal.
      *
-     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     * @param QueryBuilder $queryBuilder
      * @param Core_Model_Query $queryParameters
      */
-    protected function addCustomParametersToQueryBuilder($queryBuilder, Core_Model_Query $queryParameters=null)
-    {
+    protected function addCustomParametersToQueryBuilder(
+        QueryBuilder $queryBuilder,
+        Core_Model_Query $queryParameters = null
+    ) {
         // Nothing added by default !
     }
 

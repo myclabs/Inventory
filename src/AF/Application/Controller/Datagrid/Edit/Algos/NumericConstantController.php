@@ -22,8 +22,11 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $data = [];
                 $data['index'] = $algo->getId();
                 $data['ref'] = $algo->getRef();
-                $data['label'] = $algo->getLabel();
-                $data['unit'] = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
+                $data['label'] = $this->cellTranslatedText($algo->getLabel());
+                $data['unit'] = $this->cellText(
+                    $algo->getUnit()->getRef(),
+                    $this->translator->get($algo->getUnit()->getSymbol())
+                );
                 $data['value'] = $this->cellNumber($algo->getUnitValue()->getDigitalValue());
                 $data['uncertainty'] = $this->cellNumber($algo->getUnitValue()->getRelativeUncertainty());
                 $contextIndicator = $algo->getContextIndicator();
@@ -91,13 +94,9 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $this->send();
                 return;
             }
-            $algo->setLabel($this->getAddElementValue('label'));
+            $this->translator->set($algo->getLabel(), $this->getAddElementValue('label'));
             /** @noinspection PhpUndefinedVariableInspection */
-            $algo->setUnitValue(new Calc_UnitValue(
-                    $unit,
-                    $value,
-                    $uncertainty
-                ));
+            $algo->setUnitValue(new Calc_UnitValue($unit, $value, $uncertainty));
             $algo->save();
             $af->addAlgo($algo);
             $af->save();
@@ -128,8 +127,8 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $this->data = $algo->getRef();
                 break;
             case 'label':
-                $algo->setLabel($newValue);
-                $this->data = $algo->getLabel();
+                $this->translator->set($algo->getLabel(), $newValue);
+                $this->data = $this->cellTranslatedText($algo->getLabel());
                 break;
             case 'unit':
                 $unit = new UnitAPI($newValue);
@@ -141,7 +140,10 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                     $algo->getUnitValue()->getDigitalValue(),
                     $algo->getUnitValue()->getRelativeUncertainty()
                 ));
-                $this->data = $this->cellText($algo->getUnit()->getRef(), $algo->getUnit()->getSymbol());
+                $this->data = $this->cellText(
+                    $algo->getUnit()->getRef(),
+                    $this->translator->get($algo->getUnit()->getSymbol())
+                );
                 break;
             case 'value':
                 if (empty($newValue)) {
@@ -218,7 +220,8 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
             foreach ($library->getContextIndicators() as $contextIndicator) {
                 $this->addElementList(
                     $contextIndicator->getId(),
-                    $library->getLabel() . ' > ' . $contextIndicator->getLabel()
+                    $this->translator->get($library->getLabel()) . ' > '
+                    . $this->translator->get($contextIndicator->getLabel())
                 );
             }
         }

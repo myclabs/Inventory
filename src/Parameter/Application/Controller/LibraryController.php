@@ -3,6 +3,7 @@
 use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use Core\Annotation\Secure;
+use Core\Translation\TranslatedString;
 use MyCLabs\ACL\ACL;
 use Parameter\Domain\ParameterLibrary;
 use User\Domain\ACL\Actions;
@@ -52,6 +53,7 @@ class Parameter_LibraryController extends Core_Controller
             if ($label == '') {
                 UI_Message::addMessageStatic(__('UI', 'formValidation', 'allFieldsRequired'));
             } else {
+                $label = $this->translator->set(new TranslatedString(), $label);
                 $library = new ParameterLibrary($account, $label);
                 $library->save();
                 $this->entityManager->flush();

@@ -1,4 +1,3 @@
-# orga\models\mappers\Orga_Model_Cell.yml
 Orga_Model_Cell:
   type: entity
   repositoryClass: Orga_Model_Repository_Cell
@@ -29,10 +28,15 @@ Orga_Model_Cell:
       column: allParentsRelevant
       type: boolean
       nullable: false
+    inputStatus:
+      column: inputStatus
+      type: string
+      length: 35
+      nullable: false
     inventoryStatus:
       column: inventoryStatus
       type: string
-      length: 15
+      length: 35
       nullable: false
 
   oneToOne:

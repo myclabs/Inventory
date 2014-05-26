@@ -4,7 +4,7 @@ namespace AF\Domain\Condition\Select;
 
 use AF\Domain\Component\Select\SelectOption;
 use Core_Exception;
-use UI_Form_Condition_Elementary;
+use AF\Application\Form\Condition\ElementaryCondition as FormElementaryCondition;
 use AF\Domain\AFGenerationHelper;
 use Core_Exception_InvalidArgument;
 use AF\Domain\Condition\ElementaryCondition;
@@ -31,14 +31,14 @@ class SelectMultiCondition extends ElementaryCondition
      */
     public function getUICondition(AFGenerationHelper $generationHelper)
     {
-        $uiCondition = new UI_Form_Condition_Elementary($this->ref);
+        $uiCondition = new FormElementaryCondition($this->ref);
         $uiCondition->element = $generationHelper->getUIElement($this->field);
         switch ($this->relation) {
             case self::RELATION_CONTAINS:
-                $uiCondition->relation = UI_Form_Condition_Elementary::EQUAL;
+                $uiCondition->relation = FormElementaryCondition::EQUAL;
                 break;
             case self::RELATION_NCONTAINS:
-                $uiCondition->relation = UI_Form_Condition_Elementary::NEQUAL;
+                $uiCondition->relation = FormElementaryCondition::NEQUAL;
                 break;
             default:
                 throw new Core_Exception("The relation '$this->relation'' is invalid or undefined");

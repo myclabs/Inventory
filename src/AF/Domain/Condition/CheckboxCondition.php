@@ -2,7 +2,7 @@
 
 namespace AF\Domain\Condition;
 
-use UI_Form_Condition_Elementary;
+use AF\Application\Form\Condition\ElementaryCondition as FormElementaryCondition;
 use AF\Domain\AFGenerationHelper;
 
 /**
@@ -22,9 +22,9 @@ class CheckboxCondition extends ElementaryCondition
      */
     public function getUICondition(AFGenerationHelper $generationHelper)
     {
-        $uiCondition = new UI_Form_Condition_Elementary($this->ref);
+        $uiCondition = new FormElementaryCondition($this->ref);
         $uiCondition->element = $generationHelper->getUIElement($this->field);
-        $uiCondition->relation = UI_Form_Condition_Elementary::EQUAL;
+        $uiCondition->relation = FormElementaryCondition::EQUAL;
         $uiCondition->value = $this->value;
         return $uiCondition;
     }

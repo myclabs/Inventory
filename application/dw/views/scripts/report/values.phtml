@@ -11,12 +11,12 @@ $datagridValues->addParam('hashReport', $this->hashReport);
 
 if ($this->numeratorAxis1 !== null) {
     $numeratorAxis1 = $this->numeratorAxis1;
-    $columnAxisOne = new UI_Datagrid_Col_Text('valueAxis'.$numeratorAxis1->getRef(), $numeratorAxis1->getLabel());
+    $columnAxisOne = new UI_Datagrid_Col_Text('valueAxis'.$numeratorAxis1->getRef(), $this->translate($numeratorAxis1->getLabel()));
     $datagridValues->addCol($columnAxisOne);
 
     $numeratorAxis2 = $this->numeratorAxis2;
     if ($this->numeratorAxis2 !== null) {
-        $columnAxisTwo = new UI_Datagrid_Col_Text('valueAxis'.$numeratorAxis2->getRef(), $numeratorAxis2->getLabel());
+        $columnAxisTwo = new UI_Datagrid_Col_Text('valueAxis'.$numeratorAxis2->getRef(), $this->translate($numeratorAxis2->getLabel()));
         $datagridValues->addCol($columnAxisTwo);
     }
 }

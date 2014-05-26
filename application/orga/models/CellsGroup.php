@@ -1,10 +1,6 @@
 <?php
-use AF\Domain\AF;
 
-/**
- * @package Orga
- * @subpackage Model
- */
+use AF\Domain\AF;
 
 /**
  * Classe permettant de choisir les AF associés aux cellules enfant d'une Cell et d'une Granularity données.
@@ -47,12 +43,6 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
     protected $aF = null;
 
 
-    /**
-     * Constructeur de la classe CellsGroup.
-     *
-     * @param Orga_Model_Cell $containerCell
-     * @param Orga_Model_Granularity $inputGranularity
-     */
     public function __construct(Orga_Model_Cell $containerCell, Orga_Model_Granularity $inputGranularity)
     {
         $this->containerCell = $containerCell;
@@ -101,9 +91,9 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
     /**
      * Spécifie l'AF utilisé par le groupement de cellule.
      *
-     * @param \AF\Domain\AF $aF
+     * @param AF $aF
      */
-    public function setAF(AF $aF=null)
+    public function setAF(AF $aF = null)
     {
         if ($this->aF !== $aF) {
             $this->aF = $aF;
@@ -115,7 +105,7 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
      *
      * @throws Core_Exception_UndefinedAttribute
      *
-     * @return \AF\Domain\AF
+     * @return AF
      */
     public function getAF()
     {
@@ -124,5 +114,4 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
         }
         return $this->aF;
     }
-
 }

@@ -12,6 +12,8 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\DBAL\Types\Type;
+use Mnapoli\Translated\Helper\Zend1\TranslateZend1Helper;
+use Mnapoli\Translated\Translator as DoctrineTranslator;
 use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
@@ -198,7 +200,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'DW',
             'Algo',
             'AF',
-            'Social',
             'Orga',
             'AuditTrail',
             'Account',
@@ -264,12 +265,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $locale = Core_Locale::loadDefault();
         Core_Locale::$minSignificantFigures = $this->container->get('locale.minSignificantFigures');
 
+        // Fichiers de traduction
         $translator = new Translator($locale->getId());
         $translator->addLoader('tmx', new TmxLoader());
         $translator->addResource('tmx', APPLICATION_PATH . '/languages', 'fr');
         $translator->addResource('tmx', APPLICATION_PATH . '/languages', 'en');
         $translator->setFallbackLocales(['fr']);
         $this->container->set(Translator::class, $translator);
+
+        // Traductions en BDD
+        /** @var DoctrineTranslator $doctrineTranslator */
+        $doctrineTranslator = $this->container->get(DoctrineTranslator::class);
+        $doctrineTranslator->setLanguage($locale->getLanguage());
     }
 
     /**
@@ -286,6 +293,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             'MyCLabs\MUIH\Bridge\ZendViewHelper\Zend1');
         $view->registerHelper($this->container->get(IsAllowedHelper::class), 'isAllowed');
         $view->registerHelper($this->container->get(TutorialHelper::class), 'tutorial');
+        $view->registerHelper($this->container->get(TranslateZend1Helper::class), 'translate');
     }
 
     /**
@@ -326,7 +334,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         if ($this->container->get('enable.acl')) {
             $front = Zend_Controller_Front::getInstance();
-            $front->registerPlugin($this->container->get(Inventory_Plugin_Acl::class));
+            $front->registerPlugin($this->container->get(Inventory_Plugin_ACL::class));
         }
     }
 

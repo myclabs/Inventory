@@ -2,6 +2,7 @@
 
 namespace Unit;
 
+use Core\Translation\TranslatedString;
 use MyCLabs\UnitAPI\DTO\UnitDTO;
 use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use MyCLabs\UnitAPI\Exception\UnknownUnitException;
@@ -83,7 +84,7 @@ class UnitAPI
      * @todo À mettre en cache
      *
      * @throws UnknownUnitException
-     * @return string
+     * @return TranslatedString
      */
     public function getSymbol()
     {
