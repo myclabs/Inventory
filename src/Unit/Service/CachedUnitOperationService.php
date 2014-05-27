@@ -46,8 +46,8 @@ class CachedUnitOperationService implements UnitOperationService
         $factor = $this->cache->fetch($cacheKey);
 
         if ($factor === false) {
-            $unit = $this->wrappedService->getConversionFactor($unit1, $unit2);
-            $this->cache->save($cacheKey, $unit);
+            $factor = $this->wrappedService->getConversionFactor($unit1, $unit2);
+            $this->cache->save($cacheKey, $factor);
         }
 
         return $factor;
