@@ -135,8 +135,11 @@ return [
 
     // Units API
     'units.webservice.url' => 'http://units.myc-sense.com/api/',
-    'units.webservice.httpClient' => DI\object(\Guzzle\Http\Client::class)
-        ->constructorParameter('baseUrl', DI\link('units.webservice.url')),
+    'units.webservice.httpClient' => DI\factory(function (ContainerInterface $c) {
+        return new \GuzzleHttp\Client([
+            'base_url' => $c->get('units.webservice.url'),
+        ]);
+    }),
     UnitService::class => DI\object(UnitWebService::class)
         ->constructor(DI\link('units.webservice.httpClient')),
     UnitOperationService::class => DI\object(UnitOperationWebService::class)

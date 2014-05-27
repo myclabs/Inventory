@@ -7,7 +7,8 @@
  * @package    UI
  * @subpackage Controller
  */
-use Core\Translation\TranslatedString;
+
+use Mnapoli\Translated\AbstractTranslatedString;
 
 /**
  * Description of Controller_Datagrid.
@@ -306,12 +307,12 @@ abstract class UI_Controller_Datagrid extends Core_Controller
     /**
      * Formate les données à renvoyer pour un texte traduit.
      *
-     * @param TranslatedString $text Valeur d'une colonne date.
-     * @param bool             $editable
+     * @param AbstractTranslatedString $text Valeur d'une colonne date.
+     * @param bool                     $editable
      *
      * @return array
      */
-    public function cellTranslatedText(TranslatedString $text, $editable = true)
+    public function cellTranslatedText(AbstractTranslatedString $text, $editable = true)
     {
         return $this->baseCell($this->translator->get($text), null, $editable);
     }
