@@ -1612,6 +1612,11 @@ JS;
         $view->headScript()->appendFile('yui/build/paginator/paginator-min.js', 'text/javascript');
         $view->headScript()->appendFile('yui/build/calendar/calendar-min.js', 'text/javascript');
 
+        $view->headLink()->appendStylesheet('markitup/skins/markitup/style.css');
+        $view->headLink()->appendStylesheet('markitup/skins/textile/style.css');
+        $view->headScript()->appendFile('markitup/jquery.markitup.js', 'text/javascript');
+        $view->headScript()->appendFile('markitup/sets/textile/set.js', 'text/javascript');
+
         parent::addHeader($instance);
     }
 
