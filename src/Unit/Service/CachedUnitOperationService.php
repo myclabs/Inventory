@@ -63,7 +63,7 @@ class CachedUnitOperationService implements UnitOperationService
         $compatible = $this->cache->fetch($cacheKey);
 
         if ($compatible === false) {
-            $unit = $this->wrappedService->getConversionFactor($unit1, $unit2);
+            $unit = $this->wrappedService->areCompatible($unit1, $unit2);
             $this->cache->save($cacheKey, serialize($unit));
         } else {
             $compatible = unserialize($compatible);
