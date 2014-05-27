@@ -74,6 +74,10 @@ class UnitAPITest extends TestCase
         $result = $unit1->getConversionFactor(new UnitAPI('m^2.animal^-1.m^-2.kg'));
         $this->assertEquals(1, $result);
 
+        $unit1 = new UnitAPI('m');
+        $result = $unit1->getConversionFactor(new UnitAPI('km'));
+        $this->assertEquals(1000., $result);
+
         $unit1 = new UnitAPI('kg^2.g');
         $result = $unit1->getConversionFactor(new UnitAPI('kg^3'));
         $this->assertEquals(0.001, $result);

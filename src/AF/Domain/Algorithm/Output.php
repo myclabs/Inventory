@@ -58,7 +58,7 @@ class Output
             $convertedValue->getDigitalValue(),
             $convertedValue->getRelativeUncertainty()
         );
-        
+
         foreach ($classificationMembers as $member) {
             $this->classificationMembers[] = $member;
         }

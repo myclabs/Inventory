@@ -906,8 +906,7 @@ class Orga_Service_Export
                 $component = $input->getComponent();
                 if ($component !== null) {
                     try {
-                        $conversionFactor = $component->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
-                        $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
+                        $baseConvertedValue = $inputValue->convertTo($component->getUnit());
                         return [
                             $inputDigitalValue,
                             $inputValue->getRelativeUncertainty(),

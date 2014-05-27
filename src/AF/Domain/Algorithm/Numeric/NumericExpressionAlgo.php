@@ -51,9 +51,7 @@ class NumericExpressionAlgo extends NumericAlgo implements ValueInterface, UnitI
         $result = $calc->executeExpression($this);
 
         // Convertit à l'unité de l'algo
-        $convertedValue = $result->getDigitalValue() / $result->getUnit()->getConversionFactor($this->getUnit());
-
-        return new Calc_UnitValue($this->getUnit(), $convertedValue, $result->getRelativeUncertainty());
+        return $result->convertTo($this->getUnit());
     }
 
     /**

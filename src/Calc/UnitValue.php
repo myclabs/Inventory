@@ -81,7 +81,7 @@ class Calc_UnitValue
         if (is_null($digitalValue)) {
             $newDigitalValue = null;
         } else {
-            $newDigitalValue = (float) $digitalValue * $this->unit->getConversionFactor($unit->getRef());
+            $newDigitalValue = (float) $digitalValue / $this->unit->getConversionFactor($unit->getRef());
         }
 
         return new Calc_UnitValue($unit, $newDigitalValue, $this->value->getRelativeUncertainty());
@@ -116,7 +116,7 @@ class Calc_UnitValue
 
         // Conversion dans la même unité pour comparaison
         if ((! is_null($unitValue1)) && (! is_null($unitValue2))) {
-            $unitValue2 = $unitValue2 * $uvToCompare->unit->getConversionFactor($this->unit);
+            $unitValue2 = $unitValue2 / $uvToCompare->unit->getConversionFactor($this->unit);
         }
 
         switch ($operator) {

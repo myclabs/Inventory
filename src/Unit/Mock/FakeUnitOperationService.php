@@ -83,9 +83,9 @@ class FakeUnitOperationService implements UnitOperationService
                     case 'm':
                         return 1;
                     case 'km':
-                        return 0.001;
+                        return 1000.;
                     case '100km':
-                        return 0.00001;
+                        return 100000.;
                     default:
                         throw new IncompatibleUnitsException(
                             "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
@@ -98,9 +98,9 @@ class FakeUnitOperationService implements UnitOperationService
                     case 'km':
                         return 1;
                     case 'm':
-                        return 1000;
+                        return 0.001;
                     case '100km':
-                        return 0.01;
+                        return 100.;
                     default:
                         throw new IncompatibleUnitsException(
                             "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
@@ -111,7 +111,7 @@ class FakeUnitOperationService implements UnitOperationService
             case 'g':
                 switch ($unit2) {
                     case 'kg':
-                        return 0.001;
+                        return 1000.;
                     default:
                         throw new IncompatibleUnitsException(
                             "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
@@ -144,7 +144,7 @@ class FakeUnitOperationService implements UnitOperationService
             case 'g.j':
                 switch ($unit2) {
                     case 'm^2.kg^2.s^-2':
-                        return 0.001;
+                        return 1000.;
                     default:
                         throw new IncompatibleUnitsException(
                             "$unit1 and $unit2 are incompatible, or conversion factor undefined?"
