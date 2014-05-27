@@ -1,6 +1,19 @@
 # Mise en production
 
 
+## 3.1
+
+- Déployer normalement avec update de la bdd.
+
+```
+
+- Mettre à jour le cache d'orga :
+
+```
+bin/inventory orga-cache:rebuild
+```
+
+
 ## 3.0
 
 - Exporter les données en 2.12
