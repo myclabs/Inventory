@@ -22,7 +22,7 @@ class CachedUnitOperationService implements UnitOperationService
      */
     private $cache;
 
-    public function __construct(CachedUnitOperationService $wrappedService, Cache $cache)
+    public function __construct(UnitOperationService $wrappedService, Cache $cache)
     {
         $this->wrappedService = $wrappedService;
         $this->cache = $cache;
