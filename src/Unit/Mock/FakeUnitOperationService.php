@@ -175,14 +175,6 @@ class FakeUnitOperationService implements UnitOperationService
     /**
      * {@inheritdoc}
      */
-    public function multiply($unit1, $unit2)
-    {
-        throw new \Exception("multiply not implemented yet");
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function inverse($unit)
     {
         switch ($unit) {

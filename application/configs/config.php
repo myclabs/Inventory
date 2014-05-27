@@ -1,10 +1,13 @@
 <?php
 
 use Account\Domain\ACL\AccountAdminRole;
+use Doctrine\Common\Cache\Cache;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\Doctrine\ACLSetup;
+use Unit\Service\CachedUnitOperationService;
+use Unit\Service\CachedUnitService;
 use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
@@ -140,8 +143,12 @@ return [
             'base_url' => $c->get('units.webservice.url'),
         ]);
     }),
-    UnitService::class => DI\object(UnitWebService::class)
-        ->constructor(DI\link('units.webservice.httpClient')),
-    UnitOperationService::class => DI\object(UnitOperationWebService::class)
-        ->constructor(DI\link('units.webservice.httpClient')),
+    UnitWebService::class => DI\object()
+            ->constructor(DI\link('units.webservice.httpClient')),
+    UnitService::class => DI\object(CachedUnitService::class)
+            ->constructor(DI\link(UnitWebService::class), DI\link(Cache::class)),
+    UnitOperationWebService::class => DI\object()
+            ->constructor(DI\link('units.webservice.httpClient')),
+    UnitOperationService::class => DI\object(CachedUnitOperationService::class)
+            ->constructor(DI\link(UnitOperationWebService::class), DI\link(Cache::class)),
 ];
