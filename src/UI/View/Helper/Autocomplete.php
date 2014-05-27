@@ -25,7 +25,6 @@ class UI_View_Helper_Autocomplete extends Zend_View_Helper_Abstract
      */
     public function __toString()
     {
-        UI_JS_AutoComplete::addHeader($this->_autocomplete);
         return $this->_autocomplete->getHTML();
     }
 

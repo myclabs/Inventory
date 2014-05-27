@@ -260,8 +260,6 @@ class Form extends Zend_Form
         $broker->view->headScript()->appendFile('markitup/jquery.markitup.js', 'text/javascript');
         $broker->view->headScript()->appendFile('markitup/sets/textile/set.js', 'text/javascript');
 
-        UI_JS_AutoComplete::addHeader();
-
         if ($instance !== null) {
             $script = $instance->getScript();
             if ($script !== '') {
