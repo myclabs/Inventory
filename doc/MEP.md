@@ -5,8 +5,6 @@
 
 - Déployer normalement avec update de la bdd.
 
-```
-
 - Mettre à jour le cache d'orga :
 
 ```
