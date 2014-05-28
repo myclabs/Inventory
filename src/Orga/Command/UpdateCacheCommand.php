@@ -47,7 +47,7 @@ class UpdateCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $options = $input->getOptions();
+        $options = $input->getArguments();
         if (empty($options) || $input->getOption('input-status')) {
             $this->rebuildInputStatus = true;
         }
