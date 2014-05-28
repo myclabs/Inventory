@@ -775,6 +775,42 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
+     * @return Core_Model_Entity
+     * @throws Core_Exception_InvalidArgument
+     */
+    public function getPreviousMember()
+    {
+        if (!$this->getAxis()->isMemberPositioning()) {
+            throw new Core_Exception_InvalidArgument(
+                'This member needs to come from an axis allowing members positioning.'
+            );
+        }
+
+        return Orga_Model_Member::loadByPositionAndContext(
+            ($this->getPosition() - 1),
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @return Core_Model_Entity
+     * @throws Core_Exception_InvalidArgument
+     */
+    public function getNextMember()
+    {
+        if (!$this->getAxis()->isMemberPositioning()) {
+            throw new Core_Exception_InvalidArgument(
+                'This member needs to come from an axis allowing members positioning.'
+            );
+        }
+
+        return Orga_Model_Member::loadByPositionAndContext(
+            ($this->getPosition() + 1),
+            $this->getContext()
+        );
+    }
+
+    /**
      * Ajoute une Cell à celles utilisant le Member courant.
      *
      * @param Orga_Model_Cell $cell
