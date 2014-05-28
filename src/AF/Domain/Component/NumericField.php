@@ -163,12 +163,9 @@ class NumericField extends Field
     {
         $errors = parent::checkConfig();
         // On vérifie que l'unité associée au champs numérique est valide.
-        $unit = $this->unit;
-        try {
-            $unit->getNormalizedUnit();
-        } catch (Core_Exception_NotFound $e) {
+        if (! $this->unit->exists()) {
             $errors[] = new AFConfigurationError(
-                "L'unité '{$unit->getRef()}' associée au champ '$this->ref' n'existe pas.",
+                "L'unité '{$this->unit->getRef()}' associée au champ '$this->ref' n'existe pas.",
                 true,
                 $this->getAf()
             );

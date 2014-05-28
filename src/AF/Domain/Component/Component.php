@@ -16,6 +16,7 @@ use Core_Strategy_Ordered;
 use Core_Tools;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Mnapoli\Translated\AbstractTranslatedString;
 use Mnapoli\Translated\Translator;
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Icon;
@@ -363,10 +364,10 @@ abstract class Component extends Core_Model_Entity
     /**
      * @deprecated Moche, très moche
      * @todo À supprimer quand la génération UI est sortie du modèle
-     * @param TranslatedString $string
+     * @param AbstractTranslatedString $string
      * @return string
      */
-    protected function uglyTranslate(TranslatedString $string)
+    protected function uglyTranslate(AbstractTranslatedString $string)
     {
         /** @var Translator $translator */
         $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);

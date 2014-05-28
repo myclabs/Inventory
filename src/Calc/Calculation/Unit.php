@@ -1,19 +1,20 @@
 <?php
+
+use MyCLabs\UnitAPI\Operation\Result\OperationResult;
+use Unit\UnitAPI;
+
 /**
  * @author valentin.claras
  * @author hugo.charbonnier
  * @author yoann.croizer
- * @package    Calc
- * @subpackage Calculation
- */
-use Unit\UnitAPI;
-
-/**
- * @package    Calc
- * @subpackage Calculation
  */
 class Calc_Calculation_Unit extends Calc_Calculation
 {
+    /**
+     * @var OperationResult|null
+     */
+    private $operationResult;
+
     /**
      * Vérifie que le tableau de component est bien homogène.
      *
@@ -61,7 +62,9 @@ class Calc_Calculation_Unit extends Calc_Calculation
             $unitTab[] = $component['operand']->getRef();
         }
 
-        return UnitAPI::calculateSum($unitTab);
+        $this->operationResult = UnitAPI::calculateSum($unitTab);
+
+        return new UnitAPI($this->operationResult->getUnitId());
     }
 
     /**
@@ -79,7 +82,16 @@ class Calc_Calculation_Unit extends Calc_Calculation
             $unitTab[] = array('unit' => $component['operand'], 'signExponent' => $component['signExponent']);
         }
 
-        return UnitAPI::multiply($unitTab);
+        $this->operationResult = UnitAPI::multiply($unitTab);
+
+        return new UnitAPI($this->operationResult->getUnitId());
     }
 
+    /**
+     * @return OperationResult|null
+     */
+    public function getOperationResult()
+    {
+        return $this->operationResult;
+    }
 }

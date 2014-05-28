@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "098d6cd0d4162a5f8f5e754a1b2bb946",
+    "hash": "3fcd340d90e0e32b641cce8dc014b61a",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -514,12 +514,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "b421d03f69049e1f6037756f1093707bf443a52f"
+                "reference": "20e47ae52d38d78eadf5539399d480cdb6ed88e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/b421d03f69049e1f6037756f1093707bf443a52f",
-                "reference": "b421d03f69049e1f6037756f1093707bf443a52f",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/20e47ae52d38d78eadf5539399d480cdb6ed88e0",
+                "reference": "20e47ae52d38d78eadf5539399d480cdb6ed88e0",
                 "shasum": ""
             },
             "require": {
@@ -583,7 +583,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2014-05-21 22:15:22"
+            "time": "2014-05-27 07:55:42"
         },
         {
             "name": "dompdf/dompdf",
@@ -707,6 +707,120 @@
             "time": "2014-01-12 16:34:06"
         },
         {
+            "name": "guzzlehttp/guzzle",
+            "version": "4.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "40db53833aaea528347994acd4578d7b9b2211ee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/40db53833aaea528347994acd4578d7b9b2211ee",
+                "reference": "40db53833aaea528347994acd4578d7b9b2211ee",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/streams": "~1.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "phpunit/phpunit": "~4.0",
+                "psr/log": "~1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2014-04-16 17:33:22"
+        },
+        {
+            "name": "guzzlehttp/streams",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/streams.git",
+                "reference": "cf0c8c33ca95cc147efba4c714f630ee44767180"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/streams/zipball/cf0c8c33ca95cc147efba4c714f630ee44767180",
+                "reference": "cf0c8c33ca95cc147efba4c714f630ee44767180",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Stream\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Provides a simple abstraction over streams of data (Guzzle 4+)",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "Guzzle",
+                "stream"
+            ],
+            "time": "2014-04-03 04:48:24"
+        },
+        {
             "name": "jms/parser-lib",
             "version": "1.0.0",
             "source": {
@@ -743,21 +857,25 @@
         },
         {
             "name": "mnapoli/doctrine-translated",
-            "version": "0.2.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/DoctrineTranslated.git",
-                "reference": "b50becb23a57616a570bce9164e644e894c4201c"
+                "reference": "05a8735c3570736987458589800a5194918009e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/b50becb23a57616a570bce9164e644e894c4201c",
-                "reference": "b50becb23a57616a570bce9164e644e894c4201c",
+                "url": "https://api.github.com/repos/mnapoli/DoctrineTranslated/zipball/05a8735c3570736987458589800a5194918009e9",
+                "reference": "05a8735c3570736987458589800a5194918009e9",
                 "shasum": ""
             },
             "require": {
                 "doctrine/orm": "2.5.*@dev",
                 "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "symfony/framework-bundle": "~2.4",
+                "twig/twig": "~1.15"
             },
             "type": "library",
             "autoload": {
@@ -776,10 +894,11 @@
                 "doctrine",
                 "i18n",
                 "translatable",
+                "translated",
                 "translation",
                 "translations"
             ],
-            "time": "2014-05-22 08:20:01"
+            "time": "2014-05-26 11:50:54"
         },
         {
             "name": "mnapoli/metamodel",
@@ -1211,6 +1330,41 @@
             "time": "2013-11-11 18:29:08"
         },
         {
+            "name": "myclabs/units-api",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/Units-API.git",
+                "reference": "b35506d6dbfbf6a816de7ff39471d6bfe126d699"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/Units-API/zipball/b35506d6dbfbf6a816de7ff39471d6bfe126d699",
+                "reference": "b35506d6dbfbf6a816de7ff39471d6bfe126d699",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~4.0",
+                "mnapoli/doctrine-translated": "dev-master",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyCLabs\\UnitAPI\\": "src/MyCLabs/UnitAPI",
+                    "UnitAPITest\\UnitTest\\MyCLabs\\UnitAPI\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "source": "https://github.com/myclabs/Units-API/tree/master",
+                "issues": "https://github.com/myclabs/Units-API/issues"
+            },
+            "time": "2014-05-27 12:44:37"
+        },
+        {
             "name": "myclabs/work",
             "version": "0.3.0",
             "source": {
@@ -1590,17 +1744,17 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "2e452005b1e1d003d23702d227e23614679eb5ca"
+                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/2e452005b1e1d003d23702d227e23614679eb5ca",
-                "reference": "2e452005b1e1d003d23702d227e23614679eb5ca",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/24f723436e62598c9dddee2a8573d6992504dc5d",
+                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d",
                 "shasum": ""
             },
             "require": {
@@ -1641,11 +1795,11 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-27 13:34:57"
+            "time": "2014-05-14 21:48:29"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
@@ -1701,17 +1855,17 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "25e1e7d5e7376f8a92ae3b1d714d956edf33a730"
+                "reference": "46295af1b1e24304b35d5f20f1bf1ec0c2c4934a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/25e1e7d5e7376f8a92ae3b1d714d956edf33a730",
-                "reference": "25e1e7d5e7376f8a92ae3b1d714d956edf33a730",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/46295af1b1e24304b35d5f20f1bf1ec0c2c4934a",
+                "reference": "46295af1b1e24304b35d5f20f1bf1ec0c2c4934a",
                 "shasum": ""
             },
             "require": {
@@ -1746,21 +1900,21 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-27 13:34:57"
+            "time": "2014-05-22 13:46:01"
         },
         {
             "name": "symfony/property-access",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/PropertyAccess",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/PropertyAccess.git",
-                "reference": "0456222bc00c40c1365065b603f7c397fb9a7134"
+                "reference": "3679b3bd147d8f06b9cdef2dd3f9c8b9ddcbdc33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/PropertyAccess/zipball/0456222bc00c40c1365065b603f7c397fb9a7134",
-                "reference": "0456222bc00c40c1365065b603f7c397fb9a7134",
+                "url": "https://api.github.com/repos/symfony/PropertyAccess/zipball/3679b3bd147d8f06b9cdef2dd3f9c8b9ddcbdc33",
+                "reference": "3679b3bd147d8f06b9cdef2dd3f9c8b9ddcbdc33",
                 "shasum": ""
             },
             "require": {
@@ -1806,21 +1960,21 @@
                 "property path",
                 "reflection"
             ],
-            "time": "2014-04-18 20:37:09"
+            "time": "2014-05-21 13:15:17"
         },
         {
             "name": "symfony/translation",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/Translation",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Translation.git",
-                "reference": "d2c73ffa4a5ba1fa0c5d93f43b68331dffe898c5"
+                "reference": "9a3941444487ea57acd38f5c61bee1e0c3f69293"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/d2c73ffa4a5ba1fa0c5d93f43b68331dffe898c5",
-                "reference": "d2c73ffa4a5ba1fa0c5d93f43b68331dffe898c5",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/9a3941444487ea57acd38f5c61bee1e0c3f69293",
+                "reference": "9a3941444487ea57acd38f5c61bee1e0c3f69293",
                 "shasum": ""
             },
             "require": {
@@ -1863,21 +2017,21 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 21:02:05"
+            "time": "2014-05-22 13:46:01"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff"
+                "reference": "fd22bb88c3a6f73c898b39bec185a9e211b06265"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
-                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/fd22bb88c3a6f73c898b39bec185a9e211b06265",
+                "reference": "fd22bb88c3a6f73c898b39bec185a9e211b06265",
                 "shasum": ""
             },
             "require": {
@@ -1912,7 +2066,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 20:37:09"
+            "time": "2014-05-12 09:27:48"
         },
         {
             "name": "twig/twig",
@@ -2584,7 +2738,7 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/Config",
             "source": {
                 "type": "git",
@@ -2634,17 +2788,17 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/CssSelector",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/CssSelector.git",
-                "reference": "479a5b409723f596ffc3b5178034e4d76ce615b3"
+                "reference": "268d0a51166edaf84dfcf043c57f273685cb7c93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/CssSelector/zipball/479a5b409723f596ffc3b5178034e4d76ce615b3",
-                "reference": "479a5b409723f596ffc3b5178034e4d76ce615b3",
+                "url": "https://api.github.com/repos/symfony/CssSelector/zipball/268d0a51166edaf84dfcf043c57f273685cb7c93",
+                "reference": "268d0a51166edaf84dfcf043c57f273685cb7c93",
                 "shasum": ""
             },
             "require": {
@@ -2683,21 +2837,21 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 20:37:09"
+            "time": "2014-05-12 09:27:48"
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/DependencyInjection",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DependencyInjection.git",
-                "reference": "f4f947f83aa2f1706ec8cf4f4ead6c85ea935156"
+                "reference": "42fdd797519b04077225bf8de04742e67a1f0e6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/f4f947f83aa2f1706ec8cf4f4ead6c85ea935156",
-                "reference": "f4f947f83aa2f1706ec8cf4f4ead6c85ea935156",
+                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/42fdd797519b04077225bf8de04742e67a1f0e6c",
+                "reference": "42fdd797519b04077225bf8de04742e67a1f0e6c",
                 "shasum": ""
             },
             "require": {
@@ -2742,11 +2896,11 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 20:38:54"
+            "time": "2014-05-12 09:27:48"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
@@ -2812,6 +2966,8 @@
     "stability-flags": {
         "doctrine/common": 20,
         "doctrine/orm": 20,
+        "myclabs/units-api": 20,
+        "mnapoli/doctrine-translated": 20,
         "dompdf/dompdf": 20,
         "phpoffice/phpexcel": 20,
         "mnapoli/metaconsole": 20

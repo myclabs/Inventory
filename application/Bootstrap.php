@@ -12,7 +12,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\DBAL\Types\Type;
-use Mnapoli\Translated\Helper\Zend1\TranslateZend1Helper;
+use Mnapoli\Translated\Integration\Zend1\TranslateZend1Helper;
 use Mnapoli\Translated\Translator as DoctrineTranslator;
 use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\GenericTag;

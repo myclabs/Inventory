@@ -8,7 +8,6 @@ use Calc_UnitValue;
 use Core\Test\TestCase;
 use Core_Exception_InvalidArgument;
 use Core_Exception_NotFound;
-use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 class UnitValueTest extends TestCase
@@ -74,10 +73,13 @@ class UnitValueTest extends TestCase
 
         $this->assertEquals(2.5, $result->getDigitalValue());
         $this->assertEquals('m^2.kg^2.s^-2', $result->getUnit()->getRef());
+    }
 
-
-         //Test somme d'unité non compatible.
-
+    /**
+     * @expectedException \MyCLabs\UnitAPI\Exception\IncompatibleUnitsException
+     */
+    public function testCalculateSumIncompatibleUnits()
+    {
         $unitValue2 = new Calc_Calculation_UnitValue();
         $unitValue2->setOperation(Calc_Calculation::ADD_OPERATION);
 
@@ -89,15 +91,14 @@ class UnitValueTest extends TestCase
 
         $unitValue2->addComponents($calcUnitValue3, Calc_Calculation::SUM);
         $unitValue2->addComponents($calcUnitValue4, Calc_Calculation::SUBSTRACTION);
+        $unitValue2->calculate();
+    }
 
-        try {
-             $unitValue2->calculate();
-        } catch (IncompatibleUnitsException $e) {
-             $this->assertEquals('Units for the sum are incompatible', $e->getMessage());
-        }
-
-        //Test somme d'unité ionexistante.
-
+    /**
+     * @expectedException \MyCLabs\UnitAPI\Exception\UnknownUnitException
+     */
+    public function testCalculateSumUnknownUnit()
+    {
         $unitValue3 = new Calc_Calculation_UnitValue();
         $unitValue3->setOperation(Calc_Calculation::ADD_OPERATION);
 
@@ -109,12 +110,7 @@ class UnitValueTest extends TestCase
 
         $unitValue3->addComponents($calcUnitValue5, Calc_Calculation::SUM);
         $unitValue3->addComponents($calcUnitValue6, Calc_Calculation::SUBSTRACTION);
-
-        try {
-             $unitValue3->calculate();
-        } catch (Core_Exception_NotFound $e) {
-            $this->assertEquals("No 'Unit\\Domain\\Unit\\Unit' matching (ref == gramme)", $e->getMessage());
-        }
+        $unitValue3->calculate();
     }
 
     public function testExceptions()

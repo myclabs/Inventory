@@ -6,7 +6,7 @@ use Core\Translation\TranslatedString;
 use Core_Exception_UndefinedAttribute;
 use Core_Model_Entity;
 use Core_Strategy_Ordered;
-use Unit\IncompatibleUnitsException;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 /**
@@ -144,8 +144,14 @@ class Indicator extends Core_Model_Entity
      */
     public function setRatioUnit(UnitAPI $ratioUnit)
     {
-        if ($this->unit && !$this->unit->isEquivalent($ratioUnit)) {
-            throw new IncompatibleUnitsException('Unit ant RatioUnit should be compatible');
+        if ($this->unit != null) {
+            if (!$this->getUnit()->isEquivalent($ratioUnit)) {
+                throw new IncompatibleUnitsException(sprintf(
+                    'Unit (%s) ant RatioUnit (%s) should be compatible',
+                    $this->unit,
+                    $ratioUnit->getRef()
+                ));
+            }
         }
 
         $this->ratioUnit = $ratioUnit;

@@ -1,5 +1,7 @@
 <?php
 
+use MyCLabs\UnitAPI\Operation\Result\MultiplicationResult;
+
 /**
  * @author valentin.claras
  * @author hugo.charbonnier
@@ -74,8 +76,8 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
             /** @var Calc_UnitValue $unitValue */
             $unitValue = $component['operand'];
 
-            // Multiplication des valeurs par leur facteur de Conversion.
-            $newDigitalValue = $unitValue->getDigitalValue() * $unitValue->getUnit()->getConversionFactor();
+            // Conversion dans l'unité de résultat
+            $newDigitalValue = $unitValue->convertTo($calculationUnit)->getDigitalValue();
 
             $value = new Calc_Value($newDigitalValue, $unitValue->getRelativeUncertainty());
 
@@ -104,26 +106,22 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
      */
     protected function calculateProduct()
     {
-        $facteurConversion = 1;
-
         // Units ----------------------------------------------------
         $calcUnit = new Calc_Calculation_Unit();
         $calcUnit->operation = Calc_Calculation::MULTIPLY_OPERATION;
 
         foreach ($this->components as $component) {
-            // Si il s'agit d'une division.
-            if ($component['signExponent'] == Calc_Calculation::DIVISION) {
-                // On prend l'inverse du facteur de conversion.
-                $facteurConversion /= $component['operand']->getUnit()->getConversionFactor();
-            } elseif ($component['signExponent'] == Calc_Calculation::PRODUCT) {
-                // Sinon on prend le facteur de conversion.
-                $facteurConversion *= $component['operand']->getUnit()->getConversionFactor();
-            }
             // On ajoute les composants du produit.
             $calcUnit->addComponents($component['operand']->getUnit(), $component['signExponent']);
         }
+
         // On calcul le produit des unités.
         $calculationUnit = $calcUnit->calculate();
+
+        // On récupère le facteur de conversion
+        /** @var MultiplicationResult $multiplicationResult */
+        $multiplicationResult = $calcUnit->getOperationResult();
+        $conversionFactor = $multiplicationResult->getConversionFactor();
 
         // Values ----------------------------------------------------
         $calcValue = new Calc_Calculation_Value();
@@ -136,8 +134,8 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
         }
         // On calcul la somme des valeurs.
         $calculationValue = $calcValue->calculate();
-        // On multpilie le resultat par le facteur de conversion.
-        $calculationDigitalValue = $calculationValue->getDigitalValue() * $facteurConversion;
+        // On multiplie le resultat par le facteur de conversion.
+        $calculationDigitalValue = $calculationValue->getDigitalValue() * $conversionFactor;
 
         // On rempli une unitValue avec avec la valeur et l'unité calculée
         return new Calc_UnitValue(
@@ -146,5 +144,4 @@ class Calc_Calculation_UnitValue extends Calc_Calculation
             $calculationValue->getRelativeUncertainty()
         );
     }
-
 }

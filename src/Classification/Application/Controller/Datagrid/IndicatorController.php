@@ -5,8 +5,8 @@ use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
 use Core\Annotation\Secure;
 use Core\Translation\TranslatedString;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use Unit\UnitAPI;
-use Unit\IncompatibleUnitsException;
 
 class Classification_Datagrid_IndicatorController extends UI_Controller_Datagrid
 {

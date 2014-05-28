@@ -44,9 +44,7 @@ class NumericConstantAlgo extends NumericAlgo
     {
         $errors = parent::checkConfig();
         // On vérifie que l'unité associée à cet algorithme existe bien.
-        try {
-            $this->unitValue->getUnit()->getNormalizedUnit();
-        } catch (Core_Exception_NotFound $e) {
+        if (! $this->unitValue->getUnit()->exists()) {
             $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage("L'unité '" . $this->unitValue->getUnit()->getRef() . "' associée à l'algorithme '"
@@ -54,7 +52,7 @@ class NumericConstantAlgo extends NumericAlgo
             $errors[] = $configError;
         }
         // On vérifie que la valeur associée à cet algorithme existe bien
-        if (!is_numeric($this->unitValue->getDigitalValue())) {
+        if (! is_numeric($this->unitValue->getDigitalValue())) {
             $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
             $configError->setMessage("Aucune valeur n'est associée à l'algorithme '" . $this->ref);
