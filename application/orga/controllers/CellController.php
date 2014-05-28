@@ -188,8 +188,9 @@ class Orga_CellController extends Core_Controller
                 $purpose .= __('User', 'user', 'users');
             }
             // Inventory purpose.
-            $isNarrowerGranularityInventory = $narrowerGranularity->getCellsMonitorInventory()
-                || ($narrowerGranularity === $granularityForInventoryStatus);
+            $isNarrowerGranularityInventory = ($narrowerGranularity->getCellsMonitorInventory()
+                    || ($narrowerGranularity === $granularityForInventoryStatus))
+                && ($this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell));
             if ($isNarrowerGranularityInventory) {
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
@@ -453,7 +454,8 @@ class Orga_CellController extends Core_Controller
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
             && $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell)
             && $this->acl->isAllowed($connectedUser, Actions::INPUT, $cell));
-        $showInventory = $narrowerGranularity->getCellsMonitorInventory() || $editInventory;
+        $showInventory = ($narrowerGranularity->getCellsMonitorInventory() || $editInventory)
+            && ($this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell));;
         $showInventoryProgress = false;
         if ($showInventoryProgress) {
             foreach ($narrowerGranularity->getNarrowerGranularities() as $narrowerInputGranularity) {
