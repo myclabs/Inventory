@@ -40,8 +40,8 @@ class PopulateOrga extends AbstractPopulateOrga
         // Création des granularités.
         // Params : Organization, axes[Axis], navigable
         // OptionalParams : orgaTab=false, aCL=true, aFTab=false, dWCubes=false, genericAction=false, contextAction=false, inputDocs=false
-        $granularityGlobal = $this->createGranularity($organization, [],                                                        true,  true,  true,  true,   true,  false, false, false);
-        $granularity_site = $this->createGranularity($organization, [$axis_site],                                               true,  false, true,  false,  true,  false, false, true );
+        $granularityGlobal = $this->createGranularity($organization, [],                                                        true, false, true,  true, true,  true, false, false, false);
+        $granularity_site = $this->createGranularity($organization, [$axis_site],                                               true, false, false, true, false, true, false, false, true );
 
         // Granularité des inventaires
         // $organization->setGranularityForInventoryStatus($granularity_annee_zone_marque);
