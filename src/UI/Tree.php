@@ -1091,6 +1091,7 @@ class UI_Tree extends UI_Generic
         $broker->view->headScript()->appendFile('yui/build/connection/connection-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/json/json-min.js', 'text/javascript');
 
+        $broker->view->headScript()->appendFile('scripts/ui/form-ajax.js', 'text/javascript');
         $broker->view->headScript()->appendFile('scripts/ui/form-action.js', 'text/javascript');
         $broker->view->headLink()->appendStylesheet('markitup/skins/markitup/style.css');
         $broker->view->headLink()->appendStylesheet('markitup/skins/textile/style.css');
