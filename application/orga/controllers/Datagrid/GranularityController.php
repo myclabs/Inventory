@@ -48,7 +48,13 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $data['relevance'] = $granularity->getCellsControlRelevance();
             $data['input'] = $granularity->isInput();
             $data['afs'] = $granularity->hasInputGranularities();
-            $data['inventory'] = ($granularity === $granularityForinventoryStatus);
+            $data['inventory'] = (($granularity === $granularityForinventoryStatus) ?
+                $this->cellList('monitoring', ___('Orga', 'inventory', 'editing')) :
+                ($granularity->getCellsMonitorInventory() ?
+                    'monitoring' :
+                    'none'
+                )
+            );
             $data['reports'] = $granularity->getCellsGenerateDWCubes();
             $data['acl'] = $granularity->getCellsWithACL();
             if ((!$granularity->hasAxes()) || $data['relevance'] || $data['input']
@@ -57,6 +63,9 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             }
             if (!$data['input']) {
                 $this->editableCell($data['input'], false);
+            }
+            if ($granularity === $granularityForinventoryStatus) {
+                $this->editableCell($data['inventory'], false);
             }
             $this->addLine($data);
         }

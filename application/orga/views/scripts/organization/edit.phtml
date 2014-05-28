@@ -48,6 +48,17 @@ $this->tabView->display();
         $('#relevance').html($('#relevance').attr('data-loading'));
         $('#relevance').trigger('loadTab.muih', [$('#content ul.nav-tabs li.active a').attr('data-src')]);
     });
+    $('#inventory').on('successSubmit', $('#organizationInventory<?=$this->organization->id?>'), function(e, data) {
+        if (data.data.updated) {
+            $('#inventory').html($('#inventory').attr('data-loading'));
+            $('#inventory').trigger('loadTab.muih', [$('#content ul.nav-tabs li.active a').attr('data-src')]);
+        }
+    });
+    $('#inventory').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_inventory'), function(e, data) {
+        addMessage(data.message, 'success');
+        $('#inventory').html($('#inventory').attr('data-loading'));
+        $('#inventory').trigger('loadTab.muih', [$('#content ul.nav-tabs li.active a').attr('data-src')]);
+    });
     $('#afs').on('granularityAdded', $('#addGranularity<?=$this->organization->id?>_afs'), function(e, data) {
         addMessage(data.message, 'success');
         $('#afs').html($('#afs').attr('data-loading'));

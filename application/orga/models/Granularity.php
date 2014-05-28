@@ -89,6 +89,13 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected $cellsControlRelevance = false;
 
     /**
+     * Défini si les cellules de la granularité définissent la pertinence.
+     *
+     * @var bool
+     */
+    protected $cellsMonitorInventory = false;
+
+    /**
      * Indique la Granularity configurant cette Granularity de saisie.
      *
      * @var Orga_Model_Granularity
@@ -598,9 +605,44 @@ class Orga_Model_Granularity extends Core_Model_Entity
     }
 
     /**
+     * Défini si la Granularity est utilisé pour suivre le status des inventaires.
+     *
+     * @param bool $bool
+     *
+     * @throws Core_Exception_InvalidArgument
+     * @throws Core_Exception_UndefinedAttribute
+     */
+    public function setCellsMonitorInventory($bool)
+    {
+        if ($this->cellsMonitorInventory !== $bool) {
+            if ($bool) {
+                try {
+                    $granularityForInventoryStatus = $this->getOrganization()->getGranularityForInventoryStatus();
+                } catch (Core_Exception_UndefinedAttribute $e) {
+                    throw new Core_Exception_User('Orga', 'inventory', 'monitoringInventoryWithoutGranularity');
+                }
+                if (!$this->isNarrowerThan($granularityForInventoryStatus)) {
+                    throw new Core_Exception_User('Orga', 'inventory', 'monitoringNotNarrowerThanGranularity');
+                }
+            }
+            $this->cellsMonitorInventory = $bool;
+        }
+    }
+
+    /**
+     * Indique si les cellules de la granularité permettent de suivre le status de l'inventaire.
+     *
+     * @return bool
+     */
+    public function getCellsMonitorInventory()
+    {
+        return $this->cellsMonitorInventory;
+    }
+
+    /**
      * Défini si la Granularity est utilisé pour configurer la pertinence des cellules.
      *
-     * @param $bool
+     * @param bool $bool
      */
     public function setCellsControlRelevance($bool)
     {

@@ -76,5 +76,56 @@
                 <seg>Users — [CELL]</seg>
             </tuv>
         </tu>
+
+        <tu tuid="editing">
+            <tuv xml:lang="fr">
+                <seg>Édition</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Editing</seg>
+            </tuv>
+        </tu>
+        <tu tuid="monitoring">
+            <tuv xml:lang="fr">
+                <seg>Suivi</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Monitoring</seg>
+            </tuv>
+        </tu>
+        <tu tuid="none">
+            <tuv xml:lang="fr">
+                <seg>-</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>-</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="editInventoryExplanation">
+            <tuv xml:lang="fr">
+                <seg>Si le niveau organisationnel souhaité pour l'édition du statut des collectes n'existe pas encore, vous pouvez le créer dans l'onglet "Niveaux (synthèse)".</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>If the organizational level you want doesn't exist, you can create it in the "Levels (synthesis)" tab.</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="monitoringInventoryWithoutGranularity">
+            <tuv xml:lang="fr">
+                <seg>Impossible d'ajouter un niveau de suivi des collectes sans en avoir défini le niveau de gestion.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Can't add a inventory monitoring level without set an editing level.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="monitoringNotNarrowerThanGranularity">
+            <tuv xml:lang="fr">
+                <seg>Impossible d'ajouter un niveau de suivi des collectes qui n'est pas plus fin que le niveau de gestion.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Can't add a inventory monitoring level which isn't narrower than the editing level.</seg>
+            </tuv>
+        </tu>
     </body>
 </tmx>

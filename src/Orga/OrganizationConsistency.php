@@ -168,10 +168,6 @@ class Orga_OrganizationConsistency
         $result['controlMemberChildren'] = $checkNarrowerMember;
         $result['failureMemberChildren'] = $text3;
 
-        $result['okCrossedGranularities'] = empty($listCrossedGranularities);
-        $result['controlCrossedGranularities'] = $checkCrossedGranularities;
-        $result['failureCrossedGranularities'] = $text4;
-
         return $result;
     }
 }

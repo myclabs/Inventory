@@ -204,6 +204,9 @@ class Orga_Service_OrganizationService
                 case 'relevance':
                     $granularity->setCellsControlRelevance($value);
                     break;
+                case 'inventory':
+                    $granularity->setCellsMonitorInventory($value);
+                    break;
                 case 'afs':
                     try {
                         $inputConfigGranularity = $organization->getGranularityByRef(
@@ -252,6 +255,9 @@ class Orga_Service_OrganizationService
             switch ($attribute) {
                 case 'relevance':
                     $granularity->setCellsControlRelevance($value);
+                    break;
+                case 'inventory':
+                    $granularity->setCellsMonitorInventory($value);
                     break;
                 case 'afs':
                     try {

@@ -43,13 +43,14 @@ $columnAfs->valueTrue = '<i class="fa fa-check"></i> '.___('UI', 'other', 'yes')
 $columnAfs->valueFalse = '<i class="fa fa-times"></i> '.___('UI', 'other', 'no');
 $datagridGranularities->addCol($columnAfs);
 
-$columnInventory = new UI_Datagrid_Col_Bool('inventory', __('Orga', 'inventory', 'inventory'));
+$columnInventory = new UI_Datagrid_Col_List('inventory', __('Orga', 'inventory', 'inventory'));
 $columnInventory->addable = false;
-$columnInventory->editable = false;
-$columnInventory->textTrue = ___('UI', 'other', 'yes');
-$columnInventory->textFalse = ___('UI', 'other', 'no');
-$columnInventory->valueTrue = '<i class="fa fa-check"></i> '.___('UI', 'other', 'yes');
-$columnInventory->valueFalse = '<i class="fa fa-times"></i> '.___('UI', 'other', 'no');
+$columnInventory->editable = true;
+$columnInventory->withEmptyElement = false;
+$columnInventory->list = [
+    'monitoring' => __('Orga', 'inventory', 'monitoring'),
+    'none' => '-'
+];
 $datagridGranularities->addCol($columnInventory);
 
 $columnCube = new UI_Datagrid_Col_Bool('reports', ___('DW', 'name', 'analyses'));

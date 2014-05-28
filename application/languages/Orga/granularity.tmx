@@ -28,6 +28,14 @@
                 <seg>Levels (synthesis)</seg>
             </tuv>
         </tu>
+        <tu tuid="inventoryGranularity">
+            <tuv xml:lang="fr">
+                <seg>Niveau d'édition des collectes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Levels editing inventory status</seg>
+            </tuv>
+        </tu>
         <tu tuid="aclGranularities">
             <tuv xml:lang="fr">
                 <seg>Niveaux contrôlant les accès utilisateurs</seg>
@@ -112,6 +120,14 @@
                 <seg>Input level</seg>
             </tuv>
         </tu>
+        <tu tuid="addGranularitySelectAxesInventoryLevel">
+            <tuv xml:lang="fr">
+                <seg>Niveau pour le suivi des collectes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inventory monitoring level</seg>
+            </tuv>
+        </tu>
         <tu tuid="addGranularitySelectAxesAFConfigLevel">
             <tuv xml:lang="fr">
                 <seg>Niveau de choix des formulaires</seg>
@@ -166,6 +182,14 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Creation of a relevance configuration level</seg>
+            </tuv>
+        </tu>
+        <tu tuid="addGranularityInventory">
+            <tuv xml:lang="fr">
+                <seg>Ajout d'un niveau de suivi des collectes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of an inventory monitoring level</seg>
             </tuv>
         </tu>
         <tu tuid="addGranularityInput">
