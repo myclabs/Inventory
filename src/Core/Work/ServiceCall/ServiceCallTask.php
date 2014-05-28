@@ -4,7 +4,8 @@ namespace Core\Work\ServiceCall;
 
 use Core\Work\BaseTaskInterface;
 use Core\Work\BaseTaskTrait;
-use Doctrine\Common\Persistence\Proxy;
+use Core\Work\SerializedEntity;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
 use MyCLabs\Work\Task\ServiceCall;
 
@@ -13,9 +14,14 @@ use MyCLabs\Work\Task\ServiceCall;
  *
  * @author matthieu.napoli
  */
-class ServiceCallTask extends ServiceCall implements BaseTaskInterface
+class ServiceCallTask extends ServiceCall implements BaseTaskInterface, \Serializable
 {
     use BaseTaskTrait;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
 
     /**
      * @param string $serviceName Name of the service class
@@ -30,30 +36,23 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
         $this->setTaskLabel($taskLabel);
     }
 
-    public function reloadEntities(EntityManager $entityManager)
+    public function reloadEntities()
     {
-        $this->reloadArray($this->parameters, $entityManager);
-    }
-
-    protected function reloadArray(array &$entitiesArray, EntityManager $entityManager)
-    {
-        foreach ($entitiesArray as $i => $entity) {
-            // Gère les proxies
-            if ($entity instanceof Proxy) {
-                $realClassName = $entityManager->getClassMetadata(get_class($entity))->getName();
-                $entitiesArray[$i] = $entityManager->find($realClassName, $entity->getId());
-                continue;
+        $unserializeEntities = function (array $data) use (&$unserializeEntities) {
+            $newData = [];
+            foreach ($data as $parameter => $value) {
+                if ($value instanceof SerializedEntity) {
+                    $newData[$parameter] = $this->entityManager->find($value->class, $value->id);
+                } elseif (is_array($value)) {
+                    $newData[$parameter] = $unserializeEntities($value);
+                } else {
+                    $newData[$parameter] = $value;
+                }
             }
+            return $newData;
+        };
 
-            // Vérifie que c'est une entité Doctrine
-            if (is_object($entity) && !$entityManager->getMetadataFactory()->isTransient(get_class($entity))) {
-                $entitiesArray[$i] = $entityManager->find(get_class($entity), $entity->getId());
-            }
-
-            if (is_array($entity)) {
-                $this->reloadArray($entitiesArray[$i], $entityManager);
-            }
-        }
+        $this->parameters = $unserializeEntities($this->parameters);
     }
 
     /**
@@ -62,5 +61,51 @@ class ServiceCallTask extends ServiceCall implements BaseTaskInterface
     public function __toString()
     {
         return "$this->serviceName::$this->methodName";
+    }
+
+    /**
+     * Gestion spéciale des entités dans le tableau des paramètres.
+     *
+     * @return string
+     */
+    public function serialize()
+    {
+        $data = get_object_vars($this);
+        unset($data['entityManager']);
+
+        $metadataFactory = $this->entityManager->getMetadataFactory();
+
+        $serializeEntities = function (array $parameters) use (&$serializeEntities, $metadataFactory) {
+            $newParameters = [];
+            foreach ($parameters as $i => $parameter) {
+                if (is_object($parameter) && !$metadataFactory->isTransient(ClassUtils::getClass($parameter))) {
+                    // Si c'est une entité Doctrine
+                    $newParameters[$i] = new SerializedEntity(ClassUtils::getClass($parameter), $parameter->getId());
+                } elseif (is_array($parameter)) {
+                    $newParameters[$i] = $serializeEntities($parameter);
+                } else {
+                    $newParameters[$i] = $parameter;
+                }
+            }
+            return $newParameters;
+        };
+
+        $data['parameters'] = $serializeEntities($this->parameters);
+
+        return serialize($data);
+    }
+
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+
+        foreach ($data as $parameter => $value) {
+            $this->$parameter = $value;
+        }
+    }
+
+    public function setEntityManager(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
     }
 }
