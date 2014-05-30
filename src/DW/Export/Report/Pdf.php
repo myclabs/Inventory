@@ -92,7 +92,7 @@ class DW_Export_Report_Pdf extends Export_Pdf
         $this->html .= '<body>';
         $this->html .= '<div class="pdf">';
         $this->html .= '<h2>'.$this->translator->get($report->getCube()->getLabel()).'</h2>';
-        $this->html .= '<h2>'.$report->getLabel().'</h2>';
+        $this->html .= '<h2>'.$translator->get($report->getLabel()).'</h2>';
         $this->html .= '<h3>'.__('UI', 'name', 'configuration').'</h3>';
 
         // Parcourt des configs
