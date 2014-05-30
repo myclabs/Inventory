@@ -439,7 +439,7 @@ class DW_Form_configuration extends GenericTag
             $axisFilterWrapper->appendContent($membersGroup);
 
             $membersSelect = new GenericTag('select');
-            $membersSelect->setAttribute('name', $axis->getRef().'_members');
+            $membersSelect->setAttribute('name', $axis->getRef().'_members[]');
             $membersSelect->addClass('form-control');
             $membersGroup->appendContent($membersSelect);
 
