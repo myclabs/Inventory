@@ -30,7 +30,7 @@ class UI_Form_Decorator_Help extends Zend_Form_Decorator_Abstract
             'onMouseover'  => '$(this).children(\'.fa-question-circle\').css(\'opacity\', 1);',
             'rel'          => 'popover',
             'data-content' => 'helpWillBeReplace',
-            'style'        => 'display: inline-block; margin-left: 5px; padding-top: -5px;',
+            'style'        => 'display: inline; margin-left: 5px;',
         );
 
         $iOptions = array(
