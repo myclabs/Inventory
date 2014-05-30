@@ -25,6 +25,7 @@ class Orga_Test_CellTest
         $suite = new PHPUnit_Framework_TestSuite();
         $suite->addTestSuite('Orga_Test_CellAttributes');
         $suite->addTestSuite('Orga_Test_CellHierarchy');
+        $suite->addTestSuite('Orga_Test_CellAdjacent');
         return $suite;
     }
 
@@ -1705,6 +1706,623 @@ class Orga_Test_CellHierarchy extends TestCase
         $this->assertSame([$this->cell4_1e2b], $this->cell3_11c12a2b->getChildCells());
 
         $this->assertSame([$this->cell3_11a12a2b, $this->cell3_11a12b2b, $this->cell3_11b12a2b, $this->cell3_11b12b2b, $this->cell3_11c12a2b, $this->cell3_11c12b2b, $this->cell4_1a2b, $this->cell4_1b2b, $this->cell4_1c2b, $this->cell4_1d2b, $this->cell4_1e2b, $this->cell4_1f2b], $this->cell5_2b->getChildCells());
+    }
+
+}
+
+
+/**
+ * Tests de la classe Organization
+ * @package Organization
+ * @subpackage Test
+ */
+class Orga_Test_CellAdjacent extends TestCase
+{
+    /**
+     * @var Orga_Model_Organization
+     */
+    protected $organization;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis1;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis11;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis111;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis12;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis2;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1c;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1d;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1e;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1f;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1g;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1h;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1i;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1j;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1k;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1l;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member11a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member11b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member11c;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member111a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member111b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member12a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member12b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member2a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member2b;
+    /**
+     * @var Orga_Model_Granularity
+     */
+    protected $granularity0;
+    /**
+     * @var Orga_Model_Granularity
+     */
+    protected $granularity1;
+    /**
+     * @var Orga_Model_Granularity
+     */
+    protected $granularity2;
+    /**
+     * @var Orga_Model_Granularity
+     */
+    protected $granularity3;
+    /**
+     * @var Orga_Model_Granularity
+     */
+    protected $granularity4;
+    /**
+     * @var Orga_Model_Granularity
+     */
+    protected $granularity5;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell0_0;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell1_111a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell1_111b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell2_11a12a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell2_11b12a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell2_11c12a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell2_11a12b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell2_11b12b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell2_11c12b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11a12a2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11b12a2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11c12a2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11a12b2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11b12b2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11c12b2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11a12a2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11b12a2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11c12a2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11a12b2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11b12b2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell3_11c12b2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1a2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1b2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1c2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1d2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1e2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1f2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1g2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1h2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1i2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1j2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1k2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1l2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1a2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1b2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1c2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1d2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1e2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1f2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1g2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1h2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1i2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1j2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1k2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell4_1l2b;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell5_2a;
+    /**
+     * @var Orga_Model_Cell
+     */
+    protected $cell5_2b;
+
+    /**
+     * Set up
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+
+        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
+        $this->axis1->setMemberPositioning(true);
+        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
+        $this->axis11->setMemberPositioning(true);
+        $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
+        $this->axis111->setMemberPositioning(true);
+        $this->axis111->setContextualize(true);
+        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
+        $this->axis12->setMemberPositioning(true);
+        $this->axis12->setContextualize(true);
+        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
+
+        $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
+        $this->member111b = new Orga_Model_Member($this->axis111, 'ref111_b');
+
+        $this->member11a = new Orga_Model_Member($this->axis11, 'ref11_a', [$this->member111a]);
+        $this->member11b = new Orga_Model_Member($this->axis11, 'ref11_b', [$this->member111b]);
+        $this->member11c = new Orga_Model_Member($this->axis11, 'ref11_c', [$this->member111b]);
+
+        $this->member12a = new Orga_Model_Member($this->axis12, 'ref12_a');
+        $this->member12b = new Orga_Model_Member($this->axis12, 'ref12_b');
+
+        $this->member1a = new Orga_Model_Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
+        $this->member1b = new Orga_Model_Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
+        $this->member1c = new Orga_Model_Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
+        $this->member1d = new Orga_Model_Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
+        $this->member1e = new Orga_Model_Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
+        $this->member1f = new Orga_Model_Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
+        $this->member1g = new Orga_Model_Member($this->axis1, 'ref1_g', [$this->member11a, $this->member12a]);
+        $this->member1h = new Orga_Model_Member($this->axis1, 'ref1_h', [$this->member11a, $this->member12b]);
+        $this->member1i = new Orga_Model_Member($this->axis1, 'ref1_i', [$this->member11a, $this->member12a]);
+        $this->member1j = new Orga_Model_Member($this->axis1, 'ref1_j', [$this->member11b, $this->member12b]);
+        $this->member1k = new Orga_Model_Member($this->axis1, 'ref1_k', [$this->member11c, $this->member12a]);
+        $this->member1l = new Orga_Model_Member($this->axis1, 'ref1_l', [$this->member11c, $this->member12b]);
+
+        $this->member2a = new Orga_Model_Member($this->axis2, 'ref2_a');
+        $this->member2b = new Orga_Model_Member($this->axis2, 'ref2_b');
+
+        $this->granularity0 = new Orga_Model_Granularity($this->organization, []);
+        $this->granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);
+        $this->granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
+        $this->granularity3 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12, $this->axis2]);
+        $this->granularity4 = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis2]);
+        $this->granularity5 = new Orga_Model_Granularity($this->organization, [$this->axis2]);
+
+        $this->cell0_0 = $this->granularity0->getCellByMembers([]);
+
+        $this->cell1_111a = $this->granularity1->getCellByMembers([$this->member111a]);
+        $this->cell1_111b = $this->granularity1->getCellByMembers([$this->member111b]);
+
+        $this->cell2_11a12a = $this->granularity2->getCellByMembers([$this->member11a, $this->member12a]);
+        $this->cell2_11b12a = $this->granularity2->getCellByMembers([$this->member11b, $this->member12a]);
+        $this->cell2_11c12a = $this->granularity2->getCellByMembers([$this->member11c, $this->member12a]);
+        $this->cell2_11a12b = $this->granularity2->getCellByMembers([$this->member11a, $this->member12b]);
+        $this->cell2_11b12b = $this->granularity2->getCellByMembers([$this->member11b, $this->member12b]);
+        $this->cell2_11c12b = $this->granularity2->getCellByMembers([$this->member11c, $this->member12b]);
+
+        $this->cell3_11a12a2a = $this->granularity3->getCellByMembers([$this->member11a, $this->member12a, $this->member2a]);
+        $this->cell3_11b12a2a = $this->granularity3->getCellByMembers([$this->member11b, $this->member12a, $this->member2a]);
+        $this->cell3_11c12a2a = $this->granularity3->getCellByMembers([$this->member11c, $this->member12a, $this->member2a]);
+        $this->cell3_11a12b2a = $this->granularity3->getCellByMembers([$this->member11a, $this->member12b, $this->member2a]);
+        $this->cell3_11b12b2a = $this->granularity3->getCellByMembers([$this->member11b, $this->member12b, $this->member2a]);
+        $this->cell3_11c12b2a = $this->granularity3->getCellByMembers([$this->member11c, $this->member12b, $this->member2a]);
+        $this->cell3_11a12a2b = $this->granularity3->getCellByMembers([$this->member11a, $this->member12a, $this->member2b]);
+        $this->cell3_11b12a2b = $this->granularity3->getCellByMembers([$this->member11b, $this->member12a, $this->member2b]);
+        $this->cell3_11c12a2b = $this->granularity3->getCellByMembers([$this->member11c, $this->member12a, $this->member2b]);
+        $this->cell3_11a12b2b = $this->granularity3->getCellByMembers([$this->member11a, $this->member12b, $this->member2b]);
+        $this->cell3_11b12b2b = $this->granularity3->getCellByMembers([$this->member11b, $this->member12b, $this->member2b]);
+        $this->cell3_11c12b2b = $this->granularity3->getCellByMembers([$this->member11c, $this->member12b, $this->member2b]);
+
+        $this->cell4_1a2a = $this->granularity4->getCellByMembers([$this->member1a, $this->member2a]);
+        $this->cell4_1b2a = $this->granularity4->getCellByMembers([$this->member1b, $this->member2a]);
+        $this->cell4_1c2a = $this->granularity4->getCellByMembers([$this->member1c, $this->member2a]);
+        $this->cell4_1d2a = $this->granularity4->getCellByMembers([$this->member1d, $this->member2a]);
+        $this->cell4_1e2a = $this->granularity4->getCellByMembers([$this->member1e, $this->member2a]);
+        $this->cell4_1f2a = $this->granularity4->getCellByMembers([$this->member1f, $this->member2a]);
+        $this->cell4_1g2a = $this->granularity4->getCellByMembers([$this->member1g, $this->member2a]);
+        $this->cell4_1h2a = $this->granularity4->getCellByMembers([$this->member1h, $this->member2a]);
+        $this->cell4_1i2a = $this->granularity4->getCellByMembers([$this->member1i, $this->member2a]);
+        $this->cell4_1j2a = $this->granularity4->getCellByMembers([$this->member1j, $this->member2a]);
+        $this->cell4_1k2a = $this->granularity4->getCellByMembers([$this->member1k, $this->member2a]);
+        $this->cell4_1l2a = $this->granularity4->getCellByMembers([$this->member1l, $this->member2a]);
+        $this->cell4_1a2b = $this->granularity4->getCellByMembers([$this->member1a, $this->member2b]);
+        $this->cell4_1b2b = $this->granularity4->getCellByMembers([$this->member1b, $this->member2b]);
+        $this->cell4_1c2b = $this->granularity4->getCellByMembers([$this->member1c, $this->member2b]);
+        $this->cell4_1d2b = $this->granularity4->getCellByMembers([$this->member1d, $this->member2b]);
+        $this->cell4_1e2b = $this->granularity4->getCellByMembers([$this->member1e, $this->member2b]);
+        $this->cell4_1f2b = $this->granularity4->getCellByMembers([$this->member1f, $this->member2b]);
+        $this->cell4_1g2b = $this->granularity4->getCellByMembers([$this->member1g, $this->member2b]);
+        $this->cell4_1h2b = $this->granularity4->getCellByMembers([$this->member1h, $this->member2b]);
+        $this->cell4_1i2b = $this->granularity4->getCellByMembers([$this->member1i, $this->member2b]);
+        $this->cell4_1j2b = $this->granularity4->getCellByMembers([$this->member1j, $this->member2b]);
+        $this->cell4_1k2b = $this->granularity4->getCellByMembers([$this->member1k, $this->member2b]);
+        $this->cell4_1l2b = $this->granularity4->getCellByMembers([$this->member1l, $this->member2b]);
+
+        $this->cell5_2a = $this->granularity5->getCellByMembers([$this->member2a]);
+        $this->cell5_2b = $this->granularity5->getCellByMembers([$this->member2b]);
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedexceptionMessage Given axis needs to be used by this cell's granularity and allows member positioning.
+     */
+    function testGetPreviousCellForAxisNotUsedByGranularity()
+    {
+        $this->cell0_0->getPreviousCellForAxis($this->axis1);
+    }
+
+    function testGetPreviousForAxis()
+    {
+        $this->assertNull($this->cell1_111a->getPreviousCellForAxis($this->axis111));
+        $this->assertSame($this->cell1_111a, $this->cell1_111b->getPreviousCellForAxis($this->axis111));
+
+        $this->assertNull($this->cell2_11a12a->getPreviousCellForAxis($this->axis11));
+        $this->assertNull($this->cell2_11a12b->getPreviousCellForAxis($this->axis11));
+        $this->assertNull($this->cell2_11b12a->getPreviousCellForAxis($this->axis11));
+        $this->assertNull($this->cell2_11b12b->getPreviousCellForAxis($this->axis11));
+        $this->assertSame($this->cell2_11b12a, $this->cell2_11c12a->getPreviousCellForAxis($this->axis11));
+        $this->assertSame($this->cell2_11b12b, $this->cell2_11c12b->getPreviousCellForAxis($this->axis11));
+
+        $this->assertNull($this->cell2_11a12a->getPreviousCellForAxis($this->axis12));
+        $this->assertSame($this->cell2_11a12a, $this->cell2_11a12b->getPreviousCellForAxis($this->axis12));
+        $this->assertNull($this->cell2_11b12a->getPreviousCellForAxis($this->axis12));
+        $this->assertSame($this->cell2_11b12a, $this->cell2_11b12b->getPreviousCellForAxis($this->axis12));
+        $this->assertNull($this->cell2_11c12a->getPreviousCellForAxis($this->axis12));
+        $this->assertSame($this->cell2_11c12a, $this->cell2_11c12b->getPreviousCellForAxis($this->axis12));
+
+        $this->assertNull($this->cell3_11a12a2a->getPreviousCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11a12a2b->getPreviousCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11a12b2a->getPreviousCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11a12b2b->getPreviousCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11b12a2a->getPreviousCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11b12a2b->getPreviousCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11b12b2a->getPreviousCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11b12b2b->getPreviousCellForAxis($this->axis11));
+        $this->assertSame($this->cell3_11b12a2a, $this->cell3_11c12a2a->getPreviousCellForAxis($this->axis11));
+        $this->assertSame($this->cell3_11b12a2b, $this->cell3_11c12a2b->getPreviousCellForAxis($this->axis11));
+        $this->assertSame($this->cell3_11b12b2a, $this->cell3_11c12b2a->getPreviousCellForAxis($this->axis11));
+        $this->assertSame($this->cell3_11b12b2b, $this->cell3_11c12b2b->getPreviousCellForAxis($this->axis11));
+
+        $this->assertNull($this->cell3_11a12a2a->getPreviousCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11a12a2b->getPreviousCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11a12a2a, $this->cell3_11a12b2a->getPreviousCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11a12a2b, $this->cell3_11a12b2b->getPreviousCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11b12a2a->getPreviousCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11b12a2b->getPreviousCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11b12a2a, $this->cell3_11b12b2a->getPreviousCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11b12a2b, $this->cell3_11b12b2b->getPreviousCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11c12a2a->getPreviousCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11c12a2b->getPreviousCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11c12a2a, $this->cell3_11c12b2a->getPreviousCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11c12a2b, $this->cell3_11c12b2b->getPreviousCellForAxis($this->axis12));
+
+        $this->assertNull($this->cell4_1a2a->getPreviousCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1a2b->getPreviousCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1b2a->getPreviousCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1b2b->getPreviousCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1c2a->getPreviousCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1c2b->getPreviousCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1d2a->getPreviousCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1d2b->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1c2a, $this->cell4_1e2a->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1c2b, $this->cell4_1e2b->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1d2a, $this->cell4_1f2a->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1d2b, $this->cell4_1f2b->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1a2a, $this->cell4_1g2a->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1a2b, $this->cell4_1g2b->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1b2a, $this->cell4_1h2a->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1b2b, $this->cell4_1h2b->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1g2a, $this->cell4_1i2a->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1g2b, $this->cell4_1i2b->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1f2a, $this->cell4_1j2a->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1f2b, $this->cell4_1j2b->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1e2a, $this->cell4_1k2a->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1e2b, $this->cell4_1k2b->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1j2a, $this->cell4_1l2a->getPreviousCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1j2b, $this->cell4_1l2b->getPreviousCellForAxis($this->axis1));
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedexceptionMessage Given axis needs to be used by this cell's granularity and allows member positioning.
+     */
+    function testGetPreviousCellForAxisNotPositioning()
+    {
+        $this->cell4_1a2a->getPreviousCellForAxis($this->axis2);
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedexceptionMessage Given axis needs to be used by this cell's granularity and allows member positioning.
+     */
+    function testGetNextCellForAxisNotUsedByGranularity()
+    {
+        $this->cell0_0->getNextCellForAxis($this->axis1);
+    }
+
+    function testGetNextForAxis()
+    {
+        $this->assertSame($this->cell1_111b, $this->cell1_111a->getNextCellForAxis($this->axis111));
+        $this->assertNull($this->cell1_111b->getNextCellForAxis($this->axis111));
+
+        $this->assertNull($this->cell2_11a12a->getNextCellForAxis($this->axis11));
+        $this->assertNull($this->cell2_11a12b->getNextCellForAxis($this->axis11));
+        $this->assertSame($this->cell2_11c12a, $this->cell2_11b12a->getNextCellForAxis($this->axis11));
+        $this->assertSame($this->cell2_11c12b, $this->cell2_11b12b->getNextCellForAxis($this->axis11));
+        $this->assertNull($this->cell2_11c12a->getNextCellForAxis($this->axis11));
+        $this->assertNull($this->cell2_11c12b->getNextCellForAxis($this->axis11));
+
+        $this->assertSame($this->cell2_11a12b, $this->cell2_11a12a->getNextCellForAxis($this->axis12));
+        $this->assertNull($this->cell2_11a12b->getNextCellForAxis($this->axis12));
+        $this->assertSame($this->cell2_11b12b, $this->cell2_11b12a->getNextCellForAxis($this->axis12));
+        $this->assertNull($this->cell2_11b12b->getNextCellForAxis($this->axis12));
+        $this->assertSame($this->cell2_11c12b, $this->cell2_11c12a->getNextCellForAxis($this->axis12));
+        $this->assertNull($this->cell2_11c12b->getNextCellForAxis($this->axis12));
+
+        $this->assertNull($this->cell3_11a12a2a->getNextCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11a12a2b->getNextCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11a12b2a->getNextCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11a12b2b->getNextCellForAxis($this->axis11));
+        $this->assertSame($this->cell3_11c12a2a, $this->cell3_11b12a2a->getNextCellForAxis($this->axis11));
+        $this->assertSame($this->cell3_11c12a2b, $this->cell3_11b12a2b->getNextCellForAxis($this->axis11));
+        $this->assertSame($this->cell3_11c12b2a, $this->cell3_11b12b2a->getNextCellForAxis($this->axis11));
+        $this->assertSame($this->cell3_11c12b2b, $this->cell3_11b12b2b->getNextCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11c12a2a->getNextCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11c12a2b->getNextCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11c12b2a->getNextCellForAxis($this->axis11));
+        $this->assertNull($this->cell3_11c12b2b->getNextCellForAxis($this->axis11));
+
+        $this->assertSame($this->cell3_11a12b2a, $this->cell3_11a12a2a->getNextCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11a12b2b, $this->cell3_11a12a2b->getNextCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11a12b2a->getNextCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11a12b2b->getNextCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11b12b2a, $this->cell3_11b12a2a->getNextCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11b12b2b, $this->cell3_11b12a2b->getNextCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11b12b2a->getNextCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11b12b2b->getNextCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11c12b2a, $this->cell3_11c12a2a->getNextCellForAxis($this->axis12));
+        $this->assertSame($this->cell3_11c12b2b, $this->cell3_11c12a2b->getNextCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11c12b2a->getNextCellForAxis($this->axis12));
+        $this->assertNull($this->cell3_11c12b2b->getNextCellForAxis($this->axis12));
+
+        $this->assertSame($this->cell4_1g2a, $this->cell4_1a2a->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1g2b, $this->cell4_1a2b->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1h2a, $this->cell4_1b2a->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1h2b, $this->cell4_1b2b->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1e2a, $this->cell4_1c2a->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1e2b, $this->cell4_1c2b->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1f2a, $this->cell4_1d2a->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1f2b, $this->cell4_1d2b->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1k2a, $this->cell4_1e2a->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1k2b, $this->cell4_1e2b->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1j2a, $this->cell4_1f2a->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1j2b, $this->cell4_1f2b->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1i2a, $this->cell4_1g2a->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1i2b, $this->cell4_1g2b->getNextCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1h2a->getNextCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1h2b->getNextCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1i2a->getNextCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1i2b->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1l2a, $this->cell4_1j2a->getNextCellForAxis($this->axis1));
+        $this->assertSame($this->cell4_1l2b, $this->cell4_1j2b->getNextCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1k2a->getNextCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1k2b->getNextCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1l2a->getNextCellForAxis($this->axis1));
+        $this->assertNull($this->cell4_1l2b->getNextCellForAxis($this->axis1));
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedexceptionMessage Given axis needs to be used by this cell's granularity and allows member positioning.
+     */
+    function testGetNextCellForAxisNotPositioning()
+    {
+        $this->cell4_1a2a->getNextCellForAxis($this->axis2);
     }
 
 }

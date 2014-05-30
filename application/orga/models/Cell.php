@@ -323,7 +323,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 
         $criteriaAxis = new Criteria();
         $criteriaAxis->where($criteriaAxis->expr()->eq('axis', $axis));
-        $member = $this->members->matching($criteriaAxis);
+        $member = $this->members->matching($criteriaAxis)->toArray();
         return array_pop($member);
     }
 
@@ -841,6 +841,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             );
         }
 
+        if ($this->getMemberForAxis($axis)->getPosition() === 1) {
+            return null;
+        }
+
         return $this->getGranularity()->getCellByMembers(
             array_merge(
                 array_diff($this->getMembers(), [$this->getMemberForAxis($axis)]),
@@ -860,6 +864,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             throw new Core_Exception_InvalidArgument(
                 'Given axis needs to be used by this cell\'s granularity and allows member positioning.'
             );
+        }
+
+        if ($this->getMemberForAxis($axis)->getPosition() === $this->getMemberForAxis($axis)->getLastEligiblePosition()) {
+            return null;
         }
 
         return $this->getGranularity()->getCellByMembers(
