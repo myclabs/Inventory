@@ -775,7 +775,7 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * @return Core_Model_Entity
+     * @return Orga_Model_Member
      * @throws Core_Exception_InvalidArgument
      */
     public function getPreviousMember()
@@ -786,6 +786,10 @@ class Orga_Model_Member extends Core_Model_Entity
             );
         }
 
+        if ($this->getPosition() === 1) {
+            return null;
+        }
+
         return Orga_Model_Member::loadByPositionAndContext(
             ($this->getPosition() - 1),
             $this->getContext()
@@ -793,7 +797,7 @@ class Orga_Model_Member extends Core_Model_Entity
     }
 
     /**
-     * @return Core_Model_Entity
+     * @return Orga_Model_Member
      * @throws Core_Exception_InvalidArgument
      */
     public function getNextMember()
@@ -802,6 +806,10 @@ class Orga_Model_Member extends Core_Model_Entity
             throw new Core_Exception_InvalidArgument(
                 'This member needs to come from an axis allowing members positioning.'
             );
+        }
+
+        if ($this->getPosition() === $this->getLastEligiblePosition()) {
+            return null;
         }
 
         return Orga_Model_Member::loadByPositionAndContext(
