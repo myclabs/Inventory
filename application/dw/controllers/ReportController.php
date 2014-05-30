@@ -257,7 +257,7 @@ class DW_ReportController extends Core_Controller
                 } else if ($this->getParam($axis->getRef().'_memberNumberChoice') === 'one') {
                     $filterMemberRef = $this->getParam($axis->getRef().'_members');
                     try {
-                        $filterMember = DW_Model_Member::loadByRefAndAxis($filterMemberRef, $axis);
+                        $filterMember = DW_Model_Member::loadByRefAndAxis(reset($filterMemberRef), $axis);
                         $filter->addMember($filterMember);
                     } catch (Core_Exception_NotFound $e) {
                         $errors[$axis->getRef().'_members'] = __('DW', 'configValidation', 'filterMemberInvalid');
