@@ -225,7 +225,7 @@ class AF_AfController extends Core_Controller
     /**
      * Popup affichant l'expression d'un algo numérique sous forme de graphe
      * AJAX
-     * @Secure("viewInputAF")
+     * @Secure("public")
      */
     public function popupExpressionGraphAction()
     {
