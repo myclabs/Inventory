@@ -161,6 +161,9 @@ class UnitAPI
 
         array_walk($components, function ($component) use ($operation) {
             $unit = $component['unit'] instanceof UnitAPI ? $component['unit']->getRef() : $component['unit'];
+            if ($unit == '') {
+                throw UnknownUnitException::create($unit);
+            }
             $operation->addComponent(new OperationComponent($unit, $component['signExponent']));
         });
 
@@ -183,6 +186,9 @@ class UnitAPI
 
         $operation = new Addition();
         array_walk($components, function ($component) use ($operation) {
+            if ($component == '') {
+                throw UnknownUnitException::create($component);
+            }
             $operation->addComponent(new OperationComponent($component, 1));
         });
 
