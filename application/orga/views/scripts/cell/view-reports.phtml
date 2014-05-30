@@ -49,7 +49,7 @@ $cellReports = $this->cellReports;
             </td>
             <td>
                 <?php if (isset($cellReport['delete']) && $cellReport['delete']): ?>
-                <a href="orga/cell/remove-report/idCell/<?=$this->idCell?>/idReport/<?=$cellReport['delete']?>/" class="deleteReport withTooltip" title="<?=___('UI', 'verb', 'delete')?>">
+                <a href="orga/cell/remove-report/idCell/<?=$this->idCell?>/idReport/<?=$cellReport['idReport']?>/" class="delete-report withTooltip" title="<?=___('UI', 'verb', 'delete')?>">
                     <i class="fa fa-trash-o"></i>
                 </a>
                 <?php endif; ?>
