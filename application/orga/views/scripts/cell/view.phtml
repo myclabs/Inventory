@@ -219,10 +219,13 @@ if (count($file) > 0) {
                             <?php endif; ?>
                             <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" data-target="#inventoryUsers<?=$currentCell->id?>" href="orga/cell/view-inventory-users/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInventoryUsers')?>"><i class="fa fa-bullhorn fa-fw"></i></a>
                         <?php endif; ?>
-                        <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'contactAdministrators')?>" data-container="body"><i class="fa fa-user-md fa-fw"></i></a>
+                        <?php // Administrateurs ?>
+                        <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'contactAdministrators')?>" data-container="body"><i class="fa fa-life-ring fa-fw"></i></a>
+                        <?php // Users ?>
                         <?php if ($currentCell->showUsers) : ?>
                         <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" data-target="#users<?=$currentCell->id?>" href="orga/cell/view-users/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'editUsers')?>" data-container="body">(<?=$currentCell->numberUsers?>) <i class="fa fa-users fa-fw"></i></a>
                         <?php endif; ?>
+                        <?php // Reports ?>
                         <?php if ($currentCell->showReports) : ?>
                         <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="orga/cell/view-reports/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body"><i class="fa fa-bar-chart-o fa-fw"></i></a>
                         <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body"><i class="fa fa-download fa-fw"></i></a>
