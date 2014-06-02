@@ -1,12 +1,16 @@
-.inputProgress .progress {
+.af .inputProgress .progress {
     height: 30px;
 }
-.inputProgress .progress .progress-bar {
+.af .inputProgress .progress .progress-bar {
     line-height: 30px;
     font-size: 13px;
     font-weight: 300;
 }
 
-fieldset.collapse-wrapper legend a {
+.af fieldset.collapse-wrapper legend a {
     display: inline;
+}
+
+.af :invalid:focus {
+    border-color: #f09797;
 }

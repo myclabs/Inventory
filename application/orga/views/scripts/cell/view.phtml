@@ -190,7 +190,7 @@ if (count($file) > 0) {
                         <?php // Inventory ?>
                         <?php if ($currentCell->showInventory) : ?>
                             <span class="inventory-status withTooltip" title="<?=$currentCell->inventoryStatusTitle?>">
-                                <i class="fa fa-<?=(($currentCell->inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_CLOSED) ? 'lock' : ($currentCell->inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_ACTIVE) ? 'tasks' : 'ban')?> fa-fw"></i>
+                                <i class="fa fa-<?=(($currentCell->inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_CLOSED) ? 'lock' : ($currentCell->inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_ACTIVE) ? 'play' : 'ban')?> fa-fw"></i>
                             </span>
                             <?php if ($currentCell->showInventoryProgress) : ?>
                                 <div class="inventory-progress withPopover" title="<?=___('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsNotStartedMany') : ___('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsStartedMany') : ___('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryFinishedInputsNumber?> <?=($currentCell->inventoryFinishedInputsNumber > 1) ? ___('Orga', 'view', 'inputsCompletedMany') : ___('Orga', 'view', 'inputsCompletedSingle')?> <hr> <strong><?=(($currentCell->inventoryCompletion > 0) ? ($currentCell->inventoryCompletion + '% '.___('Orga', 'view', 'percentInputsCompleted')) : ___('Orga', 'view', 'noInputsCompleted'))?> </strong>" data-container="body">
@@ -219,10 +219,13 @@ if (count($file) > 0) {
                             <?php endif; ?>
                             <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" data-target="#inventoryUsers<?=$currentCell->id?>" href="orga/cell/view-inventory-users/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInventoryUsers')?>"><i class="fa fa-bullhorn fa-fw"></i></a>
                         <?php endif; ?>
-                        <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'contactAdministrators')?>" data-container="body"><i class="fa fa-user-md fa-fw"></i></a>
+                        <?php // Administrateurs ?>
+                        <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" href="#administrators<?=$currentCell->id?>" title="<?=___('Orga', 'view', 'contactAdministrators')?>" data-container="body"><i class="fa fa-life-ring fa-fw"></i></a>
+                        <?php // Users ?>
                         <?php if ($currentCell->showUsers) : ?>
                         <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" data-target="#users<?=$currentCell->id?>" href="orga/cell/view-users/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'editUsers')?>" data-container="body">(<?=$currentCell->numberUsers?>) <i class="fa fa-users fa-fw"></i></a>
                         <?php endif; ?>
+                        <?php // Reports ?>
                         <?php if ($currentCell->showReports) : ?>
                         <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" data-target="#reports<?=$currentCell->id?>" href="orga/cell/view-reports/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'analyzeData')?>" data-container="body"><i class="fa fa-bar-chart-o fa-fw"></i></a>
                         <a class="btn btn-default btn-sm withTooltip" data-toggle="modal" data-target="#exports<?=$currentCell->id?>" href="orga/cell/view-exports/idCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'exportData')?>" data-container="body"><i class="fa fa-download fa-fw"></i></a>
@@ -664,7 +667,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 var inventoryP = '';
                 var inventoryPopup = '';
                 if (this.showInventory) {
-                    var inventoryStatusIcon = (this.inventoryStatus == '<?=Orga_Model_Cell::INVENTORY_STATUS_CLOSED?>') ? 'lock' : (this.inventoryStatus == '<?=Orga_Model_Cell::INVENTORY_STATUS_ACTIVE?>') ? 'tasks' : 'ban';
+                    var inventoryStatusIcon = (this.inventoryStatus == '<?=Orga_Model_Cell::INVENTORY_STATUS_CLOSED?>') ? 'lock' : (this.inventoryStatus == '<?=Orga_Model_Cell::INVENTORY_STATUS_ACTIVE?>') ? 'play' : 'ban';
                     inventoryP +=
                         '<span class="inventory-status withTooltip" title="' + this.inventoryStatusTitle + '">' +
                             '<i class="fa fa-' + inventoryStatusIcon + ' fa-fw"></i>' +

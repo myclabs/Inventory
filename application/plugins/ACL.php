@@ -677,6 +677,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
             return Orga_Model_Cell::loadByDocLibraryForAFInputSetsPrimary($library);
         } catch (Core_Exception_NotFound $e) {
             // Pas de Cell
+            $this->logger->warning('No cell found for document library #' . $idLibrary);
         }
 
         throw new ForbiddenException();
@@ -937,13 +938,13 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
     {
         $cell = $this->getCellFromLibrary($request);
 
-        return $this->acl->isAllowed($identity, Actions::INPUT, $cell);
+        return $this->acl->isAllowed($identity, Actions::VIEW, $cell);
     }
 
     protected function editLibraryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $cell = $this->getCellFromLibrary($request);
 
-        return $this->acl->isAllowed($identity, Actions::INPUT, $cell);
+        return $this->acl->isAllowed($identity, Actions::VIEW, $cell);
     }
 }

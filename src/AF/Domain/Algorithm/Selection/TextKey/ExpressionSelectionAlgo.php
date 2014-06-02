@@ -4,6 +4,7 @@ namespace AF\Domain\Algorithm\Selection\TextKey;
 
 use AF\Domain\Algorithm\InputSet;
 use AF\Domain\Algorithm\Selection\TextKeySelectionAlgo;
+use AF\Domain\CalculationException;
 use Core_Exception_NotFound;
 use Exec\Execution\Select;
 use Exec\Provider\ValueInterface;
@@ -33,7 +34,14 @@ class ExpressionSelectionAlgo extends TextKeySelectionAlgo implements ValueInter
         $tecExpression = new Expression($this->expression, Expression::TYPE_SELECT);
 
         $executionSelect = new Select($tecExpression);
-        return $executionSelect->executeExpression($this);
+        $results = $executionSelect->executeExpression($this);
+
+        if (empty($results)) {
+            throw new CalculationException('No result from the selection algorithm named ' . $this->ref);
+        }
+
+        // Renvoie le premier résultat (normalement il ne devrait y'en avoir qu'un seul)
+        return reset($results);
     }
 
     /**

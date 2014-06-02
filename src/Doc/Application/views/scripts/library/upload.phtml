@@ -33,9 +33,10 @@ $library = $this->library;
     <?=__('Doc', 'library', 'uploading')?>
 </div>
 
-<div class="uploadingErrors hide alert alert-danger"></div>
+<div class="uploadingErrors alert alert-danger"></div>
 
 <script>
+    $("#library<?=$library->getId()?>_add .uploadingErrors").hide();
 
     // Début de l'upload
     $("#addDocument<?=$library->getId()?>").submit(function() {
