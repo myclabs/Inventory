@@ -320,8 +320,10 @@ $(document).ready(function() {
             || (selectDisplayType.attr('data-options') === false)) {
             selectDisplayType.attr('data-options', selectDisplayType.html());
         }
+        var oldValue = selectDisplayType.val();
         selectDisplayType.html(selectDisplayType.attr('data-options'));
         $('select[name="displayType"] option:not(.' + $('input[name="' + $('input[name="typeSumRatioChoice"]:checked', currentForm).val() + 'AxisNumberChoice"]:checked', currentForm).val() + ')', currentForm).remove();
+        selectDisplayType.val(oldValue);
         selectDisplayType.trigger('change');
     });
     $('input[name="sumAxisNumberChoice"], input[name="ratioAxisNumberChoice"]').trigger('change');
@@ -331,10 +333,11 @@ $(document).ready(function() {
             || (denominatorSelect.attr('data-options') === false)) {
             denominatorSelect.attr('data-options', denominatorSelect.html());
         }
+        var oldValue = denominatorSelect.val();
         denominatorSelect.html(denominatorSelect.attr('data-options'));
         $('option:not(.' + $(this).val() + ')', denominatorSelect).remove();
         denominatorSelect.prepend('<option value=""></option>');
-        denominatorSelect.val('');
+        denominatorSelect.val(oldValue);
     });
     $('select[name="ratioNumeratorAxisOne"], select[name="ratioNumeratorAxisTwo"]').trigger('change');
     $('select[name="displayType"]').on('change', function() {
