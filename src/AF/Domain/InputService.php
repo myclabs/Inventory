@@ -8,7 +8,6 @@ use Exception;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Parameter\Domain\Family\MemberNotFoundException;
 
 /**
  * Service responsable de la gestion des saisies des AF.
@@ -85,13 +84,9 @@ class InputService
             $af->execute($inputSet);
             $inputSet->setCalculationComplete(true);
             $inputSet->getOutputSet()->calculateTotals();
-        } catch (MemberNotFoundException $e) {
-            $message = __('AF', 'inputInput', 'completeInputSavedCalculationErrorUnknownParameterFamilyMember', [
-                'FAMILY'    => $e->getFamily(),
-                'DIMENSION' => $e->getDimension(),
-                'MEMBER'    => $e->getMember(),
-            ]);
-            $inputSet->setCalculationComplete(false, $message);
+        } catch (CalculationException $e) {
+            $message = __('AF', 'inputInput', 'completeInputSavedCalculationError');
+            $inputSet->setCalculationComplete(false, $message . ' ' . $e->getMessage());
             $inputSet->clearOutputSet();
         } catch (Exception $e) {
             $id = $inputSet->getAF()->getId();
