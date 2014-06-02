@@ -18,7 +18,7 @@ $physicalQuantityColumn->list = $this->physicalQuantities;
 $physicalQuantityColumn->list = [];
 foreach ($this->physicalQuantities as $physicalQuantity) {
     /** @var PhysicalQuantityDTO $physicalQuantity */
-    $physicalQuantityColumn->list[$physicalQuantity->id] = $physicalQuantity->label;
+    $physicalQuantityColumn->list[$physicalQuantity->id] = $this->translate($physicalQuantity->label);
 }
 $datagrid->addCol($physicalQuantityColumn);
 
@@ -26,7 +26,7 @@ $unitSystemColumn = new UI_Datagrid_Col_List('unitSystem', __('Unit', 'name', 'u
 $unitSystemColumn->list = [];
 foreach ($this->unitSystems as $unitSystem) {
     /** @var UnitSystemDTO $unitSystem */
-    $unitSystemColumn->list[$unitSystem->id] = $unitSystem->label;
+    $unitSystemColumn->list[$unitSystem->id] = $this->translate($unitSystem->label);
 }
 $datagrid->addCol($unitSystemColumn);
 

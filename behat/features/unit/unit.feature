@@ -23,18 +23,6 @@ Feature: Unit feature
     | gramme   | g   | g      | Masse            | 0,001        | International |
 
   @javascript @readOnly
-  Scenario: Display of extended units page
-    Given I am on "unit/consult/extendedunits"
-    And I wait for the page to finish loading
-    Then I should see "Unités étendues"
-    And I should see the "ListExtendedUnit" datagrid
-  # Multiplicateur
-  # TODO À MODIFIER CAR POUR L'INSTANT BUG
-    And the row 1 of the "ListExtendedUnit" datagrid should contain:
-      | name                  | ref     | symbol     | multiplier |
-      | gramme équivalent CO2 | g_co2e  | g équ. CO2 | 0          |
-
-  @javascript @readOnly
   Scenario: Display of discrete units page
     Given I am on "unit/consult/discreteunits"
     And I wait for the page to finish loading
@@ -43,13 +31,3 @@ Feature: Unit feature
     And the row 1 of the "ListDiscreteUnit" datagrid should contain:
       | name    | ref     |
       | animal  | animal  |
-
-  @javascript @readOnly
-  Scenario: Display of physical quantities page
-    Given I am on "unit/consult/physicalquantities"
-    And I wait for the page to finish loading
-    Then I should see "Grandeurs physiques"
-    And I should see the "ListPhysicalQuantity" datagrid
-    And the row 2 of the "ListPhysicalQuantity" datagrid should contain:
-      | name    | referenceUnit  | l | m | t | numeraire |
-      | Longueur  | mètre        | 1 | 0 | 0 | 0         |
