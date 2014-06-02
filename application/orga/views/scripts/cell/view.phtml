@@ -190,7 +190,7 @@ if (count($file) > 0) {
                         <?php // Inventory ?>
                         <?php if ($currentCell->showInventory) : ?>
                             <span class="inventory-status withTooltip" title="<?=$currentCell->inventoryStatusTitle?>">
-                                <i class="fa fa-<?=(($currentCell->inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_CLOSED) ? 'lock' : ($currentCell->inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_ACTIVE) ? 'play' : 'ban')?> fa-fw"></i>
+                                <i class="fa fa-<?=(($currentCell->inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_CLOSED) ? 'lock' : ($currentCell->inventoryStatus == Orga_Model_Cell::INVENTORY_STATUS_ACTIVE) ? 'unlock-alt' : 'ban')?> fa-fw"></i>
                             </span>
                             <?php if ($currentCell->showInventoryProgress) : ?>
                                 <div class="inventory-progress withPopover" title="<?=___('Orga', 'view', 'inventoryInputsDetails')?>" data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-html="true" data-content="<?=$currentCell->inventoryNotStartedInputsNumber?> <?=($currentCell->inventoryNotStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsNotStartedMany') : ___('Orga', 'view', 'inputsNotStartedSingle')?> <br> <?=$currentCell->inventoryStartedInputsNumber?> <?=($currentCell->inventoryStartedInputsNumber > 1) ? ___('Orga', 'view', 'inputsStartedMany') : ___('Orga', 'view', 'inputsStartedSingle')?> <br> <?=$currentCell->inventoryFinishedInputsNumber?> <?=($currentCell->inventoryFinishedInputsNumber > 1) ? ___('Orga', 'view', 'inputsCompletedMany') : ___('Orga', 'view', 'inputsCompletedSingle')?> <hr> <strong><?=(($currentCell->inventoryCompletion > 0) ? ($currentCell->inventoryCompletion + '% '.___('Orga', 'view', 'percentInputsCompleted')) : ___('Orga', 'view', 'noInputsCompleted'))?> </strong>" data-container="body">
@@ -667,7 +667,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 var inventoryP = '';
                 var inventoryPopup = '';
                 if (this.showInventory) {
-                    var inventoryStatusIcon = (this.inventoryStatus == '<?=Orga_Model_Cell::INVENTORY_STATUS_CLOSED?>') ? 'lock' : (this.inventoryStatus == '<?=Orga_Model_Cell::INVENTORY_STATUS_ACTIVE?>') ? 'play' : 'ban';
+                    var inventoryStatusIcon = (this.inventoryStatus == '<?=Orga_Model_Cell::INVENTORY_STATUS_CLOSED?>') ? 'lock' : (this.inventoryStatus == '<?=Orga_Model_Cell::INVENTORY_STATUS_ACTIVE?>') ? 'unlock-alt' : 'ban';
                     inventoryP +=
                         '<span class="inventory-status withTooltip" title="' + this.inventoryStatusTitle + '">' +
                             '<i class="fa fa-' + inventoryStatusIcon + ' fa-fw"></i>' +
