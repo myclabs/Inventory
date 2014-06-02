@@ -16,8 +16,8 @@ Feature: Unit feature
   # Encodage de caractères
     And I should see "ℓ"
   # Séparateur de décimale
-    And the row 8 of the "ListStandardUnits" datagrid should contain:
-    | name     | ref | symbol | physicalQuantity | unitSystem    |
+    And the "ListStandardUnits" datagrid should contain a row:
+    | label    | id  | symbol | physicalQuantity | unitSystem    |
     | gramme   | g   | g      | Masse            | International |
 
   @javascript @readOnly
@@ -26,6 +26,6 @@ Feature: Unit feature
     And I wait for the page to finish loading
     Then I should see "Unités discrètes"
     And I should see the "discreteUnits" datagrid
-    And the row 1 of the "discreteUnits" datagrid should contain:
-      | name    | ref     |
+    And the "discreteUnits" datagrid should contain a row:
+      | label   | id      |
       | animal  | animal  |
