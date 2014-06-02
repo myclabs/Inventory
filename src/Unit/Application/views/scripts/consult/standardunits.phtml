@@ -4,10 +4,10 @@ use MyCLabs\UnitAPI\DTO\UnitSystemDTO;
 
 $datagrid = new UI_Datagrid('ListStandardUnits', 'datagrids_standardunits', 'unit');
 
-$nameColumn = new UI_Datagrid_Col_Text('name', __('UI', 'name', 'label'));
+$nameColumn = new UI_Datagrid_Col_Text('label', __('UI', 'name', 'label'));
 $datagrid->addCol($nameColumn);
 
-$refColumn = new UI_Datagrid_Col_Text('ref', __('UI', 'name', 'identifier'));
+$refColumn = new UI_Datagrid_Col_Text('id', __('UI', 'name', 'identifier'));
 $datagrid->addCol($refColumn);
 
 $symbolColumn = new UI_Datagrid_Col_Text('symbol', __('Unit', 'name', 'symbol'));
@@ -18,7 +18,7 @@ $physicalQuantityColumn->list = $this->physicalQuantities;
 $physicalQuantityColumn->list = [];
 foreach ($this->physicalQuantities as $physicalQuantity) {
     /** @var PhysicalQuantityDTO $physicalQuantity */
-    $physicalQuantityColumn->list[$physicalQuantity->id] = $physicalQuantity->label;
+    $physicalQuantityColumn->list[$physicalQuantity->id] = $this->translate($physicalQuantity->label);
 }
 $datagrid->addCol($physicalQuantityColumn);
 
@@ -26,7 +26,7 @@ $unitSystemColumn = new UI_Datagrid_Col_List('unitSystem', __('Unit', 'name', 'u
 $unitSystemColumn->list = [];
 foreach ($this->unitSystems as $unitSystem) {
     /** @var UnitSystemDTO $unitSystem */
-    $unitSystemColumn->list[$unitSystem->id] = $unitSystem->label;
+    $unitSystemColumn->list[$unitSystem->id] = $this->translate($unitSystem->label);
 }
 $datagrid->addCol($unitSystemColumn);
 

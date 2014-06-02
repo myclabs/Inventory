@@ -53,12 +53,15 @@ class UnitAPI
      */
     public function exists()
     {
+        if ($this->ref == '') {
+            return false;
+        }
+
         /** @var UnitService $unitService */
         $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
-        $locale = \Core_Locale::loadDefault()->getId();
 
         try {
-            $unitService->getUnit($this->ref, $locale);
+            $unitService->getUnit($this->ref);
         } catch (UnknownUnitException $e) {
             return false;
         }
@@ -88,12 +91,15 @@ class UnitAPI
      */
     public function getSymbol()
     {
+        if ($this->ref == '') {
+            return '';
+        }
+
         /** @var UnitService $unitService */
         $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
-        $locale = \Core_Locale::loadDefault()->getId();
 
         try {
-            $unit = $unitService->getUnit($this->ref, $locale);
+            $unit = $unitService->getUnit($this->ref);
 
             return $unit->symbol;
         } catch (UnknownUnitException $e) {
@@ -203,11 +209,14 @@ class UnitAPI
      */
     public function getCompatibleUnits()
     {
+        if ($this->ref == '') {
+            return [];
+        }
+
         /** @var UnitService $unitService */
         $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
-        $locale = \Core_Locale::loadDefault()->getId();
 
-        $unitDTOs = $unitService->getCompatibleUnits($this->ref, $locale);
+        $unitDTOs = $unitService->getCompatibleUnits($this->ref);
 
         return array_map(function (UnitDTO $unitDTO) {
             return new UnitAPI($unitDTO->id);
@@ -223,11 +232,14 @@ class UnitAPI
      */
     public function getNormalizedUnit()
     {
+        if ($this->ref == '') {
+            return $this;
+        }
+
         /** @var UnitService $unitService */
         $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
-        $locale = \Core_Locale::loadDefault()->getId();
 
-        return new UnitAPI($unitService->getUnitOfReference($this->ref, $locale)->id);
+        return new UnitAPI($unitService->getUnitOfReference($this->ref)->id);
     }
 
     /**
@@ -238,6 +250,10 @@ class UnitAPI
      */
     public function reverse()
     {
+        if ($this->ref == '') {
+            return $this;
+        }
+
         /** @var UnitOperationService $operationService */
         $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
 

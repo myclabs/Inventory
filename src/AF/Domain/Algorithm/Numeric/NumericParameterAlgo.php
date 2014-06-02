@@ -5,13 +5,14 @@ namespace AF\Domain\Algorithm\Numeric;
 use AF\Domain\Algorithm\AlgoConfigurationError;
 use AF\Domain\Algorithm\ParameterCoordinate\ParameterCoordinate;
 use AF\Domain\Algorithm\InputSet;
-use AF\Domain\Algorithm\ExecutionException;
+use AF\Domain\CalculationException;
 use Core_Exception_NotFound;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Parameter\Application\Service\ParameterService;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\Family\FamilyReference;
+use Parameter\Domain\Family\MemberNotFoundException;
 use Unit\UnitAPI;
 
 /**
@@ -52,15 +53,33 @@ class NumericParameterAlgo extends NumericAlgo
         /** @var ParameterService $parameterService */
         $parameterService = \Core\ContainerSingleton::getContainer()->get(ParameterService::class);
 
-        $value = $parameterService->getFamilyValueByCoordinates($this->getFamily(), $coordinates);
+        try {
+            $family = $this->getFamily();
+        } catch (Core_Exception_NotFound $e) {
+            // Famille introuvable
+            throw new CalculationException(__('AF', 'inputInput', 'calculationErrorUnknownFamily', [
+                'FAMILY' => $this->familyReference->getFamilyRef(),
+            ]));
+        }
 
-        if (!$value) {
-            throw new ExecutionException(sprintf(
-                'No value was found for parameter %s and coordinates %s in algorithm %s',
-                $this->familyReference->getFamilyRef(),
-                implode(', ', $coordinates),
-                $this->ref
-            ));
+        try {
+            $value = $parameterService->getFamilyValueByCoordinates($family, $coordinates);
+        } catch (MemberNotFoundException $e) {
+            // Membre introuvable
+            throw new CalculationException(__('AF', 'inputInput', 'calculationErrorUnknownParameterFamilyMember', [
+                'FAMILY'    => $family->getLabel(),
+                'DIMENSION' => $e->getDimension(),
+                'MEMBER'    => $e->getMember(),
+            ]));
+        } catch (Core_Exception_NotFound $e) {
+            // Paramètre introuvable
+            $str = implode(', ', array_map(function ($dimension, $member) {
+                return $dimension . ' -> ' . $member;
+            }, array_keys($coordinates), $coordinates));
+            throw new CalculationException(__('AF', 'inputInput', 'calculationErrorUnknownParameter', [
+                'FAMILY'    => $family->getLabel(),
+                'PARAMETER' => $str,
+            ]));
         }
 
         return $value;
