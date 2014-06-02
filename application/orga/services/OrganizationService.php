@@ -485,6 +485,9 @@ class Orga_Service_OrganizationService
             }
         }
 
+        // Configuration de l'axe temps.
+        $organization->setTimeAxis($timeAxis);
+
         // Création de la granularité de collecte.
         $inventoryGranularityId = $formData['inventoryGranularity'];
         $inventoryGranularityAxes = [];

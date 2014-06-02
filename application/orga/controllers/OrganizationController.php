@@ -482,6 +482,13 @@ class Orga_OrganizationController extends Core_Controller
         $this->view->assign('idOrganization', $idOrganization);
         $this->view->assign('organizationLabel', $this->translator->get($organization->getLabel()));
 
+        $potentialAxes = [];
+        foreach ($organization->getAxes() as $axis) {
+            $potentialAxes[] = $axis;
+        }
+        $this->view->assign('potentialAxes', $potentialAxes);
+        $this->view->assign('selectedAxis', $organization->getTimeAxis());
+
         $potentialContextIndicators = [];
         foreach (ClassificationLibrary::loadUsableInAccount($organization->getAccount()) as $classificationLibrary) {
             foreach ($classificationLibrary->getContextIndicators() as $contextIndicator) {

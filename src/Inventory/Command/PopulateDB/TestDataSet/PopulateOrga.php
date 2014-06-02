@@ -46,6 +46,9 @@ class PopulateOrga extends AbstractPopulateOrga
         $axis_categorie = $this->createAxis($organization, 'categorie', 'Catégorie');
         $axis_vide = $this->createAxis($organization, 'axe_vide', 'Axe vide');
 
+        // Granularité du temps.
+        $organization->setTimeAxis($axis_annee);
+
         // Création des éléments.
         $member_annee_2012 = $this->createMember($axis_annee, '2012', '2012');
         $member_annee_2013 = $this->createMember($axis_annee, '2013', '2013');

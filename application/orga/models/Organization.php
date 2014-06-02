@@ -60,6 +60,13 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
     protected $axes = null;
 
     /**
+     * Axis qui définit les recopie de pertinence et les comparaisons de saisie.
+     *
+     * @var Orga_Model_Axis
+     */
+    protected $timeAxis = null;
+
+    /**
      * Collection des Granularity de l'Organization.
      *
      * @var Collection|Orga_Model_Granularity[]
@@ -274,6 +281,26 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
         $axes = $this->getFirstOrderedAxes();
         @usort($axes, ['Orga_Model_Axis', 'lastOrderAxes']);
         return $axes;
+    }
+
+    /**
+     * Définit l'axe selon lequel les pertinences des cellules sont recopiés et les saisies comparées.
+     *
+     * @param Orga_Model_Axis $axis
+     */
+    public function setTimeAxis(Orga_Model_Axis $axis)
+    {
+        $this->timeAxis = $axis;
+    }
+
+    /**
+     * Retourne l'axe selon lequel les pertinences des cellules sont recopiés et les saisies comparées.
+     *
+     * @return Orga_Model_Axis
+     */
+    public function getTimeAxis()
+    {
+        return $this->timeAxis;
     }
 
     public function orderGranularities()
