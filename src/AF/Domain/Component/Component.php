@@ -351,7 +351,7 @@ abstract class Component extends Core_Model_Entity
      */
     protected function getHistoryComponent(Input $input)
     {
-        $historyButton = new Button(new Icon('clock-o'));
+        $historyButton = new Button(new Icon('history'));
         $historyButton->addClass('input-history');
         $historyButton->setAttribute('title', __('UI', 'history', 'valueHistory'));
         $historyButton->setAttribute('data-input-id', $input->getId());

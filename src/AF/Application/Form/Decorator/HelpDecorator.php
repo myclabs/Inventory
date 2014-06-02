@@ -1,25 +1,30 @@
 <?php
-
-namespace AF\Application\Form\Decorator;
-
-use AF\Application\Form\Element\Group;
-use Core_Tools;
-use Zend_Form_Decorator_Abstract;
-use Zend_Form_Decorator_HtmlTag;
+/**
+ * @author valentin.claras
+ * @package UI
+ * @subpackage Form
+ */
 
 /**
  * Add an Help popup before an Element.
  *
- * @author valentin.claras
+ * @package UI
+ * @subpackage Form
  */
-class HelpDecorator extends Zend_Form_Decorator_Abstract
+class UI_Form_Decorator_Help extends Zend_Form_Decorator_Abstract
 {
+
+    /**
+     * @param string $content
+     * @see Zend/Form/Decorator/Zend_Form_Decorator_Abstract::render()
+     * @return string
+     */
     public function render($content)
     {
         $text = Core_Tools::textile($this->getElement()->getElement()->help);
         $aOptions = array(
             'tag'          => 'a',
-            'id'           => $this->getElement()->getId() . '-help',
+            'id'           => $this->getElement()->getId().'-help',
             'link'         => '#',
             'onMouseout'   => '$(this).children(\'.fa-question-circle\').css(\'opacity\', 0.3);',
             'onMouseover'  => '$(this).children(\'.fa-question-circle\').css(\'opacity\', 1);',
@@ -44,7 +49,7 @@ class HelpDecorator extends Zend_Form_Decorator_Abstract
         // Nécessaire pour pouvoir afficher des caractères HTML qui Zend échappe systématiquement.
         $a = str_replace('helpWillBeReplace', str_replace('"', '\'', $text), $a);
 
-        if ($this->getElement() instanceof Group) {
+        if ($this->getElement() instanceof UI_Form_Element_Group) {
             $smallOptions = array(
                 'tag'   => 'small',
                 'style' => 'color: #333333;',
@@ -54,8 +59,9 @@ class HelpDecorator extends Zend_Form_Decorator_Abstract
             $a = $htmlTagDecorator->render($a);
         }
 
-        $this->getElement()->setLabel($this->getElement()->getLabel() . $a);
+        $this->getElement()->setLabel($this->getElement()->getLabel().$a);
 
         return $content;
     }
+
 }
