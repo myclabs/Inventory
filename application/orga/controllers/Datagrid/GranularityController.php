@@ -198,6 +198,11 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                     }
                 }
             }
+            if ($this->update['column'] === 'inventory') {
+                $value = ($this->update['value'] == 'monitoring');
+            } else {
+                $value = (bool) $this->update['value'];
+            }
 
             $success = function () {
                 $this->message = __('UI', 'message', 'updated');
@@ -212,7 +217,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $task = new ServiceCallTask(
                 'Orga_Service_OrganizationService',
                 'editGranularity',
-                [$granularity, [ $this->update['column'] => (bool) $this->update['value'] ]],
+                [$granularity, [ $this->update['column'] => $value ]],
                 __('Orga', 'backgroundTasks', 'editGranularity', [
                     'LABEL' => $this->translator->get($granularity->getLabel())
                 ])
