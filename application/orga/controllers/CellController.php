@@ -1273,9 +1273,13 @@ class Orga_CellController extends Core_Controller
             $cell
         );
 
-        if (($organization->getTimeAxis() !== null) && ($cell->getGranularity()->hasAxis($organization->getTimeAxis()))) {
+        $timeAxis = $organization->getTimeAxis();
+        if (($timeAxis !== null) && ($cell->getGranularity()->hasAxis($timeAxis))) {
             $previousCell = $cell->getPreviousCellForAxis($organization->getTimeAxis());
-            //@todo Passer la saisie de la cellule précédente à AF.
+            $previousInputSetPrimary = $previousCell->getAFInputSetPrimary();
+            if (($previousInputSetPrimary !== null) && $previousInputSetPrimary->isFinished()) {
+                //@todo Passer la saisie de la cellule précédente à AF.
+            }
         }
 
         $aFViewConfiguration = new AFViewConfiguration();
