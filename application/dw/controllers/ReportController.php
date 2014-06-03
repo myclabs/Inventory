@@ -315,6 +315,14 @@ class DW_ReportController extends Core_Controller
             ) {
                 $clonedReport = clone $report;
                 $this->entityManager->refresh($report);
+                foreach ($report->getFilters() as $filter)
+                {
+                    $clonedFilter = new DW_Model_Filter($clonedReport, $filter->getAxis());
+                    foreach ($filter->getMembers() as $member) {
+                        $clonedFilter->addMember($member);
+                    }
+                    $clonedReport->addFilter($clonedFilter);
+                }
                 $report = $clonedReport;
             }
 
