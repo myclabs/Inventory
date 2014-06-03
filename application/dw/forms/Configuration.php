@@ -288,6 +288,10 @@ class DW_Form_configuration extends GenericTag
         foreach ($report->getCube()->getAxes() as $axis) {
             $axisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
             $axisOption->setAttribute('value', $axis->getRef());
+            $axisOption->addClass($axis->getRef());
+            foreach ($axis->getAllNarrowers() as $narrowerAxis) {
+                $axisOption->addClass($narrowerAxis->getRef());
+            }
             $ratioDenominatorAxisTwoSelect->appendContent($axisOption);
         }
         $ratioDenominatorAxisTwoGroup->appendContent($ratioDenominatorAxisTwoSelect);
@@ -572,7 +576,7 @@ class DW_Form_configuration extends GenericTag
                     }
 
                     if ($denominatorAxisTwo !== null) {
-                        foreach ($ratioDenominatorAxisOneSelect->getContent() as $option) {
+                        foreach ($ratioDenominatorAxisTwoSelect->getContent() as $option) {
                             /** @var GenericTag $option */
                             if ($option->getAttribute('value') === $denominatorAxisTwo->getRef()) {
                                 $option->setBooleanAttribute('selected');
