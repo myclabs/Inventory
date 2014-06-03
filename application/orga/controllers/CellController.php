@@ -1264,6 +1264,7 @@ class Orga_CellController extends Core_Controller
         $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
+        $organization = $cell->getOrganization();
         $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
 
         $isUserAllowedToInputCell = $this->acl->isAllowed(
@@ -1271,6 +1272,11 @@ class Orga_CellController extends Core_Controller
             Actions::INPUT,
             $cell
         );
+
+        if (($organization->getTimeAxis() !== null) && ($cell->getGranularity()->hasAxis($organization->getTimeAxis()))) {
+            $previousCell = $cell->getPreviousCellForAxis($organization->getTimeAxis());
+            //@todo Passer la saisie de la cellule précédente à AF.
+        }
 
         $aFViewConfiguration = new AFViewConfiguration();
         if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::INVENTORY_STATUS_CLOSED)) {
