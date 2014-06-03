@@ -110,6 +110,28 @@ afModule.controller('InputController', function ($scope) {
                         }
                     ]
                 }
+            },
+            {
+                type: 'subaf-multi',
+                ref: 'subAFMulti',
+                label: 'Sous-formulaire répété',
+                calledAF: {
+                    label: 'Test',
+                    components: [
+                        {
+                            type: 'numeric',
+                            ref: 'chiffre_affaire',
+                            label: 'Chiffre d\'affaire',
+                            required: true
+                        },
+                        {
+                            type: 'text',
+                            ref: 'text',
+                            label: 'Champ de text court',
+                            required: true
+                        }
+                    ]
+                }
             }
         ]
     };
@@ -185,7 +207,10 @@ afModule.directive('afFieldset', function() {
         link: function ($scope) {
             $scope.getInput = function (component) {
                 if (angular.isUndefined($scope.inputSet)) {
-                    return null;
+                    $scope.inputSet = {};
+                }
+                if (angular.isUndefined($scope.inputSet.inputs)) {
+                    $scope.inputSet.inputs = [];
                 }
                 var inputs = $scope.inputSet.inputs;
                 for (i = 0; i < inputs.length; ++i) {
@@ -194,7 +219,48 @@ afModule.directive('afFieldset', function() {
                         return input;
                     }
                 }
-                return null;
+                // Pas de valeur, on en crée une vide
+                var newInput = {
+                    componentRef: component.ref,
+                    value: null
+                };
+                $scope.inputSet.inputs.push(newInput);
+                return newInput;
+            };
+        }
+    };
+});
+
+afModule.directive('afHorizontalFieldset', function() {
+    return {
+        restrict: 'E',
+        templateUrl: 'scripts/af/templates/horizontal-fieldset.html',
+        scope: {
+            components: '=',
+            inputSets: '='
+        },
+        link: function ($scope) {
+            $scope.getInput = function (inputSet, component) {
+                if (angular.isUndefined(inputSet)) {
+                    inputSet = {};
+                }
+                if (angular.isUndefined(inputSet.inputs)) {
+                    inputSet.inputs = [];
+                }
+                var inputs = inputSet.inputs;
+                for (i = 0; i < inputs.length; ++i) {
+                    var input = inputs[i];
+                    if (input.componentRef === component.ref) {
+                        return input;
+                    }
+                }
+                // Pas de valeur, on en crée une vide
+                var newInput = {
+                    componentRef: component.ref,
+                    value: null
+                };
+                inputSet.inputs.push(newInput);
+                return newInput;
             };
         }
     };
@@ -208,6 +274,16 @@ afModule.directive('afComponent', function() {
             input: '='
         },
         templateUrl: 'scripts/af/templates/component.html'
+    };
+});
+afModule.directive('afHorizontalComponent', function() {
+    return {
+        restrict: 'E',
+        scope: {
+            component: '=',
+            input: '='
+        },
+        templateUrl: 'scripts/af/templates/horizontal-component.html'
     };
 });
 
@@ -331,6 +407,40 @@ afModule.directive('afSubSingle', function($compile) {
             // On compile manuellement sinon récursion infinie : angular pré-importe les templates
             // même s'ils ne sont pas vraiment utilisés
             element.append('<af-fieldset components="component.calledAF.components" label="component.label" input-set="input.value"></af-fieldset>');
+            $compile(element.contents())($scope.$new());
+        }
+    };
+});
+
+afModule.directive('afSubMulti', function($compile) {
+    return {
+        restrict: 'E',
+        scope: {
+            component: '=',
+            input: '='
+        },
+        template: '',
+        link: function ($scope, element) {
+            $scope.add = function () {
+                if ($scope.input === null) {
+                    $scope.input = {};
+                }
+                if (angular.isUndefined($scope.input.value) || $scope.input.value === null) {
+                    $scope.input.value = [];
+                }
+                $scope.input.value.push({});
+            };
+
+            var template =
+                '<fieldset>' +
+                    '<legend>{{ component.label }}</legend>' +
+                    '<af-horizontal-fieldset components="component.calledAF.components" input-sets="input.value"></af-horizontal-fieldset>' +
+                    '<button type="button" class="btn btn-default" ng-click="add()">' + __('UI', 'verb', 'add') + '</button>' +
+                '</fieldset>';
+
+            // On compile manuellement sinon récursion infinie : angular pré-importe les templates
+            // même s'ils ne sont pas vraiment utilisés
+            element.append(template);
             $compile(element.contents())($scope.$new());
         }
     };

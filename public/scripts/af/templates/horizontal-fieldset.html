@@ -1,0 +1,13 @@
+<table class="table table-condensed">
+    <tr>
+        <th ng-repeat="component in components" ng-style="{ width: 100/components.length + '%' }">
+            {{ component.label }}
+        </th>
+    </tr>
+
+    <tr ng-repeat="inputSet in inputSets">
+        <td ng-repeat="component in components">
+            <af-horizontal-component component="component" input="getInput(inputSet, component)"></af-horizontal-component>
+        </td>
+    </tr>
+</table>
