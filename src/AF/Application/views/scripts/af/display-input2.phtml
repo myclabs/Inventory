@@ -1,0 +1,48 @@
+<div ng-app="AF" ng-controller="InputController">
+
+    <div class="inputProgress row">
+
+        <div class="col-md-9">
+            <div class="progress">
+                <div class="progress-bar" ng-style="{ width: inputSet.completion + '%' }">
+                    {{ inputSet.completion }} %
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <img class="completionIcon" src="">
+            <span class="completionMessage">{{ inputSet.status }}</span>
+        </div>
+
+    </div>
+
+    <form class="af form-horizontal">
+
+        <af-fieldset components="af.components" input-set="inputSet"></af-fieldset>
+
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-default">
+                        <?= __('AF', 'inputInput', 'resultsPreview') ?>
+                    </button>
+                    <button type="button" class="btn btn-default">
+                        <?= __('UI', 'verb', 'save') ?>
+                    </button>
+                    <button type="button" class="btn btn-default">
+                        <?= __('AF', 'inputInput', 'finish') ?>
+                    </button>
+                    <button type="button" class="btn btn-default">
+                        <i class="fa fa-sign-out"></i>
+                        <?= __('UI', 'verb', 'quit') ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <pre ng-bind="inputSet | debug"></pre>
+
+</div>

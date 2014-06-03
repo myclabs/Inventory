@@ -1,0 +1,12 @@
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ component.label }}</label>
+    <div class="col-sm-9" ng-switch="component.type">
+        <af-numeric-field ng-switch-when="numeric" component="component" input="input"></af-numeric-field>
+        <af-select ng-switch-when="select" component="component" input="input"></af-select>
+        <af-checkbox ng-switch-when="checkbox" component="component" input="input"></af-checkbox>
+        <af-text-field ng-switch-when="text" component="component" input="input"></af-text-field>
+        <af-textarea ng-switch-when="textarea" component="component" input="input"></af-textarea>
+        <af-radio ng-switch-when="radio" component="component" input="input"></af-radio>
+        <af-select-multiple ng-switch-when="select-multiple" component="component" input="input"></af-select-multiple>
+    </div>
+</div>

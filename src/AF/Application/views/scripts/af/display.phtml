@@ -11,6 +11,7 @@ $viewConfiguration = $this->viewConfiguration;
 
 // Ajout des headers
 UI_Datagrid::addHeader();
+$this->headScript()->appendFile('scripts/af/input-angular.js', 'text/javascript');
 $this->headScript()->appendFile('scripts/af/input.js', 'text/javascript');
 $this->headScript()->appendFile('scripts/af/input-progress.js', 'text/javascript');
 // API Google pour les charts
@@ -24,7 +25,6 @@ $baseTabs = [];
 // ONGLET DE SAISIE
 $baseTabs[AFViewConfiguration::TAB_INPUT] = new Tab('tabs_tabInput');
 $baseTabs[AFViewConfiguration::TAB_INPUT]->setTitle(__('UI', 'name', 'input'));
-$baseTabs[AFViewConfiguration::TAB_INPUT]->setAjax(true, true);
 $urlArray = array(
     'module'            => 'af',
     'controller'        => 'af',
@@ -42,7 +42,9 @@ if ($viewConfiguration->getIdInputSet()) {
 }
 $url = $this->url($urlArray, null, true);
 $url .= '?actionStack=' . urlencode(json_encode($viewConfiguration->getActionStack()));
-$baseTabs[AFViewConfiguration::TAB_INPUT]->setContent($url);
+$baseTabs[AFViewConfiguration::TAB_INPUT]->setContent(
+    $this->partial('af/display-input2.phtml')
+);
 
 // ONGLET DE RESULTAT
 if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_RESULT)) {

@@ -1,0 +1,24 @@
+<div class="row">
+
+    <div class="col-xs-4">
+        <input type="text" class="form-control" pattern="-?[0-9]*[.,]?[0-9]*" ng-required="component.required"
+               ng-model="input.value.digitalValue">
+    </div>
+
+    <div class="col-xs-4">
+        <select class="form-control" ng-model="input.value.unit">
+            <option value="kiloeuro" selected="selected">k€</option>
+            <option value="euro">€</option>
+        </select>
+    </div>
+
+    <div class="col-xs-4">
+        <div class="input-group">
+            <span class="input-group-addon">±</span>
+            <input type="text" class="incertitude form-control" pattern="(100)|[0-9]{1,2}"
+                   ng-model="input.value.uncertainty">
+            <span class="input-group-addon">%</span>
+        </div>
+    </div>
+
+</div>
