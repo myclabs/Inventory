@@ -170,6 +170,16 @@ class Orga_Service_OrganizationService
             $this->entityManager->clear();
 
             $organization = Orga_Model_Organization::load($idOrganization);
+            $axes = $organization->getLastOrderedAxes();
+            foreach ($axes as $axis) {
+                /** @var Orga_Model_Axis $axis */
+                $axis->delete();
+            }
+
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+
+            $organization = Orga_Model_Organization::load($idOrganization);
             $organization->delete();
 
             $this->entityManager->flush();
