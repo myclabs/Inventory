@@ -2,7 +2,7 @@
     <legend ng-if="label">{{ label }}</legend>
 
     <div ng-repeat="component in components" ng-switch="component.type">
-        <af-group ng-switch-when="group" component="component" inputSet="inputSet"></af-group>
+        <af-group ng-switch-when="group" component="component" input-set="inputSet"></af-group>
         <af-sub-single ng-switch-when="subaf-single" component="component" input="getInput(component)"></af-sub-single>
 
         <af-component ng-switch-default component="component" input="getInput(component)"></af-component>
