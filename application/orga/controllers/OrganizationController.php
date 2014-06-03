@@ -541,6 +541,27 @@ class Orga_OrganizationController extends Core_Controller
     /**
      * @Secure("editOrganization")
      */
+    public function editTimeAxisAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $idAxis = (string) $this->getParam('timeAxis');
+        if (empty($idAxis)) {
+            $organization->setTimeAxis();
+        } else {
+            $organization->setTimeAxis(Orga_Model_Axis::load($idAxis));
+        }
+
+        $this->setFormMessage(__('UI', 'message', 'updated'));
+
+        $this->sendFormResponse();
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
     public function editContextIndicatorsAction()
     {
         $idOrganization = $this->getParam('idOrganization');
