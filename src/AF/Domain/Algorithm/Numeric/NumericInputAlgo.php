@@ -51,13 +51,12 @@ class NumericInputAlgo extends NumericAlgo
     {
         $errors = parent::checkConfig();
         $unit = $this->getUnit();
-        try {
-            $unit->getNormalizedUnit();
-        } catch (Core_Exception_NotFound $e) {
+        if (! $unit->exists()) {
             $configError = new AlgoConfigurationError();
             $configError->isFatal(true);
-            $configError->setMessage("L'unité '" . $unit->getRef() . "' associée à l'algorithme '"
-                . $this->ref . "' n'existe pas.");
+            $configError->setMessage(
+                "L'unité '" . $unit->getRef() . "' associée à l'algorithme '" . $this->ref . "' n'existe pas."
+            );
             $errors[] = $configError;
         }
         if ((!isset($this->inputRef)) || ($this->inputRef === '')) {

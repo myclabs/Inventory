@@ -68,14 +68,8 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
         $isVisible = $this->getAddElementValue('isVisible');
-        try {
-            $unitRef = $this->getAddElementValue('unit');
-            if (empty($unitRef)) {
-                $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
-            }
-            $unit = new UnitAPI($unitRef);
-            $unit->getNormalizedUnit();
-        } catch (Core_Exception_NotFound $e) {
+        $unit = new UnitAPI($this->getAddElementValue('unit'));
+        if (! $unit->exists()) {
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
         }
         try {
@@ -165,13 +159,8 @@ class AF_Datagrid_Edit_Components_NumericFieldsController extends UI_Controller_
                 $this->data = $numericField->getRequired();
                 break;
             case 'unit':
-                try {
-                    if (empty($newValue)) {
-                        throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
-                    }
-                    $unit = new UnitAPI($newValue);
-                    $unit->getNormalizedUnit();
-                } catch (Core_Exception_NotFound $e) {
+                $unit = new UnitAPI($newValue);
+                if (! $unit->exists()) {
                     throw new Core_Exception_User('UI', 'formValidation', 'invalidUnit');
                 }
                 $numericField->setUnit($unit);

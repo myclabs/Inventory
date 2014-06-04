@@ -20,7 +20,7 @@ use Classification\Domain\Indicator;
 use Mnapoli\Translated\AbstractTranslatedString;
 use Mnapoli\Translated\Translator;
 use Orga\Model\ACL\AbstractCellRole;
-use Unit\IncompatibleUnitsException;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
 use Xport\Spreadsheet\Exporter\PHPExcelExporter;
 use Xport\MappingReader\YamlMappingReader;
@@ -906,8 +906,7 @@ class Orga_Service_Export
                 $component = $input->getComponent();
                 if ($component !== null) {
                     try {
-                        $conversionFactor = $component->getUnit()->getConversionFactor($inputValue->getUnit()->getRef());
-                        $baseConvertedValue = $inputValue->copyWithNewValue($inputValue->getDigitalValue() * $conversionFactor);
+                        $baseConvertedValue = $inputValue->convertTo($component->getUnit());
                         return [
                             $inputDigitalValue,
                             $inputValue->getRelativeUncertainty(),

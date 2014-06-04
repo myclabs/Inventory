@@ -54,7 +54,7 @@ class FeatureContext extends MinkContext
         });
 
         return [
-            new Step\Then('the "#messageZone" element should contain "' . $message . '"'),
+            new Step\Then('I should see "' . $message . '" in the "#messageZone" element'),
             new Step\Then('I click element "#messageZone button.close"'),
             new Step\Then('I wait for 0.5 seconds'),
             new Step\Then('the "#messageZone" element should not contain "' . $message . '"'),

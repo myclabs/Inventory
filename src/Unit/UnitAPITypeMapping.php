@@ -1,22 +1,17 @@
 <?php
-/**
- * @author  matthieu.napoli
- * @package Unit
- */
 
-namespace Unit\Architecture\TypeMapping;
+namespace Unit;
 
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Unit\UnitAPI;
 
 /**
  * Mapping d'un objet Unit API en champ de BDD
- * @package Unit
+ *
+ * @author matthieu.napoli
  */
-class UnitAPIType extends Type
+class UnitAPITypeMapping extends Type
 {
-
     const TYPE_NAME = 'unit_api';
 
     /**
@@ -73,5 +68,4 @@ class UnitAPIType extends Type
         }
         return $ref;
     }
-
 }

@@ -81,9 +81,7 @@ class Parameter_Datagrid_FamilyDatagridController extends UI_Controller_Datagrid
             $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'emptyRequiredField'));
         } else {
             $unit = new UnitAPI($refUnit);
-            try {
-                $unit->getNormalizedUnit();
-            } catch (Exception $e) {
+            if (! $unit->exists()) {
                 $this->setAddElementErrorMessage('unit', __('UI', 'formValidation', 'invalidUnit'));
             }
         }

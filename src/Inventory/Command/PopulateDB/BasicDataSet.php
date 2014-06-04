@@ -3,7 +3,6 @@
 namespace Inventory\Command\PopulateDB;
 
 use Inventory\Command\PopulateDB\BasicDataSet\PopulateAccount;
-use Inventory\Command\PopulateDB\BasicDataSet\PopulateUnit;
 use Inventory\Command\PopulateDB\BasicDataSet\PopulateUser;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -22,12 +21,6 @@ class BasicDataSet
 
     /**
      * @Inject
-     * @var PopulateUnit
-     */
-    private $populateUnit;
-
-    /**
-     * @Inject
      * @var PopulateAccount
      */
     private $populateAccount;
@@ -37,7 +30,6 @@ class BasicDataSet
         $output->writeln('<comment>Populating with the basic data set</comment>');
 
         $this->populateUser->run($output);
-        $this->populateUnit->run($output);
         $this->populateAccount->run($output);
     }
 }
