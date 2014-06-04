@@ -1,11 +1,13 @@
 <fieldset>
     <legend ng-if="label">{{ label }}</legend>
 
-    <div ng-repeat="component in components" ng-switch="component.type">
-        <af-group ng-switch-when="group" component="component" input-set="inputSet"></af-group>
-        <af-sub-single ng-switch-when="subaf-single" component="component" input="getInput(component)"></af-sub-single>
-        <af-sub-multi ng-switch-when="subaf-multi" component="component" input="getInput(component)"></af-sub-multi>
+    <div ng-repeat="component in components" ng-switch="component.type" ng-init="input = getInput(component)">
+        <div ng-show="isInputVisible(input, component, inputSet.inputs)">
+            <af-group ng-switch-when="group" component="component" input-set="inputSet"></af-group>
+            <af-sub-single ng-switch-when="subaf-single" component="component" input="input"></af-sub-single>
+            <af-sub-multi ng-switch-when="subaf-multi" component="component" input="input"></af-sub-multi>
 
-        <af-component ng-switch-default component="component" input="getInput(component)"></af-component>
+            <af-component ng-switch-default component="component" input="input"></af-component>
+        </div>
     </div>
 </fieldset>

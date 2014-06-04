@@ -6,20 +6,23 @@ afModule.filter('debug', function() {
     };
 });
 
-afModule.controller('InputController', function ($scope) {
-    $scope.af = {
+// Todo à supprimer
+afModule.factory('af', function () {
+    return {
         label: 'Données générales',
         components: [
             {
                 type: 'numeric',
                 ref: 'chiffre_affaire',
                 label: 'Chiffre d\'affaire',
+                visible: true,
                 required: true
             },
             {
                 type: 'select',
                 ref: 'gaz',
                 label: 'Gaz',
+                visible: true,
                 required: true,
                 options: [
                     {
@@ -36,24 +39,39 @@ afModule.controller('InputController', function ($scope) {
                 type: 'checkbox',
                 ref: 'check',
                 label: 'Checkbox',
+                visible: true,
                 required: true
             },
             {
                 type: 'group',
                 ref: 'groupe',
                 label: 'Groupe',
+                visible: false,
                 subComponents: [
                     {
                         type: 'text',
                         ref: 'text',
                         label: 'Champ de text court',
+                        visible: true,
                         required: true
                     },
                     {
                         type: 'textarea',
                         ref: 'textarea',
                         label: 'Champ de text long',
+                        visible: true,
                         required: true
+                    }
+                ],
+                actions: [
+                    {
+                        type: 'show',
+                        condition: {
+                            type: 'checkbox',
+                            targetComponent: 'check',
+                            relation: 'equal',
+                            value: true
+                        }
                     }
                 ]
             },
@@ -61,6 +79,7 @@ afModule.controller('InputController', function ($scope) {
                 type: 'radio',
                 ref: 'choixSimple',
                 label: 'Choix simple',
+                visible: true,
                 required: true,
                 options: [
                     {
@@ -77,6 +96,7 @@ afModule.controller('InputController', function ($scope) {
                 type: 'select-multiple',
                 ref: 'gazMultiple',
                 label: 'Gaz',
+                visible: true,
                 required: true,
                 options: [
                     {
@@ -93,6 +113,7 @@ afModule.controller('InputController', function ($scope) {
                 type: 'subaf-single',
                 ref: 'subAFSingle',
                 label: 'Sous-formulaire non répété',
+                visible: true,
                 calledAF: {
                     label: 'Test',
                     components: [
@@ -100,12 +121,14 @@ afModule.controller('InputController', function ($scope) {
                             type: 'numeric',
                             ref: 'chiffre_affaire',
                             label: 'Chiffre d\'affaire',
+                            visible: true,
                             required: true
                         },
                         {
                             type: 'checkbox',
                             ref: 'check',
                             label: 'Checkbox',
+                            visible: true,
                             required: true
                         }
                     ]
@@ -115,6 +138,7 @@ afModule.controller('InputController', function ($scope) {
                 type: 'subaf-multi',
                 ref: 'subAFMulti',
                 label: 'Sous-formulaire répété',
+                visible: true,
                 calledAF: {
                     label: 'Test',
                     components: [
@@ -122,12 +146,14 @@ afModule.controller('InputController', function ($scope) {
                             type: 'numeric',
                             ref: 'chiffre_affaire',
                             label: 'Chiffre d\'affaire',
+                            visible: true,
                             required: true
                         },
                         {
                             type: 'text',
                             ref: 'text',
                             label: 'Champ de text court',
+                            visible: true,
                             required: true
                         }
                     ]
@@ -135,8 +161,11 @@ afModule.controller('InputController', function ($scope) {
             }
         ]
     };
+});
 
-    $scope.inputSet = {
+// Todo à supprimer
+afModule.factory('inputSet', function () {
+    return {
         completion: 65,
         status: __('AF', 'inputInput', 'statusInputIncomplete'),
         inputs: [
@@ -195,7 +224,49 @@ afModule.controller('InputController', function ($scope) {
     };
 });
 
-afModule.directive('afFieldset', function() {
+afModule.factory('testCondition', function () {
+    return function (condition, inputs) {
+        // Find target component input
+        var input = inputs.filter(function (input) {
+            return input.componentRef === condition.targetComponent;
+        })[0];
+
+        if (angular.isUndefined(input)) {
+            return false;
+        }
+
+        // Compare to condition
+        return input.value === condition.value;
+    };
+});
+
+afModule.factory('isInputVisible', ['testCondition', function (testCondition) {
+    return function (input, component, inputs) {
+        if (angular.isUndefined(component.actions)) {
+            return component.visible;
+        }
+
+        var actions = component.actions.filter(function (action) {
+            return action.type === 'show';
+        });
+
+        // No actions on this component
+        if (actions.length === 0) {
+            return component.visible;
+        }
+
+        return actions.reduce(function (result, action) {
+            return result && testCondition(action.condition, inputs);
+        }, true);
+    };
+}]);
+
+afModule.controller('InputController', ['$scope', 'af', 'inputSet', function ($scope, af, inputSet) {
+    $scope.af = af;
+    $scope.inputSet = inputSet;
+}]);
+
+afModule.directive('afFieldset', [ 'isInputVisible', function(isInputVisible) {
     return {
         restrict: 'E',
         templateUrl: 'scripts/af/templates/fieldset.html',
@@ -205,6 +276,8 @@ afModule.directive('afFieldset', function() {
             inputSet: '='
         },
         link: function ($scope) {
+            $scope.isInputVisible = isInputVisible;
+
             $scope.getInput = function (component) {
                 if (angular.isUndefined($scope.inputSet)) {
                     $scope.inputSet = {};
@@ -229,7 +302,7 @@ afModule.directive('afFieldset', function() {
             };
         }
     };
-});
+}]);
 
 afModule.directive('afHorizontalFieldset', function() {
     return {
