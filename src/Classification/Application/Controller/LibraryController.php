@@ -5,6 +5,7 @@ use Account\Domain\AccountRepository;
 use Classification\Domain\Axis;
 use Classification\Domain\ClassificationLibrary;
 use Classification\Domain\Indicator;
+use Classification\Domain\Member;
 use Core\Annotation\Secure;
 use Core\Translation\TranslatedString;
 use MyCLabs\ACL\ACL;
@@ -113,9 +114,12 @@ class Classification_LibraryController extends Core_Controller
 
                 foreach ($axis->getMembers() as $member) {
                     if ($narrowerAxis !== null) {
-                        $intersectMemberNarrowerMembers = array_intersect(
+                        $intersectMemberNarrowerMembers = array_uintersect(
                             $member->getDirectChildren(),
-                            $narrowerAxis->getMembers()
+                            $narrowerAxis->getMembers(),
+                            function(Member $a, Member $b) {
+                                return (($a === $b) ? 0 : (($a > $b) ? 1 : -1));
+                            }
                         );
                         if (count($intersectMemberNarrowerMembers) < 1) {
                             if (!isset($listAxesWithMembersNotLinkedToNarrower[$axis->getId()][$narrowerAxis->getId()])) {
@@ -125,9 +129,12 @@ class Classification_LibraryController extends Core_Controller
                         }
                     }
                     foreach ($broaderAxes as $broaderAxis) {
-                        $intersectMemberBroaderMembers = array_intersect(
+                        $intersectMemberBroaderMembers = array_uintersect(
                             $member->getDirectParents(),
-                            $broaderAxis->getMembers()
+                            $broaderAxis->getMembers(),
+                            function (Member $a, Member $b) {
+                                return (($a === $b) ? 0 : (($a > $b) ? 1 : -1));
+                            }
                         );
                         if (count($intersectMemberBroaderMembers) !== 1) {
                             if (!isset($listAxesWithMembersNotLinkedToBroader[$axis->getId()][$broaderAxis->getId()])) {
