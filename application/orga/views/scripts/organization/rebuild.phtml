@@ -1,3 +1,4 @@
+<?php if ((count($this->granularitiesData) > 1) || (!(reset($this->granularitiesData) instanceof Orga_Model_Organization))) : ?>
 <fieldset class="wrapper">
     <legend style="cursor:default"><?=___('DW', 'rebuild', 'analysisDataRebuildCollapse')?></legend>
 <p><?=___('DW', 'rebuild', 'analysisDataRebuildWarningMessageOrganization')?></p>
@@ -73,8 +74,9 @@
     </script>
 </div>
 </fieldset>
+<?php endif; ?>
 
-<?php if ($this->canEditOrganization) : ?>
+<?php if (($this->canEditOrganization) && (count($this->granularitiesResults) > 0)) : ?>
 <fieldset class="wrapper">
     <legend style="cursor: default"><?=___('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
     <p><?=___('DW', 'rebuild', 'outputDataRebuildWarningMessageOrganization') ?></p>
@@ -149,7 +151,7 @@
             $('.cell-label, .cell', $(this).closest('form')).removeClass('hide');
         }
     });
-    $('[name="granularity"]').select2({
+    $('select[name="granularity"]').select2({
         matcher: function(term, text) {
             var terms = term.split(' ');
             for (var termIndex in terms) {
