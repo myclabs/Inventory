@@ -33,7 +33,7 @@ Feature: Organization input input feature
     And I wait for the page to finish loading
     And I click element "div[id='granularity8'] button.reset"
   # Vérification contenu datagrid
-    Then the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell input status should be "finished"
+    Then the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell input status should be "statusFinished"
   # Accès à la saisie, inventaire clôturé
     When I go input the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell
   # TODO : tester le fait que le champ apparaît en consultation.

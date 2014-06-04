@@ -37,16 +37,16 @@ trait OrgaViewFeatureContext
     public function assertCellInputStatusVisible($cell, $inputStatus)
     {
         switch ($inputStatus) {
-            case 'finished':
+            case 'statusFinished':
                 $inputStatusIcon = 'certificate';
                 break;
-            case 'complete':
+            case 'statusComplete':
                 $inputStatusIcon = 'check-square-o';
                 break;
-            case 'calculation_incomplete':
+            case 'statusCalculationIncomplete':
                 $inputStatusIcon = 'warning';
                 break;
-            case 'input_incomplete':
+            case 'statusInputIncomplete':
                 $inputStatusIcon = 'pencil-square-o';
                 break;
             case 'statusNotStarted':
