@@ -58,7 +58,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $data['reports'] = $granularity->getCellsGenerateDWCubes();
             $data['acl'] = $granularity->getCellsWithACL();
             if ((!$granularity->hasAxes()) || $data['relevance'] || $data['input']
-                || $data['afs'] || $data['reports'] || $data['acl'] || $data['inventory']) {
+                || $data['afs'] || $data['reports'] || $data['acl'] || ($data['inventory'] != 'none')) {
                 $data['delete'] = false;
             }
             if (!$data['input']) {
