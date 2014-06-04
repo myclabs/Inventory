@@ -97,7 +97,7 @@ trait OrgaViewFeatureContext
                 $inventoryStatusIcon = 'lock';
                 break;
             case 'active':
-                $inventoryStatusIcon = 'tasks';
+                $inventoryStatusIcon = 'unlock-alt';
                 break;
             case 'notLaunched':
                 $inventoryStatusIcon = 'ban';
