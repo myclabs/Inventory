@@ -8,107 +8,9 @@ afModule.filter('debug', function() {
 
 // Todo à supprimer
 afModule.factory('af', function () {
+    return af;
     return {
-        label: 'Données générales',
         components: [
-            {
-                type: 'numeric',
-                ref: 'chiffre_affaire',
-                label: 'Chiffre d\'affaire',
-                visible: true,
-                required: true
-            },
-            {
-                type: 'select',
-                ref: 'gaz',
-                label: 'Gaz',
-                visible: true,
-                required: true,
-                options: [
-                    {
-                        ref: 'co2',
-                        label: 'CO2'
-                    },
-                    {
-                        ref: 'hxo',
-                        label: 'HxO'
-                    }
-                ]
-            },
-            {
-                type: 'checkbox',
-                ref: 'check',
-                label: 'Checkbox',
-                visible: true,
-                required: true
-            },
-            {
-                type: 'group',
-                ref: 'groupe',
-                label: 'Groupe',
-                visible: false,
-                subComponents: [
-                    {
-                        type: 'text',
-                        ref: 'text',
-                        label: 'Champ de text court',
-                        visible: true,
-                        required: true
-                    },
-                    {
-                        type: 'textarea',
-                        ref: 'textarea',
-                        label: 'Champ de text long',
-                        visible: true,
-                        required: true
-                    }
-                ],
-                actions: [
-                    {
-                        type: 'show',
-                        condition: {
-                            type: 'checkbox',
-                            targetComponent: 'check',
-                            relation: 'equal',
-                            value: true
-                        }
-                    }
-                ]
-            },
-            {
-                type: 'radio',
-                ref: 'choixSimple',
-                label: 'Choix simple',
-                visible: true,
-                required: true,
-                options: [
-                    {
-                        ref: 'bli',
-                        label: 'Bli'
-                    },
-                    {
-                        ref: 'blah',
-                        label: 'Blah'
-                    }
-                ]
-            },
-            {
-                type: 'select-multiple',
-                ref: 'gazMultiple',
-                label: 'Gaz',
-                visible: true,
-                required: true,
-                options: [
-                    {
-                        ref: 'co2',
-                        label: 'CO2'
-                    },
-                    {
-                        ref: 'hxo',
-                        label: 'HxO'
-                    }
-                ]
-            },
             {
                 type: 'subaf-single',
                 ref: 'subAFSingle',
@@ -165,63 +67,7 @@ afModule.factory('af', function () {
 
 // Todo à supprimer
 afModule.factory('inputSet', function () {
-    return {
-        completion: 65,
-        status: __('AF', 'inputInput', 'statusInputIncomplete'),
-        inputs: [
-            {
-                componentRef: 'chiffre_affaire',
-                value: {
-                    digitalValue: 10.45,
-                    uncertainty: 20,
-                    unit: 'euro'
-                }
-            },
-            {
-                componentRef: 'gaz',
-                value: 'hxo'
-            },
-            {
-                componentRef: 'check',
-                value: true
-            },
-            {
-                componentRef: 'text',
-                value: 'Bonsoir Paris !'
-            },
-            {
-                componentRef: 'choixSimple',
-                value: 'bli'
-            },
-            {
-                componentRef: 'gazMultiple',
-                value: [ 'co2', 'hxo' ]
-            },
-            {
-                componentRef: 'textarea',
-                value: 'Bonsoir Paris !'
-            },
-            {
-                componentRef: 'subAFSingle',
-                value: {
-                    inputs: [
-                        {
-                            componentRef: 'chiffre_affaire',
-                            value: {
-                                digitalValue: 10.45,
-                                uncertainty: 20,
-                                unit: 'euro'
-                            }
-                        },
-                        {
-                            componentRef: 'check',
-                            value: true
-                        }
-                    ]
-                }
-            }
-        ]
-    };
+    return {};
 });
 
 afModule.factory('testCondition', function () {
@@ -279,6 +125,7 @@ afModule.directive('afFieldset', [ 'isInputVisible', function(isInputVisible) {
             $scope.isInputVisible = isInputVisible;
 
             $scope.getInput = function (component) {
+                console.log(component);
                 if (angular.isUndefined($scope.inputSet)) {
                     $scope.inputSet = {};
                 }
@@ -436,6 +283,9 @@ afModule.directive('afSelectMultiple', function() {
         templateUrl: 'scripts/af/templates/component-select-multiple.html',
         link: function ($scope) {
             $scope.toggleSelection = function toggleSelection(optionRef) {
+                if ($scope.input.value === null) {
+                    $scope.input.value = [];
+                }
                 var idx = $scope.input.value.indexOf(optionRef);
 
                 // is currently selected

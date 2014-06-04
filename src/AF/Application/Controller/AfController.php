@@ -7,6 +7,7 @@
  */
 
 use AF\Application\AFViewConfiguration;
+use AF\Architecture\Service\AFSerializer;
 use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\AFCopyService;
@@ -40,6 +41,12 @@ class AF_AfController extends Core_Controller
      * @var InputService
      */
     private $inputService;
+
+    /**
+     * @Inject
+     * @var AFSerializer
+     */
+    private $afSerializer;
 
     /**
      * Affichage d'un AF en mode test
@@ -88,6 +95,8 @@ class AF_AfController extends Core_Controller
         $this->view->af = $af;
         /** @noinspection PhpUndefinedFieldInspection */
         $this->view->viewConfiguration = $viewConfiguration;
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->view->serializedAF = $this->afSerializer->serialize($af);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use AF\Application\InputFormParser;
+use AF\Architecture\Service\AFSerializer;
 use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\InputHistoryService;
@@ -41,6 +42,25 @@ class AF_InputController extends Core_Controller
      * @var InputFormParser
      */
     private $inputFormParser;
+
+    /**
+     * @Inject
+     * @var AFSerializer
+     */
+    private $afSerializer;
+
+    /**
+     * Retourne l'AF en JSON
+     * @Secure("viewInputAF")
+     */
+    public function getAfAction()
+    {
+        $af = AF::load($this->getParam('id'));
+
+        $this->getResponse()->setBody('<pre>' . $this->afSerializer->serialize($af) . '</pre>');
+
+        $this->_helper->viewRenderer->setNoRender(true);
+    }
 
     /**
      * Soumission d'un AF

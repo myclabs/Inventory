@@ -43,7 +43,7 @@ if ($viewConfiguration->getIdInputSet()) {
 $url = $this->url($urlArray, null, true);
 $url .= '?actionStack=' . urlencode(json_encode($viewConfiguration->getActionStack()));
 $baseTabs[AFViewConfiguration::TAB_INPUT]->setContent(
-    $this->partial('af/display-input2.phtml')
+    $this->partial('af/display-input2.phtml', ['serializedAF' => $this->serializedAF])
 );
 
 // ONGLET DE RESULTAT
