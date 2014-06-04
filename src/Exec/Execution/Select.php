@@ -63,10 +63,13 @@ class Select extends Execution
     {
         $results = [];
 
-        if ($node instanceof  Leaf) {
-            $results[$node->getName()] = $valueProvider->getValueForExecution($node->getName());
+        if ($node instanceof Leaf) {
+            $results[$node->getName()] = $valueProvider->getValueForExecution(
+                $node->getName(),
+                ValueInterface::RESULT_STRING
+            );
         } elseif ($node instanceof Composite) {
-            if ($valueProvider->getValueForExecution($node->getModifier()) === true) {
+            if ($valueProvider->getValueForExecution($node->getModifier(), ValueInterface::RESULT_BOOL) === true) {
                 foreach ($node->getChildren() as $child) {
                     $results = array_merge($results, $this->executeComponent($child, $valueProvider));
                 }
@@ -109,7 +112,7 @@ class Select extends Execution
         if ($node instanceof  Leaf) {
             $results[] = $node->getName();
         } elseif ($node instanceof Composite) {
-            if ($valueProvider->getValueForExecution($node->getModifier()) === true) {
+            if ($valueProvider->getValueForExecution($node->getModifier(), ValueInterface::RESULT_BOOL) === true) {
                 foreach ($node->getChildren() as $child) {
                     $results = array_merge($results, $this->getSelectedComponentLeafs($child, $valueProvider));
                 }

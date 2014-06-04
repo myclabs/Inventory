@@ -63,7 +63,7 @@ class NumericExpressionAlgo extends NumericAlgo implements ValueInterface, UnitI
      * @param string $ref Ref de l'algo utilisé dans l'expression
      * @return Calc_UnitValue
      */
-    public function getValueForExecution($ref)
+    public function getValueForExecution($ref, $expectedResult)
     {
         $algo = $this->getSet()->getAlgoByRef($ref);
         return $algo->execute($this->inputSet);
