@@ -169,7 +169,11 @@ afModule.directive('afComponent', function() {
             component: '=',
             input: '='
         },
-        templateUrl: 'scripts/af/templates/component.html'
+        templateUrl: 'scripts/af/templates/component.html',
+        link: function ($scope) {
+            // Forward les saisies du scope courant
+            $scope.inputs = $scope.$parent.inputSet.inputs;
+        }
     };
 });
 afModule.directive('afHorizontalComponent', function() {
@@ -179,77 +183,117 @@ afModule.directive('afHorizontalComponent', function() {
             component: '=',
             input: '='
         },
-        templateUrl: 'scripts/af/templates/horizontal-component.html'
+        templateUrl: 'scripts/af/templates/horizontal-component.html',
+        link: function ($scope) {
+            // Forward les saisies du scope courant
+            $scope.inputs = $scope.$parent.inputs;
+        }
     };
 });
 
-afModule.directive('afNumericField', function() {
+afModule.directive('afNumericField', function(isInputEnabled) {
     return {
         restrict: 'E',
         scope: {
             component: '=',
             input: '='
         },
-        templateUrl: 'scripts/af/templates/component-numeric-field.html'
+        templateUrl: 'scripts/af/templates/component-numeric-field.html',
+        link: function ($scope) {
+            // Forward les saisies du scope courant
+            $scope.inputs = $scope.$parent.inputs;
+
+            $scope.isInputEnabled = isInputEnabled;
+        }
     };
 });
 
-afModule.directive('afSelect', function() {
+afModule.directive('afSelect', function(isInputEnabled) {
     return {
         restrict: 'E',
         scope: {
             component: '=',
             input: '='
         },
-        templateUrl: 'scripts/af/templates/component-select.html'
+        templateUrl: 'scripts/af/templates/component-select.html',
+        link: function ($scope) {
+            // Forward les saisies du scope courant
+            $scope.inputs = $scope.$parent.inputs;
+
+            $scope.isInputEnabled = isInputEnabled;
+        }
     };
 });
 
-afModule.directive('afCheckbox', function() {
+afModule.directive('afCheckbox', function(isInputEnabled) {
     return {
         restrict: 'E',
         scope: {
             component: '=',
             input: '='
         },
-        templateUrl: 'scripts/af/templates/component-checkbox.html'
+        templateUrl: 'scripts/af/templates/component-checkbox.html',
+        link: function ($scope) {
+            // Forward les saisies du scope courant
+            $scope.inputs = $scope.$parent.inputs;
+
+            $scope.isInputEnabled = isInputEnabled;
+        }
     };
 });
 
-afModule.directive('afTextField', function() {
+afModule.directive('afTextField', function(isInputEnabled) {
     return {
         restrict: 'E',
         scope: {
             component: '=',
             input: '='
         },
-        templateUrl: 'scripts/af/templates/component-text-field.html'
+        templateUrl: 'scripts/af/templates/component-text-field.html',
+        link: function ($scope) {
+            // Forward les saisies du scope courant
+            $scope.inputs = $scope.$parent.inputs;
+
+            $scope.isInputEnabled = isInputEnabled;
+        }
     };
 });
 
-afModule.directive('afTextarea', function() {
+afModule.directive('afTextarea', function(isInputEnabled) {
     return {
         restrict: 'E',
         scope: {
             component: '=',
             input: '='
         },
-        templateUrl: 'scripts/af/templates/component-textarea.html'
+        templateUrl: 'scripts/af/templates/component-textarea.html',
+        link: function ($scope) {
+            // Forward les saisies du scope courant
+            $scope.inputs = $scope.$parent.inputs;
+
+            $scope.isInputEnabled = isInputEnabled;
+        }
     };
 });
 
-afModule.directive('afRadio', function() {
+afModule.directive('afRadio', function(isInputEnabled) {
     return {
         restrict: 'E',
         scope: {
             component: '=',
             input: '='
         },
-        templateUrl: 'scripts/af/templates/component-radio.html'
+        templateUrl: 'scripts/af/templates/component-radio.html',
+        link: function ($scope) {
+            // Forward les saisies du scope courant
+            $scope.inputs = $scope.$parent.inputs;
+
+            $scope.isInputEnabled = isInputEnabled;
+        }
     };
 });
 
-afModule.directive('afSelectMultiple', function() {
+afModule.directive('afSelectMultiple', function(isInputEnabled) {
     return {
         restrict: 'E',
         scope: {
@@ -258,6 +302,9 @@ afModule.directive('afSelectMultiple', function() {
         },
         templateUrl: 'scripts/af/templates/component-select-multiple.html',
         link: function ($scope) {
+            // Forward les saisies du scope courant
+            $scope.inputs = $scope.$parent.inputs;
+
             $scope.toggleSelection = function toggleSelection(optionRef) {
                 if ($scope.input.value === null) {
                     $scope.input.value = [];
@@ -273,6 +320,8 @@ afModule.directive('afSelectMultiple', function() {
                     $scope.input.value.push(optionRef);
                 }
             };
+
+            $scope.isInputEnabled = isInputEnabled;
         }
     };
 });

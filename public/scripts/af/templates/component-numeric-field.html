@@ -2,7 +2,8 @@
 
     <div class="col-xs-4">
         <input type="text" class="form-control" pattern="-?[0-9]*[.,]?[0-9]*" ng-required="component.required"
-               ng-model="input.value.digitalValue">
+               ng-model="input.value.digitalValue"
+               ng-disabled="!isInputEnabled(input, component, inputs)">
     </div>
 
     <div class="col-xs-4" ng-if="!component.unitChoices">
@@ -15,7 +16,8 @@
     <div class="col-xs-4" ng-if="component.unitChoices">
 
         <select class="form-control" ng-model="input.value.unit" ng-init="input.value.unit=component.unit.ref"
-                ng-options="unit.ref as unit.symbol for unit in component.unitChoices">
+                ng-options="unit.ref as unit.symbol for unit in component.unitChoices"
+                ng-disabled="!isInputEnabled(input, component, inputs)">
         </select>
 
     </div>
@@ -24,7 +26,8 @@
         <div class="input-group">
             <span class="input-group-addon">±</span>
             <input type="text" class="incertitude form-control" pattern="(100)|[0-9]{1,2}"
-                   ng-model="input.value.uncertainty">
+                   ng-model="input.value.uncertainty"
+                   ng-disabled="!isInputEnabled(input, component, inputs)">
             <span class="input-group-addon">%</span>
         </div>
     </div>

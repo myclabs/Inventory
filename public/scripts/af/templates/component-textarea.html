@@ -1,1 +1,2 @@
-<textarea class="form-control" ng-required="component.required" rows="3" ng-model="input.value"></textarea>
+<textarea class="form-control" ng-required="component.required" rows="3" ng-model="input.value"
+          ng-disabled="!isInputEnabled(input, component, inputs)"></textarea>
