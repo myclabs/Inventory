@@ -6,65 +6,6 @@ afModule.filter('debug', function() {
     };
 });
 
-// Todo à supprimer
-afModule.factory('af', function () {
-    return af;
-    return {
-        components: [
-            {
-                type: 'subaf-single',
-                ref: 'subAFSingle',
-                label: 'Sous-formulaire non répété',
-                visible: true,
-                calledAF: {
-                    label: 'Test',
-                    components: [
-                        {
-                            type: 'numeric',
-                            ref: 'chiffre_affaire',
-                            label: 'Chiffre d\'affaire',
-                            visible: true,
-                            required: true
-                        },
-                        {
-                            type: 'checkbox',
-                            ref: 'check',
-                            label: 'Checkbox',
-                            visible: true,
-                            required: true
-                        }
-                    ]
-                }
-            },
-            {
-                type: 'subaf-multi',
-                ref: 'subAFMulti',
-                label: 'Sous-formulaire répété',
-                visible: true,
-                calledAF: {
-                    label: 'Test',
-                    components: [
-                        {
-                            type: 'numeric',
-                            ref: 'chiffre_affaire',
-                            label: 'Chiffre d\'affaire',
-                            visible: true,
-                            required: true
-                        },
-                        {
-                            type: 'text',
-                            ref: 'text',
-                            label: 'Champ de text court',
-                            visible: true,
-                            required: true
-                        }
-                    ]
-                }
-            }
-        ]
-    };
-});
-
 afModule.factory('testCondition', function () {
     return function (condition, inputs) {
         // Find target component input
@@ -102,8 +43,8 @@ afModule.factory('isInputVisible', ['testCondition', function (testCondition) {
     };
 }]);
 
-afModule.controller('InputController', ['$scope', 'af', function ($scope, af) {
-    $scope.af = af;
+afModule.controller('InputController', ['$scope', '$window', function ($scope, $window) {
+    $scope.af = $window.af;
     // TODO
     $scope.inputSet = {};
 }]);
@@ -121,7 +62,7 @@ afModule.directive('afFieldset', [ 'isInputVisible', function(isInputVisible) {
             $scope.isInputVisible = isInputVisible;
 
             $scope.getInput = function (component) {
-                if (angular.isUndefined($scope.inputSet)) {
+                if (angular.isUndefined($scope.inputSet) || $scope.inputSet === null) {
                     $scope.inputSet = {};
                 }
                 if (angular.isUndefined($scope.inputSet.inputs)) {

@@ -8,6 +8,8 @@ use AF\Domain\Component\Group;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Component\Select\SelectMulti;
 use AF\Domain\Component\Select\SelectSingle;
+use AF\Domain\Component\SubAF\NotRepeatedSubAF;
+use AF\Domain\Component\SubAF\RepeatedSubAF;
 use AF\Domain\Component\TextField;
 use Mnapoli\Translated\Translator;
 
@@ -54,8 +56,19 @@ class AFSerializer
 
             switch (true) {
                 case $component instanceof Group:
+                    /** @var Group $component */
                     $arr['type'] = 'group';
                     $arr += $this->serializeGroup($component);
+                    break;
+                case $component instanceof NotRepeatedSubAF:
+                    /** @var NotRepeatedSubAF $component */
+                    $arr['type'] = 'subaf-single';
+                    $arr['calledAF'] = $this->serializeGroup($component->getCalledAF()->getRootGroup());
+                    break;
+                case $component instanceof RepeatedSubAF:
+                    /** @var RepeatedSubAF $component */
+                    $arr['type'] = 'subaf-multi';
+                    $arr['calledAF'] = $this->serializeGroup($component->getCalledAF()->getRootGroup());
                     break;
                 case $component instanceof NumericField:
                     /** @var NumericField $component */
