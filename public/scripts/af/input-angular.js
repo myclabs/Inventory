@@ -105,6 +105,9 @@ afModule.controller('InputController', ['$scope', '$window', '$http', function (
             urlParams: urlParams
         };
         $http.post('af/input/submit?id=' + af.id, data).success(function (response) {
+            if (angular.isUndefined(response)) {
+                return;
+            }
             $scope.inputSet.completion = response.data.completion;
             $scope.inputSet.status = response.data.status;
 

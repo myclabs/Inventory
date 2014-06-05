@@ -34,7 +34,7 @@ class RepeatedSubAFInput extends SubAFInput
      */
     public function getValue()
     {
-        return $this->value->toArray();
+        return is_array($this->value) ? $this->value : $this->value->toArray();
     }
 
     /**

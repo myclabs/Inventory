@@ -2,25 +2,17 @@
 
 namespace AF\Architecture\Service;
 
-use AF\Domain\Action\Action;
-use AF\Domain\Action\SetState;
 use AF\Domain\Action\SetValue;
 use AF\Domain\AF;
 use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\Component;
-use AF\Domain\Component\Group;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Component\Select\SelectMulti;
 use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Component\SubAF\NotRepeatedSubAF;
 use AF\Domain\Component\SubAF\RepeatedSubAF;
 use AF\Domain\Component\TextField;
-use AF\Domain\Condition\CheckboxCondition;
-use AF\Domain\Condition\Condition;
-use AF\Domain\Condition\ElementaryCondition;
-use AF\Domain\Condition\Select\SelectSingleCondition;
 use AF\Domain\Input\CheckboxInput;
-use AF\Domain\Input\Input;
 use AF\Domain\Input\NumericFieldInput;
 use AF\Domain\Input\Select\SelectMultiInput;
 use AF\Domain\Input\Select\SelectSingleInput;
@@ -137,53 +129,32 @@ class InputSerializer
         } elseif ($component instanceof NotRepeatedSubAF) {
             // Sous-AF non répété
             $input = new NotRepeatedSubAFInput($inputSet, $component);
-            $this->doParseForm(
-                $data['elements'],
-                $input->getValue(),
-                $component->getCalledAF()
-            );
+            if (isset($data['value']['inputs'])) {
+                foreach ($data['value']['inputs'] as $inputData) {
+                    $this->unserializeInput($inputData, $input->getValue(), $component->getCalledAF());
+                }
+            }
 
         } elseif ($component instanceof RepeatedSubAF) {
             // Sous-AF répété
             $input = new RepeatedSubAFInput($inputSet, $component);
-            foreach ($data['elements'] as $ref => $elements) {
-                list($repetitionNumber) = explode(UI_Generic::REF_SEPARATOR, strrev($ref), 2);
-                $repetitionNumber = strrev($repetitionNumber);
-                if (is_numeric($repetitionNumber)) {
-                    $subInputSets = $input->getValue();
-                    if (isset($subInputSets[$repetitionNumber])) {
-                        // La répétition existe déjà
-                        $subInputSet = $subInputSets[$repetitionNumber];
-                        // Free label
-                        foreach ($elements as $subRef => $subInputContent) {
-                            $refComponents = explode(UI_Generic::REF_SEPARATOR, $subRef);
-                            if ($refComponents[count($refComponents) - 1] == 'freeLabel') {
-                                $subInputSet->setFreeLabel($subInputContent['value']);
-                                break;
-                            }
-                        }
-                        $this->doParseForm(
-                            $elements['elements'],
-                            $subInputSet,
-                            $component->getCalledAF()
-                        );
-                    } else {
-                        // On crée une nouvelle répétition
-                        $subInputSet = new SubInputSet($component->getCalledAF());
-                        // Free label
-                        foreach ($elements as $subRef => $subInputContent) {
-                            $refComponents = explode(UI_Generic::REF_SEPARATOR, $subRef);
-                            if ($refComponents[count($refComponents) - 2] == 'freeLabel') {
-                                $subInputSet->setFreeLabel($subInputContent['value']);
-                                break;
-                            }
-                        }
-                        $this->doParseForm(
-                            $elements,
-                            $subInputSet,
-                            $component->getCalledAF()
-                        );
-                        $input->addSubSet($subInputSet);
+            $subInputSets = $input->getValue();
+
+            if (! isset($data['value']) || ! is_array($data['value'])) {
+                $data['value'] = [];
+            }
+
+            foreach ($data['value'] as $repetitionNumber => $repetition) {
+                if (isset($subInputSets[$repetitionNumber])) {
+                    $subInputSet = $subInputSets[$repetitionNumber];
+                } else {
+                    $subInputSet = new SubInputSet($component->getCalledAF());
+                    $input->addSubSet($subInputSet);
+                }
+
+                if (isset($repetition['inputs'])) {
+                    foreach ($repetition['inputs'] as $inputData) {
+                        $this->unserializeInput($inputData, $subInputSet, $component->getCalledAF());
                     }
                 }
             }
@@ -230,13 +201,13 @@ class InputSerializer
             switch (true) {
                 case $input instanceof NotRepeatedSubAFInput:
                     /** @var NotRepeatedSubAFInput $input */
-                    $arr['type'] = 'subaf-single';
-                    $arr['calledAF'] = $this->serializeGroup($input->getCalledAF()->getRootGroup());
+                    $arr['value'] = $this->serializeInputSet($input->getValue());
                     break;
                 case $input instanceof RepeatedSubAFInput:
                     /** @var RepeatedSubAFInput $input */
-                    $arr['type'] = 'subaf-multi';
-                    $arr['calledAF'] = $this->serializeGroup($input->getCalledAF()->getRootGroup());
+                    foreach ($input->getValue() as $inputSet) {
+                        $arr['value'][] = $this->serializeInputSet($inputSet);
+                    }
                     break;
                 case $input instanceof NumericFieldInput:
                     /** @var NumericFieldInput $input */
