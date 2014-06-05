@@ -454,7 +454,8 @@ class Orga_CellController extends Core_Controller
         $editInventory = (($narrowerGranularity === $granularityForInventoryStatus)
             && $this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell)
             && $this->acl->isAllowed($connectedUser, Actions::INPUT, $cell));
-        $showInventory = ($narrowerGranularity->getCellsMonitorInventory() || $editInventory)
+        $showInventory = (($narrowerGranularity === $granularityForInventoryStatus)
+                || $narrowerGranularity->getCellsMonitorInventory() || $editInventory)
             && ($this->acl->isAllowed($connectedUser, Actions::ANALYZE, $cell));;
         $showInventoryProgress = false;
         if ($showInventory) {

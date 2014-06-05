@@ -151,6 +151,8 @@ class Orga_OrganizationController extends Core_Controller
     {
         $this->view->assign('account', $this->getParam('account'));
         $this->view->assign('templates', $this->organizationService->getOrganizationTemplates());
+
+        $this->view->headScript()->appendFile('scripts/ui/form-ajax.js', 'text/javascript');
     }
 
     /**
@@ -1208,7 +1210,7 @@ class Orga_OrganizationController extends Core_Controller
 
         foreach ($topCells as $topCell) {
             $granularity = $topCell->getGranularity();
-            if ($granularity->getDWCube()) {
+            if ($granularity->getCellsGenerateDWCubes()) {
                 $granularities[$granularity->getId()] = $granularity;
             }
             foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {

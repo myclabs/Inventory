@@ -33,7 +33,7 @@ Feature: Organization datagrid feature
     And the "granularity3" datagrid should contain 1 row
     And the row 1 of the "granularity3" datagrid should contain:
       | axes | relevance | input | afs | inventory | reports | acl |
-      |      | Non       | Non   | Non | Non       | Non     | Non |
+      |      | Non       | Non   | Non | -       | Non     | Non |
 
   @javascript
   Scenario: Deletion of an organization without data scenario

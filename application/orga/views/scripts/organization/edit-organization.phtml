@@ -1,7 +1,4 @@
-<?php
-?>
-
-<fieldset class="wrapper">
+    <fieldset class="wrapper">
     <legend style="cursor:default"><?=___('UI', 'name', 'general')?></legend>
     <div>
         <form id="organizationDetails<?=$this->idOrganization?>" class="form-horizontal" method="POST" action="orga/organization/edit-organization-submit/idOrganization/<?=$this->idOrganization?>">
@@ -74,7 +71,7 @@
                     <?=___('Classification', 'contextIndicator', 'contextIndicators')?>
                 </label>
                 <div class="col-xs-10">
-                    <select name="contextIndicators[]" multiple id="contextIndicators">
+                    <select name="contextIndicators[]" multiple id="contextIndicators" style="width: 100%">
                         <?php foreach ($this->potentialContextIndicators as $contextIndicator) : ?>
                             <option value="<?=$contextIndicator->getId()?>"<?=(in_array($contextIndicator, $this->selectedContextIndicators) ? ' selected' : '')?>>
                                 <?=$this->translate($contextIndicator->getLabel())?>
