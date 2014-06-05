@@ -57,7 +57,7 @@ class SelectSingleCondition extends ElementaryCondition
     }
 
     /**
-     * @return SelectOption
+     * @return SelectOption|null
      */
     public function getOption()
     {

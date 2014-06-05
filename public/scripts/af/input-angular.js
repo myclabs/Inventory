@@ -17,8 +17,15 @@ afModule.factory('testCondition', function () {
             return false;
         }
 
-        // Compare to condition
-        return input.value === condition.value;
+        switch(condition.type) {
+            case 'equal':
+                return input.value === condition.value;
+            case 'nequal':
+                return input.value !== condition.value;
+            default:
+                console.log('Unrecognized condition type');
+                return false;
+        }
     };
 });
 
@@ -29,7 +36,7 @@ afModule.factory('isInputVisible', ['testCondition', function (testCondition) {
         }
 
         var actions = component.actions.filter(function (action) {
-            return action.type === 'show';
+            return action.type === 'show' || action.type === 'hide';
         });
 
         // No actions on this component
@@ -38,7 +45,40 @@ afModule.factory('isInputVisible', ['testCondition', function (testCondition) {
         }
 
         return actions.reduce(function (result, action) {
-            return result && testCondition(action.condition, inputs);
+            if (action.type === 'show') {
+                return result && testCondition(action.condition, inputs);
+            } else if (action.type === 'hide') {
+                return result && !testCondition(action.condition, inputs);
+            } else {
+                return result;
+            }
+        }, true);
+    };
+}]);
+
+afModule.factory('isInputEnabled', ['testCondition', function (testCondition) {
+    return function (input, component, inputs) {
+        if (angular.isUndefined(component.actions)) {
+            return component.enabled;
+        }
+
+        var actions = component.actions.filter(function (action) {
+            return action.type === 'enable' || action.type === 'disable';
+        });
+
+        // No actions on this component
+        if (actions.length === 0) {
+            return component.enabled;
+        }
+
+        return actions.reduce(function (result, action) {
+            if (action.type === 'enable') {
+                return result && testCondition(action.condition, inputs);
+            } else if (action.type === 'disable') {
+                return result && !testCondition(action.condition, inputs);
+            } else {
+                return result;
+            }
         }, true);
     };
 }]);
@@ -248,7 +288,7 @@ afModule.directive('afGroup', function($compile) {
         link: function ($scope, element) {
             // On compile manuellement sinon récursion infinie : angular pré-importe les templates
             // même s'ils ne sont pas vraiment utilisés
-            element.append('<af-fieldset components="component.subComponents" label="component.label" input-set="inputSet"></af-fieldset>');
+            element.append('<af-fieldset components="component.components" label="component.label" input-set="inputSet"></af-fieldset>');
             $compile(element.contents())($scope.$new());
         }
     };

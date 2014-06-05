@@ -2,6 +2,9 @@
 
 namespace AF\Architecture\Service;
 
+use AF\Domain\Action\Action;
+use AF\Domain\Action\SetState;
+use AF\Domain\Action\SetValue;
 use AF\Domain\AF;
 use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\Group;
@@ -11,6 +14,10 @@ use AF\Domain\Component\Select\SelectSingle;
 use AF\Domain\Component\SubAF\NotRepeatedSubAF;
 use AF\Domain\Component\SubAF\RepeatedSubAF;
 use AF\Domain\Component\TextField;
+use AF\Domain\Condition\CheckboxCondition;
+use AF\Domain\Condition\Condition;
+use AF\Domain\Condition\ElementaryCondition;
+use AF\Domain\Condition\Select\SelectSingleCondition;
 use Mnapoli\Translated\Translator;
 
 /**
@@ -54,6 +61,10 @@ class AFSerializer
                 'visible' => $component->isVisible(),
             ];
 
+            foreach ($component->getActions() as $action) {
+                $arr['actions'][] = $this->serializeAction($action);
+            }
+
             switch (true) {
                 case $component instanceof Group:
                     /** @var Group $component */
@@ -74,6 +85,7 @@ class AFSerializer
                     /** @var NumericField $component */
                     $unit = $component->getUnit();
                     $arr['type'] = 'numeric';
+                    $arr['enabled'] = $component->isEnabled();
                     $arr['unit'] = [
                         'ref'    => $unit->getRef(),
                         'symbol' => $this->translator->get($unit->getSymbol()),
@@ -96,10 +108,14 @@ class AFSerializer
                     } else {
                         $arr['type'] = 'textarea';
                     }
+                    $arr['enabled'] = $component->isEnabled();
                     $arr['required'] = $component->getRequired();
                     break;
                 case $component instanceof Checkbox:
+                    /** @var Checkbox $component */
                     $arr['type'] = 'checkbox';
+                    $arr['enabled'] = $component->isEnabled();
+                    $arr['defaultValue'] = $component->getDefaultValue();
                     break;
                 case $component instanceof SelectSingle:
                     /** @var SelectSingle $component */
@@ -108,6 +124,7 @@ class AFSerializer
                     } else {
                         $arr['type'] = 'radio';
                     }
+                    $arr['enabled'] = $component->isEnabled();
                     $arr['required'] = $component->getRequired();
                     $arr['options'] = [];
                     foreach ($component->getOptions() as $option) {
@@ -120,6 +137,7 @@ class AFSerializer
                 case $component instanceof SelectMulti:
                     /** @var SelectMulti $component */
                     $arr['type'] = 'select-multiple';
+                    $arr['enabled'] = $component->isEnabled();
                     $arr['required'] = $component->getRequired();
                     $arr['options'] = [];
                     foreach ($component->getOptions() as $option) {
@@ -136,5 +154,81 @@ class AFSerializer
         }
 
         return $data;
+    }
+
+    private function serializeAction(Action $action)
+    {
+        /** @var ElementaryCondition $condition */
+        $condition = $action->getCondition();
+
+        switch (true) {
+            case $action instanceof SetState:
+                /** @var $action SetState */
+                switch ($action->getState()) {
+                    case Action::TYPE_SHOW:
+                        $type = 'show';
+                        break;
+                    case Action::TYPE_HIDE:
+                        $type = 'hide';
+                        break;
+                    case Action::TYPE_ENABLE:
+                        $type = 'enable';
+                        break;
+                    case Action::TYPE_DISABLE:
+                        $type = 'disable';
+                        break;
+                    default:
+                        $type = null;
+                }
+                break;
+            case $action instanceof SetValue:
+                $type = 'set-value';
+                break;
+            default:
+                $type = null;
+        }
+
+        if (!$type) {
+            return null;
+        }
+
+        return [
+            'type' => $type,
+            'condition' => $this->serializeCondition($condition),
+        ];
+    }
+
+    private function serializeCondition(Condition $condition)
+    {
+        $type = null;
+        if ($condition instanceof ElementaryCondition) {
+            switch ($condition->getRelation()) {
+                case ElementaryCondition::RELATION_EQUAL:
+                    $type = 'equal';
+                    break;
+                case ElementaryCondition::RELATION_NEQUAL:
+                    $type = 'nequal';
+                    break;
+            }
+        }
+
+        switch (true) {
+            case $condition instanceof CheckboxCondition:
+                /** @var $condition CheckboxCondition */
+                return [
+                    'type'            => $type,
+                    'targetComponent' => $condition->getField()->getRef(),
+                    'value'           => $condition->getValue(),
+                ];
+            case $condition instanceof SelectSingleCondition:
+                /** @var $condition SelectSingleCondition */
+                return [
+                    'type'            => $type,
+                    'targetComponent' => $condition->getField()->getRef(),
+                    'value'           => $condition->getOption()->getRef(),
+                ];
+        }
+
+        return null;
     }
 }
