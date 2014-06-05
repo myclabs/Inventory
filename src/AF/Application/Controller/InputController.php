@@ -1,7 +1,7 @@
 <?php
 
 use AF\Application\InputFormParser;
-use AF\Architecture\Service\AFSerializer;
+use AF\Architecture\Service\InputSerializer;
 use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\InputHistoryService;
@@ -45,22 +45,9 @@ class AF_InputController extends Core_Controller
 
     /**
      * @Inject
-     * @var AFSerializer
+     * @var InputSerializer
      */
-    private $afSerializer;
-
-    /**
-     * Retourne l'AF en JSON
-     * @Secure("viewInputAF")
-     */
-    public function getAfAction()
-    {
-        $af = AF::load($this->getParam('id'));
-
-        $this->getResponse()->setBody('<pre>' . $this->afSerializer->serialize($af) . '</pre>');
-
-        $this->_helper->viewRenderer->setNoRender(true);
-    }
+    private $inputSerializer;
 
     /**
      * Soumission d'un AF
@@ -75,20 +62,20 @@ class AF_InputController extends Core_Controller
         $af = AF::load($this->getParam('id'));
         $this->setParam('af', $af);
 
-        // Form data
-        $formData = json_decode($this->getParam('af' . $af->getId()), true);
-        $errorMessages = [];
+        $urlParams = $this->getParam('urlParams');
 
-        $inputSet = $this->inputFormParser->parseForm($formData, $af, $errorMessages);
+        // Form data
+        $formData = $this->getParam('input');
+
+        $inputSet = $this->inputSerializer->unserialize($formData, $af);
 
         // Fait suivre aux actions de processing
-        $actions = json_decode($this->getParam('actionStack'), true);
+        $actions = $urlParams['actionStack'];
         // Fait suivre à la fin à l'action qui renvoie la réponse
         $actions[] = [
             'action'     => 'submit-send-response',
             'controller' => 'input',
             'module'     => 'af',
-            'params'     => ['errorMessages' => $errorMessages],
         ];
 
         // On est obligé de construire un "container" pour que les sous-actions puissent remplacer l'inputset
@@ -122,8 +109,6 @@ class AF_InputController extends Core_Controller
         $inputSetContainer = $this->getParam('inputSetContainer');
         /** @var $inputSet PrimaryInputSet */
         $inputSet = $inputSetContainer->inputSet;
-
-        $this->addFormErrors($this->getParam('errorMessages', []));
 
         if ($inputSet->isInputComplete() && $inputSet->isCalculationComplete()) {
             $this->setFormMessage(__('AF', 'inputInput', 'completeInputSaved'), UI_Message::TYPE_SUCCESS);

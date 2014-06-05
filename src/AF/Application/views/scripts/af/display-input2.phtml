@@ -1,5 +1,7 @@
 <script type="text/javascript">
-    window.af = <?=$this->serializedAF?>;
+    window.af = <?=json_encode($this->serializedAF)?>;
+    window.inputSet = <?=json_encode($this->serializedInputSet)?>;
+    window.afUrlParams = <?=json_encode($this->urlParams)?>;
 </script>
 
 <div ng-app="AF" ng-controller="InputController">
@@ -31,7 +33,7 @@
                     <button type="button" class="btn btn-default">
                         <?= __('AF', 'inputInput', 'resultsPreview') ?>
                     </button>
-                    <button type="button" class="btn btn-default">
+                    <button type="button" class="btn btn-default" ng-click="save()">
                         <?= __('UI', 'verb', 'save') ?>
                     </button>
                     <button type="button" class="btn btn-default">

@@ -1,5 +1,16 @@
 var afModule = angular.module('AF', []);
 
+// Configure Angular pour poster en "form data" plutôt qu'en JSON
+afModule.config(function ($httpProvider) {
+    $httpProvider.defaults.transformRequest = function(data){
+        if (data === undefined) {
+            return data;
+        }
+        return $.param(data);
+    };
+    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+});
+
 afModule.filter('debug', function() {
     return function(input) {
         return JSON.stringify(input, undefined, 2);
@@ -83,10 +94,23 @@ afModule.factory('isInputEnabled', ['testCondition', function (testCondition) {
     };
 }]);
 
-afModule.controller('InputController', ['$scope', '$window', function ($scope, $window) {
+afModule.controller('InputController', ['$scope', '$window', '$http', function ($scope, $window, $http) {
     $scope.af = $window.af;
-    // TODO
-    $scope.inputSet = {};
+    $scope.inputSet = $window.inputSet;
+    var urlParams = $window.afUrlParams;
+
+    $scope.save = function () {
+        var data = {
+            input: $scope.inputSet,
+            urlParams: urlParams
+        };
+        $http.post('af/input/submit?id=' + af.id, data).success(function (response) {
+            $scope.inputSet.completion = response.data.completion;
+            $scope.inputSet.status = response.data.status;
+
+            addMessage(response.message, response.type);
+        });
+    };
 }]);
 
 afModule.directive('afFieldset', [ 'isInputVisible', function(isInputVisible) {

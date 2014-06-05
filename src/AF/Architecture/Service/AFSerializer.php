@@ -37,15 +37,20 @@ class AFSerializer
         $this->translator = $translator;
     }
 
+    /**
+     * @param AF $af
+     * @return array
+     */
     public function serialize(AF $af)
     {
         $data = [
+            'id'    => $af->getId(),
             'label' => $this->translator->get($af->getLabel()),
         ];
 
         $data += $this->serializeGroup($af->getRootGroup());
 
-        return json_encode($data, JSON_PRETTY_PRINT);
+        return $data;
     }
 
     private function serializeGroup(Group $group)

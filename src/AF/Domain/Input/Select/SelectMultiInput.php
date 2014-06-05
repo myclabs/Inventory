@@ -2,6 +2,7 @@
 
 namespace AF\Domain\Input\Select;
 
+use AF\Domain\Component\NumericField;
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\Input\Input;
 use AF\Domain\Component\Component;
@@ -24,7 +25,7 @@ class SelectMultiInput extends Input implements StringCollectionInput
     protected $value;
 
     /**
-     * @param \AF\Domain\InputSet\InputSet  $inputSet
+     * @param InputSet  $inputSet
      * @param Component $component
      */
     public function __construct(InputSet $inputSet, Component $component)
@@ -38,7 +39,7 @@ class SelectMultiInput extends Input implements StringCollectionInput
      */
     public function getValue()
     {
-        return $this->value->toArray();
+        return is_array($this->value) ? $this->value : $this->value->toArray();
     }
 
     /**
@@ -49,7 +50,7 @@ class SelectMultiInput extends Input implements StringCollectionInput
     {
         $this->value = new ArrayCollection();
         foreach ($value as $option) {
-            if ($option instanceof  SelectOption) {
+            if ($option instanceof SelectOption) {
                 $this->value->add($option->getRef());
             } else {
                 throw new Core_Exception_InvalidArgument('Value must be an array of SelectOption');
@@ -74,7 +75,7 @@ class SelectMultiInput extends Input implements StringCollectionInput
     public function getNbRequiredFieldsCompleted()
     {
         if (!$this->isHidden()) {
-            /** @var $component \AF\Domain\Component\NumericField */
+            /** @var $component NumericField */
             $component = $this->getComponent();
             if ($component && $component->getRequired() && count($this->value) > 0) {
                 return 1;

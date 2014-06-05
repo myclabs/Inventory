@@ -7,7 +7,9 @@
  */
 
 use AF\Application\AFViewConfiguration;
+use AF\Application\Form\Form;
 use AF\Architecture\Service\AFSerializer;
+use AF\Architecture\Service\InputSerializer;
 use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\AFCopyService;
@@ -49,6 +51,13 @@ class AF_AfController extends Core_Controller
     private $afSerializer;
 
     /**
+     * @Inject
+     * @var InputSerializer
+     */
+    private $inputSerializer;
+
+
+    /**
      * Affichage d'un AF en mode test
      * @Secure("editAF")
      */
@@ -69,7 +78,7 @@ class AF_AfController extends Core_Controller
         $this->setActiveMenuItemAFLibrary($af->getLibrary()->getId());
         $this->forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
 
-        \AF\Application\Form\Form::addHeader();
+        Form::addHeader();
     }
 
     /**
@@ -91,12 +100,26 @@ class AF_AfController extends Core_Controller
             throw new Core_Exception_InvalidHTTPQuery('The viewConfiguration is not properly configured');
         }
 
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->af = $af;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->viewConfiguration = $viewConfiguration;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->serializedAF = $this->afSerializer->serialize($af);
+        $idInputSet = $this->getParam('idInputSet');
+        if ($idInputSet) {
+            // Charge la saisie depuis la BDD
+            $inputSet = PrimaryInputSet::load($idInputSet);
+        } elseif ($viewConfiguration->getUseSession()) {
+            // Récupère la saisie en session
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+        } else {
+            $inputSet = new PrimaryInputSet($af);
+        }
+
+        $urlParams = [
+            'actionStack' => $viewConfiguration->getActionStack(),
+        ];
+
+        $this->view->assign('af', $af);
+        $this->view->assign('viewConfiguration', $viewConfiguration);
+        $this->view->assign('serializedAF', $this->afSerializer->serialize($af));
+        $this->view->assign('serializedInputSet', $this->inputSerializer->serialize($inputSet));
+        $this->view->assign('urlParams', $urlParams);
     }
 
     /**
