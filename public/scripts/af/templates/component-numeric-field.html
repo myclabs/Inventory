@@ -5,11 +5,19 @@
                ng-model="input.value.digitalValue">
     </div>
 
-    <div class="col-xs-4">
-        <select class="form-control" ng-model="input.value.unit">
-            <option value="kiloeuro" selected="selected">k€</option>
-            <option value="euro">€</option>
+    <div class="col-xs-4" ng-if="!component.unitChoices">
+
+        <input type="text" class="form-control" disabled
+               ng-model="input.value.unit" ng-init="input.value.unit=component.unit.ref">
+
+    </div>
+
+    <div class="col-xs-4" ng-if="component.unitChoices">
+
+        <select class="form-control" ng-model="input.value.unit" ng-init="input.value.unit=component.unit.ref"
+                ng-options="unit.ref as unit.symbol for unit in component.unitChoices">
         </select>
+
     </div>
 
     <div class="col-xs-4">

@@ -125,7 +125,6 @@ afModule.directive('afFieldset', [ 'isInputVisible', function(isInputVisible) {
             $scope.isInputVisible = isInputVisible;
 
             $scope.getInput = function (component) {
-                console.log(component);
                 if (angular.isUndefined($scope.inputSet)) {
                     $scope.inputSet = {};
                 }

@@ -59,8 +59,21 @@ class AFSerializer
                     break;
                 case $component instanceof NumericField:
                     /** @var NumericField $component */
+                    $unit = $component->getUnit();
                     $arr['type'] = 'numeric';
-                    $arr['unit'] = $component->getUnit()->getRef();
+                    $arr['unit'] = [
+                        'ref'    => $unit->getRef(),
+                        'symbol' => $this->translator->get($unit->getSymbol()),
+                    ];
+                    if ($component->hasUnitSelection()) {
+                        $arr['unitChoices'] = [ $arr['unit'] ];
+                        foreach ($unit->getCompatibleUnits() as $compatibleUnit) {
+                            $arr['unitChoices'][] = [
+                                'ref'    => $compatibleUnit->getRef(),
+                                'symbol' => $this->translator->get($compatibleUnit->getSymbol()),
+                            ];
+                        }
+                    }
                     $arr['required'] = $component->getRequired();
                     break;
                 case $component instanceof TextField:
