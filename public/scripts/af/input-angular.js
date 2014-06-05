@@ -65,11 +65,6 @@ afModule.factory('af', function () {
     };
 });
 
-// Todo à supprimer
-afModule.factory('inputSet', function () {
-    return {};
-});
-
 afModule.factory('testCondition', function () {
     return function (condition, inputs) {
         // Find target component input
@@ -107,9 +102,10 @@ afModule.factory('isInputVisible', ['testCondition', function (testCondition) {
     };
 }]);
 
-afModule.controller('InputController', ['$scope', 'af', 'inputSet', function ($scope, af, inputSet) {
+afModule.controller('InputController', ['$scope', 'af', function ($scope, af) {
     $scope.af = af;
-    $scope.inputSet = inputSet;
+    // TODO
+    $scope.inputSet = {};
 }]);
 
 afModule.directive('afFieldset', [ 'isInputVisible', function(isInputVisible) {
