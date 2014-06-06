@@ -163,17 +163,13 @@ class AF_InputController extends Core_Controller
         $af = AF::load($this->getParam('id'));
 
         // Form data
-        $formContent = json_decode($this->getParam('af' . $af->getId()), true);
-        $errorMessages = [];
+        $formData = $this->getParam('input');
 
-        // Remplit l'InputSet
-        $inputSet = $this->inputFormParser->parseForm($formContent, $af, $errorMessages);
+        $inputSet = $this->inputSerializer->unserialize($formData, $af);
+
         $this->inputService->updateResults($inputSet);
 
-        $this->addFormErrors($errorMessages);
-
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->inputSet = $inputSet;
+        $this->view->assign('inputSet', $inputSet);
 
         $data = $this->view->render('af/display-results.phtml');
 

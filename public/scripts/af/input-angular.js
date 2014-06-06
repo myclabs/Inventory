@@ -17,6 +17,12 @@ afModule.filter('debug', function() {
     };
 });
 
+afModule.filter('rawHtml', function($sce){
+    return function(text) {
+        return $sce.trustAsHtml(text);
+    };
+});
+
 afModule.factory('testCondition', function () {
     return function (condition, inputs) {
         // Find target component input
@@ -99,7 +105,36 @@ afModule.controller('InputController', ['$scope', '$window', '$http', function (
     $scope.inputSet = $window.inputSet;
     var urlParams = $window.afUrlParams;
 
+    $scope.inputStatuses = {
+        in_progress: __('AF', 'inputInput', 'statusInProgress'),
+        input_incomplete: __('AF', 'inputInput', 'statusInputIncomplete'),
+        calculation_incomplete: __('AF', 'inputInput', 'statusCalculationIncomplete'),
+        complete: __('AF', 'inputInput', 'statusComplete'),
+        finished: __('AF', 'inputInput', 'statusFinished')
+    };
+
+    $scope.previewIsLoading = false;
+
+    // Preview results
+    $scope.preview = function () {
+        $scope.previewIsLoading = true;
+        $scope.resultsPreview = null;
+        var data = {
+            input: $scope.inputSet,
+            urlParams: urlParams
+        };
+        $http.post('af/input/results-preview?id=' + af.id, data).success(function (response) {
+            $scope.resultsPreview = response.data;
+            $scope.previewIsLoading = false;
+        }).error(function () {
+            $scope.previewIsLoading = false;
+            addMessage(__('Core', 'exception', 'applicationError'), 'error');
+        });
+    };
+
+    // Save input
     $scope.save = function () {
+        $scope.resultsPreview = null;
         var data = {
             input: $scope.inputSet,
             urlParams: urlParams
@@ -419,4 +454,24 @@ afModule.directive('afSubMulti', function($compile) {
             $compile(element.contents())($scope.$new());
         }
     };
+});
+
+/**
+ * Directive pour utiliser le "btn-loading" de Bootstrap
+ */
+afModule.directive("btnLoading", function() {
+    return function(scope, element, attrs){
+        scope.$watch(
+            function () {
+                return scope.$eval(attrs.btnLoading);
+            },
+            function (loading){
+                if (loading) {
+                    element.button("loading");
+                    return;
+                }
+                element.button("reset");
+            }
+        );
+    }
 });

@@ -2,6 +2,22 @@
     window.af = <?=json_encode($this->serializedAF)?>;
     window.inputSet = <?=json_encode($this->serializedInputSet)?>;
     window.afUrlParams = <?=json_encode($this->urlParams)?>;
+
+    // Traductions
+    // Statut avancement saisie
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'statusInProgress')?>
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'statusInputIncomplete')?>
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'statusCalculationIncomplete')?>
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'statusComplete')?>
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'statusFinished')?>
+    // Popups de confirmation au clic sur « Réinitialiser » ou « Quitter »
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'confirmReinitializeInput')?>
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'confirmExitInput')?>
+    <?=Core_Translate::exportJS('UI', 'verb', 'cancel')?>
+    <?=Core_Translate::exportJS('UI', 'verb', 'confirm')?>
+    <?=Core_Translate::exportJS('Core', 'exception', 'applicationError')?>
+    // Historique de la saisie
+    <?=Core_Translate::exportJS('UI', 'history', 'valueHistory')?>
 </script>
 
 <div ng-app="AF" ng-controller="InputController">
@@ -18,7 +34,7 @@
 
         <div class="col-md-3">
             <img class="completionIcon" src="">
-            <span class="completionMessage">{{ inputSet.status }}</span>
+            <span class="completionMessage">{{ inputStatuses[inputSet.status] || inputStatuses['input_incomplete'] }}</span>
         </div>
 
     </div>
@@ -30,7 +46,9 @@
         <div class="form-actions">
             <div class="row">
                 <div class="col-md-12">
-                    <button type="button" class="btn btn-default">
+                    <button type="button" class="btn btn-default" ng-click="preview()"
+                            btn-loading="previewIsLoading"
+                            data-loading-text="<i class='fa-spin fa fa-spinner'></i> <?= __('AF', 'inputInput', 'resultsPreview') ?>">
                         <?= __('AF', 'inputInput', 'resultsPreview') ?>
                     </button>
                     <button type="button" class="btn btn-default" ng-click="save()">
@@ -48,6 +66,13 @@
         </div>
 
     </form>
+
+    <div class="resultsPreview" ng-if="resultsPreview">
+        <div class="alert alert-info">
+            <?=__('AF', 'inputInput', 'resultsPreview')?>
+        </div>
+        <div class="resultsPreviewContent" ng-bind-html="resultsPreview | rawHtml"></div>
+    </div>
 
     <pre ng-bind="inputSet | debug"></pre>
 

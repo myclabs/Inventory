@@ -14,3 +14,7 @@
 .af :invalid:focus {
     border-color: #f09797;
 }
+
+.resultsPreview {
+    margin-top: 30px;
+}
