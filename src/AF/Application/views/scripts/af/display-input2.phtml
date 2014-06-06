@@ -34,7 +34,7 @@
 
         <div class="col-md-3">
             <img class="completionIcon" src="">
-            <span class="completionMessage">{{ inputStatuses[inputSet.status] || inputStatuses['input_incomplete'] }}</span>
+            <span class="completionMessage" ng-bind="inputStatuses[inputSet.status] || inputStatuses['input_incomplete']"></span>
         </div>
 
     </div>
@@ -46,21 +46,28 @@
         <div class="form-actions">
             <div class="row">
                 <div class="col-md-12">
+
                     <button type="button" class="btn btn-default" ng-click="preview()"
                             btn-loading="previewIsLoading"
                             data-loading-text="<i class='fa-spin fa fa-spinner'></i> <?= __('AF', 'inputInput', 'resultsPreview') ?>">
                         <?= __('AF', 'inputInput', 'resultsPreview') ?>
                     </button>
-                    <button type="button" class="btn btn-default" ng-click="save()">
+
+                    <button type="button" class="btn btn-default" ng-click="save()"
+                            btn-loading="saving"
+                            data-loading-text="<i class='fa-spin fa fa-spinner'></i> <?= __('UI', 'verb', 'save') ?>">
                         <?= __('UI', 'verb', 'save') ?>
                     </button>
+
                     <button type="button" class="btn btn-default">
                         <?= __('AF', 'inputInput', 'finish') ?>
                     </button>
+
                     <button type="button" class="btn btn-default">
                         <i class="fa fa-sign-out"></i>
                         <?= __('UI', 'verb', 'quit') ?>
                     </button>
+
                 </div>
             </div>
         </div>

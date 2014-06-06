@@ -114,6 +114,7 @@ afModule.controller('InputController', ['$scope', '$window', '$http', function (
     };
 
     $scope.previewIsLoading = false;
+    $scope.saving = false;
 
     // Preview results
     $scope.preview = function () {
@@ -135,11 +136,13 @@ afModule.controller('InputController', ['$scope', '$window', '$http', function (
     // Save input
     $scope.save = function () {
         $scope.resultsPreview = null;
+        $scope.saving = true;
         var data = {
             input: $scope.inputSet,
             urlParams: urlParams
         };
         $http.post('af/input/submit?id=' + af.id, data).success(function (response) {
+            $scope.saving = false;
             if (angular.isUndefined(response)) {
                 return;
             }
@@ -147,6 +150,9 @@ afModule.controller('InputController', ['$scope', '$window', '$http', function (
             $scope.inputSet.status = response.data.status;
 
             addMessage(response.message, response.type);
+        }).error(function () {
+            $scope.saving = false;
+            addMessage(__('Core', 'exception', 'applicationError'), 'error');
         });
     };
 }]);
