@@ -1,4 +1,4 @@
-afModule.directive('afFieldset', [ 'isInputVisible', function(isInputVisible) {
+afModule.directive('afFieldset', ['isInputVisible', 'getInput', function(isInputVisible, getInput) {
     return {
         restrict: 'E',
         templateUrl: 'scripts/af/templates/fieldset.html',
@@ -8,35 +8,19 @@ afModule.directive('afFieldset', [ 'isInputVisible', function(isInputVisible) {
             inputSet: '='
         },
         link: function ($scope) {
-            $scope.isInputVisible = isInputVisible;
+            if (angular.isUndefined($scope.inputSet) || $scope.inputSet === null) {
+                $scope.inputSet = {};
+            }
 
+            $scope.isInputVisible = isInputVisible;
             $scope.getInput = function (component) {
-                if (angular.isUndefined($scope.inputSet) || $scope.inputSet === null) {
-                    $scope.inputSet = {};
-                }
-                if (angular.isUndefined($scope.inputSet.inputs)) {
-                    $scope.inputSet.inputs = [];
-                }
-                var inputs = $scope.inputSet.inputs;
-                for (i = 0; i < inputs.length; ++i) {
-                    var input = inputs[i];
-                    if (input.componentRef === component.ref) {
-                        return input;
-                    }
-                }
-                // Pas de valeur, on en crée une vide
-                var newInput = {
-                    componentRef: component.ref,
-                    value: null
-                };
-                $scope.inputSet.inputs.push(newInput);
-                return newInput;
+                return getInput($scope.inputSet, component);
             };
         }
     };
 }]);
 
-afModule.directive('afHorizontalFieldset', function() {
+afModule.directive('afHorizontalFieldset', ['getInput', function(getInput) {
     return {
         restrict: 'E',
         templateUrl: 'scripts/af/templates/horizontal-fieldset.html',
@@ -45,31 +29,10 @@ afModule.directive('afHorizontalFieldset', function() {
             inputSets: '='
         },
         link: function ($scope) {
-            $scope.getInput = function (inputSet, component) {
-                if (angular.isUndefined(inputSet)) {
-                    inputSet = {};
-                }
-                if (angular.isUndefined(inputSet.inputs)) {
-                    inputSet.inputs = [];
-                }
-                var inputs = inputSet.inputs;
-                for (i = 0; i < inputs.length; ++i) {
-                    var input = inputs[i];
-                    if (input.componentRef === component.ref) {
-                        return input;
-                    }
-                }
-                // Pas de valeur, on en crée une vide
-                var newInput = {
-                    componentRef: component.ref,
-                    value: null
-                };
-                inputSet.inputs.push(newInput);
-                return newInput;
-            };
+            $scope.getInput = getInput;
         }
     };
-});
+}]);
 
 afModule.directive('afComponent', function() {
     return {

@@ -100,11 +100,37 @@ afModule.factory('isInputEnabled', ['testCondition', function (testCondition) {
     };
 }]);
 
+/**
+ * Retrouve une saisie à partir d'un composant.
+ */
+afModule.factory('getInput', function () {
+    return function (inputSet, component) {
+        if (angular.isUndefined(inputSet.inputs)) {
+            inputSet.inputs = [];
+        }
+        var inputs = inputSet.inputs;
+        for (i = 0; i < inputs.length; ++i) {
+            var input = inputs[i];
+            if (input.componentRef === component.ref) {
+                return input;
+            }
+        }
+        // Pas de valeur, on en crée une vide
+        var newInput = {
+            componentRef: component.ref,
+            value: null
+        };
+        inputSet.inputs.push(newInput);
+        return newInput;
+    };
+});
+
+/**
+ * Valide une saisie.
+ */
 afModule.factory('validateInputSet', function () {
-    return function (inputSet, components) {
-        angular.forEach(inputSet.inputs, function (input) {
-//            input.hasErrors = true;
-        });
+    return function () {
+        // TODO
     };
 });
 
