@@ -59,7 +59,9 @@
                         <?= __('UI', 'verb', 'save') ?>
                     </button>
 
-                    <button type="button" class="btn btn-default">
+                    <button type="button" class="btn btn-default" ng-click="finish()"
+                            btn-loading="markingInputAsFinished"
+                            data-loading-text="<i class='fa-spin fa fa-spinner'></i> <?= __('AF', 'inputInput', 'finish') ?>">
                         <?= __('AF', 'inputInput', 'finish') ?>
                     </button>
 

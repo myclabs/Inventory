@@ -170,11 +170,7 @@ class AF_InputController extends Core_Controller
         $this->inputService->updateResults($inputSet);
 
         $this->view->assign('inputSet', $inputSet);
-
         $data = $this->view->render('af/display-results.phtml');
-
-        // Force le statut en success (sinon les handlers JS ne sont pas exécutés)
-        $this->setFormMessage(null, UI_Message::TYPE_SUCCESS);
         $this->sendFormResponse($data);
     }
 
@@ -183,7 +179,7 @@ class AF_InputController extends Core_Controller
      * AJAX
      * @Secure("editInputAF")
      */
-    public function markInputAsFinishedAction()
+    public function finishAction()
     {
         /** @var $af AF */
         $af = AF::load($this->getParam('id'));
@@ -192,7 +188,6 @@ class AF_InputController extends Core_Controller
             /** @var $inputSet PrimaryInputSet */
             $inputSet = PrimaryInputSet::load($this->getParam('idInputSet'));
             $inputSet->markAsFinished(true);
-            $inputSet->save();
             $this->entityManager->flush();
         } else {
             // Récupère la saisie en session
@@ -205,8 +200,8 @@ class AF_InputController extends Core_Controller
         }
 
         $this->sendJsonResponse([
-            'message'    => __("AF", "inputInput", "inputFinished"),
-            'status'     => $inputSet->getStatus(),
+            'message' => __('AF', 'inputInput', 'inputFinished'),
+            'status'  => $inputSet->getStatus(),
         ]);
     }
 
