@@ -23,7 +23,7 @@ abstract class ElementaryCondition extends Condition
     const RELATION_NCONTAINS = 8;
 
     /**
-     * @var Field
+     * @var Field|null
      */
     protected $field;
 
@@ -41,7 +41,7 @@ abstract class ElementaryCondition extends Condition
     }
 
     /**
-     * @return Field
+     * @return Field|null
      */
     public function getField()
     {

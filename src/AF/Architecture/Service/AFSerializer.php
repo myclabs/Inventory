@@ -198,8 +198,8 @@ class AFSerializer
         }
 
         return [
-            'type' => $type,
-            'condition' => $this->serializeCondition($condition),
+            'type'      => $type,
+            'condition' => $condition ? $this->serializeCondition($condition) : null,
         ];
     }
 
@@ -217,20 +217,23 @@ class AFSerializer
             }
         }
 
+        $targetFieldRef = $condition->getField() ? $condition->getField()->getRef() : '';
+
         switch (true) {
             case $condition instanceof CheckboxCondition:
                 /** @var $condition CheckboxCondition */
                 return [
                     'type'            => $type,
-                    'targetComponent' => $condition->getField()->getRef(),
+                    'targetComponent' => $targetFieldRef,
                     'value'           => $condition->getValue(),
                 ];
             case $condition instanceof SelectSingleCondition:
                 /** @var $condition SelectSingleCondition */
+                $optionRef = $condition->getOption() ? $condition->getOption()->getRef() : '';
                 return [
                     'type'            => $type,
-                    'targetComponent' => $condition->getField()->getRef(),
-                    'value'           => $condition->getOption()->getRef(),
+                    'targetComponent' => $targetFieldRef,
+                    'value'           => $optionRef,
                 ];
         }
 
