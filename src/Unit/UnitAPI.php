@@ -92,7 +92,7 @@ class UnitAPI
     public function getSymbol()
     {
         if ($this->ref == '') {
-            return '';
+            return TranslatedString::untranslated('');
         }
 
         /** @var UnitService $unitService */
@@ -103,7 +103,7 @@ class UnitAPI
 
             return $unit->symbol;
         } catch (UnknownUnitException $e) {
-            return $this->ref;
+            return TranslatedString::untranslated($this->ref);
         }
     }
 
