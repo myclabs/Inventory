@@ -12,8 +12,7 @@ $viewConfiguration = $this->viewConfiguration;
 // Ajout des headers
 UI_Datagrid::addHeader();
 $this->headScript()->appendFile('scripts/af/input-angular.js', 'text/javascript');
-$this->headScript()->appendFile('scripts/af/input.js', 'text/javascript');
-$this->headScript()->appendFile('scripts/af/input-progress.js', 'text/javascript');
+$this->headScript()->appendFile('scripts/af/components.js', 'text/javascript');
 // API Google pour les charts
 $this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["orgchart"]}]}', 'text/javascript');
 

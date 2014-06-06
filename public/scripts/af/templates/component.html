@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="form-group" ng-class="input.hasErrors ? 'has-error' : ''">
     <label class="col-sm-3 control-label">{{ component.label }}</label>
     <div class="col-sm-9" ng-switch="component.type">
         <af-numeric-field ng-switch-when="numeric" component="component" input="input"></af-numeric-field>
@@ -8,5 +8,7 @@
         <af-textarea ng-switch-when="textarea" component="component" input="input"></af-textarea>
         <af-radio ng-switch-when="radio" component="component" input="input"></af-radio>
         <af-select-multiple ng-switch-when="select-multiple" component="component" input="input"></af-select-multiple>
+
+        <span class="help-block errorMessage" ng-show="input.hasErrors">Champ obligatoire pour atteindre le statut : complet.</span>
     </div>
 </div>
