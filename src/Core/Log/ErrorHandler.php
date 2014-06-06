@@ -112,6 +112,10 @@ class ErrorHandler
         }
         // Si il y'a eu une erreur fatale.
         if ($isError) {
+            // Force le code HTTP de retour
+            // @link http://stackoverflow.com/questions/2331582/catch-php-fatal-error
+            header('Status: 500 Internal Server Error');
+            header('HTTP/1.0 500 Internal Server Error');
             // Transforme l'erreur en exception.
             $e = new ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line']);
             // Log de l'erreur
