@@ -1,4 +1,4 @@
-<div ng-switch="component.type">
+<div ng-switch="component.type" ng-class="input.hasErrors ? 'has-error' : ''">
     <af-numeric-field ng-switch-when="numeric" component="component" input="input"></af-numeric-field>
     <af-select ng-switch-when="select" component="component" input="input"></af-select>
     <af-checkbox ng-switch-when="checkbox" component="component" input="input"></af-checkbox>
@@ -6,4 +6,6 @@
     <af-textarea ng-switch-when="textarea" component="component" input="input"></af-textarea>
     <af-radio ng-switch-when="radio" component="component" input="input"></af-radio>
     <af-select-multiple ng-switch-when="select-multiple" component="component" input="input"></af-select-multiple>
+
+    <span class="help-block errorMessage" ng-show="input.hasErrors" ng-bind="input.error"></span>
 </div>

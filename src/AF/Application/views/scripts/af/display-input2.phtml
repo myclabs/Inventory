@@ -10,6 +10,10 @@
     <?=Core_Translate::exportJS('AF', 'inputInput', 'statusCalculationIncomplete')?>
     <?=Core_Translate::exportJS('AF', 'inputInput', 'statusComplete')?>
     <?=Core_Translate::exportJS('AF', 'inputInput', 'statusFinished')?>
+    // Validation de la saisie
+    <?=Core_Translate::exportJS('AF', 'inputInput', 'emptyRequiredField')?>
+    <?=Core_Translate::exportJS('UI', 'formValidation', 'invalidNumber')?>
+    <?=Core_Translate::exportJS('UI', 'formValidation', 'invalidUncertainty')?>
     // Popups de confirmation au clic sur « Réinitialiser » ou « Quitter »
     <?=Core_Translate::exportJS('AF', 'inputInput', 'confirmReinitializeInput')?>
     <?=Core_Translate::exportJS('AF', 'inputInput', 'confirmExitInput')?>
@@ -84,5 +88,6 @@
     </div>
 
     <pre ng-bind="inputSet | debug"></pre>
+    <pre ng-bind="af | debug"></pre>
 
 </div>

@@ -128,11 +128,64 @@ afModule.factory('getInput', function () {
 /**
  * Valide une saisie.
  */
-afModule.factory('validateInputSet', function () {
-    return function () {
-        // TODO
+afModule.factory('validateInputSet', ['getInput', function (getInput) {
+    return function validateInputSet(inputSet, components) {
+        angular.forEach(components, function (component) {
+            var input = getInput(inputSet, component);
+            var isEmpty = function (variable) {
+                return angular.isUndefined(variable) || variable === null || variable === ''
+                    || (angular.isArray(variable) && variable.length == 0);
+            };
+
+            switch (component.type) {
+                case 'numeric':
+                    var value = '';
+                    var uncertainty = '';
+                    if (angular.isDefined(input.value) && !isEmpty(input.value.digitalValue)) {
+                        value = input.value.digitalValue;
+                    }
+                    if (angular.isDefined(input.value) && !isEmpty(input.value.uncertainty)) {
+                        uncertainty = input.value.uncertainty;
+                    }
+                    if (component.required && (value === '')) {
+                        input.hasErrors = true;
+                        input.error = __('AF', 'inputInput', 'emptyRequiredField');
+                    } else if (! /^-?[0-9]*[.,]?[0-9]*$/.test(value)) {
+                        input.hasErrors = true;
+                        input.error = __('UI', 'formValidation', 'invalidNumber');
+                    } else if (! /^[0-9]*[.,]?[0-9]*$/.test(uncertainty)) {
+                        input.hasErrors = true;
+                        input.error = __('UI', 'formValidation', 'invalidUncertainty');
+                    } else {
+                        input.hasErrors = false;
+                        input.error = null;
+                    }
+                    break;
+                case 'select':
+                case 'radio':
+                case 'select-multiple':
+                case 'text':
+                case 'textarea':
+                    if (component.required && isEmpty(input.value)) {
+                        input.hasErrors = true;
+                        input.error = __('AF', 'inputInput', 'emptyRequiredField');
+                    } else {
+                        input.hasErrors = false;
+                        input.error = null;
+                    }
+                    break;
+                case 'subaf-single':
+                    validateInputSet(input.value, component.calledAF.components);
+                    break;
+                case 'subaf-multi':
+                    angular.forEach(input.value, function (subInputSet) {
+                        validateInputSet(subInputSet, component.calledAF.components);
+                    });
+                    break;
+            }
+        });
     };
-});
+}]);
 
 afModule.controller('InputController', ['$scope', '$window', '$http', 'validateInputSet',
 function ($scope, $window, $http, validateInputSet) {

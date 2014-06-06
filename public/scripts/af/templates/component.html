@@ -9,6 +9,6 @@
         <af-radio ng-switch-when="radio" component="component" input="input"></af-radio>
         <af-select-multiple ng-switch-when="select-multiple" component="component" input="input"></af-select-multiple>
 
-        <span class="help-block errorMessage" ng-show="input.hasErrors">Champ obligatoire pour atteindre le statut : complet.</span>
+        <span class="help-block errorMessage" ng-show="input.hasErrors" ng-bind="input.error"></span>
     </div>
 </div>
