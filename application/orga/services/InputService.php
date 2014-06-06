@@ -67,6 +67,7 @@ class Orga_Service_InputService
         if ($inputSet) {
             // Modification de la saisie
             $this->afInputService->editInputSet($inputSet, $newValues);
+            $cell->updateInputStatus();
 
             $event = new Orga_Service_InputEditedEvent($cell);
         } else {

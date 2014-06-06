@@ -38,13 +38,13 @@ class PopulateOrga extends AbstractPopulateOrga
         $organization_vide = $this->createOrganization($account, 'Workspace vide');
 
         // Création des axes.
-        $axis_annee = $this->createAxis($organization, 'annee', 'Année');
-        $axis_site = $this->createAxis($organization, 'site', 'Site');
-        $axis_pays = $this->createAxis($organization, 'pays', 'Pays', $axis_site);
-        $axis_zone = $this->createAxis($organization, 'zone', 'Zone', $axis_pays);
-        $axis_marque = $this->createAxis($organization, 'marque', 'Marque', $axis_site);
-        $axis_categorie = $this->createAxis($organization, 'categorie', 'Catégorie');
-        $axis_vide = $this->createAxis($organization, 'axe_vide', 'Axe vide');
+        $axis_annee = $this->createAxis($organization, 'annee', 'Année', null, true);
+        $axis_site = $this->createAxis($organization, 'site', 'Site', null, false);
+        $axis_pays = $this->createAxis($organization, 'pays', 'Pays', $axis_site, false);
+        $axis_zone = $this->createAxis($organization, 'zone', 'Zone', $axis_pays, false);
+        $axis_marque = $this->createAxis($organization, 'marque', 'Marque', $axis_site, false);
+        $axis_categorie = $this->createAxis($organization, 'categorie', 'Catégorie', null, true);
+        $axis_vide = $this->createAxis($organization, 'axe_vide', 'Axe vide', null, false);
 
         // Granularité du temps.
         $organization->setTimeAxis($axis_annee);

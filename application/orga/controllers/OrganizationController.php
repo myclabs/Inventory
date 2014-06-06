@@ -151,6 +151,8 @@ class Orga_OrganizationController extends Core_Controller
     {
         $this->view->assign('account', $this->getParam('account'));
         $this->view->assign('templates', $this->organizationService->getOrganizationTemplates());
+
+        $this->view->headScript()->appendFile('scripts/ui/form-ajax.js', 'text/javascript');
     }
 
     /**
@@ -534,6 +536,27 @@ class Orga_OrganizationController extends Core_Controller
         } else {
             $this->setFormMessage(__('UI', 'message', 'updated'));
         }
+
+        $this->sendFormResponse();
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
+    public function editTimeAxisAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $idAxis = (string) $this->getParam('timeAxis');
+        if (empty($idAxis)) {
+            $organization->setTimeAxis();
+        } else {
+            $organization->setTimeAxis(Orga_Model_Axis::load($idAxis));
+        }
+
+        $this->setFormMessage(__('UI', 'message', 'updated'));
 
         $this->sendFormResponse();
     }
@@ -1187,7 +1210,7 @@ class Orga_OrganizationController extends Core_Controller
 
         foreach ($topCells as $topCell) {
             $granularity = $topCell->getGranularity();
-            if ($granularity->getDWCube()) {
+            if ($granularity->getCellsGenerateDWCubes()) {
                 $granularities[$granularity->getId()] = $granularity;
             }
             foreach ($granularity->getNarrowerGranularities() as $narrowerGranularity) {

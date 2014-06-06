@@ -288,7 +288,7 @@ class Orga_Model_Organization extends Core_Model_Entity implements EntityResourc
      *
      * @param Orga_Model_Axis $axis
      */
-    public function setTimeAxis(Orga_Model_Axis $axis)
+    public function setTimeAxis(Orga_Model_Axis $axis=null)
     {
         $this->timeAxis = $axis;
     }

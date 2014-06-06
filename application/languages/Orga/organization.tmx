@@ -91,6 +91,31 @@
             </tuv>
         </tu>
 
+        <tu tuid="timeAxis">
+            <tuv xml:lang="fr">
+                <seg>Choix de l'axe temporel</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Selection of the time axis</seg>
+            </tuv>
+        </tu>
+        <tu tuid="timeAxisExplanation">
+            <tuv xml:lang="fr">
+                <seg>Cet axe sera utilisé pour comparer les saisies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This axis will be used to compare inputs</seg>
+            </tuv>
+        </tu>
+        <tu tuid="timeAxisLabel">
+            <tuv xml:lang="fr">
+                <seg>Axe temporel</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Time axis</seg>
+            </tuv>
+        </tu>
+
         <tu tuid="banner">
             <tuv xml:lang="fr">
                 <seg>Bannière</seg>

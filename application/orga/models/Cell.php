@@ -321,6 +321,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             );
         }
 
+        //@todo Sans chargement, génère un problème lorsque la collection n'est pas initialisée.
+        $this->getMembers();
+
         $criteriaAxis = new Criteria();
         $criteriaAxis->where($criteriaAxis->expr()->eq('axis', $axis));
         $member = $this->members->matching($criteriaAxis)->toArray();
@@ -841,14 +844,15 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             );
         }
 
-        if ($this->getMemberForAxis($axis)->getPosition() === 1) {
+        $timeAxis = $this->getMemberForAxis($axis);
+        if ($timeAxis->getPosition() === 1) {
             return null;
         }
 
         return $this->getGranularity()->getCellByMembers(
             array_merge(
-                array_diff($this->getMembers(), [$this->getMemberForAxis($axis)]),
-                [$this->getMemberForAxis($axis)->getPreviousMember()]
+                array_diff($this->getMembers(), [$timeAxis]),
+                [$timeAxis->getPreviousMember()]
             )
         );
     }

@@ -170,6 +170,16 @@ class Orga_Service_OrganizationService
             $this->entityManager->clear();
 
             $organization = Orga_Model_Organization::load($idOrganization);
+            $axes = $organization->getLastOrderedAxes();
+            foreach ($axes as $axis) {
+                /** @var Orga_Model_Axis $axis */
+                $axis->delete();
+            }
+
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+
+            $organization = Orga_Model_Organization::load($idOrganization);
             $organization->delete();
 
             $this->entityManager->flush();
@@ -406,17 +416,19 @@ class Orga_Service_OrganizationService
         $this->translator->set($timeAxis->getLabel(), $timeAxisLabel);
         $axes['timeAxis'] = $timeAxis;
         // Création de l'axe de subdivision.
-        $subdivisionAxisLabel = $axesData['subdivisionAxis'];
-        if (!empty($subdivisionAxisLabel)) {
-            $subdivisionAxisRef = Core_Tools::refactor($subdivisionAxisLabel);
-            try {
-                $organization->getAxisByRef($subdivisionAxisRef);
-                $subdivisionAxisRef = 'd_'.$subdivisionAxisRef;
-            } catch (Core_Exception_NotFound $e) {
+        if (isset($axesData['subdivisionAxis'])) {
+            $subdivisionAxisLabel = $axesData['subdivisionAxis'];
+            if (!empty($subdivisionAxisLabel)) {
+                $subdivisionAxisRef = Core_Tools::refactor($subdivisionAxisLabel);
+                try {
+                    $organization->getAxisByRef($subdivisionAxisRef);
+                    $subdivisionAxisRef = 'd_'.$subdivisionAxisRef;
+                } catch (Core_Exception_NotFound $e) {
+                }
+                $subdivisionAxis = new Orga_Model_Axis($organization, $subdivisionAxisRef);
+                $this->translator->set($subdivisionAxis->getLabel(), $subdivisionAxisLabel);
+                $axes['subdivisionAxis'] = $subdivisionAxis;
             }
-            $subdivisionAxis = new Orga_Model_Axis($organization, $subdivisionAxisRef);
-            $this->translator->set($subdivisionAxis->getLabel(), $subdivisionAxisLabel);
-            $axes['subdivisionAxis'] = $subdivisionAxis;
         }
         // Création des axes principaux.
         foreach ($axesData as $mainAxisId => $mainAxisLabel) {
