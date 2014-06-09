@@ -104,7 +104,12 @@ class InputSerializer
             // Champ checkbox
             $input = new CheckboxInput($inputSet, $component);
             if (isset($data['value'])) {
-                $input->setValue($data['value']);
+                if (is_string($data['value'])) {
+                    $value = ($data['value'] === 'true') ? true : false;
+                } else {
+                    $value = (bool) $data['value'];
+                }
+                $input->setValue($value);
             }
 
         } elseif ($component instanceof SelectSingle) {
