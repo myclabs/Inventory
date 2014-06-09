@@ -13,6 +13,10 @@ afModule.directive('afFieldset', ['isInputVisible', 'getInput', function(isInput
             }
 
             $scope.isInputVisible = isInputVisible;
+            $scope.isCollapsed = false;
+            $scope.toggle = function () {
+                $scope.isCollapsed = !$scope.isCollapsed;
+            };
             $scope.getInput = function (component) {
                 return getInput($scope.inputSet, component);
             };
@@ -266,10 +270,21 @@ afModule.directive('afSubMulti', function($compile) {
 
             var template =
                 '<fieldset>' +
-                    '<legend>{{ component.label }}</legend>' +
-                    '<af-horizontal-fieldset components="component.calledAF.components" input-sets="input.value"></af-horizontal-fieldset>' +
-                    '<button type="button" class="btn btn-default" ng-click="add()">' + __('UI', 'verb', 'add') + '</button>' +
+                    '<legend ng-click="toggle()">' +
+                        '<i class="fa fa-chevron-right" ng-show="isCollapsed"></i>' +
+                        '<i class="fa fa-chevron-down" ng-show="!isCollapsed"></i>' +
+                        '{{ component.label }}' +
+                    '</legend>' +
+                    '<div collapse="isCollapsed">' +
+                        '<af-horizontal-fieldset components="component.calledAF.components" input-sets="input.value"></af-horizontal-fieldset>' +
+                        '<button type="button" class="btn btn-default" ng-click="add()">' + __('UI', 'verb', 'add') + '</button>' +
+                    '</div>' +
                 '</fieldset>';
+
+            $scope.isCollapsed = false;
+            $scope.toggle = function () {
+                $scope.isCollapsed = !$scope.isCollapsed;
+            };
 
             // On compile manuellement sinon récursion infinie : angular pré-importe les templates
             // même s'ils ne sont pas vraiment utilisés
