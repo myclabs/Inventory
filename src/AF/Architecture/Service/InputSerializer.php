@@ -115,8 +115,13 @@ class InputSerializer
         } elseif ($component instanceof SelectSingle) {
             // Champ de sélection simple
             $input = new SelectSingleInput($inputSet, $component);
-            if (!empty($data['value'])) {
-                $option = $component->getOptionByRef($data['value']);
+            if (! empty($data['value'])) {
+                // On ne peut pas utiliser null directement à cause d'Angular
+                if ($data['value'] === 'null') {
+                    $option = null;
+                } else {
+                    $option = $component->getOptionByRef($data['value']);
+                }
                 $input->setValue($option);
             }
 
@@ -233,7 +238,7 @@ class InputSerializer
                     break;
                 case $input instanceof SelectSingleInput:
                     /** @var SelectSingleInput $input */
-                    $arr['value'] = $input->getValue();
+                    $arr['value'] = ($input->getValue() === null) ? 'null' : $input->getValue();
                     break;
                 case $input instanceof SelectMultiInput:
                     /** @var SelectMultiInput $input */

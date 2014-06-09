@@ -169,6 +169,9 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
                     if (component.required && isEmpty(input.value)) {
                         input.hasErrors = true;
                         input.error = __('AF', 'inputInput', 'emptyRequiredField');
+                    } else if (input.value === 'null') {
+                        input.hasErrors = true;
+                        input.error = __('AF', 'inputInput', 'emptyRequiredField');
                     } else {
                         input.hasErrors = false;
                         input.error = null;

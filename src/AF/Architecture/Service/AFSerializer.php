@@ -129,18 +129,28 @@ class AFSerializer
                     /** @var SelectSingle $component */
                     if ($component->getType() === SelectSingle::TYPE_LIST) {
                         $arr['type'] = 'select';
+                        $defaultOptions = [
+                            [
+                                'ref'   => 'null',
+                                'label' => '',
+                            ],
+                        ];
                     } else {
                         $arr['type'] = 'radio';
+                        $defaultOptions = [];
                     }
                     $arr['enabled'] = $component->isEnabled();
                     $arr['required'] = $component->getRequired();
-                    $arr['options'] = [];
+                    $arr['options'] = $defaultOptions;
                     foreach ($component->getOptions() as $option) {
                         $arr['options'][] = [
                             'ref'   => $option->getRef(),
                             'label' => $this->translator->get($option->getLabel()),
                         ];
                     }
+                    $arr['defaultValue'] = $component->getDefaultValue()
+                        ? $component->getDefaultValue()->getRef()
+                        : null;
                     break;
                 case $component instanceof SelectMulti:
                     /** @var SelectMulti $component */

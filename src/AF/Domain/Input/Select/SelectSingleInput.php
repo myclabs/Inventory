@@ -15,12 +15,12 @@ class SelectSingleInput extends Input implements StringInput
 {
     /**
      * Selected option's ref
-     * @var string
+     * @var string|null
      */
     protected $value;
 
     /**
-     * @return string Option ref
+     * @return string|null Option ref
      */
     public function getValue()
     {
@@ -28,7 +28,7 @@ class SelectSingleInput extends Input implements StringInput
     }
 
     /**
-     * @param SelectOption $value
+     * @param SelectOption|null $value
      */
     public function setValue(SelectOption $value = null)
     {
