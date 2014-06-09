@@ -3,6 +3,7 @@
         <input type="checkbox" value="{{ option.ref }}"
                 ng-checked="input.value.indexOf(option.ref) > -1"
                 ng-click="toggleSelection(option.ref)"
+                ng-init="input.value = (input.value === null) ? component.defaultValue : input.value"
                 ng-disabled="!isInputEnabled(input, component, inputs)">
         {{ option.label }}
     </label>

@@ -164,6 +164,10 @@ class AFSerializer
                             'label' => $this->translator->get($option->getLabel()),
                         ];
                     }
+                    $arr['defaultValue'] = [];
+                    foreach ($component->getDefaultValues() as $option) {
+                        $arr['defaultValue'][] = $option->getRef();
+                    }
                     break;
                 default:
                     $arr['type'] = null;
