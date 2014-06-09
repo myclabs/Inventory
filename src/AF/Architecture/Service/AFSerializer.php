@@ -105,6 +105,7 @@ class AFSerializer
                         }
                     }
                     $arr['required'] = $component->getRequired();
+                    $arr['withUncertainty'] = $component->getWithUncertainty();
                     $arr['defaultValue']['digitalValue'] = $component->getDefaultValue()->getDigitalValue();
                     $arr['defaultValue']['uncertainty'] = $component->getDefaultValue()->getRelativeUncertainty();
                     $arr['defaultValue']['reminder'] = $component->getDefaultValueReminder();

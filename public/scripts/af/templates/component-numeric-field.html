@@ -24,7 +24,7 @@
         </select>
     </div>
 
-    <div class="af-uncertainty input-group">
+    <div class="af-uncertainty input-group" ng-if="component.withUncertainty">
         <span class="input-group-addon">±</span>
         <input type="text" class="incertitude form-control" pattern="(100)|[0-9]{1,2}"
                ng-model="input.value.uncertainty"
