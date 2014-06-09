@@ -245,15 +245,24 @@ afModule.directive('afSubMulti', function($compile) {
         },
         template: '',
         link: function ($scope, element) {
+            // Init the input
+            if ($scope.input === null) {
+                $scope.input = {};
+            }
+            if (angular.isUndefined($scope.input.value) || $scope.input.value === null) {
+                $scope.input.value = [];
+            }
+
             $scope.add = function () {
-                if ($scope.input === null) {
-                    $scope.input = {};
-                }
-                if (angular.isUndefined($scope.input.value) || $scope.input.value === null) {
-                    $scope.input.value = [];
-                }
                 $scope.input.value.push({});
             };
+
+            switch ($scope.component.init) {
+                case 'one_deletable':
+                case 'one_not_deletable':
+                    $scope.add();
+                    break;
+            }
 
             var template =
                 '<fieldset>' +

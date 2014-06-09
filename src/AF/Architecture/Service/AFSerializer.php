@@ -87,6 +87,18 @@ class AFSerializer
                     /** @var RepeatedSubAF $component */
                     $arr['type'] = 'subaf-multi';
                     $arr['calledAF'] = $this->serializeGroup($component->getCalledAF()->getRootGroup());
+                    switch ($component->getMinInputNumber()) {
+                        default:
+                        case RepeatedSubAF::MININPUTNUMBER_0:
+                            $arr['init'] = 'none';
+                            break;
+                        case RepeatedSubAF::MININPUTNUMBER_1_DELETABLE:
+                            $arr['init'] = 'one_deletable';
+                            break;
+                        case RepeatedSubAF::MININPUTNUMBER_1_NOT_DELETABLE:
+                            $arr['init'] = 'one_not_deletable';
+                            break;
+                    }
                     break;
                 case $component instanceof NumericField:
                     /** @var NumericField $component */
