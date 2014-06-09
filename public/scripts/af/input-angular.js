@@ -1,4 +1,4 @@
-var afModule = angular.module('AF', []);
+var afModule = angular.module('AF', ['ui.bootstrap']);
 
 // Configure Angular pour poster en "form data" plutôt qu'en JSON
 afModule.config(function ($httpProvider) {

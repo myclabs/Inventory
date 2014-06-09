@@ -248,5 +248,19 @@
 
 
 
+        <tu tuid="defaultValueReminder">
+            <tuv xml:lang="fr">
+                <seg>
+                    Rappel de la valeur par défaut :
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    The default value was:
+                </seg>
+            </tuv>
+        </tu>
+
+
 	</body>
 </tmx>

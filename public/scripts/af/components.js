@@ -76,6 +76,10 @@ afModule.directive('afNumericField', function(isInputEnabled) {
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
+
+            $scope.defaultValueReminder = __('AF', 'inputInput', 'defaultValueReminder') + ' '
+                + $scope.component.defaultValue.digitalValue + ' ' + $scope.component.unit.symbol
+                + ' ± ' + ($scope.component.defaultValue.uncertainty || '0') + ' %';
         }
     };
 });
