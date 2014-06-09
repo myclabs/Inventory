@@ -1,44 +1,36 @@
-<div class="row">
+<div class="af-numeric-input clearfix">
 
-    <div class="col-xs-4">
-        <div class="has-feedback">
-            <input type="text" class="form-control" pattern="-?[0-9]*[.,]?[0-9]*" ng-required="component.required"
-                   ng-model="input.value.digitalValue"
-                   ng-init="input.value.digitalValue = (input.value.digitalValue === undefined) ? component.defaultValue.digitalValue : input.value.digitalValue"
-                   ng-disabled="!isInputEnabled(input, component, inputs)">
+    <div class="af-value has-feedback">
+        <input type="text" class="form-control" pattern="-?[0-9]*[.,]?[0-9]*" ng-required="component.required"
+               ng-model="input.value.digitalValue"
+               ng-init="input.value.digitalValue = (input.value.digitalValue === undefined) ? component.defaultValue.digitalValue : input.value.digitalValue"
+               ng-disabled="!isInputEnabled(input, component, inputs)">
 
-            <span class="glyphicon glyphicon-info-sign form-control-feedback"
-                  ng-if="component.defaultValue.reminder && (component.defaultValue.digitalValue !== null)"
-                  tooltip="{{ defaultValueReminder }}" tooltip-placement="bottom"></span>
-        </div>
+        <span class="glyphicon glyphicon-info-sign form-control-feedback"
+              ng-if="component.defaultValue.reminder && (component.defaultValue.digitalValue !== null)"
+              tooltip="{{ defaultValueReminder }}" tooltip-placement="bottom"></span>
     </div>
 
-    <div class="col-xs-4" ng-if="!component.unitChoices">
-
+    <div class="af-unit" ng-if="!component.unitChoices">
         <input type="text" class="form-control" disabled
                ng-model="input.value.unit" ng-init="input.value.unit = component.unit.ref">
-
     </div>
 
-    <div class="col-xs-4" ng-if="component.unitChoices">
-
+    <div class="af-unit" ng-if="component.unitChoices">
         <select class="form-control" ng-model="input.value.unit"
                 ng-init="input.value.unit = input.value.unit || component.unit.ref"
                 ng-options="unit.ref as unit.symbol for unit in component.unitChoices"
                 ng-disabled="!isInputEnabled(input, component, inputs)">
         </select>
-
     </div>
 
-    <div class="col-xs-4">
-        <div class="input-group">
-            <span class="input-group-addon">±</span>
-            <input type="text" class="incertitude form-control" pattern="(100)|[0-9]{1,2}"
-                   ng-model="input.value.uncertainty"
-                   ng-init="input.value.uncertainty = (input.value.uncertainty === undefined) ? component.defaultValue.uncertainty : input.value.uncertainty"
-                   ng-disabled="!isInputEnabled(input, component, inputs)">
-            <span class="input-group-addon">%</span>
-        </div>
+    <div class="af-uncertainty input-group">
+        <span class="input-group-addon">±</span>
+        <input type="text" class="incertitude form-control" pattern="(100)|[0-9]{1,2}"
+               ng-model="input.value.uncertainty"
+               ng-init="input.value.uncertainty = (input.value.uncertainty === undefined) ? component.defaultValue.uncertainty : input.value.uncertainty"
+               ng-disabled="!isInputEnabled(input, component, inputs)">
+        <span class="input-group-addon">%</span>
     </div>
 
 </div>
