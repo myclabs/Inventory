@@ -1,6 +1,7 @@
 <div class="checkbox">
     <label>
-        <input type="checkbox" ng-model="input.value" ng-init="input.value=component.defaultValue"
+        <input type="checkbox" ng-model="input.value"
+               ng-init="input.value = (input.value === null) ? component.defaultValue : input.value"
                ng-disabled="!isInputEnabled(input, component, inputs)">
     </label>
 </div>
