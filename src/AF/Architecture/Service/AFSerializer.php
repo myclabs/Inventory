@@ -105,6 +105,8 @@ class AFSerializer
                         }
                     }
                     $arr['required'] = $component->getRequired();
+                    $arr['defaultValue']['digitalValue'] = $component->getDefaultValue()->getDigitalValue();
+                    $arr['defaultValue']['uncertainty'] = $component->getDefaultValue()->getRelativeUncertainty();
                     break;
                 case $component instanceof TextField:
                     /** @var TextField $component */

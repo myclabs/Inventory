@@ -11,14 +11,14 @@ afModule.config(function ($httpProvider) {
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
 });
 
-afModule.filter('debug', function() {
-    return function(input) {
+afModule.filter('debug', function () {
+    return function (input) {
         return JSON.stringify(input, undefined, 2);
     };
 });
 
-afModule.filter('rawHtml', function($sce){
-    return function(text) {
+afModule.filter('rawHtml', function ($sce) {
+    return function (text) {
         return $sce.trustAsHtml(text);
     };
 });
