@@ -29,6 +29,19 @@
     float: left;
     width: 110px;
 }
+.af .af-numeric-input .form-control-feedback {
+    opacity: 0.3;
+}
+.af .af-numeric-input .form-control-feedback:hover {
+    opacity: 1;
+}
+/* Corrections pour l'affichage des tooltips */
+.af .af-numeric-input .form-control-feedback {
+    right: 0;
+}
+.af .af-numeric-input .tooltip-inner {
+    width: 190px;
+}
 
 .af .af-component-help {
     opacity: 0.3;
@@ -37,6 +50,9 @@
 }
 .af .af-component-help:hover {
     opacity: 1;
+}
+.af .tooltip-inner {
+    width: 300px;
 }
 
 .resultsPreview {
