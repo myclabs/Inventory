@@ -203,6 +203,13 @@ function ($scope, $window, $http, validateInputSet) {
         complete: __('AF', 'inputInput', 'statusComplete'),
         finished: __('AF', 'inputInput', 'statusFinished')
     };
+    $scope.statusColors = {
+        in_progress: 'black',
+        input_incomplete: 'red',
+        calculation_incomplete: 'orange',
+        complete: 'yellow',
+        finished: 'green'
+    };
 
     $scope.previewIsLoading = false;
     $scope.saving = false;

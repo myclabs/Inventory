@@ -39,7 +39,8 @@
         </div>
 
         <div class="col-md-3">
-            <img class="completionIcon" src="">
+            <img class="completionIcon"
+                 ng-src="images/af/bullet_{{ statusColors[inputSet.status] || statusColors['input_incomplete'] }}.png">
             <span class="completionMessage" ng-bind="inputStatuses[inputSet.status] || inputStatuses['input_incomplete']"></span>
         </div>
 
