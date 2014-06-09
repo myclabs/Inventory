@@ -1,10 +1,5 @@
-.af .inputProgress .progress {
-    height: 30px;
-}
-.af .inputProgress .progress .progress-bar {
-    line-height: 30px;
-    font-size: 13px;
-    font-weight: 300;
+.completionIcon {
+    max-height: 23px;
 }
 
 .af fieldset.collapse-wrapper legend a {
