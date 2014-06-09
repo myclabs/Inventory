@@ -30,6 +30,15 @@
     width: 110px;
 }
 
+.af .af-component-help {
+    opacity: 0.3;
+    display: inline;
+    margin-left: 5px;
+}
+.af .af-component-help:hover {
+    opacity: 1;
+}
+
 .resultsPreview {
     margin-top: 30px;
 }

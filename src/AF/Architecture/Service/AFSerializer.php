@@ -18,6 +18,7 @@ use AF\Domain\Condition\CheckboxCondition;
 use AF\Domain\Condition\Condition;
 use AF\Domain\Condition\ElementaryCondition;
 use AF\Domain\Condition\Select\SelectSingleCondition;
+use Core_Tools;
 use Mnapoli\Translated\Translator;
 
 /**
@@ -64,6 +65,7 @@ class AFSerializer
                 'ref'     => $component->getRef(),
                 'label'   => $this->translator->get($component->getLabel()),
                 'visible' => $component->isVisible(),
+                'help'    => Core_Tools::textile($this->translator->get($component->getHelp())),
             ];
 
             foreach ($component->getActions() as $action) {
