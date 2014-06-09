@@ -190,8 +190,8 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
     };
 }]);
 
-afModule.controller('InputController', ['$scope', '$window', '$http', 'validateInputSet',
-function ($scope, $window, $http, validateInputSet) {
+afModule.controller('InputController', ['$scope', '$element', '$window', '$http', 'validateInputSet',
+function ($scope, $element, $window, $http, validateInputSet) {
     $scope.af = $window.af;
     $scope.inputSet = $window.inputSet;
     var urlParams = $window.afUrlParams;
@@ -214,6 +214,11 @@ function ($scope, $window, $http, validateInputSet) {
     $scope.previewIsLoading = false;
     $scope.saving = false;
     $scope.markingInputAsFinished = false;
+
+    // When the input is edited
+    $element.on('input change', ':input', function () {
+        $scope.inputSet.status = 'in_progress';
+    });
 
     // Preview results
     $scope.preview = function () {
