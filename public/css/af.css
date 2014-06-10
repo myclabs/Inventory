@@ -25,7 +25,7 @@
     width: 110px;
 }
 .af .af-numeric-input .form-control-feedback {
-    opacity: 0.3;
+    opacity: 0.5;
 }
 .af .af-numeric-input .form-control-feedback:hover {
     opacity: 1;

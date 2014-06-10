@@ -94,6 +94,24 @@ afModule.directive('afNumericField', function(isInputEnabled) {
                 + $scope.component.defaultValue.digitalValue + ' ' + $scope.component.unit.symbol
                 + ' ± ' + ($scope.component.defaultValue.uncertainty || '0') + ' %';
 
+            // Vérification si l'unité de la saisie n'est pas la même
+            if ($scope.component.unitChoices != undefined && $scope.input.value.unit != undefined) {
+                var found = false;
+                angular.forEach($scope.component.unitChoices, function (unit) {
+                    if (unit.ref === $scope.input.value.unit) {
+                        found = true;
+                    }
+                });
+                if (! found) {
+                    // Unité sélectionnée incompatible, on écrase la valeur saisie
+                    $scope.valueHasIncompatibleUnit = true;
+                    $scope.valueHasIncompatibleUnitHelp = __('AF', 'inputInput', 'valueWithIncompatibleUnit') +
+                        ' ' + $scope.input.value.digitalValue + ' ' + $scope.input.value.unit;
+                    $scope.input.value.digitalValue = null;
+                    $scope.input.value.unit = $scope.component.unit.ref;
+                }
+            }
+
             $scope.toggleHistory = function ($event) {
                 $($event.target).popover('toggle');
             };

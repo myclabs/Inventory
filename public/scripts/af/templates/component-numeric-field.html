@@ -5,6 +5,10 @@
                ng-model="input.value.digitalValue"
                ng-disabled="!isInputEnabled(input, component, inputs)">
 
+        <span class="glyphicon glyphicon-warning-sign form-control-feedback"
+              ng-if="valueHasIncompatibleUnit"
+              tooltip="{{ valueHasIncompatibleUnitHelp }}"></span>
+
         <span class="glyphicon glyphicon-info-sign form-control-feedback"
               ng-if="component.defaultValue.reminder && (component.defaultValue.digitalValue !== null)"
               tooltip="{{ defaultValueReminder }}"></span>

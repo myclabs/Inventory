@@ -77,6 +77,14 @@
 				<seg>Free label</seg>
 			</tuv>
 		</tu>
+        <tu tuid="valueWithIncompatibleUnit">
+            <tuv xml:lang="fr">
+                <seg>La valeur précédemment enregistrée avait une unité incompatible :</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The previously saved value had an incompatible unit:</seg>
+            </tuv>
+        </tu>
 
 		<!-- Aperçu des résultats -->
 
