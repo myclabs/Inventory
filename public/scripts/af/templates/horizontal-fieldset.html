@@ -1,16 +1,22 @@
 <table class="table table-condensed">
     <tr>
-        <th ng-repeat="component in components" ng-style="{ width: 100/(components.length+1) + '%' }">
+        <th ng-style="{ width: 100/(components.length+2) + '%' }">
+            {{ freeLabel }}
+        </th>
+        <th ng-repeat="component in components" ng-style="{ width: 100/(components.length+2) + '%' }">
             {{ component.label }}
             <a class="af-component-help" href="#" tooltip-html-unsafe="{{ component.help }}"
                ng-if="component.help">
                 <i class="fa fa-question-circle"></i>
             </a>
         </th>
-        <th ng-style="{ width: 100/(components.length+1) + '%' }"></th>
+        <th ng-style="{ width: 100/(components.length+2) + '%' }"></th>
     </tr>
 
     <tr ng-repeat="inputSet in inputSets">
+        <td>
+            <input type="text" class="form-control" ng-model="inputSet.freeLabel">
+        </td>
         <td ng-repeat="component in components">
             <af-horizontal-component component="component" input="getInput(inputSet, component)"></af-horizontal-component>
         </td>

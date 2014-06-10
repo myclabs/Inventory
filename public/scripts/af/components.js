@@ -35,6 +35,7 @@ afModule.directive('afHorizontalFieldset', ['getInput', function(getInput) {
         link: function ($scope) {
             $scope.getInput = getInput;
             $scope.removeButtonLabel = __('UI', 'verb', 'delete');
+            $scope.freeLabel = __('AF', 'inputInput', 'freeLabel');
 
             $scope.remove = function (subInputSet) {
                 var index = $scope.inputSets.indexOf(subInputSet);

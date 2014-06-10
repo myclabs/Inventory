@@ -173,6 +173,11 @@ class InputSerializer
                     $input->addSubSet($subInputSet);
                 }
 
+                // Free label
+                if (isset($repetition['freeLabel'])) {
+                    $subInputSet->setFreeLabel($repetition['freeLabel']);
+                }
+
                 if (isset($repetition['inputs'])) {
                     foreach ($repetition['inputs'] as $inputData) {
                         $this->unserializeInput($inputData, $subInputSet, $component->getCalledAF());
@@ -214,6 +219,10 @@ class InputSerializer
 
         if ($inputSet->getId()) {
             $data['id'] = $inputSet->getId();
+        }
+
+        if ($inputSet instanceof SubInputSet) {
+            $data['freeLabel'] = $inputSet->getFreeLabel();
         }
 
         $locale = Core_Locale::loadDefault();
