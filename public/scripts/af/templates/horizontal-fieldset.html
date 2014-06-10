@@ -2,6 +2,10 @@
     <tr>
         <th ng-repeat="component in components" ng-style="{ width: 100/(components.length+1) + '%' }">
             {{ component.label }}
+            <a class="af-component-help" href="#" tooltip-html-unsafe="{{ component.help }}"
+               ng-if="component.help">
+                <i class="fa fa-question-circle"></i>
+            </a>
         </th>
         <th ng-style="{ width: 100/(components.length+1) + '%' }"></th>
     </tr>
