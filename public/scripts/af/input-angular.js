@@ -250,9 +250,10 @@ function ($scope, $element, $window, $http, validateInputSet) {
         $scope.resultsPreview = null;
         var data = {
             input: $scope.inputSet,
-            urlParams: urlParams
+            urlParams: urlParams,
+            idInputSet: $scope.inputSet.id
         };
-        $http.post('af/input/results-preview?id=' + af.id, data).success(function (response) {
+        $http.post('af/input/results-preview?id=' + $scope.af.id, data).success(function (response) {
             $scope.resultsPreview = response.data;
             $scope.previewIsLoading = false;
         }).error(function () {
@@ -270,9 +271,10 @@ function ($scope, $element, $window, $http, validateInputSet) {
         $scope.saving = true;
         var data = {
             input: $scope.inputSet,
-            urlParams: urlParams
+            urlParams: urlParams,
+            idInputSet: $scope.inputSet.id
         };
-        $http.post('af/input/submit?id=' + af.id, data).success(function (response) {
+        $http.post('af/input/submit?id=' + $scope.af.id, data).success(function (response) {
             $scope.saving = false;
             $scope.inputSet.completion = response.data.completion;
             $scope.inputSet.status = response.data.status;
@@ -289,9 +291,10 @@ function ($scope, $element, $window, $http, validateInputSet) {
         $scope.markingInputAsFinished = true;
         var data = {
             input: $scope.inputSet,
-            urlParams: urlParams
+            urlParams: urlParams,
+            idInputSet: $scope.inputSet.id
         };
-        $http.post('af/input/finish?id=' + af.id, data).success(function (response) {
+        $http.post('af/input/finish?id=' + $scope.af.id, data).success(function (response) {
             $scope.markingInputAsFinished = false;
             $scope.inputSet.status = response.status;
             addMessage(response.message, 'success');
