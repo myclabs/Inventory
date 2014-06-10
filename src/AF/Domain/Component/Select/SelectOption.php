@@ -46,18 +46,6 @@ class SelectOption extends Core_Model_Entity
     protected $label;
 
     /**
-     * Flag indiquant si l'option est visible (par défaut visible)
-     * @var boolean
-     */
-    protected $visible = true;
-
-    /**
-     * Flag indiquant si l'option est activée par défaut (par défaut activée)
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
      * @var Select
      */
     protected $select;
@@ -76,8 +64,6 @@ class SelectOption extends Core_Model_Entity
         $uiElement = new Option($this->ref);
         $uiElement->value = $this->ref;
         $uiElement->label = $this->uglyTranslate($this->label);
-        $uiElement->disabled = !$this->enabled;
-        $uiElement->hidden = !$this->visible;
         return $uiElement;
     }
 
@@ -120,38 +106,6 @@ class SelectOption extends Core_Model_Entity
     public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return $this->enabled;
-    }
-
-    /**
-     * @param bool $enabled
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = (bool) $enabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVisible()
-    {
-        return $this->visible;
-    }
-
-    /**
-     * @param bool $visible
-     */
-    public function setVisible($visible)
-    {
-        $this->visible = (bool) $visible;
     }
 
     /**

@@ -32,8 +32,6 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
             $data['index'] = $option->getId();
             $data['label'] = $this->cellTranslatedText($option->getLabel());
             $data['ref'] = $option->getRef();
-            $data['isVisible'] = $option->isVisible();
-            $data['enabled'] = $option->isEnabled();
             // Si il s'agit d'une selection multiple on précise si l'option fait partie de la séléction par défaut
             if ($selectField instanceof SelectMulti) {
                 /** @var $selectField SelectMulti */
@@ -58,10 +56,6 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
         if (empty($ref)) {
             $this->setAddElementErrorMessage('ref', __('UI', 'formValidation', 'emptyRequiredField'));
         }
-        $isVisible = $this->getAddElementValue('isVisible');
-        if (empty($isVisible)) {
-            $this->setAddElementErrorMessage('isVisible', __('UI', 'formValidation', 'emptyRequiredField'));
-        }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
             $option = new SelectOption();
@@ -73,8 +67,6 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
                 return;
             }
             $this->translator->set($option->getLabel(), $this->getAddElementValue('label'));
-            $option->setVisible($isVisible);
-            $option->setEnabled($this->getAddElementValue('enabled'));
 
             $selectField->addOption($option);
             if ($selectField instanceof SelectMulti) {
@@ -115,14 +107,6 @@ class AF_Datagrid_Edit_Components_SelectOptionsController extends UI_Controller_
             case 'ref':
                 $option->setRef($newValue);
                 $this->data = $option->getRef();
-                break;
-            case 'isVisible':
-                $option->setVisible($newValue);
-                $this->data = $option->isVisible();
-                break;
-            case 'enabled':
-                $option->setEnabled($newValue);
-                $this->data = $option->isEnabled();
                 break;
             // Ce cas peut se produire uniquement avec les champs de selection multiple
             case 'defaultValue':
