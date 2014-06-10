@@ -5,6 +5,7 @@ namespace AF\Domain\Component\Select;
 use AF\Domain\Input\Select\SelectMultiInput;
 use AF\Domain\AFGenerationHelper;
 use AF\Domain\Component\Select;
+use AF\Domain\InputSet\InputSet;
 use Core_Exception_UndefinedAttribute;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -102,6 +103,21 @@ class SelectMulti extends Select
             $uiElement->getElement()->addAction($generationHelper->getUIAction($action));
         }
         return $uiElement;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initializeNewInput(InputSet $inputSet)
+    {
+        $input = $inputSet->getInputForComponent($this);
+
+        if ($input === null) {
+            $input = new SelectMultiInput($inputSet, $this);
+            $inputSet->setInputForComponent($this, $input);
+        }
+
+        $input->setValue($this->defaultValues);
     }
 
     /**

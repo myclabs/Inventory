@@ -57,6 +57,21 @@ class Checkbox extends Field
     /**
      * {@inheritdoc}
      */
+    public function initializeNewInput(InputSet $inputSet)
+    {
+        $input = $inputSet->getInputForComponent($this);
+
+        if ($input === null) {
+            $input = new CheckboxInput($inputSet, $this);
+            $inputSet->setInputForComponent($this, $input);
+        }
+
+        $input->setValue($this->defaultValue);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getNbRequiredFields(InputSet $inputSet = null)
     {
         return 0;

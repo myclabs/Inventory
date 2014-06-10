@@ -264,6 +264,15 @@ class AF extends Core_Model_Entity
     }
 
     /**
+     * Initialise une nouvelle saisie vide (avec les valeurs par défaut).
+     * @param InputSet $inputSet
+     */
+    public function initializeNewInput(InputSet $inputSet)
+    {
+        $this->rootGroup->initializeNewInput($inputSet);
+    }
+
+    /**
      * Get sets of the AF.
      * @return PrimaryInputSet[]
      */

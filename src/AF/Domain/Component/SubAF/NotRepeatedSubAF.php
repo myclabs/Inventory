@@ -65,6 +65,21 @@ class NotRepeatedSubAF extends SubAF
     /**
      * {@inheritdoc}
      */
+    public function initializeNewInput(InputSet $inputSet)
+    {
+        $input = $inputSet->getInputForComponent($this);
+
+        if ($input === null) {
+            $input = new NotRepeatedSubAFInput($inputSet, $this);
+            $inputSet->setInputForComponent($this, $input);
+        }
+
+        $this->calledAF->initializeNewInput($input->getValue());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getNbRequiredFields(InputSet $inputSet = null)
     {
         // Si il y'a une saisie

@@ -138,7 +138,6 @@ class AFSerializer
                     /** @var Checkbox $component */
                     $arr['type'] = 'checkbox';
                     $arr['enabled'] = $component->isEnabled();
-                    $arr['defaultValue'] = $component->getDefaultValue();
                     break;
                 case $component instanceof SelectSingle:
                     /** @var SelectSingle $component */
@@ -163,9 +162,6 @@ class AFSerializer
                             'label' => $this->translator->get($option->getLabel()),
                         ];
                     }
-                    $arr['defaultValue'] = $component->getDefaultValue()
-                        ? $component->getDefaultValue()->getRef()
-                        : null;
                     break;
                 case $component instanceof SelectMulti:
                     /** @var SelectMulti $component */
@@ -178,10 +174,6 @@ class AFSerializer
                             'ref'   => $option->getRef(),
                             'label' => $this->translator->get($option->getLabel()),
                         ];
-                    }
-                    $arr['defaultValue'] = [];
-                    foreach ($component->getDefaultValues() as $option) {
-                        $arr['defaultValue'][] = $option->getRef();
                     }
                     break;
                 default:

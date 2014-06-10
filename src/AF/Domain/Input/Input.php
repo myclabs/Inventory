@@ -55,8 +55,6 @@ abstract class Input extends Core_Model_Entity implements \AF\Domain\Algorithm\I
     {
         $this->inputSet = $inputSet;
         $this->refComponent = $component->getRef();
-        // Ajoute cet input à l'inputset
-        $inputSet->setInputForComponent($component, $this);
     }
 
     /**

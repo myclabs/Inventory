@@ -191,7 +191,7 @@ class AF_InputController extends Core_Controller
             $this->entityManager->flush();
         } else {
             // Récupère la saisie en session
-            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af);
             if ($inputSet === null) {
                 throw new Core_Exception_User("AF", "message", "inputSetDoesntExist");
             }

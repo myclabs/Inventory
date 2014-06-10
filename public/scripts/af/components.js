@@ -264,7 +264,9 @@ afModule.directive('afSubMulti', function($compile) {
             }
 
             $scope.add = function () {
-                $scope.input.value.push({});
+                // Copie le template
+                var newInputSet = angular.copy($scope.input.subInputSetTemplate);
+                $scope.input.value.push(newInputSet);
             };
 
             switch ($scope.component.init) {

@@ -7,6 +7,7 @@ use AF\Domain\AFConfigurationError;
 use AF\Domain\AFGenerationHelper;
 use AF\Domain\Input\NumericFieldInput;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
+use Calc_UnitValue;
 use Calc_Value;
 use Core_Exception_NotFound;
 use Core_Locale;
@@ -154,6 +155,27 @@ class NumericField extends Field
             ));
         }
         return $uiElement;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initializeNewInput(InputSet $inputSet)
+    {
+        $input = $inputSet->getInputForComponent($this);
+
+        if ($input === null) {
+            $input = new NumericFieldInput($inputSet, $this);
+            $inputSet->setInputForComponent($this, $input);
+        }
+
+        $defaultValue = new Calc_UnitValue(
+            $this->unit,
+            $this->defaultValue->getDigitalValue(),
+            $this->defaultValue->getUncertainty()
+        );
+
+        $input->setValue($defaultValue);
     }
 
     /**

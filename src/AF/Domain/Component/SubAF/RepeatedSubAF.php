@@ -150,6 +150,29 @@ class RepeatedSubAF extends SubAF
     /**
      * {@inheritdoc}
      */
+    public function initializeNewInput(InputSet $inputSet)
+    {
+        $input = $inputSet->getInputForComponent($this);
+
+        if ($input === null) {
+            $input = new RepeatedSubAFInput($inputSet, $this);
+            $inputSet->setInputForComponent($this, $input);
+        }
+
+        switch ($this->minInputNumber) {
+            case self::MININPUTNUMBER_0:
+                break;
+            case self::MININPUTNUMBER_1_DELETABLE:
+            case self::MININPUTNUMBER_1_NOT_DELETABLE:
+                $subInputSet = $input->addRepeatedSubAf();
+                $this->calledAF->initializeNewInput($subInputSet);
+                break;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getNbRequiredFields(InputSet $inputSet = null)
     {
         if ($inputSet) {

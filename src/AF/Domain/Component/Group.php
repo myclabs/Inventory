@@ -117,6 +117,16 @@ class Group extends Component
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function initializeNewInput(InputSet $inputSet)
+    {
+        foreach ($this->subComponents as $component) {
+            $component->initializeNewInput($inputSet);
+        }
+    }
+
+    /**
      * Retourne les sous-composants du groupe
      * @return Component[]
      */

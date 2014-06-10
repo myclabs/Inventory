@@ -80,6 +80,19 @@ class TextField extends Field
     /**
      * {@inheritdoc}
      */
+    public function initializeNewInput(InputSet $inputSet)
+    {
+        $input = $inputSet->getInputForComponent($this);
+
+        if ($input === null) {
+            $input = new TextFieldInput($inputSet, $this);
+            $inputSet->setInputForComponent($this, $input);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getNbRequiredFields(InputSet $inputSet = null)
     {
         if (!$this->getRequired()) {

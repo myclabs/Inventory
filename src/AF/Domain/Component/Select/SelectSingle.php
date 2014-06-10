@@ -6,6 +6,7 @@ use AF\Domain\Input\Select\SelectSingleInput;
 use AF\Application\Form\Element\Select as FormSelect;
 use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
 use AF\Domain\AFGenerationHelper;
+use AF\Domain\InputSet\InputSet;
 use Core_Exception_NotFound;
 use Core_Exception_UndefinedAttribute;
 use AF\Domain\Component\Select;
@@ -33,7 +34,7 @@ class SelectSingle extends Select
 
     /**
      * Identifiant of the default option selectioned.
-     * @var SelectOption
+     * @var SelectOption|null
      */
     protected $defaultValue;
 
@@ -99,6 +100,21 @@ class SelectSingle extends Select
             $uiElement->getElement()->addAction($generationHelper->getUIAction($action));
         }
         return $uiElement;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function initializeNewInput(InputSet $inputSet)
+    {
+        $input = $inputSet->getInputForComponent($this);
+
+        if ($input === null) {
+            $input = new SelectSingleInput($inputSet, $this);
+            $inputSet->setInputForComponent($this, $input);
+        }
+
+        $input->setValue($this->defaultValue);
     }
 
     /**

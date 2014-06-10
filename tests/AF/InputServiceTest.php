@@ -58,14 +58,17 @@ class InputServiceTest extends TestCase
         $inputSet1 = new PrimaryInputSet($this->af);
         $input1 = new CheckboxInput($inputSet1, $this->comp2);
         $input3 = new NumericFieldInput($inputSet1, $this->comp3);
+        $inputSet1->setInputForComponent($this->comp3, $input3);
         $input3->setValue($input3->getValue()->copyWithNewValue(1));
         $input3->setHidden(false);
         $input3->setDisabled(false);
 
         $inputSet2 = new PrimaryInputSet($this->af);
         $input2 = new NumericFieldInput($inputSet2, $this->comp1);
+        $inputSet2->setInputForComponent($this->comp1, $input2);
         $input2->setValue($input2->getValue()->copyWithNewValue(10));
         $input32 = new NumericFieldInput($inputSet2, $this->comp3);
+        $inputSet2->setInputForComponent($this->comp3, $input32);
         $input32->setValue($input32->getValue()->copyWithNewValue(2));
         $input32->setHidden(true);
         $input32->setDisabled(true);

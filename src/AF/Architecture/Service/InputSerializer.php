@@ -19,6 +19,7 @@ use AF\Domain\Input\Select\SelectSingleInput;
 use AF\Domain\Input\SubAF\NotRepeatedSubAFInput;
 use AF\Domain\Input\SubAF\RepeatedSubAFInput;
 use AF\Domain\Input\TextFieldInput;
+use AF\Domain\InputService;
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputSet\SubInputSet;
@@ -40,9 +41,15 @@ class InputSerializer
      */
     private $translator;
 
-    public function __construct(Translator $translator)
+    /**
+     * @var InputService
+     */
+    private $inputService;
+
+    public function __construct(Translator $translator, InputService $inputService)
     {
         $this->translator = $translator;
+        $this->inputService = $inputService;
     }
 
     /**
@@ -68,6 +75,7 @@ class InputSerializer
         if ($component instanceof NumericField) {
             // Champ numérique
             $input = new NumericFieldInput($inputSet, $component);
+            $inputSet->setInputForComponent($component, $input);
             $locale = Core_Locale::loadDefault();
             $value = null;
             try {
@@ -96,6 +104,7 @@ class InputSerializer
         } elseif ($component instanceof TextField) {
             // Champ texte
             $input = new TextFieldInput($inputSet, $component);
+            $inputSet->setInputForComponent($component, $input);
             if (!empty($data['value'])) {
                 $input->setValue($data['value']);
             }
@@ -103,6 +112,7 @@ class InputSerializer
         } elseif ($component instanceof Checkbox) {
             // Champ checkbox
             $input = new CheckboxInput($inputSet, $component);
+            $inputSet->setInputForComponent($component, $input);
             if (isset($data['value'])) {
                 if (is_string($data['value'])) {
                     $value = ($data['value'] === 'true') ? true : false;
@@ -115,19 +125,18 @@ class InputSerializer
         } elseif ($component instanceof SelectSingle) {
             // Champ de sélection simple
             $input = new SelectSingleInput($inputSet, $component);
+            $inputSet->setInputForComponent($component, $input);
             if (! empty($data['value'])) {
-                // On ne peut pas utiliser null directement à cause d'Angular
-                if ($data['value'] === 'null') {
-                    $option = null;
-                } else {
-                    $option = $component->getOptionByRef($data['value']);
-                }
-                $input->setValue($option);
+                $option = $component->getOptionByRef($data['value']);
+            } else {
+                $option = null;
             }
+            $input->setValue($option);
 
         } elseif ($component instanceof SelectMulti) {
             // Champ de sélection multiple
             $input = new SelectMultiInput($inputSet, $component);
+            $inputSet->setInputForComponent($component, $input);
             if (!empty($data['value']) && is_array($data['value'])) {
                 $options = [];
                 foreach ($data['value'] as $optionRef) {
@@ -139,6 +148,7 @@ class InputSerializer
         } elseif ($component instanceof NotRepeatedSubAF) {
             // Sous-AF non répété
             $input = new NotRepeatedSubAFInput($inputSet, $component);
+            $inputSet->setInputForComponent($component, $input);
             if (isset($data['value']['inputs'])) {
                 foreach ($data['value']['inputs'] as $inputData) {
                     $this->unserializeInput($inputData, $input->getValue(), $component->getCalledAF());
@@ -148,6 +158,7 @@ class InputSerializer
         } elseif ($component instanceof RepeatedSubAF) {
             // Sous-AF répété
             $input = new RepeatedSubAFInput($inputSet, $component);
+            $inputSet->setInputForComponent($component, $input);
             $subInputSets = $input->getValue();
 
             if (! isset($data['value']) || ! is_array($data['value'])) {
@@ -222,6 +233,11 @@ class InputSerializer
                     $arr['value'] = $this->serializeInputSet($input->getValue());
                     break;
                 case $input instanceof RepeatedSubAFInput:
+                    /** @var RepeatedSubAF $component */
+                    $component = $input->getComponent();
+                    $templateInputSet = new SubInputSet($component->getCalledAF());
+                    $component->getCalledAF()->initializeNewInput($templateInputSet);
+                    $arr['subInputSetTemplate'] = $this->serializeInputSet($templateInputSet);
                     /** @var RepeatedSubAFInput $input */
                     foreach ($input->getValue() as $inputSet) {
                         $arr['value'][] = $this->serializeInputSet($inputSet);
@@ -233,7 +249,7 @@ class InputSerializer
                     $arr['value'] = [
                         'unit'         => $value->getUnit()->getRef(),
                         'digitalValue' => $locale->formatNumberForInput($value->getDigitalValue()),
-                        'uncertainty'  => $locale->formatNumberForInput($value->getRelativeUncertainty()),
+                        'uncertainty'  => $locale->formatNumberForInput($value->getUncertainty()),
                     ];
                     break;
                 case $input instanceof TextFieldInput:
@@ -246,7 +262,7 @@ class InputSerializer
                     break;
                 case $input instanceof SelectSingleInput:
                     /** @var SelectSingleInput $input */
-                    $arr['value'] = ($input->getValue() === null) ? 'null' : $input->getValue();
+                    $arr['value'] = ($input->getValue() === null) ? null : $input->getValue();
                     break;
                 case $input instanceof SelectMultiInput:
                     /** @var SelectMultiInput $input */

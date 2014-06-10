@@ -102,6 +102,12 @@ abstract class Component extends Core_Model_Entity
     abstract public function getNbRequiredFields(InputSet $inputSet = null);
 
     /**
+     * Initialise une nouvelle saisie vide.
+     * @param InputSet $inputSet
+     */
+    abstract public function initializeNewInput(InputSet $inputSet);
+
+    /**
      * Méthode utilisée pour vérifier la configuration des champs.
      * @return AFConfigurationError[]
      */

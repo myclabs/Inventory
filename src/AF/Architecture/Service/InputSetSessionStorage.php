@@ -48,30 +48,22 @@ class InputSetSessionStorage
     }
 
     /**
-     * @param AF   $af
-     * @param bool $createIfNotFound Si l'InputSet n'est pas trouvé, en crée un nouveau automatiquement
+     * @param AF $af
      * @return PrimaryInputSet|null
      */
-    public function getInputSet(AF $af, $createIfNotFound = true)
+    public function getInputSet(AF $af)
     {
         // On cherche la saisie en session
         $session = $this->getSessionStorage();
 
         if (!isset($session->inputSet[$af->getId()])) {
-            if ($createIfNotFound) {
-                $inputSet = new PrimaryInputSet($af);
-                /** @noinspection PhpUndefinedFieldInspection */
-                $session->inputSet[$af->getId()] = $this->serializer->serialize($inputSet);
-            } else {
-                $inputSet = null;
-            }
-        } else {
-            $json = $session->inputSet[$af->getId()];
-            $inputSet = $this->serializer->unserialize($json);
-            $inputSet = reset($inputSet);
+            return null;
         }
 
-        return $inputSet;
+        $json = $session->inputSet[$af->getId()];
+        $inputSet = $this->serializer->unserialize($json);
+
+        return reset($inputSet);
     }
 
     /**
