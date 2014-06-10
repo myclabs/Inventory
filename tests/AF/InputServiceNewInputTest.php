@@ -55,5 +55,8 @@ class InputServiceNewInputTest extends TestCase
         $input = $inputSet->getInputForComponent($comp2);
         $this->assertInstanceOf(CheckboxInput::class, $input);
         $this->assertTrue($input->getValue());
+
+        // Obligé car AF crée des algos et les sauvegarde :/
+        $this->entityManager->clear();
     }
 }

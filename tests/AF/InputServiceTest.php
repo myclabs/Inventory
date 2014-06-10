@@ -57,6 +57,7 @@ class InputServiceTest extends TestCase
     {
         $inputSet1 = new PrimaryInputSet($this->af);
         $input1 = new CheckboxInput($inputSet1, $this->comp2);
+        $inputSet1->setInputForComponent($this->comp2, $input1);
         $input3 = new NumericFieldInput($inputSet1, $this->comp3);
         $inputSet1->setInputForComponent($this->comp3, $input3);
         $input3->setValue($input3->getValue()->copyWithNewValue(1));
