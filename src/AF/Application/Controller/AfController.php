@@ -95,12 +95,13 @@ class AF_AfController extends Core_Controller
         if (!$this->hasParam('viewConfiguration')) {
             throw new Core_Exception_InvalidHTTPQuery("ViewConfiguration must be provided");
         }
+        /** @var AFViewConfiguration $viewConfiguration */
         $viewConfiguration = $this->getParam('viewConfiguration');
         if (!$viewConfiguration->isUsable()) {
             throw new Core_Exception_InvalidHTTPQuery('The viewConfiguration is not properly configured');
         }
 
-        $idInputSet = $this->getParam('idInputSet');
+        $idInputSet = $viewConfiguration->getIdInputSet();
         if ($idInputSet) {
             // Charge la saisie depuis la BDD
             $inputSet = PrimaryInputSet::load($idInputSet);
