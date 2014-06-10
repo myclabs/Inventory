@@ -23,6 +23,10 @@
 .af .af-numeric-input .af-uncertainty {
     float: left;
     width: 110px;
+    margin-right: 10px;
+}
+.af .af-numeric-input .af-history {
+    float: left;
 }
 .af .af-numeric-input .form-control-feedback {
     opacity: 0.3;

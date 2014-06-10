@@ -48,6 +48,7 @@ afModule.directive('afComponent', function() {
         templateUrl: 'scripts/af/templates/component.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
+            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputSet.inputs;
         }
     };
@@ -62,6 +63,7 @@ afModule.directive('afHorizontalComponent', function() {
         templateUrl: 'scripts/af/templates/horizontal-component.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
+            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
         }
     };
@@ -77,6 +79,7 @@ afModule.directive('afNumericField', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-numeric-field.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
+            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -84,6 +87,10 @@ afModule.directive('afNumericField', function(isInputEnabled) {
             $scope.defaultValueReminder = __('AF', 'inputInput', 'defaultValueReminder') + ' '
                 + $scope.component.defaultValue.digitalValue + ' ' + $scope.component.unit.symbol
                 + ' ± ' + ($scope.component.defaultValue.uncertainty || '0') + ' %';
+
+            $scope.toggleHistory = function ($event) {
+                $($event.target).popover('toggle');
+            };
         }
     };
 });
@@ -98,6 +105,7 @@ afModule.directive('afSelect', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-select.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
+            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -115,6 +123,7 @@ afModule.directive('afCheckbox', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-checkbox.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
+            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -132,6 +141,7 @@ afModule.directive('afTextField', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-text-field.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
+            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -149,6 +159,7 @@ afModule.directive('afTextarea', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-textarea.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
+            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -166,6 +177,7 @@ afModule.directive('afRadio', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-radio.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
+            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -183,6 +195,7 @@ afModule.directive('afSelectMultiple', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-select-multiple.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
+            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.toggleSelection = function toggleSelection(optionRef) {
@@ -290,6 +303,44 @@ afModule.directive('afSubMulti', function($compile) {
             // même s'ils ne sont pas vraiment utilisés
             element.append(template);
             $compile(element.contents())($scope.$new());
+        }
+    };
+});
+
+/**
+ * Historique d'une saisie
+ */
+afModule.directive('afHistory', function($http) {
+    return {
+        restrict: 'E',
+        scope: {
+            input: '=',
+            inputSet: '='
+        },
+        templateUrl: 'scripts/af/templates/history.html',
+        link: function ($scope, $element) {
+            var button = $element.find('button');
+            var historyFetched = false;
+            var url = 'af/input/input-history?inputSet=' + $scope.inputSet.id + '&input=' + $scope.input.id;
+
+            button.popover({
+                placement: 'bottom',
+                title: __('UI', 'history', 'valueHistory'),
+                html: true,
+                content: '<p class="text-center"><img src="images/ui/ajax-loader.gif"></p>'
+            }).on('show.bs.popover', function () {
+                if (historyFetched) {
+                    return;
+                }
+
+                $http.get(url).success(function (html) {
+                    button.data('bs.popover').options.content = html;
+                    historyFetched = true;
+                    button.popover('show');
+                }).error(function () {
+                    addMessage(__('Core', 'exception', 'applicationError'), 'error');
+                });
+            });
         }
     };
 });

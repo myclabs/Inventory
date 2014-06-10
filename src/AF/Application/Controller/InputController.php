@@ -208,16 +208,16 @@ class AF_InputController extends Core_Controller
     /**
      * Retourne l'historique des valeurs d'une saisie
      * AJAX
-     * @Secure("viewCell")
+     * @Secure("viewInputHistory")
      */
     public function inputHistoryAction()
     {
-        $idInput = $this->getParam('idInput', null);
+        $idInput = $this->getParam('input', null);
 
         // Pour gérer le cas où on demande l'historique dans l'interface de test des AF
         if ($idInput !== null) {
             /** @var $input Input */
-            $input = Input::load($this->getParam('idInput'));
+            $input = Input::load($idInput);
 
             $entries = $this->inputHistoryService->getInputHistory($input);
 

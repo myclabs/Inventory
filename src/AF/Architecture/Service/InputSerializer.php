@@ -201,12 +201,20 @@ class InputSerializer
             'inputs' => [],
         ];
 
+        if ($inputSet->getId()) {
+            $data['id'] = $inputSet->getId();
+        }
+
         $locale = Core_Locale::loadDefault();
 
         foreach ($inputSet->getInputs() as $input) {
             $arr = [
                 'componentRef' => $input->getRefComponent(),
             ];
+
+            if ($input->getId()) {
+                $arr['id'] = $input->getId();
+            }
 
             switch (true) {
                 case $input instanceof NotRepeatedSubAFInput:
