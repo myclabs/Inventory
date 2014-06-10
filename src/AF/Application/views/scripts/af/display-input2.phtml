@@ -2,6 +2,7 @@
     window.af = <?=json_encode($this->serializedAF)?>;
     window.inputSet = <?=json_encode($this->serializedInputSet)?>;
     window.afUrlParams = <?=json_encode($this->urlParams)?>;
+    window.exitUrl = <?=json_encode($this->exitUrl)?>;
 
     // Traductions
     // Statut avancement saisie
@@ -77,7 +78,7 @@
                         <?= __('AF', 'inputInput', 'finish') ?>
                     </button>
 
-                    <button type="button" class="btn btn-default">
+                    <button type="button" class="btn btn-default" ng-click="exit()">
                         <i class="fa fa-sign-out"></i>
                         <?= __('UI', 'verb', 'quit') ?>
                     </button>

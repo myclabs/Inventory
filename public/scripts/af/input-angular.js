@@ -300,6 +300,25 @@ function ($scope, $element, $window, $http, validateInputSet) {
             addMessage(__('Core', 'exception', 'applicationError'), 'error');
         });
     };
+
+    // Exit
+    $scope.exit = function () {
+        if ($scope.inputSet.status === 'in_progress') {
+            $.confirm({
+                text: __('AF', 'inputInput', 'confirmExitInput'),
+                confirmButton: __('UI', 'verb', 'confirm'),
+                cancelButton: __('UI', 'verb', 'cancel'),
+                confirm: function() {
+                    window.location.href = $window.exitUrl;
+                },
+                cancel: function() {
+                    // nothing to do
+                }
+            });
+        } else {
+            window.location.href = $window.exitUrl;
+        }
+    };
 }]);
 
 /**
