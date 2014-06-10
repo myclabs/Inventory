@@ -1,4 +1,6 @@
-<div class="form-group" ng-class="input.hasErrors ? 'has-error' : ''">
+<af-history input="input" input-set="inputSet" class="af-history" ng-if="input.id"></af-history>
+
+<div class="form-group" ng-class="{ 'has-error': input.hasErrors, 'af-margin-for-history': (input.id > 0) }">
 
     <label class="col-sm-3 control-label">
         {{ component.label }}

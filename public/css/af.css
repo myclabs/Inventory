@@ -23,10 +23,6 @@
 .af .af-numeric-input .af-uncertainty {
     float: left;
     width: 110px;
-    margin-right: 10px;
-}
-.af .af-numeric-input .af-history {
-    float: left;
 }
 .af .af-numeric-input .form-control-feedback {
     opacity: 0.3;
@@ -52,6 +48,14 @@
 }
 .af .tooltip-inner {
     width: 300px;
+}
+
+/* Affichage de l'historique */
+.af .af-history {
+    float: right;
+}
+.af .af-margin-for-history {
+    margin-right: 40px;
 }
 
 .resultsPreview {

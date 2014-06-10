@@ -79,7 +79,6 @@ afModule.directive('afNumericField', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-numeric-field.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
-            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -105,7 +104,6 @@ afModule.directive('afSelect', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-select.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
-            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -123,7 +121,6 @@ afModule.directive('afCheckbox', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-checkbox.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
-            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -141,7 +138,6 @@ afModule.directive('afTextField', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-text-field.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
-            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -159,7 +155,6 @@ afModule.directive('afTextarea', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-textarea.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
-            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -177,7 +172,6 @@ afModule.directive('afRadio', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-radio.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
-            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.isInputEnabled = isInputEnabled;
@@ -195,7 +189,6 @@ afModule.directive('afSelectMultiple', function(isInputEnabled) {
         templateUrl: 'scripts/af/templates/component-select-multiple.html',
         link: function ($scope) {
             // Forward les saisies du scope courant
-            $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputs;
 
             $scope.toggleSelection = function toggleSelection(optionRef) {
