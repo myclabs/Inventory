@@ -34,6 +34,12 @@ afModule.directive('afHorizontalFieldset', ['getInput', function(getInput) {
         },
         link: function ($scope) {
             $scope.getInput = getInput;
+            $scope.removeButtonLabel = __('UI', 'verb', 'delete');
+
+            $scope.remove = function (subInputSet) {
+                var index = $scope.inputSets.indexOf(subInputSet);
+                $scope.inputSets.splice(index, 1);
+            };
         }
     };
 }]);
