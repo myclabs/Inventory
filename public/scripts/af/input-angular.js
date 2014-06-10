@@ -215,9 +215,30 @@ function ($scope, $element, $window, $http, validateInputSet) {
     $scope.saving = false;
     $scope.markingInputAsFinished = false;
 
+    // Enable/disable form actions
+    $scope.isInputInProgress = function () {
+        return $scope.inputSet.status === 'in_progress';
+    };
+    $scope.isInputComplete = function () {
+        switch ($scope.inputSet.status) {
+            default:
+            case 'in_progress':
+            case 'input_incomplete':
+                return false;
+            case 'calculation_incomplete':
+            case 'complete':
+            case 'finished':
+                return true;
+        }
+    };
+    $scope.isInputFinished = function () {
+        return $scope.inputSet.status === 'finished';
+    };
+
     // When the input is edited
     $element.on('input change', ':input', function () {
         $scope.inputSet.status = 'in_progress';
+        $scope.$digest();
     });
 
     // Preview results
@@ -284,7 +305,7 @@ function ($scope, $element, $window, $http, validateInputSet) {
 /**
  * Directive pour utiliser le "btn-loading" de Bootstrap
  */
-afModule.directive("btnLoading", function() {
+afModule.directive('btnLoading', function() {
     return function(scope, element, attrs){
         scope.$watch(
             function () {
@@ -292,10 +313,10 @@ afModule.directive("btnLoading", function() {
             },
             function (loading){
                 if (loading) {
-                    element.button("loading");
+                    element.button('loading');
                     return;
                 }
-                element.button("reset");
+                element.button('reset');
             }
         );
     }

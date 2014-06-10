@@ -53,25 +53,27 @@
 
         <af-fieldset components="af.components" input-set="inputSet"></af-fieldset>
 
-        <div class="form-actions">
+        <div class="form-actions" ng-cloak>
             <div class="row">
                 <div class="col-md-12">
 
                     <button type="button" class="btn btn-default" ng-click="preview()"
-                            btn-loading="previewIsLoading"
-                            data-loading-text="<i class='fa-spin fa fa-spinner'></i> <?= __('AF', 'inputInput', 'resultsPreview') ?>">
+                            ng-disabled="!isInputInProgress() || previewIsLoading">
+                        <i class="fa-spin fa fa-spinner" ng-show="previewIsLoading"></i>
                         <?= __('AF', 'inputInput', 'resultsPreview') ?>
                     </button>
 
                     <button type="button" class="btn btn-default" ng-click="save()"
-                            btn-loading="saving"
-                            data-loading-text="<i class='fa-spin fa fa-spinner'></i> <?= __('UI', 'verb', 'save') ?>">
+                            ng-disabled="!isInputInProgress() || saving"
+                            ng-class="{ 'btn-primary': isInputInProgress() }">
+                        <i class="fa-spin fa fa-spinner" ng-show="saving"></i>
                         <?= __('UI', 'verb', 'save') ?>
                     </button>
 
                     <button type="button" class="btn btn-default" ng-click="finish()"
-                            btn-loading="markingInputAsFinished"
-                            data-loading-text="<i class='fa-spin fa fa-spinner'></i> <?= __('AF', 'inputInput', 'finish') ?>">
+                            ng-disabled="!isInputComplete() || isInputFinished() || markingInputAsFinished"
+                            ng-class="{ 'btn-primary': isInputComplete() && !isInputFinished() }">
+                        <i class="fa-spin fa fa-spinner" ng-show="markingInputAsFinished"></i>
                         <?= __('AF', 'inputInput', 'finish') ?>
                     </button>
 
@@ -86,7 +88,7 @@
 
     </form>
 
-    <div class="resultsPreview" ng-if="resultsPreview">
+    <div class="resultsPreview" ng-if="resultsPreview" ng-cloak>
         <div class="alert alert-info">
             <?=__('AF', 'inputInput', 'resultsPreview')?>
         </div>
