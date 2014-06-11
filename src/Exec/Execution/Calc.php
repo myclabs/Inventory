@@ -156,7 +156,7 @@ class Calc extends Execution
     protected function executeComponent(Component $node, ValueInterface $valueProvider)
     {
         if ($node instanceof Leaf) {
-            $result = $valueProvider->getValueForExecution($node->getName());
+            $result = $valueProvider->getValueForExecution($node->getName(), ValueInterface::RESULT_NUMERIC);
         } else {
             /** @var $node Composite */
             $calculation = $this->getCalculation();

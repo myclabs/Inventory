@@ -46,7 +46,7 @@ class Inventory_Model_ValueProviderEntity implements ValueInterface
      *
      * @param String $ref
      */
-    public function getValueForExecution($ref)
+    public function getValueForExecution($ref, $expectedResult)
     {
         return $this->_tab[$ref];
     }
