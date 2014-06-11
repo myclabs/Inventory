@@ -257,8 +257,8 @@ class InputSerializer
                     $value = $input->getValue();
                     $arr['value'] = [
                         'unit'         => $value->getUnit()->getRef(),
-                        'digitalValue' => $locale->formatNumberForInput($value->getDigitalValue()),
-                        'uncertainty'  => $locale->formatNumberForInput($value->getUncertainty()),
+                        'digitalValue' => $value->getDigitalValue(),
+                        'uncertainty'  => $value->getUncertainty(),
                     ];
                     break;
                 case $input instanceof TextFieldInput:

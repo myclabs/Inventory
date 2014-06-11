@@ -25,6 +25,10 @@ afModule.filter('rawHtml', function ($sce) {
 
 afModule.factory('testCondition', function () {
     return function (condition, inputs) {
+        if (condition === null) {
+            return false;
+        }
+
         // Find target component input
         var input = inputs.filter(function (input) {
             return input.componentRef === condition.targetComponent;
@@ -39,6 +43,14 @@ afModule.factory('testCondition', function () {
                 return input.value === condition.value;
             case 'nequal':
                 return input.value !== condition.value;
+            case '>=':
+                return input.value >= condition.value;
+            case '>':
+                return input.value > condition.value;
+            case '<=':
+                return input.value <= condition.value;
+            case '<':
+                return input.value < condition.value;
             default:
                 console.log('Unrecognized condition type');
                 return false;
@@ -342,4 +354,34 @@ afModule.directive('btnLoading', function() {
             }
         );
     }
+});
+
+/**
+ * Directive pour avoir un vrai champ de saisie pour les nombres à virgule.
+ */
+afModule.directive('inputFloat', function ($window) {
+    var FLOAT_REGEXP = /^\-?\d+((\.|\,)\d+)?$/;
+    var decimalSeparator = $window.decimalSeparator;
+
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attrs, controller) {
+            controller.$parsers.unshift(function (viewValue) {
+                if (FLOAT_REGEXP.test(viewValue)) {
+                    controller.$setValidity('float', true);
+                    if (typeof viewValue === 'number') {
+                        return viewValue;
+                    } else {
+                        return parseFloat(viewValue.replace(decimalSeparator, '.'));
+                    }
+                } else {
+                    controller.$setValidity('float', false);
+                    return undefined;
+                }
+            });
+            controller.$formatters.push(function (modelValue) {
+                return modelValue.toString().replace('.', decimalSeparator);
+            });
+        }
+    };
 });

@@ -17,6 +17,7 @@ use AF\Domain\Component\TextField;
 use AF\Domain\Condition\CheckboxCondition;
 use AF\Domain\Condition\Condition;
 use AF\Domain\Condition\ElementaryCondition;
+use AF\Domain\Condition\NumericFieldCondition;
 use AF\Domain\Condition\Select\SelectSingleCondition;
 use Core_Tools;
 use Mnapoli\Translated\Translator;
@@ -238,6 +239,18 @@ class AFSerializer
                 case ElementaryCondition::RELATION_NEQUAL:
                     $type = 'nequal';
                     break;
+                case ElementaryCondition::RELATION_GE:
+                    $type = '>=';
+                    break;
+                case ElementaryCondition::RELATION_GT:
+                    $type = '>';
+                    break;
+                case ElementaryCondition::RELATION_LE:
+                    $type = '<=';
+                    break;
+                case ElementaryCondition::RELATION_LT:
+                    $type = '<';
+                    break;
             }
         }
 
@@ -258,6 +271,13 @@ class AFSerializer
                     'type'            => $type,
                     'targetComponent' => $targetFieldRef,
                     'value'           => $optionRef,
+                ];
+            case $condition instanceof NumericFieldCondition:
+                /** @var $condition NumericFieldCondition */
+                return [
+                    'type'            => $type,
+                    'targetComponent' => $targetFieldRef,
+                    'value'           => $condition->getValue(),
                 ];
         }
 
