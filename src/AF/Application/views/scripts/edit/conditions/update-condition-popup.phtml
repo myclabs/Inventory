@@ -188,7 +188,7 @@ $allRelations = [
                     <?php foreach ($selectComponent->getOptions() as $option) : ?>
                         <option value="<?=$option->getId()?>"
                             <?=$option->getId() == $selected ? 'selected' : ''?>>
-                            <?=$option->getLabel()?>
+                            <?=$this->translate($option->getLabel())?>
                         </option>
                     <?php endforeach; ?>
                 </select>
