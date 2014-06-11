@@ -47,19 +47,26 @@ class ExpressionSelectionAlgo extends TextKeySelectionAlgo implements ValueInter
     /**
      * {@inheritdoc}
      */
-    public function getValueForExecution($ref)
+    public function getValueForExecution($ref, $expectedResult)
     {
+        if ($expectedResult === ValueInterface::RESULT_BOOL) {
+            $algo = $this->getSet()->getAlgoByRef($ref);
+            return $algo->execute($this->inputSet);
+        }
+
         try {
             // Si l'opérande est le ref d'un algo, alors on renvoie le résultat de cet algo
             $algo = $this->getSet()->getAlgoByRef($ref);
-            if ($algo instanceof TextKeySelectionAlgo) {
-                return $algo->execute($this->inputSet);
-            }
         } catch (Core_Exception_NotFound $e) {
+            // Sinon on renvoie le ref
+            return $ref;
         }
 
-        // Sinon on renvoie le ref
-        return $ref;
+        if ($algo instanceof TextKeySelectionAlgo) {
+            return $algo->execute($this->inputSet);
+        } else {
+            return $ref;
+        }
     }
 
     /**

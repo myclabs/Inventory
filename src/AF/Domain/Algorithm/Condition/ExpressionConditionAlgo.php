@@ -36,11 +36,7 @@ class ExpressionConditionAlgo extends ConditionAlgo implements ValueInterface
         return $executionCalc->executeExpression($this);
     }
 
-    /**
-     * @param string $ref
-     * @return bool
-     */
-    public function getValueForExecution($ref)
+    public function getValueForExecution($ref, $expectedResult)
     {
         $algo = $this->set->getAlgoByRef($ref);
         return $algo->execute($this->inputSet);

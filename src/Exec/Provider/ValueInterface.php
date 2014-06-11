@@ -9,6 +9,10 @@ namespace Exec\Provider;
  */
 interface ValueInterface
 {
+    const RESULT_BOOL = 1;
+    const RESULT_STRING = 2;
+    const RESULT_NUMERIC = 3;
+
     /**
      * Vérifie la valeur associée à la ref donnée en vue de l'execution.
      *
@@ -22,8 +26,9 @@ interface ValueInterface
      * Renvoi la valeur associée à la ref donnée.
      *
      * @param string $ref
+     * @param int    $expectedResult
      *
      * @return mixed
      */
-    public function getValueForExecution($ref);
+    public function getValueForExecution($ref, $expectedResult);
 }

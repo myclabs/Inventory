@@ -43,7 +43,7 @@ class Condition extends Execution
         $result = null;
 
         if ($node instanceof Leaf) {
-            $result = (bool)$valueProvider->getValueForExecution($node->getName());
+            $result = (bool) $valueProvider->getValueForExecution($node->getName(), ValueInterface::RESULT_BOOL);
         } else {
             if ($node instanceof  Composite) {
                 foreach ($node->getChildren() as $child) {
@@ -58,11 +58,8 @@ class Condition extends Execution
                             case Composite::LOGICAL_OR:
                                 $result |= $childResult;
                                 break;
-                            case Composite::LOGICAL_XOR:
-                                $result ^= $childResult;
-                                break;
                         }
-                        $result = (bool)$result;
+                        $result = (bool) $result;
                     }
                 }
             }
