@@ -38,19 +38,25 @@ afModule.factory('testCondition', function () {
             return false;
         }
 
+        // Cas particulier des saisies numériques
+        var value = input.value;
+        if (value.hasOwnProperty('digitalValue')) {
+            value = value.digitalValue;
+        }
+
         switch(condition.type) {
             case 'equal':
-                return input.value === condition.value;
+                return value === condition.value;
             case 'nequal':
-                return input.value !== condition.value;
+                return value !== condition.value;
             case '>=':
-                return input.value >= condition.value;
+                return value >= condition.value;
             case '>':
-                return input.value > condition.value;
+                return value > condition.value;
             case '<=':
-                return input.value <= condition.value;
+                return value <= condition.value;
             case '<':
-                return input.value < condition.value;
+                return value < condition.value;
             default:
                 console.log('Unrecognized condition type');
                 return false;
@@ -363,7 +369,7 @@ afModule.directive('btnLoading', function() {
  * Directive pour avoir un vrai champ de saisie pour les nombres à virgule.
  */
 afModule.directive('inputFloat', function ($window) {
-    var FLOAT_REGEXP = /^\-?\d+((\.|\,)\d+)?$/;
+    var FLOAT_REGEXP = /^\-?\d+[\.|\,]?\d*$/;
     var decimalSeparator = $window.decimalSeparator;
 
     return {
