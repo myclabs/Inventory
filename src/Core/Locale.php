@@ -245,6 +245,13 @@ class Core_Locale
             return $input;
         }
 
+        // Accepte tous les séparateurs décimaux
+        $decimalSeparators = ['.', ','];
+        $correctDecimalSeparator = $this->getDecimalSeparator();
+        foreach ($decimalSeparators as $decimalSeparator) {
+            $input = str_replace($decimalSeparator, $correctDecimalSeparator, $input);
+        }
+
         if (trim($input) === '') {
             return null;
         }
