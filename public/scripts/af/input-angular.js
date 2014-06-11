@@ -57,8 +57,11 @@ afModule.factory('testCondition', function () {
                 return value <= condition.value;
             case '<':
                 return value < condition.value;
+            case 'contains':
+                return value.indexOf(condition.value) !== -1;
+            case 'ncontains':
+                return value.indexOf(condition.value) === -1;
             default:
-                console.log('Unrecognized condition type');
                 return false;
         }
     };

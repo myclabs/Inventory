@@ -18,6 +18,7 @@ use AF\Domain\Condition\CheckboxCondition;
 use AF\Domain\Condition\Condition;
 use AF\Domain\Condition\ElementaryCondition;
 use AF\Domain\Condition\NumericFieldCondition;
+use AF\Domain\Condition\Select\SelectMultiCondition;
 use AF\Domain\Condition\Select\SelectSingleCondition;
 use Core_Tools;
 use Mnapoli\Translated\Translator;
@@ -244,6 +245,12 @@ class AFSerializer
                 case ElementaryCondition::RELATION_LT:
                     $type = '<';
                     break;
+                case ElementaryCondition::RELATION_CONTAINS:
+                    $type = 'contains';
+                    break;
+                case ElementaryCondition::RELATION_NCONTAINS:
+                    $type = 'ncontains';
+                    break;
             }
         }
 
@@ -259,6 +266,14 @@ class AFSerializer
                 ];
             case $condition instanceof SelectSingleCondition:
                 /** @var $condition SelectSingleCondition */
+                $optionRef = $condition->getOption() ? $condition->getOption()->getRef() : '';
+                return [
+                    'type'            => $type,
+                    'targetComponent' => $targetFieldRef,
+                    'value'           => $optionRef,
+                ];
+            case $condition instanceof SelectMultiCondition:
+                /** @var $condition SelectMultiCondition */
                 $optionRef = $condition->getOption() ? $condition->getOption()->getRef() : '';
                 return [
                     'type'            => $type,
