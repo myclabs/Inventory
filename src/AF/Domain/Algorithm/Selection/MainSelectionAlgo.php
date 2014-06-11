@@ -72,7 +72,7 @@ class MainSelectionAlgo extends SelectionAlgo implements ValueInterface
     /**
      * {@inheritdoc}
      */
-    public function getValueForExecution($ref)
+    public function getValueForExecution($ref, $expectedResult)
     {
         $algo = $this->set->getAlgoByRef($ref);
         if ($algo instanceof NumericAlgo) {
