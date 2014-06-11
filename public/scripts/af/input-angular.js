@@ -165,7 +165,7 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
                     } else if (! /^-?[0-9]*[.,]?[0-9]*$/.test(value)) {
                         input.hasErrors = true;
                         input.error = __('UI', 'formValidation', 'invalidNumber');
-                    } else if (! /^[0-9]*[.,]?[0-9]*$/.test(uncertainty)) {
+                    } else if (! /^[0-9]*$/.test(uncertainty)) {
                         input.hasErrors = true;
                         input.error = __('UI', 'formValidation', 'invalidUncertainty');
                     } else {
@@ -188,6 +188,9 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
                         input.hasErrors = false;
                         input.error = null;
                     }
+                    break;
+                case 'group':
+                    validateInputSet(inputSet, component.components);
                     break;
                 case 'subaf-single':
                     validateInputSet(input.value, component.calledAF.components);
@@ -376,10 +379,13 @@ afModule.directive('inputFloat', function ($window) {
                     }
                 } else {
                     controller.$setValidity('float', false);
-                    return undefined;
+                    return viewValue;
                 }
             });
             controller.$formatters.push(function (modelValue) {
+                if (modelValue === null || modelValue === undefined) {
+                    return modelValue;
+                }
                 return modelValue.toString().replace('.', decimalSeparator);
             });
         }
