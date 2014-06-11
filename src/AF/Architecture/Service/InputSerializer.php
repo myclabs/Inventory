@@ -6,6 +6,7 @@ use AF\Domain\Action\SetValue;
 use AF\Domain\AF;
 use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\Component;
+use AF\Domain\Component\Group;
 use AF\Domain\Component\NumericField;
 use AF\Domain\Component\Select\SelectMulti;
 use AF\Domain\Component\Select\SelectSingle;
@@ -13,6 +14,7 @@ use AF\Domain\Component\SubAF\NotRepeatedSubAF;
 use AF\Domain\Component\SubAF\RepeatedSubAF;
 use AF\Domain\Component\TextField;
 use AF\Domain\Input\CheckboxInput;
+use AF\Domain\Input\GroupInput;
 use AF\Domain\Input\NumericFieldInput;
 use AF\Domain\Input\Select\SelectMultiInput;
 use AF\Domain\Input\Select\SelectSingleInput;
@@ -184,11 +186,11 @@ class InputSerializer
                     }
                 }
             }
+        } elseif ($component instanceof Group) {
+            return;
         } else {
             throw new \InvalidArgumentException("Unknown component " . get_class($component));
         }
-
-        return $input;
     }
 
     /**
@@ -225,9 +227,11 @@ class InputSerializer
             $data['freeLabel'] = $inputSet->getFreeLabel();
         }
 
-        $locale = Core_Locale::loadDefault();
-
         foreach ($inputSet->getInputs() as $input) {
+            if ($input instanceof GroupInput) {
+                continue;
+            }
+
             $arr = [
                 'componentRef' => $input->getRefComponent(),
             ];
