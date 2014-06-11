@@ -122,7 +122,7 @@ class AFSerializer
                     $arr['required'] = $component->getRequired();
                     $arr['withUncertainty'] = $component->getWithUncertainty();
                     $arr['defaultValue']['digitalValue'] = $component->getDefaultValue()->getDigitalValue();
-                    $arr['defaultValue']['uncertainty'] = $component->getDefaultValue()->getRelativeUncertainty();
+                    $arr['defaultValue']['uncertainty'] = $component->getDefaultValue()->getUncertainty();
                     $arr['defaultValue']['reminder'] = $component->getDefaultValueReminder();
                     break;
                 case $component instanceof TextField:
@@ -144,19 +144,12 @@ class AFSerializer
                     /** @var SelectSingle $component */
                     if ($component->getType() === SelectSingle::TYPE_LIST) {
                         $arr['type'] = 'select';
-                        $defaultOptions = [
-                            [
-                                'ref'   => 'null',
-                                'label' => '',
-                            ],
-                        ];
                     } else {
                         $arr['type'] = 'radio';
-                        $defaultOptions = [];
                     }
                     $arr['enabled'] = $component->isEnabled();
                     $arr['required'] = $component->getRequired();
-                    $arr['options'] = $defaultOptions;
+                    $arr['options'] = [];
                     foreach ($component->getOptions() as $option) {
                         $arr['options'][] = [
                             'ref'   => $option->getRef(),
