@@ -16,6 +16,7 @@ use AF\Domain\Component\TextField;
 use AF\Domain\Condition\CheckboxCondition;
 use AF\Domain\Condition\Condition;
 use AF\Domain\Condition\ElementaryCondition;
+use AF\Domain\Condition\ExpressionCondition;
 use AF\Domain\Condition\NumericFieldCondition;
 use AF\Domain\Condition\Select\SelectMultiCondition;
 use AF\Domain\Condition\Select\SelectSingleCondition;
@@ -220,34 +221,51 @@ class AFSerializer
 
     private function serializeCondition(Condition $condition)
     {
-        $type = null;
         if ($condition instanceof ElementaryCondition) {
-            switch ($condition->getRelation()) {
-                case ElementaryCondition::RELATION_EQUAL:
-                    $type = 'equal';
-                    break;
-                case ElementaryCondition::RELATION_NEQUAL:
-                    $type = 'nequal';
-                    break;
-                case ElementaryCondition::RELATION_GE:
-                    $type = '>=';
-                    break;
-                case ElementaryCondition::RELATION_GT:
-                    $type = '>';
-                    break;
-                case ElementaryCondition::RELATION_LE:
-                    $type = '<=';
-                    break;
-                case ElementaryCondition::RELATION_LT:
-                    $type = '<';
-                    break;
-                case ElementaryCondition::RELATION_CONTAINS:
-                    $type = 'contains';
-                    break;
-                case ElementaryCondition::RELATION_NCONTAINS:
-                    $type = 'ncontains';
-                    break;
-            }
+            return $this->serializeElementaryCondition($condition);
+        } elseif ($condition instanceof ExpressionCondition) {
+            $subConditions = array_map(function (Condition $condition) {
+                return $this->serializeCondition($condition);
+            }, $condition->getSubConditions());
+            return [
+                'ref'           => $condition->getRef(),
+                'type'          => 'expression',
+                'expression'    => $condition->getExpression(),
+                'subConditions' => $subConditions,
+            ];
+        }
+
+        return [];
+    }
+
+    private function serializeElementaryCondition(ElementaryCondition $condition)
+    {
+        $type = null;
+        switch ($condition->getRelation()) {
+            case ElementaryCondition::RELATION_EQUAL:
+                $type = 'equal';
+                break;
+            case ElementaryCondition::RELATION_NEQUAL:
+                $type = 'nequal';
+                break;
+            case ElementaryCondition::RELATION_GE:
+                $type = '>=';
+                break;
+            case ElementaryCondition::RELATION_GT:
+                $type = '>';
+                break;
+            case ElementaryCondition::RELATION_LE:
+                $type = '<=';
+                break;
+            case ElementaryCondition::RELATION_LT:
+                $type = '<';
+                break;
+            case ElementaryCondition::RELATION_CONTAINS:
+                $type = 'contains';
+                break;
+            case ElementaryCondition::RELATION_NCONTAINS:
+                $type = 'ncontains';
+                break;
         }
 
         $targetFieldRef = $condition->getField() ? $condition->getField()->getRef() : '';
@@ -256,6 +274,7 @@ class AFSerializer
             case $condition instanceof CheckboxCondition:
                 /** @var $condition CheckboxCondition */
                 return [
+                    'ref'             => $condition->getRef(),
                     'type'            => $type,
                     'targetComponent' => $targetFieldRef,
                     'value'           => $condition->getValue(),
@@ -264,6 +283,7 @@ class AFSerializer
                 /** @var $condition SelectSingleCondition */
                 $optionRef = $condition->getOption() ? $condition->getOption()->getRef() : '';
                 return [
+                    'ref'             => $condition->getRef(),
                     'type'            => $type,
                     'targetComponent' => $targetFieldRef,
                     'value'           => $optionRef,
@@ -272,6 +292,7 @@ class AFSerializer
                 /** @var $condition SelectMultiCondition */
                 $optionRef = $condition->getOption() ? $condition->getOption()->getRef() : '';
                 return [
+                    'ref'             => $condition->getRef(),
                     'type'            => $type,
                     'targetComponent' => $targetFieldRef,
                     'value'           => $optionRef,
@@ -279,6 +300,7 @@ class AFSerializer
             case $condition instanceof NumericFieldCondition:
                 /** @var $condition NumericFieldCondition */
                 return [
+                    'ref'             => $condition->getRef(),
                     'type'            => $type,
                     'targetComponent' => $targetFieldRef,
                     'value'           => $condition->getValue(),

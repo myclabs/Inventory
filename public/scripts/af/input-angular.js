@@ -23,10 +23,41 @@ afModule.filter('rawHtml', function ($sce) {
     };
 });
 
-afModule.factory('testCondition', function () {
-    return function (condition, inputs) {
+/**
+ * Evalue une expression de type condition.
+ */
+afModule.factory('evaluateExpression', function ($rootScope) {
+    return function (expression, variables) {
+        // Transforme l'expression en une expression javascript valide
+        expression = expression.replace('&', '&&');
+        expression = expression.replace('|', '||');
+
+        // Utilise $eval d'AngularJS pour évaluer l'expression
+        var expressionScope = $rootScope.$new(true);
+        angular.forEach(variables, function (value, key) {
+            expressionScope[key] = value;
+        });
+        return expressionScope.$eval(expression);
+    };
+});
+
+/**
+ * Evalue une condition.
+ */
+afModule.factory('testCondition', function (evaluateExpression) {
+    return function testCondition(condition, inputs) {
         if (condition === null) {
             return false;
+        }
+
+        // Expression
+        if (condition.type === 'expression') {
+            var variables = {};
+            // Évalue les sous-expression
+            angular.forEach(condition.subConditions, function (subCondition) {
+                variables[subCondition.ref] = testCondition(subCondition, inputs);
+            });
+            return evaluateExpression(condition.expression, variables);
         }
 
         // Find target component input

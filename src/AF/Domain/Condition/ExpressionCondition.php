@@ -42,8 +42,21 @@ class ExpressionCondition extends Condition
      */
     public function getExpression()
     {
+        return $this->expression;
+    }
+
+    /**
+     * Retourne toutes les sous-conditions qui apparaissent dans l'expression.
+     * @return Condition[]
+     */
+    public function getSubConditions()
+    {
         $tecExpression = new Expression($this->expression, Expression::TYPE_LOGICAL);
-        return $tecExpression->getAsString();
+        $leafs = $tecExpression->getRootNode()->getAllLeafsRecursively();
+        $subConditions = array_map(function (Leaf $leaf) {
+            return Condition::loadByRefAndAF($leaf->getName(), $this->getAf());
+        }, $leafs);
+        return $subConditions;
     }
 
     /**
