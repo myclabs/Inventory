@@ -60,6 +60,10 @@
         <div class="form-actions" ng-cloak>
             <div class="row">
                 <div class="col-md-12">
+                    <div class="alert alert-success alertFinishInput" ng-if="!readOnly"
+                         ng-show="isInputComplete() && !isInputFinished()">
+                        <?= __('AF', 'inputInput', 'inputCompleteMessage') ?>
+                    </div>
 
                     <button type="button" class="btn btn-default" ng-click="preview()"
                             ng-if="!readOnly"
