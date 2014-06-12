@@ -11,7 +11,7 @@ $viewConfiguration = $this->viewConfiguration;
 
 // Ajout des headers
 UI_Datagrid::addHeader();
-$this->headScript()->appendFile('scripts/af/input-angular.js', 'text/javascript');
+$this->headScript()->appendFile('scripts/af/input.js', 'text/javascript');
 $this->headScript()->appendFile('scripts/af/components.js', 'text/javascript');
 // API Google pour les charts
 $this->headScript()->appendFile('https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["orgchart"]}]}', 'text/javascript');
@@ -24,30 +24,14 @@ $baseTabs = [];
 // ONGLET DE SAISIE
 $baseTabs[AFViewConfiguration::TAB_INPUT] = new Tab('tabs_tabInput');
 $baseTabs[AFViewConfiguration::TAB_INPUT]->setTitle(__('UI', 'name', 'input'));
-$urlArray = array(
-    'module'            => 'af',
-    'controller'        => 'af',
-    'action'            => 'display-input',
-    'idAF'              => $af->getId(),
-    'mode'              => $viewConfiguration->getMode(),
-    'exitURL'           => urlencode($viewConfiguration->getExitURL()),
-    'resultsPreview'    => $viewConfiguration->withResultsPreview(),
-    'resultsPreviewUrl' => urlencode(json_encode($viewConfiguration->getResultsPreviewUrl())),
-    'useSession'        => $viewConfiguration->getUseSession(),
-);
-$urlArray += $viewConfiguration->getUrlParams();
-if ($viewConfiguration->getIdInputSet()) {
-    $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
-}
-$url = $this->url($urlArray, null, true);
-$url .= '?actionStack=' . urlencode(json_encode($viewConfiguration->getActionStack()));
 $baseTabs[AFViewConfiguration::TAB_INPUT]->setContent(
-    $this->partial('af/display-input2.phtml', [
+    $this->partial('af/display-input.phtml', [
         'serializedAF'       => $this->serializedAF,
         'serializedInputSet' => $this->serializedInputSet,
         'urlParams'          => $this->urlParams,
         'exitUrl'            => $viewConfiguration->getExitURL(),
         'readOnly'           => $viewConfiguration->getMode() === AFViewConfiguration::MODE_READ,
+        'resultsPreviewUrl'  => $viewConfiguration->getResultsPreviewUrl(),
     ])
 );
 

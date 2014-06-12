@@ -1,6 +1,5 @@
 <?php
 
-use AF\Application\InputFormParser;
 use AF\Architecture\Service\InputSerializer;
 use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
@@ -36,12 +35,6 @@ class AF_InputController extends Core_Controller
      * @var InputHistoryService
      */
     private $inputHistoryService;
-
-    /**
-     * @Inject
-     * @var InputFormParser
-     */
-    private $inputFormParser;
 
     /**
      * @Inject
@@ -162,10 +155,7 @@ class AF_InputController extends Core_Controller
         /** @var $af AF */
         $af = AF::load($this->getParam('id'));
 
-        // Form data
-        $formData = $this->getParam('input');
-
-        $inputSet = $this->inputSerializer->unserialize($formData, $af);
+        $inputSet = $this->inputSerializer->unserialize($this->getParam('input'), $af);
 
         $this->inputService->updateResults($inputSet);
 

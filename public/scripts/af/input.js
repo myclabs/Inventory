@@ -1,335 +1,441 @@
-/**
- * @namespace AF
- */
-var AF = AF || {};
+var afModule = angular.module('AF', ['ui.bootstrap']);
+
+// Configure Angular pour poster en "form data" plutôt qu'en JSON
+afModule.config(function ($httpProvider) {
+    $httpProvider.defaults.transformRequest = function(data){
+        if (data === undefined) {
+            return data;
+        }
+        return $.param(data);
+    };
+    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+});
+
+afModule.filter('debug', function () {
+    return function (input) {
+        return JSON.stringify(input, undefined, 2);
+    };
+});
+
+afModule.filter('rawHtml', function ($sce) {
+    return function (text) {
+        return $sce.trustAsHtml(text);
+    };
+});
 
 /**
- * Saisie d'un AF
- *
- * @author matthieu.napoli
- *
- * @param {int} id ID de l'AF
- * @param {string} ref Ref de l'AF
- * @param {string} mode read/write/test
- * @param {int|null} idInputSet ID de l'inputSet, ou null si inputSet en session
- * @param {string} exitURL URL où envoyer l'utilisateur lors du clic sur le bouton "Exit"
- * @param {object} urlParams Paramètres d'URL additionnels à utiliser
- * @param {string} resultsPreviewUrl
- * @constructor
+ * Evalue une expression de type condition.
  */
-AF.Input = function (id, ref, mode, idInputSet, exitURL, urlParams, resultsPreviewUrl) {
-    var that = this;
+afModule.factory('evaluateExpression', function ($rootScope) {
+    return function (expression, variables) {
+        // Transforme l'expression en une expression javascript valide
+        expression = expression.replace('&', '&&');
+        expression = expression.replace('|', '||');
 
-    /**
-     * id de l'AF
-     * @type {int}
-     */
-    this.id = id;
-
-    /**
-     * ref de l'AF
-     * @type {string}
-     */
-    this.ref = ref;
-
-    /**
-     * Formulaire (objet jquery)
-     */
-    this.form = $("#" + ref);
-
-    /**
-     * Mode de la saisie
-     * @type {string} read/write/test
-     */
-    this.mode = mode;
-
-    /**
-     * ID de l'inputSet, ou null si inputSet en session
-     * @type {int|null}
-     */
-    this.idInputSet = idInputSet;
-
-    /**
-     * Exit URL
-     * @type {string}
-     */
-    this.exitURL = exitURL;
-
-    /**
-     * Results preview submit URL
-     * @type {string}
-     */
-    this.resultsPreviewUrl = resultsPreviewUrl;
-
-    /**
-     * Est-ce que la saisie a été modifiée
-     * @type {boolean}
-     */
-    this.hasChanges = false;
-
-    /**
-     * Sauvegarde l'URL par défaut de soumission du formulaire
-     * @type {string}
-     * @private
-     */
-    this.defaultFormAction = this.form.prop("action");
-
-    /**
-     * @type {function(data)}
-     * @private
-     */
-    this.inputSavedHandler = this.onSaveHandler;
-
-    /**
-     * Complétion de la saisie
-     * @type {AF.InputProgress}
-     */
-    this.inputProgress = new AF.InputProgress();
-
-    /**
-     * Paramètres d'URL additionnels à utiliser
-     * @type {object}
-     */
-    this.urlParams = urlParams;
-
-    // Initialisation lorsque toute la page est chargée
-    $(function () {
-        // Se branche sur les boutons du formulaire
-        $(".inputSave").click(function () {
-            that.save();
+        // Utilise $eval d'AngularJS pour évaluer l'expression
+        var expressionScope = $rootScope.$new(true);
+        angular.forEach(variables, function (value, key) {
+            expressionScope[key] = value;
         });
-        $(".inputFinish").click(function () {
-            that.finishInput();
-        });
-        $(".inputPreview").click(function () {
-            that.previewResults();
-        });
-        $(".inputExit").click(function () {
-            that.exit();
-        });
-        // Quand le formulaire est modifié
-        that.onChange(function () {
-            that.hasChanges = true;
-            that.inputProgress.setStatus('in_progress');
-        });
-    });
+        return expressionScope.$eval(expression);
+    };
+});
 
-    // Handler appelé quand la saisie a été sauvegardée avec succès
-    $.fn.inputSavedHandler = function (data, textStatus, jqXHR) {
-        that.inputSavedHandler(data, textStatus, jqXHR);
+/**
+ * Evalue une condition.
+ */
+afModule.factory('testCondition', function (evaluateExpression) {
+    return function testCondition(condition, inputs) {
+        if (condition === null) {
+            return false;
+        }
+
+        // Expression
+        if (condition.type === 'expression') {
+            var variables = {};
+            // Évalue les sous-expression
+            angular.forEach(condition.subConditions, function (subCondition) {
+                variables[subCondition.ref] = testCondition(subCondition, inputs);
+            });
+            return evaluateExpression(condition.expression, variables);
+        }
+
+        // Find target component input
+        var input = inputs.filter(function (input) {
+            return input.componentRef === condition.targetComponent;
+        })[0];
+
+        if (angular.isUndefined(input)) {
+            return false;
+        }
+
+        // Cas particulier des saisies numériques
+        var value = input.value;
+        if (value.hasOwnProperty('digitalValue')) {
+            value = value.digitalValue;
+        }
+
+        switch(condition.type) {
+            case 'equal':
+                return value === condition.value;
+            case 'nequal':
+                return value !== condition.value;
+            case '>=':
+                return value >= condition.value;
+            case '>':
+                return value > condition.value;
+            case '<=':
+                return value <= condition.value;
+            case '<':
+                return value < condition.value;
+            case 'contains':
+                return value.indexOf(condition.value) !== -1;
+            case 'ncontains':
+                return value.indexOf(condition.value) === -1;
+            default:
+                return false;
+        }
+    };
+});
+
+afModule.factory('isInputVisible', ['testCondition', function (testCondition) {
+    return function (input, component, inputs) {
+        if (angular.isUndefined(component.actions)) {
+            return component.visible;
+        }
+
+        var actions = component.actions.filter(function (action) {
+            return action.type === 'show' || action.type === 'hide';
+        });
+
+        // No actions on this component
+        if (actions.length === 0) {
+            return component.visible;
+        }
+
+        return actions.reduce(function (result, action) {
+            if (action.type === 'show') {
+                return result && testCondition(action.condition, inputs);
+            } else if (action.type === 'hide') {
+                return result && !testCondition(action.condition, inputs);
+            } else {
+                return result;
+            }
+        }, true);
+    };
+}]);
+
+afModule.factory('isInputEnabled', ['$window', 'testCondition', function ($window, testCondition) {
+    return function (input, component, inputs) {
+        if ($window.readOnly) {
+            return false;
+        }
+
+        if (angular.isUndefined(component.actions)) {
+            return component.enabled;
+        }
+
+        var actions = component.actions.filter(function (action) {
+            return action.type === 'enable' || action.type === 'disable';
+        });
+
+        // No actions on this component
+        if (actions.length === 0) {
+            return component.enabled;
+        }
+
+        return actions.reduce(function (result, action) {
+            if (action.type === 'enable') {
+                return result && testCondition(action.condition, inputs);
+            } else if (action.type === 'disable') {
+                return result && !testCondition(action.condition, inputs);
+            } else {
+                return result;
+            }
+        }, true);
+    };
+}]);
+
+/**
+ * Retrouve une saisie à partir d'un composant.
+ */
+afModule.factory('getInput', function () {
+    return function (inputSet, component) {
+        if (angular.isUndefined(inputSet.inputs)) {
+            inputSet.inputs = [];
+        }
+        var inputs = inputSet.inputs;
+        for (i = 0; i < inputs.length; ++i) {
+            var input = inputs[i];
+            if (input.componentRef === component.ref) {
+                return input;
+            }
+        }
+        // Pas de valeur, on en crée une vide
+        var newInput = {
+            componentRef: component.ref,
+            value: null
+        };
+        inputSet.inputs.push(newInput);
+        return newInput;
+    };
+});
+
+/**
+ * Valide une saisie.
+ */
+afModule.factory('validateInputSet', ['getInput', function (getInput) {
+    return function validateInputSet(inputSet, components) {
+        angular.forEach(components, function (component) {
+            var input = getInput(inputSet, component);
+            var isEmpty = function (variable) {
+                return angular.isUndefined(variable) || variable === null || variable === ''
+                    || (angular.isArray(variable) && variable.length == 0);
+            };
+
+            switch (component.type) {
+                case 'numeric':
+                    var value = '';
+                    var uncertainty = '';
+                    if (angular.isDefined(input.value) && !isEmpty(input.value.digitalValue)) {
+                        value = input.value.digitalValue;
+                    }
+                    if (angular.isDefined(input.value) && !isEmpty(input.value.uncertainty)) {
+                        uncertainty = input.value.uncertainty;
+                    }
+                    if (component.required && (value === '')) {
+                        input.hasErrors = true;
+                        input.error = __('AF', 'inputInput', 'emptyRequiredField');
+                    } else if (! /^-?[0-9]*[.,]?[0-9]*$/.test(value)) {
+                        input.hasErrors = true;
+                        input.error = __('UI', 'formValidation', 'invalidNumber');
+                    } else if (! /^[0-9]*$/.test(uncertainty)) {
+                        input.hasErrors = true;
+                        input.error = __('UI', 'formValidation', 'invalidUncertainty');
+                    } else {
+                        input.hasErrors = false;
+                        input.error = null;
+                    }
+                    break;
+                case 'select':
+                case 'radio':
+                case 'select-multiple':
+                case 'text':
+                case 'textarea':
+                    if (component.required && isEmpty(input.value)) {
+                        input.hasErrors = true;
+                        input.error = __('AF', 'inputInput', 'emptyRequiredField');
+                    } else if (input.value === 'null') {
+                        input.hasErrors = true;
+                        input.error = __('AF', 'inputInput', 'emptyRequiredField');
+                    } else {
+                        input.hasErrors = false;
+                        input.error = null;
+                    }
+                    break;
+                case 'group':
+                    validateInputSet(inputSet, component.components);
+                    break;
+                case 'subaf-single':
+                    validateInputSet(input.value, component.calledAF.components);
+                    break;
+                case 'subaf-multi':
+                    angular.forEach(input.value, function (subInputSet) {
+                        validateInputSet(subInputSet, component.calledAF.components);
+                    });
+                    break;
+            }
+        });
+    };
+}]);
+
+afModule.controller('InputController', ['$scope', '$element', '$window', '$http', 'validateInputSet',
+function ($scope, $element, $window, $http, validateInputSet) {
+    $scope.readOnly = $window.readOnly;
+    $scope.af = $window.af;
+    $scope.inputSet = $window.inputSet;
+    $scope.refPrefix = '';
+    var urlParams = $window.afUrlParams;
+    var resultsPreviewUrl = $window.resultsPreviewUrl;
+
+    $scope.inputStatuses = {
+        in_progress: __('AF', 'inputInput', 'statusInProgress'),
+        input_incomplete: __('AF', 'inputInput', 'statusInputIncomplete'),
+        calculation_incomplete: __('AF', 'inputInput', 'statusCalculationIncomplete'),
+        complete: __('AF', 'inputInput', 'statusComplete'),
+        finished: __('AF', 'inputInput', 'statusFinished')
+    };
+    $scope.statusColors = {
+        in_progress: 'black',
+        input_incomplete: 'red',
+        calculation_incomplete: 'orange',
+        complete: 'yellow',
+        finished: 'green'
     };
 
-    // Handler pour l'historique d'une valeur
-    var popoverDefaultContent = '<p class="text-center"><img src="images/ui/ajax-loader.gif"></p>';
-    $(".input-history").popover({
-        placement: 'bottom',
-        title: __('UI', 'history', 'valueHistory'),
-        html: true,
-        content: popoverDefaultContent
-    })
-    .on('show.bs.popover', function () {
-        // Failsafe parce qu'on ré-appelle "show" quand AJAX a finit de charger
-        if ($(this).hasClass('active')) {
-            return;
+    $scope.previewIsLoading = false;
+    $scope.saving = false;
+    $scope.markingInputAsFinished = false;
+
+    // Enable/disable form actions
+    $scope.isInputInProgress = function () {
+        return $scope.inputSet.status === 'in_progress';
+    };
+    $scope.isInputComplete = function () {
+        switch ($scope.inputSet.status) {
+            default:
+            case 'in_progress':
+            case 'input_incomplete':
+                return false;
+            case 'calculation_incomplete':
+            case 'complete':
+            case 'finished':
+                return true;
         }
-        that.loadInputHistory($(this).data('input-id'), $(this));
-    })
-    .on('hidden.bs.popover', function () {
-        // Rétablit le contenu par défaut
-        $(this).data('bs.popover').options.content = popoverDefaultContent;
-    })
-};
+    };
+    $scope.isInputFinished = function () {
+        return $scope.inputSet.status === 'finished';
+    };
 
-AF.Input.prototype = {
+    // When the input is edited
+    $element.on('input change', ':input', function () {
+        $scope.inputSet.status = 'in_progress';
+        $scope.$digest();
+    });
 
-    /**
-     * Quitte le formulaire
-     */
-    exit: function () {
-        var that = this;
-        if (this.hasChanges) {
+    // Preview results
+    $scope.preview = function () {
+        // Validate input
+        validateInputSet($scope.inputSet, $scope.af.components);
+
+        $scope.previewIsLoading = true;
+        $scope.resultsPreview = null;
+        var data = {
+            input: $scope.inputSet,
+            urlParams: urlParams,
+            idInputSet: $scope.inputSet.id
+        };
+        $http.post(resultsPreviewUrl, data).success(function (response) {
+            $scope.resultsPreview = response.data;
+            $scope.previewIsLoading = false;
+        }).error(function () {
+            $scope.previewIsLoading = false;
+            addMessage(__('Core', 'exception', 'applicationError'), 'error');
+        });
+    };
+
+    // Save input
+    $scope.save = function () {
+        // Validate input
+        validateInputSet($scope.inputSet, $scope.af.components);
+
+        $scope.resultsPreview = null;
+        $scope.saving = true;
+        var data = {
+            input: $scope.inputSet,
+            urlParams: urlParams,
+            idInputSet: $scope.inputSet.id
+        };
+        $http.post('af/input/submit?id=' + $scope.af.id, data).success(function (response) {
+            $scope.saving = false;
+            $scope.inputSet.completion = response.data.completion;
+            $scope.inputSet.status = response.data.status;
+            $scope.inputSet.id = response.data.idInputSet;
+            addMessage(response.message, response.type);
+        }).error(function () {
+            $scope.saving = false;
+            addMessage(__('Core', 'exception', 'applicationError'), 'error');
+        });
+    };
+
+    // Mark input as finished
+    $scope.finish = function () {
+        $scope.resultsPreview = null;
+        $scope.markingInputAsFinished = true;
+        var data = {
+            input: $scope.inputSet,
+            urlParams: urlParams,
+            idInputSet: $scope.inputSet.id
+        };
+        $http.post('af/input/finish?id=' + $scope.af.id, data).success(function (response) {
+            $scope.markingInputAsFinished = false;
+            $scope.inputSet.status = response.status;
+            addMessage(response.message, 'success');
+        }).error(function () {
+            $scope.markingInputAsFinished = false;
+            addMessage(__('Core', 'exception', 'applicationError'), 'error');
+        });
+    };
+
+    // Exit
+    $scope.exit = function () {
+        if ($scope.inputSet.status === 'in_progress') {
             $.confirm({
-                text: __("AF", "inputInput", "confirmExitInput"),
-                confirmButton: __("UI", "verb", "confirm"),
-                cancelButton: __("UI", "verb", "cancel"),
+                text: __('AF', 'inputInput', 'confirmExitInput'),
+                confirmButton: __('UI', 'verb', 'confirm'),
+                cancelButton: __('UI', 'verb', 'cancel'),
                 confirm: function() {
-                    window.location.href = that.exitURL;
+                    window.location.href = $window.exitUrl;
                 },
                 cancel: function() {
                     // nothing to do
                 }
             });
         } else {
-            window.location.href = that.exitURL;
+            window.location.href = $window.exitUrl;
         }
-    },
+    };
+}]);
 
-    /**
-     * Sauvegarde le formulaire
-     */
-    save: function () {
-        this.form.find(".inputSave").button("loading");
-        this.form.submit();
-    },
-
-    /**
-     * Handler appelée pour la réponse de sauvegarde du formulaire
-     * @param {object} response JSON
-     * @param {string} textStatus
-     * @param {XMLHttpRequest} jqXHR
-     * @private
-     */
-    onSaveHandler: function (response, textStatus, jqXHR) {
-        var that = this;
-        this.hasChanges = false;
-
-        // Ajoute l'idInputSet aux l'URL
-        if ("idInputSet" in response.data) {
-            this.idInputSet = response.data.idInputSet;
-            this.inputProgress.idInputSet = this.idInputSet;
-            // URL de soumission du formulaire
-            var currentUrl = this.form.attr("action");
-            if ((currentUrl.indexOf("/idInputSet/") === -1) && (currentUrl.indexOf("?idInputSet=") === -1)) {
-                this.form.attr("action", currentUrl + "?idInputSet=" + this.idInputSet);
+/**
+ * Directive pour utiliser le "btn-loading" de Bootstrap
+ */
+afModule.directive('btnLoading', function() {
+    return function(scope, element, attrs){
+        scope.$watch(
+            function () {
+                return scope.$eval(attrs.btnLoading);
+            },
+            function (loading){
+                if (loading) {
+                    element.button('loading');
+                    return;
+                }
+                element.button('reset');
             }
-            // URL d'aperçu des résultats
-            currentUrl = $("[href='#tabs_tabResult']").attr("data-src");
-            if ((typeof currentUrl !== "undefined")
-                && (currentUrl.indexOf("/idInputSet/") === -1)
-                && (currentUrl.indexOf("?idInputSet=") === -1)
-            ) {
-                $("[href='#tabs_tabResult']").attr("data-src", currentUrl + "?idInputSet=" + this.idInputSet);
-            }
-            // URL du détails des calculs
-            currentUrl = $("[href='#tabs_tabCalculationDetails']").attr("data-src");
-            if ((typeof currentUrl !== "undefined")
-                && (currentUrl.indexOf("/idInputSet/") === -1)
-                && (currentUrl.indexOf("?idInputSet=") === -1)
-            ) {
-                $("[href='#tabs_tabCalculationDetails']").attr("data-src", currentUrl + "?idInputSet=" + this.idInputSet);
-            }
-        }
-
-        // Réinitialise l'aspect des boutons
-        this.form.find(".inputExit").removeClass("btn-danger");
-        this.form.find(".inputSave").button("reset");
-        // @see https://github.com/twitter/bootstrap/issues/6242
-        setTimeout(function () {
-            that.form.find(".inputSave").prop("disabled", true);
-        }, 0);
-
-        // Cache l'aperçu des résultats
-        $(".resultsPreview").addClass('hide');
-
-        // Met à jour la complétion de la saisie
-        this.inputProgress.setStatus(response.data.status, response.data.completion);
-
-        // Affiche les messages d'erreur
-        if ("errorMessages" in response) {
-            this.form.parseFormErrors(jqXHR);
-        }
-        addMessage(response.message, response.type);
-    },
-
-    /**
-     * Affiche l'aperçu des résultats
-     */
-    previewResults: function () {
-        this.form.find(".inputPreview").button("loading");
-        // Définit une nouvelle URL pour le submit
-        var url;
-        if (this.resultsPreviewUrl) {
-            url = this.resultsPreviewUrl + "/id/" + this.id;
-        } else {
-            url = "af/input/results-preview/id/" + this.id;
-        }
-        for (var key in this.urlParams) {
-            if (this.urlParams.hasOwnProperty(key)) {
-                url += '/' + key + '/' + this.urlParams[key];
-            }
-        }
-        this.form.prop("action", url);
-        // Définit le handler de retour à utiliser
-        this.inputSavedHandler = this.onResultsPreviewHandler;
-        // Soumet le formulaire
-        this.form.submit();
-    },
-
-    /**
-     * Handler appelée pour la réponse d'affichage d'aperçu des résultats
-     * @param {object} response JSON
-     * @param {string} textStatus
-     * @param {XMLHttpRequest} jqXHR
-     * @private
-     */
-    onResultsPreviewHandler: function (response, textStatus, jqXHR) {
-        this.form.find(".inputPreview").button("reset");
-        $(".resultsPreviewContent").html(response.data);
-        $(".resultsPreview").removeClass('hide');
-        // Restaure l'URL de submit par défaut
-        this.form.prop("action", this.defaultFormAction);
-        // Restaure le handler par défaut
-        this.inputSavedHandler = this.onSaveHandler;
-        // Affiche les messages d'erreur
-        if ("errorMessages" in response) {
-            this.form.parseFormErrors(jqXHR);
-        }
-    },
-
-    /**
-     * Ajoute un handler à l'évènement "change" de la saisie
-     * Ne supprime pas les handlers précédents
-     * @param {Function} handler Callback
-     */
-    onChange: function (handler) {
-        // Pour tous les input du formulaire (utilise "on()" pour des raisons de performances)
-        this.form.on("change keyup", ":input", handler);
-        this.form.on("click", ".addRow", handler);
-        this.form.find('.repeatedGroup').on("click", ".deleteRow", handler);
-    },
-
-    /**
-     * Marque la saisie comme terminée
-     */
-    finishInput: function () {
-        var that = this;
-        var data = {
-            id: this.id
-        };
-        if (this.idInputSet) {
-            data.idInputSet = this.idInputSet;
-        }
-
-        for (var key in this.urlParams) {
-            data[key] = this.urlParams[key];
-        }
-
-        $.ajax("af/input/mark-input-as-finished", {
-            data: data,
-            success: function (data) {
-                addMessage(data.message, 'success');
-                that.inputProgress.setStatus(data.status);
-            }
-        });
-    },
-
-    /**
-     * Charge l'historique des valeurs d'une saisie
-     * @param inputId {int}
-     * @param button
-     */
-    loadInputHistory: function (inputId, button) {
-        var url = "af/input/input-history/id/" + this.id + "/idInputSet/" + this.idInputSet + "/idInput/" + inputId;
-        for (var key in this.urlParams) {
-            if (this.urlParams.hasOwnProperty(key)) {
-                url += '/' + key + '/' + this.urlParams[key];
-            }
-        }
-
-        $.get(url, function (html) {
-            button.data('bs.popover').options.content = html;
-            button.popover('show');
-        });
+        );
     }
+});
 
-};
+/**
+ * Directive pour avoir un vrai champ de saisie pour les nombres à virgule.
+ */
+afModule.directive('inputFloat', function ($window) {
+    var FLOAT_REGEXP = /^\-?\d+[\.|\,]?\d*$/;
+    var decimalSeparator = $window.decimalSeparator;
+
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attrs, controller) {
+            controller.$parsers.unshift(function (viewValue) {
+                if (FLOAT_REGEXP.test(viewValue)) {
+                    controller.$setValidity('float', true);
+                    if (typeof viewValue === 'number') {
+                        return viewValue;
+                    } else {
+                        return parseFloat(viewValue.replace(decimalSeparator, '.'));
+                    }
+                } else {
+                    controller.$setValidity('float', false);
+                    return viewValue;
+                }
+            });
+            controller.$formatters.push(function (modelValue) {
+                if (modelValue === null || modelValue === undefined) {
+                    return modelValue;
+                }
+                return modelValue.toString().replace('.', decimalSeparator);
+            });
+        }
+    };
+});

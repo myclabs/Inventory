@@ -74,6 +74,7 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->setPageTitle($this->translator->get($af->getLabel()));
         $viewConfiguration->setUseSession(true);
         $viewConfiguration->setExitUrl('af/library/view/id/' . $af->getLibrary()->getId());
+        $viewConfiguration->setResultsPreviewUrl('af/input/results-preview?id=' . $af->getId());
 
         $this->setActiveMenuItemAFLibrary($af->getLibrary()->getId());
         $this->forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
@@ -129,72 +130,6 @@ class AF_AfController extends Core_Controller
         $this->view->assign('serializedAF', $this->afSerializer->serialize($af));
         $this->view->assign('serializedInputSet', $this->inputSerializer->serialize($inputSet));
         $this->view->assign('urlParams', $urlParams);
-    }
-
-    /**
-     * Affiche le formulaire pour y rentrer des saisies
-     * AJAX
-     * @Secure("modeInputAF")
-     */
-    public function displayInputAction()
-    {
-        /** @var $af AF */
-        $af = AF::load($this->getParam('idAF'));
-        $actionStack = json_decode($this->getParam('actionStack'));
-        $exitURL = urldecode($this->getParam('exitURL'));
-        $resultsPreviewUrl = json_decode(urldecode($this->getParam('resultsPreviewUrl')));
-        $mode = $this->getParam('mode');
-        $idInputSet = $this->getParam('idInputSet');
-        if ($idInputSet) {
-            // Charge la saisie depuis la BDD
-            $inputSet = PrimaryInputSet::load($idInputSet);
-        } elseif ($this->getParam('useSession')) {
-            // Récupère la saisie en session
-            $inputSet = $this->inputSetSessionStorage->getInputSet($af);
-        } else {
-            $inputSet = new PrimaryInputSet($af);
-        }
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->af = $af;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->inputSet = $inputSet;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->mode = $mode;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->exitURL = $exitURL;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->withResultsPreview = $this->getParam('resultsPreview');
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->resultsPreviewUrl = $resultsPreviewUrl;
-        // Génère le formulaire
-        $form = $af->generateForm($inputSet, $mode);
-        $form->setAjax(true, 'inputSavedHandler');
-        // URL de submit
-        $params = ['id' => $af->getId(), 'actionStack' => json_encode($actionStack)];
-        // Ajoute les paramètres personnalisés qu'il peut y'avoir dans l'URL
-        $urlParams = $this->getAllParams();
-        unset(
-            $urlParams['module'],
-            $urlParams['controller'],
-            $urlParams['action'],
-            $urlParams['idAF'],
-            $urlParams['actionStack'],
-            $urlParams['exitURL'],
-            $urlParams['resultsPreviewUrl'],
-            $urlParams['mode'],
-            $urlParams['idInputSet']
-        );
-        $this->view->urlParams = $urlParams;
-        $params += $urlParams;
-        if ($idInputSet) {
-            $params['idInputSet'] = $idInputSet;
-        }
-        if ($mode != AFViewConfiguration::MODE_READ) {
-            $form->setAction($this->_helper->url('submit', 'input', 'af', $params));
-        }
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->form = $form;
-        $this->_helper->layout->disableLayout();
     }
 
     /**
