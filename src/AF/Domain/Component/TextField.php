@@ -3,10 +3,7 @@
 namespace AF\Domain\Component;
 
 use AF\Domain\InputSet\InputSet;
-use AF\Domain\AFGenerationHelper;
 use AF\Domain\Input\TextFieldInput;
-use AF\Application\Form\Element\TextField as FormTextField;
-use AF\Application\Form\Element\Textarea;
 
 /**
  * Gestion des champs de type texte.
@@ -36,45 +33,6 @@ class TextField extends Field
     {
         parent::__construct();
         $this->setType($type);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUIElement(AFGenerationHelper $generationHelper)
-    {
-        if ($this->type == self::TYPE_SHORT) {
-            $uiElement = new FormTextField($this->ref);
-        } else {
-            $uiElement = new Textarea($this->ref);
-        }
-        $uiElement->setLabel($this->uglyTranslate($this->label));
-        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
-        $uiElement->setRequired($this->getRequired());
-        if ($generationHelper->isReadOnly()) {
-            $uiElement->getElement()->setReadOnly();
-        }
-        // Remplit avec la valeur saisie
-        $input = null;
-        if ($generationHelper->getInputSet()) {
-            /** @var $input TextFieldInput */
-            $input = $generationHelper->getInputSet()->getInputForComponent($this);
-        }
-        if ($input) {
-            $uiElement->getElement()->disabled = $input->isDisabled();
-            $uiElement->getElement()->hidden = $input->isHidden();
-            $uiElement->setValue($input->getValue());
-            // Historique de la valeur
-            $uiElement->getElement()->addElement($this->getHistoryComponent($input));
-        } else {
-            $uiElement->getElement()->disabled = !$this->enabled;
-            $uiElement->getElement()->hidden = !$this->visible;
-        }
-        // Actions
-        foreach ($this->actions as $action) {
-            $uiElement->getElement()->addAction($generationHelper->getUIAction($action));
-        }
-        return $uiElement;
     }
 
     /**

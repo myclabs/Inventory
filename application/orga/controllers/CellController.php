@@ -2,7 +2,6 @@
 
 use Account\Application\Service\OrganizationViewFactory;
 use AF\Application\AFViewConfiguration;
-use AF\Application\Form\Form;
 use AF\Architecture\Service\InputSerializer;
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
@@ -1337,8 +1336,6 @@ class Orga_CellController extends Core_Controller
         $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
 
         $this->setActiveMenuItemOrganization($cell->getOrganization()->getId());
-
-        Form::addHeader();
 
         $this->forward('display', 'af', 'af', [
             'id' => $af->getId(),

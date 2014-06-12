@@ -250,15 +250,6 @@ class Form extends Zend_Form
     public static function addHeader($instance = null)
     {
         $broker = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
-        // Ajout des feuilles de style.
-        $broker->view->headLink()->appendStylesheet('css/ui/form.css');
-        $broker->view->headScript()->appendFile('scripts/ui/form-ajax.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('scripts/ui/form-action.js', 'text/javascript');
-
-        $broker->view->headLink()->appendStylesheet('markitup/skins/markitup/style.css');
-        $broker->view->headLink()->appendStylesheet('markitup/skins/textile/style.css');
-        $broker->view->headScript()->appendFile('markitup/jquery.markitup.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('markitup/sets/textile/set.js', 'text/javascript');
 
         if ($instance !== null) {
             $script = $instance->getScript();

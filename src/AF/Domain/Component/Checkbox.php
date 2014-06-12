@@ -3,9 +3,7 @@
 namespace AF\Domain\Component;
 
 use AF\Domain\InputSet\InputSet;
-use AF\Domain\AFGenerationHelper;
 use AF\Domain\Input\CheckboxInput;
-use AF\Application\Form\Element\Checkbox as FormCheckbox;
 
 /**
  * @author matthieu.napoli
@@ -18,41 +16,6 @@ class Checkbox extends Field
      * @var bool
      */
     protected $defaultValue = false;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUIElement(AFGenerationHelper $generationHelper)
-    {
-        $uiElement = new FormCheckbox($this->ref);
-        $uiElement->setLabel($this->uglyTranslate($this->label));
-        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
-        if ($generationHelper->isReadOnly()) {
-            $uiElement->getElement()->setReadOnly();
-        }
-        // Remplit avec la valeur saisie
-        $input = null;
-        if ($generationHelper->getInputSet()) {
-            /** @var $input CheckboxInput */
-            $input = $generationHelper->getInputSet()->getInputForComponent($this);
-        }
-        if ($input) {
-            $uiElement->getElement()->disabled = $input->isDisabled();
-            $uiElement->getElement()->hidden = $input->isHidden();
-            $uiElement->setValue($input->getValue());
-            // Historique de la valeur
-            $uiElement->getElement()->addElement($this->getHistoryComponent($input));
-        } else {
-            $uiElement->getElement()->disabled = !$this->enabled;
-            $uiElement->getElement()->hidden = !$this->visible;
-            $uiElement->setValue($this->defaultValue);
-        }
-        // Actions
-        foreach ($this->actions as $action) {
-            $uiElement->getElement()->addAction($generationHelper->getUIAction($action));
-        }
-        return $uiElement;
-    }
 
     /**
      * {@inheritdoc}

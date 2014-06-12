@@ -3,10 +3,8 @@
 namespace AF\Domain\Condition;
 
 use AF\Domain\AF;
-use AF\Domain\AFGenerationHelper;
 use Core_Model_Entity;
 use Core_Tools;
-use AF\Application\Form\Condition\FormCondition;
 
 /**
  * @author matthieu.napoli
@@ -33,14 +31,6 @@ abstract class Condition extends Core_Model_Entity
      * @var AF
      */
     protected $af;
-
-
-    /**
-     * Génère une condition UI
-     * @param AFGenerationHelper $generationHelper
-     * @return FormCondition
-     */
-    abstract public function getUICondition(AFGenerationHelper $generationHelper);
 
     /**
      * @return int

@@ -7,7 +7,6 @@
  */
 
 use AF\Application\AFViewConfiguration;
-use AF\Application\Form\Form;
 use AF\Architecture\Service\AFSerializer;
 use AF\Architecture\Service\InputSerializer;
 use AF\Architecture\Service\InputSetSessionStorage;
@@ -78,8 +77,6 @@ class AF_AfController extends Core_Controller
 
         $this->setActiveMenuItemAFLibrary($af->getLibrary()->getId());
         $this->forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
-
-        Form::addHeader();
     }
 
     /**

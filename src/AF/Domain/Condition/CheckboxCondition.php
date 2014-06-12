@@ -2,9 +2,6 @@
 
 namespace AF\Domain\Condition;
 
-use AF\Application\Form\Condition\ElementaryCondition as FormElementaryCondition;
-use AF\Domain\AFGenerationHelper;
-
 /**
  * @author matthieu.napoli
  * @author yoann.croizer
@@ -16,18 +13,6 @@ class CheckboxCondition extends ElementaryCondition
      * @var bool
      */
     protected $value = true;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUICondition(AFGenerationHelper $generationHelper)
-    {
-        $uiCondition = new FormElementaryCondition($this->ref);
-        $uiCondition->element = $generationHelper->getUIElement($this->field);
-        $uiCondition->relation = FormElementaryCondition::EQUAL;
-        $uiCondition->value = $this->value;
-        return $uiCondition;
-    }
 
     /**
      * Valeur boolean pour laquelle la condition est effective.
