@@ -2,7 +2,6 @@
 
 namespace AF\Architecture\Service;
 
-use AF\Domain\Action\SetValue;
 use AF\Domain\AF;
 use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\Component;

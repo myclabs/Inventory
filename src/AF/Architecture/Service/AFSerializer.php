@@ -4,7 +4,6 @@ namespace AF\Architecture\Service;
 
 use AF\Domain\Action\Action;
 use AF\Domain\Action\SetState;
-use AF\Domain\Action\SetValue;
 use AF\Domain\AF;
 use AF\Domain\Component\Checkbox;
 use AF\Domain\Component\Group;
@@ -204,9 +203,6 @@ class AFSerializer
                     default:
                         $type = null;
                 }
-                break;
-            case $action instanceof SetValue:
-                $type = 'set-value';
                 break;
             default:
                 $type = null;

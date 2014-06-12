@@ -35,17 +35,17 @@ Feature: AF change component state interaction feature
     And I open collapse "Modifications de l'état de composants"
     Then I should see the "actionsSetState" datagrid
     And the row 1 of the "actionsSetState" datagrid should contain:
-      | targetComponent           | typeState | condition                       |
+      | targetComponent                  | typeState | condition                       |
       | Champ numérique cible activation | Activer   | cond_el_inter_util_act_setstate |
   # TODO : ajouter la possibilité de modifier le composant cible ?
   # Modification type d'action
     When I set "Masquer" for column "typeState" of row 1 of the "actionsSetState" datagrid with a confirmation message
   # Modification condition
-    And I set "cond_el_inter_util_act_setvalue" for column "condition" of row 1 of the "actionsSetState" datagrid with a confirmation message
+    And I set "cond_el_inter" for column "condition" of row 1 of the "actionsSetState" datagrid with a confirmation message
   # Vérification valeurs modifiées
     Then the row 1 of the "actionsSetState" datagrid should contain:
-      | targetComponent                  | typeState | condition                       |
-      | Champ numérique cible activation | Masquer   | cond_el_inter_util_act_setvalue |
+      | targetComponent                  | typeState | condition     |
+      | Champ numérique cible activation | Masquer   | cond_el_inter |
 
   @javascript
   Scenario: Deletion of a change component state interaction scenario
