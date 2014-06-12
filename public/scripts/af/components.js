@@ -100,7 +100,8 @@ afModule.directive('afNumericField', function(isInputEnabled) {
                 + ' ± ' + ($scope.component.defaultValue.uncertainty || '0') + ' %';
 
             // Vérification si l'unité de la saisie n'est pas la même
-            if ($scope.component.unitChoices != undefined && $scope.input.value.unit != undefined) {
+            if ($scope.component.unitChoices !== undefined
+                && $scope.input.value !== null && $scope.input.value.unit !== undefined) {
                 var found = false;
                 angular.forEach($scope.component.unitChoices, function (unit) {
                     if (unit.ref === $scope.input.value.unit) {
