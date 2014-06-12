@@ -47,6 +47,7 @@ $baseTabs[AFViewConfiguration::TAB_INPUT]->setContent(
         'serializedInputSet' => $this->serializedInputSet,
         'urlParams'          => $this->urlParams,
         'exitUrl'            => $viewConfiguration->getExitURL(),
+        'readOnly'           => $viewConfiguration->getMode() === AFViewConfiguration::MODE_READ,
     ])
 );
 

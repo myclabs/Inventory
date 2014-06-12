@@ -4,6 +4,7 @@
     window.afUrlParams = <?=json_encode($this->urlParams)?>;
     window.exitUrl = <?=json_encode($this->exitUrl)?>;
     window.decimalSeparator = <?=json_encode(Core_Locale::loadDefault()->getDecimalSeparator())?>;
+    window.readOnly = <?=json_encode($this->readOnly)?>;
 
     // Traductions
     // Statut avancement saisie
@@ -61,12 +62,14 @@
                 <div class="col-md-12">
 
                     <button type="button" class="btn btn-default" ng-click="preview()"
+                            ng-if="!readOnly"
                             ng-disabled="!isInputInProgress() || previewIsLoading">
                         <i class="fa-spin fa fa-spinner" ng-show="previewIsLoading"></i>
                         <?= __('AF', 'inputInput', 'resultsPreview') ?>
                     </button>
 
                     <button type="button" class="btn btn-default" ng-click="save()"
+                            ng-if="!readOnly"
                             ng-disabled="!isInputInProgress() || saving"
                             ng-class="{ 'btn-primary': isInputInProgress() }">
                         <i class="fa-spin fa fa-spinner" ng-show="saving"></i>
@@ -74,6 +77,7 @@
                     </button>
 
                     <button type="button" class="btn btn-default" ng-click="finish()"
+                            ng-if="!readOnly"
                             ng-disabled="!isInputComplete() || isInputFinished() || markingInputAsFinished"
                             ng-class="{ 'btn-primary': isInputComplete() && !isInputFinished() }">
                         <i class="fa-spin fa fa-spinner" ng-show="markingInputAsFinished"></i>

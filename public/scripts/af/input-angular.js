@@ -125,8 +125,12 @@ afModule.factory('isInputVisible', ['testCondition', function (testCondition) {
     };
 }]);
 
-afModule.factory('isInputEnabled', ['testCondition', function (testCondition) {
+afModule.factory('isInputEnabled', ['$window', 'testCondition', function ($window, testCondition) {
     return function (input, component, inputs) {
+        if ($window.readOnly) {
+            return false;
+        }
+
         if (angular.isUndefined(component.actions)) {
             return component.enabled;
         }
@@ -247,6 +251,7 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
 
 afModule.controller('InputController', ['$scope', '$element', '$window', '$http', 'validateInputSet',
 function ($scope, $element, $window, $http, validateInputSet) {
+    $scope.readOnly = $window.readOnly;
     $scope.af = $window.af;
     $scope.inputSet = $window.inputSet;
     $scope.refPrefix = '';
