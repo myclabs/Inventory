@@ -67,6 +67,7 @@
 
                     <button type="button" class="btn btn-default" ng-click="preview()"
                             ng-if="!readOnly"
+                            tooltip="<?= __('AF', 'inputInput', 'resultsPreviewHelp') ?>" tooltip-placement="bottom"
                             ng-disabled="!isInputInProgress() || previewIsLoading">
                         <i class="fa-spin fa fa-spinner" ng-show="previewIsLoading"></i>
                         <?= __('AF', 'inputInput', 'resultsPreview') ?>
