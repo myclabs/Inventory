@@ -12,6 +12,7 @@ afModule.directive('afFieldset', ['isInputVisible', 'getInput', function(isInput
                 $scope.inputSet = {};
             }
 
+            $scope.refPrefix = $scope.$parent.refPrefix;
             $scope.isInputVisible = isInputVisible;
             $scope.isCollapsed = false;
             $scope.toggle = function () {
@@ -36,6 +37,7 @@ afModule.directive('afHorizontalFieldset', ['getInput', function(getInput) {
             $scope.getInput = getInput;
             $scope.removeButtonLabel = __('UI', 'verb', 'delete');
             $scope.freeLabel = __('AF', 'inputInput', 'freeLabel');
+            $scope.refPrefix = $scope.$parent.refPrefix;
 
             $scope.remove = function (subInputSet) {
                 var index = $scope.inputSets.indexOf(subInputSet);
@@ -50,7 +52,8 @@ afModule.directive('afComponent', function() {
         restrict: 'E',
         scope: {
             component: '=',
-            input: '='
+            input: '=',
+            refPrefix: '='
         },
         templateUrl: 'scripts/af/templates/component.html',
         link: function ($scope) {
@@ -65,7 +68,8 @@ afModule.directive('afHorizontalComponent', function() {
         restrict: 'E',
         scope: {
             component: '=',
-            input: '='
+            input: '=',
+            refPrefix: '='
         },
         templateUrl: 'scripts/af/templates/horizontal-component.html',
         link: function ($scope) {
@@ -87,6 +91,7 @@ afModule.directive('afNumericField', function(isInputEnabled) {
         link: function ($scope) {
             // Forward les saisies du scope courant
             $scope.inputs = $scope.$parent.inputs;
+            $scope.refPrefix = $scope.$parent.refPrefix;
 
             $scope.isInputEnabled = isInputEnabled;
 
@@ -130,6 +135,7 @@ afModule.directive('afSelect', function(isInputEnabled) {
         link: function ($scope) {
             // Forward les saisies du scope courant
             $scope.inputs = $scope.$parent.inputs;
+            $scope.refPrefix = $scope.$parent.refPrefix;
 
             $scope.isInputEnabled = isInputEnabled;
         }
@@ -147,6 +153,7 @@ afModule.directive('afCheckbox', function(isInputEnabled) {
         link: function ($scope) {
             // Forward les saisies du scope courant
             $scope.inputs = $scope.$parent.inputs;
+            $scope.refPrefix = $scope.$parent.refPrefix;
 
             $scope.isInputEnabled = isInputEnabled;
         }
@@ -164,6 +171,7 @@ afModule.directive('afTextField', function(isInputEnabled) {
         link: function ($scope) {
             // Forward les saisies du scope courant
             $scope.inputs = $scope.$parent.inputs;
+            $scope.refPrefix = $scope.$parent.refPrefix;
 
             $scope.isInputEnabled = isInputEnabled;
         }
@@ -181,6 +189,7 @@ afModule.directive('afTextarea', function(isInputEnabled) {
         link: function ($scope) {
             // Forward les saisies du scope courant
             $scope.inputs = $scope.$parent.inputs;
+            $scope.refPrefix = $scope.$parent.refPrefix;
 
             $scope.isInputEnabled = isInputEnabled;
         }
@@ -198,6 +207,7 @@ afModule.directive('afRadio', function(isInputEnabled) {
         link: function ($scope) {
             // Forward les saisies du scope courant
             $scope.inputs = $scope.$parent.inputs;
+            $scope.refPrefix = $scope.$parent.refPrefix;
 
             $scope.isInputEnabled = isInputEnabled;
         }
@@ -215,6 +225,7 @@ afModule.directive('afSelectMultiple', function(isInputEnabled) {
         link: function ($scope) {
             // Forward les saisies du scope courant
             $scope.inputs = $scope.$parent.inputs;
+            $scope.refPrefix = $scope.$parent.refPrefix;
 
             $scope.toggleSelection = function toggleSelection(optionRef) {
                 if ($scope.input.value === null) {
@@ -246,6 +257,12 @@ afModule.directive('afGroup', function($compile) {
         },
         template: '',
         link: function ($scope, element) {
+            if ($scope.$parent.refPrefix !== null) {
+                $scope.refPrefix = $scope.$parent.refPrefix + $scope.component.ref + '__';
+            } else {
+                $scope.refPrefix = $scope.component.ref;
+            }
+
             // On compile manuellement sinon récursion infinie : angular pré-importe les templates
             // même s'ils ne sont pas vraiment utilisés
             element.append('<af-fieldset components="component.components" label="component.label" input-set="inputSet"></af-fieldset>');
@@ -263,6 +280,8 @@ afModule.directive('afSubSingle', function($compile) {
         },
         template: '',
         link: function ($scope, element) {
+            $scope.refPrefix = $scope.$parent.refPrefix + $scope.component.ref + '__';
+
             // On compile manuellement sinon récursion infinie : angular pré-importe les templates
             // même s'ils ne sont pas vraiment utilisés
             element.append('<af-fieldset components="component.calledAF.components" label="component.label" input-set="input.value"></af-fieldset>');
@@ -280,6 +299,8 @@ afModule.directive('afSubMulti', function($compile) {
         },
         template: '',
         link: function ($scope, element) {
+            $scope.refPrefix = $scope.$parent.refPrefix + $scope.component.ref + '__';
+
             // Init the input
             if ($scope.input === null) {
                 $scope.input = {};

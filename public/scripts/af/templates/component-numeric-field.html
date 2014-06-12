@@ -2,6 +2,7 @@
 
     <div class="af-value has-feedback">
         <input input-float type="text" class="form-control" pattern="-?[0-9]*[.,]?[0-9]*"
+               name="{{ refPrefix + component.ref }}"
                ng-required="component.required"
                ng-model="input.value.digitalValue"
                ng-disabled="!isInputEnabled(input, component, inputs)">

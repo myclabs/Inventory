@@ -1,6 +1,7 @@
 <div class="radio" ng-repeat="option in component.options">
     <label>
         <input type="radio" ng-value="option.ref" ng-model="input.value"
+               name="{{ refPrefix + component.ref }}"
                ng-disabled="!isInputEnabled(input, component, inputs)">
         {{ option.label }}
     </label>

@@ -249,6 +249,7 @@ afModule.controller('InputController', ['$scope', '$element', '$window', '$http'
 function ($scope, $element, $window, $http, validateInputSet) {
     $scope.af = $window.af;
     $scope.inputSet = $window.inputSet;
+    $scope.refPrefix = '';
     var urlParams = $window.afUrlParams;
 
     $scope.inputStatuses = {

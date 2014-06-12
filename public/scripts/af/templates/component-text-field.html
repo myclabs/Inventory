@@ -1,3 +1,3 @@
 <input type="text" class="form-control" ng-required="component.required"
-       ng-model="input.value"
+       ng-model="input.value" name="{{ refPrefix + component.ref }}"
        ng-disabled="!isInputEnabled(input, component, inputs)">

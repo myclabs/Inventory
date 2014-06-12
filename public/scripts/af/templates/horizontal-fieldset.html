@@ -1,27 +1,29 @@
 <table class="table table-condensed">
     <tr>
-        <th ng-style="{ width: 100/(components.length+2) + '%' }">
+        <th>
             {{ freeLabel }}
         </th>
-        <th ng-repeat="component in components" ng-style="{ width: 100/(components.length+2) + '%' }">
+        <th ng-repeat="component in components">
             {{ component.label }}
             <a class="af-component-help" href="#" tooltip-html-unsafe="{{ component.help }}"
                ng-if="component.help">
                 <i class="fa fa-question-circle"></i>
             </a>
         </th>
-        <th ng-style="{ width: 100/(components.length+2) + '%' }"></th>
+        <th></th>
     </tr>
 
     <tr ng-repeat="inputSet in inputSets">
         <td>
-            <input type="text" class="form-control" ng-model="inputSet.freeLabel">
+            <input type="text" class="form-control" ng-model="inputSet.freeLabel"
+                   name="{{ refPrefix + $index }}__freeLabel">
         </td>
         <td ng-repeat="component in components">
-            <af-horizontal-component component="component" input="getInput(inputSet, component)"></af-horizontal-component>
+            <af-horizontal-component component="component" input="getInput(inputSet, component)"
+                                     ref-prefix="refPrefix + $index + '__'"></af-horizontal-component>
         </td>
         <td>
-            <button type="button" class="btn btn-default" ng-click="remove(inputSet)">
+            <button type="button" class="btn btn-default btn-block" ng-click="remove(inputSet)">
                 {{ removeButtonLabel }}
             </button>
         </td>
