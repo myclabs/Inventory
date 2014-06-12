@@ -8,6 +8,7 @@
 
 ```sql
 DELETE FROM AF_Action WHERE type_action LIKE 'setvalue%';
+DELETE FROM AF_Action WHERE type_action = 'setoptionstate';
 ```
 
 

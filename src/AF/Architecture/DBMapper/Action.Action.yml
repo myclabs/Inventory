@@ -9,7 +9,6 @@ AF\Domain\Action\Action:
     type: string
   discriminatorMap:
     setstate: AF\Domain\Action\SetState
-    setoptionstate: AF\Domain\Action\SetOptionState
 
   id:
     id:
