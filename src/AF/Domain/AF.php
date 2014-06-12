@@ -54,12 +54,6 @@ class AF extends Core_Model_Entity
     protected $library;
 
     /**
-     * @deprecated Sera supprimée dans la 3.1
-     * @var string
-     */
-    private $ref;
-
-    /**
      * @var TranslatedString
      */
     protected $label;
@@ -126,16 +120,6 @@ class AF extends Core_Model_Entity
         $this->rootGroup = new Group();
         $this->rootGroup->setRef(Group::ROOT_GROUP_REF);
         $this->rootGroup->setAf($this);
-    }
-
-    /**
-     * Get the ref attribute.
-     * @deprecated Sera supprimée dans la 3.1
-     * @return string
-     */
-    public function getRef()
-    {
-        return $this->ref;
     }
 
     /**
