@@ -334,6 +334,7 @@ function ($scope, $element, $window, $http, validateInputSet) {
             $scope.saving = false;
             $scope.inputSet.completion = response.data.completion;
             $scope.inputSet.status = response.data.status;
+            $scope.inputSet.id = response.data.idInputSet;
             addMessage(response.message, response.type);
         }).error(function () {
             $scope.saving = false;
