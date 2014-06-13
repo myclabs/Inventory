@@ -113,11 +113,6 @@ class CellViewModel
     public $showInput = false;
 
     /**
-     * @var boolean
-     */
-    public $showInputLink = false;
-
-    /**
      * @var string
      */
     public $inputStatus = null;

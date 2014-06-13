@@ -747,7 +747,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 var inputStatusP = '';
                 if (this.showInput) {
                     var inputStatusIcon = (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_FINISHED?>') ? 'certificate' : (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_COMPLETE?>') ? 'check-square-o' : (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_CALCULATION_INCOMPLETE?>') ? 'warning' : (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_INPUT_INCOMPLETE?>') ? 'pencil-square-o' : (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_NOT_STARTED?>') ? 'square-o' : (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_AF_NOT_CONFIGURED?>') ? 'wrench' : 'ban';
-                    inputStatusP =
+                    inputStatusP +=
                         '<a class="go-input btn btn-link btn-sm withTooltip' + (((this.inventoryStatus != '<?=Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED?>') && (this.inputStatus != '<?=Orga_Model_Cell::INPUT_STATUS_AF_NOT_CONFIGURED?>')) ? '' : ' disabled') + '" href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">' +
                             '<?=___('Orga', 'view', 'inputLinkDetail')?>' +
                         '</a>' +
