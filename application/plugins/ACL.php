@@ -6,6 +6,8 @@ use AF\Domain\AF;
 use AF\Domain\AFLibrary;
 use Classification\Domain\ClassificationLibrary;
 use Doc\Domain\Library;
+use DW\Domain\Cube;
+use DW\Domain\Report;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\ParameterLibrary;
 use User\Application\HttpNotFoundException;
@@ -437,13 +439,13 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
     {
         $idReport = $request->getParam('idReport');
         if ($idReport !== null) {
-            $idCube = DW_Model_Report::load($idReport)->getCube()->getId();
+            $idCube = Report::load($idReport)->getCube()->getId();
         } else {
             $idCube = $request->getParam('idCube');
         }
 
         if ($idCube !== null) {
-            $dWCube = DW_Model_Cube::load($idCube);
+            $dWCube = Cube::load($idCube);
             // Si le DWCube est d'un Granularity, vérification que l'utilisateur peut configurer le projet.
             try {
                 $granularity = Orga_Model_Granularity::loadByDWCube($dWCube);
@@ -484,7 +486,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
     protected function deleteReportRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $idReport = $request->getParam('idReport');
-        $cellReport = Orga_Model_CellReport::loadByCellDWReport(DW_Model_Report::load($idReport));
+        $cellReport = Orga_Model_CellReport::loadByCellDWReport(Report::load($idReport));
         return ($cellReport->getOwner() === $identity);
     }
 

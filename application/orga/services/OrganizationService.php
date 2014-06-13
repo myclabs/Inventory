@@ -4,6 +4,7 @@ use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use Doctrine\ORM\EntityManager;
+use DW\Domain\Report;
 use Mnapoli\Translated\Translator;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -649,32 +650,32 @@ class Orga_Service_OrganizationService
         $this->entityManager->flush();
 
         // Analyses préconfigurées
-        $report = new DW_Model_Report($granularityYear->getDWCube());
+        $report = new Report($granularityYear->getDWCube());
         $report->getLabel()->set('GES émis par catégorie', 'fr');
-        $report->setChartType(DW_Model_Report::CHART_PIE);
+        $report->setChartType(Report::CHART_PIE);
         $report->setWithUncertainty(false);
-        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('ges', $granularityYear->getDWCube()));
-        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube('o_categorie', $granularityYear->getDWCube()));
-        $report->setSortType(DW_Model_Report::SORT_CONVENTIONAL);
+        $report->setNumeratorIndicator($granularityYear->getDWCube()->getIndicatorByRef('ges'));
+        $report->setNumeratorAxis1($granularityYear->getDWCube()->getAxisByRef('o_categorie'));
+        $report->setSortType(Report::SORT_CONVENTIONAL);
         $report->save();
 
-        $report = new DW_Model_Report($granularityYear->getDWCube());
+        $report = new Report($granularityYear->getDWCube());
         $report->getLabel()->set('GES émis par catégorie et poste article 75', 'fr');
-        $report->setChartType(DW_Model_Report::CHART_VERTICAL_STACKED);
+        $report->setChartType(Report::CHART_VERTICAL_STACKED);
         $report->setWithUncertainty(false);
-        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('ges', $granularityYear->getDWCube()));
-        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube('o_categorie', $granularityYear->getDWCube()));
-        $report->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube('c_poste_article_75', $granularityYear->getDWCube()));
-        $report->setSortType(DW_Model_Report::SORT_CONVENTIONAL);
+        $report->setNumeratorIndicator($granularityYear->getDWCube()->getIndicatorByRef('ges'));
+        $report->setNumeratorAxis1($granularityYear->getDWCube()->getAxisByRef('o_categorie'));
+        $report->setNumeratorAxis2($granularityYear->getDWCube()->getAxisByRef('c_poste_article_75'));
+        $report->setSortType(Report::SORT_CONVENTIONAL);
         $report->save();
 
-        $report = new DW_Model_Report($granularityYear->getDWCube());
+        $report = new Report($granularityYear->getDWCube());
         $report->getLabel()->set('Energie finale consommée par catégorie', 'fr');
-        $report->setChartType(DW_Model_Report::CHART_PIE);
+        $report->setChartType(Report::CHART_PIE);
         $report->setWithUncertainty(false);
-        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube('energie_finale', $granularityYear->getDWCube()));
-        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube('o_categorie', $granularityYear->getDWCube()));
-        $report->setSortType(DW_Model_Report::SORT_CONVENTIONAL);
+        $report->setNumeratorIndicator($granularityYear->getDWCube()->getIndicatorByRef('energie_finale'));
+        $report->setNumeratorAxis1($granularityYear->getDWCube()->getAxisByRef('o_categorie'));
+        $report->setSortType(Report::SORT_CONVENTIONAL);
         $report->save();
     }
 }

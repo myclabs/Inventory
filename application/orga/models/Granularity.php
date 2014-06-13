@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
 use Doctrine\Common\Collections\Selectable;
+use DW\Domain\Cube;
 
 /**
  * Objet métier Granularité : ensemble d'Axis formant des Cell pour chaque association de Member.
@@ -119,7 +120,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     /**
      * Organization de DW généré par et propre à la Cell.
      *
-     * @var DW_model_cube
+     * @var Cube
      */
     protected $dWCube = null;
 
@@ -175,11 +176,11 @@ class Orga_Model_Granularity extends Core_Model_Entity
     /**
      * Charge le Granularity correspondant à un Organization de DW.
      *
-     * @param DW_model_cube $dWCube
+     * @param Cube $dWCube
      *
      * @return Orga_Model_Granularity
      */
-    public static function loadByDWCube(DW_model_cube $dWCube)
+    public static function loadByDWCube(Cube $dWCube)
     {
         return self::getEntityRepository()->loadBy(array('dWCube' => $dWCube));
     }
@@ -820,7 +821,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
     protected function createDWCube()
     {
         if ($this->dWCube === null) {
-            $this->dWCube = new DW_Model_Cube();
+            $this->dWCube = new Cube();
             $this->dWCube->setLabel(clone $this->getLabel());
 
             /** @var Orga_Service_ETLStructure $etlStructureService */
@@ -845,7 +846,7 @@ class Orga_Model_Granularity extends Core_Model_Entity
      *
      * @throws Core_Exception_UndefinedAttribute
      *
-     * @return DW_model_cube
+     * @return Cube
      */
     public function getDWCube()
     {

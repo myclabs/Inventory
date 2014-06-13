@@ -1,0 +1,56 @@
+DW\Domain\Indicator:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: DW_Indicator
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      column: ref
+      type: string
+      length: 255
+      nullable: false
+    position:
+      column: position
+      type: integer
+      nullable: false
+    unit:
+      column: refUnit
+      type: string
+      length: 255
+      nullable: false
+    ratioUnit:
+      column: refRatioUnit
+      type: string
+      length: 255
+      nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    cube:
+      targetEntity: Cube
+      inversedBy: indicators
+      joinColumn:
+        name: idCube
+        referencedColumnName: id
+        nullable: false
+
+  lifecycleCallbacks:
+    preUpdate: [ preUpdate ]
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]
+
+  uniqueConstraints:
+    indicatorRefUniquenessInCube:
+      columns:
+        - ref
+        - idCube

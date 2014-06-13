@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
+use DW\Domain\Cube;
+use DW\Domain\Result;
 use MyCLabs\ACL\Model\EntityResource;
 use Orga\Model\ACL\AbstractCellRole;
 use Orga\Model\ACL\CellAdminRole;
@@ -157,14 +159,14 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     /**
      * Organization de DW généré par et propre à la Cell.
      *
-     * @var DW_model_cube
+     * @var Cube
      */
     protected $dWCube = null;
 
     /**
      * Collection des résultats créés par le primarySet.
      *
-     * @var Collection|DW_Model_Result[]
+     * @var Collection|Result[]
      */
     protected $dWResults = null;
 
@@ -225,11 +227,11 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     /**
      * Charge la Cell correspondant à un Organization de DW.
      *
-     * @param DW_model_cube $dWCube
+     * @param Cube $dWCube
      *
      * @return Orga_Model_Cell
      */
-    public static function loadByDWCube(DW_model_cube $dWCube)
+    public static function loadByDWCube(Cube $dWCube)
     {
         return self::getEntityRepository()->loadBy(array('dWCube' => $dWCube));
     }
@@ -1236,7 +1238,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             /** @var Orga_Service_ETLData $etlDataService */
             $etlDataService = $container->get(Orga_Service_ETLData::class);
 
-            $this->dWCube = new DW_model_cube();
+            $this->dWCube = new Cube();
             $this->dWCube->setLabel(clone $this->getLabel());
 
             $etlStructureService->populateCellDWCube($this);
@@ -1265,7 +1267,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
      *
      * @throws Core_Exception_UndefinedAttribute
      *
-     * @return DW_model_cube
+     * @return Cube
      */
     public function getDWCube()
     {
@@ -1278,7 +1280,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     /**
      * Récupère l'ensemble des organizations de DW peuplés par la Cell.
      *
-     * @return DW_model_cube[]
+     * @return Cube[]
      */
     public function getPopulatedDWCubes()
     {
@@ -1339,9 +1341,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     /**
      * Créer l'ensemble des résultats pour un organization de DW donné.
      *
-     * @param DW_model_cube $dWCube
+     * @param Cube $dWCube
      */
-    public function createDWResultsForDWCube(DW_Model_Cube $dWCube)
+    public function createDWResultsForDWCube(Cube $dWCube)
     {
         if (($this->aFInputSetPrimary === null) || ($this->aFInputSetPrimary->getOutputSet() === null)) {
             return;
@@ -1351,23 +1353,22 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $refClassifIndicator = $outputElement->getContextIndicator()->getIndicator()->getLibrary()
                 . '_' . $outputElement->getContextIndicator()->getIndicator()->getRef();
             try {
-                $dWIndicator = DW_Model_Indicator::loadByRefAndCube($refClassifIndicator, $dWCube);
+                $dWIndicator = $dWCube->getIndicatorByRef($refClassifIndicator);
             } catch (Core_Exception_NotFound $e) {
                 // Indexation selon l'indicateur de classification non trouvée. Impossible de créer le résultat.
                 continue;
             }
 
-            $dWResult = new DW_Model_Result($dWIndicator);
+            $dWResult = new Result($dWIndicator);
             $dWResult->setValue($outputElement->getValue());
 
             foreach ($outputElement->getIndexes() as $outputIndex) {
                 try {
                     $classificationLibrary = $outputIndex->getAxis()->getLibrary();
-                    $dWAxis = DW_Model_Axis::loadByRefAndCube(
-                        'c_'.$classificationLibrary->getId().'_'.$outputIndex->getRefAxis(),
-                        $dWCube
+                    $dWAxis = $dWCube->getAxisByRef(
+                        'c_'.$classificationLibrary->getId().'_'.$outputIndex->getRefAxis()
                     );
-                    $dWMember = DW_Model_Member::loadByRefAndAxis($outputIndex->getRefMember(), $dWAxis);
+                    $dWMember = $dWAxis->getMemberByRef($outputIndex->getRefMember());
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
                     // Indexation selon classification non trouvée.
@@ -1375,11 +1376,10 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
 
                 foreach ($outputIndex->getMember()->getAllParents() as $classifParentMember) {
                     try {
-                        $dWBroaderAxis = DW_Model_Axis::loadByRefAndCube(
-                            'c_'.$classificationLibrary->getId().'_'.$classifParentMember->getAxis()->getRef(),
-                            $dWCube
+                        $dWBroaderAxis = $dWCube->getAxisByRef(
+                            'c_'.$classificationLibrary->getId().'_'.$classifParentMember->getAxis()->getRef()
                         );
-                        $dWParentMember = DW_Model_Member::loadByRefAndAxis($classifParentMember->getRef(), $dWBroaderAxis);
+                        $dWParentMember = $dWBroaderAxis->getMemberByRef($classifParentMember->getRef());
                         $dWResult->addMember($dWParentMember);
                     } catch (Core_Exception_NotFound $e) {
                         // Indexation selon classification non trouvée.
@@ -1395,8 +1395,8 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             }
             foreach ($indexingMembers as $indexingMember) {
                 try {
-                    $dWAxis = DW_Model_Axis::loadByRefAndCube('o_'.$indexingMember->getAxis()->getRef(), $dWCube);
-                    $dWMember = DW_Model_Member::loadByRefAndAxis($indexingMember->getRef(), $dWAxis);
+                    $dWAxis = $dWCube->getAxisByRef('o_'.$indexingMember->getAxis()->getRef());
+                    $dWMember = $dWAxis->getMemberByRef($indexingMember->getRef());
                     $dWResult->addMember($dWMember);
                 } catch (Core_Exception_NotFound $e) {
                     // Indexation selon orga non trouvée.
@@ -1428,9 +1428,9 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     /**
      * Supprime l'ensemble des résultats de l'InputSet de la cellule dans le organization de DW donné.
      *
-     * @param DW_model_cube $dWCube
+     * @param Cube $dWCube
      */
-    public function deleteDWResultsForDWCube(DW_model_cube $dWCube)
+    public function deleteDWResultsForDWCube(Cube $dWCube)
     {
         // Pas de criteria sur les manyToMany pour le moment.
 //        $criteria = Doctrine\Common\Collections\Criteria::create()->where(

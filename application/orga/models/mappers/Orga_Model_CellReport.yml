@@ -12,7 +12,7 @@ Orga_Model_CellReport:
 
   oneToOne:
     cellDWReport:
-      targetEntity: DW_Model_Report
+      targetEntity: DW\Domain\Report
       joinColumn:
         name: idCellDWReport
         referencedColumnName: id

@@ -6,6 +6,7 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use DW\Domain\Report;
 
 /**
  * Classe faisant le lien entre les rapport des granularités et des cellules.
@@ -25,17 +26,17 @@ class Orga_Model_GranularityReport extends Core_Model_Entity
     /**
      * Report du Cube de DW de la granularité concerné.
      *
-     * @var DW_Model_Report
+     * @var Report
      */
     protected $granularityDWReport;
 
     /**
-     * @var Collection|DW_Model_Report[]
+     * @var Collection|Report[]
      */
     protected $cellDWReports;
 
 
-    public function __construct(DW_Model_Report $granularityDWReport)
+    public function __construct(Report $granularityDWReport)
     {
         $this->granularityDWReport = $granularityDWReport;
 
@@ -45,11 +46,11 @@ class Orga_Model_GranularityReport extends Core_Model_Entity
     /**
      * Charge le GranularityReport correspondant à un Report de DW.
      *
-     * @param DW_Model_Report $dWReport
+     * @param Report $dWReport
      *
      * @return Orga_Model_GranularityReport
      */
-    public static function loadByGranularityDWReport(DW_Model_Report $dWReport)
+    public static function loadByGranularityDWReport(Report $dWReport)
     {
         return self::getEntityRepository()->loadBy(['granularityDWReport' => $dWReport]);
     }
@@ -65,7 +66,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity
     /**
      * Renvoie le Report de DW.
      *
-     * @return DW_Model_Report
+     * @return Report
      */
     public function getGranularityDWReport()
     {
@@ -75,9 +76,9 @@ class Orga_Model_GranularityReport extends Core_Model_Entity
     /**
      * Ajoute un Report de DW pour un Cell au GranularityReport.
      *
-     * @param DW_Model_Report $cellDWReport
+     * @param Report $cellDWReport
      */
-    public function addCellDWReport(DW_Model_Report $cellDWReport)
+    public function addCellDWReport(Report $cellDWReport)
     {
         if (!($this->hasCellDWReport($cellDWReport))) {
             $this->cellDWReports->add($cellDWReport);
@@ -87,11 +88,11 @@ class Orga_Model_GranularityReport extends Core_Model_Entity
     /**
      * Vérifie si le GranularityReport possède le Report de DW pour un Cell donné.
      *
-     * @param DW_Model_Report $cellDWReport
+     * @param Report $cellDWReport
      *
      * @return boolean
      */
-    public function hasCellDWReport(DW_Model_Report $cellDWReport)
+    public function hasCellDWReport(Report $cellDWReport)
     {
         return $this->cellDWReports->contains($cellDWReport);
     }
@@ -99,9 +100,9 @@ class Orga_Model_GranularityReport extends Core_Model_Entity
     /**
      * Retire le Report de DW pour un Cell donné des Report de DW de Cell du GranularityReport.
      *
-     * @param DW_Model_Report $cellDWReport
+     * @param Report $cellDWReport
      */
-    public function removeCellDWReport(DW_Model_Report $cellDWReport)
+    public function removeCellDWReport(Report $cellDWReport)
     {
         if ($this->hasCellDWReport($cellDWReport)) {
             $this->cellDWReports->removeElement($cellDWReport);
@@ -121,7 +122,7 @@ class Orga_Model_GranularityReport extends Core_Model_Entity
     /**
      * Renvoie un tableau des Report de DW de Cell du Granularity.
      *
-     * @return DW_Model_Report[]
+     * @return Report[]
      */
     public function getCellDWReports()
     {

@@ -1,0 +1,36 @@
+DW\Domain\Cube:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: DW_Cube
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  oneToMany:
+    reports:
+      targetEntity: Report
+      mappedBy: cube
+      orphanRemoval: true
+      cascade: [ persist, remove ]
+    axes:
+      targetEntity: Axis
+      mappedBy: cube
+      orderBy:
+        position: ASC
+      orphanRemoval: true
+      cascade: [ persist, remove ]
+    indicators:
+      targetEntity: Indicator
+      mappedBy: cube
+      orderBy:
+        position: ASC
+      orphanRemoval: true
+      cascade: [ persist, remove ]

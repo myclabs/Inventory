@@ -1,0 +1,93 @@
+DW\Domain\Report:
+  type: entity
+  repositoryClass: \DW\Architecture\Repository\ReportRepository
+  table: DW_Report
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    chartType:
+      column: chartType
+      type: string
+      length: 255
+      nullable: true
+    sortType:
+      column: sortType
+      type: string
+      length: 255
+      nullable: false
+    withUncertainty:
+      column: withUncertainty
+      type: boolean
+      nullable: false
+    lastModificationTimestamp:
+      column: lastModificationTimestamp
+      type: integer
+      nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    cube:
+      targetEntity: Cube
+      inversedBy: reports
+      joinColumn:
+        name: idCube
+        referencedColumnName: id
+        nullable: false
+    numeratorIndicator:
+      targetEntity: Indicator
+      joinColumn:
+        name: idNumeratorIndicator
+        referencedColumnName: id
+        nullable: true
+    numeratorAxis1:
+      targetEntity: Axis
+      joinColumn:
+        name: idNumeratorAxis1
+        referencedColumnName: id
+        nullable: true
+    numeratorAxis2:
+      targetEntity: Axis
+      joinColumn:
+        name: idNumeratorAxis2
+        referencedColumnName: id
+        nullable: true
+    denominatorIndicator:
+      targetEntity: Indicator
+      joinColumn:
+        name: idDenominatorIndicator
+        referencedColumnName: id
+        nullable: true
+    denominatorAxis1:
+      targetEntity: Axis
+      joinColumn:
+        name: idDenominatorAxis1
+        referencedColumnName: id
+        nullable: true
+    denominatorAxis2:
+      targetEntity: Axis
+      joinColumn:
+        name: idDenominatorAxis2
+        referencedColumnName: id
+        nullable: true
+
+  oneToMany:
+    filters:
+      targetEntity: Filter
+      mappedBy: report
+      cascade: [ persist, remove ]
+      orphanRemoval: true
+
+  lifecycleCallbacks:
+    prePersist: [ preSave ]
+    preUpdate: [ updateLastModification ]
+    postUpdate: [ postUpdate ]
+    preRemove: [ preDelete ]

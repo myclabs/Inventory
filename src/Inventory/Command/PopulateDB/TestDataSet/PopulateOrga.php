@@ -7,7 +7,7 @@ use AF\Domain\AF;
 use AF\Domain\Component\Select;
 use Calc_UnitValue;
 use Classification\Domain\ClassificationLibrary;
-use DW_Model_Report;
+use DW\Domain\Report;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateOrga;
 use Orga_Model_Cell;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -168,9 +168,9 @@ qui officia deserunt mollit anim id est laborum.',
         $this->entityManager->flush();
 
         // Création d'analyses préconfigurées
-        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire, par année', '1_chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
-        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire 2012, marques A et B, par site', '1_chiffre_affaire', 'o_site', ['o_annee' => ['2012'], 'o_marque' => ['marque_a', 'marque_b']], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_VALUE_DECREASING);
-        $this->createSimpleGranularityReport($granularity_site, 'Chiffre d\'affaire, par année', '1_chiffre_affaire', 'o_annee', [], false, DW_Model_Report::CHART_PIE, DW_Model_Report::SORT_CONVENTIONAL);
+        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire, par année', '1_chiffre_affaire', 'o_annee', [], false, Report::CHART_PIE, Report::SORT_CONVENTIONAL);
+        $this->createSimpleGranularityReport($granularityGlobal, 'Chiffre d\'affaire 2012, marques A et B, par site', '1_chiffre_affaire', 'o_site', ['o_annee' => ['2012'], 'o_marque' => ['marque_a', 'marque_b']], false, Report::CHART_PIE, Report::SORT_VALUE_DECREASING);
+        $this->createSimpleGranularityReport($granularity_site, 'Chiffre d\'affaire, par année', '1_chiffre_affaire', 'o_annee', [], false, Report::CHART_PIE, Report::SORT_CONVENTIONAL);
 
         // Création des utilisateurs orga.
         $this->createUser('administrateur.workspace@toto.com');

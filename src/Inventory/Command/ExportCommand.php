@@ -50,13 +50,13 @@ class ExportCommand extends Command
             \Orga\Model\ACL\CellManagerRole::class => [ 'exclude' => true ],
             \Orga\Model\ACL\CellContributorRole::class => [ 'exclude' => true ],
             \Orga\Model\ACL\CellObserverRole::class => [ 'exclude' => true ],
-            \DW_Model_Cube::class => [ 'exclude' => true ],
-            \DW_Model_Axis::class => [ 'exclude' => true ],
-            \DW_Model_Member::class => [ 'exclude' => true ],
-            \DW_Model_Indicator::class => [ 'exclude' => true ],
-            \DW_Model_Result::class => [ 'exclude' => true ],
-            \DW_Model_Report::class => [ 'exclude' => true ],
-            \DW_Model_Filter::class => [ 'exclude' => true ],
+            \DW\Domain\Cube::class => [ 'exclude' => true ],
+            \DW\Domain\Axis::class => [ 'exclude' => true ],
+            \DW\Domain\Member::class => [ 'exclude' => true ],
+            \DW\Domain\Indicator::class => [ 'exclude' => true ],
+            \DW\Domain\Result::class => [ 'exclude' => true ],
+            \DW\Domain\Report::class => [ 'exclude' => true ],
+            \DW\Domain\Filter::class => [ 'exclude' => true ],
             \DateTime::class => [
                 'serialize' => true,
             ],
@@ -242,57 +242,57 @@ class ExportCommand extends Command
         $output->writeln('<comment>Exporting Reports</comment>');
         $reportsSerializer = new CustomSerializerForMigration(
             [
-                \DW_Model_Report::class => [
+                \DW\Domain\Report::class => [
                     'properties' => [
                         'cube' => [
                             'exclude' => true,
                         ],
                         'numerator' => [
-                            'transform' => function (\DW_Model_Indicator $i) {
+                            'transform' => function (\DW\Domain\Indicator $i) {
                                 return ($i != null) ? $i->getRef() : null;
                             },
                         ],
                         'denominator' => [
-                            'transform' => function (\DW_Model_Indicator $i) {
+                            'transform' => function (\DW\Domain\Indicator $i) {
                                 return ($i != null) ? $i->getRef() : null;
                             },
                         ],
                         'numeratorAxis1' => [
-                            'transform' => function (\DW_Model_Axis $i) {
+                            'transform' => function (\DW\Domain\Axis $i) {
                                 return ($i != null) ? $i->getRef() : null;
                             },
                         ],
                         'numeratorAxis2' => [
-                            'transform' => function (\DW_Model_Axis $i) {
+                            'transform' => function (\DW\Domain\Axis $i) {
                                 return ($i != null) ? $i->getRef() : null;
                             },
                         ],
                         'denominatorAxis1' => [
-                            'transform' => function (\DW_Model_Axis $i) {
+                            'transform' => function (\DW\Domain\Axis $i) {
                                 return ($i != null) ? $i->getRef() : null;
                             },
                         ],
                         'denominatorAxis2' => [
-                            'transform' => function (\DW_Model_Axis $i) {
+                            'transform' => function (\DW\Domain\Axis $i) {
                                 return ($i != null) ? $i->getRef() : null;
                             },
                         ],
                     ],
                 ],
-                \DW_Model_Filter::class => [
+                \DW\Domain\Filter::class => [
                     'properties' => [
                         'cube' => [
                             'exclude' => true,
                         ],
                         'axis' => [
-                            'transform' => function (\DW_Model_Axis $i) {
+                            'transform' => function (\DW\Domain\Axis $i) {
                                 return $i->getRef();
                             },
                         ],
                         'members' => [
                             'transform' => function (Collection $c) {
                                 $members = $c->toArray();
-                                return array_map(function (\DW_Model_Member $m) {
+                                return array_map(function (\DW\Domain\Member $m) {
                                     return $m->getRef();
                                 }, $members);
                             },

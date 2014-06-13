@@ -24,12 +24,9 @@ use AF\Domain\Input\Select\SelectMultiInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core_Exception_NotFound;
 use Doctrine\ORM\EntityManager;
-use DW_Model_Axis;
-use DW_Model_Cube;
-use DW_Model_Filter;
-use DW_Model_Indicator;
-use DW_Model_Member;
-use DW_Model_Report;
+use DW\Domain\Cube;
+use DW\Domain\Filter;
+use DW\Domain\Report;
 use MyCLabs\ACL\ACL;
 use Orga\Model\ACL\CellAdminRole;
 use Orga\Model\ACL\CellManagerRole;
@@ -136,10 +133,10 @@ abstract class AbstractPopulateOrga
     //  + createDoubleGranularityReport : refIndicator, refAxis1, refAxis2
     //  + createDoubleRatioGranularityReport : refNumeratorIndicator, refNumeratorAxis1, refNumeratorAxis2, refDenominatorIndicator, refDenominatorAxis1, refDenominatorAxis2
     // OptionalParams : [refAxis => [refMember]] filters, displayUncertainty=false
-    //  + createSimpleGranularityReport : chartType=DW_Model_Report::CHART_PIE, sortType=DW_Model_Report::SORT_VALUE_DECREASING
-    //  + createSimbleRatioGranularityReport : chartType=DW_Model_Report::CHART_PIE, sortType=DW_Model_Report::SORT_VALUE_DECREASING
-    //  + createDoubleGranularityReport : chartType=DW_Model_Report::CHART_VERTICAL_GROUPED
-    //  + createDoubleRatioGranularityReport : chartType=DW_Model_Report::CHART_VERTICAL_GROUPED
+    //  + createSimpleGranularityReport : chartType=Report::CHART_PIE, sortType=Report::SORT_VALUE_DECREASING
+    //  + createSimbleRatioGranularityReport : chartType=Report::CHART_PIE, sortType=Report::SORT_VALUE_DECREASING
+    //  + createDoubleGranularityReport : chartType=Report::CHART_VERTICAL_GROUPED
+    //  + createDoubleRatioGranularityReport : chartType=Report::CHART_VERTICAL_GROUPED
 
     // Création des utilisateurs orga.
     //  + createUser: -
@@ -317,26 +314,25 @@ abstract class AbstractPopulateOrga
     }
 
     /**
-     * @param DW_Model_Cube $cube
+     * @param \DW\Domain\Cube $cube
      * @param string $label
      * @param string $chartType
      * @param string $displayUncertainty
      * @param array $filters
-     * @return DW_Model_Report
+     * @return Report
      */
-    private function createReport(DW_Model_Cube $cube, $label, $chartType, $displayUncertainty, $filters = array())
+    private function createReport(Cube $cube, $label, $chartType, $displayUncertainty, $filters = array())
     {
-        $report = new DW_Model_Report($cube);
+        $report = new Report($cube);
         $report->getLabel()->set($label, 'fr');
         $report->setChartType($chartType);
         $report->setWithUncertainty($displayUncertainty);
         foreach ($filters as $refAxis => $membersFiltered) {
-            $axis = DW_Model_Axis::loadByRefAndCube($refAxis, $cube);
-            $filter = new DW_Model_Filter($report, $axis);
+            $axis = $cube->getAxisByRef($refAxis, $cube);
+            $filter = new Filter($report, $axis);
             foreach ($membersFiltered as $refMember) {
-                $filter->addMember(DW_Model_Member::loadByRefAndAxis($refMember, $axis));
+                $filter->addMember($axis->getMemberByRef($refMember));
             }
-            $report->addFilter($filter);
         }
         return $report;
     }
@@ -358,12 +354,12 @@ abstract class AbstractPopulateOrga
         $refAxis,
         $filters = array(),
         $displayUncertainty = false,
-        $chartType = DW_Model_Report::CHART_PIE,
-        $sortType = DW_Model_Report::SORT_VALUE_DECREASING
+        $chartType = Report::CHART_PIE,
+        $sortType = Report::SORT_VALUE_DECREASING
     ) {
         $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty, $filters);
-        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refIndicator, $granularity->getDWCube()));
-        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refAxis, $granularity->getDWCube()));
+        $report->setNumeratorIndicator($granularity->getDWCube()->getIndicatorByRef($refIndicator));
+        $report->setNumeratorAxis1($granularity->getDWCube()->getAxisByRef($refAxis));
         $report->setSortType($sortType);
         $report->save();
     }
@@ -389,16 +385,14 @@ abstract class AbstractPopulateOrga
         $refDenominatorAxis,
         $filters = array(),
         $displayUncertainty = false,
-        $chartType = DW_Model_Report::CHART_PIE,
-        $sortType = DW_Model_Report::SORT_VALUE_DECREASING
+        $chartType = Report::CHART_PIE,
+        $sortType = Report::SORT_VALUE_DECREASING
     ) {
         $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty, $filters);
-        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refNumeratorIndicator, $granularity->getDWCube()));
-        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refNumeratorAxis, $granularity->getDWCube()));
-        $report->setDenominator(
-            DW_Model_Indicator::loadByRefAndCube($refDenominatorIndicator, $granularity->getDWCube())
-        );
-        $report->setDenominatorAxis1(DW_Model_Axis::loadByRefAndCube($refDenominatorAxis, $granularity->getDWCube()));
+        $report->setNumeratorIndicator($granularity->getDWCube()->getIndicatorByRef($refNumeratorIndicator));
+        $report->setNumeratorAxis1($granularity->getDWCube()->getAxisByRef($refNumeratorAxis));
+        $report->setDenominatorIndicator($granularity->getDWCube()->getIndicatorByRef($refDenominatorIndicator));
+        $report->setDenominatorAxis1($granularity->getDWCube()->getAxisByRef($refDenominatorAxis));
         $report->setSortType($sortType);
         $report->save();
     }
@@ -421,12 +415,12 @@ abstract class AbstractPopulateOrga
         $refAxis2,
         $filters = array(),
         $displayUncertainty = false,
-        $chartType = DW_Model_Report::CHART_VERTICAL_GROUPED
+        $chartType = Report::CHART_VERTICAL_GROUPED
     ) {
         $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty, $filters);
-        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refIndicator, $granularity->getDWCube()));
-        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refAxis1, $granularity->getDWCube()));
-        $report->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube($refAxis2, $granularity->getDWCube()));
+        $report->setNumeratorIndicator($granularity->getDWCube()->getIndicatorByRef($refIndicator, $granularity->getDWCube()));
+        $report->setNumeratorAxis1($granularity->getDWCube()->getAxisByRef($refAxis1));
+        $report->setNumeratorAxis2($granularity->getDWCube()->getAxisByRef($refAxis2));
         $report->setWithUncertainty($displayUncertainty);
         $report->save();
     }
@@ -455,17 +449,15 @@ abstract class AbstractPopulateOrga
         $refDenominatorAxis2,
         $filters = array(),
         $displayUncertainty = false,
-        $chartType = DW_Model_Report::CHART_VERTICAL_GROUPED
+        $chartType = Report::CHART_VERTICAL_GROUPED
     ) {
         $report = $this->createReport($granularity->getDWCube(), $label, $chartType, $displayUncertainty, $filters);
-        $report->setNumerator(DW_Model_Indicator::loadByRefAndCube($refNumeratorIndicator, $granularity->getDWCube()));
-        $report->setNumeratorAxis1(DW_Model_Axis::loadByRefAndCube($refNumeratorAxis1, $granularity->getDWCube()));
-        $report->setNumeratorAxis2(DW_Model_Axis::loadByRefAndCube($refNumeratorAxis2, $granularity->getDWCube()));
-        $report->setDenominator(
-            DW_Model_Indicator::loadByRefAndCube($refDenominatorIndicator, $granularity->getDWCube())
-        );
-        $report->setDenominatorAxis1(DW_Model_Axis::loadByRefAndCube($refDenominatorAxis1, $granularity->getDWCube()));
-        $report->setDenominatorAxis2(DW_Model_Axis::loadByRefAndCube($refDenominatorAxis2, $granularity->getDWCube()));
+        $report->setNumeratorIndicator($granularity->getDWCube()->getIndicatorByRef($refNumeratorIndicator));
+        $report->setNumeratorAxis1($granularity->getDWCube()->getAxisByRef($refNumeratorAxis1));
+        $report->setNumeratorAxis2($granularity->getDWCube()->getAxisByRef($refNumeratorAxis2));
+        $report->setDenominatorIndicator($granularity->getDWCube()->getIndicatorByRef($refDenominatorIndicator));
+        $report->setDenominatorAxis1($granularity->getDWCube()->getAxisByRef($refDenominatorAxis1));
+        $report->setDenominatorAxis2($granularity->getDWCube()->getAxisByRef($refDenominatorAxis2));
         $report->save();
     }
 

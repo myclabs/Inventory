@@ -1,5 +1,6 @@
 <?php
 
+use DW\Domain\Report;
 use User\Application\ForbiddenException;
 use User\Domain\User;
 
@@ -17,7 +18,7 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
 
     /**
      * @param string          $event
-     * @param DW_Model_Report $subject
+     * @param Report $subject
      * @param array           $arguments
      * @throws ForbiddenException
      */
@@ -27,7 +28,7 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
         $etlStructureService = \Core\ContainerSingleton::getContainer()->get('Orga_Service_ETLStructure');
 
         switch ($event) {
-            case DW_Model_Report::EVENT_SAVE:
+            case Report::EVENT_SAVE:
                 if ($subject->getCube()->getId() == null) {
                     return ;
                 }
@@ -53,7 +54,7 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
                     }
                 }
                 break;
-            case DW_Model_Report::EVENT_UPDATED:
+            case Report::EVENT_UPDATED:
                 try {
                     $etlStructureService->updateCellsDWReportFromGranularityReport(
                         Orga_Model_GranularityReport::loadByGranularityDWReport($subject)
@@ -62,7 +63,7 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
                     // Le Report n'est pas issue d'un Cube de DW de Granularity.
                 }
                 break;
-            case DW_Model_Report::EVENT_DELETE:
+            case Report::EVENT_DELETE:
                 try {
                     $granularityReport = Orga_Model_GranularityReport::loadByGranularityDWReport($subject);
                     $granularityReport->delete();

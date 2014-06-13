@@ -4,6 +4,7 @@
  * @subpackage Model
  */
 
+use DW\Domain\Report;
 use User\Domain\User;
 
 /**
@@ -24,7 +25,7 @@ class Orga_Model_CellReport extends Core_Model_Entity
     /**
      * Report du Cube de DW de la cellule concerné.
      *
-     * @var DW_Model_Report
+     * @var Report
      */
     protected $cellDWReport;
 
@@ -36,7 +37,7 @@ class Orga_Model_CellReport extends Core_Model_Entity
     protected $owner;
 
 
-    public function __construct(DW_Model_Report $cellDWReport, User $owner)
+    public function __construct(Report $cellDWReport, User $owner)
     {
         $this->cellDWReport = $cellDWReport;
         $this->owner = $owner;
@@ -45,11 +46,11 @@ class Orga_Model_CellReport extends Core_Model_Entity
     /**
      * Charge le CellReport correspondant à un Report de DW.
      *
-     * @param DW_Model_Report $cellDWReport
+     * @param Report $cellDWReport
      *
      * @return Orga_Model_CellReport
      */
-    public static function loadByCellDWReport(DW_Model_Report $cellDWReport)
+    public static function loadByCellDWReport(Report $cellDWReport)
     {
         return self::getEntityRepository()->loadBy(['cellDWReport' => $cellDWReport]);
     }
@@ -65,7 +66,7 @@ class Orga_Model_CellReport extends Core_Model_Entity
     /**
      * Renvoie le Report de DW.
      *
-     * @return DW_Model_Report
+     * @return Report
      */
     public function getCellDWReport()
     {
