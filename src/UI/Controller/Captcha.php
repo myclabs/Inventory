@@ -1,16 +1,8 @@
 <?php
-/**
- * Fichier de la classe Controller Captacha.
- *
- * @author     yoann.croizer
- * @package    UI
- * @subpackage Controller
- */
 
 /**
  * Controleur pour afficher des Captcha.
- * @package    UI
- * @subpackage Controller
+ * @author yoann.croizer
  */
 class UI_Controller_Captcha extends Core_Controller
 {
