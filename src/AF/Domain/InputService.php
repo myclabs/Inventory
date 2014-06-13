@@ -33,6 +33,21 @@ class InputService
     }
 
     /**
+     * Crée une nouvelle saisie en la remplissant avec les valeurs par défaut.
+     *
+     * @param AF $af
+     * @return PrimaryInputSet
+     */
+    public function createDefaultInputSet(AF $af)
+    {
+        $inputSet = new PrimaryInputSet($af);
+
+        $af->initializeNewInput($inputSet);
+
+        return $inputSet;
+    }
+
+    /**
      * Modifie une saisie et recalcule les résultats si la saisie est complète
      *
      * @param PrimaryInputSet $inputSet  InputSet à modifier

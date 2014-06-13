@@ -7,6 +7,8 @@
  */
 
 use AF\Application\AFViewConfiguration;
+use AF\Architecture\Service\AFSerializer;
+use AF\Architecture\Service\InputSerializer;
 use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\AFCopyService;
@@ -42,6 +44,19 @@ class AF_AfController extends Core_Controller
     private $inputService;
 
     /**
+     * @Inject
+     * @var AFSerializer
+     */
+    private $afSerializer;
+
+    /**
+     * @Inject
+     * @var InputSerializer
+     */
+    private $inputSerializer;
+
+
+    /**
      * Affichage d'un AF en mode test
      * @Secure("editAF")
      */
@@ -58,11 +73,10 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->setPageTitle($this->translator->get($af->getLabel()));
         $viewConfiguration->setUseSession(true);
         $viewConfiguration->setExitUrl('af/library/view/id/' . $af->getLibrary()->getId());
+        $viewConfiguration->setResultsPreviewUrl('af/input/results-preview?id=' . $af->getId());
 
         $this->setActiveMenuItemAFLibrary($af->getLibrary()->getId());
         $this->forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
-
-        \AF\Application\Form\Form::addHeader();
     }
 
     /**
@@ -79,81 +93,40 @@ class AF_AfController extends Core_Controller
         if (!$this->hasParam('viewConfiguration')) {
             throw new Core_Exception_InvalidHTTPQuery("ViewConfiguration must be provided");
         }
+        /** @var AFViewConfiguration $viewConfiguration */
         $viewConfiguration = $this->getParam('viewConfiguration');
         if (!$viewConfiguration->isUsable()) {
             throw new Core_Exception_InvalidHTTPQuery('The viewConfiguration is not properly configured');
         }
 
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->af = $af;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->viewConfiguration = $viewConfiguration;
-    }
-
-    /**
-     * Affiche le formulaire pour y rentrer des saisies
-     * AJAX
-     * @Secure("modeInputAF")
-     */
-    public function displayInputAction()
-    {
-        /** @var $af AF */
-        $af = AF::load($this->getParam('idAF'));
-        $actionStack = json_decode($this->getParam('actionStack'));
-        $exitURL = urldecode($this->getParam('exitURL'));
-        $resultsPreviewUrl = json_decode(urldecode($this->getParam('resultsPreviewUrl')));
-        $mode = $this->getParam('mode');
-        $idInputSet = $this->getParam('idInputSet');
+        $idInputSet = $viewConfiguration->getIdInputSet();
         if ($idInputSet) {
             // Charge la saisie depuis la BDD
             $inputSet = PrimaryInputSet::load($idInputSet);
-        } elseif ($this->getParam('useSession')) {
+        } elseif ($viewConfiguration->getUseSession()) {
             // Récupère la saisie en session
-            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af);
         } else {
-            $inputSet = new PrimaryInputSet($af);
+            $inputSet = null;
         }
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->af = $af;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->inputSet = $inputSet;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->mode = $mode;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->exitURL = $exitURL;
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->withResultsPreview = $this->getParam('resultsPreview');
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->resultsPreviewUrl = $resultsPreviewUrl;
-        // Génère le formulaire
-        $form = $af->generateForm($inputSet, $mode);
-        $form->setAjax(true, 'inputSavedHandler');
-        // URL de submit
-        $params = ['id' => $af->getId(), 'actionStack' => json_encode($actionStack)];
-        // Ajoute les paramètres personnalisés qu'il peut y'avoir dans l'URL
-        $urlParams = $this->getAllParams();
-        unset(
-            $urlParams['module'],
-            $urlParams['controller'],
-            $urlParams['action'],
-            $urlParams['idAF'],
-            $urlParams['actionStack'],
-            $urlParams['exitURL'],
-            $urlParams['resultsPreviewUrl'],
-            $urlParams['mode'],
-            $urlParams['idInputSet']
-        );
-        $this->view->urlParams = $urlParams;
-        $params += $urlParams;
-        if ($idInputSet) {
-            $params['idInputSet'] = $idInputSet;
+
+        // Crée une nouvelle saisie initialisée avec les valeurs par défaut
+        if ($inputSet === null) {
+            $inputSet = $this->inputService->createDefaultInputSet($af);
+            if ($viewConfiguration->getUseSession()) {
+                $this->inputSetSessionStorage->saveInputSet($af, $inputSet);
+            }
         }
-        if ($mode != AFViewConfiguration::MODE_READ) {
-            $form->setAction($this->_helper->url('submit', 'input', 'af', $params));
-        }
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->form = $form;
-        $this->_helper->layout->disableLayout();
+
+        $urlParams = [
+            'actionStack' => $viewConfiguration->getActionStack(),
+        ];
+
+        $this->view->assign('af', $af);
+        $this->view->assign('viewConfiguration', $viewConfiguration);
+        $this->view->assign('serializedAF', $this->afSerializer->serialize($af));
+        $this->view->assign('serializedInputSet', $this->inputSerializer->serialize($inputSet));
+        $this->view->assign('urlParams', $urlParams);
     }
 
     /**
@@ -171,7 +144,7 @@ class AF_AfController extends Core_Controller
             $inputSet = PrimaryInputSet::load($idInputSet);
         } else {
             // Récupère la saisie en session
-            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af);
             // Recalcule les résultats parce que sinon problème de serialisation de proxies en session
             if ($inputSet) {
                 $this->inputService->updateResults($inputSet);
@@ -199,7 +172,7 @@ class AF_AfController extends Core_Controller
             $inputSet = PrimaryInputSet::load($idInputSet);
         } else {
             // Récupère la saisie en session
-            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af);
             // Recalcule les résultats parce que sinon problème de serialisation de proxies en session
             if ($inputSet) {
                 $this->inputService->updateResults($inputSet);

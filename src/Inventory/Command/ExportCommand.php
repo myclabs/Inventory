@@ -93,7 +93,7 @@ class ExportCommand extends Command
                     'aF' => [
                         'transform' => function (\AF\Domain\AF $af = null) {
                             if ($af) {
-                                return $af->getRef();
+                                return $af->getLabel();
                             } else {
                                 return null;
                             }

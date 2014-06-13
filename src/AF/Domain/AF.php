@@ -13,7 +13,6 @@ use AF\Domain\Input\SubAF\NotRepeatedSubAFInput;
 use AF\Domain\Input\SubAF\RepeatedSubAFInput;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Output\OutputSet;
-use AF\Application\AFViewConfiguration;
 use AF\Domain\Algorithm\Algo;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
 use AF\Domain\Algorithm\Selection\MainSelectionAlgo;
@@ -27,8 +26,6 @@ use Core_Model_Query;
 use Core_Strategy_Ordered;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use AF\Application\Form\Form;
-use AF\Application\Form\Element\Group as FormGroup;
 
 /**
  * Accounting form.
@@ -55,12 +52,6 @@ class AF extends Core_Model_Entity
      * @var AFLibrary
      */
     protected $library;
-
-    /**
-     * @deprecated Sera supprimée dans la 3.1
-     * @var string
-     */
-    private $ref;
 
     /**
      * @var TranslatedString
@@ -129,16 +120,6 @@ class AF extends Core_Model_Entity
         $this->rootGroup = new Group();
         $this->rootGroup->setRef(Group::ROOT_GROUP_REF);
         $this->rootGroup->setAf($this);
-    }
-
-    /**
-     * Get the ref attribute.
-     * @deprecated Sera supprimée dans la 3.1
-     * @return string
-     */
-    public function getRef()
-    {
-        return $this->ref;
     }
 
     /**
@@ -232,35 +213,12 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * Generate a form to render it in a view
-     * @param PrimaryInputSet|null $inputSet
-     * @param string               $mode read, write or test (default is write)
-     * @return Form
+     * Initialise une nouvelle saisie vide (avec les valeurs par défaut).
+     * @param InputSet $inputSet
      */
-    public function generateForm(
-        PrimaryInputSet $inputSet = null,
-        $mode = AFViewConfiguration::MODE_WRITE
-    ) {
-        $form = new Form('af' . $this->id);
-        $form->addClass('af');
-
-        $generationHelper = new AFGenerationHelper($inputSet, $mode);
-
-        // Ajout du groupe principal constituant le formulaire.
-        $form->addElement($this->rootGroup->getUIElement($generationHelper));
-        return $form;
-    }
-
-    /**
-     * Génère un composant form de cet AF en tant que sous-AF
-     * @param AFGenerationHelper $generationHelper
-     * @param InputSet|null      $inputSet
-     * @return FormGroup
-     */
-    public function generateSubForm(AFGenerationHelper $generationHelper, InputSet $inputSet = null)
+    public function initializeNewInput(InputSet $inputSet)
     {
-        $generationHelper = new AFGenerationHelper($inputSet, $generationHelper->getMode());
-        return $this->rootGroup->getUIElement($generationHelper);
+        $this->rootGroup->initializeNewInput($inputSet);
     }
 
     /**

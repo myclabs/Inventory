@@ -9,12 +9,6 @@ AF\Domain\Action\Action:
     type: string
   discriminatorMap:
     setstate: AF\Domain\Action\SetState
-    setoptionstate: AF\Domain\Action\SetOptionState
-    setalgovalue: AF\Domain\Action\SetAlgoValue
-    setvalue_numeric: AF\Domain\Action\SetValue\SetNumericFieldValue
-    setvalue_checkbox: AF\Domain\Action\SetValue\SetCheckboxValue
-    setvalue_select_single: AF\Domain\Action\SetValue\Select\SetSelectSingleValue
-    setvalue_select_multi: AF\Domain\Action\SetValue\Select\SetSelectMultiValue
 
   id:
     id:

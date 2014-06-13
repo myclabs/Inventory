@@ -1,6 +1,6 @@
 <?php
 
-use AF\Application\InputFormParser;
+use AF\Architecture\Service\InputSerializer;
 use AF\Architecture\Service\InputSetSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\InputHistoryService;
@@ -38,9 +38,9 @@ class AF_InputController extends Core_Controller
 
     /**
      * @Inject
-     * @var InputFormParser
+     * @var InputSerializer
      */
-    private $inputFormParser;
+    private $inputSerializer;
 
     /**
      * Soumission d'un AF
@@ -55,20 +55,20 @@ class AF_InputController extends Core_Controller
         $af = AF::load($this->getParam('id'));
         $this->setParam('af', $af);
 
-        // Form data
-        $formData = json_decode($this->getParam('af' . $af->getId()), true);
-        $errorMessages = [];
+        $urlParams = $this->getParam('urlParams');
 
-        $inputSet = $this->inputFormParser->parseForm($formData, $af, $errorMessages);
+        // Form data
+        $formData = $this->getParam('input');
+
+        $inputSet = $this->inputSerializer->unserialize($formData, $af);
 
         // Fait suivre aux actions de processing
-        $actions = json_decode($this->getParam('actionStack'), true);
+        $actions = $urlParams['actionStack'];
         // Fait suivre à la fin à l'action qui renvoie la réponse
         $actions[] = [
             'action'     => 'submit-send-response',
             'controller' => 'input',
             'module'     => 'af',
-            'params'     => ['errorMessages' => $errorMessages],
         ];
 
         // On est obligé de construire un "container" pour que les sous-actions puissent remplacer l'inputset
@@ -102,8 +102,6 @@ class AF_InputController extends Core_Controller
         $inputSetContainer = $this->getParam('inputSetContainer');
         /** @var $inputSet PrimaryInputSet */
         $inputSet = $inputSetContainer->inputSet;
-
-        $this->addFormErrors($this->getParam('errorMessages', []));
 
         if ($inputSet->isInputComplete() && $inputSet->isCalculationComplete()) {
             $this->setFormMessage(__('AF', 'inputInput', 'completeInputSaved'), UI_Message::TYPE_SUCCESS);
@@ -157,23 +155,12 @@ class AF_InputController extends Core_Controller
         /** @var $af AF */
         $af = AF::load($this->getParam('id'));
 
-        // Form data
-        $formContent = json_decode($this->getParam('af' . $af->getId()), true);
-        $errorMessages = [];
+        $inputSet = $this->inputSerializer->unserialize($this->getParam('input'), $af);
 
-        // Remplit l'InputSet
-        $inputSet = $this->inputFormParser->parseForm($formContent, $af, $errorMessages);
         $this->inputService->updateResults($inputSet);
 
-        $this->addFormErrors($errorMessages);
-
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->inputSet = $inputSet;
-
+        $this->view->assign('inputSet', $inputSet);
         $data = $this->view->render('af/display-results.phtml');
-
-        // Force le statut en success (sinon les handlers JS ne sont pas exécutés)
-        $this->setFormMessage(null, UI_Message::TYPE_SUCCESS);
         $this->sendFormResponse($data);
     }
 
@@ -182,7 +169,7 @@ class AF_InputController extends Core_Controller
      * AJAX
      * @Secure("editInputAF")
      */
-    public function markInputAsFinishedAction()
+    public function finishAction()
     {
         /** @var $af AF */
         $af = AF::load($this->getParam('id'));
@@ -191,11 +178,10 @@ class AF_InputController extends Core_Controller
             /** @var $inputSet PrimaryInputSet */
             $inputSet = PrimaryInputSet::load($this->getParam('idInputSet'));
             $inputSet->markAsFinished(true);
-            $inputSet->save();
             $this->entityManager->flush();
         } else {
             // Récupère la saisie en session
-            $inputSet = $this->inputSetSessionStorage->getInputSet($af, false);
+            $inputSet = $this->inputSetSessionStorage->getInputSet($af);
             if ($inputSet === null) {
                 throw new Core_Exception_User("AF", "message", "inputSetDoesntExist");
             }
@@ -204,24 +190,24 @@ class AF_InputController extends Core_Controller
         }
 
         $this->sendJsonResponse([
-            'message'    => __("AF", "inputInput", "inputFinished"),
-            'status'     => $inputSet->getStatus(),
+            'message' => __('AF', 'inputInput', 'inputFinished'),
+            'status'  => $inputSet->getStatus(),
         ]);
     }
 
     /**
      * Retourne l'historique des valeurs d'une saisie
      * AJAX
-     * @Secure("viewCell")
+     * @Secure("viewInputHistory")
      */
     public function inputHistoryAction()
     {
-        $idInput = $this->getParam('idInput', null);
+        $idInput = $this->getParam('input', null);
 
         // Pour gérer le cas où on demande l'historique dans l'interface de test des AF
         if ($idInput !== null) {
             /** @var $input Input */
-            $input = Input::load($this->getParam('idInput'));
+            $input = Input::load($idInput);
 
             $entries = $this->inputHistoryService->getInputHistory($input);
 

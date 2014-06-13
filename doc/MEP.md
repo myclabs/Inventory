@@ -1,9 +1,20 @@
 # Mise en production
 
+## 3.2
+
+- Déployer normalement avec update de la BDD.
+
+- Exécuter les requêtes suivantes :
+
+```sql
+DELETE FROM AF_Action WHERE type_action LIKE 'setvalue%';
+DELETE FROM AF_Action WHERE type_action = 'setoptionstate';
+```
+
 
 ## 3.1
 
-- Déployer normalement avec update de la bdd.
+- Déployer normalement avec update de la BDD.
 
 - Mettre à jour le cache d'orga :
 

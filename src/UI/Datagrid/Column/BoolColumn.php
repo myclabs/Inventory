@@ -7,9 +7,6 @@ use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
 use MyCLabs\MUIH\Icon;
 use UI\Datagrid\Datagrid;
-use AF\Application\Form\Element\HTMLElement;
-use AF\Application\Form\Element\Radio;
-use AF\Application\Form\Element\Option;
 
 /**
  * Classe représentant une colonne contenant des booleens.

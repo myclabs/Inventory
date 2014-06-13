@@ -7,14 +7,6 @@
  * @package    UI
  * @subpackage Datagrid
  */
-use AF\Application\Form\Action\SetOptions;
-use AF\Application\Form\Action\Show;
-use AF\Application\Form\Condition\FormCondition;
-use AF\Application\Form\Condition\ElementaryCondition;
-use AF\Application\Form\Element\Option;
-use AF\Application\Form\Element\NumericField;
-use AF\Application\Form\Element\Radio;
-use AF\Application\Form\Element\Select;
 
 /**
  * Description of colonne order.
@@ -397,48 +389,6 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
     public function getFilterFormElement($datagrid, $defaultValue=null)
     {
         throw new Exception('Col Order needs to be refactored before being able to filter element.');
-        $filterFormElement = new NumericField($this->getFilterFormId($datagrid));
-        $filterFormElement->setLabel($this->getFilterFormLabel());
-        $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
-
-        // Récupération des valeurs par défaut.
-        if (isset($defaultValue[$this->filterOperator])) {
-            $filterFormElement->setValue($defaultValue[$this->filterOperator]);
-        }
-
-        $filterFormElement->getElement()->addSuffix($this->getResetFieldFilterFormSuffix($datagrid));
-
-        // Champs pour le fitre <=.
-        $filterFormElementInferior = new NumericField($this->getFilterFormId($datagrid).'_lower');
-        $filterFormElementInferior->getElement()->addPrefix($this->keywordFilterLower);
-        if (isset($defaultValue[$this->filterOperatorLower])) {
-            $filterFormElementInferior->setValue($defaultValue[$this->filterOperatorLower]);
-        }
-        $resetFieldInferior = '<i ';
-        $resetFieldInferior .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
-        $resetFieldInferior .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'_lower\').val(\'\');"';
-        $resetFieldInferior .= '>';
-        $resetFieldInferior .= '</i>';
-        $filterFormElementInferior->getElement()->addSuffix($resetFieldInferior);
-
-        $filterFormElement->getElement()->addElement($filterFormElementInferior);
-
-        // Champs pour le fitre >=.
-        $filterFormElementSuperior = new NumericField($this->getFilterFormId($datagrid).'_higher');
-        $filterFormElementSuperior->getElement()->addPrefix($this->keywordFilterHigher);
-        if (isset($defaultValue[$this->filterOperatorHigher])) {
-            $filterFormElementSuperior->setValue($defaultValue[$this->filterOperatorHigher]);
-        }
-        $resetFieldSuperior = '<i ';
-        $resetFieldSuperior .= 'class="fa fa-'.$datagrid->filterIconResetFieldSuffix.' reset" ';
-        $resetFieldSuperior .= 'onclick="$(\'#'.$this->getFilterFormId($datagrid).'_higher\').val(\'\');"';
-        $resetFieldSuperior .= '>';
-        $resetFieldSuperior .= '</i>';
-        $filterFormElementSuperior->getElement()->addSuffix($resetFieldSuperior);
-
-        $filterFormElement->getElement()->addElement($filterFormElementSuperior);
-
-        return $filterFormElement;
     }
 
     /**
@@ -451,36 +401,6 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
     public function getFilterValue($datagrid)
     {
         throw new Exception('Col Order needs to be refactored before being able to filter element.');
-        $filterValue = '';
-
-        // Condition de saisie du filtre.
-        $filterValue .= 'var valueEqu = $(\'#'.$this->getFilterFormId($datagrid).'\').val();';
-        $filterValue .= 'var valueInf = $(\'#'.$this->getFilterFormId($datagrid).'_lower\').val();';
-        $filterValue .= 'var valueSup = $(\'#'.$this->getFilterFormId($datagrid).'_higher\').val();';
-        $filterValue .= 'if ((valueEqu != \'\') || (valueInf != \'\') || (valueSup != \'\')) {';
-
-        // Ajout au filtre.
-        $filterValue .= 'filter += "{\"'.$this->getFullFilterName($datagrid).'\": {";';
-        $filterValue .= 'if (valueEqu != \'\') {';
-        $filterValue .= 'filter += "\"'.$this->filterOperator.'\":\"" + valueEqu + "\"";';
-        $filterValue .= '}';
-        $filterValue .= 'if (valueInf != \'\') {';
-        $filterValue .= 'if (valueEqu != \'\') {';
-        $filterValue .= 'filter += ",";';
-        $filterValue .= '}';
-        $filterValue .= 'filter += "\"'.$this->filterOperatorLower.'\":\"" + valueInf + "\"";';
-        $filterValue .= '}';
-        $filterValue .= 'if (valueSup != \'\') {';
-        $filterValue .= 'if ((valueEqu != \'\') || (valueInf != \'\')) {';
-        $filterValue .= 'filter += ",";';
-        $filterValue .= '}';
-        $filterValue .= 'filter += "\"'.$this->filterOperatorHigher.'\":\"" + valueSup + "\"";';
-        $filterValue .= '}';
-        $filterValue .= 'filter += "}},";';
-
-        $filterValue .= '}';
-
-        return $filterValue;
     }
 
     /**
@@ -493,13 +413,6 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
     function getResettingFilter($datagrid)
     {
         throw new Exception('Col Order needs to be refactored before being able to filter element.');
-        $resetFields = '';
-
-        $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).'\').val(\'\');';
-        $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).'_lower\').val(\'\');';
-        $resetFields .= '$(\'#'.$this->getFilterFormId($datagrid).'_higher\').val(\'\');';
-
-        return $resetFields;
     }
 
     /**
@@ -512,52 +425,6 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
     public function getAddFormElement($datagrid)
     {
         throw new Exception('Col Order needs to be refactored before being able to add element.');
-        $addFormElement = new Radio($this->getAddFormElementId($datagrid));
-        $addFormElement->setLabel($this->getAddFormElementLabel());
-
-        $optionFirst = new Option($this->getAddFormElementId($datagrid).'_first', 'first');
-        $optionFirst->label = $this->labelAddFirst;
-        $addFormElement->addOption($optionFirst);
-
-        $optionLast = new Option($this->getAddFormElementId($datagrid).'_last', 'last');
-        $optionLast->label = $this->labelAddLast;
-        $addFormElement->addOption($optionLast);
-
-        if ($this->listPosition != null) {
-            $optionAfter = new Option($this->getAddFormElementId($datagrid).'_after', 'after');
-            $optionAfter->label = $this->labelAddAfter;
-            $addFormElement->addOption($optionAfter);
-
-            $selectAfter = new Select($this->getAddFormElementId($datagrid).'_select');
-
-            $optionLoading = new Option($this->getAddFormElementId($datagrid).'_load');
-            $optionLoading->label = $this->loadingText;
-            $selectAfter->addOption($optionLoading);
-            $selectAfter->getElement()->hidden = true;
-
-            $addFormElement->getElement()->addElement($selectAfter);
-
-            $conditionShowSelect = new ElementaryCondition($this->getAddFormElementId($datagrid).'_equal');
-            $conditionShowSelect->element = $addFormElement;
-            $conditionShowSelect->relation = FormCondition::EQUAL;
-            $conditionShowSelect->value = $optionAfter->value;
-
-            $actionShowSelect = new Show($this->getAddFormElementId($datagrid).'_show');
-            $actionShowSelect->condition = $conditionShowSelect;
-
-            $selectAfter->getElement()->addAction($actionShowSelect);
-
-            $actionFillSelect = new SetOptions($this->getAddFormElementId($datagrid).'_fill');
-            $actionFillSelect->condition = $conditionShowSelect;
-            $actionFillSelect->request = $this->listPosition;
-            $actionFillSelect->backValue = array($this->loadingText);
-
-            $selectAfter->getElement()->addAction($actionFillSelect);
-        }
-
-        $addFormElement->setValue($this->defaultAddValue);
-
-        return $addFormElement;
     }
 
 }

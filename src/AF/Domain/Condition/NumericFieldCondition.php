@@ -2,10 +2,7 @@
 
 namespace AF\Domain\Condition;
 
-use Core_Exception;
-use AF\Application\Form\Condition\ElementaryCondition as FormElementaryCondition;
 use Core_Exception_InvalidArgument;
-use AF\Domain\AFGenerationHelper;
 
 /**
  * @author matthieu.napoli
@@ -18,39 +15,6 @@ class NumericFieldCondition extends ElementaryCondition
      * @var float|null
      */
     protected $value;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUICondition(AFGenerationHelper $generationHelper)
-    {
-        $uiCondition = new FormElementaryCondition($this->ref);
-        $uiCondition->element = $generationHelper->getUIElement($this->field);
-        switch ($this->getRelation()) {
-            case self::RELATION_EQUAL:
-                $uiCondition->relation = FormElementaryCondition::EQUAL;
-                break;
-            case self::RELATION_NEQUAL:
-                $uiCondition->relation = FormElementaryCondition::NEQUAL;
-                break;
-            case self::RELATION_GT:
-                $uiCondition->relation = FormElementaryCondition::GT;
-                break;
-            case self::RELATION_LT:
-                $uiCondition->relation = FormElementaryCondition::LT;
-                break;
-            case self::RELATION_GE:
-                $uiCondition->relation = FormElementaryCondition::GE;
-                break;
-            case self::RELATION_LE:
-                $uiCondition->relation = FormElementaryCondition::LE;
-                break;
-            default:
-                throw new Core_Exception("The relation '{$this->getRelation()}'' is invalid or undefined");
-        }
-        $uiCondition->value = $this->value;
-        return $uiCondition;
-    }
 
     /**
      * Set the relation Param.

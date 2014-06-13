@@ -1,0 +1,20 @@
+<fieldset>
+    <legend ng-if="label" ng-click="toggle()">
+        <i class="fa fa-chevron-right" ng-show="isCollapsed"></i>
+        <i class="fa fa-chevron-down" ng-show="!isCollapsed"></i>
+        {{ label }}
+    </legend>
+
+    <div collapse="isCollapsed">
+        <div ng-repeat="component in components" ng-switch="component.type" ng-init="input = getInput(component)">
+            <div ng-show="isInputVisible(input, component, inputSet.inputs)">
+                <af-group ng-switch-when="group" component="component" input-set="inputSet"></af-group>
+                <af-sub-single ng-switch-when="subaf-single" component="component" input="input"></af-sub-single>
+                <af-sub-multi ng-switch-when="subaf-multi" component="component" input="input"></af-sub-multi>
+
+                <af-component ng-switch-default component="component" input="input"
+                              ref-prefix="refPrefix"></af-component>
+            </div>
+        </div>
+    </div>
+</fieldset>

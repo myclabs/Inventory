@@ -15,7 +15,6 @@ use Unit\UnitAPI;
  */
 class Calc_UnitValue
 {
-
     // Constantes de classe.
     const RELATION_EQUAL = '==';
     const RELATION_NOTEQUAL = '!=';
@@ -41,33 +40,33 @@ class Calc_UnitValue
 
     /**
      * @param UnitAPI    $unit
-     * @param float|null $digitalValue
-     * @param float|null $relativeUncertainty
+     * @param float|null $numericValue
+     * @param float|null $uncertainty
      */
-    public function __construct(UnitAPI $unit = null, $digitalValue = null, $relativeUncertainty = null)
+    public function __construct(UnitAPI $unit = null, $numericValue = null, $uncertainty = null)
     {
         $this->unit = $unit ? : new UnitAPI();
-        $this->value = new Calc_Value($digitalValue, $relativeUncertainty);
+        $this->value = new Calc_Value($numericValue, $uncertainty);
     }
 
     /**
-     * Copy the UnitValue to a new object and changes its digital value
-     * @param float|null $digitalValue
+     * Copy the UnitValue to a new object and changes its numeric value
+     * @param float|null $numericValue
      * @return Calc_UnitValue
      */
-    public function copyWithNewValue($digitalValue = null)
+    public function copyWithNewValue($numericValue = null)
     {
-        return new self($this->getUnit(), $digitalValue, $this->getRelativeUncertainty());
+        return new self($this->getUnit(), $numericValue, $this->getUncertainty());
     }
 
     /**
-     * Copy the UnitValue to a new object and changes its relative uncertainty
-     * @param float|null $relativeUncertainty
+     * Copy the UnitValue to a new object and changes its uncertainty
+     * @param float|null $uncertainty
      * @return Calc_UnitValue
      */
-    public function copyWithNewUncertainty($relativeUncertainty = null)
+    public function copyWithNewUncertainty($uncertainty = null)
     {
-        return new self($this->getUnit(), $this->getDigitalValue(), $relativeUncertainty);
+        return new self($this->getUnit(), $this->getDigitalValue(), $uncertainty);
     }
 
     /**
@@ -77,14 +76,14 @@ class Calc_UnitValue
      */
     public function convertTo(UnitAPI $unit)
     {
-        $digitalValue = $this->value->getDigitalValue();
-        if (is_null($digitalValue)) {
-            $newDigitalValue = null;
+        $numericValue = $this->value->getDigitalValue();
+        if (is_null($numericValue)) {
+            $newNumericValue = null;
         } else {
-            $newDigitalValue = (float) $digitalValue / $this->unit->getConversionFactor($unit->getRef());
+            $newNumericValue = (float) $numericValue / $this->unit->getConversionFactor($unit->getRef());
         }
 
-        return new Calc_UnitValue($unit, $newDigitalValue, $this->value->getRelativeUncertainty());
+        return new Calc_UnitValue($unit, $newNumericValue, $this->value->getUncertainty());
     }
 
     /**
@@ -156,7 +155,7 @@ class Calc_UnitValue
     {
         $equals = $this->toCompare($uvToCompare, self::RELATION_EQUAL);
 
-        return $equals && ($this->getRelativeUncertainty() === $uvToCompare->getRelativeUncertainty());
+        return $equals && ($this->getUncertainty() === $uvToCompare->getUncertainty());
     }
 
     /**
@@ -176,11 +175,20 @@ class Calc_UnitValue
     }
 
     /**
+     * @deprecated Utiliser getUncertainty()
      * @return float|null
      */
     public function getRelativeUncertainty()
     {
-        return $this->value->getRelativeUncertainty();
+        return $this->getUncertainty();
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getUncertainty()
+    {
+        return $this->value->getUncertainty();
     }
 
     /**
@@ -210,7 +218,7 @@ class Calc_UnitValue
 
         $value = Calc_Value::createFromString($strValue);
 
-        return new static(new UnitAPI($unitRef), $value->getDigitalValue(), $value->getRelativeUncertainty());
+        return new static(new UnitAPI($unitRef), $value->getDigitalValue(), $value->getUncertainty());
     }
 
     /**

@@ -1,0 +1,10 @@
+<div class="checkbox" ng-repeat="option in component.options">
+    <label>
+        <input type="checkbox" value="{{ option.ref }}"
+               name="{{ refPrefix + component.ref }}"
+               ng-checked="input.value.indexOf(option.ref) > -1"
+               ng-click="toggleSelection(option.ref)"
+               ng-disabled="!isInputEnabled(input, component, inputs)">
+        {{ option.label }}
+    </label>
+</div>

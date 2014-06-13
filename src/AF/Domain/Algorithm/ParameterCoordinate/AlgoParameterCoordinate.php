@@ -14,7 +14,7 @@ class AlgoParameterCoordinate extends ParameterCoordinate
 {
     /**
      * Algo Keyword associé
-     * @var \AF\Domain\Algorithm\Selection\TextKeySelectionAlgo
+     * @var TextKeySelectionAlgo
      */
     protected $algoKeyword;
 
@@ -31,7 +31,7 @@ class AlgoParameterCoordinate extends ParameterCoordinate
     }
 
     /**
-     * @return \AF\Domain\Algorithm\Selection\TextKeySelectionAlgo
+     * @return TextKeySelectionAlgo
      */
     public function getSelectionAlgo()
     {
@@ -39,7 +39,7 @@ class AlgoParameterCoordinate extends ParameterCoordinate
     }
 
     /**
-     * @param \AF\Domain\Algorithm\Selection\TextKeySelectionAlgo $selectionAlgo
+     * @param TextKeySelectionAlgo $selectionAlgo
      */
     public function setSelectionAlgo(TextKeySelectionAlgo $selectionAlgo)
     {

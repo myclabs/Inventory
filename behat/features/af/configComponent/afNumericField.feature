@@ -206,30 +206,19 @@ Feature: AF numeric field feature
     And I open tab "Composants"
     And I open collapse "Champs numériques"
     Then I should see the "numericFieldDatagrid" datagrid
-    And the "numericFieldDatagrid" datagrid should contain 3 row
+    And the "numericFieldDatagrid" datagrid should contain 2 row
     And the row 1 of the "numericFieldDatagrid" datagrid should contain:
       | label           |
       | Champ numérique |
     And the row 2 of the "numericFieldDatagrid" datagrid should contain:
       | label                            |
       | Champ numérique cible activation |
-    And the row 3 of the "numericFieldDatagrid" datagrid should contain:
-      | label                          |
-      | Champ numérique cible setvalue |
   # Suppression des champs cibles d'actions
     When I open tab "Interactions"
     And I open collapse "Modifications de l'état de composants"
     Then I should see the "actionsSetState" datagrid
     And the "actionsSetState" datagrid should contain 1 row
-    When I open collapse "Assignations de valeurs à des champs"
-    Then I should see the "actionsSetValue" datagrid
-    And the "actionsSetValue" datagrid should contain 3 row
     When I open tab "Composants"
-    # And I open collapse "Champs numériques" (déjà ouvert !)
-    When I click "Supprimer" in the row 3 of the "numericFieldDatagrid" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
     When I click "Supprimer" in the row 2 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
@@ -242,11 +231,6 @@ Feature: AF numeric field feature
     And I open collapse "Modifications de l'état de composants"
     Then I should see the "actionsSetState" datagrid
     And the "actionsSetState" datagrid should contain 0 row
-  # On ferme et on rouvre pour rafraîchir le contenu
-    When I close collapse "Assignations de valeurs à des champs"
-    And I open collapse "Assignations de valeurs à des champs"
-    Then I should see the "actionsSetValue" datagrid
-    And the "actionsSetValue" datagrid should contain 2 row
   # Suppression sans obstacle
     When I open tab "Composants"
   # And I open collapse "Champs numériques" (déjà ouvert !)

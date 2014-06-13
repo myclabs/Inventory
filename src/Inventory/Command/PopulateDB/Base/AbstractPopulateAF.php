@@ -4,10 +4,6 @@ namespace Inventory\Command\PopulateDB\Base;
 
 use Account\Domain\Account;
 use AF\Domain\Action\SetState;
-use AF\Domain\Action\SetAlgoValue;
-use AF\Domain\Action\SetValue\Select\SetSelectSingleValue;
-use AF\Domain\Action\SetValue\SetCheckboxValue;
-use AF\Domain\Action\SetValue\SetNumericFieldValue;
 use AF\Domain\AF;
 use AF\Domain\Action\Action;
 use AF\Domain\AFLibrary;
@@ -858,38 +854,6 @@ abstract class AbstractPopulateAF
     ) {
         $action = new SetState();
         $action->setState($state);
-        return $this->createAction($action, $component, $condition);
-    }
-
-    /**
-     * @param Component $component
-     * @param string    $type TYPE_SETVALUE|TYPE_SETALGOVALUE
-     * @param mixed     $value
-     * @param Condition $condition
-     * @return Action
-     * @throws Core_Exception
-     */
-    protected function createActionSetValue(Component $component, $type, $value, Condition $condition = null)
-    {
-        if ($type == Action::TYPE_SETVALUE) {
-            switch (get_class($component)) {
-                case NumericField::class:
-                    $action = new SetNumericFieldValue();
-                    $action->setValue($value);
-                    break;
-                case Checkbox::class:
-                    $action = new SetCheckboxValue();
-                    $action->setChecked($value);
-                    break;
-                case SelectSingle::class:
-                    $action = new SetSelectSingleValue();
-                    $action->setOption($value);
-                    break;
-            }
-        } elseif ($type == Action::TYPE_SETALGOVALUE) {
-            $action = new SetAlgoValue();
-            $action->setAlgo($value);
-        }
         return $this->createAction($action, $component, $condition);
     }
 

@@ -2,8 +2,6 @@
 
 namespace AF\Domain\Action;
 
-use AF\Application\Form\Action\FormAction;
-use AF\Domain\AFGenerationHelper;
 use Core_Model_Entity;
 use AF\Domain\Condition\Condition;
 use AF\Domain\AFConfigurationError;
@@ -42,14 +40,6 @@ abstract class Action extends Core_Model_Entity
      * @var Component
      */
     protected $targetComponent;
-
-
-    /**
-     * Génère une action UI
-     * @param AFGenerationHelper $generationHelper
-     * @return FormAction
-     */
-    abstract public function getUIAction(AFGenerationHelper $generationHelper);
 
     /**
      * @return int
