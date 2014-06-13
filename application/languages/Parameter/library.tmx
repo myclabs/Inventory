@@ -4,6 +4,38 @@
             creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
+        <tu tuid="libraryHelpTitle">
+            <tuv xml:lang="fr">
+                <seg>Les bibliothèques de paramètres</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Les bibliothèques de paramètres</seg>
+            </tuv>
+        </tu>
+        <tu tuid="libraryHelp">
+            <tuv xml:lang="fr">
+                <seg>
+                    Ces bibliothèques contiennent les paramètres utiles pour la réalisation de calculs effectués à
+                    partir des données saisies. Typiquement, il s'agit de facteurs d'impacts (comme des facteurs
+                    d'émissions de gaz à effet de serre) qui permettent de calculer les impacts (environnementaux,
+                    sociaux, …) associés aux données d'activité saisies.
+                    Les paramètres sont regroupés (déclinés) par familles, et à l'intérieur d'une famille ils sont
+                    organisés en tableau multidimensionnel (souvent simplement unidimensionnel).
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Ces bibliothèques contiennent les paramètres utiles pour la réalisation de calculs effectués à
+                    partir des données saisies. Typiquement, il s'agit de facteurs d'impacts (comme des facteurs
+                    d'émissions de gaz à effet de serre) qui permettent de calculer les impacts (environnementaux,
+                    sociaux, …) associés aux données d'activité saisies.
+                    Les paramètres sont regroupés (déclinés) par familles, et à l'intérieur d'une famille ils sont
+                    organisés en tableau multidimensionnel (souvent simplement unidimensionnel).
+                </seg>
+            </tuv>
+        </tu>
+
+
         <tu tuid="createNewLibrary">
             <tuv xml:lang="fr">
                 <seg>Créer une nouvelle bibliothèque de paramètres</seg>
