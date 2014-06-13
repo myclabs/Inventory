@@ -71,9 +71,16 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->setDisplayConfigurationLink(true);
         $viewConfiguration->addBaseTabs();
         $viewConfiguration->setPageTitle($this->translator->get($af->getLabel()));
-        $viewConfiguration->setUseSession(true);
         $viewConfiguration->setExitUrl('af/library/view/id/' . $af->getLibrary()->getId());
         $viewConfiguration->setResultsPreviewUrl('af/input/results-preview?id=' . $af->getId());
+
+        // Charge la saisie depuis la session
+        $inputSet = $this->inputSetSessionStorage->getInputSet($af);
+        if ($inputSet === null) {
+            $inputSet = $this->inputService->createDefaultInputSet($af);
+            $this->inputSetSessionStorage->saveInputSet($af, $inputSet);
+        }
+        $viewConfiguration->setInputSet($inputSet);
 
         $this->setActiveMenuItemAFLibrary($af->getLibrary()->getId());
         $this->forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
@@ -99,24 +106,14 @@ class AF_AfController extends Core_Controller
             throw new Core_Exception_InvalidHTTPQuery('The viewConfiguration is not properly configured');
         }
 
-        $idInputSet = $viewConfiguration->getIdInputSet();
-        if ($idInputSet) {
-            // Charge la saisie depuis la BDD
-            $inputSet = PrimaryInputSet::load($idInputSet);
-        } elseif ($viewConfiguration->getUseSession()) {
-            // Récupère la saisie en session
-            $inputSet = $this->inputSetSessionStorage->getInputSet($af);
-        } else {
-            $inputSet = null;
-        }
+        $inputSet = $viewConfiguration->getInputSet();
 
         // Crée une nouvelle saisie initialisée avec les valeurs par défaut
         if ($inputSet === null) {
             $inputSet = $this->inputService->createDefaultInputSet($af);
-            if ($viewConfiguration->getUseSession()) {
-                $this->inputSetSessionStorage->saveInputSet($af, $inputSet);
-            }
         }
+
+        $previousInputSet = $viewConfiguration->getPreviousInputSet();
 
         $urlParams = [
             'actionStack' => $viewConfiguration->getActionStack(),
@@ -125,7 +122,8 @@ class AF_AfController extends Core_Controller
         $this->view->assign('af', $af);
         $this->view->assign('viewConfiguration', $viewConfiguration);
         $this->view->assign('serializedAF', $this->afSerializer->serialize($af));
-        $this->view->assign('serializedInputSet', $this->inputSerializer->serialize($inputSet));
+        $this->view->assign('inputSet', $inputSet);
+        $this->view->assign('serializedInputSet', $this->inputSerializer->serialize($inputSet, $previousInputSet));
         $this->view->assign('urlParams', $urlParams);
     }
 

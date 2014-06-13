@@ -189,7 +189,7 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
 
             switch (component.type) {
                 case 'numeric':
-                    var value = '';
+                    var value = null;
                     var uncertainty = '';
                     if (angular.isDefined(input.value) && !isEmpty(input.value.digitalValue)) {
                         value = input.value.digitalValue;
@@ -197,7 +197,10 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
                     if (angular.isDefined(input.value) && !isEmpty(input.value.uncertainty)) {
                         uncertainty = input.value.uncertainty;
                     }
-                    if (component.required && (value === '')) {
+                    // Errors
+                    input.hasErrors = false;
+                    input.error = null;
+                    if (component.required && (value === null)) {
                         input.hasErrors = true;
                         input.error = __('AF', 'inputInput', 'emptyRequiredField');
                     } else if (! /^-?[0-9]*[.,]?[0-9]*$/.test(value)) {
@@ -206,9 +209,16 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
                     } else if (! /^[0-9]*$/.test(uncertainty)) {
                         input.hasErrors = true;
                         input.error = __('UI', 'formValidation', 'invalidUncertainty');
-                    } else {
-                        input.hasErrors = false;
-                        input.error = null;
+                    }
+                    // Warnings
+                    input.hasWarnings = false;
+                    input.warning = null;
+                    if (input.hasErrors === false && input.previousValue !== undefined) {
+                        var isValueValid = (value > input.previousValue / 2) && (value < input.previousValue * 2);
+                        if (! isValueValid) {
+                            input.hasWarnings = true;
+                            input.warning = __('AF', 'inputInput', 'valueVeryDifferentFromPreviousInput');
+                        }
                     }
                     break;
                 case 'select':
@@ -216,15 +226,15 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
                 case 'select-multiple':
                 case 'text':
                 case 'textarea':
+                    // Errors
+                    input.hasErrors = false;
+                    input.error = null;
                     if (component.required && isEmpty(input.value)) {
                         input.hasErrors = true;
                         input.error = __('AF', 'inputInput', 'emptyRequiredField');
                     } else if (input.value === 'null') {
                         input.hasErrors = true;
                         input.error = __('AF', 'inputInput', 'emptyRequiredField');
-                    } else {
-                        input.hasErrors = false;
-                        input.error = null;
                     }
                     break;
                 case 'group':

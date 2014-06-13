@@ -28,6 +28,7 @@ use Calc_UnitValue;
 use Core_Exception_InvalidArgument;
 use Core_Locale;
 use Mnapoli\Translated\Translator;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 /**
@@ -194,9 +195,10 @@ class InputSerializer
 
     /**
      * @param PrimaryInputSet $inputSet
+     * @param PrimaryInputSet $previousInputSet
      * @return array
      */
-    public function serialize(PrimaryInputSet $inputSet = null)
+    public function serialize(PrimaryInputSet $inputSet = null, PrimaryInputSet $previousInputSet = null)
     {
         if ($inputSet === null) {
             return null;
@@ -207,12 +209,12 @@ class InputSerializer
             'status'     => $inputSet->getStatus(),
         ];
 
-        $data += $this->serializeInputSet($inputSet);
+        $data += $this->serializeInputSet($inputSet, $previousInputSet);
 
         return $data;
     }
 
-    private function serializeInputSet(InputSet $inputSet)
+    private function serializeInputSet(InputSet $inputSet, InputSet $previousInputSet = null)
     {
         $data = [
             'inputs' => [],
@@ -239,10 +241,16 @@ class InputSerializer
                 $arr['id'] = $input->getId();
             }
 
+            // Saisie précédente
+            $previousInput = null;
+            if ($previousInputSet) {
+                $previousInput = $previousInputSet->getInputByRef($input->getRefComponent());
+            }
+
             switch (true) {
                 case $input instanceof NotRepeatedSubAFInput:
                     /** @var NotRepeatedSubAFInput $input */
-                    $arr['value'] = $this->serializeInputSet($input->getValue());
+                    $arr['value'] = $this->serializeInputSet($input->getValue(), $previousInput->getValue());
                     break;
                 case $input instanceof RepeatedSubAFInput:
                     /** @var RepeatedSubAF $component */
@@ -263,22 +271,41 @@ class InputSerializer
                         'digitalValue' => $value->getDigitalValue(),
                         'uncertainty'  => $value->getUncertainty(),
                     ];
+                    if ($previousInput instanceof NumericFieldInput) {
+                        try {
+                            $previousValue = $previousInput->getValue()->convertTo($value->getUnit());
+                            $arr['previousValue'] = $previousValue->getDigitalValue();
+                        } catch (IncompatibleUnitsException $e) {
+                        }
+                    }
                     break;
                 case $input instanceof TextFieldInput:
                     /** @var TextFieldInput $input */
                     $arr['value'] = $input->getValue();
+                    if ($previousInput instanceof TextFieldInput) {
+                        $arr['previousValue'] = $previousInput->getValue();
+                    }
                     break;
                 case $input instanceof CheckboxInput:
                     /** @var CheckboxInput $input */
                     $arr['value'] = $input->getValue();
+                    if ($previousInput instanceof CheckboxInput) {
+                        $arr['previousValue'] = $previousInput->getValue();
+                    }
                     break;
                 case $input instanceof SelectSingleInput:
                     /** @var SelectSingleInput $input */
-                    $arr['value'] = ($input->getValue() === null) ? null : $input->getValue();
+                    $arr['value'] = $input->getValue();
+                    if ($previousInput instanceof SelectSingleInput) {
+                        $arr['previousValue'] = $previousInput->getValue();
+                    }
                     break;
                 case $input instanceof SelectMultiInput:
                     /** @var SelectMultiInput $input */
                     $arr['value'] = $input->getValue();
+                    if ($previousInput instanceof SelectMultiInput) {
+                        $arr['previousValue'] = $previousInput->getValue();
+                    }
                     break;
             }
             $data['inputs'][] = $arr;

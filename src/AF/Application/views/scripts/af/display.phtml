@@ -1,11 +1,14 @@
 <?php
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
+use AF\Domain\InputSet\PrimaryInputSet;
 use MyCLabs\MUIH\Tab;
 use MyCLabs\MUIH\Tabs;
 
 /** @var $af AF */
 $af = $this->af;
+/** @var $inputSet PrimaryInputSet */
+$inputSet = $this->inputSet;
 /** @var $viewConfiguration AFViewConfiguration */
 $viewConfiguration = $this->viewConfiguration;
 
@@ -40,16 +43,16 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_RESULT)) {
     $baseTabs[AFViewConfiguration::TAB_RESULT] = new Tab('tabs_tabResult');
     $baseTabs[AFViewConfiguration::TAB_RESULT]->setAjax(true, false);
     $baseTabs[AFViewConfiguration::TAB_RESULT]->setTitle(__('UI', 'name', 'results'));
-    $urlArray = array(
+    $urlArray = [
         'module'     => 'af',
         'controller' => 'af',
         'action'     => 'display-results',
         'idAF'       => $af->getId(),
         'mode'       => $viewConfiguration->getMode(),
-    );
+    ];
     $urlArray += $viewConfiguration->getUrlParams();
-    if ($viewConfiguration->getIdInputSet()) {
-        $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
+    if ($inputSet->getId()) {
+        $urlArray['idInputSet'] = $inputSet->getId();
     }
     $baseTabs[AFViewConfiguration::TAB_RESULT]->setContent($this->url($urlArray, null, true));
 }
@@ -59,16 +62,16 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS)
     $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS] = new Tab('tabs_tabCalculationDetails');
     $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->setAjax(true, false);
     $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->setTitle(__('AF', 'inputCalculationDetail', 'tab'));
-    $urlArray = array(
+    $urlArray = [
         'module'     => 'af',
         'controller' => 'af',
         'action'     => 'display-calculation-details',
         'idAF'       => $af->getId(),
         'mode'       => $viewConfiguration->getMode(),
-    );
+    ];
     $urlArray += $viewConfiguration->getUrlParams();
-    if ($viewConfiguration->getIdInputSet()) {
-        $urlArray['idInputSet'] = $viewConfiguration->getIdInputSet();
+    if ($inputSet->getId()) {
+        $urlArray['idInputSet'] = $inputSet->getId();
     }
     $baseTabs[AFViewConfiguration::TAB_CALCULATION_DETAILS]->setContent($this->url($urlArray, null, true));
 }
@@ -77,12 +80,12 @@ if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS)
 if ($viewConfiguration->hasBaseTab(AFViewConfiguration::TAB_DOCUMENTATION)) {
     $documentationTab = new Tab('tabDocumentation');
     $documentationTab->setTitle(__('UI', 'name', 'documentation'));
-    $urlArray = array(
+    $urlArray = [
         'module'     => 'af',
         'controller' => 'af',
         'action'     => 'display-documentation',
         'idAF'       => $af->getId(),
-    );
+    ];
     $urlArray += $viewConfiguration->getUrlParams();
     $documentationTab->setContent($this->url($urlArray, null, true));
     $baseTabs[AFViewConfiguration::TAB_DOCUMENTATION] = $documentationTab;
@@ -134,4 +137,3 @@ $tabView->activeTab('tabs_tabInput');
 $tabView->display();
 
 echo $this->tutorial('af');
-?>

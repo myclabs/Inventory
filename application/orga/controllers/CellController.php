@@ -1274,36 +1274,35 @@ class Orga_CellController extends Core_Controller
             $cell
         );
 
-        $timeAxis = $organization->getTimeAxis();
-        if (($timeAxis !== null) && ($cell->getGranularity()->hasAxis($timeAxis))) {
-            $previousCell = $cell->getPreviousCellForAxis($timeAxis);
-            if ($previousCell !== null) {
-                $previousInputSetPrimary = $previousCell->getAFInputSetPrimary();
-                if (($previousInputSetPrimary !== null) && $previousInputSetPrimary->isFinished()) {
-                    //@todo Passer la saisie de la cellule précédente à AF.
-                }
-            }
-        }
-
-        $aFViewConfiguration = new AFViewConfiguration();
+        $viewConfiguration = new AFViewConfiguration();
         if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::INVENTORY_STATUS_CLOSED)) {
-            $aFViewConfiguration->setMode(AFViewConfiguration::MODE_WRITE);
+            $viewConfiguration->setMode(AFViewConfiguration::MODE_WRITE);
         } else {
-            $aFViewConfiguration->setMode(AFViewConfiguration::MODE_READ);
+            $viewConfiguration->setMode(AFViewConfiguration::MODE_READ);
         }
-        $aFViewConfiguration->setPageTitle(
+        $viewConfiguration->setPageTitle(
             __('UI', 'name', 'input').' <small>'.$this->translator->get($cell->getLabel()).'</small>'
         );
-        $aFViewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $cell->getId()]);
-        $aFViewConfiguration->setResultsPreviewUrl(
+        $viewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $cell->getId()]);
+        $viewConfiguration->setResultsPreviewUrl(
             'orga/cell/input-preview?id=' . $af->getId() . '&idCell=' . $cell->getId()
         );
-        $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $fromIdCell . '/');
-        $aFViewConfiguration->addUrlParam('idCell', $cell->getId());
-        $aFViewConfiguration->setDisplayConfigurationLink(false);
-        $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_INPUT);
-        if ($cell->getAFInputSetPrimary() !== null) {
-            $aFViewConfiguration->setIdInputSet($cell->getAFInputSetPrimary()->getId());
+        $viewConfiguration->setExitUrl('orga/cell/view/idCell/' . $fromIdCell . '/');
+        $viewConfiguration->addUrlParam('idCell', $cell->getId());
+        $viewConfiguration->setDisplayConfigurationLink(false);
+        $viewConfiguration->addBaseTab(AFViewConfiguration::TAB_INPUT);
+        $viewConfiguration->setInputSet($cell->getAFInputSetPrimary());
+
+        // Saisie de l'année précédente
+        $timeAxis = $organization->getTimeAxis();
+        if ($timeAxis && $cell->getGranularity()->hasAxis($timeAxis)) {
+            $previousCell = $cell->getPreviousCellForAxis($timeAxis);
+            if ($previousCell) {
+                $previousInput = $previousCell->getAFInputSetPrimary();
+                if ($previousInput && $previousInput->isFinished()) {
+                    $viewConfiguration->setPreviousInputSet($previousInput);
+                }
+            }
         }
 
         $tabComments = new Tab('inputComments');
@@ -1316,13 +1315,13 @@ class Orga_CellController extends Core_Controller
             $this->acl->isAllowed($this->_helper->auth(), Actions::INPUT, $cell)
         );
         $tabComments->setContent($commentView->render('cell/input-comments.phtml'));
-        $aFViewConfiguration->addTab($tabComments);
+        $viewConfiguration->addTab($tabComments);
 
         $tabDocs = new Tab('inputDocs');
         $tabDocs->setTitle(__('Doc', 'name', 'documents'));
         $tabDocs->setContent('orga/cell/input-docs/idCell/' . $cell->getId());
         $tabDocs->setAjax(true, true);
-        $aFViewConfiguration->addTab($tabDocs);
+        $viewConfiguration->addTab($tabDocs);
 
         $isUserAllowedToViewCellReports = $this->acl->isAllowed(
             $this->_helper->auth(),
@@ -1330,16 +1329,16 @@ class Orga_CellController extends Core_Controller
             $cell
         );
         if ($isUserAllowedToViewCellReports) {
-            $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_RESULT);
-            $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS);
+            $viewConfiguration->addBaseTab(AFViewConfiguration::TAB_RESULT);
+            $viewConfiguration->addBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS);
         }
-        $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
+        $viewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
 
         $this->setActiveMenuItemOrganization($cell->getOrganization()->getId());
 
         $this->forward('display', 'af', 'af', [
             'id' => $af->getId(),
-            'viewConfiguration' => $aFViewConfiguration,
+            'viewConfiguration' => $viewConfiguration,
         ]);
     }
 
