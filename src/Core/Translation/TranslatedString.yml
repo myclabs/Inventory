@@ -4,7 +4,9 @@ Core\Translation\TranslatedString:
   fields:
     fr:
       type: string
+      length: 2000
       nullable: true
     en:
       type: string
+      length: 2000
       nullable: true
