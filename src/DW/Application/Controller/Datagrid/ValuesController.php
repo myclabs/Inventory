@@ -21,7 +21,7 @@ class DW_Datagrid_ValuesController extends UI_Controller_Datagrid
     private $sessionStorageName;
 
     /**
-     * @Inject("ReportService")
+     * @Inject("DW\Application\Service\ReportService")
      * @var ReportService
      */
     private $reportService;
