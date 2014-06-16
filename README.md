@@ -12,6 +12,12 @@ Install [composer](http://getcomposer.org/doc/00-intro.md) and run:
 composer install
 ```
 
+Install npm and run:
+
+```shell
+npm install
+```
+
 Install [Bower](http://bower.io/#installing-bower) and run:
 
 ```shell
