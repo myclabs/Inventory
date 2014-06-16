@@ -12,3 +12,5 @@ AF\Domain\Input\NumericFieldInput:
       nullable: false
       gedmo:
         - versioned
+    inconsistentValue:
+      type: boolean

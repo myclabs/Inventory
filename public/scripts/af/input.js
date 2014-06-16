@@ -210,15 +210,11 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
                         input.hasErrors = true;
                         input.error = __('UI', 'formValidation', 'invalidUncertainty');
                     }
-                    // Warnings
-                    input.hasWarnings = false;
-                    input.warning = null;
+                    // Warnings valeur "bizarre"
+                    input.inconsistent = false;
                     if (input.hasErrors === false && input.previousValue !== undefined) {
                         var isValueValid = (value > input.previousValue / 2) && (value < input.previousValue * 2);
-                        if (! isValueValid) {
-                            input.hasWarnings = true;
-                            input.warning = __('AF', 'inputInput', 'valueVeryDifferentFromPreviousInput');
-                        }
+                        input.inconsistent = !isValueValid;
                     }
                     break;
                 case 'select':

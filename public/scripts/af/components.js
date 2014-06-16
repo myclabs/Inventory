@@ -60,6 +60,8 @@ afModule.directive('afComponent', function() {
             // Forward les saisies du scope courant
             $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputSet.inputs;
+
+            $scope.inconsistentValueWarning = __('AF', 'inputInput', 'valueVeryDifferentFromPreviousInput');
         }
     };
 });

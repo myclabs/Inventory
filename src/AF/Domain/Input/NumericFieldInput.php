@@ -22,6 +22,12 @@ class NumericFieldInput extends Input implements NumericInput
     protected $value;
 
     /**
+     * Est-ce que la saisie a une valeur "bizarre" (trop éloignée de la valeur de l'année précédente) ?
+     * @var bool
+     */
+    protected $inconsistentValue;
+
+    /**
      * @param InputSet  $inputSet
      * @param Component $component
      */
@@ -81,9 +87,26 @@ class NumericFieldInput extends Input implements NumericInput
         }
 
         if ($input instanceof NumericFieldInput) {
-            return $this->getValue()->equals($input->getValue());
+            return $this->getValue()->equals($input->getValue())
+                   && $this->inconsistentValue === $input->inconsistentValue;
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasInconsistentValue()
+    {
+        return $this->inconsistentValue;
+    }
+
+    /**
+     * @param bool $inconsistentValue
+     */
+    public function setInconsistentValue($inconsistentValue)
+    {
+        $this->inconsistentValue = (bool) $inconsistentValue;
     }
 }

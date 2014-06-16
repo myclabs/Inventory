@@ -120,6 +120,7 @@ class InputSetUpdater extends ArrayComparator
         if ($input1 instanceof NumericFieldInput) {
             /** @var NumericFieldInput $input2 */
             $input1->setValue($input2->getValue());
+            $input1->setInconsistentValue($input2->hasInconsistentValue());
         }
         if ($input1 instanceof CheckboxInput) {
             /** @var CheckboxInput $input2 */

@@ -1,6 +1,6 @@
 <af-history input="input" input-set="inputSet" class="af-history" ng-if="input.id"></af-history>
 
-<div class="form-group" ng-class="{ 'has-error': input.hasErrors, 'has-warning': input.hasWarnings, 'af-margin-for-history': (input.id > 0) }">
+<div class="form-group" ng-class="{ 'has-error': input.hasErrors, 'has-warning': input.inconsistent, 'af-margin-for-history': (input.id > 0) }">
 
     <label class="col-sm-3 control-label">
         {{ component.label }}
@@ -20,7 +20,7 @@
         <af-select-multiple ng-switch-when="select-multiple" component="component" input="input"></af-select-multiple>
 
         <span class="help-block errorMessage" ng-show="input.hasErrors" ng-bind="input.error"></span>
-        <span class="help-block errorMessage" ng-show="input.hasWarnings" ng-bind="input.warning"></span>
+        <span class="help-block errorMessage" ng-show="input.inconsistent" ng-bind="inconsistentValueWarning"></span>
     </div>
 
 </div>

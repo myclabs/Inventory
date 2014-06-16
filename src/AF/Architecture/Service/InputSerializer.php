@@ -102,6 +102,11 @@ class InputSerializer
                 $unit = $component->getUnit();
             }
             $input->setValue(new Calc_UnitValue($unit, $value, $relativeUncertainty));
+            if (isset($data['inconsistent']) && $data['inconsistent'] == 'true') {
+                $input->setInconsistentValue(true);
+            } else {
+                $input->setInconsistentValue(false);
+            }
 
         } elseif ($component instanceof TextField) {
             // Champ texte
@@ -278,6 +283,7 @@ class InputSerializer
                         } catch (IncompatibleUnitsException $e) {
                         }
                     }
+                    $arr['inconsistent'] = $input->hasInconsistentValue();
                     break;
                 case $input instanceof TextFieldInput:
                     /** @var TextFieldInput $input */
