@@ -47,13 +47,12 @@ Feature: Family element tab edit feature
     And I fill in "Incertitude" with "auie"
     And I click "Enregistrer"
     Then the field "Valeur" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    And the field "Incertitude" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "Incertitude" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
   # Valeur et incertitude séparateur décimal invalide
     When I fill in "Valeur" with "1234.56789"
     And I fill in "Incertitude" with "12.34"
     And I click "Enregistrer"
-    Then the field "Valeur" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    And the field "Incertitude" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "Incertitude" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
 
   @javascript
   Scenario: Family edit, edition of an element scenario, correct input
@@ -86,10 +85,9 @@ Feature: Family element tab edit feature
     And I fill in "Incertitude" with "auie"
     And I click "Enregistrer"
     Then the field "Valeur" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    And the field "Incertitude" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "Incertitude" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
   # Valeur et incertitude séparateur décimal invalide
     When I fill in "Valeur" with "1234.56789"
     And I fill in "Incertitude" with "12.34"
     And I click "Enregistrer"
-    Then the field "Valeur" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    And the field "Incertitude" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "Incertitude" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
