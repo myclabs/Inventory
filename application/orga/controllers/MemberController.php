@@ -55,7 +55,6 @@ class Orga_MemberController extends Core_Controller
             $this->_helper->layout()->disableLayout();
             $this->view->assign('display', false);
         } else {
-            $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
             $this->view->assign('display', true);
         }
     }

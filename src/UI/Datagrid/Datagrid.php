@@ -1601,7 +1601,6 @@ JS;
         $view->headLink()->appendStylesheet('yui/build/datatable/assets/skins/sam/datatable.css');
         $view->headLink()->appendStylesheet('yui/build/paginator/assets/skins/sam/paginator.css');
         $view->headLink()->appendStylesheet('yui/build/calendar/assets/skins/sam/calendar.css');
-        $view->headLink()->appendStylesheet('css/ui/datagrid.css');
         // Ajout des fichiers Javascript.
         $view->headScript()->appendFile('yui/build/yahoo-dom-event/yahoo-dom-event.js', 'text/javascript');
         $view->headScript()->appendFile('yui/build/element/element-min.js', 'text/javascript');
@@ -1611,11 +1610,6 @@ JS;
         $view->headScript()->appendFile('yui/build/datatable/datatable-min.js', 'text/javascript');
         $view->headScript()->appendFile('yui/build/paginator/paginator-min.js', 'text/javascript');
         $view->headScript()->appendFile('yui/build/calendar/calendar-min.js', 'text/javascript');
-
-        $view->headLink()->appendStylesheet('markitup/skins/markitup/style.css');
-        $view->headLink()->appendStylesheet('markitup/skins/textile/style.css');
-        $view->headScript()->appendFile('markitup/jquery.markitup.js', 'text/javascript');
-        $view->headScript()->appendFile('markitup/sets/textile/set.js', 'text/javascript');
 
         parent::addHeader($instance);
     }

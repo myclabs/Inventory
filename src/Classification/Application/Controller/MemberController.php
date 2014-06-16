@@ -30,6 +30,5 @@ class Classification_MemberController extends Core_Controller
 
         $this->view->assign('library', $library);
         $this->view->assign('listAxes', $library->getAxesOrderedAsAscendantTree());
-        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
     }
 }

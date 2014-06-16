@@ -1628,7 +1628,6 @@ class UI_Datagrid extends UI_Generic
         $broker->view->headLink()->appendStylesheet('yui/build/datatable/assets/skins/sam/datatable.css');
         $broker->view->headLink()->appendStylesheet('yui/build/paginator/assets/skins/sam/paginator.css');
         $broker->view->headLink()->appendStylesheet('yui/build/calendar/assets/skins/sam/calendar.css');
-        $broker->view->headLink()->appendStylesheet('css/ui/datagrid.css');
         // Ajout des fichiers Javascript.
         $broker->view->headScript()->appendFile('yui/build/yahoo-dom-event/yahoo-dom-event.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/element/element-min.js', 'text/javascript');
@@ -1638,13 +1637,6 @@ class UI_Datagrid extends UI_Generic
         $broker->view->headScript()->appendFile('yui/build/datatable/datatable-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/paginator/paginator-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/calendar/calendar-min.js', 'text/javascript');
-
-        $broker->view->headScript()->appendFile('scripts/ui/form-ajax.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('scripts/ui/form-action.js', 'text/javascript');
-        $broker->view->headLink()->appendStylesheet('markitup/skins/markitup/style.css');
-        $broker->view->headLink()->appendStylesheet('markitup/skins/textile/style.css');
-        $broker->view->headScript()->appendFile('markitup/jquery.markitup.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('markitup/sets/textile/set.js', 'text/javascript');
 
         parent::addHeader($instance);
     }

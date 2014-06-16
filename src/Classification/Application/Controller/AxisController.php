@@ -15,7 +15,6 @@ class Classification_AxisController extends Core_Controller
 
         $this->view->assign('library', $library);
         $this->view->assign('listParents', $library->getRootAxes());
-        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
         $this->setActiveMenuItemClassificationLibrary($library->getId());
     }
 }

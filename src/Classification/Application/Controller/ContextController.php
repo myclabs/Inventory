@@ -14,7 +14,6 @@ class Classification_ContextController extends Core_Controller
         $library = ClassificationLibrary::load($this->getParam('library'));
 
         $this->view->assign('library', $library);
-        $this->view->headScript()->appendFile('scripts/ui/refRefactor.js', 'text/javascript');
         $this->setActiveMenuItemClassificationLibrary($library->getId());
     }
 }

@@ -576,19 +576,6 @@ class UI_TMD extends UI_Generic
     }
 
     /**
-     * Ajoute les fichiers CSS et Javascript à la page.
-     *
-     * @param UI_TMD $instance Permet de spécifier les headers requis en fonction de l'instance passée.
-     */
-    static function addHeader($instance=null)
-    {
-        parent::addHeader($instance);
-        $broker = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
-        // Ajout des feuilles de style.
-        $broker->view->headLink()->appendStylesheet('css/ui/tmd.css');
-    }
-
-    /**
      * Renvoi le javascript de l'interface.
      *
      * @return string

@@ -29,7 +29,7 @@ abstract class UI_Generic
      *
      * @param UI_Generic $instance
      */
-    public static function addHeader($instance=null)
+    public static function addHeader($instance = null)
     {
         /* @var $broker Zend_Controller_Action_Helper_ViewRenderer */
         $broker = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');

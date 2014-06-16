@@ -1068,12 +1068,11 @@ class UI_Tree extends UI_Generic
      *
      * @param UI_Tree $instance Permet de spécifier les headers requis en fonction de l'instance passée.
      */
-    static function addHeader($instance=null)
+    public static function addHeader($instance = null)
     {
         $broker = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
         // Ajout des feuilles de style.
         $broker->view->headLink()->appendStylesheet('yui/build/treeview/assets/skins/sam/treeview.css');
-        $broker->view->headLink()->appendStylesheet('css/ui/tree.css');
         // Ajout des fichiers Javascript.
         $broker->view->headScript()->appendFile('yui/build/yahoo-dom-event/yahoo-dom-event.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/element/element-min.js', 'text/javascript');
@@ -1081,13 +1080,6 @@ class UI_Tree extends UI_Generic
         $broker->view->headScript()->appendFile('yui/build/treeview/treeview-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/connection/connection-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/json/json-min.js', 'text/javascript');
-
-        $broker->view->headScript()->appendFile('scripts/ui/form-ajax.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('scripts/ui/form-action.js', 'text/javascript');
-        $broker->view->headLink()->appendStylesheet('markitup/skins/markitup/style.css');
-        $broker->view->headLink()->appendStylesheet('markitup/skins/textile/style.css');
-        $broker->view->headScript()->appendFile('markitup/jquery.markitup.js', 'text/javascript');
-        $broker->view->headScript()->appendFile('markitup/sets/textile/set.js', 'text/javascript');
 
         parent::addHeader($instance);
     }
