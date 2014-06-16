@@ -12,6 +12,20 @@ Install [composer](http://getcomposer.org/doc/00-intro.md) and run:
 composer install
 ```
 
+Install [Bower](http://bower.io/#installing-bower) and run:
+
+```shell
+bower install
+```
+
+Install [Grunt](http://gruntjs.com/getting-started) and run:
+
+```shell
+grunt
+```
+
+This will generate the minified JS and CSS in `public/build/`.
+
 Set up config files
 
 ```shell
