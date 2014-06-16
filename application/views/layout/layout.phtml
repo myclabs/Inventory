@@ -151,30 +151,37 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
                 switch (type) {
                     case 'info':
                         title = '<?=__('UI', 'message', 'titleInfo')?>';
-                        divClass = ' alert-info';
+                        divClass = 'alert-info';
                         break;
                     case 'success':
                         title = '<?=__('UI', 'message', 'titleSuccess')?>';
-                        divClass = ' alert-success';
+                        divClass = 'alert-success';
                         break;
                     case 'error':
                         title = '<?=__('UI', 'message', 'titleError')?>';
-                        divClass = ' alert-danger';
+                        divClass = 'alert-danger';
                         break;
                     case 'warning':
                     default :
                         title = '<?=__('UI', 'message', 'titleWarning')?>';
-                        divClass = ' alert-warning';
+                        divClass = 'alert-warning';
                         break;
                 }
                 var messageZone = $('#messageZone');
-                messageZone.append('<div class="alert' + divClass + ' alert-dismissable fade in" style="display:none;"></div>');
-                messageZone.children('div:last').append('<button class="close" data-dismiss="alert">×</button>');
-                messageZone.children('div:last').append('<strong>' + title + '</strong> ' + text);
-                messageZone.children('div:last').slideDown(100);
+                var message = $('<div class="alert ' + divClass + ' alert-dismissable fade in" style="display:none;"></div>');
+                message.append('<button class="close" data-dismiss="alert">×</button>');
+                message.append('<strong>' + title + '</strong> ' + text);
+                message.fadeIn();
+                messageZone.append(message);
 
                 if (messageZone.children('div').size() > 2) {
-                    setTimeout(eraseFirstMessage, 500, 2);
+                    setTimeout(eraseFirstMessage, 500, 1);
+                }
+                // Auto-close success messages
+                if (type === 'success') {
+                    setTimeout(function () {
+                        message.alert('close');
+                    }, 5000);
                 }
             };
             errorHandler = function (jqXHR) {

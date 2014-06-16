@@ -28,6 +28,13 @@ nav ul ul li a {
 }
 
 /* Correction de l'affichage des messages d'erreur en haut de page */
+#messageZone {
+    position: fixed;
+    right: 0;
+    left: 220px;
+    top: 49px;
+    z-index: 999;
+}
 #messageZone .alert {
     margin: 0;
 }
