@@ -6,6 +6,7 @@ use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use AF\Domain\AF;
 use AF\Domain\AFLibrary;
+use AF\Domain\Input\Input;
 use AF\Domain\InputService;
 use AF\Domain\Component\Component;
 use AF\Domain\Component\Group;
@@ -303,7 +304,9 @@ abstract class AbstractPopulateOrga
                 $inputType = SelectMultiInput::class;
             }
 
+            /** @var Input $input */
             $input = new $inputType($inputSetPrimary, $component);
+            $inputSetPrimary->setInputForComponent($component, $input);
             $input->setValue($value);
         }
 

@@ -14,3 +14,4 @@ AF\Domain\Input\NumericFieldInput:
         - versioned
     inconsistentValue:
       type: boolean
+      nullable: true
