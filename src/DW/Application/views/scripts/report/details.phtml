@@ -490,6 +490,8 @@ $(document).ready(function() {
         $('li a[href="#reportChart"]').tab('show');
         $('#reportChart').html($('#reportChart').attr('data-loading'));
         $('#reportChart').trigger('loadTab.muih', [$('#reportContent ul.nav-tabs li.active a').attr('data-src')]);
+        $('#reportValues').html($('#reportChart').attr('data-loading'));
+        $('#reportValues').trigger('loadTab.muih', [$('#reportContent ul.nav-tabs li:not(.active) a').attr('data-src')]);
     });
     $('#reportContent li').on('click', function(e) {
         if ($(this).hasClass('disabled')) {
