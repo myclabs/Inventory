@@ -1,4 +1,4 @@
-@dbFull @skipped
+@dbFull
 Feature: General info tab analysis edit feature
 
   Background:
@@ -7,17 +7,16 @@ Feature: General info tab analysis edit feature
   @javascript
   Scenario: Add a granularity analysis (global granularity)
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
-    And I open tab "Paramétrage"
-    And I open tab "Informations générales"
+    And I open tab "Config. Analyses"
   # Accès au datagrid des analyses pré-configurées au niveau global
     And I open collapse "Niveau organisationnel global"
-    Then I should see the "granularity1Report" datagrid
+    Then I should see the "datagridCellReports1" datagrid
   # Nouvelle analyse
-    When I click "Nouvelle analyse"
-    And I click element "#indicatorRatio_indicator"
-    And I select "Camembert" from "chartType"
+    When I click element "a[href='orga/granularity/view-report/idGranularity/1/']"
+    And I select "sum" from "typeSumRatioChoice"
+    And I select "Camembert" from "displayType"
     And I click "Lancer"
     Then the following message is shown and closed: "Analyse effectuée."
   # Sauvegarde
@@ -27,21 +26,20 @@ Feature: General info tab analysis edit feature
     And I click element "#saveReport .btn:contains('Enregistrer')"
     And I click "Retour"
     And I open collapse "Niveau organisationnel global"
-    Then I should see the "granularity1Report" datagrid
-    And the "granularity1Report" datagrid should contain a row:
-      | label |
+    Then I should see the "datagridCellReports1" datagrid
+    And the "datagridCellReports1" datagrid should contain a row:
+      | report |
       | Analyse préconfigurée test |
 
   @javascript
   Scenario: Delete a granularity analysis
-    Given I am on "orga/cell/details/idCell/1"
+    Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
-    And I open tab "Paramétrage"
-    And I open tab "Informations générales"
+    And I open tab "Config. Analyses"
     And I open collapse "Niveau organisationnel global"
-    Then I should see the "granularity1Report" datagrid
-    And the "granularity1Report" datagrid should contain 2 row
-    When I click "Supprimer" in the row 1 of the "granularity1Report" datagrid
+    Then I should see the "datagridCellReports1" datagrid
+    And the "datagridCellReports1" datagrid should contain 2 row
+    When I click "Supprimer" in the row 1 of the "datagridCellReports1" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     And I wait 10 seconds
