@@ -25,7 +25,7 @@ class NumericFieldInput extends Input implements NumericInput
      * Est-ce que la saisie a une valeur "bizarre" (trop éloignée de la valeur de l'année précédente) ?
      * @var bool
      */
-    protected $inconsistentValue;
+    protected $inconsistentValue = false;
 
     /**
      * @param InputSet  $inputSet
