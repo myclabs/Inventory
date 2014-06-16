@@ -32,6 +32,8 @@ grunt
 
 This will generate the minified JS and CSS in `public/build/`.
 
+Alternatively, there is an `install.sh` script that will do all the commands above.
+
 Set up config files
 
 ```shell
