@@ -45,6 +45,23 @@ chmod -R 777 public/cache
 chmod 777 public/temp
 ```
 
+## Configure PhpStorm
+
+Mark the following directories as "excluded":
+
+- `vendor`
+- `data/logs`
+- `data/proxies`
+- `behat/fixtures`
+- `node_modules`
+- `public/build`
+
+Re-include the `vendor` directory in PHP "External Libraries" (to get auto-completion).
+
+Add a "file watcher" for CSS files with the command `grunt cssmin:app`.
+Add another "file watcher" for JS files with the command `grunt uglify:app`.
+Don't forget to exclude the `public/build` directory, else it will run in an infinite loop!
+
 ## Run with Vagrant
 
 Install [Virtual Box](https://www.virtualbox.org/wiki/Downloads) and [Vagrant](http://www.vagrantup.com/):
