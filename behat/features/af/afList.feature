@@ -104,34 +104,34 @@ Feature: AF list edit feature
     Then the "listAF" datagrid should contain 5 row
 
   @javascript
-  Scenario: Deletion of an AF form from AF list
+  Scenario: Deletion of an AF from AF list
     #6193 Dans le jeu de données "full.sql", impossible de supprimer le formulaire "Formulaire test"
     Given I am on "af/library/view/id/1"
     And I wait for the page to finish loading
     Then I should see the "listAF" datagrid
     And the row 1 of the "listAF" datagrid should contain:
-      | label             |
+      | label                                               |
       | Combustion de combustible, mesuré en unité de masse |
     And the row 2 of the "listAF" datagrid should contain:
       | label             |
       | Données générales |
     And the row 3 of the "listAF" datagrid should contain:
-      | label                                               |
+      | label                            |
       | Formulaire avec sous-formulaires |
     And the row 4 of the "listAF" datagrid should contain:
-      | label                                               |
+      | label           |
       | Formulaire test |
     And the row 5 of the "listAF" datagrid should contain:
-      | label                                               |
+      | label                              |
       | Formulaire avec tout type de champ |
     And the row 6 of the "listAF" datagrid should contain:
-      | label                                               |
+      | label                                                               |
       | Formulaire avec sous-formulaire répété contenant tout type de champ |
     And the row 7 of the "listAF" datagrid should contain:
-      | label                                               |
+      | label           |
       | Formulaire vide |
     And the row 8 of the "listAF" datagrid should contain:
-      | label                                               |
+      | label                                      |
       | Forfait émissions en fonction de la marque |
   # Tentative de suppression, formulaire avec saisies
     When I click "Supprimer" in the row 1 of the "listAF" datagrid
