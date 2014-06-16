@@ -13,3 +13,5 @@ public/.htaccess
 
 *.vpp.*
 *.vpp~*
+
+node_modules/

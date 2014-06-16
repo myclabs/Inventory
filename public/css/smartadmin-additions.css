@@ -1,3 +1,8 @@
+body {
+    /* Surcharge le background avec image */
+    background: #EFF0F0;
+}
+
 /* Logo texte */
 #logo-group {
     margin-left: 25px;

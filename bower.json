@@ -1,0 +1,19 @@
+{
+    "name": "inventory",
+    "version": "0.0.0",
+    "license": "proprietary",
+    "private": true,
+    "dependencies": {
+        "jquery": "2.*",
+        "jquery-ui": "1.10.*",
+        "jquery-confirm": "2.*",
+        "jquery-form": "3.*",
+        "bootstrap": "3.*",
+        "fontawesome": "4.*",
+        "angular": "1.2.*",
+        "angular-bootstrap": "*",
+        "select2": "3.4.*",
+        "markitup-markitup": "1.1.*",
+        "intro.js": "0.9.*"
+    }
+}

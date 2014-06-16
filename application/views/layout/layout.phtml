@@ -30,22 +30,8 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         ?>
         <base href="http://<?= $server ?><?= $this->baseUrl() ?>/"/>
 
-        <!-- Basic Styles -->
-        <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/muih.css">
-
-        <!-- SmartAdmin Styles : Please note (smartadmin-production.css) was created using LESS variables -->
-        <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/smartadmin-production.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/smartadmin-skins.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-additions.css">
-
-        <link rel="stylesheet" type="text/css" media="screen" href="markitup/skins/markitup/style.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="markitup/skins/textile/style.css">
-
-        <link rel="stylesheet" type="text/css" media="screen" href="css/ui/tabs.css">
-
-        <link rel="stylesheet" type="text/css" media="screen" href="css/af.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="build/vendors.min.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="build/app.min.css">
 
         <?= $this->headLink()->toString(8) ?>
         <?= $this->headStyle()->toString(8) ?>
@@ -61,20 +47,7 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         <meta content="yes" name="apple-mobile-web-app-capable">
         <meta content="black" name="apple-mobile-web-app-status-bar-style">
 
-        <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-        <script>
-            if (!window.jQuery) {
-                document.write('<script src="vendor/js/libs/jquery-2.0.2.min.js"><\/script>');
-            }
-        </script>
-
-        <!-- AngularJS -->
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.4/angular.min.js"></script>
-
-        <!-- Traductions : obligé de l'inclure ici -->
-        <script src="scripts/ui/translate.js"></script>
-
+        <script src="build/head.min.js"></script>
     </head>
     <body class="fixed-navigation fixed-header fixed-ribbon">
 
@@ -116,26 +89,8 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
             </ul>
         </div>
 
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-        <script>
-            if (!window.jQuery.ui) {
-                document.write('<script src="vendor/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
-            }
-        </script>
-
-        <script src="vendor/js/bootstrap/bootstrap.min.js"></script>
-        <script src="vendor/js/smartwidgets/jarvis.widget.min.js"></script>
-        <script src="vendor/js/libs/jquery.form.min.js"></script>
-        <script src="vendor/js/libs/jquery.confirm.min.js"></script>
-        <script src="vendor/js/ui-bootstrap-tpls-0.11.0.min.js"></script>
-        <script src="select2/select2.js"></script>
-        <script src="markitup/jquery.markitup.js"></script>
-        <script src="markitup/sets/textile/set.js"></script>
-
-        <script src="vendor/js/app.js"></script>
-        <script src="vendor/js/muih.js"></script>
-        <script src="scripts/ajax-form.js"></script>
-        <script src="scripts/feedback-form.js"></script>
+        <script src="build/vendors.min.js"></script>
+        <script src="build/app.min.js"></script>
 
         <script>
             eraseFirstMessage = function (loop) {
