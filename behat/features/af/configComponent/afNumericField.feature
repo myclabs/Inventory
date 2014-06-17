@@ -106,13 +106,11 @@ Feature: AF numeric field feature
     And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "auie"
     And I click "Valider"
     Then the field "numericFieldDatagrid_digitalValue_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
   # Ajout, valeur initiale et incertitude initiale nombres mais pas au bon format
-    When I fill in "numericFieldDatagrid_digitalValue_addForm" with "1000.5"
     And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "10.9"
     And I click "Valider"
-    Then the field "numericFieldDatagrid_digitalValue_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
 
   @javascript
   Scenario: Edition of a numeric field, correct input
@@ -191,13 +189,11 @@ Feature: AF numeric field feature
   # Modification valeur initiale
     When I set "auie" for column "digitalValue" of row 1 of the "numericFieldDatagrid" datagrid
     Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    When I set "1.5" for column "digitalValue" of row 1 of the "numericFieldDatagrid" datagrid
-    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Modification incertitude initiale
     When I set "auie" for column "relativeUncertainty" of row 1 of the "numericFieldDatagrid" datagrid
-    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    Then the following message is shown and closed: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
     When I set "15.9" for column "relativeUncertainty" of row 1 of the "numericFieldDatagrid" datagrid
-    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    Then the following message is shown and closed: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
 
   @javascript
   Scenario: Deletion of a numeric field
