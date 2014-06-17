@@ -55,7 +55,7 @@ Feature: AF numeric field feature
     And the "numericFieldDatagrid" datagrid should contain a row:
       | label | ref | isVisible | enabled    | required    | unit           | unitSelection     | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
       | AAA   | aaa | Masqué    | Désactivé  | Obligatoire | kg équ. CO2/m³ | Non modifiable    | Masquée         | 1 000,5      | 10                  | Affiché              |
-    When I click "Aide" in the row 4 of the "numericFieldDatagrid" datagrid
+    When I click "Aide" in the row 3 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#numericFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
     When I click element ".close:contains('×')"
