@@ -255,7 +255,8 @@ class InputSerializer
             switch (true) {
                 case $input instanceof NotRepeatedSubAFInput:
                     /** @var NotRepeatedSubAFInput $input */
-                    $arr['value'] = $this->serializeInputSet($input->getValue(), $previousInput->getValue());
+                    $previousValue = $previousInput ? $previousInput->getValue() : null;
+                    $arr['value'] = $this->serializeInputSet($input->getValue(), $previousValue);
                     break;
                 case $input instanceof RepeatedSubAFInput:
                     /** @var RepeatedSubAF $component */
