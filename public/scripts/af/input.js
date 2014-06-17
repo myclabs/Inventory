@@ -65,8 +65,12 @@ afModule.factory('testCondition', function (evaluateExpression) {
 
         // Cas particulier des saisies numériques
         var value = input.value;
-        if (value.hasOwnProperty('digitalValue')) {
+        if (value !== null && value.hasOwnProperty('digitalValue')) {
             value = value.digitalValue;
+        }
+
+        if (value === null) {
+            return false;
         }
 
         switch(condition.type) {
