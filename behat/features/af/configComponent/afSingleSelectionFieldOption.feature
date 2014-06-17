@@ -24,8 +24,8 @@ Feature: AF single selection field option feature
     And I click "Valider"
   # Option ajoutée apparaît en dernier
     Then the row 3 of the "optionDatagrid" datagrid should contain:
-      | label | ref | isVisible | enabled |
-      | AAA   | aaa | Visible   | Activé  |
+      | label | ref |
+      | AAA   | aaa |
     When I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
     # When I click "×" (ne marche pas)
     Then the following message is shown and closed: "Ajout effectué."
@@ -70,8 +70,8 @@ Feature: AF single selection field option feature
   # Contenu première ligne
     And I should see the "optionDatagrid" datagrid
     And the row 1 of the "optionDatagrid" datagrid should contain:
-      | label    | ref   | isVisible | enabled |
-      | Option 1 | opt_1 | Visible   | Activée |
+      | label    | ref   |
+      | Option 1 | opt_1 |
   # Modification du libellé
     When I set "Option 1 modifiée" for column "label" of row 1 of the "optionDatagrid" datagrid
     And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
@@ -81,21 +81,11 @@ Feature: AF single selection field option feature
     And I set "option_1_modifiee" for column "ref" of row 1 of the "optionDatagrid" datagrid
     And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
     Then the following message is shown and closed: "Modification effectuée."
-  # Modification visibilité
-    When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
-    And I set "Masquée" for column "isVisible" of row 1 of the "optionDatagrid" datagrid
-    And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
-    Then the following message is shown and closed: "Modification effectuée."
-  # Modification activation
-    When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
-    And I set "Désactivée" for column "enabled" of row 1 of the "optionDatagrid" datagrid
-    And I click element "#selectSingleFieldDatagrid_options_popup .close:contains('×')"
-    Then the following message is shown and closed: "Modification effectuée."
   # Vérification modifications effectuées
     When I click "Options" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then the row 1 of the "optionDatagrid" datagrid should contain:
-      | label             | ref               | isVisible | enabled    |
-      | Option 1 modifiée | option_1_modifiee | Masquée   | Désactivée |
+      | label             | ref               |
+      | Option 1 modifiée | option_1_modifiee |
 
   @javascript
   Scenario: Edition of a single selection field option scenario, incorrect input
