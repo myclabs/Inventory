@@ -20,7 +20,7 @@ Feature: AF elementary condition for interaction feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Conditions élémentaires affichées dans l'ordre d'ajout
-    And the row 4 of the "conditionsElementary" datagrid should contain:
+    And the row 3 of the "conditionsElementary" datagrid should contain:
       | ref  | field         | relation | value |
       | aaa  | Champ booléen | =        |       |
 
