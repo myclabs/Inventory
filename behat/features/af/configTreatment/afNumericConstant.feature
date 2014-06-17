@@ -143,7 +143,7 @@ Feature: AF numeric constant algo feature
     Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Modification de l'incertitude, saisie invalide
     When I set "auieae" for column "uncertainty" of row 1 of the "algoNumericConstant" datagrid
-    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    Then the following message is shown and closed: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
   # Modification de l'incertitude avec décimale
     When I set "10.5" for column "uncertainty" of row 1 of the "algoNumericConstant" datagrid
     Then the following message is shown and closed: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
