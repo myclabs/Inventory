@@ -334,7 +334,7 @@ afModule.directive('afSubMulti', function($compile) {
                     '</legend>' +
                     '<div collapse="isCollapsed">' +
                         '<af-horizontal-fieldset components="component.calledAF.components" input-sets="input.value"></af-horizontal-fieldset>' +
-                        '<button type="button" class="btn btn-default" ng-click="add()">' + __('UI', 'verb', 'add') + '</button>' +
+                        '<button type="button" class="btn btn-default addSubAF" ng-click="add()">' + __('UI', 'verb', 'add') + '</button>' +
                     '</div>' +
                 '</fieldset>';
 

@@ -302,6 +302,10 @@ function ($scope, $element, $window, $http, validateInputSet) {
         $scope.inputSet.status = 'in_progress';
         $scope.$digest();
     });
+    $element.on('click', '.addSubAF', function () {
+        $scope.inputSet.status = 'in_progress';
+        $scope.$digest();
+    });
 
     // Preview results
     $scope.preview = function () {

@@ -13,17 +13,17 @@
         <th></th>
     </tr>
 
-    <tr ng-repeat="inputSet in inputSets">
+    <tr ng-repeat="(inputSetIndex, inputSet) in inputSets">
         <td>
             <input type="text" class="form-control" ng-model="inputSet.freeLabel"
                    name="{{ refPrefix + $index }}__freeLabel">
         </td>
         <td ng-repeat="component in components">
             <af-horizontal-component component="component" input="getInput(inputSet, component)"
-                                     ref-prefix="refPrefix + $index + '__'"></af-horizontal-component>
+                                     ref-prefix="refPrefix + (inputSetIndex + 1) + '__'"></af-horizontal-component>
         </td>
         <td>
-            <button type="button" class="btn btn-default btn-block" ng-click="remove(inputSet)">
+            <button type="button" class="btn btn-default btn-block removeSubAF" ng-click="remove(inputSet)">
                 {{ removeButtonLabel }}
             </button>
         </td>
