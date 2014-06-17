@@ -173,10 +173,11 @@ class AF_InputController extends Core_Controller
     {
         /** @var $af AF */
         $af = AF::load($this->getParam('id'));
-        if ($this->hasParam('idInputSet')) {
+        $idInputSet = $this->getParam('idInputSet');
+        if ($idInputSet) {
             // Charge la saisie depuis la BDD
             /** @var $inputSet PrimaryInputSet */
-            $inputSet = PrimaryInputSet::load($this->getParam('idInputSet'));
+            $inputSet = PrimaryInputSet::load($idInputSet);
             $inputSet->markAsFinished(true);
             $this->entityManager->flush();
         } else {
