@@ -21,10 +21,10 @@ Feature: AF single selection field feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Champs ordonnés suivant l'ordre de création, vérification des valeurs par défaut
-    And the row 5 of the "selectSingleFieldDatagrid" datagrid should contain:
+    And the row 4 of the "selectSingleFieldDatagrid" datagrid should contain:
       | label | ref | isVisible | enabled | required    | type             |
       | AAA   | aaa | Visible   | Activé  | Facultatif  | Liste déroulante |
-    When I click "Aide" in the row 5 of the "selectSingleFieldDatagrid" datagrid
+    When I click "Aide" in the row 4 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#selectSingleFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
     When I click "×"
@@ -155,7 +155,7 @@ Feature: AF single selection field feature
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car une (au moins) des conditions élémentaires de l'onglet « Traitement » porte sur lui."
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+    And the "selectSingleFieldDatagrid" datagrid should contain 3 row
   # Suppression sans obstacle
     When I open tab "Composants"
   # And I open collapse "Champs de sélection simple" (déjà ouvert !)
@@ -188,12 +188,11 @@ Feature: AF single selection field feature
     When I open tab "Composants"
     And I open collapse "Champs de sélection simple"
     Then I should see the "selectSingleFieldDatagrid" datagrid
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
     When I click "Supprimer" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car il est utilisé pour l'indexation d'au moins un algorithme numérique ou la détermination d'au moins une coordonnée d'algorithme de type paramètre."
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+    And the "selectSingleFieldDatagrid" datagrid should contain 3 row
 
   @javascript
   Scenario: Deletion of a single selection field scenario, 3
@@ -213,12 +212,11 @@ Feature: AF single selection field feature
     When I open tab "Composants"
     And I open collapse "Champs de sélection simple"
     Then I should see the "selectSingleFieldDatagrid" datagrid
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
     When I click "Supprimer" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car il est utilisé pour l'indexation d'au moins un algorithme numérique ou la détermination d'au moins une coordonnée d'algorithme de type paramètre."
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+    And the "selectSingleFieldDatagrid" datagrid should contain 3 row
 
 
 
