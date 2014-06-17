@@ -42,7 +42,7 @@ Feature: Cell administrator feature
     Then I should see "Europe | Marque A"
   # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)
     When I click element "div[id='currentGranularity'] a.go-input"
-    And I click element "#chiffre_affaireHistory .btn"
+    And I click element "#chiffre_affaireHistory"
     Then I should see "Historique des valeurs"
     And I should see a "code:contains('10 k€ ± 15 %')" element
 

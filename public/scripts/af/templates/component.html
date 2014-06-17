@@ -1,4 +1,5 @@
-<af-history input="input" input-set="inputSet" class="af-history" ng-if="input.id"></af-history>
+<af-history input="input" input-set="inputSet" class="af-history" ng-if="input.id"
+            ref-prefix="refPrefix + component.ref"></af-history>
 
 <div class="form-group" ng-class="{ 'has-error': input.hasErrors, 'has-warning': input.inconsistent, 'af-margin-for-history': (input.id > 0) }">
 

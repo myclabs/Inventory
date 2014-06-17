@@ -353,7 +353,8 @@ afModule.directive('afHistory', function($http) {
         restrict: 'E',
         scope: {
             input: '=',
-            inputSet: '='
+            inputSet: '=',
+            refPrefix: '='
         },
         templateUrl: 'scripts/af/templates/history.html',
         link: function ($scope, $element) {
