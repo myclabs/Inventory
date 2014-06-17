@@ -104,13 +104,7 @@ afModule.directive('afNumericField', function(isInputEnabled) {
             // Vérification si l'unité de la saisie n'est pas la même
             if ($scope.component.unitChoices !== undefined
                 && $scope.input.value !== null && $scope.input.value.unit !== undefined) {
-                var found = false;
-                angular.forEach($scope.component.unitChoices, function (unit) {
-                    if (unit.ref === $scope.input.value.unit) {
-                        found = true;
-                    }
-                });
-                if (! found) {
+                if (! $scope.component.unitChoices.hasOwnProperty($scope.input.value.unit)) {
                     // Unité sélectionnée incompatible, on écrase la valeur saisie
                     $scope.valueHasIncompatibleUnit = true;
                     $scope.valueHasIncompatibleUnitHelp = __('AF', 'inputInput', 'valueWithIncompatibleUnit') +

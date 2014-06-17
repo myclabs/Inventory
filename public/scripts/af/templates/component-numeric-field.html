@@ -23,8 +23,9 @@
 
     <div class="af-unit" ng-if="component.unitChoices">
         <select class="form-control" ng-model="input.value.unit"
+                name="{{ refPrefix + component.ref + '_unit' }}"
                 ng-init="input.value.unit = input.value.unit || component.unit.ref"
-                ng-options="unit.ref as unit.symbol for unit in component.unitChoices"
+                ng-options="ref as symbol for (ref, symbol) in component.unitChoices"
                 ng-disabled="!isInputEnabled(input, component, inputs)">
         </select>
     </div>

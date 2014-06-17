@@ -112,12 +112,10 @@ class AFSerializer
                         'symbol' => $this->translator->get($unit->getSymbol()),
                     ];
                     if ($component->hasUnitSelection()) {
-                        $arr['unitChoices'] = [ $arr['unit'] ];
+                        $arr['unitChoices'][$unit->getRef()] = $this->translator->get($unit->getSymbol());
                         foreach ($unit->getCompatibleUnits() as $compatibleUnit) {
-                            $arr['unitChoices'][] = [
-                                'ref'    => $compatibleUnit->getRef(),
-                                'symbol' => $this->translator->get($compatibleUnit->getSymbol()),
-                            ];
+                            $arr['unitChoices'][$compatibleUnit->getRef()] =
+                                $this->translator->get($compatibleUnit->getSymbol());
                         }
                     }
                     $arr['required'] = $component->getRequired();
