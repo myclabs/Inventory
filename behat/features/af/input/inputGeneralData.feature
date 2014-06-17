@@ -33,8 +33,8 @@ Feature: General data input feature
     When I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
     And the field "chiffre_affaire" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-  # Saisie incertitude incorrecte (nombre vide)
-    When I fill in "chiffre_affaire" with ""
+  # Saisie incertitude incorrecte
+    When I fill in "chiffre_affaire" with "12"
     And I fill in "percentchiffre_affaire" with "auie"
     And I click "Aperçu des résultats"
     Then the field "chiffre_affaire" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."

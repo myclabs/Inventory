@@ -32,6 +32,7 @@
     <div class="af-uncertainty input-group" ng-if="component.withUncertainty">
         <span class="input-group-addon">±</span>
         <input type="text" class="incertitude form-control" pattern="(100)|[0-9]{1,2}"
+               name="{{ refPrefix + 'percent' + component.ref }}"
                ng-model="input.value.uncertainty"
                ng-disabled="!isInputEnabled(input, component, inputs)">
         <span class="input-group-addon">%</span>
