@@ -1054,7 +1054,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
                     break;
             }
         } else {
-            if (($this->getGranularity()->isInput()) && ($this->getInputAFUsed() === null)) {
+            if (($this->getGranularity()->isInput()) && ($this->getInputAFUsed() !== null)) {
                 $this->inputStatus = self::INPUT_STATUS_NOT_STARTED;
             } else {
                 $this->inputStatus = self::INPUT_STATUS_AF_NOT_CONFIGURED;

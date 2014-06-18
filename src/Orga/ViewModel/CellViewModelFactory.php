@@ -68,7 +68,6 @@ class CellViewModelFactory
      * @param bool $withInventoryProgress
      * @param bool $editInventory
      * @param bool $withInput
-     * @param bool $withInputLink
      * @return CellViewModel
      */
     public function createCellViewModel(
@@ -81,8 +80,7 @@ class CellViewModelFactory
         $withInventory = null,
         $withInventoryProgress = null,
         $editInventory = null,
-        $withInput = null,
-        $withInputLink = null
+        $withInput = null
     ) {
         $cellViewModel = new CellViewModel();
         $cellViewModel->id = $cell->getId();
@@ -270,19 +268,6 @@ class CellViewModelFactory
             $cellViewModel->inputStatusTitle = $this->inputStatusList[$cellViewModel->inputStatus];
 
             $cellViewModel->showInput = true;
-            $cellViewModel->showInputLink = (($withInputLink !== true) && ($withInputLink !== false)) ? true : $withInputLink;
-            try {
-                $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
-                if (($cell->getInventoryStatus() === Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED)
-                    && (($cell->getGranularity() === $granularityForInventoryStatus)
-                        || ($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)))) {
-                    if ($withInputLink !== false) {
-                        $cellViewModel->showInputLink = false;
-                    }
-                }
-            } catch (Core_Exception_UndefinedAttribute $e) {
-            } catch (\Core_Exception_NotFound $e) {
-            }
         }
 
         return $cellViewModel;
