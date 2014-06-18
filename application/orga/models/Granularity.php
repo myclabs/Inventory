@@ -383,7 +383,18 @@ class Orga_Model_Granularity extends Core_Model_Entity
      */
     protected function createCell(array $members)
     {
-        $this->cells->add(new Orga_Model_Cell($this, $members));
+        $cell = new Orga_Model_Cell($this, $members);
+        $this->cells->add($cell);
+
+        if ($this->getCellsControlRelevance()) {
+            $timeAxis = $this->getOrganization()->getTimeAxis();
+            if (($timeAxis !== null) && ($this->hasAxis($timeAxis))) {
+                $previousCell = $cell->getPreviousCellForAxis($timeAxis);
+                if ($previousCell !== null) {
+                    $cell->setRelevant($previousCell->getRelevant());
+                }
+            }
+        }
     }
 
     /**
