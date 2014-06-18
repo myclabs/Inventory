@@ -11,8 +11,6 @@ use UI\Datagrid\Column\GenericColumn;
 use UI\Datagrid\Column\ListColumn;
 use UI\Datagrid\Column\LongTextColumn;
 use UI_Generic;
-use UI_Form;
-use UI_Form_Element_HTML;
 use Core_Exception_InvalidArgument;
 use Zend_Json;
 use Zend_Json_Expr;
@@ -114,9 +112,9 @@ class Datagrid extends UI_Generic
     public $addPanelTitle;
 
     /**
-     * Définition du formulaire affiché dans le popup d'ajout. Null = UI_Form par défaut.
+     * Définition du formulaire affiché dans le popup d'ajout. Null = form par défaut.
      *
-     * @var UI_Form
+     * @var GenericTag
      */
     public $addPanelForm;
 
@@ -1614,7 +1612,10 @@ JS;
         $view->headScript()->appendFile('yui/build/paginator/paginator-min.js', 'text/javascript');
         $view->headScript()->appendFile('yui/build/calendar/calendar-min.js', 'text/javascript');
 
-        UI_Form::addHeader();
+        $view->headLink()->appendStylesheet('markitup/skins/markitup/style.css');
+        $view->headLink()->appendStylesheet('markitup/skins/textile/style.css');
+        $view->headScript()->appendFile('markitup/jquery.markitup.js', 'text/javascript');
+        $view->headScript()->appendFile('markitup/sets/textile/set.js', 'text/javascript');
 
         parent::addHeader($instance);
     }

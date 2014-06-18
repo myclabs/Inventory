@@ -1,19 +1,13 @@
 <?php
-/**
- * @author valentin.claras
- * @package Unit
- */
 
 namespace Unit\Application;
 
 use Core_Package_Bootstrap;
 use Doctrine\DBAL\Types\Type;
-use Unit\Architecture\TypeMapping\UnitAPIType;
+use Unit\UnitAPITypeMapping;
 
 /**
- * Bootstrap
  * @author valentin.claras
- * @package Unit
  */
 class Bootstrap extends Core_Package_Bootstrap
 {
@@ -22,6 +16,6 @@ class Bootstrap extends Core_Package_Bootstrap
      */
     protected function _initUnitTypeMapping()
     {
-        Type::addType(UnitAPIType::TYPE_NAME, 'Unit\Architecture\TypeMapping\UnitAPIType');
+        Type::addType(UnitAPITypeMapping::TYPE_NAME, UnitAPITypeMapping::class);
     }
 }

@@ -3,52 +3,33 @@
 namespace Unit;
 
 use Core\Translation\TranslatedString;
-use Core_Exception;
-use Unit\Domain\Unit\Unit;
-use Unit\IncompatibleUnitsException;
-use Unit\Domain\ComposedUnit\ComposedUnit;
+use MyCLabs\UnitAPI\DTO\UnitDTO;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
+use MyCLabs\UnitAPI\Exception\UnknownUnitException;
+use MyCLabs\UnitAPI\Operation\Addition;
+use MyCLabs\UnitAPI\Operation\Multiplication;
+use MyCLabs\UnitAPI\Operation\OperationComponent;
+use MyCLabs\UnitAPI\Operation\Result\AdditionResult;
+use MyCLabs\UnitAPI\Operation\Result\OperationResult;
+use MyCLabs\UnitAPI\UnitOperationService;
+use MyCLabs\UnitAPI\UnitService;
 
 /**
- * API
- * @author     valentin.claras
- * @author     hugo.charbonnier
- * @author     yoann.croizer
+ * API pour utiliser les unités.
+ *
+ * @author valentin.claras
+ * @author hugo.charbonnier
+ * @author yoann.croizer
  */
 class UnitAPI
 {
     /**
-     * Référent textuel d'une unité
-     *  si le référent contient un "." c'et qu'il s'agit d'une unité composée.
+     * Identifiant d'une unité
      * @var string
      */
-    protected $ref;
+    private $ref;
 
     /**
-     * Cache des facteurs de conversion
-     *  tableau à deux dimensions : this->ref,ref de l'unité vers laquelle on converti
-     *  les valeurs sont les facteurs de conversion
-     *  la deuxième clef est égale à la première si le facteur de conversion est vers les unités de base
-     * @var array
-     */
-    protected static $conversionFactors = array();
-
-    /**
-     * Cache des équivalence entre unités
-     *  tableau à deux dimensions : this->ref,ref de l'unité que l'on test
-     *  les valeurs sont des booléens indiquant si les deux unités sont équivalentes
-     * @var array
-     */
-    protected static $equivalentUnits = array();
-
-    /**
-     * Cache des symboles des unités
-     *  tableau à une dimension : this->ref
-     * @var array
-     */
-    protected static $symbols = array();
-
-    /**
-     * Constructeur.
      * @param string $ref
      */
     public function __construct($ref = null)
@@ -72,16 +53,25 @@ class UnitAPI
      */
     public function exists()
     {
-        try {
-            $this->getNormalizedUnit();
-            return !empty($this->ref);
-        } catch (Core_Exception $e) {
+        if ($this->ref == '') {
             return false;
         }
+
+        /** @var UnitService $unitService */
+        $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
+
+        try {
+            $unitService->getUnit($this->ref);
+        } catch (UnknownUnitException $e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * Renvoi le référent textuel de l'API.
+     *
      * @return string
      */
     public function getRef()
@@ -90,36 +80,52 @@ class UnitAPI
     }
 
     /**
-     * getSymbol()
      * Va prendre en paramètre le référent textuel d'une unité et va retourner le symbol de l'unité
      * sous forme de chaîne de caractères. La variable booléenne $html si elle est à "true" permet de
      * transformer par exemple un exposant de la forme m^2 en m<sup>2</sup>.
      *
+     * @todo À mettre en cache
+     *
+     * @throws UnknownUnitException
      * @return TranslatedString
      */
     public function getSymbol()
     {
-        if (!array_key_exists($this->ref, self::$symbols)) {
-            $composedUnit = new ComposedUnit($this->ref);
-            self::$symbols[$this->ref] = $composedUnit->getSymbol();
+        if ($this->ref == '') {
+            return TranslatedString::untranslated('');
         }
-        return self::$symbols[$this->ref];
+
+        /** @var UnitService $unitService */
+        $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
+
+        try {
+            $unit = $unitService->getUnit($this->ref);
+
+            return $unit->symbol;
+        } catch (UnknownUnitException $e) {
+            return TranslatedString::untranslated($this->ref);
+        }
     }
 
 
     /**
      * Vérifie qu'une ref est compatible avec l'unité.
+     *
      * @param string $ref
+     *
+     * @throws UnknownUnitException
      * @return bool
      */
     public function isEquivalent($ref)
     {
-        if (!array_key_exists($this->ref, self::$equivalentUnits)
-            || !array_key_exists((string) $ref, self::$equivalentUnits[$this->ref])) {
-            $composedUnit = new ComposedUnit($this->ref);
-            self::$equivalentUnits[$this->ref][(string) $ref] = $composedUnit->isEquivalent(new ComposedUnit($ref));
+        if ($ref instanceof UnitAPI) {
+            $ref = $ref->getRef();
         }
-        return self::$equivalentUnits[$this->ref][(string) $ref];
+
+        /** @var UnitOperationService $operationService */
+        $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
+
+        return $operationService->areCompatible($this->ref, $ref);
     }
 
     /**
@@ -129,99 +135,128 @@ class UnitAPI
      *     sont équivalentes)
      *
      * @param string $refUnit
+     *
+     * @throws UnknownUnitException
      * @throws IncompatibleUnitsException
      * @return float Le facteur de conversion.
      */
-    public function getConversionFactor($refUnit = null)
+    public function getConversionFactor($refUnit)
     {
-        // Dans le cas ou on veut passer l'unité apellé dans l'unité passée en paramètre
-        if (isset($refUnit)) {
-            if (!array_key_exists($this->ref, self::$conversionFactors)
-                || !array_key_exists((string) $refUnit, self::$conversionFactors[$this->ref])
-            ) {
-                if ($this->isEquivalent($refUnit)) {
-                    $unit1 = new ComposedUnit($this->ref);
-                    $factor1 = $unit1->getConversionFactor();
-                    $unit2 = new ComposedUnit($refUnit);
-                    $factor2 = $unit2->getConversionFactor();
-                    self::$conversionFactors[$this->ref][(string) $refUnit] = $factor2 / $factor1;
-                } else {
-                    throw new IncompatibleUnitsException("Unit {$this->ref} is incompatible with $refUnit");
-                }
-            }
-        } else {
-            // Dans le cas ou on veut récupérer le facteur de conversion de l'unité de base
-            $unit = new ComposedUnit($this->ref);
-            return $unit->getConversionFactor();
-        }
-        return self::$conversionFactors[$this->ref][(string) $refUnit];
+        /** @var UnitOperationService $operationService */
+        $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
+
+        return $operationService->getConversionFactor($this->ref, $refUnit);
     }
 
     /**
      * Sert à multiplier des unités. Renvoie une chaine de caractère qui
      *  correspond à une unité composéé d'unités de référence de grandeur
      *   physique de base (univoque).
+     *
      * @param array $components
-     * @return UnitAPI $api
+     *
+     * @throws UnknownUnitException
+     * @return OperationResult
      */
     public static function multiply($components)
     {
-        $unit = new ComposedUnit();
-        $result = $unit->multiply($components);
-        $api = new UnitAPI($result->getRef());
-        return $api;
+        /** @var UnitOperationService $operationService */
+        $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
+
+        $operation = new Multiplication();
+
+        array_walk($components, function ($component) use ($operation) {
+            $unit = $component['unit'] instanceof UnitAPI ? $component['unit']->getRef() : $component['unit'];
+            if ($unit == '') {
+                throw UnknownUnitException::create($unit);
+            }
+            $operation->addComponent(new OperationComponent($unit, $component['signExponent']));
+        });
+
+        return $operationService->execute($operation);
     }
 
     /**
      * Sert à ajouter des unités entre elles. Renvoi une unité composée
      *  d'unités de référence de grandeur physique de base.
+     *
      * @param array $components
-     * @return UnitAPI
+     *
+     * @throws UnknownUnitException
+     * @return AdditionResult
      */
     public static function calculateSum($components)
     {
-        $unit = new ComposedUnit();
-        $result = $unit->calculateSum($components);
-        $api = new UnitAPI($result->getRef());
-        return $api;
+        /** @var UnitOperationService $operationService */
+        $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
+
+        $operation = new Addition();
+        array_walk($components, function ($component) use ($operation) {
+            if ($component == '') {
+                throw UnknownUnitException::create($component);
+            }
+            $operation->addComponent(new OperationComponent($component, 1));
+        });
+
+        return $operationService->execute($operation);
     }
 
     /**
      * Renvoie la liste des refs des unités compatibles, càd de même grandeur physique.
+     *
+     * @throws UnknownUnitException
      * @return UnitAPI[]
      */
     public function getCompatibleUnits()
     {
-        $unit = new ComposedUnit($this->getRef());
+        if ($this->ref == '') {
+            return [];
+        }
 
-        return array_map(
-            function (ComposedUnit $unit) {
-                return new UnitAPI($unit->getRef());
-            },
-            $unit->getCompatibleUnits()
-        );
+        /** @var UnitService $unitService */
+        $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
+
+        $unitDTOs = $unitService->getCompatibleUnits($this->ref);
+
+        return array_map(function (UnitDTO $unitDTO) {
+            return new UnitAPI($unitDTO->id);
+        }, $unitDTOs);
     }
 
 
     /**
      * Renvoie l'unité normalisée associée à une unité.
+     *
+     * @throws UnknownUnitException
      * @return UnitAPI
      */
     public function getNormalizedUnit()
     {
-        $unit = new ComposedUnit($this->ref);
-        return new UnitAPI($unit->getNormalizedUnit()->getRef());
+        if ($this->ref == '') {
+            return $this;
+        }
+
+        /** @var UnitService $unitService */
+        $unitService = \Core\ContainerSingleton::getContainer()->get(UnitService::class);
+
+        return new UnitAPI($unitService->getUnitOfReference($this->ref)->id);
     }
 
     /**
-     * Retourne l'inverse de l'unité
+     * Retourne l'inverse de l'unité.
+     *
+     * @throws UnknownUnitException
      * @return UnitAPI
      */
     public function reverse()
     {
-        $composedUnit = new ComposedUnit($this->getRef());
-        $composedUnit->reverseUnit();
-        return new UnitAPI($composedUnit->getRef());
-    }
+        if ($this->ref == '') {
+            return $this;
+        }
 
+        /** @var UnitOperationService $operationService */
+        $operationService = \Core\ContainerSingleton::getContainer()->get(UnitOperationService::class);
+
+        return new UnitAPI($operationService->inverse($this->ref));
+    }
 }

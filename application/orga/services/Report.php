@@ -16,10 +16,10 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
     private static $copiedReports = [];
 
     /**
-     * @param string $event
+     * @param string          $event
      * @param DW_Model_Report $subject
-     * @param array $arguments
-     * @throws Core_Exception_InvalidArgument
+     * @param array           $arguments
+     * @throws ForbiddenException
      */
     public static function applyEvent($event, $subject, $arguments = [])
     {
@@ -84,5 +84,4 @@ class Orga_Service_Report implements Core_Event_ObserverInterface
                 break;
         }
     }
-
 }

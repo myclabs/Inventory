@@ -5,10 +5,10 @@ namespace AF\Domain\Action;
 use AF\Domain\AFGenerationHelper;
 use AF\Domain\Component\Select\SelectOption;
 use Core_Exception;
-use UI_Form_Action_Disable;
-use UI_Form_Action_Enable;
-use UI_Form_Action_Hide;
-use UI_Form_Action_Show;
+use AF\Application\Form\Action\Disable;
+use AF\Application\Form\Action\Enable;
+use AF\Application\Form\Action\Hide;
+use AF\Application\Form\Action\Show;
 
 /**
  * @author matthieu.napoli
@@ -32,16 +32,16 @@ class SetOptionState extends Action
     {
         switch ($this->state) {
             case self::TYPE_DISABLE:
-                $uiAction = new UI_Form_Action_Disable($this->id);
+                $uiAction = new Disable($this->id);
                 break;
             case self::TYPE_ENABLE:
-                $uiAction = new UI_Form_Action_Enable($this->id);
+                $uiAction = new Enable($this->id);
                 break;
             case self::TYPE_HIDE:
-                $uiAction = new UI_Form_Action_Hide($this->id);
+                $uiAction = new Hide($this->id);
                 break;
             case self::TYPE_SHOW:
-                $uiAction = new UI_Form_Action_Show($this->id);
+                $uiAction = new Show($this->id);
                 break;
             default:
                 throw new Core_Exception("Unknown type $this->state");

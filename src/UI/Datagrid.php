@@ -124,7 +124,7 @@ class UI_Datagrid extends UI_Generic
     public $addPanelTitle = null;
 
     /**
-     * Définition du formulaire affiché dans le popup d'ajout. Null = UI_Form par défaut.
+     * Définition du formulaire affiché dans le popup d'ajout. Null = form par défaut.
      *
      * @var   GenericTag
      */
@@ -1639,7 +1639,12 @@ class UI_Datagrid extends UI_Generic
         $broker->view->headScript()->appendFile('yui/build/paginator/paginator-min.js', 'text/javascript');
         $broker->view->headScript()->appendFile('yui/build/calendar/calendar-min.js', 'text/javascript');
 
-        UI_Form::addHeader();
+        $broker->view->headScript()->appendFile('scripts/ui/form-ajax.js', 'text/javascript');
+        $broker->view->headScript()->appendFile('scripts/ui/form-action.js', 'text/javascript');
+        $broker->view->headLink()->appendStylesheet('markitup/skins/markitup/style.css');
+        $broker->view->headLink()->appendStylesheet('markitup/skins/textile/style.css');
+        $broker->view->headScript()->appendFile('markitup/jquery.markitup.js', 'text/javascript');
+        $broker->view->headScript()->appendFile('markitup/sets/textile/set.js', 'text/javascript');
 
         parent::addHeader($instance);
     }

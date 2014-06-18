@@ -43,17 +43,17 @@ class CellViewModelFactory
         $this->translator = $translator;
 
         $this->inventoryStatusList = [
-            Orga_Model_Cell::STATUS_NOTLAUNCHED => __('Orga', 'view', 'inventoryNotLaunched'),
-            Orga_Model_Cell::STATUS_ACTIVE => __('Orga', 'view', 'inventoryOpen'),
-            Orga_Model_Cell::STATUS_CLOSED => __('Orga', 'view', 'inventoryClosed')
+            Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED => __('Orga', 'view', 'inventoryNotLaunched'),
+            Orga_Model_Cell::INVENTORY_STATUS_ACTIVE => __('Orga', 'view', 'inventoryOpen'),
+            Orga_Model_Cell::INVENTORY_STATUS_CLOSED => __('Orga', 'view', 'inventoryClosed')
         ];
         $this->inputStatusList = [
-            PrimaryInputSet::STATUS_FINISHED => __('AF', 'inputInput', 'statusFinished'),
-            PrimaryInputSet::STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
-            PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
-            PrimaryInputSet::STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
-            CellViewModel::AF_STATUS_AF_NOT_CONFIGURED => __('Orga', 'view', 'statusAFNotConfigured'),
-            CellViewModel::AF_STATUS_NOT_STARTED => __('Orga', 'view', 'statusNotStarted'),
+            Orga_Model_Cell::INPUT_STATUS_NOT_STARTED => __('Orga', 'view', 'statusNotStarted'),
+            Orga_Model_Cell::INPUT_STATUS_AF_NOT_CONFIGURED => __('Orga', 'view', 'statusAFNotConfigured'),
+            Orga_Model_Cell::INPUT_STATUS_INPUT_INCOMPLETE => __('AF', 'inputInput', 'statusInputIncomplete'),
+            Orga_Model_Cell::INPUT_STATUS_CALCULATION_INCOMPLETE => __('AF', 'inputInput', 'statusCalculationIncomplete'),
+            Orga_Model_Cell::INPUT_STATUS_COMPLETE => __('AF', 'inputInput', 'statusComplete'),
+            Orga_Model_Cell::INPUT_STATUS_FINISHED => __('AF', 'inputInput', 'statusFinished'),
         ];
     }
 
@@ -68,7 +68,6 @@ class CellViewModelFactory
      * @param bool $withInventoryProgress
      * @param bool $editInventory
      * @param bool $withInput
-     * @param bool $withInputLink
      * @return CellViewModel
      */
     public function createCellViewModel(
@@ -81,8 +80,7 @@ class CellViewModelFactory
         $withInventory = null,
         $withInventoryProgress = null,
         $editInventory = null,
-        $withInput = null,
-        $withInputLink = null
+        $withInput = null
     ) {
         $cellViewModel = new CellViewModel();
         $cellViewModel->id = $cell->getId();
@@ -260,31 +258,16 @@ class CellViewModelFactory
                 && ($cell->getGranularity()->getInputConfigGranularity() !== null)
                 && (($this->acl->isAllowed($user, Actions::INPUT, $cell))))
         ) {
-            $cellViewModel->showInput = true;
-            $cellViewModel->showInputLink = (($withInputLink !== true) && ($withInputLink !== false)) ? true : $withInputLink;
-            $inputStatus = ($cell->getInputAFUsed() !== null) ? CellViewModel::AF_STATUS_NOT_STARTED : CellViewModel::AF_STATUS_AF_NOT_CONFIGURED;
-            try {
-                $granularityForInventoryStatus = $cell->getGranularity()->getOrganization()->getGranularityForInventoryStatus();
-                if (($cell->getInventoryStatus() === Orga_Model_Cell::STATUS_NOTLAUNCHED)
-                    && (($cell->getGranularity() === $granularityForInventoryStatus)
-                        || ($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus)))) {
-                    if ($withInputLink !== false) {
-                        $cellViewModel->showInputLink = false;
-                    }
-                }
-            } catch (Core_Exception_UndefinedAttribute $e) {
-            } catch (\Core_Exception_NotFound $e) {
-            }
-
+            $cellViewModel->inputStatus = $cell->getInputStatus();
             $aFInputSetPrimary = $cell->getAFInputSetPrimary();
             if ($aFInputSetPrimary !== null) {
-                $cellViewModel->inputStatus = $aFInputSetPrimary->getStatus();
                 $cellViewModel->inputCompletion = $aFInputSetPrimary->getCompletion();
             } else {
-                $cellViewModel->inputStatus = $inputStatus;
                 $cellViewModel->inputCompletion = 0;
             }
             $cellViewModel->inputStatusTitle = $this->inputStatusList[$cellViewModel->inputStatus];
+
+            $cellViewModel->showInput = true;
         }
 
         return $cellViewModel;

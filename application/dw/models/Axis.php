@@ -10,6 +10,7 @@
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Objet métier définissant un axe organisationnel au sein d'un cube.
@@ -33,14 +34,14 @@ class DW_Model_Axis extends Core_Model_Entity
      *
      * @var int
      */
-    protected  $id = null;
+    protected $id = null;
 
     /**
      * Référence unique (au sein d'un cube) de l'axe.
      *
      * @var string
      */
-    protected  $ref = null;
+    protected $ref = null;
 
     /**
      * Label de l'axe.
@@ -78,9 +79,6 @@ class DW_Model_Axis extends Core_Model_Entity
     protected $members = null;
 
 
-    /**
-     * Constructeur de la classe Axis.
-     */
     public function __construct(DW_Model_Cube $cube)
     {
         $this->label = new TranslatedString();
@@ -204,7 +202,7 @@ class DW_Model_Axis extends Core_Model_Entity
      *
      * @param DW_Model_Axis $narrowerAxis
      */
-    public function setDirectNarrower(DW_Model_Axis $narrowerAxis=null)
+    public function setDirectNarrower(DW_Model_Axis $narrowerAxis = null)
     {
         if ($this->directNarrower !== $narrowerAxis) {
             if ($this->directNarrower !== null) {
@@ -302,7 +300,9 @@ class DW_Model_Axis extends Core_Model_Entity
 
         uasort(
             $directBroaders,
-            function ($a, $b) { return $a->getPosition() - $b->getPosition(); }
+            function (DW_Model_Axis $a, DW_Model_Axis $b) {
+                return $a->getPosition() - $b->getPosition();
+            }
         );
 
         return $directBroaders;
@@ -384,7 +384,7 @@ class DW_Model_Axis extends Core_Model_Entity
      */
     public function getMemberByRef($ref)
     {
-        $criteria = \Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('ref', $ref));
         $member = $this->members->matching($criteria)->toArray();
 
@@ -438,7 +438,7 @@ class DW_Model_Axis extends Core_Model_Entity
      *
      * @return bool
      */
-    public function isNarrowerThan($axis)
+    public function isNarrowerThan(DW_Model_Axis $axis)
     {
         $directNarrower = $axis->getDirectNarrower();
         return (($this == $directNarrower) || ((null !== $directNarrower) && $this->isNarrowerThan($directNarrower)));
@@ -470,5 +470,4 @@ class DW_Model_Axis extends Core_Model_Entity
         }
         return true;
     }
-
 }

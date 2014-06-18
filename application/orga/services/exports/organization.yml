@@ -57,8 +57,6 @@ sheets:
           - label: "{{ granularityColumnACL }}"
           - label: "{{ granularityColumnAFTab }}"
           - label: "{{ granularityColumnDW }}"
-          - label: "{{ granularityColumnGenericActions }}"
-          - label: "{{ granularityColumnContextActions }}"
           - label: "{{ granularityColumnInputDocuments }}"
         lines:
           - foreach: organization.granularities as granularity
@@ -70,8 +68,6 @@ sheets:
                   - "{{ granularity.cellsWithACL }}"
                   - "{{ granularity.cellsWithAFConfigTab }}"
                   - "{{ granularity.cellsGenerateDWCubes }}"
-                  - "{{ granularity.cellsWithSocialGenericActions }}"
-                  - "{{ granularity.cellsWithSocialContextActions }}"
                   - "{{ granularity.cellsWithInputDocs }}"
 
 

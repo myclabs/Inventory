@@ -1,36 +1,37 @@
 <?php
-/**
- * @author valentin.claras
- * @package Unit
- * @subpackage Controller
- */
 
 use Core\Annotation\Secure;
-use Unit\Domain\Unit\DiscreteUnit;
+use MyCLabs\UnitAPI\DTO\UnitDTO;
+use MyCLabs\UnitAPI\UnitService;
 
-/**
- * Unit_Tableau_DiscreteUnitsController
- * @package Unit
- * @subpackage Controller
- */
 class Unit_Datagrids_DiscreteunitsController extends UI_Controller_Datagrid
 {
+    /**
+     * @Inject
+     * @var UnitService
+     */
+    private $unitService;
+
     /**
      * @Secure("viewUnit")
      */
     public function getelementsAction()
     {
-        /* @var $discreteUnit DiscreteUnit */
-        foreach (DiscreteUnit::loadList($this->request) as $discreteUnit) {
+        $units = $this->unitService->getUnits();
+
+        foreach ($units as $unit) {
+            if ($unit->type !== UnitDTO::TYPE_DISCRETE) {
+                continue;
+            }
+
             $element = array();
-            $idDiscreteUnit = $discreteUnit->getKey();
-            $element['index'] = $idDiscreteUnit['id'];
-            $element['name'] = $this->cellTranslatedText($discreteUnit->getName());
-            $element['ref'] = $discreteUnit->getRef();
-            $element['symbole'] = $this->cellTranslatedText($discreteUnit->getSymbol());
+            $element['index'] = $unit->id;
+            $element['label'] = $this->cellTranslatedText($unit->label);
+            $element['id'] = $unit->id;
+
             $this->addLine($element);
         }
-        $this->totalElements = DiscreteUnit::countTotal($this->request);
+
         $this->send();
     }
 }

@@ -61,6 +61,8 @@ class AF_AfController extends Core_Controller
 
         $this->setActiveMenuItemAFLibrary($af->getLibrary()->getId());
         $this->forward('display', 'af', 'af', ['viewConfiguration' => $viewConfiguration]);
+
+        \AF\Application\Form\Form::addHeader();
     }
 
     /**

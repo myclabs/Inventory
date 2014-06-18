@@ -52,13 +52,13 @@ class Output
         $this->sourceValue = clone $value;
         $this->algo = $algo;
         $unit = $algo->getContextIndicator()->getIndicator()->getUnit();
-        // Get the value using the conversionFactor
-        // TODO use Unit conversion API
-        $conversionFactor = $unit->getConversionFactor($this->sourceValue->getUnit()->getRef());
+
+        $convertedValue = $value->convertTo($unit);
         $this->value = new Calc_Value(
-            $value->getDigitalValue() * $conversionFactor,
-            $value->getRelativeUncertainty()
+            $convertedValue->getDigitalValue(),
+            $convertedValue->getRelativeUncertainty()
         );
+
         foreach ($classificationMembers as $member) {
             $this->classificationMembers[] = $member;
         }

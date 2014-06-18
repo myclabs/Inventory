@@ -7,13 +7,6 @@ use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
 use MyCLabs\MUIH\Icon;
 use UI\Datagrid\Datagrid;
-use UI_Form_Element_MultiCheckbox;
-use UI_Form_Element_MultiSelect;
-use UI_Form_Element_Radio;
-use UI_Form_Element_Select;
-use UI_Form_Element_Option;
-use UI_Form_Element_Pattern_AjaxAutocomplete;
-use UI_Form_Element_HTML;
 
 /**
  * Classe représentant une colonne contenant des listes.
@@ -757,6 +750,7 @@ class ListColumn extends GenericColumn
                 $textInput->setAttribute('name', $this->getAddFormElementId($datagrid));
                 $textInput->setAttribute('id', $this->getAddFormElementId($datagrid));
                 $textInput->setAttribute('value', $this->defaultAddValue);
+                $textInput->setAttribute('style', 'width: 100%;');
                 $selectWrapper->appendContent($textInput);
             } else {
                 $selectInput = new GenericTag('select');

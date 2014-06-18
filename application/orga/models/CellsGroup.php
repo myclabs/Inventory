@@ -43,12 +43,6 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
     protected $aF = null;
 
 
-    /**
-     * Constructeur de la classe CellsGroup.
-     *
-     * @param Orga_Model_Cell $containerCell
-     * @param Orga_Model_Granularity $inputGranularity
-     */
     public function __construct(Orga_Model_Cell $containerCell, Orga_Model_Granularity $inputGranularity)
     {
         $this->containerCell = $containerCell;

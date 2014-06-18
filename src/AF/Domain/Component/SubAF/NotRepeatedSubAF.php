@@ -6,7 +6,7 @@ use AF\Domain\InputSet\InputSet;
 use AF\Domain\AFGenerationHelper;
 use AF\Domain\Component\SubAF;
 use AF\Domain\Input\SubAF\NotRepeatedSubAFInput;
-use UI_Form_Element_Group;
+use AF\Application\Form\Element\Group;
 
 /**
  * Gestion des sous-formulaires non répétés.
@@ -21,7 +21,7 @@ class NotRepeatedSubAF extends SubAF
      */
     public function getUIElement(AFGenerationHelper $generationHelper)
     {
-        $uiElement = new UI_Form_Element_Group($this->ref);
+        $uiElement = new Group($this->ref);
         $uiElement->setLabel($this->uglyTranslate($this->label));
         $uiElement->getElement()->help = $this->uglyTranslate($this->help);
         $uiElement->getElement()->hidden = !$this->visible;
@@ -38,7 +38,7 @@ class NotRepeatedSubAF extends SubAF
         // Récupère la saisie correspondant à cet élément
         $input = null;
         if ($generationHelper->getInputSet()) {
-            /** @var $input \AF\Domain\Input\SubAF\NotRepeatedSubAFInput */
+            /** @var $input NotRepeatedSubAFInput */
             $input = $generationHelper->getInputSet()->getInputForComponent($this);
             if ($input) {
                 $uiElement->getElement()->hidden = $input->isHidden();
@@ -69,7 +69,7 @@ class NotRepeatedSubAF extends SubAF
     {
         // Si il y'a une saisie
         if ($inputSet) {
-            /** @var $input \AF\Domain\Input\SubAF\NotRepeatedSubAFInput */
+            /** @var $input NotRepeatedSubAFInput */
             $input = $inputSet->getInputForComponent($this);
             if ($input) {
                 if ($input->isHidden()) {

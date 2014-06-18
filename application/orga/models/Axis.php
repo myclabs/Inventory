@@ -10,6 +10,7 @@
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
 
 /**
@@ -470,14 +471,14 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getAllNarrowers()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         foreach (explode(Orga_Model_Organization::PATH_JOIN, $this->getBroaderTag()) as $pathTag) {
             $criteria->andWhere(
-                Doctrine\Common\Collections\Criteria::expr()->contains('broaderTag', $pathTag)
+                Criteria::expr()->contains('broaderTag', $pathTag)
             );
         }
         $criteria->andWhere(
-            Doctrine\Common\Collections\Criteria::expr()->neq('broaderTag', $this->getBroaderTag())
+            Criteria::expr()->neq('broaderTag', $this->getBroaderTag())
         );
         $criteria->orderBy(['narrowerTag' => 'DESC']);
         return $this->getOrganization()->getAxes()->matching($criteria)->toArray();
@@ -512,7 +513,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getDirectBroaders()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->orderBy(['narrowerTag' => 'ASC']);
         return $this->directBroaders->matching($criteria);
     }
@@ -524,12 +525,12 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getAllBroadersFirstOrdered()
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         $criteria->where(
-            Doctrine\Common\Collections\Criteria::expr()->contains('narrowerTag', $this->getNarrowerTag())
+            Criteria::expr()->contains('narrowerTag', $this->getNarrowerTag())
         );
         $criteria->andWhere(
-            Doctrine\Common\Collections\Criteria::expr()->neq('narrowerTag', $this->getNarrowerTag())
+            Criteria::expr()->neq('narrowerTag', $this->getNarrowerTag())
         );
         $criteria->orderBy(['narrowerTag' => 'ASC']);
         return $this->getOrganization()->getAxes()->matching($criteria)->toArray();
@@ -730,7 +731,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      */
     public function getOrderedMembers()
     {
-        $criteria = \Doctrine\Common\Collections\Criteria::create();
+        $criteria = Criteria::create();
         if ($this->isMemberPositioning()) {
             $criteria->orderBy(['parentMembersHashKey' => 'ASC', 'position' => 'ASC']);
         } else {
@@ -796,7 +797,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      *
      * @return bool
      */
-    public function isNarrowerThan($axis)
+    public function isNarrowerThan(Orga_Model_Axis $axis)
     {
         return ((strpos($axis->narrowerTag, $this->narrowerTag) !== false) && ($axis !== $this));
     }
@@ -808,7 +809,7 @@ class Orga_Model_Axis extends Core_Model_Entity
      *
      * @return bool
      */
-    public function isBroaderThan($axis)
+    public function isBroaderThan(Orga_Model_Axis $axis)
     {
         return $axis->isNarrowerThan($this);
     }
@@ -837,5 +838,4 @@ class Orga_Model_Axis extends Core_Model_Entity
     {
         return $this->getRef();
     }
-
 }

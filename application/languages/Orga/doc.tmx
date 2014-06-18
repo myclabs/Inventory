@@ -12,22 +12,6 @@
                 <seg>Documents of inputs</seg>
             </tuv>
         </tu>
-        <tu tuid="docLibraryForSocialTemplateAction">
-            <tuv xml:lang="fr">
-                <seg>Documents des modèles d'action</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Documents of action templates</seg>
-            </tuv>
-        </tu>
-        <tu tuid="docLibraryForSocialAction">
-            <tuv xml:lang="fr">
-                <seg>Documents des actions</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Documents of actions</seg>
-            </tuv>
-        </tu>
 
     </body>
 </tmx>

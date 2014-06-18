@@ -48,15 +48,24 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $data['relevance'] = $granularity->getCellsControlRelevance();
             $data['input'] = $granularity->isInput();
             $data['afs'] = $granularity->hasInputGranularities();
-            $data['inventory'] = ($granularity === $granularityForinventoryStatus);
+            $data['inventory'] = (($granularity === $granularityForinventoryStatus) ?
+                $this->cellList('monitoring', ___('Orga', 'inventory', 'editing')) :
+                ($granularity->getCellsMonitorInventory() ?
+                    'monitoring' :
+                    'none'
+                )
+            );
             $data['reports'] = $granularity->getCellsGenerateDWCubes();
             $data['acl'] = $granularity->getCellsWithACL();
             if ((!$granularity->hasAxes()) || $data['relevance'] || $data['input']
-                || $data['afs'] || $data['reports'] || $data['acl'] || $data['inventory']) {
+                || $data['afs'] || $data['reports'] || $data['acl'] || ($data['inventory'] != 'none')) {
                 $data['delete'] = false;
             }
             if (!$data['input']) {
                 $this->editableCell($data['input'], false);
+            }
+            if ($granularity === $granularityForinventoryStatus) {
+                $this->editableCell($data['inventory'], false);
             }
             $this->addLine($data);
         }
@@ -189,6 +198,11 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                     }
                 }
             }
+            if ($this->update['column'] === 'inventory') {
+                $value = ($this->update['value'] == 'monitoring');
+            } else {
+                $value = (bool) $this->update['value'];
+            }
 
             $success = function () {
                 $this->message = __('UI', 'message', 'updated');
@@ -203,7 +217,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             $task = new ServiceCallTask(
                 'Orga_Service_OrganizationService',
                 'editGranularity',
-                [$granularity, [ $this->update['column'] => (bool) $this->update['value'] ]],
+                [$granularity, [ $this->update['column'] => $value ]],
                 __('Orga', 'backgroundTasks', 'editGranularity', [
                     'LABEL' => $this->translator->get($granularity->getLabel())
                 ])

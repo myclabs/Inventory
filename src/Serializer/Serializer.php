@@ -156,37 +156,6 @@ class Serializer
 
             $property->setAccessible(true);
 
-            // Translated property
-            if (isset($config['properties'][$propertyName]['translated'])
-                && $config['properties'][$propertyName]['translated'] === true) {
-                $translations = $this->translationRepository->findTranslations($object);
-                // Moche, à cause d'un bug dans Translatable
-                if (empty($translations)) {
-                    $qb = $this->translationRepository->createQueryBuilder('trans');
-                    $qb->select('trans.content, trans.field, trans.locale')
-                        ->where('trans.foreignKey = :entityId', 'trans.objectClass = :entityClass');
-                    $data = $qb->getQuery()->execute(
-                        ['entityId' => $object->getId(), 'entityClass' => ClassUtils::getClass($object)],
-                        Query::HYDRATE_ARRAY
-                    );
-                    if ($data && is_array($data) && count($data)) {
-                        foreach ($data as $row) {
-                            $translations[$row['locale']][$row['field']] = $row['content'];
-                        }
-                    }
-                }
-                $propertyTranslations = [
-                    'translated' => true,
-                    'fr'         => $property->getValue($object), // valeur par défaut
-                ];
-                foreach ($translations as $lang => $properties) {
-                    if (isset($properties[$propertyName])) {
-                        $propertyTranslations[$lang] = $properties[$propertyName];
-                    }
-                }
-                $property->setValue($object, $propertyTranslations);
-            }
-
             if (isset($propertyConfig['serialize'])) {
                 $callable = $propertyConfig['serialize'];
                 $serializedValue = $callable($property->getValue($object));

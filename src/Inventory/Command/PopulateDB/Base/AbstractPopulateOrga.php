@@ -201,6 +201,7 @@ abstract class AbstractPopulateOrga
      * @param Orga_Model_Organization $organization
      * @param array $axes
      * @param bool $relevance
+     * @param bool $monitoring
      * @param bool $dWCubes
      * @param bool $acl
      * @return Orga_Model_Granularity
@@ -209,6 +210,7 @@ abstract class AbstractPopulateOrga
         Orga_Model_Organization $organization,
         array $axes = [],
         $relevance = false,
+        $monitoring = false,
         $dWCubes = false,
         $acl = true
     ) {
@@ -218,6 +220,7 @@ abstract class AbstractPopulateOrga
             $granularity = new Orga_Model_Granularity($organization, $axes);
         }
         $granularity->setCellsControlRelevance($relevance);
+        $granularity->setCellsMonitorInventory($monitoring);
         $granularity->setCellsGenerateDWCubes($dWCubes);
         $granularity->setCellsWithACL($acl);
         $granularity->save();
@@ -306,6 +309,7 @@ abstract class AbstractPopulateOrga
         $inputSetPrimary->save();
 
         $inputCell->setAFInputSetPrimary($inputSetPrimary);
+        $inputCell->updateInputStatus();
         $this->etlDataService->populateDWResultsFromCell($inputCell);
     }
 

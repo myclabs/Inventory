@@ -7,6 +7,14 @@
  * @package    UI
  * @subpackage Datagrid
  */
+use AF\Application\Form\Action\SetOptions;
+use AF\Application\Form\Action\Show;
+use AF\Application\Form\Condition\FormCondition;
+use AF\Application\Form\Condition\ElementaryCondition;
+use AF\Application\Form\Element\Option;
+use AF\Application\Form\Element\NumericField;
+use AF\Application\Form\Element\Radio;
+use AF\Application\Form\Element\Select;
 
 /**
  * Description of colonne order.
@@ -389,7 +397,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
     public function getFilterFormElement($datagrid, $defaultValue=null)
     {
         throw new Exception('Col Order needs to be refactored before being able to filter element.');
-        $filterFormElement = new UI_Form_Element_Numeric($this->getFilterFormId($datagrid));
+        $filterFormElement = new NumericField($this->getFilterFormId($datagrid));
         $filterFormElement->setLabel($this->getFilterFormLabel());
         $filterFormElement->getElement()->addPrefix($this->keywordFilterEqual);
 
@@ -401,7 +409,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
         $filterFormElement->getElement()->addSuffix($this->getResetFieldFilterFormSuffix($datagrid));
 
         // Champs pour le fitre <=.
-        $filterFormElementInferior = new UI_Form_Element_Numeric($this->getFilterFormId($datagrid).'_lower');
+        $filterFormElementInferior = new NumericField($this->getFilterFormId($datagrid).'_lower');
         $filterFormElementInferior->getElement()->addPrefix($this->keywordFilterLower);
         if (isset($defaultValue[$this->filterOperatorLower])) {
             $filterFormElementInferior->setValue($defaultValue[$this->filterOperatorLower]);
@@ -416,7 +424,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
         $filterFormElement->getElement()->addElement($filterFormElementInferior);
 
         // Champs pour le fitre >=.
-        $filterFormElementSuperior = new UI_Form_Element_Numeric($this->getFilterFormId($datagrid).'_higher');
+        $filterFormElementSuperior = new NumericField($this->getFilterFormId($datagrid).'_higher');
         $filterFormElementSuperior->getElement()->addPrefix($this->keywordFilterHigher);
         if (isset($defaultValue[$this->filterOperatorHigher])) {
             $filterFormElementSuperior->setValue($defaultValue[$this->filterOperatorHigher]);
@@ -504,42 +512,42 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
     public function getAddFormElement($datagrid)
     {
         throw new Exception('Col Order needs to be refactored before being able to add element.');
-        $addFormElement = new UI_Form_Element_Radio($this->getAddFormElementId($datagrid));
+        $addFormElement = new Radio($this->getAddFormElementId($datagrid));
         $addFormElement->setLabel($this->getAddFormElementLabel());
 
-        $optionFirst = new UI_Form_Element_Option($this->getAddFormElementId($datagrid).'_first', 'first');
+        $optionFirst = new Option($this->getAddFormElementId($datagrid).'_first', 'first');
         $optionFirst->label = $this->labelAddFirst;
         $addFormElement->addOption($optionFirst);
 
-        $optionLast = new UI_Form_Element_Option($this->getAddFormElementId($datagrid).'_last', 'last');
+        $optionLast = new Option($this->getAddFormElementId($datagrid).'_last', 'last');
         $optionLast->label = $this->labelAddLast;
         $addFormElement->addOption($optionLast);
 
         if ($this->listPosition != null) {
-            $optionAfter = new UI_Form_Element_Option($this->getAddFormElementId($datagrid).'_after', 'after');
+            $optionAfter = new Option($this->getAddFormElementId($datagrid).'_after', 'after');
             $optionAfter->label = $this->labelAddAfter;
             $addFormElement->addOption($optionAfter);
 
-            $selectAfter = new UI_Form_Element_Select($this->getAddFormElementId($datagrid).'_select');
+            $selectAfter = new Select($this->getAddFormElementId($datagrid).'_select');
 
-            $optionLoading = new UI_Form_Element_Option($this->getAddFormElementId($datagrid).'_load');
+            $optionLoading = new Option($this->getAddFormElementId($datagrid).'_load');
             $optionLoading->label = $this->loadingText;
             $selectAfter->addOption($optionLoading);
             $selectAfter->getElement()->hidden = true;
 
             $addFormElement->getElement()->addElement($selectAfter);
 
-            $conditionShowSelect = new UI_Form_Condition_Elementary($this->getAddFormElementId($datagrid).'_equal');
+            $conditionShowSelect = new ElementaryCondition($this->getAddFormElementId($datagrid).'_equal');
             $conditionShowSelect->element = $addFormElement;
-            $conditionShowSelect->relation = UI_Form_Condition::EQUAL;
+            $conditionShowSelect->relation = FormCondition::EQUAL;
             $conditionShowSelect->value = $optionAfter->value;
 
-            $actionShowSelect = new UI_Form_Action_Show($this->getAddFormElementId($datagrid).'_show');
+            $actionShowSelect = new Show($this->getAddFormElementId($datagrid).'_show');
             $actionShowSelect->condition = $conditionShowSelect;
 
             $selectAfter->getElement()->addAction($actionShowSelect);
 
-            $actionFillSelect = new UI_Form_Action_SetOptions($this->getAddFormElementId($datagrid).'_fill');
+            $actionFillSelect = new SetOptions($this->getAddFormElementId($datagrid).'_fill');
             $actionFillSelect->condition = $conditionShowSelect;
             $actionFillSelect->request = $this->listPosition;
             $actionFillSelect->backValue = array($this->loadingText);

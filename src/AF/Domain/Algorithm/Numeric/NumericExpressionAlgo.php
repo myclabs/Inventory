@@ -10,9 +10,9 @@ use Core_Exception_NotFound;
 use Exec\Execution\Calc;
 use Exec\Provider\UnitInterface;
 use Exec\Provider\ValueInterface;
+use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
 use TEC\Exception\InvalidExpressionException;
 use TEC\Expression;
-use Unit\IncompatibleUnitsException;
 use Unit\UnitAPI;
 
 /**
@@ -51,9 +51,7 @@ class NumericExpressionAlgo extends NumericAlgo implements ValueInterface, UnitI
         $result = $calc->executeExpression($this);
 
         // Convertit à l'unité de l'algo
-        $convertedValue = $result->getDigitalValue() / $result->getUnit()->getConversionFactor($this->getUnit());
-
-        return new Calc_UnitValue($this->getUnit(), $convertedValue, $result->getRelativeUncertainty());
+        return $result->convertTo($this->getUnit());
     }
 
     /**
@@ -109,19 +107,16 @@ class NumericExpressionAlgo extends NumericAlgo implements ValueInterface, UnitI
         try {
             $calculationUnit = $calc->checkUnitCompatibility($this);
             if (!$calculationUnit->isEquivalent($this->getUnit())) {
-                $errors[] = new AlgoConfigurationError(
-                    __('Algo', 'configControl', 'operandUnitsNotCompatibleWithAlgoUnit', [
-                        'REF_ALGO'        => $this->ref,
-                        'ALGO_UNIT'       => $this->getUnit(),
-                        'EXPRESSION'      => $this->expression,
-                        'EXPRESSION_UNIT' => $calculationUnit,
-                    ]),
-                    true
-                );
+                $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'operandUnitsNotCompatibleWithAlgoUnit', [
+                   'REF_ALGO'   => $this->ref,
+                   'ALGO_UNIT'   => $this->getUnit(),
+                   'EXPRESSION' => $this->expression,
+                   'EXPRESSION_UNIT' => $calculationUnit,
+                ]), true);
             }
         } catch (IncompatibleUnitsException $e) {
             $errors[] = new AlgoConfigurationError(__('Algo', 'configControl', 'incompatibleUnitsAmongOperands', [
-                'REF_ALGO'   => $this->ref,
+                'REF_ALGO' => $this->ref,
                 'EXPRESSION' => $this->expression
             ]), true);
         } catch (Core_Exception_NotFound $e) {

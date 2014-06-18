@@ -13,7 +13,7 @@ use Core_ORM_ForeignKeyViolationException;
 use Core_Strategy_Ordered;
 use Core_Tools;
 use Mnapoli\Translated\Translator;
-use UI_Form_Element_Option;
+use AF\Application\Form\Element\Option;
 
 /**
  * Gestion des options associées aux composants de type select.
@@ -69,11 +69,11 @@ class SelectOption extends Core_Model_Entity
 
     /**
      * Génère un élément UI
-     * @return UI_Form_Element_Option
+     * @return Option
      */
     public function getUIElement()
     {
-        $uiElement = new UI_Form_Element_Option($this->ref);
+        $uiElement = new Option($this->ref);
         $uiElement->value = $this->ref;
         $uiElement->label = $this->uglyTranslate($this->label);
         $uiElement->disabled = !$this->enabled;

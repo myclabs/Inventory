@@ -5,7 +5,7 @@ namespace UI\Datagrid\Column;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\Icon;
 use UI\Datagrid\Datagrid;
-use UI_Form_ZendElement;
+use AF\Application\Form\Element\ZendFormElement;
 
 /**
  * Classe abstraite représentant une colonne de datagrid.

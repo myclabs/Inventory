@@ -1,19 +1,16 @@
 <?php
-use MyCLabs\MUIH\Button;
 
-/**
- * @author valentin.claras
- * @package UI
- * @subpackage Form
- */
+use AF\Application\Form\Element\FormElement;
+use AF\Application\Form\Element\HTMLElement;
+use AF\Application\Form\Element\ZendFormElement;
+use MyCLabs\MUIH\Button;
 
 /**
  * Generate a Captcha Image.
  *
- * @package UI
- * @subpackage Form
+ * @author valentin.claras
  */
-class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha implements UI_Form_ZendElement
+class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha implements ZendFormElement
 {
     /**
      * Contient le chemin vers le controlleur qui doit étendre UI_Form_Element_Captcha.
@@ -23,22 +20,19 @@ class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha implements UI_Fo
     protected $_urlController;
 
     /**
-     * Reference to a UI_Form_Element, to access to its methods.
-     *
-     * @var UI_Form_Element
+     * @var FormElement
      */
     protected $_element;
 
 
     /**
-     * Constructor
-     *
-     * @param String $name
+     * @param string $name
      * @param string $urlReload
      *
+     * @throws Core_Exception
      * @throws Core_Exception_InvalidArgument if $name is not valid.
      */
-    public function __construct($name, $urlReload=null)
+    public function __construct($name, $urlReload = null)
     {
         if (!(is_string($name))) {
             throw new Core_Exception_InvalidArgument('Name is required for the Element');
@@ -81,11 +75,11 @@ class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha implements UI_Fo
         );
 
         parent::__construct($name, $options);
-        $this->_element = new UI_Form_Element($this);
+        $this->_element = new FormElement($this);
 
         if ($urlReload !== null) {
             $this->_urlController = $urlReload;
-            $captchaReload = new UI_Form_Element_HTML('reloadCaptcha-'.$name);
+            $captchaReload = new HTMLElement('reloadCaptcha-'.$name);
             $buttonReload = new Button(__('UI', 'captcha', 'reloadCaptcha'));
             $buttonReload->setAttribute('id', $this->getId().'-reload');
             $captchaReload->content = $buttonReload->render();
@@ -98,7 +92,7 @@ class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha implements UI_Fo
     /**
      * Get the associated Element.
      *
-     * @return UI_Form_Element
+     * @return FormElement
      */
     public function getElement()
     {
@@ -106,7 +100,7 @@ class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha implements UI_Fo
     }
 
     /**
-     * Utilisé par UI_Form pour fournir les scripts javascripts.
+     * Utilisé par Form pour fournir les scripts javascripts.
      *
      * @return string
      */
@@ -135,5 +129,4 @@ class UI_Form_Element_Captcha extends Zend_Form_Element_Captcha implements UI_Fo
 
         return $script;
     }
-
 }

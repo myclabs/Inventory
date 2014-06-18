@@ -128,8 +128,10 @@ class Core_Model_Repository extends Doctrine\ORM\EntityRepository
      * @param QueryBuilder $queryBuilder
      * @param Core_Model_Query $queryParameters
      */
-    protected function addCustomParametersToQueryBuilder($queryBuilder, Core_Model_Query $queryParameters = null)
-    {
+    protected function addCustomParametersToQueryBuilder(
+        QueryBuilder $queryBuilder,
+        Core_Model_Query $queryParameters = null
+    ) {
         // Nothing added by default !
     }
 

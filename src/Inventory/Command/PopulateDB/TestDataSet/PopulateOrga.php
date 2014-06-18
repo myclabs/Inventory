@@ -62,17 +62,18 @@ class PopulateOrga extends AbstractPopulateOrga
         $member_categorie_forfait_marque = $this->createMember($axis_categorie, 'forfait_marque', 'Forfait marque');
 
         // Création des granularités.
-        $granularityGlobal = $this->createGranularity($organization, [],                                                        false, true,  true);
-        $granularity_zone_marque = $this->createGranularity($organization, [$axis_zone, $axis_marque],                          true,  true,  true);
-        $granularity_site = $this->createGranularity($organization, [$axis_site],                                               false, true,  true);
-        $granularity_annee = $this->createGranularity($organization, [$axis_annee],                                             false, false, false);
-        $granularity_annee_categorie = $this->createGranularity($organization, [$axis_annee, $axis_categorie],                  false, false, false);
-        $granularity_annee_zone_marque = $this->createGranularity($organization, [$axis_annee, $axis_zone, $axis_marque],       false, false, false);
-        $granularity_annee_site = $this->createGranularity($organization, [$axis_annee, $axis_site],                            false, false, false);
-        $granularity_annee_site_categorie = $this->createGranularity($organization, [$axis_annee, $axis_site, $axis_categorie], false, false, false);
-
+        $granularityGlobal = $this->createGranularity($organization, [],                                                        false, false, true,  true);
+        $granularity_zone_marque = $this->createGranularity($organization, [$axis_zone, $axis_marque],                          true,  false, true,  true);
+        $granularity_site = $this->createGranularity($organization, [$axis_site],                                               false, false, true,  true);
+        $granularity_annee = $this->createGranularity($organization, [$axis_annee],                                             false, false, false, false);
+        $granularity_annee_categorie = $this->createGranularity($organization, [$axis_annee, $axis_categorie],                  false, false, false, false);
+        $granularity_annee_zone_marque = $this->createGranularity($organization, [$axis_annee, $axis_zone, $axis_marque],       false, false, false, false);
         // Granularité des collectes
         $organization->setGranularityForInventoryStatus($granularity_annee_zone_marque);
+        // Création des granularités.
+        $granularity_annee_site = $this->createGranularity($organization, [$axis_annee, $axis_site],                            false, true,  false, false);
+        $granularity_annee_site_categorie = $this->createGranularity($organization, [$axis_annee, $axis_site, $axis_categorie], false, true,  false, false);
+
 
         // Granularités de saisie
         $granularityGlobal->setInputConfigGranularity($granularityGlobal); // Utile pour tester le bon affichage dans les onglets Saisies et Formulaires
@@ -82,11 +83,11 @@ class PopulateOrga extends AbstractPopulateOrga
 
         // Statut des inventaires
         // 2012 ouvert pour Europe marque A
-        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::STATUS_ACTIVE);
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::INVENTORY_STATUS_ACTIVE);
         // 2012 clôturé pour Europe marque B
-        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_b], Orga_Model_Cell::STATUS_CLOSED);
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_b], Orga_Model_Cell::INVENTORY_STATUS_CLOSED);
         // 2013 ouvert pour Europe marque A
-        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2013, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::STATUS_ACTIVE);
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2013, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::INVENTORY_STATUS_ACTIVE);
         // 2013 non lancé pour Europe marque B (par défaut)
 
         // Sélection des formulaires

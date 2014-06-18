@@ -27,8 +27,8 @@ use Core_Model_Query;
 use Core_Strategy_Ordered;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use UI_Form;
-use UI_Form_Element_Group;
+use AF\Application\Form\Form;
+use AF\Application\Form\Element\Group as FormGroup;
 
 /**
  * Accounting form.
@@ -232,16 +232,16 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * Generate a UI_Form to render it in a view
+     * Generate a form to render it in a view
      * @param PrimaryInputSet|null $inputSet
      * @param string               $mode read, write or test (default is write)
-     * @return UI_Form
+     * @return Form
      */
     public function generateForm(
         PrimaryInputSet $inputSet = null,
         $mode = AFViewConfiguration::MODE_WRITE
     ) {
-        $form = new UI_Form('af' . $this->id);
+        $form = new Form('af' . $this->id);
         $form->addClass('af');
 
         $generationHelper = new AFGenerationHelper($inputSet, $mode);
@@ -252,10 +252,10 @@ class AF extends Core_Model_Entity
     }
 
     /**
-     * Génère un composant UI_Form de cet AF en tant que sous-AF
+     * Génère un composant form de cet AF en tant que sous-AF
      * @param AFGenerationHelper $generationHelper
      * @param InputSet|null      $inputSet
-     * @return UI_Form_Element_Group
+     * @return FormGroup
      */
     public function generateSubForm(AFGenerationHelper $generationHelper, InputSet $inputSet = null)
     {

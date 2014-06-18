@@ -1,11 +1,13 @@
 <?php
 use AF\Application\AFViewConfiguration;
+use AF\Application\Form\Element\HTMLElement;
+use AF\Application\Form\Form;
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
 
 /** @var $af AF */
 $af = $this->af;
-/** @var $form UI_Form */
+/** @var $form Form */
 $form = $this->form;
 /** @var $inputSet PrimaryInputSet|null */
 $inputSet = $this->inputSet;
@@ -36,7 +38,7 @@ if ($this->mode != AFViewConfiguration::MODE_READ) {
 
     $loadingText = __('UI', 'loading', 'loading');
     // Boutons
-    $actionGroup = new UI_Form_Element_HTML('formActionGroup');
+    $actionGroup = new HTMLElement('formActionGroup');
     $saveButtonLabel = __('UI', 'verb', 'save');
     $finishButtonLabel = __('AF', 'inputInput', 'finish');
     $resultsPreviewButtonHelp = __('AF', 'inputInput', 'resultsPreviewHelp');
@@ -77,7 +79,7 @@ HTML;
 } else {
 
     // Boutons
-    $actionGroup = new UI_Form_Element_HTML('formActionGroup');
+    $actionGroup = new HTMLElement('formActionGroup');
     $quitButtonLabel = __('UI', 'verb', 'quit');
     $actionGroup->content = <<<HTML
         <button type="button" class="inputExit btn btn-default">

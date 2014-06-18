@@ -9,6 +9,7 @@
 use Core\Translation\TranslatedString;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Mnapoli\Translated\Translator;
 
 /**
@@ -485,7 +486,7 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @param DW_Model_Filter $filter
      */
-    public function removeFilter($filter)
+    public function removeFilter(DW_Model_Filter $filter)
     {
         if ($this->hasFilter($filter)) {
             $this->filters->removeElement($filter);
@@ -522,11 +523,9 @@ class DW_Model_Report extends Core_Model_Entity
      *
      * @return DW_Model_Filter
      */
-    public function getFilterForAxis($axis)
+    public function getFilterForAxis(DW_Model_Axis $axis)
     {
-        $criteria = Doctrine\Common\Collections\Criteria::create()->where(
-            Doctrine\Common\Collections\Criteria::expr()->eq('axis', $axis)
-        );
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('axis', $axis));
         $filterArray = $this->filters->matching($criteria)->toArray();
 
         if (empty($filterArray)) {
@@ -627,7 +626,7 @@ class DW_Model_Report extends Core_Model_Entity
                 $serieAxis->type = 'string';
                 $serieValues = new UI_Chart_Serie('');
                 $numberValues = 0;
-                foreach ($this->getValues() as $position => $value) {
+                foreach ($this->getValues() as $value) {
                     $serieAxis->values[] = $translator->get($value['members'][0]->getLabel());
                     $serieValues->values[] = $value['value'];
                     $serieValues->uncertainties[] = $value['uncertainty'];

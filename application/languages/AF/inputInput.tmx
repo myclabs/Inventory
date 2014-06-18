@@ -115,18 +115,52 @@
 				<seg>Input saved (complete input).</seg>
 			</tuv>
 		</tu>
-        <tu tuid="completeInputSavedCalculationErrorUnknownParameterFamilyMember">
+        <tu tuid="completeInputSavedCalculationError">
             <tuv xml:lang="fr">
                 <seg>
                     Enregistrement effectué.
                     La saisie est complète, mais un problème est intervenu dans l'exécution des calculs :
-                    le membre « [MEMBER] » pour la coordonnée « [DIMENSION] » de la famille « [FAMILY] » est introuvable.
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
                     Input saved. The input is complete, but the calculation failed:
+                </seg>
+            </tuv>
+        </tu>
+        <tu tuid="calculationErrorUnknownParameterFamilyMember">
+            <tuv xml:lang="fr">
+                <seg>
+                    le membre « [MEMBER] » pour la coordonnée « [DIMENSION] » de la famille « [FAMILY] » est introuvable.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    the member "[MEMBER]" for the coordinate « [DIMENSION] » of the family "[FAMILY]" doesn't exist.
+                </seg>
+            </tuv>
+        </tu>
+        <tu tuid="calculationErrorUnknownParameter">
+            <tuv xml:lang="fr">
+                <seg>
+                    le paramètre « [PARAMETER] » de la famille « [FAMILY] » est introuvable.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
                     the parameter "[PARAMETER]" of the family "[FAMILY]" doesn't exist.
+                </seg>
+            </tuv>
+        </tu>
+        <tu tuid="calculationErrorUnknownFamily">
+            <tuv xml:lang="fr">
+                <seg>
+                    la famille « [FAMILY] » est introuvable.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    the family "[FAMILY]" doesn't exist.
                 </seg>
             </tuv>
         </tu>

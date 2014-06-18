@@ -19,11 +19,13 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
     /**
      * Ajoute des paramètres personnalisés au QueryBuilder utilisé par le loadList et le countTotal.
      *
-     * @param QueryBuilder $queryBuilder
-     * @param Core_Model_Query $queryParameters
+     * @param QueryBuilder          $queryBuilder
+     * @param Core_Model_Query|null $queryParameters
      */
-    protected function addCustomParametersToQueryBuilder($queryBuilder, Core_Model_Query $queryParameters = null)
-    {
+    protected function addCustomParametersToQueryBuilder(
+        QueryBuilder $queryBuilder,
+        Core_Model_Query $queryParameters = null
+    ) {
         if ($queryParameters === null) {
             return;
         }
@@ -110,7 +112,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
      * @param Core_Model_Query $queryParameters
      * @param QueryBuilder $queryBuilder
      */
-    protected function addMembersFiltersToQueryBuilder($queryParameters, $queryBuilder)
+    protected function addMembersFiltersToQueryBuilder(Core_Model_Query $queryParameters, QueryBuilder $queryBuilder)
     {
         foreach ($queryParameters->getCustomParameters() as $memberFilter) {
             $queryBuilder->leftJoin(
@@ -156,7 +158,7 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
      * @param array $arrayMembers
      * @param QueryBuilder $queryBuilder
      */
-    protected function parseArrayMembersToQueryBuilder($arrayMembers, $queryBuilder)
+    protected function parseArrayMembersToQueryBuilder($arrayMembers, QueryBuilder $queryBuilder)
     {
         $queryBuilder->leftJoin(
             Orga_Model_Cell::getAlias().'.members',
@@ -191,8 +193,11 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
      *
      * @return array('expression' => \Doctrine\ORM\Query\Expr\Andx, 'parameters' => array())
      */
-    protected function getGranularityMembersNeededExpression($granularityIndex, $granularityMembers, $queryBuilder)
-    {
+    protected function getGranularityMembersNeededExpression(
+        $granularityIndex,
+        $granularityMembers,
+        QueryBuilder $queryBuilder
+    ) {
         $cellAlias = Orga_Model_Cell::getAlias();
 
         $granularityMembersExpression = $queryBuilder->expr()->andX();

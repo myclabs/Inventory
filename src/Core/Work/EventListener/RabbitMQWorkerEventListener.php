@@ -49,7 +49,8 @@ class RabbitMQWorkerEventListener implements WorkerEventListener
     {
         // Traitement spécial pour les entités Doctrine
         if ($task instanceof ServiceCallTask) {
-            $task->reloadEntities($this->entityManager);
+            $task->setEntityManager($this->entityManager);
+            $task->reloadEntities();
         }
     }
 

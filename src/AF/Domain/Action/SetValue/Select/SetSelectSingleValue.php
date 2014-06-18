@@ -3,7 +3,7 @@
 namespace AF\Domain\Action\SetValue\Select;
 
 use AF\Domain\Action\SetValue;
-use UI_Form_Action_SetValue;
+use AF\Application\Form\Action\SetValue as FormSetValue;
 use AF\Domain\Component\Select\SelectOption;
 use AF\Domain\AFGenerationHelper;
 
@@ -23,7 +23,7 @@ class SetSelectSingleValue extends SetValue
      */
     public function getUIAction(AFGenerationHelper $generationHelper)
     {
-        $uiAction = new UI_Form_Action_SetValue($this->id);
+        $uiAction = new FormSetValue($this->id);
         if (!empty($this->condition)) {
             $uiAction->condition = $generationHelper->getUICondition($this->condition);
         }

@@ -1,10 +1,13 @@
 <?php
 
 use Account\Domain\ACL\AccountAdminRole;
+use Doctrine\Common\Cache\Cache;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\Doctrine\ACLSetup;
+use Unit\Service\CachedUnitOperationService;
+use Unit\Service\CachedUnitService;
 use User\Domain\ACL\Actions;
 use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
@@ -18,6 +21,10 @@ use Orga\Model\ACL\CellResourceGraphTraverser;
 use Orga\Model\ACL\OrganizationAdminRole;
 use Orga\Model\ACL\OrganizationResourceGraphTraverser;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use MyCLabs\UnitAPI\UnitOperationService;
+use MyCLabs\UnitAPI\UnitService;
+use MyCLabs\UnitAPI\WebService\UnitOperationWebService;
+use MyCLabs\UnitAPI\WebService\UnitWebService;
 use User\Domain\ACL\AdminRole;
 use User\Domain\User;
 
@@ -128,4 +135,20 @@ return [
         return $setup;
     }),
 
+
+    // Units API
+    'units.webservice.url' => 'http://units.myc-sense.com/api/',
+    'units.webservice.httpClient' => DI\factory(function (ContainerInterface $c) {
+        return new \GuzzleHttp\Client([
+            'base_url' => $c->get('units.webservice.url'),
+        ]);
+    }),
+    UnitWebService::class => DI\object()
+            ->constructor(DI\link('units.webservice.httpClient')),
+    UnitService::class => DI\object(CachedUnitService::class)
+            ->constructor(DI\link(UnitWebService::class), DI\link(Cache::class)),
+    UnitOperationWebService::class => DI\object()
+            ->constructor(DI\link('units.webservice.httpClient')),
+    UnitOperationService::class => DI\object(CachedUnitOperationService::class)
+            ->constructor(DI\link(UnitOperationWebService::class), DI\link(Cache::class)),
 ];

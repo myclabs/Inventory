@@ -29,11 +29,6 @@ class Orga_Service_InputService
      */
     private $workDispatcher;
 
-    /**
-     * @param InputService    $afInputService
-     * @param EventDispatcher $eventDispatcher
-     * @param WorkDispatcher  $workDispatcher
-     */
     public function __construct(
         InputService $afInputService,
         EventDispatcher $eventDispatcher,
@@ -72,6 +67,7 @@ class Orga_Service_InputService
         if ($inputSet) {
             // Modification de la saisie
             $this->afInputService->editInputSet($inputSet, $newValues);
+            $cell->updateInputStatus();
 
             $event = new Orga_Service_InputEditedEvent($cell);
         } else {
@@ -81,6 +77,7 @@ class Orga_Service_InputService
             // Sauvegarde et attache à la cellule
             $inputSet->save();
             $cell->setAFInputSetPrimary($inputSet);
+            $cell->updateInputStatus();
             $this->afInputService->updateResults($inputSet);
 
             $event = new Orga_Service_InputCreatedEvent($cell);

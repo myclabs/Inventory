@@ -109,23 +109,6 @@ class UI_JS_AutoComplete extends UI_Generic
     }
 
     /**
-     * Ajoute les fichiers CSS et Javascript à la page.
-     *
-     * @param UI_JS_AutoComplete $instance Permet de spécifier les headers requis en fonction de l'instance passée.
-     */
-    static function addHeader($instance=null)
-    {
-        /* @var $broker Zend_Controller_Action_Helper_ViewRenderer */
-        $broker = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
-
-        // Ajout des feuilles de style.
-        // Ajout des fichiers Javascript.
-        $broker->view->headScript()->appendFile('select2/select2.js', 'text/javascript');
-
-        parent::addHeader($instance);
-    }
-
-    /**
      * Fonction permettant d'ajouter des attributs html à l'autocomplete.
      *
      * @param string $attributeName  Nom de l'attribut à ajouter.
