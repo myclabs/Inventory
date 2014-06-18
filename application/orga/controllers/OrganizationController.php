@@ -216,7 +216,10 @@ class Orga_OrganizationController extends Core_Controller
         $task = new ServiceCallTask(
             'Orga_Service_OrganizationService',
             'deleteOrganization',
-            [$organization]
+            [$organization],
+            ___('Orga', 'backgroundTasks', 'removeOrganization',
+                ['LABEL' => $this->translator->get($organization->getLabel())]
+            )
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
