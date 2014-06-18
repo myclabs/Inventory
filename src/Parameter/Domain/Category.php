@@ -259,6 +259,7 @@ class Category extends Core_Model_Entity
     protected function getContext()
     {
         return [
+            'library'        => $this->library,
             'parentCategory' => $this->parentCategory,
         ];
     }
