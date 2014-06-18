@@ -87,7 +87,15 @@
             <tuv xml:lang="en">
                 <seg>Before deleting this axis, please delete its members first.</seg>
             </tuv>
-        </tu>    
+        </tu>
+        <tu tuid="contextualizingAxisHasMembersWithSameRef">
+            <tuv xml:lang="fr">
+                <seg>Pour pouvoir enlever le caractère contextualisant de cet axe, merci de modifier auparavant ses éléments avec des refs identiques.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Before removing the contextualizing effect of this axis, please change identical refs from its members first.</seg>
+            </tuv>
+        </tu>
 
 
     </body>

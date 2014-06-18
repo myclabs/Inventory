@@ -184,7 +184,11 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
                 $this->translator->set($axis->getLabel(), $newLabel);
             }
             if ($axis->isContextualizing() !== $contextualizing) {
-                $axis->setContextualize($contextualizing);
+                try {
+                    $axis->setContextualize($contextualizing);
+                } catch (Core_Exception_TooMany $e) {
+                    throw new Core_Exception_User('Orga', 'exceptions', 'test');
+                }
             }
             if (($newPosition !== null) && ($axis->getPosition() !== $newPosition)) {
                 $axis->setPosition($newPosition);
@@ -192,6 +196,19 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             $this->message = __('UI', 'message', 'updated', [
                 'AXIS' => $this->translator->get($axis->getLabel())
             ]);
+        }
+
+        $this->entityManager->beginTransaction();
+        try {
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Core_Exception_TooMany $e) {
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
+            $this->setEditFormElementErrorMessage(
+                'isContextualizing',
+                __('Orga', 'axis', 'contextualizingAxisHasMembersWithSameRef')
+            );
         }
 
         $this->send();

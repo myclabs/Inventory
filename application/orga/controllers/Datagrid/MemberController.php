@@ -131,8 +131,8 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             $this->setAddElementErrorMessage('ref', $e->getMessage());
         }
 
-        $broaderMembers = array();
-        $contextualizingMembers = array();
+        $parentMembers = [];
+        $contextualizingMembers = [];
         foreach ($axis->getDirectBroaders() as $directBroaderAxis) {
             $formFieldRef = 'broader'.$directBroaderAxis->getRef();
             $refBroaderMember = $this->getAddElementValue($formFieldRef);
@@ -141,7 +141,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             } else {
                 try {
                     $broaderMember = $directBroaderAxis->getMemberByCompleteRef($refBroaderMember);
-                    $broaderMembers[] = $broaderMember;
+                    $parentMembers[] = $broaderMember;
                 } catch (Core_Exception_NotFound $e) {
                     $this->setAddElementErrorMessage($formFieldRef, __('Core', 'exception', 'applicationError'));
                     continue;
@@ -175,7 +175,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 $task = new ServiceCallTask(
                     'Orga_Service_OrganizationService',
                     'addMember',
-                    [$axis, $ref, $label, $broaderMembers],
+                    [$axis, $ref, $label, $parentMembers],
                     __('Orga', 'backgroundTasks', 'addMember', [
                         'MEMBER' => $label,
                         'AXIS' => $this->translator->get($axis->getLabel()),
