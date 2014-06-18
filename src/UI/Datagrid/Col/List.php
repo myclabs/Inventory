@@ -801,6 +801,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                 $textInput->setAttribute('name', $this->getAddFormElementId($datagrid));
                 $textInput->setAttribute('id', $this->getAddFormElementId($datagrid));
                 $textInput->setAttribute('value', $this->defaultAddValue);
+                $textInput->setAttribute('style', 'width: 100%;');
                 $selectWrapper->appendContent($textInput);
             } else {
                 $selectInput = new GenericTag('select');

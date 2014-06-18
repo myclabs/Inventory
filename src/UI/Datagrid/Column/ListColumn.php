@@ -750,6 +750,7 @@ class ListColumn extends GenericColumn
                 $textInput->setAttribute('name', $this->getAddFormElementId($datagrid));
                 $textInput->setAttribute('id', $this->getAddFormElementId($datagrid));
                 $textInput->setAttribute('value', $this->defaultAddValue);
+                $textInput->setAttribute('style', 'width: 100%;');
                 $selectWrapper->appendContent($textInput);
             } else {
                 $selectInput = new GenericTag('select');
