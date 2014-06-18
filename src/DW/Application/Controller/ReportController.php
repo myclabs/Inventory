@@ -7,17 +7,14 @@
  */
 
 use Core\Annotation\Secure;
-use DW\Application\Service\Export\Report\DW_Export_Report_Pdf;
+use DW\Application\DWFormConfiguration;
+use DW\Application\Service\Export\ExcelReport;
+use DW\Application\Service\Export\PdfReport;
 use DW\Application\Service\ReportService;
 use DW\Application\DWViewConfiguration;
-use DW\Domain\Axis;
 use DW\Domain\Cube;
 use DW\Domain\Filter;
-use DW\Domain\Indicator;
-use DW\Domain\Member;
 use DW\Domain\Report;
-use DW\Service\Export\Report\DW_Export_Report_Excel;
-use User\Domain\User;
 
 /**
  * Classe du controler de Data Warehouse
@@ -93,8 +90,7 @@ class DW_ReportController extends Core_Controller
         $this->view->assign('idCube', $report->getCube()->getId());
         $this->view->assign('hashReport', $hash);
         $this->view->assign('reportLabel', $this->translator->get($report->getLabel()));
-        require_once(dirname(__FILE__) . '/../forms/Configuration.php');
-        $this->view->assign('configurationForm', new DW_Form_configuration($report, $hash, $this->translator));
+        $this->view->assign('configurationForm', new DWFormconfiguration($report, $hash, $this->translator));
 
         if ($this->hasParam('viewConfiguration')) {
             $this->view->assign('viewConfiguration', $this->getParam('viewConfiguration'));
@@ -389,7 +385,7 @@ class DW_ReportController extends Core_Controller
     {
         $report = $this->getReportFromSession($this->getParam('hashReport'));
 
-        $export = new DW_Export_Report_Excel($report, $this->translator);
+        $export = new ExcelReport($report, $this->translator);
 
         $this->entityManager->clear();
 
@@ -404,7 +400,7 @@ class DW_ReportController extends Core_Controller
     {
         $report = $this->getReportFromSession($this->getParam('hashReport'));
 
-        $export = new DW_Export_Report_Pdf($report, $this->translator);
+        $export = new PdfReport($report, $this->translator);
 
         $this->entityManager->clear();
 

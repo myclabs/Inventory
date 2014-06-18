@@ -3,18 +3,21 @@
  * @author valentin.claras
  */
 
+namespace DW\Application;
+
 use DW\Domain\Report;
 use Mnapoli\Translated\Translator;
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\Collapse;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
+use MyCLabs\MUIH\Icon;
 
 /**
  * @package    DW
  * @subpackage Form
  */
-class DW_Form_configuration extends GenericTag
+class DWFormConfiguration extends GenericTag
 {
     /**
      * @var Translator
@@ -390,8 +393,32 @@ class DW_Form_configuration extends GenericTag
         $filtersCollapse = new Collapse('filters'.$hash, __('UI', 'name', 'filters'));
         $this->appendContent($filtersCollapse);
 
+        $filtersGroup = new GenericTag('div');
+        $filtersGroup->addClass('form-group');
+        $filtersCollapse->appendContent($filtersGroup);
+
+        $filtersInputGroup = new GenericTag('div');
+        $filtersInputGroup->addClass('input-group');
+        $filtersGroup->appendContent($filtersInputGroup);
+
+        $filtersSelect = new GenericTag('select');
+        $filtersSelect->setAttribute('name', 'addFilter');
+        $filtersSelect->addClass('form-control');
+        $filtersInputGroup->appendContent($filtersSelect);
+
+        $filtersAddAction = new Button(new Icon('plus'));
+        $filtersAddAction->addClass('add-filter');
+        $filtersAddActionWrapper = new GenericTag('span', $filtersAddAction);
+        $filtersAddActionWrapper->addClass('input-group-btn');
+        $filtersInputGroup->appendContent($filtersAddActionWrapper);
+
+        $emptyOption = new GenericTag('option', '');
+        $emptyOption->setAttribute('value', '');
+        $filtersSelect->appendContent($emptyOption);
+
         foreach ($report->getCube()->getAxes() as $axis) {
             $axisFilterWrapper = new GenericTag('fieldset');
+            $axisFilterWrapper->addClass('filter-' . $axis->getRef());
             $axisFilterLegend = new GenericTag('legend', $this->translator->get($axis->getLabel()));
             $axisFilterWrapper->appendContent($axisFilterLegend);
             $filtersCollapse->appendContent($axisFilterWrapper);
@@ -451,6 +478,11 @@ class DW_Form_configuration extends GenericTag
                     $oneMemberChoiceInput->setBooleanAttribute('checked');
                 }
             } else {
+                $filterAxisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
+                $filterAxisOption->setAttribute('value', $axis->getRef());
+                $filtersSelect->appendContent($filterAxisOption);
+
+                $axisFilterWrapper->addClass('hide');
                 $membersGroup->addClass('hide');
                 $allMembersChoiceInput->setBooleanAttribute('checked');
             }

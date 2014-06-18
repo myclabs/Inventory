@@ -351,6 +351,14 @@ $(document).ready(function() {
                 .closest('.form-group').removeClass('hide');
         }
     });
+    $('.add-filter').on('click', function() {
+        var select = $('select[name="addFilter"]');
+        if (select.val() != '') {
+            $('.filter-' + $('select[name="addFilter"]').val()).removeClass('hide');
+            $('option:selected', select).remove();
+            select.val('');
+        }
+    });
     $('input.filterMemberNumber').on('change', function() {
         var currentForm = $(this).closest('form');
 
