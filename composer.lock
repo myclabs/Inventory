@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "3fcd340d90e0e32b641cce8dc014b61a",
+    "hash": "7a0a1a27a36393bbf9c037dc53e87ac6",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -1152,16 +1153,16 @@
         },
         {
             "name": "myclabs/acl",
-            "version": "1.0.0",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/ACL.git",
-                "reference": "560642cf45f8060ae85435a0aafc82a2f5882370"
+                "reference": "5c89494c7a05474d4da6c5c3f005e183f49961ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/ACL/zipball/560642cf45f8060ae85435a0aafc82a2f5882370",
-                "reference": "560642cf45f8060ae85435a0aafc82a2f5882370",
+                "url": "https://api.github.com/repos/myclabs/ACL/zipball/5c89494c7a05474d4da6c5c3f005e183f49961ad",
+                "reference": "5c89494c7a05474d4da6c5c3f005e183f49961ad",
                 "shasum": ""
             },
             "require": {
@@ -1171,8 +1172,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "MyCLabs\\ACL\\": "src/",
-                    "Tests\\MyCLabs\\ACL\\": "tests/"
+                    "MyCLabs\\ACL\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1186,7 +1186,7 @@
                 "doctrine",
                 "permission"
             ],
-            "time": "2014-04-29 12:21:35"
+            "time": "2014-06-19 11:14:32"
         },
         {
             "name": "myclabs/array-comparator",
