@@ -348,9 +348,7 @@ class Orga_Service_OrganizationService
             while ($narrowerAxis !== null) {
                 $this->entityManager->refresh($narrowerAxis);
                 foreach ($narrowerAxis->getMembers() as $member) {
-                    foreach ($member->getCells() as $cell) {
-                        $cell->updateHierarchy();
-                    }
+                    $member->enableCells();
                 }
                 $narrowerAxis = $narrowerAxis->getDirectNarrower();
             }
