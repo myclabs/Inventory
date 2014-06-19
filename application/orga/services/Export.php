@@ -830,7 +830,7 @@ class Orga_Service_Export
                 if (!$subInput instanceof GroupInput) {
                     $subInputs = array_merge(
                         $subInputs,
-                        $this->getInputsDetails($subInput, $translator, $path . $this->translator->get($componentLabel) . '/')
+                        $this->getInputsDetails($subInput, $translator, $path . $componentLabel . '/')
                     );
                 }
             }
@@ -845,7 +845,7 @@ class Orga_Service_Export
                             $subInputs,
                             $this->getInputsDetails(
                                 $subInput,
-                                $path . $this->translator->get($componentLabel) . '/' . $label . '/'
+                                $path . $componentLabel . '/' . $label . '/'
                             )
                         );
                     }

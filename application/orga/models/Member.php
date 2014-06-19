@@ -480,20 +480,27 @@ class Orga_Model_Member extends Core_Model_Entity
     /**
      * Désactive chaque cellules.
      */
-    protected function disableCells()
+    public function disableCells()
     {
         foreach ($this->getCells() as $cell) {
             $cell->disable();
         }
+        foreach ($this->getDirectChildren() as $directChild) {
+            $directChild->disableCells();
+        }
+
     }
 
     /**
      * Active chaque cellules.
      */
-    protected function enableCells()
+    public function enableCells()
     {
         foreach ($this->getCells() as $cell) {
             $cell->enable();
+        }
+        foreach ($this->getDirectChildren() as $directChild) {
+            $directChild->enableCells();
         }
     }
 

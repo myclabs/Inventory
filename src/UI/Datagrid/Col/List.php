@@ -853,6 +853,8 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                     $selectInput->setAttribute('id', $this->getAddFormElementId($datagrid));
                     if ($this->fieldType !== self::FIELD_AUTOCOMPLETE) {
                         $selectInput->addClass('form-control');
+                    } else {
+                        $selectInput->setAttribute('style', 'width: 100%;');
                     }
                     $selectInput->setAttribute('multiple', 'multiple');
 

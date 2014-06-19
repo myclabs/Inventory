@@ -1,12 +1,27 @@
 <?php
 
 use Core\Annotation\Secure;
+use Core\Work\ServiceCall\ServiceCallTask;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 
 /**
  * @author valentin.claras
  */
 class Orga_Tree_AxisController extends UI_Controller_Tree
 {
+
+    /**
+     * @Inject
+     * @var SynchronousWorkDispatcher
+     */
+    private $workDispatcher;
+
+    /**
+     * @Inject("work.waitDelay")
+     * @var int
+     */
+    private $waitDelay;
+
     /**
      * @Secure("viewOrganization")
      */
@@ -224,15 +239,39 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
 
         if ($axis->hasGranularities()) {
             throw new Core_Exception_User('Orga', 'axis', 'axisHasGranularities',
-                array('AXIS' => $this->getParam('label')));
+                ['AXIS' => $this->getParam('label')]);
         } else if ($axis->hasMembers()) {
             throw new Core_Exception_User('Orga', 'axis', 'axisHasMembers',
-                    array('AXIS' => $this->getParam('label')));
+                    ['AXIS' => $this->getParam('label')]);
         } else if ($axis->hasDirectBroaders()) {
             throw new Core_Exception_User('Orga', 'axis', 'axisHasDirectBroaders',
-                    array('AXIS' => $this->getParam('label')));
+                    ['AXIS' => $this->getParam('label')]);
         }
-        $axis->delete();
+
+        $this->entityManager->flush();
+
+        $success = function () {
+            $this->message = __('UI', 'message', 'deleted');
+        };
+        $timeout = function () {
+            $this->message = __('UI', 'message', 'deletedLater');
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            'Orga_Service_OrganizationService',
+            'deleteAxis',
+            [$axis],
+            __('Orga', 'backgroundTasks', 'deleteAxis', [
+                    'AXIS' => $this->translator->get($axis->getLabel()),
+            ])
+        );
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
+
+
         $this->message = __('UI', 'message', 'deleted', [
             'AXIS' => $this->translator->get($axis->getLabel())
         ]);
