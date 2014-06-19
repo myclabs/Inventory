@@ -14,7 +14,7 @@ sheets:
           - foreach: contexts as context
             do:
               - cells:
-                  - "{{ context.label }}"
+                  - "{{ translateLabel(context.label) }}"
                   - "{{ context.ref }}"
 
       - type: VerticalTable
@@ -28,10 +28,10 @@ sheets:
           - foreach: indicators as indicator
             do:
               - cells:
-                  - "{{ indicator.label }}"
+                  - "{{ translateLabel(indicator.label) }}"
                   - "{{ indicator.ref }}"
-                  - "{{ indicator.unit.symbol }}"
-                  - "{{ indicator.ratioUnit.symbol }}"
+                  - "{{ translateLabel(indicator.unit.symbol) }}"
+                  - "{{ translateLabel(indicator.ratioUnit.symbol) }}"
 
       - type: VerticalTable
         label: "{{ contextindicatorTableLabel }}"
@@ -43,8 +43,8 @@ sheets:
           - foreach: contextindicators as contextindicator
             do:
               - cells:
-                  - "{{ contextindicator.context.label }}"
-                  - "{{ contextindicator.indicator.label }}"
+                  - "{{ translateLabel(contextindicator.context.label) }}"
+                  - "{{ translateLabel(contextindicator.indicator.label) }}"
                   - "{{ displayContextIndicatorAxes(contextindicator) }}"
 
 
@@ -61,7 +61,7 @@ sheets:
           - foreach: axes as axis
             do:
               - cells:
-                  - "{{ axis.label }}"
+                  - "{{ translateLabel(axis.label) }}"
                   - "{{ axis.ref }}"
                   - "{{ displayAxisDirectNarrower(axis) }}"
 
@@ -73,18 +73,18 @@ sheets:
       - foreach: axes as axis
         do:
           - type: VerticalTable
-            label: "{{ axis.label }}"
+            label: "{{ translateLabel(axis.label) }}"
             columns:
               - label: "{{ memberColumnLabel }}"
               - label: "{{ memberColumnRef }}"
               - foreach: axis.directBroaders as broaderAxis
                 do:
-                  - label: "{{ broaderAxis.label }}"
+                  - label: "{{ translateLabel(broaderAxis.label) }}"
             lines:
               - foreach: axis.members as member
                 do:
                   - cells:
-                      - "{{ member.label }}"
+                      - "{{ translateLabel(member.label) }}"
                       - "{{ member.ref }}"
                       - foreach: axis.directBroaders as broaderAxis
                         do:

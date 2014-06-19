@@ -2,7 +2,9 @@
 
 namespace Parameter\Application\Service;
 
+use Mnapoli\Translated\AbstractTranslatedString;
 use Mnapoli\Translated\Translator;
+use Parameter\Domain\ParameterLibrary;
 use PHPExcel_Writer_Excel2007;
 use PHPExcel_Writer_Excel5;
 use Parameter\Domain\Category;
@@ -17,7 +19,7 @@ use Xport\MappingReader\YamlMappingReader;
  * @author valentin.claras
  * @author matthieu.napoli
  */
-class ExportService
+class ParameterExportService
 {
     /**
      * @var Translator
@@ -32,10 +34,10 @@ class ExportService
     /**
      * Exporte les paramètres.
      *
-     * @param string $format
-     * @param string $file
+     * @param ParameterLibrary $library
+     * @param string           $format
      */
-    public function export($format, $file = 'php://output')
+    public function stream(ParameterLibrary $library, $format)
     {
         $modelBuilder = new SpreadsheetModelBuilder();
         $export = new PHPExcelExporter();
@@ -50,9 +52,12 @@ class ExportService
         $modelBuilder->bindFunction('getAllFamilies', $getAllFamilies);
 
         // Skip les catégories vides sinon onglet vide et -> https://github.com/PHPOffice/PHPExcel/issues/193
-        $categories = array_filter(Category::loadRootCategories(), function (Category $category) use ($getAllFamilies) {
-            return !empty($getAllFamilies($category));
-        });
+        $categories = array_filter(
+            $library->getCategories()->toArray(),
+                function (Category $category) use ($getAllFamilies) {
+                return !empty($getAllFamilies($category));
+            }
+        );
 
         $modelBuilder->bind('categories', $categories);
         $modelBuilder->bind('cellDigitalValue', __('UI', 'name', 'value'));
@@ -88,6 +93,13 @@ class ExportService
             }
         );
 
+        $modelBuilder->bindFunction(
+            'translateLabel',
+            function (AbstractTranslatedString $label) {
+                return $this->translator->get($label);
+            }
+        );
+
         switch ($format) {
             case 'xls':
                 $writer = new PHPExcel_Writer_Excel5();
@@ -98,8 +110,10 @@ class ExportService
                 break;
         }
 
-        $model = $modelBuilder->build(new YamlMappingReader(__DIR__ . '/export.yml'));
-
-        $export->export($model, $file, $writer);
+        $export->export(
+            $modelBuilder->build(new YamlMappingReader(__DIR__ . '/export.yml')),
+            'php://output',
+            $writer
+        );
     }
 }

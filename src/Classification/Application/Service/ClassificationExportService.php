@@ -7,6 +7,7 @@ use Classification\Domain\Member;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Axis;
 use Mnapoli\Translated\Translator;
+use Mnapoli\Translated\AbstractTranslatedString;
 use PHPExcel_Writer_Excel2007;
 use PHPExcel_Writer_Excel5;
 use Xport\Spreadsheet\Builder\SpreadsheetModelBuilder;
@@ -103,6 +104,13 @@ class ClassificationExportService
                     }
                 }
                 return '';
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'translateLabel',
+            function (AbstractTranslatedString $label) {
+                return $this->translator->get($label);
             }
         );
 
