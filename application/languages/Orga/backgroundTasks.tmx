@@ -60,6 +60,14 @@
                 <seg>Deletion of member: [MEMBER] from axis: [AXIS]</seg>
             </tuv>
         </tu>
+        <tu tuid="deleteAxis">
+            <tuv xml:lang="fr">
+                <seg>Suppression de l'axe : [AXIS]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Deletion of axis: [AXIS]</seg>
+            </tuv>
+        </tu>
         <tu tuid="removeRoleFromUser">
             <tuv xml:lang="fr">
                 <seg>Suppression du rôle : [ROLE] pour l’utilisateur : [USER]</seg>

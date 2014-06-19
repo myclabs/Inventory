@@ -332,6 +332,40 @@ class Orga_Service_OrganizationService
 
     /**
      * @param Orga_Model_Axis $axis
+     *
+     * @throws Exception
+     */
+    public function deleteAxis(Orga_Model_Axis $axis)
+    {
+        try {
+            $this->entityManager->beginTransaction();
+
+            $axis->delete();
+
+            $this->entityManager->flush();
+
+            $narrowerAxis = $axis->getDirectNarrower();
+            while ($narrowerAxis !== null) {
+                $this->entityManager->refresh($narrowerAxis);
+                foreach ($narrowerAxis->getMembers() as $member) {
+                    foreach ($member->getCells() as $cell) {
+                        $cell->updateHierarchy();
+                    }
+                }
+                $narrowerAxis = $narrowerAxis->getDirectNarrower();
+            }
+
+            $this->entityManager->commit();
+        } catch (Exception $e) {
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @param Orga_Model_Axis $axis
      * @param $ref
      * @param $label
      * @param array $parentMembers
