@@ -1,8 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
-        "This file is @generated automatically"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
     "hash": "7a0a1a27a36393bbf9c037dc53e87ac6",
     "packages": [
@@ -366,7 +365,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -1158,16 +1157,16 @@
         },
         {
             "name": "myclabs/acl",
-            "version": "1.1.4",
+            "version": "1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/ACL.git",
-                "reference": "5c89494c7a05474d4da6c5c3f005e183f49961ad"
+                "reference": "0b5044ae9820b9dcb7d3cf9b9cd564de66eb13de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/ACL/zipball/5c89494c7a05474d4da6c5c3f005e183f49961ad",
-                "reference": "5c89494c7a05474d4da6c5c3f005e183f49961ad",
+                "url": "https://api.github.com/repos/myclabs/ACL/zipball/0b5044ae9820b9dcb7d3cf9b9cd564de66eb13de",
+                "reference": "0b5044ae9820b9dcb7d3cf9b9cd564de66eb13de",
                 "shasum": ""
             },
             "require": {
@@ -1191,7 +1190,7 @@
                 "doctrine",
                 "permission"
             ],
-            "time": "2014-06-19 11:14:32"
+            "time": "2014-06-19 14:21:26"
         },
         {
             "name": "myclabs/array-comparator",
@@ -2118,7 +2117,7 @@
                     "role": "Lead Developer"
                 },
                 {
-                    "name": "Armin Ronacher",
+                    "name": "Armin Ronacher2",
                     "email": "armin.ronacher@active-4.com",
                     "role": "Project Founder"
                 },
