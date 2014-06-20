@@ -24,8 +24,8 @@ Feature: AF multiple selection field option feature
     And I click "Valider"
   # Option ajoutée apparaît en dernier
     Then the row 3 of the "optionDatagrid" datagrid should contain:
-      | label | ref | isVisible | enabled | defaultValue     |
-      | AAA   | aaa | Visible   | Activé  | Non sélectionnée |
+      | label | ref | defaultValue     |
+      | AAA   | aaa | Non sélectionnée |
     When I click element "#selectMultiFieldDatagrid_options_popup .close:contains('×')"
   # When I click "×" (ne marche pas)
     Then the following message is shown and closed: "Ajout effectué."
@@ -69,8 +69,8 @@ Feature: AF multiple selection field option feature
     Then I should see the popup "Options"
   # Contenu première ligne
     And the row 1 of the "optionDatagrid" datagrid should contain:
-      | label    | ref   | isVisible | enabled | defaultValue     |
-      | Option 1 | opt_1 | Visible   | Activée | Non sélectionnée |
+      | label    | ref   | defaultValue     |
+      | Option 1 | opt_1 | Non sélectionnée |
   # Modification du libellé
     When I set "Option 1 modifiée" for column "label" of row 1 of the "optionDatagrid" datagrid
     And I click element "#selectMultiFieldDatagrid_options_popup .close:contains('×')"
@@ -98,8 +98,8 @@ Feature: AF multiple selection field option feature
   # Vérification modifications effectuées
     When I click "Options" in the row 1 of the "selectMultiFieldDatagrid" datagrid
     Then the row 1 of the "optionDatagrid" datagrid should contain:
-      | label             | ref               | isVisible | enabled    | defaultValue |
-      | Option 1 modifiée | option_1_modifiee | Masquée   | Désactivée | Sélectionnée |
+      | label             | ref               | defaultValue |
+      | Option 1 modifiée | option_1_modifiee | Sélectionnée |
 
   @javascript
   Scenario: Edition of a multiple selection field option scenario, incorrect input
