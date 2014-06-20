@@ -489,7 +489,9 @@ class Orga_OrganizationController extends Core_Controller
 
         $potentialAxes = [];
         foreach ($organization->getAxes() as $axis) {
-            $potentialAxes[] = $axis;
+            if ($axis->isMemberPositioning()) {
+                $potentialAxes[] = $axis;
+            }
         }
         $this->view->assign('potentialAxes', $potentialAxes);
         $this->view->assign('selectedAxis', $organization->getTimeAxis());
