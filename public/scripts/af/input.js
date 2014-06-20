@@ -302,14 +302,12 @@ function ($scope, $element, $window, $http, validateInputSet) {
     };
 
     // When the input is edited
-    $element.on('input change', ':input', function () {
+    $scope.$watch('inputSet.inputs', function (newValue, oldValue) {
+        if ( newValue === oldValue ) {
+            return;
+        }
         $scope.inputSet.status = 'in_progress';
-        $scope.$digest();
-    });
-    $element.on('click', '.addSubAF', function () {
-        $scope.inputSet.status = 'in_progress';
-        $scope.$digest();
-    });
+    }, true);
 
     // Preview results
     $scope.preview = function () {
