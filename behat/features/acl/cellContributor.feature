@@ -20,6 +20,7 @@ Feature: Cell contributor feature
     And I click element "div[id='currentGranularity'] a.go-input"
     And I click element "#chiffre_affaireHistory"
     Then I should see "Historique des valeurs"
+    And I wait 2 seconds
     And I should see a "code:contains('10 k€ ± 15 %')" element
   # Accès à l'onglet "Commentaires"
     When I open tab "Commentaires"

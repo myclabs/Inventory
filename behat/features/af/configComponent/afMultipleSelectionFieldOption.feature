@@ -80,16 +80,6 @@ Feature: AF multiple selection field option feature
     And I set "option_1_modifiee" for column "ref" of row 1 of the "optionDatagrid" datagrid
     And I click element "#selectMultiFieldDatagrid_options_popup .close:contains('×')"
     Then the following message is shown and closed: "Modification effectuée."
-  # Modification visibilité
-    When I click "Options" in the row 1 of the "selectMultiFieldDatagrid" datagrid
-    And I set "Masquée" for column "isVisible" of row 1 of the "optionDatagrid" datagrid
-    And I click element "#selectMultiFieldDatagrid_options_popup .close:contains('×')"
-    Then the following message is shown and closed: "Modification effectuée."
-  # Modification activation
-    When I click "Options" in the row 1 of the "selectMultiFieldDatagrid" datagrid
-    And I set "Désactivée" for column "enabled" of row 1 of the "optionDatagrid" datagrid
-    And I click element "#selectMultiFieldDatagrid_options_popup .close:contains('×')"
-    Then the following message is shown and closed: "Modification effectuée."
   # Modification sélection initiale
     When I click "Options" in the row 1 of the "selectMultiFieldDatagrid" datagrid
     And I set "Sélectionnée" for column "defaultValue" of row 1 of the "optionDatagrid" datagrid
