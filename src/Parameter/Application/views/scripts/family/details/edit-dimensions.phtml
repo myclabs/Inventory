@@ -21,7 +21,7 @@ $family = $this->family;
             <code><?=$dimension->getRef()?></code>
 
             <a class="btn btn-warning btn-xs pull-right deleteDimensionButton"
-                    href="<?=$this->baseUrl('parameter/dimension/delete/id/' . $dimension->getId())?>"
+                    href="<?=$this->baseUrl('parameter/dimension/delete/idFamily/' . $family->getId() . '/idDimension/' . $dimension->getId())?>"
                     title="<?=__('Parameter', 'dimension', 'deleteDimension')?>">
                 <?=__('UI', 'verb', 'delete')?>
             </a>
