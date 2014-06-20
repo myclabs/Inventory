@@ -611,5 +611,13 @@
                 <seg>Values</seg>
             </tuv>
         </tu>
+        <tu tuid="resources">
+            <tuv xml:lang="fr">
+                <seg>Ressources</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Resources</seg>
+            </tuv>
+        </tu>
 	</body>
 </tmx>
