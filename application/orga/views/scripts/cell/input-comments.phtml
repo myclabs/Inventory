@@ -1,39 +1,35 @@
-<div ng-app="Comments" ng-controller="CommentsController">
+<div id="comments" ng-controller="CommentsController">
 
-    <blockquote ng-repeat="comment in comments">
+    <blockquote ng-repeat="comment in comments" ng-cloak>
         <div ng-show="!comment.edition">
             <div ng-bind-html="comment.html | rawHtml"></div>
             <small>
                 <?=__('Orga', 'comment', 'by')?> <strong>{{ comment.author }}</strong>
                 <?=__('Orga', 'comment', 'dated')?> {{ comment.date }}
+
+                <span ng-if="comment.canBeEdited && !comment.edition">
+                    <button ng-click="comment.edition = true" type="button" class="btn btn-default btn-xs"
+                            tooltip="<?= __('UI', 'verb', 'edit') ?>">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </button>
+                    <button ng-click="deleteComment(comment)" type="button" class="btn btn-default btn-xs"
+                            tooltip="<?= __('UI', 'verb', 'delete') ?>">
+                        <i class="fa fa-trash-o"></i>
+                    </button>
+                </span>
             </small>
         </div>
-        <div ng-if="comment.canBeEdited">
-
-            <div ng-if="!comment.edition">
-                <button ng-click="comment.edition = true" type="button" class="btn btn-default btn-xs">
-                    <i class="fa fa-pencil-square-o"></i>
-                    <?=__('UI', 'verb', 'edit')?>
-                </button>
-                <button ng-click="deleteComment(comment)" type="button" class="btn btn-default btn-xs">
-                    <i class="fa fa-trash-o"></i>
-                    <?=__('UI', 'verb', 'delete')?>
-                </button>
+        <form ng-if="comment.canBeEdited && comment.edition" ng-submit="editComment(comment)">
+            <div class="form-group">
+                <textarea ng-model="comment.text" class="form-control" rows="5"></textarea>
             </div>
-
-            <form ng-if="comment.edition" ng-submit="editComment(comment)">
-                <div class="form-group">
-                    <textarea ng-model="comment.text" class="form-control" rows="5"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    <?=__('UI', 'verb', 'save')?>
-                </button>
-                <button ng-click="comment.edition = false" type="button" class="btn btn-default">
-                    <?=__('UI', 'verb', 'cancel')?>
-                </button>
-            </form>
-
-        </div>
+            <button type="submit" class="btn btn-primary">
+                <?=__('UI', 'verb', 'save')?>
+            </button>
+            <button ng-click="comment.edition = false" type="button" class="btn btn-default">
+                <?=__('UI', 'verb', 'cancel')?>
+            </button>
+        </form>
     </blockquote>
 
     <p ng-if="comments.length == 0" class="text-muted">
@@ -55,10 +51,10 @@
 </div>
 
 <script>
-    var app = angular.module('Comments', []);
+    var commentsModule = angular.module('Comments', ['ui.bootstrap']);
 
     // Configure Angular pour poster en "form data" plutôt qu'en JSON
-    app.config(function ($httpProvider) {
+    commentsModule.config(function ($httpProvider) {
         $httpProvider.defaults.transformRequest = function(data){
             if (data === undefined) {
                 return data;
@@ -68,13 +64,13 @@
         $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
     });
 
-    app.filter('rawHtml', function($sce){
+    commentsModule.filter('rawHtml', function($sce){
         return function(text) {
             return $sce.trustAsHtml(text);
         };
     });
 
-    app.controller('CommentsController', function ($scope, $http) {
+    commentsModule.controller('CommentsController', function ($scope, $http) {
         $scope.comments = [];
 
         $scope.refresh = function() {
@@ -119,5 +115,8 @@
 
         $scope.refresh();
     });
+
+    // Bootstrap the angular app manually because we can't have 2 angular apps in the main page loaded automatically
+    angular.bootstrap($('#comments'), ['Comments']);
 </script>
 
