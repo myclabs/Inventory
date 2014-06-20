@@ -90,9 +90,10 @@ Feature: Percentage of filled mandatory fields feature
     And I wait for the page to finish loading
     And I fill in "c_n" with "10"
     And I select "Option 1" from "c_s_s_liste"
-    And I check "c_s_s_bouton_opt_1"
-    And I check "c_s_m_checkbox_opt_1"
-    And I additionally select "Option 1" from "c_s_m_liste"
+    # On est obligé de passer par un vieux selecteur CSS à cause d'Angular :(
+    And I click element "[name='c_s_s_bouton'][value='opt_1']"
+    And I click element "[name='c_s_m_checkbox'][value='opt_1']"
+    And I click element "[name='c_s_m_liste'][value='opt_1']"
     And I fill in "c_t_c" with "Blabla"
     And I fill in "c_t_l" with "Blabla"
     And I click "Enregistrer"
