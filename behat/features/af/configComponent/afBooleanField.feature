@@ -24,7 +24,7 @@ Feature: AF boolean field feature
     And the "checkboxFieldDatagrid" datagrid should contain a row:
       | label | ref | isVisible | enabled | defaultValue |
       | AAA   | aaa | Visible   | Activé  | Décoché      |
-    When I click "Aide" in the row 3 of the "checkboxFieldDatagrid" datagrid
+    When I click "Aide" in the row 2 of the "checkboxFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see "Blabla" in the "#checkboxFieldDatagrid_help_popup .modal-body h1" element
 
@@ -104,10 +104,10 @@ Feature: AF boolean field feature
     And I open tab "Composants"
     And I open collapse "Champs booléens"
     Then I should see the "checkboxFieldDatagrid" datagrid
-    And the "checkboxFieldDatagrid" datagrid should contain 2 row
+    And the "checkboxFieldDatagrid" datagrid should contain 1 row
   # Suppression sans obstacle
     When I click "Supprimer" in the row 1 of the "checkboxFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "checkboxFieldDatagrid" datagrid should contain 1 row
+    And the "checkboxFieldDatagrid" datagrid should contain 0 row
