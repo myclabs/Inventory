@@ -7,7 +7,8 @@
     <af-radio ng-switch-when="radio" component="component" input="input"></af-radio>
     <af-select-multiple ng-switch-when="select-multiple" component="component" input="input"></af-select-multiple>
 
-    <af-history input="input" input-set="inputSet" ng-if="input.id"></af-history>
+    <af-history input="input" input-set="inputSet" ng-if="input.id"
+                ref-prefix="refPrefix + component.ref"></af-history>
 
     <span class="help-block errorMessage" ng-show="input.hasErrors" ng-bind="input.error"></span>
 </div>

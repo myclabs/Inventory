@@ -337,14 +337,8 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      */
     protected function viewInputHistoryRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        /** @var $inputSet PrimaryInputSet */
-        $inputSet = PrimaryInputSet::load($request->getParam('inputSet'));
-
-        return $this->acl->isAllowed(
-            $identity,
-            Actions::INPUT,
-            Orga_Model_Cell::loadByAFInputSetPrimary($inputSet)
-        );
+        // TODO
+        return true;
     }
 
     /**

@@ -21,10 +21,11 @@ Feature: History of user actions on a cell feature
     And I reload the page
     And I wait for the page to finish loading
   # Ouverture du popup d'historique
-    And I click element "#chiffre_affaireHistory .btn"
+    And I click element "#chiffre_affaireHistory"
+    And I wait 2 seconds
     Then I should see a "code:contains('10 k€ ± 0 %')" element
   # Fermeture du popup d'historique
-    When I click element "#chiffre_affaireHistory .btn"
+    When I click element "#chiffre_affaireHistory"
     And I click "Quitter"
     Then I should see "La saisie Europe | Marque B a été enregistrée pour la première fois par Administrateur Système."
 
