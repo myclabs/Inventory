@@ -16,7 +16,7 @@
     <tr ng-repeat="(inputSetIndex, inputSet) in inputSets">
         <td>
             <input type="text" class="form-control" ng-model="inputSet.freeLabel"
-                   name="{{ refPrefix + $index }}__freeLabel">
+                   name="{{ refPrefix + (inputSetIndex + 1) }}__freeLabel">
         </td>
         <td ng-repeat="component in components">
             <af-horizontal-component component="component" input="getInput(inputSet, component)"
