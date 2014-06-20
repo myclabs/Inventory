@@ -19,8 +19,10 @@ Feature: Cell coordinator feature
     When I wait 5 seconds
     And I click element "div[id='currentGranularity'] a.go-input"
     And I click element "#chiffre_affaireHistory"
+    And I wait 2 seconds
     Then I should see "Historique des valeurs"
     And I should see a "code:contains('10 k€ ± 15 %')" element
+    And I click element "#chiffre_affaireHistory"
   # Accès à l'onglet "Collectes", édition du statut d'une collecte
     When I click "Quitter"
     Then I should see "Workspace avec données"

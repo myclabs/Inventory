@@ -21,6 +21,7 @@ Feature: Cell contributor feature
     Then I should see "Historique des valeurs"
     And I wait 2 seconds
     And I should see a "code:contains('10 k€ ± 15 %')" element
+    And I click element "#chiffre_affaireHistory"
   # Accès à l'onglet "Commentaires"
     When I open tab "Commentaires"
     And I click "Ajouter un commentaire"
