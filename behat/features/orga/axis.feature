@@ -10,7 +10,7 @@ Feature: Organizational axis feature
     Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
-    And I wait 5 seconds
+    And I wait 2 seconds
     Then I should see "Année (annee)"
   # Popup d'ajout
     And I click "Ajouter"
@@ -19,18 +19,18 @@ Feature: Organizational axis feature
     When I fill in "addAxis_label" with "Test"
     And I fill in "addAxis_ref" with "test"
     And I click "Valider"
-    And I wait 5 seconds
+    And I wait 2 seconds
     Then the following message is shown and closed: "Ajout effectué."
     And I should see "Test"
   # Ajout d'un axe non à la racine
-    When I wait 5 seconds
+    When I wait 2 seconds
     And I click "Ajouter"
     Then I should see the popup "Ajout d'un axe"
     When I fill in "addAxis_label" with "Axe plus grossier que l'axe vide"
     And I fill in "addAxis_ref" with "axe_plus_grossier_que_axe_vide"
     And I select "Axe vide" from "addAxis_parent"
     And I click "Valider"
-    And I wait 5 seconds
+    And I wait 2 seconds
     Then the following message is shown and closed: "Ajout effectué."
   # Vérification que l'axe ajouté est bien parent de l'axe "axe vide"
     When I click "Axe vide"
@@ -46,7 +46,7 @@ Feature: Organizational axis feature
     Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
-    And I wait 5 seconds
+    And I wait 2 seconds
   # TODO : modification sans effet
   # Popup d'ajout
     And I click "Ajouter"
@@ -79,7 +79,7 @@ Feature: Organizational axis feature
     When I fill in "editAxis_label" with "Site modifié"
     And I fill in "editAxis_ref" with "site_modifie"
     And I click "Confirmer"
-    And I wait 10 seconds
+    And I wait 4 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Modification de l'identifiant d'un axe, identifiant vide
     When I click "Site modifié"
@@ -101,13 +101,13 @@ Feature: Organizational axis feature
     Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
-    And I wait 5 seconds
+    And I wait 2 seconds
   # Déplacement en premier (axe situé à la racine)
     When I click "Catégorie"
     Then I should see the popup "Édition d'un axe"
     When I check "Premier"
     And I click "Confirmer"
-    And I wait 5 seconds
+    And I wait 2 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement "Après" (axe situé à la racine)
     When I click "Catégorie"
@@ -115,14 +115,14 @@ Feature: Organizational axis feature
     When I check "Après"
     And I select "Année" from "editAxis_selectAfter"
     And I click "Confirmer"
-    And I wait 5 seconds
+    And I wait 2 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en dernier (axe situé à la racine)
     When I click "Catégorie"
     Then I should see the popup "Édition d'un axe"
     When I check "Dernier"
     And I click "Confirmer"
-    And I wait 5 seconds
+    And I wait 2 seconds
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
@@ -131,7 +131,7 @@ Feature: Organizational axis feature
     Given I am on "orga/organization/edit/idOrganization/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
-    And I wait 5 seconds
+    And I wait 2 seconds
   # Axe contenant un élément
     When I click "Pays"
     Then I should see the popup "Édition d'un axe"
@@ -155,7 +155,7 @@ Feature: Organizational axis feature
     When I click "Supprimer"
     Then I should see the popup "Demande de confirmation"
     When I click element "#editAxis_deletePanel .modal-footer .btn-primary"
-    And I wait 5 seconds
+    And I wait 2 seconds
     Then the following message is shown and closed: "Suppression effectuée."
     And I should not see "Axe vide"
 
