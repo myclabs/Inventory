@@ -53,6 +53,30 @@
                 <seg>Not contextualizing</seg>
             </tuv>
         </tu>
+        <tu tuid="positionningLabel">
+            <tuv xml:lang="fr">
+                <seg>Positionnement des éléments au sein de l'axe</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Positionning of elements in the axis</seg>
+            </tuv>
+        </tu>
+        <tu tuid="positionningOption">
+            <tuv xml:lang="fr">
+                <seg>fixes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>fixed</seg>
+            </tuv>
+        </tu>
+        <tu tuid="notPositionningOption">
+            <tuv xml:lang="fr">
+                <seg>Alphabétique</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Alphabetical</seg>
+            </tuv>
+        </tu>
         <tu tuid="rootAxes">
             <tuv xml:lang="fr">
                 <seg>Axes racine</seg>
@@ -94,6 +118,14 @@
             </tuv>
             <tuv xml:lang="en">
                 <seg>Before removing the contextualizing effect of this axis, please change identical refs from its members first.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="positionningAxisIsTimeAxis">
+            <tuv xml:lang="fr">
+                <seg>Pour pouvoir enlever le caractère positionnant de cet axe, merci de modifier auparavant l'axe temps de l'organisation.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Before removing the positionning effect of this axis, please change the time axis of his organization first.</seg>
             </tuv>
         </tu>
 

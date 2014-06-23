@@ -83,6 +83,11 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             } else {
                 $axis->setContextualize(false);
             }
+            if ($this->getAddElementValue('addAxis_isPositionning') === 'positionning') {
+                $axis->setMemberPositioning(true);
+            } else {
+                $axis->setMemberPositioning(false);
+            }
             $axis->save();
 
             if ($axis->getDirectNarrower() === null) {
@@ -162,6 +167,15 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
         } else {
             $contextualizing = false;
         }
+
+        if ($this->getEditElementValue('isPositionning') === 'positionning') {
+            $positionning = true;
+        } else {
+            $positionning = false;
+            if ($axis->isMemberPositioning() && ($organization->getTimeAxis() === $axis)) {
+                $this->setEditFormElementErrorMessage('isPositionning', ___('Orga', 'axis', 'positionningAxisIsTimeAxis'));
+            }
+        }
         switch ($this->getEditElementValue('changeOrder')) {
             case 'first':
                 $newPosition = 1;
@@ -199,11 +213,10 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
                 $this->translator->set($axis->getLabel(), $newLabel);
             }
             if ($axis->isContextualizing() !== $contextualizing) {
-                try {
-                    $axis->setContextualize($contextualizing);
-                } catch (Core_Exception_TooMany $e) {
-                    throw new Core_Exception_User('Orga', 'exceptions', 'test');
-                }
+                $axis->setContextualize($contextualizing);
+            }
+            if ($axis->isMemberPositioning() !== $positionning) {
+                $axis->setMemberPositioning($positionning);
             }
             if (($newPosition !== null) && ($axis->getPosition() !== $newPosition)) {
                 $axis->setPosition($newPosition);
@@ -290,6 +303,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
         $this->data['ref'] = $axis->getRef();
         $this->data['label'] = $this->translator->get($axis->getLabel());
         $this->data['isContextualizing'] = $axis->isContextualizing() ? 'contextualizing' : 'notContextualizing';
+        $this->data['isPositionning'] = $axis->isMemberPositioning() ? 'positionning' : 'notPositionning';
 
         $this->send();
     }
