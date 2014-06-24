@@ -34,6 +34,13 @@ foreach ($this->axes as $axis) {
         $resetSelectParentFieldScript .= '});';
     }
 
+    if ($axis->isMemberPositioning() && $this->isUserAllowToEditAllMembers) {
+        $columnPosition = new UI_Datagrid_Col_Order('position', ___('UI', 'name', 'position'));
+        $columnPosition->addable = false;
+        $columnPosition->editable = true;
+        $datagridAxisMembers->addCol($columnPosition);
+    }
+
     $datagridAxisMembers->deleteElements = true;
     if (!$this->isUserAllowToEditAllMembers) {
         $datagridAxisMembers->pagination = false;
