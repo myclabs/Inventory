@@ -28,6 +28,7 @@ class Orga_Model_Member extends Core_Model_Entity
     const QUERY_REF = 'ref';
     const QUERY_PARENTMEMBERS_HASHKEY = 'parentMembersHashKey';
     const QUERY_LABEL = 'label';
+    const QUERY_POSITION = 'position';
     const QUERY_AXIS = 'axis';
     // Constantes de séparation de la memberHashKey et de la ref du membre.
     const COMPLETEREF_JOIN = '#';
