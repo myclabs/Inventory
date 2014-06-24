@@ -11,6 +11,12 @@ DELETE FROM AF_Action WHERE type_action LIKE 'setvalue%';
 DELETE FROM AF_Action WHERE type_action = 'setoptionstate';
 ```
 
+- Exécuter le script de rebuild des positions :
+
+```php
+php script/migration/3.2/position.php
+```
+
 
 ## 3.1
 
