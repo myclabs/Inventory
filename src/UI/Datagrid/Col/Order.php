@@ -239,6 +239,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
         $format .= 'var canUp = sData.up;';
         $format .= 'var canDown = sData.down;';
         $format .= '}';
+        $format .= 'content = \'<span class="datagrid-orgder">\' + content + \'</span>\';';
 
 
         if ($this->editable === true) {
@@ -249,7 +250,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
             }
             if ($this->useGoUp === true) {
                 $format .= 'content = \'';
-                $format .= '<span ';
+                $format .= '<span class="btn btn-link datagrid-order-change"';
                 $format .= 'onclick="'.$functionUpdate.'(\\\'goUp\\\',\\\'\' + oRecord._oData.index + \'\\\');"';
                 $format .= '> ';
                 $format .= $this->labelGoUp;
@@ -258,7 +259,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
             }
             if ($this->useGoFirst === true) {
                 $format .= 'content = \'';
-                $format .= '<span ';
+                $format .= '<span class="btn btn-link datagrid-order-change"';
                 $format .= 'onclick="'.$functionUpdate.'(\\\'goFirst\\\',\\\'\' + oRecord._oData.index + \'\\\');"';
                 $format .= '> ';
                 $format .= $this->labelGoFirst;
@@ -268,8 +269,12 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
             if ($this->useGoFirst === true || $this->useGoUp === true) {
                 $format .= '} else {';
                 $format .= 'content = \'';
+                $format .= '<span class="btn btn-link datagrid-order-change disabled">';
                 $format .= $this->labelForbiddenGoFirst;
+                $format .= '</span>';
+                $format .= '<span class="btn btn-link datagrid-order-change disabled">';
                 $format .= $this->labelForbiddenGoUp;
+                $format .= '</span>';
                 $format .= '\' + content;';
                 $format .= '}';
             }
@@ -279,7 +284,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
             }
             if ($this->useGoDown === true) {
                 $format .= 'content += \'';
-                $format .= ' <span ';
+                $format .= '<span class="btn btn-link datagrid-order-change"';
                 $format .= 'onclick="'.$functionUpdate.'(\\\'goDown\\\',\\\'\' + oRecord._oData.index + \'\\\');"';
                 $format .= '>';
                 $format .= $this->labelGoDown;
@@ -288,7 +293,7 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
             }
             if ($this->useGoLast === true) {
                 $format .= 'content += \'';
-                $format .= ' <span ';
+                $format .= '<span class="btn btn-link datagrid-order-change"';
                 $format .= 'onclick="'.$functionUpdate.'(\\\'goLast\\\',\\\'\' + oRecord._oData.index + \'\\\');"';
                 $format .= '>';
                 $format .= $this->labelGoLast;
@@ -298,8 +303,12 @@ class UI_Datagrid_Col_Order extends UI_Datagrid_Col_Generic
             if ($this->useGoDown === true || $this->useGoLast === true) {
                 $format .= '} else {';
                 $format .= 'content += \'';
+                $format .= '<span class="btn btn-link datagrid-order-change disabled">';
                 $format .= $this->labelForbiddenGoDown;
+                $format .= '</span>';
+                $format .= '<span class="btn btn-link datagrid-order-change disabled">';
                 $format .= $this->labelForbiddenGoLast;
+                $format .= '</span>';
                 $format .= '\';';
                 $format .= '}';
             }
