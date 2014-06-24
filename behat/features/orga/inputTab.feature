@@ -28,10 +28,10 @@ Feature: Organization input tab feature
     And the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/" cell inventory status should be "active"
     And the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/" cell input status should be "statusComplete"
   # Cas inventaire en cours, saisie incomplète / saisie terminée
-    Then I should see the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/" cell
-    And the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/" cell input status should be "statusFinished"
-    Then I should see the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/" cell
-    And the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:test_affichage/" cell input status should be "statusInputIncomplete"
+    Then I should see the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:1-energie/" cell
+    And the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:1-energie/" cell input status should be "statusFinished"
+    Then I should see the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:3-test_affichage/" cell
+    And the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:3-test_affichage/" cell input status should be "statusInputIncomplete"
   # Cas inventaire non lancé, inventaire clôturé
     And I click element "div[id='granularity8'] button.reset"
     Then I should see the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell

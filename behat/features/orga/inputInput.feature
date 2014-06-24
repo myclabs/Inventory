@@ -8,14 +8,14 @@ Feature: Organization input input feature
   Scenario: Global administrator direct access to input scenario
     Given I am on "orga/cell/input/idCell/29/fromIdCell/1"
     And I wait for the page to finish loading
-    Then I should see "Saisie 1-2012 | Annecy | Énergie"
+    Then I should see "Saisie 2012 | Annecy | Énergie"
 
   @javascript @readOnly
   Scenario: Display of existing input with correct values and uncertainties scenario
     Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading
     And I click "Année | Site Fonctionnalités disponibles à ce niveau : Suivi des collectes, Saisies"
-    And I go input the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/" cell
+    And I go input the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:1-energie/" cell
     Then I should see "Saisie 1-2012 | Annecy | Énergie"
     And the "quantite_combustible" field should contain "10"
     And the "percentquantite_combustible" field should contain "15"
