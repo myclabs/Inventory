@@ -844,15 +844,15 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             );
         }
 
-        $timeAxis = $this->getMemberForAxis($axis);
-        if ($timeAxis->getPosition() === 1) {
+        $axisMember = $this->getMemberForAxis($axis);
+        if ($axisMember->getPosition() === 1) {
             return null;
         }
 
         return $this->getGranularity()->getCellByMembers(
             array_merge(
-                array_diff($this->getMembers(), [$timeAxis]),
-                [$timeAxis->getPreviousMember()]
+                array_diff($this->getMembers(), [$axisMember]),
+                [$axisMember->getPreviousMember()]
             )
         );
     }
@@ -870,14 +870,15 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             );
         }
 
-        if ($this->getMemberForAxis($axis)->getPosition() === $this->getMemberForAxis($axis)->getLastEligiblePosition()) {
+        $axisMember = $this->getMemberForAxis($axis);
+        if ($axisMember->getPosition() === $axisMember->getLastEligiblePosition()) {
             return null;
         }
 
         return $this->getGranularity()->getCellByMembers(
             array_merge(
-                array_diff($this->getMembers(), [$this->getMemberForAxis($axis)]),
-                [$this->getMemberForAxis($axis)->getNextMember()]
+                array_diff($this->getMembers(), [$axisMember]),
+                [$axisMember->getNextMember()]
             )
         );
     }
