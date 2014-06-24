@@ -84,7 +84,7 @@ trait Core_Strategy_Ordered
      */
     protected function checkHasPosition()
     {
-        if ($this->position === null) {
+        if ($this->position == null) {
             throw new Core_Exception_UndefinedAttribute("Can't move an object without established position.");
         }
     }
@@ -135,9 +135,9 @@ trait Core_Strategy_Ordered
      */
     protected function setPositionInternal($position=null)
     {
-        if (($this->position === null) && ($position === null)) {
+        if (($this->position == null) && ($position == null)) {
             $this->addPosition();
-        } else if ($position !== null) {
+        } else if ($position != null) {
             $this->checkHasPosition();
 
             // Vérification que la position ne soit pas inférieure à la première et supérieure à la dernière.
@@ -175,7 +175,7 @@ trait Core_Strategy_Ordered
      */
     protected function addPosition()
     {
-        if ($this->position === null) {
+        if ($this->position == null) {
             $this->position = self::getLastPositionByContext($this->getContext()) + 1;
             $serializedContext = self::serializeContext($this->getContext());
             self::$lastPosition[$serializedContext]++;
@@ -190,11 +190,11 @@ trait Core_Strategy_Ordered
      */
     protected function deletePosition()
     {
-        if ($this->position !== null) {
+        if ($this->position != null) {
             if (self::getLastPositionByContext($this->getContext()) > 1) {
                 $this->setPosition(self::getLastPositionByContext($this->getContext()));
             }
-            $this->position  = null;
+            $this->position = null;
             $serializedContext = self::serializeContext($this->getContext());
             unset(self::$entities[$serializedContext][self::$lastPosition[$serializedContext]]);
             self::$lastPosition[$serializedContext]--;
@@ -302,7 +302,7 @@ trait Core_Strategy_Ordered
     public function goUp()
     {
         // Si l'objet est le premier, il n'est pas déplacé.
-        if ($this->position !== 1) {
+        if ($this->position != 1) {
             $this->setPositionInternal($this->getPosition() - 1);
         }
 
@@ -318,7 +318,7 @@ trait Core_Strategy_Ordered
     public function goDown()
     {
         // Si l'objet est le dernier, il n'est pas déplacé.
-        if ($this->position !== self::getLastPositionByContext($this->getContext())) {
+        if ($this->position != self::getLastPositionByContext($this->getContext())) {
             $this->setPositionInternal($this->getPosition() + 1);
         }
 
