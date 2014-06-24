@@ -63,10 +63,10 @@
         </tu>
         <tu tuid="positionningOption">
             <tuv xml:lang="fr">
-                <seg>fixes</seg>
+                <seg>Libre</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>fixed</seg>
+                <seg>Free</seg>
             </tuv>
         </tu>
         <tu tuid="notPositionningOption">
