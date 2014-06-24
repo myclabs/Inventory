@@ -97,6 +97,9 @@ class Orga_Model_CellsGroup extends Core_Model_Entity
     {
         if ($this->aF !== $aF) {
             $this->aF = $aF;
+            foreach ($this->containerCell->getChildCellsForGranularity($this->getInputGranularity()) as $inputCell) {
+                $inputCell->updateInputStatus();
+            }
         }
     }
 
