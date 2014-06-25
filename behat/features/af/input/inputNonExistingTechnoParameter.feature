@@ -18,7 +18,7 @@ Feature: Input with a non existing Parameter parameter feature
     And I should see "Saisie complète, calculs incomplets"
   # Contenu de l'onglet "Résultats"
     When I open tab "Résultats"
-    Then I should see "La saisie enregistrée est complète mais un problème est intervenu au cours de l'exécution des calculs."
+    Then I should see "Enregistrement effectué. La saisie est complète, mais un problème est intervenu dans l'exécution des calculs : le paramètre « processus -> combustion, combustible -> gaz_naturel » de la famille « Combustion de combustible, mesuré en unité de masse » est introuvable."
   # Contenu de l'onglet "Détails calculs"
     When I open tab "Détails calculs"
     Then I should see "La saisie enregistrée est complète mais un problème est intervenu au cours de l'exécution des calculs."
