@@ -79,7 +79,7 @@ Feature: Percentage of filled mandatory fields feature
   # On accède à la saisie
     And I click "Test"
   # On checke le champ booléen, histoire de modifier la saisie et donc de pouvoir l'enregistrer
-    And I check "c_b"
+    And I click element "[name='c_b']"
     And I click "Enregistrer"
   # La saisie est complète
     Then the "#tabs_tabInput .inputProgress .progress-bar" element should contain "100%"
