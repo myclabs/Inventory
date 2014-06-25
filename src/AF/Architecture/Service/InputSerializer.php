@@ -249,6 +249,7 @@ class InputSerializer
 
             $arr = [
                 'componentRef' => $input->getRefComponent(),
+                'visible'      => ! $input->isHidden(),
             ];
 
             if ($input->getId()) {
