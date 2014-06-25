@@ -26,7 +26,7 @@ use Zend_Session_Namespace;
  *
  * @author matthieu.napoli
  */
-class InputSetSessionStorage
+class InputSessionStorage
 {
     const SESSION_EXPIRATION = 3600;
 

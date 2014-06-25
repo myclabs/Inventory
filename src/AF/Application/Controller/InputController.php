@@ -1,7 +1,7 @@
 <?php
 
 use AF\Architecture\Service\InputSerializer;
-use AF\Architecture\Service\InputSetSessionStorage;
+use AF\Architecture\Service\InputSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\InputHistoryService;
 use AF\Domain\InputService;
@@ -26,9 +26,9 @@ class AF_InputController extends Core_Controller
 
     /**
      * @Inject
-     * @var InputSetSessionStorage
+     * @var InputSessionStorage
      */
-    private $inputSetSessionStorage;
+    private $inputSessionStorage;
 
     /**
      * @Inject
@@ -140,7 +140,7 @@ class AF_InputController extends Core_Controller
         $this->inputService->updateResults($inputSet);
 
         // Sauvegarde en session
-        $this->inputSetSessionStorage->saveInputSet($this->getParam('af'), $inputSet);
+        $this->inputSessionStorage->saveInputSet($this->getParam('af'), $inputSet);
 
         $this->_helper->viewRenderer->setNoRender(true);
     }
@@ -182,12 +182,12 @@ class AF_InputController extends Core_Controller
             $this->entityManager->flush();
         } else {
             // Récupère la saisie en session
-            $inputSet = $this->inputSetSessionStorage->getInputSet($af);
+            $inputSet = $this->inputSessionStorage->getInputSet($af);
             if ($inputSet === null) {
                 throw new Core_Exception_User("AF", "message", "inputSetDoesntExist");
             }
             $inputSet->markAsFinished(true);
-            $this->inputSetSessionStorage->saveInputSet($af, $inputSet);
+            $this->inputSessionStorage->saveInputSet($af, $inputSet);
         }
 
         $this->sendJsonResponse([

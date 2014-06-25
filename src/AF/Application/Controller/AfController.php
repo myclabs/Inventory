@@ -9,7 +9,7 @@
 use AF\Application\AFViewConfiguration;
 use AF\Architecture\Service\AFSerializer;
 use AF\Architecture\Service\InputSerializer;
-use AF\Architecture\Service\InputSetSessionStorage;
+use AF\Architecture\Service\InputSessionStorage;
 use AF\Domain\AF;
 use AF\Domain\AFCopyService;
 use AF\Domain\AFLibrary;
@@ -27,9 +27,9 @@ class AF_AfController extends Core_Controller
 {
     /**
      * @Inject
-     * @var InputSetSessionStorage
+     * @var InputSessionStorage
      */
-    private $inputSetSessionStorage;
+    private $inputSessionStorage;
 
     /**
      * @Inject
@@ -75,10 +75,10 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->setResultsPreviewUrl('af/input/results-preview?id=' . $af->getId());
 
         // Charge la saisie depuis la session
-        $inputSet = $this->inputSetSessionStorage->getInputSet($af);
+        $inputSet = $this->inputSessionStorage->getInputSet($af);
         if ($inputSet === null) {
             $inputSet = $this->inputService->createDefaultInputSet($af);
-            $this->inputSetSessionStorage->saveInputSet($af, $inputSet);
+            $this->inputSessionStorage->saveInputSet($af, $inputSet);
         }
         $viewConfiguration->setInputSet($inputSet);
 
@@ -142,7 +142,7 @@ class AF_AfController extends Core_Controller
             $inputSet = PrimaryInputSet::load($idInputSet);
         } else {
             // Récupère la saisie en session
-            $inputSet = $this->inputSetSessionStorage->getInputSet($af);
+            $inputSet = $this->inputSessionStorage->getInputSet($af);
             // Recalcule les résultats parce que sinon problème de serialisation de proxies en session
             if ($inputSet) {
                 $this->inputService->updateResults($inputSet);
@@ -170,7 +170,7 @@ class AF_AfController extends Core_Controller
             $inputSet = PrimaryInputSet::load($idInputSet);
         } else {
             // Récupère la saisie en session
-            $inputSet = $this->inputSetSessionStorage->getInputSet($af);
+            $inputSet = $this->inputSessionStorage->getInputSet($af);
             // Recalcule les résultats parce que sinon problème de serialisation de proxies en session
             if ($inputSet) {
                 $this->inputService->updateResults($inputSet);
