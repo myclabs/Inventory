@@ -17,6 +17,12 @@ DELETE FROM AF_Action WHERE type_action = 'setoptionstate';
 php script/migration/3.2/position.php
 ```
 
+- Exécuter:
+
+```
+bin/inventory orga-cache:rebuild --input-status
+```
+
 
 ## 3.1
 
@@ -25,7 +31,7 @@ php script/migration/3.2/position.php
 - Mettre à jour le cache d'orga :
 
 ```
-bin/inventory orga-cache:rebuild
+bin/inventory orga-cache:rebuild --input-status
 ```
 
 
