@@ -26,6 +26,7 @@ use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\InputSet\SubInputSet;
 use Calc_UnitValue;
 use Core_Exception_InvalidArgument;
+use Core_Exception_NotFound;
 use Core_Locale;
 use Mnapoli\Translated\Translator;
 use MyCLabs\UnitAPI\Exception\IncompatibleUnitsException;
@@ -72,7 +73,12 @@ class InputSerializer
 
     private function unserializeInput($data, InputSet $inputSet, AF $af)
     {
-        $component = Component::loadByRef($data['componentRef'], $af);
+        try {
+            $component = Component::loadByRef($data['componentRef'], $af);
+        } catch (Core_Exception_NotFound $e) {
+            // Champ introuvable ignoré
+            return;
+        }
 
         if ($component instanceof NumericField) {
             // Champ numérique
