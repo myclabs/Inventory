@@ -23,8 +23,9 @@ Feature: Input mandatory field display feature
   # Affichage des messages des champs au clic sur "Enregistrer"
     When I reload the page
     And I wait for the page to finish loading
-    And I check "c_b"
-    And I uncheck "c_b"
+    # check/uncheck (à cause d'Angular on doit utiliser click)
+    And I click element "[name='c_b']"
+    And I click element "[name='c_b']"
     And I click "Enregistrer"
     Then the field "c_n" should have error: "Champ obligatoire pour atteindre le statut : complet."
     And the field "c_s_s_liste" should have error: "Champ obligatoire pour atteindre le statut : complet."
