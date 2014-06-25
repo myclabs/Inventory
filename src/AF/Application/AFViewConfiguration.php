@@ -38,7 +38,13 @@ class AFViewConfiguration
      * Saisie de l'année précédente.
      * @var PrimaryInputSet|null
      */
-    protected $previousInputSet;
+    private $previousInputSet;
+
+    /**
+     * Libellé de la saisie de l'année précédente.
+     * @var string
+     */
+    private $previousInputSetLabel;
 
     /**
      * The URL to go to when the user quit
@@ -115,8 +121,9 @@ class AFViewConfiguration
         return $this->previousInputSet;
     }
 
-    public function setPreviousInputSet(PrimaryInputSet $inputSet = null)
+    public function setPreviousInputSet($label, PrimaryInputSet $inputSet = null)
     {
+        $this->previousInputSetLabel = (string) $label;
         $this->previousInputSet = $inputSet;
     }
 
@@ -342,5 +349,13 @@ class AFViewConfiguration
     public function setResultsPreview($resultsPreview)
     {
         $this->resultsPreview = (bool) $resultsPreview;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPreviousInputSetLabel()
+    {
+        return $this->previousInputSetLabel;
     }
 }

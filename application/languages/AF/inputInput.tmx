@@ -87,10 +87,10 @@
         </tu>
         <tu tuid="valueVeryDifferentFromPreviousInput">
             <tuv xml:lang="fr">
-                <seg>Attention, la valeur saisie diffère grandement de la valeur saisie l'année précédente.</seg>
+                <seg>Attention, la valeur saisie diffère grandement de la valeur saisie lors de l'occurrence ([label]) précédente.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Warning: the given value is very different from the value for the previous year.</seg>
+                <seg>Warning: the given value is very different from the value for the previous input ([label]).</seg>
             </tuv>
         </tu>
 
