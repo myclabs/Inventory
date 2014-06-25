@@ -1299,10 +1299,8 @@ class Orga_CellController extends Core_Controller
             $previousCell = $cell->getPreviousCellForAxis($timeAxis);
             if ($previousCell) {
                 $previousInput = $previousCell->getAFInputSetPrimary();
-                if ($previousInput && $previousInput->isFinished()) {
-                    $label = $this->translator->get($previousCell->getLabel());
-                    $viewConfiguration->setPreviousInputSet($label, $previousInput);
-                }
+                $label = $this->translator->get($previousCell->getLabel());
+                $viewConfiguration->setPreviousInputSet($label, $previousInput);
             }
         }
 
