@@ -202,6 +202,9 @@ class InputSerializer
         } else {
             throw new \InvalidArgumentException("Unknown component " . get_class($component));
         }
+
+        $visible = ($data['visible'] === 'true') ? true : false;
+        $input->setHidden(! $visible);
     }
 
     /**

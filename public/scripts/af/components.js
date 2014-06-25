@@ -12,8 +12,15 @@ afModule.directive('afFieldset', ['isInputVisible', 'getInput', function(isInput
                 $scope.inputSet = {};
             }
 
+            // Update hidden/visible
+            $scope.$watch('inputSet.inputs', function () {
+                angular.forEach($scope.components, function (component) {
+                    var input = getInput($scope.inputSet, component);
+                    input.visible = isInputVisible(input, component, $scope.inputSet.inputs);
+                });
+            }, true);
+
             $scope.refPrefix = $scope.$parent.refPrefix;
-            $scope.isInputVisible = isInputVisible;
             $scope.isCollapsed = false;
             $scope.toggle = function () {
                 $scope.isCollapsed = !$scope.isCollapsed;

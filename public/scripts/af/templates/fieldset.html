@@ -7,7 +7,7 @@
 
     <div collapse="isCollapsed">
         <div ng-repeat="component in components" ng-switch="component.type" ng-init="input = getInput(component)">
-            <div ng-show="isInputVisible(input, component, inputSet.inputs)">
+            <div ng-show="input.visible">
                 <af-group ng-switch-when="group" component="component" input-set="inputSet"></af-group>
                 <af-sub-single ng-switch-when="subaf-single" component="component" input="input"></af-sub-single>
                 <af-sub-multi ng-switch-when="subaf-multi" component="component" input="input"></af-sub-multi>
