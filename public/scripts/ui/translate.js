@@ -39,7 +39,7 @@ Translate.translate = function (module, file, ref, replacements) {
 
     for (var search in replacements) {
         var replacement = replacements[search];
-        message.replace('[' + search + ']', replacement);
+        message = message.replace('[' + search + ']', replacement);
     }
     return message
 };
