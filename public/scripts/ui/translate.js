@@ -18,7 +18,7 @@ Translate.translations = [];
  * @return string
  */
 function __(module, file, ref, replacements) {
-	return Translate.translate(module, file, ref, replacements);
+    return Translate.translate(module, file, ref, replacements);
 }
 
 /**
@@ -29,19 +29,19 @@ function __(module, file, ref, replacements) {
  * @param [replacements] {Array} Optionnel
  * @return string
  */
-Translate.translate = function(module, file, ref, replacements) {
-	if ((typeof(Translate.translations[module]) === 'undefined')
-		|| (typeof(Translate.translations[module][file]) === 'undefined')
-		|| (typeof(Translate.translations[module][file][ref]) === 'undefined')) {
-		return ref;
-	}
-	var message = Translate.translations[module][file][ref];
+Translate.translate = function (module, file, ref, replacements) {
+    if ((typeof(Translate.translations[module]) === 'undefined')
+        || (typeof(Translate.translations[module][file]) === 'undefined')
+        || (typeof(Translate.translations[module][file][ref]) === 'undefined')) {
+        return ref;
+    }
+    var message = Translate.translations[module][file][ref];
 
-	for (var search in replacements) {
-		var replacement = replacements[search];
-		message.replace('[' + search + ']', replacement);
-	}
-	return message
+    for (var search in replacements) {
+        var replacement = replacements[search];
+        message.replace('[' + search + ']', replacement);
+    }
+    return message
 };
 
 /**
@@ -51,12 +51,12 @@ Translate.translate = function(module, file, ref, replacements) {
  * @param ref {string}
  * @param message {string}
  */
-Translate.addTranslation = function(module, file, ref, message) {
-	if (typeof(Translate.translations[module]) === 'undefined') {
-		Translate.translations[module] = [];
-	}
-	if (typeof(Translate.translations[module][file]) === 'undefined') {
-		Translate.translations[module][file] = [];
-	}
-	Translate.translations[module][file][ref] = message;
+Translate.addTranslation = function (module, file, ref, message) {
+    if (typeof(Translate.translations[module]) === 'undefined') {
+        Translate.translations[module] = [];
+    }
+    if (typeof(Translate.translations[module][file]) === 'undefined') {
+        Translate.translations[module][file] = [];
+    }
+    Translate.translations[module][file][ref] = message;
 };
