@@ -109,7 +109,8 @@ class DW_Model_Repository_Report extends Core_Model_Repository
 
             $denominatorResults = $this->getResultForIndicatorAndAxes(
                 $denominator,
-                [$denominatorAxis1, $denominatorAxis2]
+                [$denominatorAxis1, $denominatorAxis2],
+                $report->getFilters()
             );
 
             // Tableau des identifiants des valeur des ratios (enfants) indxant l'identifiant des numérateurs (parents).
