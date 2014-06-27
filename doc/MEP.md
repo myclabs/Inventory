@@ -1,5 +1,11 @@
 # Mise en production
 
+## 3.3
+
+- Déployer normalement avec update de la BDD.
+
+- Lancer un rebuild de tous les DW.
+
 ## 3.2
 
 - Déployer normalement avec update de la BDD.
