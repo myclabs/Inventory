@@ -45,7 +45,7 @@ DW\Domain\Report:
     numeratorIndicator:
       targetEntity: Indicator
       joinColumn:
-        name: idNumeratorIndicator
+        name: idNumerator
         referencedColumnName: id
         nullable: true
     numeratorAxis1:
@@ -63,7 +63,7 @@ DW\Domain\Report:
     denominatorIndicator:
       targetEntity: Indicator
       joinColumn:
-        name: idDenominatorIndicator
+        name: idDenominator
         referencedColumnName: id
         nullable: true
     denominatorAxis1:
