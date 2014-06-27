@@ -887,6 +887,10 @@ class Orga_CellController extends Core_Controller
                 }
             }
         }
+        usort($cellReports, function ($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+
         // Copied Reports.
         /** @var Orga_Model_CellReport[] $usersReports */
         $usersReports = [];
