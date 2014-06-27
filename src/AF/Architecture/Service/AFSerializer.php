@@ -109,13 +109,13 @@ class AFSerializer
                     $arr['enabled'] = $component->isEnabled();
                     $arr['unit'] = [
                         'ref'    => $unit->getRef(),
-                        'symbol' => $this->translator->get($unit->getSymbol()),
+                        'symbol' => (string) $this->translator->get($unit->getSymbol()),
                     ];
                     if ($component->hasUnitSelection()) {
                         $arr['unitChoices'][$unit->getRef()] = $this->translator->get($unit->getSymbol());
                         foreach ($unit->getCompatibleUnits() as $compatibleUnit) {
                             $arr['unitChoices'][$compatibleUnit->getRef()] =
-                                $this->translator->get($compatibleUnit->getSymbol());
+                                (string) $this->translator->get($compatibleUnit->getSymbol());
                         }
                     }
                     $arr['required'] = $component->getRequired();
