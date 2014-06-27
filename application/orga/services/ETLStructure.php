@@ -1002,8 +1002,8 @@ class Orga_Service_ETLStructure
         foreach (DWReport::loadList($queryCube) as $dWReport) {
             /** @var DWReport $dWReport */
             $dWReportsAsString[] = $this->reportService->getReportAsJson($dWReport);
-            $dWReportReset = $dWReport->reset();
-            $dWReportReset->save();
+            $dWReport->reset();
+            $dWReport->save();
         }
 
         // Suppression des axes et indicateurs.
