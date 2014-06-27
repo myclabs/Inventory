@@ -15,7 +15,7 @@ Feature: Organization input input feature
     Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading
     And I click "Année | Site Fonctionnalités disponibles à ce niveau : Suivi des collectes, Saisies"
-    And I go input the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:energie/" cell
+    And I go input the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:1-energie/" cell
     Then I should see "Saisie 2012 | Annecy | Énergie"
     And the "quantite_combustible" field should contain "10"
     And the "percentquantite_combustible" field should contain "15"
@@ -33,9 +33,9 @@ Feature: Organization input input feature
     And I wait for the page to finish loading
     And I click element "div[id='granularity8'] button.reset"
   # Vérification contenu datagrid
-    Then the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell input status should be "statusFinished"
+    Then the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell input status should be "statusFinished"
   # Accès à la saisie, inventaire clôturé
-    When I go input the "/1-annee:2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell
+    When I go input the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell
   # TODO : tester le fait que le champ apparaît en consultation.
     Then I should not see "Aperçu des résultats"
     And I should not see "Enregistrer"

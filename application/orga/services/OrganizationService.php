@@ -170,6 +170,16 @@ class Orga_Service_OrganizationService
             $this->entityManager->clear();
 
             $organization = Orga_Model_Organization::load($idOrganization);
+            $axes = $organization->getLastOrderedAxes();
+            foreach ($axes as $axis) {
+                /** @var Orga_Model_Axis $axis */
+                $axis->delete();
+            }
+
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+
+            $organization = Orga_Model_Organization::load($idOrganization);
             $organization->delete();
 
             $this->entityManager->flush();
@@ -518,6 +528,9 @@ class Orga_Service_OrganizationService
                 } while (!isset($members[$axisId][$memberId]));
             }
         }
+
+        // Configuration de l'axe temps.
+        $organization->setTimeAxis($timeAxis);
 
         // Création de la granularité de collecte.
         $inventoryGranularityId = $formData['inventoryGranularity'];

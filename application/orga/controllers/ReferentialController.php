@@ -2,7 +2,7 @@
 
 use Classification\Application\Service\ClassificationExportService;
 use Core\Annotation\Secure;
-use Parameter\Application\Service\ExportService;
+use Parameter\Application\Service\ParameterExportService;
 use User\Domain\User;
 
 /**
@@ -86,7 +86,7 @@ class Orga_ReferentialController extends Core_Controller
             $baseFilename = __('Classification', 'classification', 'classification');
             break;
             case 'Parameter':
-                $exportService = new ExportService();
+                $exportService = new ParameterExportService();
                 $streamFunction = 'stream';
                 $baseFilename = __('UI', 'name', 'parameters');
                 break;

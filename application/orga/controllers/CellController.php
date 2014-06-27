@@ -1,8 +1,8 @@
 <?php
 
 use Account\Application\Service\OrganizationViewFactory;
-use AF\Application\InputFormParser;
 use AF\Application\AFViewConfiguration;
+use AF\Architecture\Service\InputSerializer;
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
@@ -75,9 +75,9 @@ class Orga_CellController extends Core_Controller
 
     /**
      * @Inject
-     * @var InputFormParser
+     * @var InputSerializer
      */
-    private $inputFormParser;
+    private $inputSerializer;
 
     /**
      * @Inject
@@ -1262,10 +1262,11 @@ class Orga_CellController extends Core_Controller
      */
     public function inputAction()
     {
-        $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($idCell);
-        $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $idCell;
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
+        $af = $cell->getInputAFUsed();
+        $organization = $cell->getOrganization();
+        $fromIdCell = $this->hasParam('fromIdCell') ? $this->getParam('fromIdCell') : $cell->getId();
 
         $isUserAllowedToInputCell = $this->acl->isAllowed(
             $this->_helper->auth(),
@@ -1273,42 +1274,53 @@ class Orga_CellController extends Core_Controller
             $cell
         );
 
-        $aFViewConfiguration = new AFViewConfiguration();
+        $viewConfiguration = new AFViewConfiguration();
         if ($isUserAllowedToInputCell && ($cell->getInventoryStatus() !== Orga_Model_Cell::INVENTORY_STATUS_CLOSED)) {
-            $aFViewConfiguration->setMode(AFViewConfiguration::MODE_WRITE);
+            $viewConfiguration->setMode(AFViewConfiguration::MODE_WRITE);
         } else {
-            $aFViewConfiguration->setMode(AFViewConfiguration::MODE_READ);
+            $viewConfiguration->setMode(AFViewConfiguration::MODE_READ);
         }
-        $aFViewConfiguration->setPageTitle(
+        $viewConfiguration->setPageTitle(
             __('UI', 'name', 'input').' <small>'.$this->translator->get($cell->getLabel()).'</small>'
         );
-        $aFViewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $idCell]);
-        $aFViewConfiguration->setResultsPreviewUrl('orga/cell/input-preview');
-        $aFViewConfiguration->setExitUrl('orga/cell/view/idCell/' . $fromIdCell . '/');
-        $aFViewConfiguration->addUrlParam('idCell', $idCell);
-        $aFViewConfiguration->setDisplayConfigurationLink(false);
-        $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_INPUT);
-        if ($cell->getAFInputSetPrimary() !== null) {
-            $aFViewConfiguration->setIdInputSet($cell->getAFInputSetPrimary()->getId());
+        $viewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $cell->getId()]);
+        $viewConfiguration->setResultsPreviewUrl(
+            'orga/cell/input-preview?id=' . $af->getId() . '&idCell=' . $cell->getId()
+        );
+        $viewConfiguration->setExitUrl('orga/cell/view/idCell/' . $fromIdCell . '/');
+        $viewConfiguration->addUrlParam('idCell', $cell->getId());
+        $viewConfiguration->setDisplayConfigurationLink(false);
+        $viewConfiguration->addBaseTab(AFViewConfiguration::TAB_INPUT);
+        $viewConfiguration->setInputSet($cell->getAFInputSetPrimary());
+
+        // Saisie de l'année précédente
+        $timeAxis = $organization->getTimeAxis();
+        if ($timeAxis && $cell->getGranularity()->hasAxis($timeAxis)) {
+            $previousCell = $cell->getPreviousCellForAxis($timeAxis);
+            if ($previousCell) {
+                $previousInput = $previousCell->getAFInputSetPrimary();
+                $label = $this->translator->get($previousCell->getLabel());
+                $viewConfiguration->setPreviousInputSet($label, $previousInput);
+            }
         }
 
         $tabComments = new Tab('inputComments');
         $tabComments->setTitle(__('Orga', 'comment', 'comments'));
         $commentView = new Zend_View();
         $commentView->setScriptPath(__DIR__ . '/../views/scripts');
-        $commentView->assign('idCell', $idCell);
+        $commentView->assign('idCell', $cell->getId());
         $commentView->assign(
             'isUserAbleToComment',
             $this->acl->isAllowed($this->_helper->auth(), Actions::INPUT, $cell)
         );
         $tabComments->setContent($commentView->render('cell/input-comments.phtml'));
-        $aFViewConfiguration->addTab($tabComments);
+        $viewConfiguration->addTab($tabComments);
 
         $tabDocs = new Tab('inputDocs');
         $tabDocs->setTitle(__('Doc', 'name', 'documents'));
-        $tabDocs->setContent('orga/cell/input-docs/idCell/'.$idCell);
+        $tabDocs->setContent('orga/cell/input-docs/idCell/' . $cell->getId());
         $tabDocs->setAjax(true, true);
-        $aFViewConfiguration->addTab($tabDocs);
+        $viewConfiguration->addTab($tabDocs);
 
         $isUserAllowedToViewCellReports = $this->acl->isAllowed(
             $this->_helper->auth(),
@@ -1316,18 +1328,16 @@ class Orga_CellController extends Core_Controller
             $cell
         );
         if ($isUserAllowedToViewCellReports) {
-            $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_RESULT);
-            $aFViewConfiguration->addBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS);
+            $viewConfiguration->addBaseTab(AFViewConfiguration::TAB_RESULT);
+            $viewConfiguration->addBaseTab(AFViewConfiguration::TAB_CALCULATION_DETAILS);
         }
-        $aFViewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
+        $viewConfiguration->setResultsPreview($isUserAllowedToViewCellReports);
 
         $this->setActiveMenuItemOrganization($cell->getOrganization()->getId());
 
-        \AF\Application\Form\Form::addHeader();
-
         $this->forward('display', 'af', 'af', [
-            'id' => $cell->getInputAFUsed()->getId(),
-            'viewConfiguration' => $aFViewConfiguration
+            'id' => $af->getId(),
+            'viewConfiguration' => $viewConfiguration,
         ]);
     }
 
@@ -1337,30 +1347,18 @@ class Orga_CellController extends Core_Controller
      */
     public function inputPreviewAction()
     {
-        $idCell = $this->getParam('idCell');
-        $cell = Orga_Model_Cell::load($idCell);
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
 
         $af = AF::load($this->getParam('id'));
 
-        // Form data
-        $formContent = json_decode($this->getParam('af' . $af->getId()), true);
-        $errorMessages = [];
+        $inputSet = $this->inputSerializer->unserialize($this->getParam('input'), $af);
 
-        // Remplit l'InputSet
-        $inputSet = $this->inputFormParser->parseForm($formContent, $af, $errorMessages);
         $this->inputService->updateResults($cell, $inputSet);
 
-        $this->addFormErrors($errorMessages);
-
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->view->inputSet = $inputSet;
-
+        $this->view->assign('inputSet', $inputSet);
         // Moche mais sinon je me petit-suicide
         $this->view->addScriptPath(PACKAGE_PATH . '/src/AF/Application/views/scripts/');
         $data = $this->view->render('af/display-results.phtml');
-
-        // Force le statut en success (sinon les handlers JS ne sont pas exécutés)
-        $this->setFormMessage(null, UI_Message::TYPE_SUCCESS);
         $this->sendFormResponse($data);
     }
 

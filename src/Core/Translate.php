@@ -1,10 +1,10 @@
 <?php
 
-use Core\Translation\TranslatedString;
 use Doctrine\Common\Cache\Cache;
+use Mnapoli\Translated\AbstractTranslatedString;
 use Mnapoli\Translated\Translator as DoctrineTranslator;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\Translator as SymfonyTranslator;
 
 /**
  * Gère la traduction.
@@ -14,7 +14,7 @@ class Core_Translate
     const CACHE_NAMESPACE = '/translations/';
 
     /**
-     * @var Translator
+     * @var SymfonyTranslator
      */
     private $translator;
 
@@ -34,7 +34,7 @@ class Core_Translate
     private $doctrineTranslator;
 
     public function __construct(
-        Translator $translator,
+        SymfonyTranslator $translator,
         LoggerInterface $logger,
         Cache $cache,
         DoctrineTranslator $doctrineTranslator
@@ -62,7 +62,7 @@ class Core_Translate
         $id = $package . '.' . $file . '.' . $ref;
 
         $replacements = array_map(function ($replacement) {
-            if ($replacement instanceof TranslatedString) {
+            if ($replacement instanceof AbstractTranslatedString) {
                 return $this->doctrineTranslator->get($replacement);
             }
             return $replacement;

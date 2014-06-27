@@ -15,6 +15,13 @@ Orga_Model_Organization:
       class: Core\Translation\TranslatedString
 
   oneToOne:
+    timeAxis:
+      targetEntity: Orga_Model_Axis
+      joinColumn:
+        name: idTimeAxis
+        referencedColumnName: id
+        nullable: true
+        unique: true
     granularityForInventoryStatus:
       targetEntity: Orga_Model_Granularity
       joinColumn:

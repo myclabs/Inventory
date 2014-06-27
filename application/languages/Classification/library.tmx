@@ -4,6 +4,43 @@
             creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
+        <tu tuid="libraryHelpTitle">
+            <tuv xml:lang="fr">
+                <seg>Les bibliothèques de classification</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Les bibliothèques de classification</seg>
+            </tuv>
+        </tu>
+        <tu tuid="libraryHelp">
+            <tuv xml:lang="fr">
+                <seg>
+                    Ces bibliothèques contiennent la configuration des indicateurs auxquels sont associés les données
+                    saisies et les résultats des calculs effectués par l'application (cette association est configurée
+                    au niveau des formulaires comptables).
+                    Ces indicateurs (émissions de gaz à effet de serre, consommations diverses, indicateurs économiques,
+                    sociaux, environnementaux de toute nature) sont associés à des axes de classification (par exemple
+                    les catégories réglementaires dans le cas des émissions de gaz à effet de serre) qui permettent
+                    l'indexation des résultats.
+                    Plus précisément, les axes sont associés à des indicateurs "contextualisés" (par un contexte tel que
+                    "transport", "déchets" ou tout simplement un "contexte indifférencié" générique).
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Ces bibliothèques contiennent la configuration des indicateurs auxquels sont associés les données
+                    saisies et les résultats des calculs effectués par l'application (cette association est configurée
+                    au niveau des formulaires comptables).
+                    Ces indicateurs (émissions de gaz à effet de serre, consommations diverses, indicateurs économiques,
+                    sociaux, environnementaux de toute nature) sont associés à des axes de classification (par exemple
+                    les catégories réglementaires dans le cas des émissions de gaz à effet de serre) qui permettent
+                    l'indexation des résultats.
+                    Plus précisément, les axes sont associés à des indicateurs "contextualisés" (par un contexte tel que
+                    "transport", "déchets" ou tout simplement un "contexte indifférencié" générique).
+                </seg>
+            </tuv>
+        </tu>
+
         <tu tuid="createNewLibrary">
             <tuv xml:lang="fr">
                 <seg>Créer une nouvelle bibliothèque de classification</seg>

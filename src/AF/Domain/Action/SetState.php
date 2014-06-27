@@ -2,13 +2,7 @@
 
 namespace AF\Domain\Action;
 
-use AF\Domain\AFGenerationHelper;
-use Core_Exception;
 use Core_Exception_InvalidArgument;
-use AF\Application\Form\Action\Disable;
-use AF\Application\Form\Action\Enable;
-use AF\Application\Form\Action\Hide;
-use AF\Application\Form\Action\Show;
 
 /**
  * @author matthieu.napoli
@@ -20,33 +14,6 @@ class SetState extends Action
      * @var int
      */
     protected $state;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUIAction(AFGenerationHelper $generationHelper)
-    {
-        switch ($this->state) {
-            case self::TYPE_DISABLE:
-                $uiAction = new Disable($this->id);
-                break;
-            case self::TYPE_ENABLE:
-                $uiAction = new Enable($this->id);
-                break;
-            case self::TYPE_HIDE:
-                $uiAction = new Hide($this->id);
-                break;
-            case self::TYPE_SHOW:
-                $uiAction = new Show($this->id);
-                break;
-            default:
-                throw new Core_Exception("Unknown type $this->state");
-        }
-        if ($this->condition) {
-            $uiAction->condition = $generationHelper->getUICondition($this->condition);
-        }
-        return $uiAction;
-    }
 
     /**
      * Get the state attribute.

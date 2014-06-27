@@ -14,7 +14,7 @@
 class Calc_Value
 {
     /**
-     * Valeur digitale.
+     * Valeur numérique.
      * @var float|null
      */
     private $digitalValue;
@@ -26,33 +26,33 @@ class Calc_Value
     private $relativeUncertainty;
 
     /**
-     * @param float|null $digitalValue
-     * @param float|null $relativeUncertainty
+     * @param float|null $numericValue
+     * @param float|null $uncertainty
      */
-    public function __construct($digitalValue = null, $relativeUncertainty = null)
+    public function __construct($numericValue = null, $uncertainty = null)
     {
-        $this->digitalValue = is_numeric($digitalValue) ? floatval($digitalValue) : null;
-        $this->relativeUncertainty = is_numeric($relativeUncertainty) ? intval($relativeUncertainty) : null;
+        $this->digitalValue = is_numeric($numericValue) ? floatval($numericValue) : null;
+        $this->relativeUncertainty = is_numeric($uncertainty) ? intval($uncertainty) : null;
     }
 
     /**
-     * Copy the Value to a new object and changes its digital value
-     * @param float|null $digitalValue
+     * Copy the value to a new object and changes its digital value
+     * @param float|null $numericValue
      * @return Calc_Value
      */
-    public function copyWithNewValue($digitalValue = null)
+    public function copyWithNewValue($numericValue = null)
     {
-        return new self($digitalValue, $this->getRelativeUncertainty());
+        return new self($numericValue, $this->relativeUncertainty);
     }
 
     /**
-     * Copy the Value to a new object and changes its relative uncertainty
-     * @param float|null $relativeUncertainty
+     * Copy the Value to a new object and changes its uncertainty
+     * @param float|null $uncertainty
      * @return Calc_Value
      */
-    public function copyWithNewUncertainty($relativeUncertainty = null)
+    public function copyWithNewUncertainty($uncertainty = null)
     {
-        return new self($this->getDigitalValue(), $relativeUncertainty);
+        return new self($this->getDigitalValue(), $uncertainty);
     }
 
     /**
@@ -64,9 +64,18 @@ class Calc_Value
     }
 
     /**
+     * @deprecated Préferer getUncertainty()
      * @return float|null
      */
     public function getRelativeUncertainty()
+    {
+        return $this->relativeUncertainty;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getUncertainty()
     {
         return $this->relativeUncertainty;
     }
@@ -94,9 +103,9 @@ class Calc_Value
             throw new InvalidArgumentException("Invalid string");
         }
 
-        list($digitalValue, $relativeUncertainty) = explode(';', $str);
+        list($numericValue, $uncertainty) = explode(';', $str);
 
-        return new static($digitalValue, $relativeUncertainty);
+        return new static($numericValue, $uncertainty);
     }
 
     /**

@@ -4,6 +4,39 @@
             creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
+        <tu tuid="libraryHelpTitle">
+            <tuv xml:lang="fr">
+                <seg>Les bibliothèques de formulaires</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Les bibliothèques de formulaires</seg>
+            </tuv>
+        </tu>
+        <tu tuid="libraryHelp">
+            <tuv xml:lang="fr">
+                <seg>
+                    Ces bibliothèques contiennent la configuration des formulaires de saisie, des calculs effectués à
+                    partir des données saisies (d'où l'adjectif "comptable"), de l'association des résultats obtenus à
+                    des indicateurs des bibliothèques de classification, et de l'indexation de ces résultats suivant les
+                    axes de classification correspondant à ces indicateurs.
+                    L'architecture des formulaires comptables est modulaire : on peut inclure un formulaire B dans un
+                    formulaire A (B joue alors le rôle de "sous-formulaire" pour A). Il n'est pas nécessaire pour cela
+                    que B appartienne à la même bibliothèque de formulaires que A.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    Ces bibliothèques contiennent la configuration des formulaires de saisie, des calculs effectués à
+                    partir des données saisies (d'où l'adjectif "comptable"), de l'association des résultats obtenus à
+                    des indicateurs des bibliothèques de classification, et de l'indexation de ces résultats suivant les
+                    axes de classification correspondant à ces indicateurs.
+                    L'architecture des formulaires comptables est modulaire : on peut inclure un formulaire B dans un
+                    formulaire A (B joue alors le rôle de "sous-formulaire" pour A). Il n'est pas nécessaire pour cela
+                    que B appartienne à la même bibliothèque de formulaires que A.
+                </seg>
+            </tuv>
+        </tu>
+
         <tu tuid="createNewLibrary">
             <tuv xml:lang="fr">
                 <seg>Créer une nouvelle bibliothèque de formulaires</seg>

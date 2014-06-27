@@ -16,11 +16,12 @@ Feature: Cell contributor feature
     Then I should see "Workspace avec données"
     And I should see "Europe | Marque A"
   # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)
-    When I wait 5 seconds
     And I click element "div[id='currentGranularity'] a.go-input"
-    And I click element "#chiffre_affaireHistory .btn"
+    And I click element "#chiffre_affaireHistory"
     Then I should see "Historique des valeurs"
+    And I wait 2 seconds
     And I should see a "code:contains('10 k€ ± 15 %')" element
+    And I click element "#chiffre_affaireHistory"
   # Accès à l'onglet "Commentaires"
     When I open tab "Commentaires"
     And I click "Ajouter un commentaire"

@@ -25,7 +25,7 @@ Feature: AF composed condition for interaction feature
       | aaa |
     When I click "Expression" in the row 2 of the "conditionsExpression" datagrid
     Then I should see the popup "Expression"
-    And I should see "a & (b | c) & d"
+    And I should see "a&(b|c)&d"
 
   @javascript
   Scenario: Creation of an composed condition for interaction scenario, incorrect input
@@ -71,7 +71,7 @@ Feature: AF composed condition for interaction feature
       | cond_comp_inter |
     When I click "Expression" in the row 1 of the "conditionsExpression" datagrid
     Then I should see the popup "Expression"
-    And I should see "a & (b | c) & d"
+    And I should see "a&(b|c)&d"
   # Fermeture du popup
     When I click "×"
   # Modification de l'identifiant, saisie correcte
@@ -83,7 +83,7 @@ Feature: AF composed condition for interaction feature
     When I set "a&b" for column "expression" of row 1 of the "conditionsExpression" datagrid with a confirmation message
     And I click "Expression" in the row 1 of the "conditionsExpression" datagrid
     Then I should see the popup "Expression"
-    And I should see "a & b"
+    And I should see "a&b"
 
   @javascript
   Scenario: Edition of an composed condition for interaction scenario, incorrect input

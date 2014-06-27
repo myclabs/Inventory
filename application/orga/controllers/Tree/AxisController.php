@@ -83,6 +83,11 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             } else {
                 $axis->setContextualize(false);
             }
+            if ($this->getAddElementValue('addAxis_isPositionning') === 'positionning') {
+                $axis->setMemberPositioning(true);
+            } else {
+                $axis->setMemberPositioning(false);
+            }
             $axis->save();
 
             if ($axis->getDirectNarrower() === null) {
@@ -162,6 +167,15 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
         } else {
             $contextualizing = false;
         }
+
+        if ($this->getEditElementValue('isPositionning') === 'positionning') {
+            $positionning = true;
+        } else {
+            $positionning = false;
+            if ($axis->isMemberPositioning() && ($organization->getTimeAxis() === $axis)) {
+                $this->setEditFormElementErrorMessage('isPositionning', ___('Orga', 'axis', 'positionningAxisIsTimeAxis'));
+            }
+        }
         switch ($this->getEditElementValue('changeOrder')) {
             case 'first':
                 $newPosition = 1;
@@ -201,12 +215,28 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
             if ($axis->isContextualizing() !== $contextualizing) {
                 $axis->setContextualize($contextualizing);
             }
+            if ($axis->isMemberPositioning() !== $positionning) {
+                $axis->setMemberPositioning($positionning);
+            }
             if (($newPosition !== null) && ($axis->getPosition() !== $newPosition)) {
                 $axis->setPosition($newPosition);
             }
             $this->message = __('UI', 'message', 'updated', [
                 'AXIS' => $this->translator->get($axis->getLabel())
             ]);
+        }
+
+        $this->entityManager->beginTransaction();
+        try {
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Core_Exception_TooMany $e) {
+            $this->entityManager->rollback();
+            $this->entityManager->clear();
+            $this->setEditFormElementErrorMessage(
+                'isContextualizing',
+                __('Orga', 'axis', 'contextualizingAxisHasMembersWithSameRef')
+            );
         }
 
         $this->send();
@@ -273,6 +303,7 @@ class Orga_Tree_AxisController extends UI_Controller_Tree
         $this->data['ref'] = $axis->getRef();
         $this->data['label'] = $this->translator->get($axis->getLabel());
         $this->data['isContextualizing'] = $axis->isContextualizing() ? 'contextualizing' : 'notContextualizing';
+        $this->data['isPositionning'] = $axis->isMemberPositioning() ? 'positionning' : 'notPositionning';
 
         $this->send();
     }

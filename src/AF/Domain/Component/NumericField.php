@@ -4,18 +4,12 @@ namespace AF\Domain\Component;
 
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\AFConfigurationError;
-use AF\Domain\AFGenerationHelper;
 use AF\Domain\Input\NumericFieldInput;
 use AF\Domain\Algorithm\Numeric\NumericInputAlgo;
+use Calc_UnitValue;
 use Calc_Value;
 use Core_Exception_NotFound;
-use Core_Locale;
-use AF\Application\Form\Element\Option;
-use AF\Application\Form\Element\Pattern\PercentPattern;
-use AF\Application\Form\Element\Pattern\ValuePattern;
-use AF\Application\Form\Element\Select as FormSelect;
 use Unit\UnitAPI;
-use Zend_Form_Element;
 
 /**
  * Gestion des champs de type Numeric (champs de saisie).
@@ -72,88 +66,22 @@ class NumericField extends Field
     /**
      * {@inheritdoc}
      */
-    public function getUIElement(AFGenerationHelper $generationHelper)
+    public function initializeNewInput(InputSet $inputSet)
     {
-        $locale = Core_Locale::loadDefault();
+        $input = $inputSet->getInputForComponent($this);
 
-        $uiElement = new ValuePattern($this->ref, false);
-        $uiElement->setLabel($this->uglyTranslate($this->label));
-        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
-        $uiElement->setRequired($this->getRequired());
-        if ($generationHelper->isReadOnly()) {
-            $uiElement->getElement()->setReadOnly();
+        if ($input === null) {
+            $input = new NumericFieldInput($inputSet, $this);
+            $inputSet->setInputForComponent($this, $input);
         }
-        // Remplit avec la valeur saisie
-        $input = null;
-        if ($generationHelper->getInputSet()) {
-            /** @var $input NumericFieldInput */
-            $input = $generationHelper->getInputSet()->getInputForComponent($this);
-        }
-        if ($input) {
-            $uiElement->getElement()->disabled = $input->isDisabled();
-            $uiElement->getElement()->hidden = $input->isHidden();
-            $value = $input->getValue();
-            $selectedUnit = $input->getValue()->getUnit();
-            // Si l'unité du champ n'est plus compatible avec l'ancienne saisie
-            if (!$selectedUnit->isEquivalent($this->unit->getRef())) {
-                // Ignore l'ancienne saisie
-                $value = $this->defaultValue;
-                $selectedUnit = $this->unit;
-            }
-            // Valeur
-            if ($value) {
-                // Si on ne peut plus choisir l'unité, et qu'une valeur a été saisie dans une unité différente
-                if ((!$this->hasUnitSelection()) && ($value->getUnit() != $this->unit)) {
-                    // On convertit dans l'unité par défaut
-                    $value = $value->convertTo($this->unit);
-                }
-                $uiElement->setValue($locale->formatNumberForInput($value->getDigitalValue()));
-            }
-            // Unité
-            $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $selectedUnit));
-            // Incertitude
-            if ($this->withUncertainty) {
-                $uiUncertaintyElement = new PercentPattern('percent' . $this->ref);
-                if ($value) {
-                    $uiUncertaintyElement->setValue($locale->formatNumberForInput($value->getRelativeUncertainty()));
-                }
-                $uiElement->getElement()->addElement($uiUncertaintyElement);
-            }
-            // Historique de la valeur
-            $uiElement->getElement()->addElement($this->getHistoryComponent($input));
-        } else {
-            $uiElement->getElement()->disabled = !$this->enabled;
-            $uiElement->getElement()->hidden = !$this->visible;
-            // Valeur
-            $uiElement->setValue($locale->formatNumberForInput($this->defaultValue->getDigitalValue()));
-            // Unité
-            if ($this->unit !== null) {
-                $uiElement->getElement()->addElement($this->getUnitComponent($this->unit, $this->unit));
-            }
-            // Incertitude
-            if ($this->withUncertainty) {
-                $uiUncertaintyElement = new PercentPattern('percent' . $this->ref);
-                $uiUncertaintyElement->setValue(
-                    $locale->formatNumberForInput($this->defaultValue->getRelativeUncertainty())
-                );
-                $uiElement->getElement()->addElement($uiUncertaintyElement);
-            }
-        }
-        // Actions
-        foreach ($this->actions as $action) {
-            $uiElement->getElement()->addAction($generationHelper->getUIAction($action));
-        }
-        // Rappel de la valeur par défaut
-        if ($this->getDefaultValueReminder()) {
-            $locale = Core_Locale::loadDefault();
-            $uiElement->setDescription(sprintf(
-                "Valeur par défaut : %s %s ± %d%%",
-                $locale->formatNumber((float) $this->defaultValue->getDigitalValue()),
-                $this->uglyTranslate($this->unit->getSymbol()),
-                (float) $this->defaultValue->getRelativeUncertainty()
-            ));
-        }
-        return $uiElement;
+
+        $defaultValue = new Calc_UnitValue(
+            $this->unit,
+            $this->defaultValue->getDigitalValue(),
+            $this->defaultValue->getUncertainty()
+        );
+
+        $input->setValue($defaultValue);
     }
 
     /**
@@ -306,45 +234,6 @@ class NumericField extends Field
     public function setRequired($required)
     {
         $this->required = (bool) $required;
-    }
-
-    /**
-     * Retourne le composant UI pour le choix de l'unité de la saisie
-     * @param UnitAPI $baseUnit
-     * @param UnitAPI $selectedUnit
-     * @return Zend_Form_Element
-     */
-    protected function getUnitComponent(UnitAPI $baseUnit, UnitAPI $selectedUnit)
-    {
-        $unitComponent = new FormSelect($this->ref . '_unit');
-
-        // Ajoute l'unité de base
-        $option = new Option(
-            $this->ref . '_unit_' . $baseUnit->getRef(),
-            $baseUnit->getRef(),
-            $this->uglyTranslate($baseUnit->getSymbol())
-        );
-        $unitComponent->addOption($option);
-
-        // Ajoute les unités compatibles
-        foreach ($baseUnit->getCompatibleUnits() as $compatibleUnit) {
-            $option = new Option(
-                $this->ref . '_unit_' . $compatibleUnit->getRef(),
-                $compatibleUnit->getRef(),
-                $this->uglyTranslate($compatibleUnit->getSymbol())
-            );
-            $unitComponent->addOption($option);
-        }
-
-        // Sélection
-        if ($this->hasUnitSelection()) {
-            $unitComponent->setValue($selectedUnit->getRef());
-        } else {
-            $unitComponent->setValue($baseUnit->getRef());
-            $unitComponent->getElement()->disabled = true;
-        }
-
-        return $unitComponent;
     }
 
     /**

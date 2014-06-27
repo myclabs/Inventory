@@ -34,7 +34,7 @@ class RepeatedSubAFInput extends SubAFInput
      */
     public function getValue()
     {
-        return $this->value->toArray();
+        return is_array($this->value) ? $this->value : $this->value->toArray();
     }
 
     /**
@@ -78,6 +78,7 @@ class RepeatedSubAFInput extends SubAFInput
     /**
      * Ajoute une nouvelle répétition d'un sous-formulaire
      * @param string $freeLabel
+     * @return SubInputSet
      */
     public function addRepeatedSubAf($freeLabel = null)
     {
@@ -86,5 +87,7 @@ class RepeatedSubAFInput extends SubAFInput
         $subInputSet = new SubInputSet($component->getCalledAF());
         $subInputSet->setFreeLabel($freeLabel);
         $this->addSubSet($subInputSet);
+
+        return $subInputSet;
     }
 }

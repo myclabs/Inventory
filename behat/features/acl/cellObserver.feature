@@ -16,7 +16,7 @@ Feature: Cell observer feature
     Then I should see "Workspace avec données"
     And I should see "Europe | Marque A"
     When I click element "legend a[href='#granularity7']"
-    Then I should see "13%" in the ".cell[data-tag='/1-annee:2012/&/1-zone:europe/&/2-marque:marque_a/']" element
+    Then I should see "13%" in the ".cell[data-tag='/1-annee:1-2012/&/1-zone:europe/&/2-marque:marque_a/']" element
     # And the "inventories6" datagrid should contain 2 row
   # TODO : statut de la collecte non éditable
   # Accès à l'onglet "Analyses"

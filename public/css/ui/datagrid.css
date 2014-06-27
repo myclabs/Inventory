@@ -49,11 +49,11 @@
 .yui-skin-sam .yui-dt-data .yui-dt-liner .datagrid_cell_editable i { vertical-align: bottom; opacity: 0.5; }
 
 /* Taille des cellules de pourcentage */
-.yui-skin-sam td .yui-dt-liner .progress { margin-bottom: 0px; }
+.yui-skin-sam td .yui-dt-liner .progress { margin-bottom: 0; }
 
 /* Décoration des icônes des cellules de position */
-.yui-skin-sam td span span.datagrid_order_enable { cursor: pointer; }
-.yui-skin-sam td span span.datagrid_order_disable { color: #888888; text-decoration: line-through; }
+.yui-skin-sam td span.datagrid-order-change { margin: 0 4px; padding: 0 3px; }
+.yui-skin-sam td span.datagrid-order-change + span.datagrid-order-change { margin-left: 0; }
 
 /* Taille des popups d'éditions */
 .yui-dt-editor input[type="text"] { width: 90% !important; }
@@ -62,7 +62,7 @@
 .yui-dt-editor label { display: inline-block; margin-right: 10px}
 .yui-dt-editor input[type="checkbox"] { float:left; display: inline-block; margin-right: 10px; }
 .yui-dt-editor input[type="checkbox"] + label { clear: right; display: block; }
-.yui-dt-editor .yui-calcontainer { border: none; padding: 0px; }
+.yui-dt-editor .yui-calcontainer { border: none; padding: 0; }
 
 /* Ajustement de markitup dans l'éditeur en ligne */
 .yui-dt-editor textarea {

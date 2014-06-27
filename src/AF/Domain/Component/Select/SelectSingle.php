@@ -3,13 +3,10 @@
 namespace AF\Domain\Component\Select;
 
 use AF\Domain\Input\Select\SelectSingleInput;
-use AF\Application\Form\Element\Select as FormSelect;
 use AF\Domain\Algorithm\Selection\TextKey\InputSelectionAlgo;
-use AF\Domain\AFGenerationHelper;
+use AF\Domain\InputSet\InputSet;
 use Core_Exception_NotFound;
-use Core_Exception_UndefinedAttribute;
 use AF\Domain\Component\Select;
-use AF\Application\Form\Element\Radio;
 
 /**
  * @author matthieu.napoli
@@ -33,7 +30,7 @@ class SelectSingle extends Select
 
     /**
      * Identifiant of the default option selectioned.
-     * @var SelectOption
+     * @var SelectOption|null
      */
     protected $defaultValue;
 
@@ -47,58 +44,16 @@ class SelectSingle extends Select
     /**
      * {@inheritdoc}
      */
-    public function getUIElement(AFGenerationHelper $generationHelper)
+    public function initializeNewInput(InputSet $inputSet)
     {
-        switch ($this->type) {
-            case self::TYPE_RADIO:
-                $uiElement = new Radio($this->ref);
-                break;
-            case self::TYPE_LIST:
-                $uiElement = new FormSelect($this->ref);
-                // Ajout d'un choix vide à la liste déroulante
-                $uiElement->addNullOption('');
-                break;
-            default:
-                throw new Core_Exception_UndefinedAttribute("The type must be defined and valid");
+        $input = $inputSet->getInputForComponent($this);
+
+        if ($input === null) {
+            $input = new SelectSingleInput($inputSet, $this);
+            $inputSet->setInputForComponent($this, $input);
         }
-        $uiElement->setLabel($this->uglyTranslate($this->label));
-        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
-        $uiElement->setRequired($this->getRequired());
-        // Liste des options
-        foreach ($this->options as $option) {
-            $uiElement->addOption($generationHelper->getUIOption($option));
-        }
-        if ($generationHelper->isReadOnly()) {
-            $uiElement->getElement()->setReadOnly(true);
-        }
-        // Remplit avec la valeur saisie
-        $input = null;
-        if ($generationHelper->getInputSet()) {
-            /** @var $input SelectSingleInput */
-            $input = $generationHelper->getInputSet()->getInputForComponent($this);
-        }
-        if ($input) {
-            $uiElement->getElement()->disabled = $input->isDisabled();
-            $uiElement->getElement()->hidden = $input->isHidden();
-            $optionRef = $input->getValue();
-            if ($optionRef) {
-                $uiElement->setValue($optionRef);
-            }
-            // Historique de la valeur
-            $uiElement->getElement()->addElement($this->getHistoryComponent($input));
-        } else {
-            $uiElement->getElement()->disabled = !$this->enabled;
-            $uiElement->getElement()->hidden = !$this->visible;
-            // Valeur par défaut
-            if ($this->defaultValue) {
-                $uiElement->setValue($this->defaultValue->getRef());
-            }
-        }
-        // Actions
-        foreach ($this->actions as $action) {
-            $uiElement->getElement()->addAction($generationHelper->getUIAction($action));
-        }
-        return $uiElement;
+
+        $input->setValue($this->defaultValue);
     }
 
     /**

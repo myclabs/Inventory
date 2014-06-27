@@ -132,6 +132,18 @@ class Core_Locale
     }
 
     /**
+     * Retourne le séparateur décimal ("." ou ",") de la locale actuelle.
+     *
+     * @return string
+     */
+    public function getDecimalSeparator()
+    {
+        $symbols = Zend_Locale_Data::getList($this->zendLocale->toString(), 'symbols');
+
+        return $symbols['decimal'];
+    }
+
+    /**
      * Formate un nombre pour l'affichage.
      *
      * @param float $number
@@ -229,6 +241,17 @@ class Core_Locale
      */
     public function readNumber($input, $significantFigures = null, $numberDecimal = null)
     {
+        if (is_int($input) || is_float($input)) {
+            return $input;
+        }
+
+        // Accepte tous les séparateurs décimaux
+        $decimalSeparators = ['.', ','];
+        $correctDecimalSeparator = $this->getDecimalSeparator();
+        foreach ($decimalSeparators as $decimalSeparator) {
+            $input = str_replace($decimalSeparator, $correctDecimalSeparator, $input);
+        }
+
         if (trim($input) === '') {
             return null;
         }
@@ -263,6 +286,10 @@ class Core_Locale
      */
     public function readInteger($input)
     {
+        if (is_int($input) || is_float($input)) {
+            return (int) $input;
+        }
+
         if (trim($input) === '') {
             return null;
         }

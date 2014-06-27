@@ -5,6 +5,7 @@ use Account\Domain\AccountRepository;
 use Core\Annotation\Secure;
 use Core\Translation\TranslatedString;
 use MyCLabs\ACL\ACL;
+use Parameter\Application\Service\ParameterExportService;
 use Parameter\Domain\ParameterLibrary;
 use User\Domain\ACL\Actions;
 
@@ -24,6 +25,12 @@ class Parameter_LibraryController extends Core_Controller
      * @var AccountRepository
      */
     private $accountRepository;
+
+    /**
+     * @Inject
+     * @var ParameterExportService
+     */
+    private $exportService;
 
     /**
      * @Secure("viewParameterLibrary")
@@ -84,5 +91,30 @@ class Parameter_LibraryController extends Core_Controller
         }
 
         $this->redirect('account/dashboard');
+    }
+
+    /**
+     * @Secure("viewParameterLibrary")
+     */
+    public function exportAction()
+    {
+        session_write_close();
+        set_time_limit(0);
+        PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip);
+
+        /** @var $library ParameterLibrary */
+        $library = ParameterLibrary::load($this->getParam('id'));
+
+        $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
+        $filename = $date . '_' . __('Classification', 'classification', 'classification') . '.xls';
+
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition:attachement;filename='.$filename);
+        header('Cache-Control: max-age=0');
+
+        Zend_Layout::getMvcInstance()->disableLayout();
+        Zend_Controller_Front::getInstance()->setParam('noViewRenderer', true);
+
+        $this->exportService->stream($library, 'xls');
     }
 }

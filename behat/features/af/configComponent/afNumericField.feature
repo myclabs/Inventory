@@ -55,7 +55,7 @@ Feature: AF numeric field feature
     And the "numericFieldDatagrid" datagrid should contain a row:
       | label | ref | isVisible | enabled    | required    | unit           | unitSelection     | withUncertainty | digitalValue | relativeUncertainty | defaultValueReminder |
       | AAA   | aaa | Masqué    | Désactivé  | Obligatoire | kg équ. CO2/m³ | Non modifiable    | Masquée         | 1 000,5      | 10                  | Affiché              |
-    When I click "Aide" in the row 4 of the "numericFieldDatagrid" datagrid
+    When I click "Aide" in the row 3 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#numericFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
     When I click element ".close:contains('×')"
@@ -106,13 +106,11 @@ Feature: AF numeric field feature
     And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "auie"
     And I click "Valider"
     Then the field "numericFieldDatagrid_digitalValue_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
   # Ajout, valeur initiale et incertitude initiale nombres mais pas au bon format
-    When I fill in "numericFieldDatagrid_digitalValue_addForm" with "1000.5"
     And I fill in "numericFieldDatagrid_relativeUncertainty_addForm" with "10.9"
     And I click "Valider"
-    Then the field "numericFieldDatagrid_digitalValue_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "numericFieldDatagrid_relativeUncertainty_addForm" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
 
   @javascript
   Scenario: Edition of a numeric field, correct input
@@ -191,13 +189,11 @@ Feature: AF numeric field feature
   # Modification valeur initiale
     When I set "auie" for column "digitalValue" of row 1 of the "numericFieldDatagrid" datagrid
     Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    When I set "1.5" for column "digitalValue" of row 1 of the "numericFieldDatagrid" datagrid
-    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Modification incertitude initiale
     When I set "auie" for column "relativeUncertainty" of row 1 of the "numericFieldDatagrid" datagrid
-    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    Then the following message is shown and closed: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
     When I set "15.9" for column "relativeUncertainty" of row 1 of the "numericFieldDatagrid" datagrid
-    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    Then the following message is shown and closed: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
 
   @javascript
   Scenario: Deletion of a numeric field
@@ -206,30 +202,19 @@ Feature: AF numeric field feature
     And I open tab "Composants"
     And I open collapse "Champs numériques"
     Then I should see the "numericFieldDatagrid" datagrid
-    And the "numericFieldDatagrid" datagrid should contain 3 row
+    And the "numericFieldDatagrid" datagrid should contain 2 row
     And the row 1 of the "numericFieldDatagrid" datagrid should contain:
       | label           |
       | Champ numérique |
     And the row 2 of the "numericFieldDatagrid" datagrid should contain:
       | label                            |
       | Champ numérique cible activation |
-    And the row 3 of the "numericFieldDatagrid" datagrid should contain:
-      | label                          |
-      | Champ numérique cible setvalue |
   # Suppression des champs cibles d'actions
     When I open tab "Interactions"
     And I open collapse "Modifications de l'état de composants"
     Then I should see the "actionsSetState" datagrid
     And the "actionsSetState" datagrid should contain 1 row
-    When I open collapse "Assignations de valeurs à des champs"
-    Then I should see the "actionsSetValue" datagrid
-    And the "actionsSetValue" datagrid should contain 3 row
     When I open tab "Composants"
-    # And I open collapse "Champs numériques" (déjà ouvert !)
-    When I click "Supprimer" in the row 3 of the "numericFieldDatagrid" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
     When I click "Supprimer" in the row 2 of the "numericFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
@@ -242,11 +227,6 @@ Feature: AF numeric field feature
     And I open collapse "Modifications de l'état de composants"
     Then I should see the "actionsSetState" datagrid
     And the "actionsSetState" datagrid should contain 0 row
-  # On ferme et on rouvre pour rafraîchir le contenu
-    When I close collapse "Assignations de valeurs à des champs"
-    And I open collapse "Assignations de valeurs à des champs"
-    Then I should see the "actionsSetValue" datagrid
-    And the "actionsSetValue" datagrid should contain 2 row
   # Suppression sans obstacle
     When I open tab "Composants"
   # And I open collapse "Champs numériques" (déjà ouvert !)

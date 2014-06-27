@@ -75,7 +75,7 @@ class Parameter_DimensionController extends Core_Controller
      */
     public function deleteAction()
     {
-        $dimension = Dimension::load($this->getParam('id'));
+        $dimension = Dimension::load($this->getParam('idFamily'));
         $dimension->getFamily()->removeDimension($dimension);
         $dimension->delete();
         $this->entityManager->flush();

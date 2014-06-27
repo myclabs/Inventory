@@ -28,6 +28,7 @@ class Orga_Model_Member extends Core_Model_Entity
     const QUERY_REF = 'ref';
     const QUERY_PARENTMEMBERS_HASHKEY = 'parentMembersHashKey';
     const QUERY_LABEL = 'label';
+    const QUERY_POSITION = 'position';
     const QUERY_AXIS = 'axis';
     // Constantes de séparation de la memberHashKey et de la ref du membre.
     const COMPLETEREF_JOIN = '#';
@@ -779,6 +780,50 @@ class Orga_Model_Member extends Core_Model_Entity
             $criteria->orderBy(['ref' => 'ASC']);
         }
         return $axis->getMembers()->matching($criteria)->toArray();
+    }
+
+    /**
+     * @return Orga_Model_Member
+     * @throws Core_Exception_InvalidArgument
+     */
+    public function getPreviousMember()
+    {
+        if (!$this->getAxis()->isMemberPositioning()) {
+            throw new Core_Exception_InvalidArgument(
+                'This member needs to come from an axis allowing members positioning.'
+            );
+        }
+
+        if ($this->getPosition() === 1) {
+            return null;
+        }
+
+        return Orga_Model_Member::loadByPositionAndContext(
+            ($this->getPosition() - 1),
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @return Orga_Model_Member
+     * @throws Core_Exception_InvalidArgument
+     */
+    public function getNextMember()
+    {
+        if (!$this->getAxis()->isMemberPositioning()) {
+            throw new Core_Exception_InvalidArgument(
+                'This member needs to come from an axis allowing members positioning.'
+            );
+        }
+
+        if ($this->getPosition() === $this->getLastEligiblePosition()) {
+            return null;
+        }
+
+        return Orga_Model_Member::loadByPositionAndContext(
+            ($this->getPosition() + 1),
+            $this->getContext()
+        );
     }
 
     /**

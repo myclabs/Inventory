@@ -3,13 +3,10 @@
 namespace AF\Domain\Component\Select;
 
 use AF\Domain\Input\Select\SelectMultiInput;
-use AF\Domain\AFGenerationHelper;
 use AF\Domain\Component\Select;
-use Core_Exception_UndefinedAttribute;
+use AF\Domain\InputSet\InputSet;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use AF\Application\Form\Element\MultiCheckbox;
-use AF\Application\Form\Element\MultiSelect;
 
 /**
  * @author matthieu.napoli
@@ -17,7 +14,6 @@ use AF\Application\Form\Element\MultiSelect;
  */
 class SelectMulti extends Select
 {
-
     /**
      * Constante associée à l'attribut 'type'.
      * Correspond à des cases à cocher à choix multiples.
@@ -53,55 +49,16 @@ class SelectMulti extends Select
     /**
      * {@inheritdoc}
      */
-    public function getUIElement(AFGenerationHelper $generationHelper)
+    public function initializeNewInput(InputSet $inputSet)
     {
-        switch ($this->type) {
-            case self::TYPE_MULTICHECKBOX:
-                $uiElement = new MultiCheckbox($this->ref);
-                break;
-            case self::TYPE_MULTISELECT:
-                $uiElement = new MultiSelect($this->ref);
-                break;
-            default:
-                throw new Core_Exception_UndefinedAttribute("The type must be defined and valid");
+        $input = $inputSet->getInputForComponent($this);
+
+        if ($input === null) {
+            $input = new SelectMultiInput($inputSet, $this);
+            $inputSet->setInputForComponent($this, $input);
         }
-        $uiElement->setLabel($this->uglyTranslate($this->label));
-        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
-        $uiElement->setRequired($this->getRequired());
-        // Liste des options
-        foreach ($this->options as $option) {
-            $uiElement->addOption($generationHelper->getUIOption($option));
-        }
-        if ($generationHelper->isReadOnly()) {
-            $uiElement->getElement()->setReadOnly(true);
-        }
-        // Remplit avec les options saisies
-        $input = null;
-        if ($generationHelper->getInputSet()) {
-            /** @var $input SelectMultiInput */
-            $input = $generationHelper->getInputSet()->getInputForComponent($this);
-        }
-        if ($input) {
-            $uiElement->getElement()->disabled = $input->isDisabled();
-            $uiElement->getElement()->hidden = $input->isHidden();
-            $uiElement->setValue($input->getValue());
-            // Historique de la valeur
-            $uiElement->getElement()->addElement($this->getHistoryComponent($input));
-        } else {
-            $uiElement->getElement()->disabled = !$this->enabled;
-            $uiElement->getElement()->hidden = !$this->visible;
-            // Valeurs par défaut
-            $defaultOptionsRef = [];
-            foreach ($this->defaultValues as $defaultValue) {
-                $defaultOptionsRef[] = $defaultValue->getRef();
-            }
-            $uiElement->setValue($defaultOptionsRef);
-        }
-        // Actions
-        foreach ($this->actions as $action) {
-            $uiElement->getElement()->addAction($generationHelper->getUIAction($action));
-        }
-        return $uiElement;
+
+        $input->setValue($this->defaultValues);
     }
 
     /**

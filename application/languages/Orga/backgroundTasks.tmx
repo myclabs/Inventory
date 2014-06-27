@@ -12,6 +12,14 @@
                 <seg>Creation of organization: [LABEL]</seg>
             </tuv>
         </tu>
+        <tu tuid="removeOrganization">
+            <tuv xml:lang="fr">
+                <seg>Suppression de l'organisation : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Deletion of organization: [LABEL]</seg>
+            </tuv>
+        </tu>
         <tu tuid="addMember">
             <tuv xml:lang="fr">
                 <seg>Ajout de l'élément :[MEMBER] à l’axe : [AXIS]</seg>

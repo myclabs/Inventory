@@ -13,12 +13,6 @@ AF\Domain\Component\Select\SelectOption:
     ref:
       type: string
       nullable: false
-    visible:
-      type: boolean
-      nullable: false
-    enabled:
-      type: boolean
-      nullable: false
     position:
       type: integer
       nullable: false

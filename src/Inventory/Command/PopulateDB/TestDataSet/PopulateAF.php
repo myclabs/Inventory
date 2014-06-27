@@ -88,17 +88,14 @@ class PopulateAF extends AbstractPopulateAF
 
         $c_n_test = $this->createNumericInput($aF_test, $g_test_cont_champ, 'c_n', 'Champ numérique', 'kg_co2e.m3^-1', '1000.5', '10');
         $c_n_test_cible_activation = $this->createNumericInput($aF_test, $g_test_cont_champ, 'c_n_cible_activation', 'Champ numérique cible activation', 'kg_co2e.m3^-1', '1000.5', '10', false, false, true);
-        $c_n_test_cible_setvalue = $this->createNumericInput($aF_test, $g_test_cont_champ, 'c_n_cible_setvalue', 'Champ numérique cible setvalue', 'kg_co2e.m3^-1', '1000.5', '10', false, false, true);
 
         $c_s_s_test = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'c_s_s', 'Champ sélection simple', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
         $c_s_s_util_cond_el_inter = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'c_s_s_util_cond_el_inter', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Interactions"', ['opt_1' => 'Option 1']);
         $c_s_s_util_cond_el_trait = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'c_s_s_util_cond_el_trait', 'Champ sélection simple utilisé par une condition élémentaire de l\'onglet "Traitement"', ['opt_1' => 'Option 1']);
-        $c_s_s_cible_setvalue = $this->createSelectInputList($aF_test, $aF_test->getRootGroup(), 'c_s_s_cible_setvalue', 'Champ sélection simple cible d\'une action "setValue"', ['opt_1' => 'Option 1']);
 
         $c_s_m_test = $this->createSelectInputBoxes($aF_test, $aF_test->getRootGroup(), 'c_s_m', 'Champ sélection multiple', ['opt_1' => 'Option 1', 'opt_2' => 'Option 2']);
 
         $c_b_test = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'c_b', 'Champ booléen');
-        $c_b_cible_setvalue = $this->createBooleanInput($aF_test, $aF_test->getRootGroup(), 'c_b_cible_setvalue', 'Champ booléen cible d\'une action "setValue"');
 
         $c_t_c_test = $this->createShortTextInput($aF_test, $aF_test->getRootGroup(), 'c_t_c', 'Champ texte court');
         $c_t_l_test = $this->createLongTextInput($aF_test, $aF_test->getRootGroup(), 'c_t_l', 'Champ texte long');
@@ -106,16 +103,10 @@ class PopulateAF extends AbstractPopulateAF
         // Interactions
         $cond_el_inter = $this->createConditionElementary($aF_test, 'cond_el_inter', $c_s_s_util_cond_el_inter);
         $cond_el_inter_util_act_setstate = $this->createConditionElementary($aF_test, 'cond_el_inter_util_act_setstate', $c_s_s_util_cond_el_inter);
-        $cond_el_inter_util_act_setvalue = $this->createConditionElementary($aF_test, 'cond_el_inter_util_act_setvalue', $c_s_s_util_cond_el_inter);
 
         $cond_comp_inter = $this->createConditionExpression($aF_test, 'cond_comp_inter', 'a&(b|c)&d');
 
         $this->createActionSetState($c_n_test_cible_activation, Action::TYPE_ENABLE, $cond_el_inter_util_act_setstate);
-
-        $calcValueToBeSet = new Calc_Value(1234.56789, 5.9);
-        $this->createActionSetValue($c_n_test_cible_setvalue, Action::TYPE_SETVALUE, $calcValueToBeSet, $cond_el_inter_util_act_setvalue);
-        $this->createActionSetValue($c_s_s_cible_setvalue, Action::TYPE_SETVALUE, null);
-        $this->createActionSetValue($c_b_cible_setvalue, Action::TYPE_SETVALUE, true, $cond_el_inter_util_act_setvalue);
 
         // Algorithmes
         $aF_test->getMainAlgo()->setExpression(':c_n;');

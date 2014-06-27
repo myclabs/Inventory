@@ -2,6 +2,7 @@
 
 namespace AF\Application;
 
+use AF\Domain\InputSet\PrimaryInputSet;
 use Core_Exception_InvalidArgument;
 use MyCLabs\MUIH\Tab;
 
@@ -29,9 +30,21 @@ class AFViewConfiguration
     const MODE_READ = 'read';
 
     /**
-     * @var int
+     * @var PrimaryInputSet|null
      */
-    protected $idInputSet;
+    protected $inputSet;
+
+    /**
+     * Saisie de l'année précédente.
+     * @var PrimaryInputSet|null
+     */
+    private $previousInputSet;
+
+    /**
+     * Libellé de la saisie de l'année précédente.
+     * @var string
+     */
+    private $previousInputSetLabel;
 
     /**
      * The URL to go to when the user quit
@@ -80,8 +93,6 @@ class AFViewConfiguration
      */
     protected $urlParams = array();
 
-    protected $useSession = false;
-
     /**
      * Est-ce qu'on peut afficher l'aperçu des résultats
      * @var bool
@@ -90,19 +101,30 @@ class AFViewConfiguration
 
 
     /**
-     * @return int
+     * @return PrimaryInputSet|null
      */
-    public function getIdInputSet()
+    public function getInputSet()
     {
-        return $this->idInputSet;
+        return $this->inputSet;
+    }
+
+    public function setInputSet(PrimaryInputSet $inputSet = null)
+    {
+        $this->inputSet = $inputSet;
     }
 
     /**
-     * @param int $idInputSet
+     * @return PrimaryInputSet|null
      */
-    public function setIdInputSet($idInputSet)
+    public function getPreviousInputSet()
     {
-        $this->idInputSet = $idInputSet;
+        return $this->previousInputSet;
+    }
+
+    public function setPreviousInputSet($label, PrimaryInputSet $inputSet = null)
+    {
+        $this->previousInputSetLabel = (string) $label;
+        $this->previousInputSet = $inputSet;
     }
 
     /**
@@ -314,22 +336,6 @@ class AFViewConfiguration
     }
 
     /**
-     * @return boolean
-     */
-    public function getUseSession()
-    {
-        return $this->useSession;
-    }
-
-    /**
-     * @param boolean $useSession
-     */
-    public function setUseSession($useSession)
-    {
-        $this->useSession = $useSession;
-    }
-
-    /**
      * @return boolean Est-ce qu'on peut afficher l'aperçu des résultats
      */
     public function withResultsPreview()
@@ -343,5 +349,13 @@ class AFViewConfiguration
     public function setResultsPreview($resultsPreview)
     {
         $this->resultsPreview = (bool) $resultsPreview;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPreviousInputSetLabel()
+    {
+        return $this->previousInputSetLabel;
     }
 }

@@ -4,8 +4,8 @@ use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use Classification\Domain\Axis;
 use Classification\Domain\ClassificationLibrary;
-use Classification\Domain\Indicator;
 use Classification\Domain\Member;
+use Classification\Application\Service\ClassificationExportService;
 use Core\Annotation\Secure;
 use Core\Translation\TranslatedString;
 use MyCLabs\ACL\ACL;
@@ -24,6 +24,12 @@ class Classification_LibraryController extends Core_Controller
      * @var AccountRepository
      */
     private $accountRepository;
+
+    /**
+     * @Inject
+     * @var ClassificationExportService
+     */
+    private $exportService;
 
     /**
      * @Secure("viewClassificationLibrary")
@@ -234,5 +240,30 @@ class Classification_LibraryController extends Core_Controller
         }
 
         $this->sendJsonResponse(['messages' => $messages]);
+    }
+
+    /**
+     * @Secure("viewClassificationLibrary")
+     */
+    public function exportAction()
+    {
+        session_write_close();
+        set_time_limit(0);
+        PHPExcel_Settings::setCacheStorageMethod(PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip);
+
+        /** @var $library ClassificationLibrary */
+        $library = ClassificationLibrary::load($this->getParam('id'));
+
+        $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
+        $filename = $date . '_' . __('Classification', 'classification', 'classification') . '.xls';
+
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition:attachement;filename='.$filename);
+        header('Cache-Control: max-age=0');
+
+        Zend_Layout::getMvcInstance()->disableLayout();
+        Zend_Controller_Front::getInstance()->setParam('noViewRenderer', true);
+
+        $this->exportService->stream($library, 'xls');
     }
 }

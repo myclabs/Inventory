@@ -24,22 +24,6 @@ $script .= '}';
 $script .= '});';
 
 
-$actionsSetValue = new Collapse('actionsSetValue', __('AF', 'configInteractionCollapse', 'fixedValueOrAlgorithmResultAssignmentCollapse'));
-$actionsSetValue->setContent($this->partial('edit/actions/set-value.phtml', [
-    'af'            => $af,
-    'componentList' => $this->componentList,
-    'conditionList' => $this->conditionList
-]));
-echo $actionsSetValue->render();
-
-// FML
-$script .= '$(\'#actionsSetValue\').on(\'show.bs.collapse\', function(e) {';
-$script .= 'if ($(e.target).attr(\'id\') == \'actionsSetValue\') {';
-$script .= 'actionsSetValue.filter();';
-$script .= '}';
-$script .= '});';
-
-
 $conditionsExpression = new Collapse('conditionsExpression', __('AF', 'configInteractionCollapse', 'composedConditionCollapse'));
 $conditionsExpression->setContent($this->partial('edit/conditions/expression.phtml', ['af' => $this->af]));
 echo $conditionsExpression->render();

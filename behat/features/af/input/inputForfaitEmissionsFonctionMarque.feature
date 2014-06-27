@@ -10,7 +10,7 @@ Feature: Forfait emissions input feature
     Given I am on "af/af/test/id/8"
     And I wait for the page to finish loading
   # Saisie et enregistrement
-    When I fill in "Champ sans effet" with "0"
+    When I fill in "sans_effet" with "0"
     And I click "Enregistrer"
     And I open tab "Résultats"
     Then I should see "Total : 1 t équ. CO2"

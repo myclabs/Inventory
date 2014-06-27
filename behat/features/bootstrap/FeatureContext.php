@@ -138,6 +138,18 @@ class FeatureContext extends MinkContext
             $node->click();
         });
 
+        // Check if the button has a loading state (Bootstrap 3)
+        try {
+            $button = $this->findLinkOrButton($name);
+        } catch (ExpectationException $e) {
+            $button = null;
+        }
+        // Wait for 2 seconds that the button gets re-enabled (loading finished)
+        $startTime = time();
+        while ($button && (time() - $startTime < 2) && $button->hasAttribute('disabled')) {
+            usleep(300000);
+        }
+
         $this->waitForPageToFinishLoading();
     }
 

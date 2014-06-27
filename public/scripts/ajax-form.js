@@ -78,10 +78,13 @@ AjaxForm = function (selector) {
                 continue;
             }
 
-            var input = self.form.find('[name="' + name + '"]');
+            var input = self.form.find('[name="' + name + '"]').last();
+            if(input.parent().get(0).tagName.toLowerCase() == 'label') {
+                input = input.parent();
+            }
             input.parent().append(
                 '<span class="help-block errorMessage">' +
-                data.errorMessages[name] +
+                    data.errorMessages[name] +
                 '</span>'
             );
 

@@ -21,10 +21,10 @@ Feature: AF single selection field feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Champs ordonnés suivant l'ordre de création, vérification des valeurs par défaut
-    And the row 5 of the "selectSingleFieldDatagrid" datagrid should contain:
+    And the row 4 of the "selectSingleFieldDatagrid" datagrid should contain:
       | label | ref | isVisible | enabled | required    | type             |
       | AAA   | aaa | Visible   | Activé  | Facultatif  | Liste déroulante |
-    When I click "Aide" in the row 5 of the "selectSingleFieldDatagrid" datagrid
+    When I click "Aide" in the row 4 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Aide"
     And I should see a "#selectSingleFieldDatagrid_help_popup .modal-body h1:contains('Blabla')" element
     When I click "×"
@@ -134,7 +134,7 @@ Feature: AF single selection field feature
     And I open tab "Composants"
     And I open collapse "Champs de sélection simple"
     Then I should see the "selectSingleFieldDatagrid" datagrid
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+    And the "selectSingleFieldDatagrid" datagrid should contain 3 row
     And the row 1 of the "selectSingleFieldDatagrid" datagrid should contain:
       | label                  |
       | Champ sélection simple |
@@ -144,42 +144,18 @@ Feature: AF single selection field feature
     And the row 3 of the "selectSingleFieldDatagrid" datagrid should contain:
       | label                                                                                 |
       | Champ sélection simple utilisé par une condition élémentaire de l'onglet "Traitement" |
-    And the row 4 of the "selectSingleFieldDatagrid" datagrid should contain:
-      | label                                                |
-      | Champ sélection simple cible d'une action "setValue" |
   # Suppression, algo utilisé par une condition élémentaire de l'onglet "Interactions"
     When I click "Supprimer" in the row 2 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car une (au moins) des conditions élémentaires de l'onglet « Interactions » porte sur lui."
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+    And the "selectSingleFieldDatagrid" datagrid should contain 3 row
   # Suppression, algo utilisé par une condition élémentaire de l'onglet "Traitement"
     When I click "Supprimer" in the row 3 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car une (au moins) des conditions élémentaires de l'onglet « Traitement » porte sur lui."
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
-  # Suppression, algo cible d'une action (en l'occurrence une action setValue)
-  # La suppression est bien permise, et donne lieu à la suppression de l'action en question
-    When open tab "Interactions"
-    And I open collapse "Assignations de valeurs à des champs"
-    Then I should see the "actionsSetValue" datagrid
-    And the "actionsSetValue" datagrid should contain 3 row
-    When I open tab "Composants"
-    # And I open collapse "Champs de sélection simple" (déjà ouvert !)
-    Then I should see the "selectSingleFieldDatagrid" datagrid
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
-    When I click "Supprimer" in the row 4 of the "selectSingleFieldDatagrid" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Suppression effectuée."
     And the "selectSingleFieldDatagrid" datagrid should contain 3 row
-  # On vérifie que l'action correspondante a bien été supprimée
-    When open tab "Interactions"
-    And I close collapse "Assignations de valeurs à des champs"
-    And I open collapse "Assignations de valeurs à des champs"
-    Then I should see the "actionsSetValue" datagrid
-    And the "actionsSetValue" datagrid should contain 2 row
   # Suppression sans obstacle
     When I open tab "Composants"
   # And I open collapse "Champs de sélection simple" (déjà ouvert !)
@@ -212,12 +188,11 @@ Feature: AF single selection field feature
     When I open tab "Composants"
     And I open collapse "Champs de sélection simple"
     Then I should see the "selectSingleFieldDatagrid" datagrid
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
     When I click "Supprimer" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car il est utilisé pour l'indexation d'au moins un algorithme numérique ou la détermination d'au moins une coordonnée d'algorithme de type paramètre."
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+    And the "selectSingleFieldDatagrid" datagrid should contain 3 row
 
   @javascript
   Scenario: Deletion of a single selection field scenario, 3
@@ -237,12 +212,11 @@ Feature: AF single selection field feature
     When I open tab "Composants"
     And I open collapse "Champs de sélection simple"
     Then I should see the "selectSingleFieldDatagrid" datagrid
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
     When I click "Supprimer" in the row 1 of the "selectSingleFieldDatagrid" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Ce champ ne peut pas être supprimé, car il est utilisé pour l'indexation d'au moins un algorithme numérique ou la détermination d'au moins une coordonnée d'algorithme de type paramètre."
-    And the "selectSingleFieldDatagrid" datagrid should contain 4 row
+    And the "selectSingleFieldDatagrid" datagrid should contain 3 row
 
 
 

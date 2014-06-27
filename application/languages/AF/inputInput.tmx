@@ -77,6 +77,22 @@
 				<seg>Free label</seg>
 			</tuv>
 		</tu>
+        <tu tuid="valueWithIncompatibleUnit">
+            <tuv xml:lang="fr">
+                <seg>La valeur précédemment enregistrée avait une unité incompatible :</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>The previously saved value had an incompatible unit:</seg>
+            </tuv>
+        </tu>
+        <tu tuid="valueVeryDifferentFromPreviousInput">
+            <tuv xml:lang="fr">
+                <seg>Attention, la valeur saisie diffère grandement de la valeur saisie lors de l'occurrence ([label]) précédente.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Warning: the given value is very different from the value for the previous input ([label]).</seg>
+            </tuv>
+        </tu>
 
 		<!-- Aperçu des résultats -->
 
@@ -246,6 +262,20 @@
             </tuv>
         </tu>
 
+
+
+        <tu tuid="defaultValueReminder">
+            <tuv xml:lang="fr">
+                <seg>
+                    Rappel de la valeur par défaut :
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+                    The default value was:
+                </seg>
+            </tuv>
+        </tu>
 
 
 	</body>

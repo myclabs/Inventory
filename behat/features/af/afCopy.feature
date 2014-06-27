@@ -69,7 +69,7 @@ Feature: AF copy feature
       | Copie forfait émissions en fonction de la marque |
     When I click "Test" in the row 9 of the "listAF" datagrid
   # Saisie et enregistrement
-    When I fill in "Champ sans effet" with "0"
+    When I fill in "sans_effet" with "0"
     And I click "Enregistrer"
     And I open tab "Résultats"
     Then I should see "Total : 1 t équ. CO2"
@@ -98,12 +98,13 @@ Feature: AF copy feature
       | label                                    |
       | Copie formulaire avec tout type de champ |
     When I click "Test" in the row 9 of the "listAF" datagrid
-    And I fill in "Champ numérique" with "10"
+    And I fill in "c_n" with "10"
     And I select "kg_co2e.bl^-1" from "c_n_unit"
     And I select "Option 1" from "c_s_s_liste"
-    And I check "c_s_s_bouton_opt_2"
-    And I check "c_s_m_checkbox_opt_3"
-    And I select "Option 4" from "c_s_m_liste"
+    # On est obligé de passer par "click" à cause d'Angular :(
+    And I click element "[name='c_s_s_bouton'][value='opt_2']"
+    And I click element "[name='c_s_m_checkbox'][value='opt_3']"
+    And I click element "[name='c_s_m_liste'][value='opt_4']"
     And I check "c_b"
     And I fill in "c_t_c" with "Bla"
     And I fill in "c_t_l" with "BlaBla"
@@ -131,14 +132,15 @@ Feature: AF copy feature
     When I click "Test" in the row 9 of the "listAF" datagrid
     And I click "Ajouter"
     And I click "Ajouter"
-    And I fill in "s_f_r_t_t_c__c_n__1" with "10"
-    And I select "kg_co2e.bl^-1" from "s_f_r_t_t_c__c_n_unit__1"
-    And I select "Option 1" from "s_f_r_t_t_c__c_s_s_liste__1"
-    And I check "s_f_r_t_t_c__c_s_s_bouton__1_opt_2"
-    And I check "s_f_r_t_t_c__c_s_m_checkbox__1_opt_3"
-    And I select "Option 4" from "s_f_r_t_t_c__c_s_m_liste__1"
-    And I check "s_f_r_t_t_c__c_b__1"
-    And I fill in "s_f_r_t_t_c__c_t_c__1" with "Bla"
-    And I fill in "s_f_r_t_t_c__c_t_l__1" with "BlaBla"
+    And I fill in "s_f_r_t_t_c__1__c_n" with "10"
+    And I select "kg_co2e.bl^-1" from "s_f_r_t_t_c__1__c_n_unit"
+    And I select "Option 1" from "s_f_r_t_t_c__1__c_s_s_liste"
+    # On est obligé de passer par "click" à cause d'Angular :(
+    And I click element "[name='s_f_r_t_t_c__1__c_s_s_bouton'][value='opt_2']"
+    And I click element "[name='s_f_r_t_t_c__1__c_s_m_checkbox'][value='opt_3']"
+    And I click element "[name='s_f_r_t_t_c__1__c_s_m_liste'][value='opt_4']"
+    And I check "s_f_r_t_t_c__1__c_b"
+    And I fill in "s_f_r_t_t_c__1__c_t_c" with "Bla"
+    And I fill in "s_f_r_t_t_c__1__c_t_l" with "BlaBla"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."

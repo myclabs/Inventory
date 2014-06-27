@@ -5,8 +5,6 @@ namespace AF\Domain\Component;
 use AF\Domain\Action\Action;
 use AF\Domain\AF;
 use AF\Domain\AFConfigurationError;
-use AF\Domain\AFGenerationHelper;
-use AF\Domain\Input\Input;
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\Algorithm\Condition\ElementaryConditionAlgo;
 use Core\Translation\TranslatedString;
@@ -16,13 +14,6 @@ use Core_Strategy_Ordered;
 use Core_Tools;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Mnapoli\Translated\AbstractTranslatedString;
-use Mnapoli\Translated\Translator;
-use MyCLabs\MUIH\Button;
-use MyCLabs\MUIH\Icon;
-use AF\Application\Form\Element\HTMLElement;
-use AF\Application\Form\Element\ZendFormElement;
-use Zend_Form_Element;
 
 /**
  * @author matthieu.napoli
@@ -88,18 +79,17 @@ abstract class Component extends Core_Model_Entity
     }
 
     /**
-     * Génère un élément UI
-     * @param AFGenerationHelper $generationHelper
-     * @return ZendFormElement|Zend_Form_Element
-     */
-    abstract public function getUIElement(AFGenerationHelper $generationHelper);
-
-    /**
      * Retourne le nombre de champs requis dans le composant pour la saisie de l'AF
      * @param InputSet|null $inputSet
      * @return int
      */
     abstract public function getNbRequiredFields(InputSet $inputSet = null);
+
+    /**
+     * Initialise une nouvelle saisie vide.
+     * @param InputSet $inputSet
+     */
+    abstract public function initializeNewInput(InputSet $inputSet);
 
     /**
      * Méthode utilisée pour vérifier la configuration des champs.
@@ -342,36 +332,5 @@ abstract class Component extends Core_Model_Entity
     protected static function getOrderedBaseEntityName()
     {
         return __CLASS__;
-    }
-
-    /**
-     * Retourne le composant UI pour l'historique des valeurs de la saisie
-     * @param Input $input
-     * @return HTMLElement
-     */
-    protected function getHistoryComponent(Input $input)
-    {
-        $historyButton = new Button(new Icon('history'));
-        $historyButton->addClass('input-history');
-        $historyButton->setAttribute('title', __('UI', 'history', 'valueHistory'));
-        $historyButton->setAttribute('data-input-id', $input->getId());
-        $historyButton->setAttribute('data-toggle', 'button');
-        $historyButton->setAttribute('data-container', 'body');
-
-        return new HTMLElement($this->ref . 'History', $historyButton->render());
-    }
-
-    /**
-     * @deprecated Moche, très moche
-     * @todo À supprimer quand la génération UI est sortie du modèle
-     * @param AbstractTranslatedString $string
-     * @return string
-     */
-    protected function uglyTranslate(AbstractTranslatedString $string)
-    {
-        /** @var Translator $translator */
-        $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
-
-        return $translator->get($string);
     }
 }

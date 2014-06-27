@@ -14,6 +14,7 @@ class Orga_Test_MemberTest
         $suite->addTestSuite('Orga_Test_MemberAttributes');
         $suite->addTestSuite('Orga_Test_MemberTag');
         $suite->addTestSuite('Orga_Test_MemberHierarchy');
+        $suite->addTestSuite('Orga_Test_MemberAdjacent');
         return $suite;
     }
 }
@@ -598,5 +599,237 @@ class Orga_Test_MemberHierarchy extends TestCase
     {
         $this->member1a->getChildrenForAxis($this->axis2);
     }
+
+}
+
+class Orga_Test_MemberAdjacent extends TestCase
+{
+    /**
+     * @var Orga_Model_Organization
+     */
+    protected $organization;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis1;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis11;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis111;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis12;
+    /**
+     * @var Orga_Model_Axis
+     */
+    protected $axis2;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1c;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1d;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1e;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1f;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1g;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1h;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1i;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1j;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1k;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member1l;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member11a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member11b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member11c;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member111a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member111b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member12a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member12b;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member2a;
+    /**
+     * @var Orga_Model_Member
+     */
+    protected $member2b;
+
+    /**
+     * Set up
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+
+        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
+        $this->axis1->setMemberPositioning(true);
+        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
+        $this->axis11->setMemberPositioning(true);
+        $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
+        $this->axis111->setMemberPositioning(true);
+        $this->axis111->setContextualize(true);
+        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
+        $this->axis12->setMemberPositioning(true);
+        $this->axis12->setContextualize(true);
+        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
+
+        $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
+        $this->member111b = new Orga_Model_Member($this->axis111, 'ref111_b');
+
+        $this->member11a = new Orga_Model_Member($this->axis11, 'ref11_a', [$this->member111a]);
+        $this->member11b = new Orga_Model_Member($this->axis11, 'ref11_b', [$this->member111b]);
+        $this->member11c = new Orga_Model_Member($this->axis11, 'ref11_c', [$this->member111b]);
+
+        $this->member12a = new Orga_Model_Member($this->axis12, 'ref12_a');
+        $this->member12b = new Orga_Model_Member($this->axis12, 'ref12_b');
+
+        $this->member1a = new Orga_Model_Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
+        $this->member1b = new Orga_Model_Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
+        $this->member1c = new Orga_Model_Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
+        $this->member1d = new Orga_Model_Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
+        $this->member1e = new Orga_Model_Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
+        $this->member1f = new Orga_Model_Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
+        $this->member1g = new Orga_Model_Member($this->axis1, 'ref1_g', [$this->member11a, $this->member12a]);
+        $this->member1h = new Orga_Model_Member($this->axis1, 'ref1_h', [$this->member11a, $this->member12b]);
+        $this->member1i = new Orga_Model_Member($this->axis1, 'ref1_i', [$this->member11a, $this->member12a]);
+        $this->member1j = new Orga_Model_Member($this->axis1, 'ref1_j', [$this->member11b, $this->member12b]);
+        $this->member1k = new Orga_Model_Member($this->axis1, 'ref1_k', [$this->member11c, $this->member12a]);
+        $this->member1l = new Orga_Model_Member($this->axis1, 'ref1_l', [$this->member11c, $this->member12b]);
+
+        $this->member2a = new Orga_Model_Member($this->axis2, 'ref2_a');
+        $this->member2b = new Orga_Model_Member($this->axis2, 'ref2_b');
+    }
+
+    public function testGetPreviousMember()
+    {
+        $this->assertNull($this->member111a->getPreviousMember());
+        $this->assertSame($this->member111a, $this->member111b->getPreviousMember());
+
+        $this->assertNull($this->member11a->getPreviousMember());
+        $this->assertNull($this->member11b->getPreviousMember());
+        $this->assertSame($this->member11b, $this->member11c->getPreviousMember());
+
+        $this->assertNull($this->member12a->getPreviousMember());
+        $this->assertSame($this->member12a, $this->member12b->getPreviousMember());
+
+        $this->assertNull($this->member1a->getPreviousMember());
+        $this->assertNull($this->member1b->getPreviousMember());
+        $this->assertNull($this->member1c->getPreviousMember());
+        $this->assertNull($this->member1d->getPreviousMember());
+        $this->assertSame($this->member1c, $this->member1e->getPreviousMember());
+        $this->assertSame($this->member1d, $this->member1f->getPreviousMember());
+        $this->assertSame($this->member1a, $this->member1g->getPreviousMember());
+        $this->assertSame($this->member1b, $this->member1h->getPreviousMember());
+        $this->assertSame($this->member1g, $this->member1i->getPreviousMember());
+        $this->assertSame($this->member1f, $this->member1j->getPreviousMember());
+        $this->assertSame($this->member1e, $this->member1k->getPreviousMember());
+        $this->assertSame($this->member1j, $this->member1l->getPreviousMember());
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage This member needs to come from an axis allowing members positioning.
+     */
+    public function testGetPreviousMemberNotPositionning()
+    {
+        $this->member2a->getPreviousMember();
+    }
+
+    public function testGetNextMember()
+    {
+        $this->assertSame($this->member111b, $this->member111a->getNextMember());
+        $this->assertNull($this->member111b->getNextMember());
+
+        $this->assertNull($this->member11a->getNextMember());
+        $this->assertSame($this->member11c, $this->member11b->getNextMember());
+        $this->assertNull($this->member11c->getNextMember());
+
+        $this->assertSame($this->member12b, $this->member12a->getNextMember());
+        $this->assertNull($this->member12b->getNextMember());
+
+        $this->assertSame($this->member1g, $this->member1a->getNextMember());
+        $this->assertSame($this->member1h, $this->member1b->getNextMember());
+        $this->assertSame($this->member1e, $this->member1c->getNextMember());
+        $this->assertSame($this->member1f, $this->member1d->getNextMember());
+        $this->assertSame($this->member1k, $this->member1e->getNextMember());
+        $this->assertSame($this->member1j, $this->member1f->getNextMember());
+        $this->assertSame($this->member1i, $this->member1g->getNextMember());
+        $this->assertNull($this->member1h->getNextMember());
+        $this->assertNull($this->member1i->getNextMember());
+        $this->assertSame($this->member1l, $this->member1j->getNextMember());
+        $this->assertNull($this->member1k->getNextMember());
+        $this->assertNull($this->member1l->getNextMember());
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage This member needs to come from an axis allowing members positioning.
+     */
+    public function testGetNextMemberNotPositionning()
+    {
+        $this->member2a->getNextMember();
+    }
+
 
 }

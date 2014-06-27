@@ -4,6 +4,8 @@ use Account\Domain\AccountRepository;
 use AF\Application\AFViewConfiguration;
 use AF\Domain\AF;
 use AF\Domain\AFLibrary;
+use AF\Domain\Input\Input;
+use AF\Domain\InputSet\PrimaryInputSet;
 use Classification\Domain\ClassificationLibrary;
 use Doc\Domain\Library;
 use Parameter\Domain\Family\Family;
@@ -326,6 +328,17 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
             Actions::INPUT,
             $this->getCell($request)
         );
+    }
+
+    /**
+     * @param User                             $identity
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     */
+    protected function viewInputHistoryRule(User $identity, Zend_Controller_Request_Abstract $request)
+    {
+        // TODO
+        return true;
     }
 
     /**

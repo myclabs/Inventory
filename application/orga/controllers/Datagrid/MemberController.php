@@ -84,7 +84,11 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             usort($members, [Orga_Model_Member::class, 'orderMembers']);
         } else {
             $this->request->filter->addCondition(Orga_Model_Member::QUERY_AXIS, $axis);
-            $this->request->order->addTranslatedOrder(Orga_Model_Member::QUERY_LABEL);
+            if ($axis->isMemberPositioning()) {
+                $this->request->order->addOrder(Orga_Model_Member::QUERY_POSITION);
+            } else {
+                $this->request->order->addTranslatedOrder(Orga_Model_Member::QUERY_LABEL);
+            }
             /** @var Orga_Model_Member[] $members */
             $members = Orga_Model_Member::loadList($this->request);
         }
@@ -100,6 +104,12 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                     $this->translator->get($directParentMember->getLabel())
                 );
             }
+            $memberPosition = $member->getPosition();
+            $data['position'] = $this->cellPosition(
+                $memberPosition,
+                ($memberPosition > 1),
+                ($memberPosition < $member->getLastEligiblePosition())
+            );
             $this->addLine($data);
         }
 
@@ -131,8 +141,8 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             $this->setAddElementErrorMessage('ref', $e->getMessage());
         }
 
-        $broaderMembers = array();
-        $contextualizingMembers = array();
+        $parentMembers = [];
+        $contextualizingMembers = [];
         foreach ($axis->getDirectBroaders() as $directBroaderAxis) {
             $formFieldRef = 'broader'.$directBroaderAxis->getRef();
             $refBroaderMember = $this->getAddElementValue($formFieldRef);
@@ -141,7 +151,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             } else {
                 try {
                     $broaderMember = $directBroaderAxis->getMemberByCompleteRef($refBroaderMember);
-                    $broaderMembers[] = $broaderMember;
+                    $parentMembers[] = $broaderMember;
                 } catch (Core_Exception_NotFound $e) {
                     $this->setAddElementErrorMessage($formFieldRef, __('Core', 'exception', 'applicationError'));
                     continue;
@@ -175,7 +185,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                 $task = new ServiceCallTask(
                     'Orga_Service_OrganizationService',
                     'addMember',
-                    [$axis, $ref, $label, $broaderMembers],
+                    [$axis, $ref, $label, $parentMembers],
                     __('Orga', 'backgroundTasks', 'addMember', [
                         'MEMBER' => $label,
                         'AXIS' => $this->translator->get($axis->getLabel()),
@@ -242,6 +252,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
         $organization = Orga_Model_Organization::load($idOrganization);
         $axis = $organization->getAxisByRef($this->getParam('refAxis'));
 
+        /** @var Orga_Model_Member $member */
         $member = Orga_Model_Member::load($this->update['index']);
 
         switch ($this->update['column']) {
@@ -265,6 +276,33 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                         'LABEL' => $this->translator->get($member->getLabel())
                     ]);
                 }
+                break;
+            case 'position':
+                $newPosition = $this->update['value'];
+                switch ($newPosition) {
+                    case 'goFirst';
+                        $member->setPosition(1);
+                        break;
+                    case 'goUp';
+                        $member->setPosition($member->getPosition() - 1);
+                        break;
+                    case 'goDown';
+                        $member->setPosition($member->getPosition() + 1);
+                        break;
+                    case 'goLast';
+                        $member->setPosition($member->getLastEligiblePosition());
+                        break;
+                    default:
+                        $newPosition = (int) $newPosition;
+                        if ($newPosition < 1) {
+                            $newPosition = 1;
+                        }
+                        if ($newPosition > $member->getLastEligiblePosition()) {
+                            $newPosition = $member->getLastEligiblePosition();
+                        }
+                        $member->setPosition((int) $newPosition);
+                }
+                $this->message = __('UI', 'message', 'updated');
                 break;
             default:
                 $refBroaderAxis = substr($this->update['column'], 7);

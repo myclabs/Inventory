@@ -216,7 +216,10 @@ class Orga_OrganizationController extends Core_Controller
         $task = new ServiceCallTask(
             'Orga_Service_OrganizationService',
             'deleteOrganization',
-            [$organization]
+            [$organization],
+            ___('Orga', 'backgroundTasks', 'removeOrganization',
+                ['LABEL' => $this->translator->get($organization->getLabel())]
+            )
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
 
@@ -484,6 +487,15 @@ class Orga_OrganizationController extends Core_Controller
         $this->view->assign('idOrganization', $idOrganization);
         $this->view->assign('organizationLabel', $this->translator->get($organization->getLabel()));
 
+        $potentialAxes = [];
+        foreach ($organization->getAxes() as $axis) {
+            if ($axis->isMemberPositioning()) {
+                $potentialAxes[] = $axis;
+            }
+        }
+        $this->view->assign('potentialAxes', $potentialAxes);
+        $this->view->assign('selectedAxis', $organization->getTimeAxis());
+
         $potentialContextIndicators = [];
         foreach (ClassificationLibrary::loadUsableInAccount($organization->getAccount()) as $classificationLibrary) {
             foreach ($classificationLibrary->getContextIndicators() as $contextIndicator) {
@@ -529,6 +541,27 @@ class Orga_OrganizationController extends Core_Controller
         } else {
             $this->setFormMessage(__('UI', 'message', 'updated'));
         }
+
+        $this->sendFormResponse();
+    }
+
+    /**
+     * @Secure("editOrganization")
+     */
+    public function editTimeAxisAction()
+    {
+        $idOrganization = $this->getParam('idOrganization');
+        /** @var Orga_Model_Organization $organization */
+        $organization = Orga_Model_Organization::load($idOrganization);
+
+        $idAxis = (string) $this->getParam('timeAxis');
+        if (empty($idAxis)) {
+            $organization->setTimeAxis();
+        } else {
+            $organization->setTimeAxis(Orga_Model_Axis::load($idAxis));
+        }
+
+        $this->setFormMessage(__('UI', 'message', 'updated'));
 
         $this->sendFormResponse();
     }

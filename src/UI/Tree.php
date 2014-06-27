@@ -1,6 +1,4 @@
 <?php
-use AF\Application\Form\Element\Option;
-use AF\Application\Form\Element\Select;
 use MyCLabs\MUIH\Button;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
@@ -592,13 +590,6 @@ class UI_Tree extends UI_Generic
             $changeOrderGroup->appendContent($changeOrderWrapper);
             $editForm->appendContent($changeOrderGroup);
 
-            $selectAfter = new Select($this->id.'_selectAfter');
-
-            $optionLoadingAfter = new Option($this->id.'_load');
-            $optionLoadingAfter->label = $this->changeOrderLoadingOption;
-            $selectAfter->addOption($optionLoadingAfter);
-            $selectAfter->getElement()->hidden = true;
-            
             $changeOrderLoadingOption = new GenericTag('option', $this->changeOrderLoadingOption);
             $changeOrderInput = new GenericTag('select', $changeOrderLoadingOption);
             $changeOrderInput->setAttribute('name', $this->id.'_selectAfter');

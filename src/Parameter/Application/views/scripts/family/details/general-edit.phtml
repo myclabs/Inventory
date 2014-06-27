@@ -55,11 +55,11 @@ $family = $this->family;
 
         $('#deleteFamily').confirm({
             text: <?=json_encode(__('Parameter', 'familyDetail', 'deleteConfirm'))?>,
-            confirm: function(button) {
+            confirm: function () {
                 var url = "<?=$this->baseUrl('parameter/family/delete')?>";
 
                 $.post(url, {id: <?=$family->getId()?>}, function() {
-                    window.location = "<?=$this->baseUrl('parameter/family/tree-edit')?>";
+                    window.location = "<?= $this->baseUrl('parameter/library/view/id/' . $family->getLibrary()->getId()) ?>";
                 })
                 .error(errorHandler);
             },

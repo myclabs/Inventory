@@ -14,7 +14,7 @@ if (!$inputSet || !$inputSet->isInputComplete()) {
 }
 
 if (!$inputSet->isCalculationComplete()) {
-    echo '<p>' . __('AF', 'inputInput', 'completeInputIncompleteCalculations') . '</p>';
+    echo '<p>' . $inputSet->getErrorMessage() ?: __('AF', 'inputInput', 'completeInputSaved') . '</p>';
     return;
 }
 

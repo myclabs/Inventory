@@ -26,6 +26,43 @@
 </fieldset>
 
 <fieldset class="wrapper">
+    <legend style="cursor:default">
+        <?=___('Orga', 'organization', 'timeAxis')?>
+        <small><?=___('Orga', 'organization', 'timeAxisExplanation')?></small>
+    </legend>
+    <div>
+        <form id="organizationTimeAxis<?=$this->idOrganization?>" class="form-horizontal" method="POST" action="orga/organization/edit-time-axis/idOrganization/<?=$this->idOrganization?>">
+            <div class="form-group">
+                <label for="organization_timeAxis" class="control-label col-xs-2">
+                    <?=___('Orga', 'organization', 'timeAxisLabel')?>
+                </label>
+                <div class="col-xs-10">
+                    <select name="timeAxis" id="organization_timeAxis" class="form-control">
+                        <option value=""></option>
+                        <?php foreach ($this->potentialAxes as $axis) : ?>
+                            <option value="<?=$axis->getId()?>"<?php if ($this->selectedAxis === $axis) :?> selected<?php endif; ?>>
+                                <?=$this->translate($axis->getLabel())?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                new AjaxForm('#organizationTimeAxis<?=$this->idOrganization?>');
+            });
+        </script>
+    </div>
+</fieldset>
+
+<fieldset class="wrapper">
     <legend style="cursor:default"><?=___('Orga', 'organization', 'contextIndicators')?></legend>
     <div>
         <form id="organizationContextIndicators<?=$this->idOrganization?>" class="form-horizontal" method="POST" action="orga/organization/edit-context-indicators/idOrganization/<?=$this->idOrganization?>">

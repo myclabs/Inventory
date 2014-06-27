@@ -4,12 +4,8 @@ namespace AF\Domain\Component;
 
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\AFConfigurationError;
-use AF\Domain\AFGenerationHelper;
-use AF\Domain\Input\GroupInput;
-use Core_Exception_User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use AF\Application\Form\Element\Group as FormGroup;
 
 /**
  * Gestion des groupements de champs.
@@ -67,53 +63,12 @@ class Group extends Component
 
     /**
      * {@inheritdoc}
-     * @throws Core_Exception_User The group is empty
      */
-    public function getUIElement(AFGenerationHelper $generationHelper)
+    public function initializeNewInput(InputSet $inputSet)
     {
-        $isRootGroup = false;
-        $uiElement = new FormGroup($this->ref);
-        $uiElement->setLabel($this->uglyTranslate($this->label));
-        $uiElement->getElement()->help = $this->uglyTranslate($this->help);
-        $uiElement->getElement()->hidden = !$this->visible;
-        switch ($this->foldaway) {
-            case self::FOLDAWAY:
-                $uiElement->foldaway = true;
-                break;
-            case self::FOLDED:
-                $uiElement->folded = true;
-                break;
+        foreach ($this->subComponents as $component) {
+            $component->initializeNewInput($inputSet);
         }
-        // Si c'est le rootGroup on n'affiche pas le label, et il n'est pas repliable
-        if ($this->af->getRootGroup() === $this) {
-            $isRootGroup = true;
-            $uiElement->foldaway = false;
-            $uiElement->folded = false;
-            $uiElement->removeDecorator('GroupDecorator');
-        }
-        // Récupère la saisie correspondant à cet élément
-        if ($generationHelper->getInputSet()) {
-            /** @var $input GroupInput */
-            $input = $generationHelper->getInputSet()->getInputForComponent($this);
-            if ($input) {
-                $uiElement->getElement()->hidden = $input->isHidden();
-                $uiElement->getElement()->disabled = $input->isDisabled();
-            }
-        }
-        // Sous-éléments
-        $subComponents = $this->getSubComponents();
-        foreach ($subComponents as $component) {
-            $subElement = $generationHelper->getUIElement($component);
-            if (!$isRootGroup) {
-                $subElement->getElement()->prefixRef($this->ref);
-            }
-            $uiElement->addElement($subElement);
-        }
-        // Actions
-        foreach ($this->actions as $action) {
-            $uiElement->getElement()->addAction($generationHelper->getUIAction($action));
-        }
-        return $uiElement;
     }
 
     /**

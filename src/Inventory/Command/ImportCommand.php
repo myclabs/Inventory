@@ -308,7 +308,7 @@ class ImportCommand extends Command
                                 return null;
                             }
                             foreach ($afLibrary->getAFList() as $af) {
-                                if ($af->getRef() == $var) {
+                                if ($af->getLabel() == $var) {
                                     return $af;
                                 }
                             }
@@ -323,22 +323,7 @@ class ImportCommand extends Command
                     'af' => [
                         'callback' => function ($var) use ($afLibrary) {
                             foreach ($afLibrary->getAFList() as $af) {
-                                if ($af->getRef() == $var) {
-                                    return $af;
-                                }
-                            }
-                            throw new Exception('AF "' . $var . '" NOT FOUND !');
-                        },
-                    ]
-                ],
-            ],
-            SubInputSet::class => [
-                'properties' => [
-                    'refAF' => [ 'name' => 'af' ],
-                    'af' => [
-                        'callback' => function ($var) use ($afLibrary) {
-                            foreach ($afLibrary->getAFList() as $af) {
-                                if ($af->getRef() == $var) {
+                                if ($af->getLabel() == $var) {
                                     return $af;
                                 }
                             }

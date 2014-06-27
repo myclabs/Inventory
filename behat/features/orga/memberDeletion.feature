@@ -19,7 +19,7 @@ Feature: Organizational member deletion feature
     # Remarque : Grenoble associé à aucun rôle
     When I click "Supprimer" in the row 3 of the "listMemberssite" datagrid
     And I click "Confirmer"
-    And I wait 5 seconds
+    And I wait 2 seconds
     Then the following message is shown and closed: "Suppression effectuée."
     And the "listMemberssite" datagrid should contain 2 row
     # Tentative de suppression d'un élément générant une cellule associée à des rôles

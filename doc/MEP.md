@@ -1,14 +1,37 @@
 # Mise en production
 
+## 3.2
+
+- Déployer normalement avec update de la BDD.
+
+- Exécuter les requêtes suivantes :
+
+```sql
+DELETE FROM AF_Action WHERE type_action LIKE 'setvalue%';
+DELETE FROM AF_Action WHERE type_action = 'setoptionstate';
+```
+
+- Exécuter le script de rebuild des positions :
+
+```php
+php scripts/migration/3.2/position.php
+```
+
+- Exécuter:
+
+```
+bin/inventory orga-cache:rebuild --input-status
+```
+
 
 ## 3.1
 
-- Déployer normalement avec update de la bdd.
+- Déployer normalement avec update de la BDD.
 
 - Mettre à jour le cache d'orga :
 
 ```
-bin/inventory orga-cache:rebuild
+bin/inventory orga-cache:rebuild --input-status
 ```
 
 

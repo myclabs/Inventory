@@ -1,0 +1,27 @@
+<af-history input="input" input-set="inputSet" class="af-history" ng-if="input.id"
+            ref-prefix="refPrefix + component.ref"></af-history>
+
+<div class="form-group" ng-class="{ 'has-error': input.hasErrors, 'has-warning': input.inconsistent, 'af-margin-for-history': (input.id > 0) }">
+
+    <label class="col-sm-3 control-label">
+        {{ component.label }}
+        <a class="af-component-help" href="#" tooltip-html-unsafe="{{ component.help }}"
+           ng-if="component.help">
+            <i class="fa fa-question-circle"></i>
+        </a>
+    </label>
+
+    <div class="col-sm-9" ng-switch="component.type">
+        <af-numeric-field ng-switch-when="numeric" component="component" input="input"></af-numeric-field>
+        <af-select ng-switch-when="select" component="component" input="input"></af-select>
+        <af-checkbox ng-switch-when="checkbox" component="component" input="input"></af-checkbox>
+        <af-text-field ng-switch-when="text" component="component" input="input"></af-text-field>
+        <af-textarea ng-switch-when="textarea" component="component" input="input"></af-textarea>
+        <af-radio ng-switch-when="radio" component="component" input="input"></af-radio>
+        <af-select-multiple ng-switch-when="select-multiple" component="component" input="input"></af-select-multiple>
+
+        <span class="help-block errorMessage" ng-show="input.hasErrors" ng-bind="input.error"></span>
+        <span class="help-block errorMessage" ng-show="input.inconsistent" ng-bind="inconsistentValueWarning"></span>
+    </div>
+
+</div>

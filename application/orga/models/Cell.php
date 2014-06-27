@@ -307,6 +307,30 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     }
 
     /**
+     * Renvoi tous les Member indexant la Cell.
+     *
+     * @param Orga_Model_Axis $axis
+     * @throws Core_Exception_InvalidArgument
+     * @return Orga_Model_Member
+     */
+    public function getMemberForAxis(Orga_Model_Axis $axis)
+    {
+        if (!$this->getGranularity()->hasAxis($axis)) {
+            throw new Core_Exception_InvalidArgument(
+                'Given axis needs to be part of the cell\'s granularity.'
+            );
+        }
+
+        //@todo Sans chargement, génère un problème lorsque la collection n'est pas initialisée.
+        $this->getMembers();
+
+        $criteriaAxis = new Criteria();
+        $criteriaAxis->where($criteriaAxis->expr()->eq('axis', $axis));
+        $member = $this->members->matching($criteriaAxis)->toArray();
+        return array_pop($member);
+    }
+
+    /**
      * Met à jour la HashKey et le ta de la cellule.
      */
     public function updateTags()
@@ -805,6 +829,58 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             $totalChildCells += $this->countTotalChildCellsForGranularity($narrowerGranularity);
         }
         return $totalChildCells;
+    }
+
+    /**
+     * @param Orga_Model_Axis $axis
+     * @return Orga_Model_Cell
+     * @throws Core_Exception_InvalidArgument
+     */
+    public function getPreviousCellForAxis(Orga_Model_Axis $axis)
+    {
+        if (!$this->getGranularity()->hasAxis($axis) || !$axis->isMemberPositioning()) {
+            throw new Core_Exception_InvalidArgument(
+                'Given axis needs to be used by this cell\'s granularity and allows member positioning.'
+            );
+        }
+
+        $axisMember = $this->getMemberForAxis($axis);
+        if ($axisMember->getPosition() === 1) {
+            return null;
+        }
+
+        return $this->getGranularity()->getCellByMembers(
+            array_merge(
+                array_diff($this->getMembers(), [$axisMember]),
+                [$axisMember->getPreviousMember()]
+            )
+        );
+    }
+
+    /**
+     * @param Orga_Model_Axis $axis
+     * @return Orga_Model_Cell
+     * @throws Core_Exception_InvalidArgument
+     */
+    public function getNextCellForAxis(Orga_Model_Axis $axis)
+    {
+        if (!$this->getGranularity()->hasAxis($axis) || !$axis->isMemberPositioning()) {
+            throw new Core_Exception_InvalidArgument(
+                'Given axis needs to be used by this cell\'s granularity and allows member positioning.'
+            );
+        }
+
+        $axisMember = $this->getMemberForAxis($axis);
+        if ($axisMember->getPosition() === $axisMember->getLastEligiblePosition()) {
+            return null;
+        }
+
+        return $this->getGranularity()->getCellByMembers(
+            array_merge(
+                array_diff($this->getMembers(), [$axisMember]),
+                [$axisMember->getNextMember()]
+            )
+        );
     }
 
     /**

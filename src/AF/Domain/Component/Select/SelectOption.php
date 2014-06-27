@@ -12,8 +12,7 @@ use Core_Model_Query;
 use Core_ORM_ForeignKeyViolationException;
 use Core_Strategy_Ordered;
 use Core_Tools;
-use Mnapoli\Translated\Translator;
-use AF\Application\Form\Element\Option;
+use Doctrine\ORM\UnitOfWork;
 
 /**
  * Gestion des options associées aux composants de type select.
@@ -46,18 +45,6 @@ class SelectOption extends Core_Model_Entity
     protected $label;
 
     /**
-     * Flag indiquant si l'option est visible (par défaut visible)
-     * @var boolean
-     */
-    protected $visible = true;
-
-    /**
-     * Flag indiquant si l'option est activée par défaut (par défaut activée)
-     * @var boolean
-     */
-    protected $enabled = true;
-
-    /**
      * @var Select
      */
     protected $select;
@@ -65,20 +52,6 @@ class SelectOption extends Core_Model_Entity
     public function __construct()
     {
         $this->label = new TranslatedString();
-    }
-
-    /**
-     * Génère un élément UI
-     * @return Option
-     */
-    public function getUIElement()
-    {
-        $uiElement = new Option($this->ref);
-        $uiElement->value = $this->ref;
-        $uiElement->label = $this->uglyTranslate($this->label);
-        $uiElement->disabled = !$this->enabled;
-        $uiElement->hidden = !$this->visible;
-        return $uiElement;
     }
 
     /**
@@ -120,38 +93,6 @@ class SelectOption extends Core_Model_Entity
     public function setLabel(TranslatedString $label)
     {
         $this->label = $label;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return $this->enabled;
-    }
-
-    /**
-     * @param bool $enabled
-     */
-    public function setEnabled($enabled)
-    {
-        $this->enabled = (bool) $enabled;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVisible()
-    {
-        return $this->visible;
-    }
-
-    /**
-     * @param bool $visible
-     */
-    public function setVisible($visible)
-    {
-        $this->visible = (bool) $visible;
     }
 
     /**
@@ -200,12 +141,12 @@ class SelectOption extends Core_Model_Entity
     {
         // Cherche si une condition d'algo porte sur ce champ
         $query = new Core_Model_Query();
-        $query->filter->addCondition(SelectConditionAlgo::QUERY_SET, $this->getSelect()->getAf()->getMainAlgo()->getSet());
+        $query->filter->addCondition(SelectConditionAlgo::QUERY_SET, $this->select->getAf()->getMainAlgo()->getSet());
         $query->filter->addCondition(SelectConditionAlgo::QUERY_VALUE, $this->getRef());
         $algos = SelectConditionAlgo::loadList($query);
         $unitOfWork = \Core\ContainerSingleton::getEntityManager()->getUnitOfWork();
         foreach ($algos as $algo) {
-            if ($unitOfWork->getEntityState($algo) === \Doctrine\ORM\UnitOfWork::STATE_MANAGED) {
+            if ($unitOfWork->getEntityState($algo) === UnitOfWork::STATE_MANAGED) {
                 throw new Core_ORM_ForeignKeyViolationException(
                     get_class(current($algos)),
                     'value',
@@ -235,19 +176,5 @@ class SelectOption extends Core_Model_Entity
         return [
             'select' => $this->select,
         ];
-    }
-
-    /**
-     * @deprecated Moche, très moche
-     * @todo À supprimer quand la génération UI est sortie du modèle
-     * @param TranslatedString $string
-     * @return string
-     */
-    protected function uglyTranslate(TranslatedString $string)
-    {
-        /** @var Translator $translator */
-        $translator = \Core\ContainerSingleton::getContainer()->get(Translator::class);
-
-        return $translator->get($string);
     }
 }

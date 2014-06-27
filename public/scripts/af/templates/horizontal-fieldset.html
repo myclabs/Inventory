@@ -1,0 +1,31 @@
+<table class="table table-condensed">
+    <tr>
+        <th>
+            {{ freeLabel }}
+        </th>
+        <th ng-repeat="component in components">
+            {{ component.label }}
+            <a class="af-component-help" href="#" tooltip-html-unsafe="{{ component.help }}"
+               ng-if="component.help">
+                <i class="fa fa-question-circle"></i>
+            </a>
+        </th>
+        <th></th>
+    </tr>
+
+    <tr ng-repeat="(inputSetIndex, inputSet) in inputSets">
+        <td>
+            <input type="text" class="form-control" ng-model="inputSet.freeLabel"
+                   name="{{ refPrefix + (inputSetIndex + 1) }}__freeLabel">
+        </td>
+        <td ng-repeat="component in components">
+            <af-horizontal-component component="component" input="getInput(inputSet, component)"
+                                     ref-prefix="refPrefix + (inputSetIndex + 1) + '__'"></af-horizontal-component>
+        </td>
+        <td>
+            <button type="button" class="btn btn-default btn-block removeSubAF" ng-click="remove(inputSet)">
+                {{ removeButtonLabel }}
+            </button>
+        </td>
+    </tr>
+</table>

@@ -20,7 +20,7 @@ Feature: AF elementary condition for interaction feature
     And I click "Valider"
     Then the following message is shown and closed: "Ajout effectué."
   # Conditions élémentaires affichées dans l'ordre d'ajout
-    And the row 4 of the "conditionsElementary" datagrid should contain:
+    And the row 3 of the "conditionsElementary" datagrid should contain:
       | ref  | field         | relation | value |
       | aaa  | Champ booléen | =        |       |
 
@@ -99,31 +99,22 @@ Feature: AF elementary condition for interaction feature
     And I open tab "Interactions"
     And I open collapse "Conditions élémentaires"
     Then I should see the "conditionsElementary" datagrid
-    And the "conditionsElementary" datagrid should contain 3 row
+    And the "conditionsElementary" datagrid should contain 2 row
     And the row 1 of the "conditionsElementary" datagrid should contain:
       | ref           |
       | cond_el_inter |
     And the row 2 of the "conditionsElementary" datagrid should contain:
       | ref                              |
       | cond_el_inter_util_act_setstate  |
-    And the row 3 of the "conditionsElementary" datagrid should contain:
-      | ref                              |
-      | cond_el_inter_util_act_setvalue  |
   # Suppression, condition utilisée pour une action de modification de l'état d'un composant
     When I click "Supprimer" in the row 2 of the "conditionsElementary" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Cette condition ne peut pas être supprimée, car elle intervient dans le déclenchement d'une (ou plusieurs) actions."
-    And the "conditionsElementary" datagrid should contain 3 row
-  # Suppression, condition utilisée pour une action de modification de l'état d'un composant
-    When I click "Supprimer" in the row 3 of the "conditionsElementary" datagrid
-    Then I should see the popup "Demande de confirmation"
-    When I click "Confirmer"
-    Then the following message is shown and closed: "Cette condition ne peut pas être supprimée, car elle intervient dans le déclenchement d'une (ou plusieurs) actions."
-    And the "conditionsElementary" datagrid should contain 3 row
+    And the "conditionsElementary" datagrid should contain 2 row
   # Suppression sans obstacle
     When I click "Supprimer" in the row 1 of the "conditionsElementary" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    And the "conditionsElementary" datagrid should contain 2 row
+    And the "conditionsElementary" datagrid should contain 1 row

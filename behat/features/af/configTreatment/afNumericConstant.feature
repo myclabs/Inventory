@@ -62,14 +62,13 @@ Feature: AF numeric constant algo feature
     And I click "Valider"
     And the field "algoNumericConstant_unit_addForm" should have error: "Merci de saisir un identifiant d'unité valide."
     And the field "algoNumericConstant_value_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    And the field "algoNumericConstant_uncertainty_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "algoNumericConstant_uncertainty_addForm" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
   # Ajout, identifiant avec caractères non autorisés, unité valide, valeur valide mais avec mauvais séparateur décimal, idem incertitude
     When I fill in "algoNumericConstant_unit_addForm" with "t_co2e.passager^-1.km^-1"
     And I fill in "algoNumericConstant_value_addForm" with "12345.6789"
     And I fill in "algoNumericConstant_uncertainty_addForm" with "5.5"
     And I click "Valider"
-    Then the field "algoNumericConstant_uncertainty_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-    And the field "algoNumericConstant_uncertainty_addForm" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    And the field "algoNumericConstant_uncertainty_addForm" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
   # Ajout, identifiant avec caractères non autorisés, unité valide, valeur valide, incertitude vide
     When I fill in "algoNumericConstant_value_addForm" with "12345,6789"
     And I fill in "algoNumericConstant_uncertainty_addForm" with ""
@@ -142,15 +141,12 @@ Feature: AF numeric constant algo feature
   # Modification de la valeur, saisie invalide
     When I set "auie" for column "value" of row 1 of the "algoNumericConstant" datagrid
     Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-  # Modification de la valeur, séparateur décimal invalide
-    When I set "1.5" for column "value" of row 1 of the "algoNumericConstant" datagrid
-    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
   # Modification de l'incertitude, saisie invalide
     When I set "auieae" for column "uncertainty" of row 1 of the "algoNumericConstant" datagrid
-    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-  # Modification de l'incertitude, séparateur décimal invalide
+    Then the following message is shown and closed: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
+  # Modification de l'incertitude avec décimale
     When I set "10.5" for column "uncertainty" of row 1 of the "algoNumericConstant" datagrid
-    Then the following message is shown and closed: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    Then the following message is shown and closed: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
 
   @javascript
   Scenario: Deletion of a numeric constant algo scenario

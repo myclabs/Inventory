@@ -82,7 +82,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 $uncertainty = 0;
             }
         } catch(Core_Exception_InvalidArgument $e) {
-            $this->setAddElementErrorMessage('uncertainty', __('UI', 'formValidation', 'invalidNumber'));
+            $this->setAddElementErrorMessage('uncertainty', __('UI', 'formValidation', 'invalidUncertainty'));
         }
         // Pas d'erreurs
         if (empty($this->_addErrorMessages)) {
@@ -162,7 +162,7 @@ class AF_Datagrid_Edit_Algos_NumericConstantController extends UI_Controller_Dat
                 try {
                     $newValue = $locale->readInteger($newValue);
                 } catch (Core_Exception_InvalidArgument $e) {
-                    throw new Core_Exception_User('UI', 'formValidation', 'invalidNumber');
+                    throw new Core_Exception_User('UI', 'formValidation', 'invalidUncertainty');
                 }
                 $unitValue = $algo->getUnitValue()->copyWithNewUncertainty($newValue);
                 $algo->setUnitValue($unitValue);

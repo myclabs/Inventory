@@ -40,6 +40,9 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         <link rel="stylesheet" type="text/css" media="screen" href="vendor/css/smartadmin-skins.css">
         <link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-additions.css">
 
+        <link rel="stylesheet" type="text/css" media="screen" href="markitup/skins/markitup/style.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="markitup/skins/textile/style.css">
+
         <link rel="stylesheet" type="text/css" media="screen" href="css/ui/tabs.css">
 
         <link rel="stylesheet" type="text/css" media="screen" href="css/af.css">
@@ -68,6 +71,10 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
 
         <!-- AngularJS -->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.4/angular.min.js"></script>
+        <script src="vendor/js/ui-bootstrap-tpls-0.11.0.min.js"></script>
+
+        <!-- Traductions : obligé de l'inclure ici -->
+        <script src="scripts/ui/translate.js"></script>
 
     </head>
     <body class="fixed-navigation fixed-header fixed-ribbon">
@@ -122,10 +129,11 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
         <script src="vendor/js/libs/jquery.form.min.js"></script>
         <script src="vendor/js/libs/jquery.confirm.min.js"></script>
         <script src="select2/select2.js"></script>
+        <script src="markitup/jquery.markitup.js"></script>
+        <script src="markitup/sets/textile/set.js"></script>
 
         <script src="vendor/js/app.js"></script>
         <script src="vendor/js/muih.js"></script>
-        <script src="scripts/ui/translate.js"></script>
         <script src="scripts/ajax-form.js"></script>
         <script src="scripts/feedback-form.js"></script>
 
@@ -143,30 +151,37 @@ if (Zend_Auth::getInstance()->hasIdentity()) {
                 switch (type) {
                     case 'info':
                         title = '<?=__('UI', 'message', 'titleInfo')?>';
-                        divClass = ' alert-info';
+                        divClass = 'alert-info';
                         break;
                     case 'success':
                         title = '<?=__('UI', 'message', 'titleSuccess')?>';
-                        divClass = ' alert-success';
+                        divClass = 'alert-success';
                         break;
                     case 'error':
                         title = '<?=__('UI', 'message', 'titleError')?>';
-                        divClass = ' alert-danger';
+                        divClass = 'alert-danger';
                         break;
                     case 'warning':
                     default :
                         title = '<?=__('UI', 'message', 'titleWarning')?>';
-                        divClass = ' alert-warning';
+                        divClass = 'alert-warning';
                         break;
                 }
                 var messageZone = $('#messageZone');
-                messageZone.append('<div class="alert' + divClass + ' alert-dismissable fade in" style="display:none;"></div>');
-                messageZone.children('div:last').append('<button class="close" data-dismiss="alert">×</button>');
-                messageZone.children('div:last').append('<strong>' + title + '</strong> ' + text);
-                messageZone.children('div:last').slideDown(100);
+                var message = $('<div class="alert ' + divClass + ' alert-dismissable fade in" style="display:none;"></div>');
+                message.append('<button class="close" data-dismiss="alert">×</button>');
+                message.append('<strong>' + title + '</strong> ' + text);
+                message.fadeIn();
+                messageZone.append(message);
 
                 if (messageZone.children('div').size() > 2) {
-                    setTimeout(eraseFirstMessage, 500, 2);
+                    setTimeout(eraseFirstMessage, 500, 1);
+                }
+                // Auto-close success messages
+                if (type === 'success') {
+                    setTimeout(function () {
+                        message.alert('close');
+                    }, 5000);
                 }
             };
             errorHandler = function (jqXHR) {
