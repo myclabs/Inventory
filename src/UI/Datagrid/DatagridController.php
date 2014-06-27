@@ -112,14 +112,14 @@ abstract class DatagridController extends Core_Controller
         switch ($action) {
 
             case 'getelements':
-                // Préparation de la sauvegarde en session des paramètres d'affichage utilisateur.
-                $container = \Core\ContainerSingleton::getContainer();
-                $zendSessionDatagrid = new Zend_Session_Namespace($container->get('session.storage.name'));
-                $idDatagrid = 'datagrid'.$this->id;
-                if ((!(isset($zendSessionDatagrid->$idDatagrid))) || (!(is_array($zendSessionDatagrid->$idDatagrid)))) {
-                    $zendSessionDatagrid->$idDatagrid = array();
-                }
-                $datagridSession = &$zendSessionDatagrid->$idDatagrid;
+//                // Préparation de la sauvegarde en session des paramètres d'affichage utilisateur.
+//                $container = \Core\ContainerSingleton::getContainer();
+//                $zendSessionDatagrid = new Zend_Session_Namespace($container->get('session.storage.name'));
+//                $idDatagrid = 'datagrid'.$this->id;
+//                if ((!(isset($zendSessionDatagrid->$idDatagrid))) || (!(is_array($zendSessionDatagrid->$idDatagrid)))) {
+//                    $zendSessionDatagrid->$idDatagrid = array();
+//                }
+//                $datagridSession = &$zendSessionDatagrid->$idDatagrid;
 
                 // Création d'un objet Requête.
                 $criteriaName = str_replace('|', '\\', $this->getParam('criteriaName'));
@@ -129,17 +129,17 @@ abstract class DatagridController extends Core_Controller
                 // Récupération du nombre d'éléments à renvoyer.
                 if (($this->getParam('nbElements') !== 'null') && ($this->getParam('nbElements') !== 'false')) {
                     $this->criteria->setMaxResults((int) $this->getParam('nbElements'));
-                    // Sauvegarde du nombre d'élément de la pagination.
-                    $datagridSession['nbElements'] = (int) $this->getParam('nbElements');
+//                    // Sauvegarde du nombre d'élément de la pagination.
+//                    $datagridSession['nbElements'] = (int) $this->getParam('nbElements');
                     // Récupération de l'élément de départ.
                     $this->criteria->setFirstResult((int) $this->getParam('startIndex'));
-                    // Sauvegarde de la page de départ.
-                    $datagridSession['startIndex'] = (int) $this->getParam('startIndex');
-                } else {
-                    // Sauvegarde de l'abscence de pagination.
-                    $datagridSession['nbElements'] = null;
-                    // Sauvegarde de la page de départ.
-                    $datagridSession['startIndex'] = null;
+//                    // Sauvegarde de la page de départ.
+//                    $datagridSession['startIndex'] = (int) $this->getParam('startIndex');
+//                } else {
+//                    // Sauvegarde de l'abscence de pagination.
+//                    $datagridSession['nbElements'] = null;
+//                    // Sauvegarde de la page de départ.
+//                    $datagridSession['startIndex'] = null;
                 }
 
                 /* Filtre */
@@ -154,24 +154,24 @@ abstract class DatagridController extends Core_Controller
                         }
                     }
                 }
-                // Sauvegarde du filtre.
-                $datagridSession['filters'] = $filters;
+//                // Sauvegarde du filtre.
+//                $datagridSession['filters'] = $filters;
 
                 /* Tri */
                 // Définition de la colonne de tri et sauvegarde du tri.
                 if ($this->getParam('sortColumn') !== 'null') {
                     $sortName = $this->getParam('sortColumn');
-                    $datagridSession['sortColumn'] = $sortName;
+//                    $datagridSession['sortColumn'] = $sortName;
                     // Récupération de la direction du tri.
                     if ($this->getParam('sortDirection') === 'true') {
                         $this->criteria->orderBy([$this->criteria->$sortName->getField() => Criteria::ASC]);
-                        $datagridSession['sortDirection'] = true;
+//                        $datagridSession['sortDirection'] = true;
                     } else {
                         $this->criteria->orderBy([$this->criteria->$sortName->getField() => Criteria::DESC]);
-                        $datagridSession['sortDirection'] = false;
+//                        $datagridSession['sortDirection'] = false;
                     }
-                } else {
-                    $datagridSession['sortColumn'] = null;
+//                } else {
+//                    $datagridSession['sortColumn'] = null;
                 }
                 break;
 

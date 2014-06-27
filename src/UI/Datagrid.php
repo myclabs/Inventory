@@ -630,14 +630,14 @@ class UI_Datagrid extends UI_Generic
     {
         $this->filterCollapse->getCollapse()->setAttribute('id', $this->id.'_filter');
 
-        $datagridSession = $this->getDatagridSession();
-        // Vérification de la présence de valeur par défaut nécéssitant l'affichage du l'indicateur.
-        if (($datagridSession['filters'] !== null) && (count($datagridSession['filters']) != 0)) {
-            $icon = new Icon('filter');
-            $icon->addClass('filterActive');
-            $icon->setAttribute('title', $this->filterCollapseActiveHint);
-            $this->filterCollapse->getTitleLink()->prependContent($icon);
-        }
+//        $datagridSession = $this->getDatagridSession();
+//        // Vérification de la présence de valeur par défaut nécéssitant l'affichage du l'indicateur.
+//        if (($datagridSession['filters'] !== null) && (count($datagridSession['filters']) != 0)) {
+//            $icon = new Icon('filter');
+//            $icon->addClass('filterActive');
+//            $icon->setAttribute('title', $this->filterCollapseActiveHint);
+//            $this->filterCollapse->getTitleLink()->prependContent($icon);
+//        }
     }
 
     /**
@@ -648,7 +648,7 @@ class UI_Datagrid extends UI_Generic
     protected function generateFilter()
     {
         $this->initFilterCollapse();
-        $datagridSession = $this->getDatagridSession();
+//        $datagridSession = $this->getDatagridSession();
 
         // Création d'un formulaire contenant les champs du filtre.
         $formFilter = new GenericTag('form');
@@ -659,11 +659,11 @@ class UI_Datagrid extends UI_Generic
         foreach ($filters as $column) {
             /** @var UI_Datagrid_Col_Generic $column */
             if ($column->filterName !== null) {
-                if (isset($datagridSession['filters'][$column->getFullFilterName($this)])) {
-                    $defaultValue = $datagridSession['filters'][$column->getFullFilterName($this)];
-                } else {
+//                if (isset($datagridSession['filters'][$column->getFullFilterName($this)])) {
+//                    $defaultValue = $datagridSession['filters'][$column->getFullFilterName($this)];
+//                } else {
                     $defaultValue = null;
-                }
+//                }
                 $columnFilterElement = $column->getFilterFormElement($this, $defaultValue);
                 if ($columnFilterElement !== null) {
                     $formFilter->appendContent($columnFilterElement);
@@ -933,7 +933,7 @@ class UI_Datagrid extends UI_Generic
      */
     protected function getDatagridScript()
     {
-        $datagridSession = $this->getDatagridSession();
+//        $datagridSession = $this->getDatagridSession();
 
         $datagridScript = '';
 
@@ -1080,18 +1080,20 @@ class UI_Datagrid extends UI_Generic
         // Paginator : par defaut 10 lignes affiches, option 5,10,25,50 lignes à afficher, 5 pages maximum en liens.
         if ($this->pagination === true) {
             // Récupération de l'index de départ par défault.
-            if ($datagridSession['startIndex'] !== null) {
-                $startIndexInitial = $datagridSession['startIndex'];
-                if ($datagridSession['nbElements'] === 0) {
-                    $startPage = 1;
-                    $datagridSession['nbElements'] = $this->paginationRowPerPage;
-                } else {
-                    $startPage = $startIndexInitial / $datagridSession['nbElements'] + 1;
-                }
-            } else {
+//            if ($datagridSession['startIndex'] !== null) {
+//                $startIndexInitial = $datagridSession['startIndex'];
+//                if ($datagridSession['nbElements'] === 0) {
+//                    $startPage = 1;
+//                    $datagridSession['nbElements'] = $this->paginationRowPerPage;
+//                } else {
+//                    $startPage = $startIndexInitial / $datagridSession['nbElements'] + 1;
+//                }
+//                $rowsPerPage = $datagridSession['nbElements'];
+//            } else {
                 $startIndexInitial = 0;
                 $startPage = 1;
-            }
+                $rowsPerPage = 10;
+//            }
             // Définition du template de pagination.
             $templatePagination = '';
             // Début du bloc permettant de contextualiser la pagination.
@@ -1110,7 +1112,7 @@ class UI_Datagrid extends UI_Generic
             $datagridScript .= 'paginator: new YAHOO.widget.Paginator({';
             $datagridScript .= 'containers: new Array("'.$this->id.'_paginationBefore", ';
             $datagridScript .= '"'.$this->id.'_paginationAfter"),';
-            $datagridScript .= 'rowsPerPage: '.$datagridSession['nbElements'].',';
+            $datagridScript .= 'rowsPerPage: '.$rowsPerPage.',';
             $datagridScript .= 'initialPage: '.$startPage.',';
             $datagridScript .= 'totalRecords: '.($startIndexInitial + 1).',';
             $datagridScript .= 'template: "'.$templatePagination.'",';
@@ -1162,24 +1164,25 @@ class UI_Datagrid extends UI_Generic
             $datagridScript .= '}),';
         }
 
-        // Récupération du filtre par défault.
-        if ($datagridSession['filters'] !== null) {
-            $initialFilter = json_encode($datagridSession['filters']);
-        } else {
+//        // Récupération du filtre par défault.
+//        if ($datagridSession['filters'] !== null) {
+//            $initialFilter = json_encode($datagridSession['filters']);
+//        } else {
             $initialFilter = '{}';
-        }
-        // Récupération du tri par défaut.
-        if ($datagridSession['sortColumn'] !== null) {
-            $defaultSortName = $datagridSession['sortColumn'];
-        } else {
+//        }
+//        // Récupération du tri par défaut.
+//        if ($datagridSession['sortColumn'] !== null) {
+//            $defaultSortName = $datagridSession['sortColumn'];
+//        } else {
             $defaultSortName = null;
-        }
-        // Récupération de l'ordre de tri par défaut.
-        if ($datagridSession['sortDirection'] !== null) {
-            $this->_defaultSortting['direction'] = $datagridSession['sortDirection'];
-        }
+//        }
+//        // Récupération de l'ordre de tri par défaut.
+//        if ($datagridSession['sortDirection'] !== null) {
+//            $this->_defaultSortting['direction'] = $datagridSession['sortDirection'];
+//        }
         // Récupération de la colonne de tri sauvegardée.
-        if (($this->_defaultSortting['state'] === true) || ($datagridSession['sortColumn'] !== null)) {
+//        if (($this->_defaultSortting['state'] === true) || ($datagridSession['sortColumn'] !== null)) {
+        if ($this->_defaultSortting['state'] === true) {
             foreach ($this->_cols as $column) {
                 // Vérification que le nom du tri est bien défini pour cette colonne.
                 if ($defaultSortName !== null) {
@@ -1198,19 +1201,20 @@ class UI_Datagrid extends UI_Generic
             }
             $datagridScript .= 'sortedBy : { key: "'.$this->_defaultSortting['column'].'"';
             // Mise en forme de la direction du tri
-            if ($datagridSession['sortDirection'] !== null) {
-                // Récupération de la direction du tri sauvegardée.
-                if ($datagridSession['sortDirection'] == true) {
-                    $initialSortRequest = 'true';
-                } else {
-                    $initialSortRequest = 'false';
-                }
-                if ($datagridSession['sortDirection'] === true) {
-                    $datagridScript .= ', dir:YAHOO.widget.DataTable.CLASS_ASC';
-                } else {
-                    $datagridScript .= ', dir:YAHOO.widget.DataTable.CLASS_DESC';
-                }
-            } else if ($this->_defaultSortting['direction'] === self::TYPE_SORT_ASC) {
+//            if ($datagridSession['sortDirection'] !== null) {
+//                // Récupération de la direction du tri sauvegardée.
+//                if ($datagridSession['sortDirection'] == true) {
+//                    $initialSortRequest = 'true';
+//                } else {
+//                    $initialSortRequest = 'false';
+//                }
+//                if ($datagridSession['sortDirection'] === true) {
+//                    $datagridScript .= ', dir:YAHOO.widget.DataTable.CLASS_ASC';
+//                } else {
+//                    $datagridScript .= ', dir:YAHOO.widget.DataTable.CLASS_DESC';
+//                }
+//            } else if ($this->_defaultSortting['direction'] === self::TYPE_SORT_ASC) {
+            if ($this->_defaultSortting['direction'] === self::TYPE_SORT_ASC) {
                 $datagridScript .= ', dir:YAHOO.widget.DataTable.CLASS_ASC';
                 $initialSortRequest = 'true';
             } else {
@@ -1221,7 +1225,7 @@ class UI_Datagrid extends UI_Generic
             if ($this->pagination === true) {
                 $datagridScript .= 'initialRequest : "getelements';
                 $datagridScript .= $this->encodeParameters();
-                $datagridScript .= '/nbElements/'.$datagridSession['nbElements'];
+                $datagridScript .= '/nbElements/'.$rowsPerPage;
                 $datagridScript .= '/startIndex/'.$startIndexInitial;
                 $datagridScript .= '/sortColumn/'.$defaultSortName;
                 $datagridScript .= '/sortDirection/'.$initialSortRequest;
@@ -1238,7 +1242,7 @@ class UI_Datagrid extends UI_Generic
         } else if ($this->pagination === true) {
             $datagridScript .= 'initialRequest : "getelements';
             $datagridScript .= $this->encodeParameters();
-            $datagridScript .= '/nbElements/'.$datagridSession['nbElements'];
+            $datagridScript .= '/nbElements/'.$rowsPerPage;
             $datagridScript .= '/startIndex/'.$startIndexInitial;
             $datagridScript .= '/sortColumn/null';
             $datagridScript .= '/sortDirection/false';
