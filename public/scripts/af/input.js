@@ -191,6 +191,15 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
                     || (angular.isArray(variable) && variable.length == 0);
             };
 
+            // Reset
+            input.hasErrors = false;
+            input.error = null;
+
+            // Ignore hidden inputs
+            if (! input.visible) {
+                return;
+            }
+
             switch (component.type) {
                 case 'numeric':
                     var value = null;
@@ -202,8 +211,6 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
                         uncertainty = input.value.uncertainty;
                     }
                     // Errors
-                    input.hasErrors = false;
-                    input.error = null;
                     if ((! component.required) && (value === null)) {
                         break;
                     } else if (component.required && (value === null)) {
@@ -229,8 +236,6 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
                 case 'text':
                 case 'textarea':
                     // Errors
-                    input.hasErrors = false;
-                    input.error = null;
                     if (component.required && isEmpty(input.value)) {
                         input.hasErrors = true;
                         input.error = __('AF', 'inputInput', 'emptyRequiredField');
