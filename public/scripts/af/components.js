@@ -321,13 +321,6 @@ afModule.directive('afSubMulti', function($compile) {
                 $scope.input.value.push(newInputSet);
             };
 
-            switch ($scope.component.init) {
-                case 'one_deletable':
-                case 'one_not_deletable':
-                    $scope.add();
-                    break;
-            }
-
             var template =
                 '<fieldset>' +
                     '<legend ng-click="toggle()">' +
