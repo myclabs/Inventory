@@ -19,7 +19,7 @@
     <div class="af-unit" ng-if="!component.unitChoices">
         <input type="text" class="form-control" disabled
                name="{{ refPrefix + component.ref + '_unit' }}"
-               ng-model="input.value.unit" ng-init="input.value.unit = component.unit.ref">
+               ng-value="component.unit.symbol" ng-init="input.value.unit = component.unit.ref">
     </div>
 
     <div class="af-unit" ng-if="component.unitChoices">
