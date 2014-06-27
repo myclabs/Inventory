@@ -40,6 +40,21 @@ class Orga_Service_InputService
     }
 
     /**
+     * @param Orga_Model_Organization $organization
+     */
+    public function updateInputsFromOrganization(Orga_Model_Organization $organization)
+    {
+        $timeAxis = $organization->getTimeAxis();
+
+        //@todo Voir avec Matthieu pour la mise à jour de l'"incenstitent" de l'input.
+        foreach ($organization->getInputGranularities() as $inputGranularity) {
+            foreach ($inputGranularity->getCells() as $inputCell) {
+
+            }
+        }
+    }
+
+    /**
      * Modifie la saisie d'une cellule et recalcule les résultats si la saisie est complète
      *
      * @param Orga_Model_Cell $cell

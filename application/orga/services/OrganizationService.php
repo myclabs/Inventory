@@ -3,9 +3,11 @@
 use Account\Domain\Account;
 use Account\Domain\AccountRepository;
 use AF\Domain\AF;
+use Core\Work\ServiceCall\ServiceCallTask;
 use Doctrine\ORM\EntityManager;
 use DW\Domain\Report;
 use Mnapoli\Translated\Translator;
+use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -35,17 +37,23 @@ class Orga_Service_OrganizationService
      * @var Translator
      */
     private $translator;
+    /**
+     * @var SynchronousWorkDispatcher
+     */
+    private $workDispatcher;
 
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ACLManager $aclManager,
         UserService $userService,
-        Translator $translator
+        Translator $translator,
+        SynchronousWorkDispatcher $workDispatcher
     ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
         $this->userService = $userService;
         $this->translator = $translator;
+        $this->workDispatcher = $workDispatcher;
     }
 
     /**
@@ -134,6 +142,24 @@ class Orga_Service_OrganizationService
 
             throw $e;
         }
+    }
+
+    /**
+     * @param Orga_Model_Organization $organiszation
+     * @param Orga_Model_Axis $timeAxis
+     */
+    public function editOrganization(Orga_Model_Organization $organiszation, Orga_Model_Axis $timeAxis=null)
+    {
+        $organiszation->setTimeAxis($timeAxis);
+
+        $task = new ServiceCallTask(
+            'Orga_Service_InputService',
+            'updateInputsFromOrganization',
+            [
+                $organiszation
+            ]
+        );
+        $this->workDispatcher->run($task);
     }
 
     /**
