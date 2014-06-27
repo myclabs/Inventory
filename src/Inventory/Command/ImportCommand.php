@@ -386,21 +386,21 @@ class ImportCommand extends Command
             ],
             \Orga_Model_GranularityReport::class => [ 'exclude' => true ],
             \Orga_Model_CellReport::class => [ 'exclude' => true ],
-            \DW_Model_Cube::class => [
+            \DW\Domain\Cube::class => [
                 'properties' => [
                     'axes' => [ 'exclude' => true ],
                     'indicators' => [ 'exclude' => true ],
                     'reports' => [ 'exclude' => true ],
                 ],
             ],
-            \DW_Model_Axis::class => [ 'exclude' => true ],
-            \DW_Model_Member::class => [ 'exclude' => true ],
-            \DW_Model_Indicator::class => [ 'exclude' => true ],
-            \DW_Model_Result::class => [ 'exclude' => true ],
-            \DW_Model_Report::class => [
+            \DW\Domain\Axis::class => [ 'exclude' => true ],
+            \DW\Domain\Member::class => [ 'exclude' => true ],
+            \DW\Domain\Indicator::class => [ 'exclude' => true ],
+            \DW\Domain\Result::class => [ 'exclude' => true ],
+            \DW\Domain\Report::class => [
                 'exclude' => true
             ],
-            \DW_Model_Filter::class => [
+            \DW\Domain\Filter::class => [
                 'exclude' => true
             ],
             'User\Domain\ACL\Role\AdminRole' => [
@@ -521,9 +521,9 @@ class ImportCommand extends Command
                     );
 
                     $dwCube = $granularity->getDWCube();
-                    /** @var \DW_Model_Report $reportObject */
+                    /** @var \DW\Domain\Report $reportObject */
                     foreach ($granularityObject->granularityReports as $reportObject) {
-                        $report = new \DW_Model_Report($dwCube);
+                        $report = new \DW\Domain\Report($dwCube);
 
                         $errorHappened = 0;
 
@@ -532,11 +532,11 @@ class ImportCommand extends Command
                         $report->setSortType($reportObject->getSortType());
                         $report->setWithUncertainty($reportObject->getWithUncertainty());
 
-                        if ($reportObject->getNumerator() != null) {
+                        if ($reportObject->getNumeratorIndicator() != null) {
                             try {
-                                $report->setNumerator(
+                                $report->setNumeratorIndicator(
                                     $dwCube->getIndicatorByRef(
-                                        $classificationLibrary->getId() . '_' . $reportObject->getNumerator()
+                                        $classificationLibrary->getId() . '_' . $reportObject->getNumeratorIndicator()
                                     )
                                 );
                             } catch (\Core_Exception_NotFound $e) {
@@ -588,11 +588,11 @@ class ImportCommand extends Command
                                     }
                                 }
                             }
-                            if ($reportObject->getDenominator() != null) {
+                            if ($reportObject->getDenominatorIndicator() != null) {
                                 try {
-                                    $report->setDenominator(
+                                    $report->setDenominatorIndicator(
                                         $dwCube->getIndicatorByRef(
-                                            $classificationLibrary->getId() . '_' . $reportObject->getDenominator()
+                                            $classificationLibrary->getId() . '_' . $reportObject->getDenominatorIndicator()
                                         )
                                     );
                                 } catch (\Core_Exception_NotFound $e) {
@@ -644,7 +644,7 @@ class ImportCommand extends Command
                                 $errorHappened = true;
                                 continue;
                             }
-                            $filter = new \DW_Model_Filter($report, $axis);
+                            $filter = new \DW\Domain\Filter($report, $axis);
                             foreach ($filterObject->getMembers() as $refMember) {
                                 try {
                                     $filter->addMember(

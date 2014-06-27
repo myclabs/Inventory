@@ -1,4 +1,4 @@
-@dbFull @skipped
+@dbFull
 Feature: Check uncertainty computation feature
 
   Background:
@@ -9,11 +9,12 @@ Feature: Check uncertainty computation feature
     Given I am on "orga/cell/view/idCell/1"
     And I wait for the page to finish loading
   # Accès cellule "Annecy"
-    And I click element "#granularity4 legend"
-    And I click ".cell[data+tag='/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/'] .fa-bar-chart-o"
+    And I click element "a[href='#granularity4']"
+    And I click element ".cell[data-tag='/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/'] .fa-bar-chart-o"
     And I click element "#reports6 .modal-footer .fa-plus"
-    And I click element "#indicatorRatio_indicator"
-    And I select "Histogramme vertical" from "chartType"
+    And I select "sum" from "typeSumRatioChoice"
+    And I select "1_ges" from "numeratorIndicator"
+    And I select "Histogramme vertical" from "displayType"
     And I click "Lancer"
     Then the following message is shown and closed: "Analyse effectuée."
     When I open tab "Valeurs"

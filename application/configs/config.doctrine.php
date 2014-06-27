@@ -35,7 +35,6 @@ return [
 
         $paths = [
             APPLICATION_PATH . '/models/mappers',
-            APPLICATION_PATH . '/dw/models/mappers',
             APPLICATION_PATH . '/orga/models/mappers',
         ];
         $doctrineYAMLDriver = new YamlDriver($paths, '.yml');
@@ -62,6 +61,7 @@ return [
         $modules = [
             'User',
             'Classification',
+            'DW',
             'Parameter',
             'Doc',
             'AuditTrail',

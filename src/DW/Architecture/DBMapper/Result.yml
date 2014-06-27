@@ -1,0 +1,44 @@
+DW\Domain\Result:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: DW_Result
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    value:
+      column: value
+      type: calc_value
+      nullable: false
+
+  manyToOne:
+    cube:
+      targetEntity: Cube
+      joinColumn:
+        name: idCube
+        referencedColumnName: id
+        onDelete: CASCADE
+    indicator:
+      targetEntity: Indicator
+      joinColumn:
+        name: idIndicator
+        referencedColumnName: id
+        onDelete: CASCADE
+
+  manyToMany:
+    members:
+      targetEntity: Member
+      inversedBy: results
+      joinTable:
+        name: DW_Result_Member
+        joinColumns:
+          idResult:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idMember:
+            referencedColumnName: id

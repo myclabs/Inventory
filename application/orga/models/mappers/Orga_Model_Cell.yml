@@ -58,7 +58,7 @@ Orga_Model_Cell:
       orphanRemoval: true
       cascade: [ persist, remove ]
     dWCube:
-      targetEntity: DW_Model_Cube
+      targetEntity: DW\Domain\Cube
       joinColumn:
         name: idDWCube
         referencedColumnName: id
@@ -104,7 +104,7 @@ Orga_Model_Cell:
           idMember:
             referencedColumnName: id
     dWResults:
-      targetEntity: DW_Model_Result
+      targetEntity: DW\Domain\Result
       joinTable:
         name: Orga_Cell_DWResults
         joinColumns:

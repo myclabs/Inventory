@@ -232,7 +232,7 @@ class Orga_Model_Member extends Core_Model_Entity
     /**
      * Vérifie que la ref est unique.
      *
-     * @throw Core_Exception_TooMany
+     * @throws Core_Exception_TooMany
      */
     protected function checkRefUniqueness()
     {

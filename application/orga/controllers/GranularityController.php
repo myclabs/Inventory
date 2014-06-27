@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use DW\Application\DWViewConfiguration;
 
 /**
  * @author valentin.claras
@@ -40,7 +41,7 @@ class Orga_GranularityController extends Core_Controller
         $granularity = Orga_Model_Granularity::load($this->getParam('idGranularity'));
         $idOrganization = $granularity->getOrganization()->getId();
 
-        $viewConfiguration = new DW_ViewConfiguration();
+        $viewConfiguration = new DWViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(' <small>'.$this->translator->get($granularity->getLabel()).'</small>');
         $viewConfiguration->setOutputUrl('orga/organization/edit/idOrganization/' . $idOrganization . '/tab/reports/');
         $viewConfiguration->setSaveURL('orga/granularity/view-report/idGranularity/' . $granularity->getId());

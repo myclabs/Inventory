@@ -64,7 +64,7 @@ Orga_Model_Granularity:
 
   oneToOne:
     dWCube:
-      targetEntity: DW_Model_Cube
+      targetEntity: DW\Domain\Cube
       joinColumn:
         name: idDWCube
         referencedColumnName: id

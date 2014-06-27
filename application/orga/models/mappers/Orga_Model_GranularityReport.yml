@@ -12,7 +12,7 @@ Orga_Model_GranularityReport:
 
   oneToOne:
     granularityDWReport:
-      targetEntity: DW_Model_Report
+      targetEntity: DW\Domain\Report
       joinColumn:
         name: idGranularityDWReport
         referencedColumnName: id
@@ -22,7 +22,7 @@ Orga_Model_GranularityReport:
 
   manyToMany:
     cellDWReports:
-      targetEntity: DW_Model_Report
+      targetEntity: DW\Domain\Report
       joinTable:
         name: Orga_Granularity_DWReport_Cell_DWReport
         joinColumns:

@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use DW\Domain\Report;
 
 /**
  * @author valentin.claras
@@ -17,10 +18,10 @@ class Orga_Datagrid_Organization_ReportsController extends UI_Controller_Datagri
         $granularity = Orga_Model_Granularity::load($idGranularity);
         $dWCube = $granularity->getDWCube();
 
-        $this->request->filter->addCondition(DW_Model_Report::QUERY_CUBE, $dWCube);
-        $this->request->order->addTranslatedOrder(DW_Model_Report::QUERY_LABEL);
-        /** @var DW_Model_Report $report */
-        foreach (DW_Model_Report::loadList($this->request) as $report) {
+        $this->request->filter->addCondition(Report::QUERY_CUBE, $dWCube);
+        $this->request->order->addTranslatedOrder(Report::QUERY_LABEL);
+        /** @var Report $report */
+        foreach (Report::loadList($this->request) as $report) {
             $data = array();
             $data['index'] = $report->getId();
             $data['report'] = $this->cellTranslatedText($report->getLabel());
@@ -29,7 +30,7 @@ class Orga_Datagrid_Organization_ReportsController extends UI_Controller_Datagri
             $this->addline($data);
         }
 
-        $this->totalElements = DW_Model_Report::countTotal($this->request);
+        $this->totalElements = Report::countTotal($this->request);
 
         $this->send(true);
     }
@@ -39,7 +40,7 @@ class Orga_Datagrid_Organization_ReportsController extends UI_Controller_Datagri
      */
     public function deleteelementAction()
     {
-        DW_Model_Report::load($this->delete)->delete();
+        Report::load($this->delete)->delete();
         $this->message = __('UI', 'message', 'deleted');
         $this->send();
     }

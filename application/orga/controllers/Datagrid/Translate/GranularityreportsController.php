@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use DW\Domain\Report;
 
 class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller_Datagrid
 {
@@ -19,11 +20,11 @@ class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller
     {
         $organization = Orga_Model_Organization::load($this->getParam('idOrganization'));
         $this->request->filter->addCondition(
-            DW_Model_Report::QUERY_CUBE,
+            Report::QUERY_CUBE,
             $organization->getGranularityByRef($this->getParam('refGranularity'))->getDWCube()
         );
 
-        foreach (DW_Model_Report::loadList($this->request) as $report) {
+        foreach (Report::loadList($this->request) as $report) {
             $data = array();
             $data['index'] = $report->getKey()['id'];
             $data['identifier'] = $report->getKey()['id'];
@@ -33,7 +34,7 @@ class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller
             }
             $this->addline($data);
         }
-        $this->totalElements = DW_Model_Report::countTotal($this->request);
+        $this->totalElements = Report::countTotal($this->request);
 
         $this->send();
     }
@@ -45,7 +46,7 @@ class Orga_Datagrid_Translate_GranularityreportsController extends UI_Controller
      */
     public function updateelementAction()
     {
-        $report = DW_Model_Report::load($this->update['index']);
+        $report = Report::load($this->update['index']);
         $report->getLabel()->set($this->update['value'], $this->update['column']);
         $this->data = $report->getLabel()->get($this->update['column']);
 

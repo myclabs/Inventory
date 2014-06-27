@@ -1,0 +1,38 @@
+DW\Domain\Filter:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: DW_Filter
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  manyToOne:
+    report:
+      targetEntity: Report
+      inversedBy: filters
+      joinColumn:
+        name: idReport
+        referencedColumnName: id
+      nullable: false
+    axis:
+      targetEntity: Axis
+      joinColumn:
+        name: idAxis
+        referencedColumnName: id
+      nullable: false
+
+  manyToMany:
+    members:
+      targetEntity: Member
+      joinTable:
+        name: DW_Filter_Member
+        joinColumns:
+          idFilter:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idMember:
+            referencedColumnName: id

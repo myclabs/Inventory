@@ -6,6 +6,13 @@ use Classification\Domain\Axis;
 use Classification\Domain\Member;
 use Core\Translation\TranslatedString;
 use Doctrine\ORM\EntityManager;
+use DW\Application\Service\ReportService;
+use DW\Domain\Axis as DWAxis;
+use DW\Domain\Cube as DWCube;
+use DW\Domain\Indicator as DWIndicator;
+use DW\Domain\Member as DWMember;
+use DW\Domain\Report as DWReport;
+use DW\Domain\Result as DWResult;
 use Mnapoli\Translated\Translator;
 
 /**
@@ -24,6 +31,11 @@ class Orga_Service_ETLStructure
      * @var Orga_Service_ETLData
      */
     private $etlDataService;
+
+    /**
+     * @var ReportService
+     */
+    private $reportService;
 
     /**
      * @var Core_EventDispatcher
@@ -53,6 +65,7 @@ class Orga_Service_ETLStructure
     /**
      * @param EntityManager        $entityManager
      * @param Orga_Service_ETLData $etlDataService
+     * @param ReportService        $reportService
      * @param Core_EventDispatcher $eventDispatcher
      * @param string               $defaultLocale
      * @param string[]             $locales
@@ -61,6 +74,7 @@ class Orga_Service_ETLStructure
     public function __construct(
         EntityManager $entityManager,
         Orga_Service_ETLData $etlDataService,
+        ReportService $reportService,
         Core_EventDispatcher $eventDispatcher,
         $defaultLocale,
         array $locales,
@@ -68,6 +82,7 @@ class Orga_Service_ETLStructure
     ) {
         $this->entityManager = $entityManager;
         $this->etlDataService = $etlDataService;
+        $this->reportService = $reportService;
         $this->eventDispatcher = $eventDispatcher;
         $this->defaultLocale = $defaultLocale;
         $this->locales = $locales;
@@ -139,12 +154,12 @@ class Orga_Service_ETLStructure
     /**
      * Peuple le cube de DW avec les données issues de Classification et Orga.
      *
-     * @param DW_Model_Cube $dWCube
+     * @param DWCube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      */
     private function populateDWCubeWithClassificationAndOrga(
-        DW_Model_Cube $dWCube,
+        DWCube $dWCube,
         Orga_Model_Organization $orgaOrganization,
         array $orgaFilters
     ) {
@@ -156,17 +171,17 @@ class Orga_Service_ETLStructure
     /**
      * Peuple le cube de DW avec un axe indiquant le status de l'AF.
      *
-     * @param DW_Model_Cube $dWCube
+     * @param DWCube $dWCube
      */
-    private function populateDWCubeWithAF(DW_Model_Cube $dWCube)
+    private function populateDWCubeWithAF(DWCube $dWCube)
     {
-        $inputStatusDWAxis = new DW_Model_Axis($dWCube);
+        $inputStatusDWAxis = new DWAxis($dWCube);
         $inputStatusDWAxis->setRef('inputStatus');
 
-        $finishedDWMember = new DW_Model_Member($inputStatusDWAxis);
+        $finishedDWMember = new DWMember($inputStatusDWAxis);
         $finishedDWMember->setRef('finished');
 
-        $completedDWMember = new DW_Model_Member($inputStatusDWAxis);
+        $completedDWMember = new DWMember($inputStatusDWAxis);
         $completedDWMember->setRef('completed');
 
         foreach ($this->locales as $localeId) {
@@ -197,11 +212,11 @@ class Orga_Service_ETLStructure
     /**
      * Peuple le cube de DW avec les données issues de Classification.
      *
-     * @param DW_Model_Cube $dWCube
+     * @param DWCube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
      */
     private function populateDWCubeWithClassification(
-        DW_Model_Cube $dWCube,
+        DWCube $dWCube,
         Orga_Model_Organization $orgaOrganization
     ) {
         $classificationIndicators = array_map(
@@ -225,11 +240,11 @@ class Orga_Service_ETLStructure
      * Copie un indicateur de Classification dans un cube de DW.
      *
      * @param Indicator $classificationIndicator
-     * @param DW_Model_Cube $dWCube
+     * @param DWCube $dWCube
      */
-    private function copyIndicatorFromClassificationToDWCube(Indicator $classificationIndicator, DW_Model_Cube $dWCube)
+    private function copyIndicatorFromClassificationToDWCube(Indicator $classificationIndicator, DWCube $dWCube)
     {
-        $dWIndicator = new DW_Model_Indicator($dWCube);
+        $dWIndicator = new DWIndicator($dWCube);
         $dWIndicator->setRef($classificationIndicator->getLibrary()->getId().'_'.$classificationIndicator->getRef());
         $dWIndicator->setUnit($classificationIndicator->getUnit());
         $dWIndicator->setRatioUnit($classificationIndicator->getRatioUnit());
@@ -240,15 +255,15 @@ class Orga_Service_ETLStructure
      * Copie un axe de Classification dans un cube DW.
      *
      * @param Axis $classificationAxis
-     * @param DW_Model_Cube $dwCube
+     * @param DWCube $dwCube
      * @param array &$associationArray
      */
     private function copyAxisAndMembersFromClassificationToDW(
         Axis $classificationAxis,
-        DW_Model_Cube $dwCube,
+        DWCube $dwCube,
         &$associationArray = []
     ) {
-        $dWAxis = new DW_Model_Axis($dwCube);
+        $dWAxis = new DWAxis($dwCube);
         $dWAxis->setRef('c_'.$classificationAxis->getLibrary()->getId().'_'.$classificationAxis->getRef());
         $dWAxis->setLabel(clone $classificationAxis->getLabel());
 
@@ -259,7 +274,7 @@ class Orga_Service_ETLStructure
         }
 
         foreach ($classificationAxis->getMembers() as $classificationMember) {
-            $dWMember = new DW_Model_Member($dWAxis);
+            $dWMember = new DWMember($dWAxis);
             $dWMember->setRef($classificationMember->getRef());
             $dWMember->setPosition($classificationMember->getPosition());
             $dWMember->setLabel(clone $classificationMember->getLabel());
@@ -269,7 +284,7 @@ class Orga_Service_ETLStructure
             foreach ($classificationMember->getDirectChildren() as $narrowerClassificationMember) {
                 $narrowerIdentifier = $narrowerClassificationMember->getAxis()->getRef()
                     . '_' . $narrowerClassificationMember->getRef();
-                $dWMember->addDirectChild($associationArray['members'][$narrowerIdentifier]);
+                $associationArray['members'][$narrowerIdentifier]->setDirectParentForAxis($dWMember);
             }
         }
 
@@ -281,12 +296,12 @@ class Orga_Service_ETLStructure
     /**
      * Peuple le cube de DW avec les données issues de Classification.
      *
-     * @param DW_Model_Cube $dWCube
+     * @param DWCube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      */
     private function populateDWCubeWithOrgaOrganization(
-        DW_Model_Cube $dWCube,
+        DWCube $dWCube,
         Orga_Model_Organization $orgaOrganization,
         $orgaFilters
     ) {
@@ -299,13 +314,13 @@ class Orga_Service_ETLStructure
      * Copie un axe de Orga dans un cube DW.
      *
      * @param Orga_Model_Axis $orgaAxis
-     * @param DW_Model_Cube $dwCube
+     * @param DWCube $dwCube
      * @param array $orgaFilters
      * @param array &$associationArray
      */
     private function copyAxisAndMembersFromOrgaToDW(
         Orga_Model_Axis $orgaAxis,
-        DW_Model_Cube $dwCube,
+        DWCube $dwCube,
         $orgaFilters,
         &$associationArray = []
     ) {
@@ -320,7 +335,7 @@ class Orga_Service_ETLStructure
             }
         }
 
-        $dWAxis = new DW_Model_Axis($dwCube);
+        $dWAxis = new DWAxis($dwCube);
         $dWAxis->setRef('o_'.$orgaAxis->getRef());
         $dWAxis->setLabel(clone $orgaAxis->getLabel());
 
@@ -345,7 +360,7 @@ class Orga_Service_ETLStructure
                 }
             }
 
-            $dWMember = new DW_Model_Member($dWAxis);
+            $dWMember = new DWMember($dWAxis);
             $dWMember->setRef($orgaMember->getRef());
             $dWMember->setLabel(clone $orgaMember->getLabel());
 
@@ -355,7 +370,7 @@ class Orga_Service_ETLStructure
                 $narrowerIdentifier = $narrowerOrgaMember->getAxis()->getRef().'_'
                     .$narrowerOrgaMember->getCompleteRef();
                 if (isset($associationArray['members'][$narrowerIdentifier])) {
-                    $dWMember->addDirectChild($associationArray['members'][$narrowerIdentifier]);
+                    $associationArray['members'][$narrowerIdentifier]->setDirectParentForAxis($dWMember);
                 }
             }
         }
@@ -385,19 +400,14 @@ class Orga_Service_ETLStructure
      */
     public function updateCellsDWReportFromGranularityReport(Orga_Model_GranularityReport $granularityReport)
     {
-        $granularityReportAsString = $granularityReport->getGranularityDWReport()->getAsString();
+        $granularityDWReport = $granularityReport->getGranularityDWReport();
         foreach ($granularityReport->getCellDWReports() as $cellDWReport) {
-            $cellDWReportId = $cellDWReport->getId();
-            $cellDWReportDWCubeId = $cellDWReport->getCube()->getId();
-            $cellDWReport = DW_Model_Report::getFromString(
-                preg_replace(
-                    '#^(\{"id":)([0-9]+)(,"idCube":)([0-9]+)(,.+\})$#',
-                    '${1}'.$cellDWReportId.'${3}'.$cellDWReportDWCubeId.'${5}',
-                    $granularityReportAsString
+            $this->entityManager->flush(
+                $this->reportService->updateReportFromAnother(
+                    $cellDWReport,
+                    $granularityDWReport
                 )
             );
-            $cellDWReport->setLabel(clone $granularityReport->getGranularityDWReport()->getLabel());
-            $this->entityManager->flush($cellDWReport);
         }
     }
 
@@ -418,13 +428,13 @@ class Orga_Service_ETLStructure
      * Copie le Report d'un Cube de DW d'un Granularity dans le Cube d'un Cell.
      *
      * @param Orga_Model_GranularityReport $granularityReport
-     * @param DW_Model_Cube                $dWCube
+     * @param DWCube                       $dWCube
      */
     private function copyGranularityReportToCellDWCube(
         Orga_Model_GranularityReport $granularityReport,
-        DW_Model_Cube $dWCube
+        DWCube $dWCube
     ) {
-        $reportCopy = $granularityReport->getGranularityDWReport()->copyToCube($dWCube);
+        $reportCopy = $this->reportService->copyReportToCube($granularityReport->getGranularityDWReport(), $dWCube);
         $granularityReport->addCellDWReport($reportCopy);
     }
 
@@ -494,13 +504,13 @@ class Orga_Service_ETLStructure
     /**
      * Indique les différences entre un cube de DW donné el les données de Classification et Orga.
      *
-     * @param DW_Model_Cube $dWCube
+     * @param DWCube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      *
      * @return bool
      */
-    private function isDWCubeUpToDate(DW_Model_Cube $dWCube, Orga_Model_Organization $orgaOrganization, $orgaFilters)
+    private function isDWCubeUpToDate(DWCube $dWCube, Orga_Model_Organization $orgaOrganization, $orgaFilters)
     {
         return $this->areDWIndicatorsUpToDate($dWCube, $orgaOrganization)
             && $this->areDWAxesUpToDate($dWCube, $orgaOrganization, $orgaFilters);
@@ -509,12 +519,12 @@ class Orga_Service_ETLStructure
     /**
      * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
-     * @param DW_Model_Cube $dWCube
+     * @param DWCube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
      *
      * @return bool
      */
-    private function areDWIndicatorsUpToDate(DW_Model_Cube $dWCube, Orga_Model_Organization $orgaOrganization)
+    private function areDWIndicatorsUpToDate(DWCube $dWCube, Orga_Model_Organization $orgaOrganization)
     {
         $classificationIndicators = [];
         foreach ($orgaOrganization->getContextIndicators() as $classificationContextIndicator) {
@@ -543,13 +553,13 @@ class Orga_Service_ETLStructure
     /**
      * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
-     * @param DW_Model_Indicator $dWIndicator
+     * @param DWIndicator $dWIndicator
      * @param Indicator $classificationIndicator
      *
      * @return bool
      */
     private function isDWIndicatorDifferentFromClassification(
-        DW_Model_Indicator $dWIndicator,
+        DWIndicator $dWIndicator,
         Indicator $classificationIndicator
     ) {
         if (($classificationIndicator->getRef() !== $dWIndicator->getRef())
@@ -567,13 +577,13 @@ class Orga_Service_ETLStructure
     /**
      * Compare les différences entre une liste d'indicateurs de DW et ceux de Classification.
      *
-     * @param DW_Model_Cube $dWCube
+     * @param DWCube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilters
      *
      * @return bool
      */
-    private function areDWAxesUpToDate(DW_Model_Cube $dWCube, Orga_Model_Organization $orgaOrganization, $orgaFilters)
+    private function areDWAxesUpToDate(DWCube $dWCube, Orga_Model_Organization $orgaOrganization, $orgaFilters)
     {
         $dWRootAxes = $dWCube->getRootAxes();
 
@@ -610,12 +620,12 @@ class Orga_Service_ETLStructure
     /**
      * Compare un axe de DW et un de Classification.
      *
-     * @param DW_Model_Axis $dWAxis
+     * @param DWAxis $dWAxis
      * @param Axis $classificationAxis
      *
      * @return bool
      */
-    private function isDWAxisDifferentFromClassification(DW_Model_Axis $dWAxis, Axis $classificationAxis)
+    private function isDWAxisDifferentFromClassification(DWAxis $dWAxis, Axis $classificationAxis)
     {
         if (('c_'.$classificationAxis->getRef() !== $dWAxis->getRef())
             || ((($classificationAxis->getDirectNarrower() !== null) || ($dWAxis->getDirectNarrower() !== null))
@@ -649,12 +659,12 @@ class Orga_Service_ETLStructure
     /**
      * Compare un membre de DW et un de Classification.
      *
-     * @param DW_Model_Axis $dWAxis
+     * @param DWAxis $dWAxis
      * @param Axis $classificationAxis
      *
      * @return bool
      */
-    private function areDWMembersDifferentFromClassification(DW_Model_Axis $dWAxis, Axis $classificationAxis)
+    private function areDWMembersDifferentFromClassification(DWAxis $dWAxis, Axis $classificationAxis)
     {
         $classificationMembers = $classificationAxis->getMembers();
         $dWMembers = $dWAxis->getMembers();
@@ -678,12 +688,12 @@ class Orga_Service_ETLStructure
     /**
      * Compare un membre de DW et un de Classification.
      *
-     * @param DW_Model_Member $dWMember
+     * @param DWMember $dWMember
      * @param Member $classificationMember
      *
      * @return bool
      */
-    private function isDWMemberDifferentFromClassification(DW_Model_Member $dWMember, Member $classificationMember)
+    private function isDWMemberDifferentFromClassification(DWMember $dWMember, Member $classificationMember)
     {
         if (($classificationMember->getRef() !== $dWMember->getRef())
             || ($classificationMember->getLabel() != $dWMember->getLabel())
@@ -713,13 +723,13 @@ class Orga_Service_ETLStructure
     /**
      * Compare un axe de DW et un de Orga.
      *
-     * @param DW_Model_Axis $dWAxis
+     * @param DWAxis $dWAxis
      * @param Orga_Model_Axis $orgaAxis
      * @param array $orgaFilters
      *
      * @return bool
      */
-    private function isDWAxisDifferentFromOrga(DW_Model_Axis $dWAxis, Orga_Model_Axis $orgaAxis, $orgaFilters)
+    private function isDWAxisDifferentFromOrga(DWAxis $dWAxis, Orga_Model_Axis $orgaAxis, $orgaFilters)
     {
         if (in_array($orgaAxis, $orgaFilters['axes'])) {
             return false;
@@ -761,13 +771,13 @@ class Orga_Service_ETLStructure
     /**
      * Compare un membre de DW et un de Orga.
      *
-     * @param DW_Model_Axis $dWAxis
+     * @param DWAxis $dWAxis
      * @param Orga_Model_Axis $orgaAxis
      * @param array $orgaFilters
      *
      * @return bool
      */
-    private function areDWMembersDifferentFromOrga(DW_Model_Axis $dWAxis, Orga_Model_Axis $orgaAxis, $orgaFilters)
+    private function areDWMembersDifferentFromOrga(DWAxis $dWAxis, Orga_Model_Axis $orgaAxis, $orgaFilters)
     {
         $filteringOrgaBroaderAxes = array();
         foreach ($orgaFilters['axes'] as $filteringOrgaAxis) {
@@ -813,13 +823,13 @@ class Orga_Service_ETLStructure
     /**
      * Compare un membre de DW et un de Orga.
      *
-     * @param DW_Model_Member $dWMember
+     * @param DWMember $dWMember
      * @param Orga_Model_Member $orgaMember
      * @param array $orgaFilters
      *
      * @return bool
      */
-    private function isDWMemberDifferentFromOrga(DW_Model_Member $dWMember, Orga_Model_Member $orgaMember, $orgaFilters)
+    private function isDWMemberDifferentFromOrga(DWMember $dWMember, Orga_Model_Member $orgaMember, $orgaFilters)
     {
         if (($orgaMember->getRef() !== $dWMember->getRef())
             || ($dWMember->getLabel() != $orgaMember->getLabel())
@@ -876,7 +886,7 @@ class Orga_Service_ETLStructure
      */
     public function resetGranularityAndCellsDWCubes(Orga_Model_Granularity $granularity)
     {
-        $this->eventDispatcher->removeListener(Orga_Service_Report::class, DW_Model_Report::class);
+        $this->eventDispatcher->removeListener(Orga_Service_Report::class, DWReport::class);
 
         foreach ($granularity->getCells() as $cell) {
             $cell = Orga_Model_Cell::load($cell->getId());
@@ -972,35 +982,27 @@ class Orga_Service_ETLStructure
     /**
      * Réinitialise un cube de DW donné.
      *
-     * @param DW_Model_Cube $dWCube
+     * @param DWCube $dWCube
      * @param Orga_Model_Organization $orgaOrganization
      * @param array $orgaFilter
      */
-    private function resetDWCube(DW_Model_Cube $dWCube, Orga_Model_Organization $orgaOrganization, array $orgaFilter)
+    private function resetDWCube(DWCube $dWCube, Orga_Model_Organization $orgaOrganization, array $orgaFilter)
     {
         set_time_limit(0);
 
         $queryCube = new Core_Model_Query();
-        $queryCube->filter->addCondition(DW_Model_Report::QUERY_CUBE, $dWCube);
+        $queryCube->filter->addCondition(DWReport::QUERY_CUBE, $dWCube);
         // Suppression des résultats.
-        foreach (DW_Model_Result::loadList($queryCube) as $dWResult) {
+        foreach (DWResult::loadList($queryCube) as $dWResult) {
             $dWResult->delete();
         }
 
         // Préparation à la copie des Reports.
         $dWReportsAsString = array();
-        foreach (DW_Model_Report::loadList($queryCube) as $dWReport) {
-            /** @var DW_Model_Report $dWReport */
-            $dWReportsAsString[] = $dWReport->getAsString();
-            // TODO http://42lareponse.fr/wp-content/uploads/2013/05/what-the-fuck-is-this1.jpg
-            $emptyDWReportString = '{'.
-                '"id":'.$dWReport->getKey()['id'].',"idCube":'.$dWCube->getId().',"label":{},'.
-                '"refNumerator":null,"refNumeratorAxis1":null,"refNumeratorAxis2":null,'.
-                '"refDenominator":null,"refDenominatorAxis1":null,"refDenominatorAxis2":null,'.
-                '"chartType":null,"sortType":"orderResultByDecreasingValue","withUncertainty":false,'.
-                '"filters":[]'.
-            '}';
-            $dWReportReset = DW_Model_Report::getFromString($emptyDWReportString);
+        foreach (DWReport::loadList($queryCube) as $dWReport) {
+            /** @var DWReport $dWReport */
+            $dWReportsAsString[] = $this->reportService->getReportAsJson($dWReport);
+            $dWReportReset = $dWReport->reset();
             $dWReportReset->save();
         }
 
@@ -1024,7 +1026,7 @@ class Orga_Service_ETLStructure
         // Copie des Reports.
         foreach ($dWReportsAsString as $dWReportString) {
             try {
-                $newReport = DW_Model_Report::getFromString($dWReportString);
+                $newReport = $this->reportService->getReportFromJson($dWReportString);
                 $newReport->save();
             } catch (Core_Exception_NotFound $e) {
                 // Le rapport n'est pas compatible avec la nouvelle version du cube.

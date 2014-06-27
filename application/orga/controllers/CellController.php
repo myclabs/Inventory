@@ -6,6 +6,10 @@ use AF\Architecture\Service\InputSerializer;
 use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
+use DW\Application\Service\Export\PdfSpecific;
+use DW\Application\DWViewConfiguration;
+use DW\Application\Service\ReportService;
+use DW\Domain\Report;
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
 use MyCLabs\MUIH\Icon;
@@ -78,6 +82,12 @@ class Orga_CellController extends Core_Controller
      * @var InputSerializer
      */
     private $inputSerializer;
+
+    /**
+     * @Inject
+     * @var ReportService
+     */
+    private $reportService;
 
     /**
      * @Inject
@@ -867,7 +877,7 @@ class Orga_CellController extends Core_Controller
             while (false !== ($entry = $specificReportsDirectory->read())) {
                 if ((is_file($specificReportsDirectoryPath.$entry)) && (preg_match('#\.xml$#', $entry))) {
                     $fileName = substr($entry, null, -4);
-                    if (DW_Export_Specific_Pdf::isValid($specificReportsDirectoryPath.$entry)) {
+                    if (PdfSpecific::isValid($specificReportsDirectoryPath.$entry)) {
                         $cellReports[] = [
                             'label' => $fileName,
                             'link' => 'orga/cell/view-report-specific/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/report/'.$fileName,
@@ -881,7 +891,7 @@ class Orga_CellController extends Core_Controller
         /** @var Orga_Model_CellReport[] $usersReports */
         $usersReports = [];
         $dWReports = $cell->getDWCube()->getReports();
-        usort($dWReports, function (DW_Model_Report $a, DW_Model_Report $b) {
+        usort($dWReports, function (Report $a, Report $b) {
             return strcmp(
                 $this->translator->get($a->getLabel()),
                 $this->translator->get($b->getLabel())
@@ -903,7 +913,7 @@ class Orga_CellController extends Core_Controller
         // User Reports.
         $otherUsers = [];
         foreach ($usersReports as $cellReport) {
-            /** @var DW_Model_Report $dWReport */
+            /** @var Report $dWReport */
             $cellReports[] = [
                 'label' => $this->translator->get($cellReport->getCellDWReport()->getLabel()),
                 'link' => 'orga/cell/view-report/idCell/'.$idCell.'/fromIdCell/'.$fromIdCell.'/idReport/'.$cellReport->getCellDWReport()->getId(),
@@ -929,7 +939,7 @@ class Orga_CellController extends Core_Controller
      */
     public function removeReportAction()
     {
-        DW_Model_Report::load($this->getParam('idReport'))->delete();
+        Report::load($this->getParam('idReport'))->delete();
         $this->sendJsonResponse(__('UI', 'message', 'deleted'));
     }
 
@@ -948,7 +958,7 @@ class Orga_CellController extends Core_Controller
 
         $reportCanBeUpdated = false;
         if ($this->hasParam('idReport')) {
-            $report = DW_Model_Report::load($this->getParam('idReport'));
+            $report = Report::load($this->getParam('idReport'));
             try {
                 $cellReport = Orga_Model_CellReport::loadByCellDWReport($report);
                 $reportCanBeUpdated = ($cellReport->getOwner() === $connectedUser);
@@ -957,7 +967,7 @@ class Orga_CellController extends Core_Controller
             }
         }
 
-        $viewConfiguration = new DW_ViewConfiguration();
+        $viewConfiguration = new DWViewConfiguration();
         $viewConfiguration->setComplementaryPageTitle(
             ' <small>'.$this->translator->get($cell->getExtendedLabel()).'</small>'
         );
@@ -998,9 +1008,10 @@ class Orga_CellController extends Core_Controller
         $specificReportsDirectoryPath = PACKAGE_PATH.'/data/specificReports/'.
             $cell->getGranularity()->getOrganization()->getId().'/'.
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
-        $specificReports = new DW_Export_Specific_Pdf(
+        $specificReports = new PdfSpecific(
             $specificReportsDirectoryPath.$this->getParam('report').'.xml',
             $cell->getDWCube(),
+            $this->reportService,
             $this->translator,
             $exportUrl
         );
