@@ -652,21 +652,21 @@ class Orga_CellController extends Core_Controller
         $upTo = $upTo->sub(new DateInterval('P1M'));
 
         $activity = [];
-        $hasComments = true;
         $hasHistory = true;
-        while ((count($activity) == 0) && ($hasComments || $hasHistory)) {
+        $hasComments = true;
+        while ((count($activity) == 0) && ($hasHistory || $hasComments)) {
             $activity = $this->findActivity($cell, $from, $upTo);
 
             $from = $from->sub(new DateInterval('P1M'));
             $upTo = $upTo->sub(new DateInterval('P1M'));
 
-            /** @var Orga_Model_Repository_Cell $cellRepository */
-            $cellRepository = $this->entityManager->getRepository(Orga_Model_Cell::class);
-            $hasComments = $cellRepository->hasFromComments($cell, $from);
-
             $context = new OrganizationContext($cell->getGranularity()->getOrganization());
             $context->setCell($cell);
             $hasHistory = $this->auditTrailRepository->hasFromForOrganizationContext($context, $from);
+
+            /** @var Orga_Model_Repository_Cell $cellRepository */
+            $cellRepository = $this->entityManager->getRepository(Orga_Model_Cell::class);
+            $hasComments = $cellRepository->hasFromComments($cell, $from);
         }
 
         if (count($activity) == 0) {
@@ -683,6 +683,29 @@ class Orga_CellController extends Core_Controller
         $activity = [];
 
         $locale = Core_Locale::loadDefault();
+
+        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
+        $context->setCell($cell);
+        foreach ($this->auditTrailRepository->findUpToForOrganizationContext($context, $upTo, $from) as $entry) {
+            $contextCell = $entry->getContext()->getCell();
+            $cellLink = '<a href="orga/cell/input/idCell/' . $contextCell->getId()
+                . '/fromIdCell/' . $cell->getId() . '/">'
+                . $this->translator->get($contextCell->getLabel())
+                . '</a>';
+            $eventText = __('Orga', 'auditTrail', $entry->getEventName(), [
+                    'INPUT' => '',
+                    'USER' => '<b>'.$entry->getUser()->getName().'</b>'
+                ]);
+
+            $dateTime = $locale->formatShortDateTime($entry->getDate());
+            $activity[] = [
+                'type' => 'history',
+                'dateTime' => $dateTime,
+                'author' => $entry->getUser()->getName(),
+                'cell' => $cellLink,
+                'content' => $eventText
+            ];
+        }
 
         /** @var Orga_Model_Repository_Cell $cellRepository */
         $cellRepository = $this->entityManager->getRepository(Orga_Model_Cell::class);
@@ -711,29 +734,6 @@ class Orga_CellController extends Core_Controller
                 'author' => $comment->getAuthor()->getName(),
                 'cell' => $cellLink,
                 'content' => $commentText
-            ];
-        }
-
-        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
-        $context->setCell($cell);
-        foreach ($this->auditTrailRepository->findUpToForOrganizationContext($context, $upTo, $from) as $entry) {
-            $contextCell = $entry->getContext()->getCell();
-            $cellLink = '<a href="orga/cell/input/idCell/' . $contextCell->getId()
-                . '/fromIdCell/' . $cell->getId() . '/">'
-                . $this->translator->get($contextCell->getLabel())
-                . '</a>';
-            $eventText = __('Orga', 'auditTrail', $entry->getEventName(), [
-                    'INPUT' => '',
-                    'USER' => '<b>'.$entry->getUser()->getName().'</b>'
-                ]);
-
-            $dateTime = $locale->formatShortDateTime($entry->getDate());
-            $activity[] = [
-                'type' => 'history',
-                'dateTime' => $dateTime,
-                'author' => $entry->getUser()->getName(),
-                'cell' => $cellLink,
-                'content' => $eventText
             ];
         }
 

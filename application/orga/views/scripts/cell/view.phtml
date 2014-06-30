@@ -422,11 +422,11 @@ if (count($file) > 0) {
 </div>
 
 <div class="col-md-3">
-    <div class="comments">
+    <div class="history">
         <h3>
-            <?=___('Orga', 'comment', 'comments')?>
+            <?=___('UI', 'history', 'history')?>
             <small class="pull-right">
-                <a href="orga/cell/view-comments/idCell/<?=$currentCell->id?>/" class="refresh">
+                <a href="orga/cell/view-history/idCell/<?=$currentCell->id?>/" class="refresh">
                     <i class="fa fa-refresh fa-fw"></i>
                 </a>
             </small>
@@ -435,11 +435,11 @@ if (count($file) > 0) {
             <?=___('UI', 'loading', 'error')?>
         </div>
     </div>
-    <div class="history">
+    <div class="comments">
         <h3>
-            <?=___('UI', 'history', 'history')?>
+            <?=___('Orga', 'comment', 'comments')?>
             <small class="pull-right">
-                <a href="orga/cell/view-history/idCell/<?=$currentCell->id?>/" class="refresh">
+                <a href="orga/cell/view-comments/idCell/<?=$currentCell->id?>/" class="refresh">
                     <i class="fa fa-refresh fa-fw"></i>
                 </a>
             </small>
@@ -476,40 +476,6 @@ if (count($file) > 0) {
 
 </div>
 <script>
-$('.comments a.refresh').on('click', function(e) {
-    e.preventDefault();
-    $('.comments > h3 .refresh i').addClass('fa-spin');
-    $('.comments > div').html('<i class="fa fa-spinner fa-fw fa-spin fa-3x"></i> <?=addslashes(___('Orga', 'comment', 'loadingComments'))?>');
-    $.ajax({
-        url: $(this).attr('href'),
-        type: "GET",
-        success: function(data) {
-            $('.comments > h3 .refresh i').removeClass('fa-spin');
-            $('.comments > div').html('');
-            if (data.length > 0) {
-                $.each(data, function() {
-                    var date = this.date;
-                    $('.comments > div').append('<div data-date="' + date + '"><h4><span>' + date + '</span></h4></div>');
-                    var divDate = $('.comments > div > div[data-date="' + date + '"]');
-                    $.each(this.comments, function() {
-                        divDate.append(
-                            '<div class="row">' +
-                                '<div class="col-md-2">' + this.time + '</div>' +
-                                '<div class="col-md-10">' + this.comment + '</div>' +
-                            '</div>'
-                        );
-                    });
-                });
-            } else {
-                $('.comments > div').html('<p><?=addslashes(___('Orga', 'comment', 'noComment'))?></p>');
-            }
-        },
-        error: function(jqXHR) {
-            $('.comments > h3 .refresh i').removeClass('fa-spin');
-            $('.comments > div').html('<?=addslashes(___('Orga', 'comment', 'errorWhileLoadingComments'))?>');
-        }
-    });
-});
 $('.history a.refresh').on('click', function(e) {
     e.preventDefault();
     $('.history > h3 .refresh i').addClass('fa-spin');
@@ -541,6 +507,40 @@ $('.history a.refresh').on('click', function(e) {
         error: function(jqXHR) {
             $('.history > h3 .refresh i').removeClass('fa-spin');
             $('.history > div').html('<?=addslashes(___('UI', 'loading', 'error'))?>');
+        }
+    });
+});
+$('.comments a.refresh').on('click', function(e) {
+    e.preventDefault();
+    $('.comments > h3 .refresh i').addClass('fa-spin');
+    $('.comments > div').html('<i class="fa fa-spinner fa-fw fa-spin fa-3x"></i> <?=addslashes(___('Orga', 'comment', 'loadingComments'))?>');
+    $.ajax({
+        url: $(this).attr('href'),
+        type: "GET",
+        success: function(data) {
+            $('.comments > h3 .refresh i').removeClass('fa-spin');
+            $('.comments > div').html('');
+            if (data.length > 0) {
+                $.each(data, function() {
+                    var date = this.date;
+                    $('.comments > div').append('<div data-date="' + date + '"><h4><span>' + date + '</span></h4></div>');
+                    var divDate = $('.comments > div > div[data-date="' + date + '"]');
+                    $.each(this.comments, function() {
+                        divDate.append(
+                            '<div class="row">' +
+                                '<div class="col-md-2">' + this.time + '</div>' +
+                                '<div class="col-md-10">' + this.comment + '</div>' +
+                                '</div>'
+                        );
+                    });
+                });
+            } else {
+                $('.comments > div').html('<p><?=addslashes(___('Orga', 'comment', 'noComment'))?></p>');
+            }
+        },
+        error: function(jqXHR) {
+            $('.comments > h3 .refresh i').removeClass('fa-spin');
+            $('.comments > div').html('<?=addslashes(___('Orga', 'comment', 'errorWhileLoadingComments'))?>');
         }
     });
 });
