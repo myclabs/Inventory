@@ -300,4 +300,57 @@ class Orga_Model_Repository_Cell extends Core_Model_Repository
 
         return $comments;
     }
+
+    /**
+     * Retourne les derniers commentaires pour la cellule et ses sous-cellules.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param DateTime        $upTo
+     * @param DateTime        $from
+     *
+     * @return Orga_Model_Cell_InputComment[]
+     */
+    public function getUpToComments(Orga_Model_Cell $cell, DateTime $upTo, DateTime $from=null)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('comment')
+            ->from('Orga_Model_Cell_InputComment', 'comment')
+            ->join('comment.cell', 'cell')
+            ->orderBy('comment.creationDate', 'DESC')
+            ->where($qb->expr()->gte('comment.creationDate', ':upTo'));
+        $qb->setParameter('upTo', $upTo);
+        if (($from !== null) && ($upTo < $from)) {
+            $qb->andWhere($qb->expr()->lte('comment.creationDate', ':from'));
+            $qb->setParameter('from', $from);
+        }
+
+        $this->addCellAndChildrenConditionsToQueryBuilder($qb, $cell, 'cell');
+
+        $comments = $qb->getQuery()->getResult();
+
+        return $comments;
+    }
+
+    /**
+     * Retourne les derniers commentaires pour la cellule et ses sous-cellules.
+     *
+     * @param Orga_Model_Cell $cell
+     * @param DateTime        $from
+     *
+     * @return Orga_Model_Cell_InputComment[]
+     */
+    public function hasFromComments(Orga_Model_Cell $cell, DateTime $from=null)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select($qb->expr()->count('comment'))
+            ->from('Orga_Model_Cell_InputComment', 'comment')
+            ->join('comment.cell', 'cell')
+            ->orderBy('comment.creationDate', 'DESC')
+            ->where($qb->expr()->lte('comment.creationDate', ':from'))
+            ->setParameter('from', $from);
+
+        $this->addCellAndChildrenConditionsToQueryBuilder($qb, $cell, 'cell');
+
+        return ($qb->getQuery()->getSingleScalarResult() > 0);
+    }
 }

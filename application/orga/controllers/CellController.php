@@ -552,17 +552,20 @@ class Orga_CellController extends Core_Controller
         /** @var Orga_Model_Cell $cell */
         $cell = Orga_Model_Cell::load($idCell);
 
-        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
-        $context->setCell($cell);
         $locale = Core_Locale::loadDefault();
 
         $events = [];
+
+        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
+        $context->setCell($cell);
         foreach ($this->auditTrailRepository->findLatestForOrganizationContext($context, 10) as $entry) {
+            $contextCell = $entry->getContext()->getCell();
+            $cellLink = '<a href="orga/cell/input/idCell/' . $contextCell->getId()
+                . '/fromIdCell/' . $cell->getId() . '/">'
+                . $this->translator->get($contextCell->getLabel())
+                . '</a>';
             $eventText = __('Orga', 'auditTrail', $entry->getEventName(), [
-                'INPUT' => '<a href="orga/cell/input/idCell/' . $entry->getContext()->getCell()->getId()
-                                . '/fromIdCell/' . $cell->getId() . '/">'
-                                . $this->translator->get($entry->getContext()->getCell()->getLabel())
-                            . '</a>',
+                'INPUT' => $cellLink,
                 'USER' => '<b>'.$entry->getUser()->getName().'</b>'
             ]);
 
@@ -584,23 +587,26 @@ class Orga_CellController extends Core_Controller
     {
         session_write_close();
 
+        $idCell = $this->getParam('idCell');
         /** @var Orga_Model_Cell $cell */
-        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
-
-        /** @var Orga_Model_Repository_Cell $cellRepository */
-        $cellRepository = $this->entityManager->getRepository(Orga_Model_Cell::class);
+        $cell = Orga_Model_Cell::load($idCell);
 
         $locale = Core_Locale::loadDefault();
 
         $comments = [];
+
+        /** @var Orga_Model_Repository_Cell $cellRepository */
+        $cellRepository = $this->entityManager->getRepository(Orga_Model_Cell::class);
         /** @var Orga_Model_Cell_InputComment $comment */
         foreach ($cellRepository->getLatestComments($cell, 10) as $comment) {
+            $contextCell = $comment->getCell();
+            $cellLink = ' <a href="orga/cell/input/idCell/' . $contextCell->getId()
+                . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
+                . $this->translator->get($contextCell->getLabel())
+                . '</a>';
             $commentText = __('Orga', 'comment', 'by') . ' <b>' . $comment->getAuthor()->getName() . '</b> '
                 . __('Orga', 'input', 'aboutInput')
-                . ' <a href="orga/cell/input/idCell/' . $comment->getCell()->getId()
-                    . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
-                    . $this->translator->get($comment->getCell()->getLabel())
-                . '</a>' . __('UI', 'other', ':')
+                . $cellLink . __('UI', 'other', ':')
                 . '« '
                 . Core_Tools::truncateString(Core_Tools::removeTextileMarkUp($comment->getText()), 150)
                 . ' ».';
@@ -612,7 +618,130 @@ class Orga_CellController extends Core_Controller
             }
             $comments[$date]['comments'][] = ['time' => $time, 'comment' => $commentText];
         }
+
         $this->sendJsonResponse(array_values($comments));
+    }
+
+    /**
+     * @Secure("viewCell")
+     */
+    public function viewActivityAction()
+    {
+        session_write_close();
+
+        $idCell = $this->getParam('idCell');
+        $this->view->assign('idCell', $idCell);
+
+        $from = new DateTime();
+        $this->view->assign('fromDate', $from->getTimestamp());
+    }
+
+    /**
+     * @Secure("viewCell")
+     */
+    public function viewMoreActivityAction()
+    {
+        session_write_close();
+
+        $idCell = $this->getParam('idCell');
+        /** @var Orga_Model_Cell $cell */
+        $cell = Orga_Model_Cell::load($idCell);
+
+        $from = new DateTime('@'.$this->getParam('from'));
+        $upTo = clone $from;
+        $upTo = $upTo->sub(new DateInterval('P1M'));
+
+        $activity = [];
+        $hasComments = true;
+        $hasHistory = true;
+        while ((count($activity) == 0) && ($hasComments || $hasHistory)) {
+            $activity = $this->findActivity($cell, $from, $upTo);
+
+            $from = $from->sub(new DateInterval('P1M'));
+            $upTo = $upTo->sub(new DateInterval('P1M'));
+
+            /** @var Orga_Model_Repository_Cell $cellRepository */
+            $cellRepository = $this->entityManager->getRepository(Orga_Model_Cell::class);
+            $hasComments = $cellRepository->hasFromComments($cell, $from);
+
+            $context = new OrganizationContext($cell->getGranularity()->getOrganization());
+            $context->setCell($cell);
+            $hasHistory = $this->auditTrailRepository->hasFromForOrganizationContext($context, $from);
+        }
+
+        if (count($activity) == 0) {
+            $upTo = new DateTime('@'.$this->getParam('from'));
+        }
+        $this->sendJsonResponse([
+            'activity' => array_values($activity),
+            'dateFrom' => $upTo->getTimestamp()
+        ]);
+    }
+
+    protected function findActivity(Orga_Model_Cell $cell, DateTime $from, DateTime $upTo)
+    {
+        $activity = [];
+
+        $locale = Core_Locale::loadDefault();
+
+        /** @var Orga_Model_Repository_Cell $cellRepository */
+        $cellRepository = $this->entityManager->getRepository(Orga_Model_Cell::class);
+        /** @var Orga_Model_Cell_InputComment $comment */
+        foreach ($cellRepository->getUpToComments($cell, $upTo, $from) as $comment) {
+            $contextCell = $comment->getCell();
+            $cellLink = ' <a href="orga/cell/input/idCell/' . $contextCell->getId()
+                . '/fromIdCell/' . $cell->getId() . '/tab/comments/">'
+                . $this->translator->get($contextCell->getLabel())
+                . '</a>';
+            $commentText = '<blockquote>'
+                . '« '
+                . Core_Tools::removeTextileMarkUp($comment->getText())
+                . ' ».'
+                . '<footer>'
+                . __('Orga', 'comment', 'by') .
+                ' <b>' . $comment->getAuthor()->getName() . '</b> '
+                . __('Orga', 'input', 'aboutInput')
+                . '</footer>'
+                .'</blockquote>';
+
+            $dateTime = $locale->formatShortDateTime($comment->getCreationDate());
+            $activity[] = [
+                'type' => 'comment',
+                'dateTime' => $dateTime,
+                'author' => $comment->getAuthor()->getName(),
+                'cell' => $cellLink,
+                'content' => $commentText
+            ];
+        }
+
+        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
+        $context->setCell($cell);
+        foreach ($this->auditTrailRepository->findUpToForOrganizationContext($context, $upTo, $from) as $entry) {
+            $contextCell = $entry->getContext()->getCell();
+            $cellLink = '<a href="orga/cell/input/idCell/' . $contextCell->getId()
+                . '/fromIdCell/' . $cell->getId() . '/">'
+                . $this->translator->get($contextCell->getLabel())
+                . '</a>';
+            $eventText = __('Orga', 'auditTrail', $entry->getEventName(), [
+                    'INPUT' => '',
+                    'USER' => '<b>'.$entry->getUser()->getName().'</b>'
+                ]);
+
+            $dateTime = $locale->formatShortDateTime($entry->getDate());
+            $activity[] = [
+                'type' => 'history',
+                'dateTime' => $dateTime,
+                'author' => $entry->getUser()->getName(),
+                'cell' => $cellLink,
+                'content' => $eventText
+            ];
+        }
+
+        uasort($activity, function ($a, $b) {
+            return strcmp($b['dateTime'], $a['dateTime']);
+        });
+
+        return $activity;
     }
 
     /**

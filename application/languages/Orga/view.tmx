@@ -563,6 +563,44 @@
             </tuv>
         </tu>
 
+        <!-- Activity -->
+
+        <tu tuid="displayMoreActivity">
+            <tuv xml:lang="fr">
+                <seg>Afficher plus</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Display more</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="loadingActivity">
+            <tuv xml:lang="fr">
+                <seg>Chargement de l'activité…</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Loading activity…</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="errorWhileLoadingActivity">
+            <tuv xml:lang="fr">
+                <seg>Erreur durant le chargement de l'activité.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Error while loading activity.</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="noMoreActivity">
+            <tuv xml:lang="fr">
+                <seg>Pas d'activité plus ancienne trouvé.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No more activity found.</seg>
+            </tuv>
+        </tu>
+
 
     </body>
 </tmx>

@@ -448,6 +448,13 @@ if (count($file) > 0) {
             <?=___('UI', 'loading', 'error')?>
         </div>
     </div>
+    <hr>
+    <p class="text-center">
+        <a href="orga/cell/view-activity/idCell/<?=$currentCell->id?>/" class="btn btn-default">
+            <?=___('Orga', 'view', 'viewActivity')?>
+        </a>
+    </p>
+    <hr>
     <?php if ($this->canAddMembers) : ?>
     <div class="addMember">
         <h3>
@@ -471,13 +478,13 @@ if (count($file) > 0) {
 <script>
 $('.comments a.refresh').on('click', function(e) {
     e.preventDefault();
-    $('.comments > h3 i').addClass('fa-spin');
+    $('.comments > h3 .refresh i').addClass('fa-spin');
     $('.comments > div').html('<i class="fa fa-spinner fa-fw fa-spin fa-3x"></i> <?=addslashes(___('Orga', 'comment', 'loadingComments'))?>');
     $.ajax({
         url: $(this).attr('href'),
         type: "GET",
         success: function(data) {
-            $('.comments > h3 i').removeClass('fa-spin');
+            $('.comments > h3 .refresh i').removeClass('fa-spin');
             $('.comments > div').html('');
             if (data.length > 0) {
                 $.each(data, function() {
@@ -498,20 +505,20 @@ $('.comments a.refresh').on('click', function(e) {
             }
         },
         error: function(jqXHR) {
-            $('.comments > h3 i').removeClass('fa-spin');
+            $('.comments > h3 .refresh i').removeClass('fa-spin');
             $('.comments > div').html('<?=addslashes(___('Orga', 'comment', 'errorWhileLoadingComments'))?>');
         }
     });
 });
 $('.history a.refresh').on('click', function(e) {
     e.preventDefault();
-    $('.history > h3 i').addClass('fa-spin');
+    $('.history > h3 .refresh i').addClass('fa-spin');
     $('.history > div').html('<i class="fa fa-spinner fa-fw fa-spin fa-3x"></i> <?=addslashes(___('UI', 'history', 'loadingHistory'))?>');
     $.ajax({
         url: $(this).attr('href'),
         type: "GET",
         success: function(data) {
-            $('.history > h3 i').removeClass('fa-spin');
+            $('.history > h3 .refresh i').removeClass('fa-spin');
             $('.history > div').html('');
             if (data.length > 0) {
                 $.each(data, function() {
@@ -532,7 +539,7 @@ $('.history a.refresh').on('click', function(e) {
             }
         },
         error: function(jqXHR) {
-            $('.history > h3 i').removeClass('fa-spin');
+            $('.history > h3 .refresh i').removeClass('fa-spin');
             $('.history > div').html('<?=addslashes(___('UI', 'loading', 'error'))?>');
         }
     });
