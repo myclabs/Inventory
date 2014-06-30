@@ -601,6 +601,15 @@
             </tuv>
         </tu>
 
+        <tu tuid="viewActivity">
+            <tuv xml:lang="fr">
+                <seg>Voir toute l'activité</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>View all activity.</seg>
+            </tuv>
+        </tu>
+
 
     </body>
 </tmx>
