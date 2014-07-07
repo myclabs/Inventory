@@ -243,10 +243,6 @@ class InputSerializer
         }
 
         foreach ($inputSet->getInputs() as $input) {
-            if ($input instanceof GroupInput) {
-                continue;
-            }
-
             $arr = [
                 'componentRef' => $input->getRefComponent(),
                 'visible'      => ! $input->isHidden(),
@@ -275,6 +271,7 @@ class InputSerializer
                     $component->getCalledAF()->initializeNewInput($templateInputSet);
                     $arr['subInputSetTemplate'] = $this->serializeInputSet($templateInputSet);
                     /** @var RepeatedSubAFInput $input */
+                    $arr['value'] = [];
                     foreach ($input->getValue() as $inputSet) {
                         $arr['value'][] = $this->serializeInputSet($inputSet);
                     }

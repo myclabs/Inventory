@@ -260,8 +260,8 @@ afModule.factory('validateInputSet', ['getInput', function (getInput) {
     };
 }]);
 
-afModule.controller('InputController', ['$scope', '$element', '$window', '$http', 'validateInputSet',
-function ($scope, $element, $window, $http, validateInputSet) {
+afModule.controller('InputController', ['$scope', '$element', '$window', '$http', '$timeout', 'validateInputSet',
+function ($scope, $element, $window, $http, $timeout, validateInputSet) {
     $scope.readOnly = $window.readOnly;
     $scope.af = $window.af;
     $scope.inputSet = $window.inputSet;
@@ -309,12 +309,14 @@ function ($scope, $element, $window, $http, validateInputSet) {
     };
 
     // When the input is edited
-    $scope.$watch('inputSet.inputs', function (newValue, oldValue) {
-        if ( newValue === oldValue ) {
-            return;
-        }
-        $scope.inputSet.status = 'in_progress';
-    }, true);
+    $timeout(function () {
+        $scope.$watch('inputSet.inputs', function (newValue, oldValue) {
+            if ( newValue === oldValue ) {
+                return;
+            }
+            $scope.inputSet.status = 'in_progress';
+        }, true);
+    }, 1000);
 
     // Preview results
     $scope.preview = function () {
