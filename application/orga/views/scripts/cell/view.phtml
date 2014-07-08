@@ -406,11 +406,13 @@ if (count($file) > 0) {
                         <option value="<?=$statusValue?>"><?=$statusLabel?></option>
                     <?php endforeach ?>
                 </select>
-                <select name="granularity<?=$narrowerGranularity->getId()?>_inputInconsistencies" data-filter="input-inconsistencies" class="form-control input-sm">
-                    <?php foreach ($inputInconsistenciesFilters as $inconsistenciesValue => $inconsistenciesLabel) : ?>
-                        <option value="<?=$inconsistenciesValue?>"><?=$inconsistenciesLabel?></option>
-                    <?php endforeach ?>
-                </select>
+                    <?php if ($narrowerGranularityArray['isTimedInput']) : ?>
+                    <select name="granularity<?=$narrowerGranularity->getId()?>_inputInconsistencies" data-filter="input-inconsistencies" class="form-control input-sm">
+                        <?php foreach ($inputInconsistenciesFilters as $inconsistenciesValue => $inconsistenciesLabel) : ?>
+                            <option value="<?=$inconsistenciesValue?>"><?=$inconsistenciesLabel?></option>
+                        <?php endforeach ?>
+                    </select>
+                    <?php endif; ?>
                 <?php endif; ?>
                 <button class="btn btn-default btn-sm reset"><i class="fa fa-search-minus fa-fw"></i> <?=___('UI', 'verb', 'reset')?></button>
                 <select name="show-cells" class="form-control input-sm withTooltip" title="<?=___('UI', 'datagridPagination', 'lineNumber')?>">

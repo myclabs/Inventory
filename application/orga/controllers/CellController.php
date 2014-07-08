@@ -119,6 +119,8 @@ class Orga_CellController extends Core_Controller
         $granularity = $cell->getGranularity();
         $organization = $granularity->getOrganization();
 
+        $timeAxis = $organization->getTimeAxis();
+
         $this->view->assign('cellVWFactory', $this->cellVMFactory);
         $this->view->assign('organization', $this->organizationVMFactory->createOrganizationView($organization, $connectedUser));
         $this->view->assign('currentCell', $this->cellVMFactory->createCellViewModel($cell, $connectedUser, true));
@@ -214,7 +216,12 @@ class Orga_CellController extends Core_Controller
             }
             // Input purpose.
             $isNarrowerGranularityInput = ($narrowerGranularity->getInputConfigGranularity() !== null);
+            $isNarrowerGranularityTimedInput = false;
             if ($isNarrowerGranularityInput) {
+                if ($timeAxis && $narrowerGranularity->hasAxis($timeAxis)) {
+                    $isNarrowerGranularityTimedInput = true;
+                }
+
                 if ($purpose !== '') {
                     $purpose .= __('Orga', 'view', 'separator');
                 }
@@ -271,6 +278,7 @@ class Orga_CellController extends Core_Controller
                     'showInventory' => $showInventoryFilter,
                     'isGranularityForInventoryStatus' => ($narrowerGranularity === $granularityForInventoryStatus),
                     'isInput' => $isNarrowerGranularityInput,
+                    'isTimedInput' => $isNarrowerGranularityTimedInput,
                     'isAnalyses' => $isNarrowerGranularityAnalyses,
                     'totalCells' => $totalChildCells
                 ];
