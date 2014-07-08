@@ -10,8 +10,10 @@ use AF\Domain\Algorithm\Input\BooleanInput;
  * @author matthieu.napoli
  * @author yoann.croizer
  */
-class CheckboxInput extends Input implements BooleanInput
+class CheckboxInput extends Input implements BooleanInput, InputErrorField
 {
+    use InputErrorMessage;
+
     /**
      * True if the checkbox is checked, else false
      * @var bool

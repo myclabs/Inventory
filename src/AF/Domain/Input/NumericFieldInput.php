@@ -14,8 +14,10 @@ use Calc_UnitValue;
  * @author matthieu.napoli
  * @author yoann.croizer
  */
-class NumericFieldInput extends Input implements NumericInput
+class NumericFieldInput extends Input implements NumericInput, InputErrorField
 {
+    use InputErrorMessage;
+
     /**
      * @var Calc_UnitValue
      */

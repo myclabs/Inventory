@@ -3,6 +3,8 @@
 namespace AF\Domain\Input\Select;
 
 use AF\Domain\Component\NumericField;
+use AF\Domain\Input\InputErrorField;
+use AF\Domain\Input\InputErrorMessage;
 use AF\Domain\InputSet\InputSet;
 use AF\Domain\Input\Input;
 use AF\Domain\Component\Component;
@@ -16,8 +18,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author matthieu.napoli
  * @author yoann.croizer
  */
-class SelectMultiInput extends Input implements StringCollectionInput
+class SelectMultiInput extends Input implements StringCollectionInput, InputErrorField
 {
+    use InputErrorMessage;
+
     /**
      * All selected options ref
      * @var string[]|Collection

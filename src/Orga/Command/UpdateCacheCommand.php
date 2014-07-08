@@ -3,10 +3,9 @@
 namespace Orga\Command;
 
 use Doctrine\ORM\EntityManager;
-use Orga_Service_Export;
 use Orga_Model_Organization;
 use Orga_Model_Granularity;
-use Orga_Model_Cell;
+use Orga_Service_InputService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,16 +23,26 @@ class UpdateCacheCommand extends Command
      * @var EntityManager
      */
     private $entityManager;
+    /**
+     * @var EntityManager
+     */
+    private $inputService;
 
     /**
      * @var bool
      */
     private $rebuildInputStatus = false;
 
+    /**
+     * @var bool
+     */
+    private $rebuildInputInconsistencies = false;
 
-    public function __construct(EntityManager $entityManager)
+
+    public function __construct(EntityManager $entityManager, Orga_Service_InputService $inputService)
     {
         $this->entityManager = $entityManager;
+        $this->inputService = $inputService;
 
         parent::__construct();
     }
@@ -42,7 +51,8 @@ class UpdateCacheCommand extends Command
     {
         $this->setName('orga-cache:rebuild')
             ->setDescription('Regénère les caches d\'orga')
-            ->addOption('input-status', null, InputOption::VALUE_NONE, "Update input status of cells");
+            ->addOption('input-status', null, InputOption::VALUE_NONE, "Update input status of cells")
+            ->addOption('input-inconsistencies', null, InputOption::VALUE_NONE, "Update input inconsistencies of InputSet");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -50,6 +60,9 @@ class UpdateCacheCommand extends Command
         $options = $input->getArguments();
         if (empty($options) || $input->getOption('input-status')) {
             $this->rebuildInputStatus = true;
+        }
+        if (empty($options) || $input->getOption('input-inconsistencies')) {
+            $this->rebuildInputInconsistencies = true;
         }
 
         $this->traverseOrganizations($output);
@@ -87,6 +100,9 @@ class UpdateCacheCommand extends Command
         foreach ($granularity->getCells() as $cell) {
             if ($this->rebuildInputStatus) {
                 $cell->updateInputStatus();
+            }
+            if ($this->rebuildInputInconsistencies) {
+                $this->inputService->updateInconsistentInputSetFromPreviousValue($cell);
             }
         }
     }

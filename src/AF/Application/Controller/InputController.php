@@ -6,6 +6,7 @@ use AF\Domain\AF;
 use AF\Domain\InputHistoryService;
 use AF\Domain\InputService;
 use AF\Domain\Input\Input;
+use AF\Domain\InputService\InputSetValuesValidator;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Annotation\Secure;
 
@@ -143,6 +144,25 @@ class AF_InputController extends Core_Controller
         $this->inputSessionStorage->saveInputSet($this->getParam('af'), $inputSet);
 
         $this->_helper->viewRenderer->setNoRender(true);
+    }
+
+    /**
+     * Validation de la saisie
+     * AJAX
+     * @Secure("editInputAF")
+     */
+    public function inputValidationAction()
+    {
+        /** @var $af AF */
+        $af = AF::load($this->getParam('id'));
+
+        $inputSet = $this->inputSerializer->unserialize($this->getParam('input'), $af);
+
+        $validator = new InputSetValuesValidator($inputSet);
+        $validator->validate();
+
+        $data = ['input' => $this->inputSerializer->serialize($inputSet)];
+        $this->sendJsonResponse($data);
     }
 
     /**

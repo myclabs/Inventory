@@ -182,80 +182,54 @@ afModule.factory('getInput', function () {
 /**
  * Valide une saisie.
  */
-afModule.factory('validateInputSet', ['getInput', function (getInput) {
-    return function validateInputSet(inputSet, components) {
+afModule.factory('updateInputs', ['getInput', function (getInput) {
+    return function updateInputs(inputSet, updatedInputSet, components) {
+        var context = {};
+        context['inputSet'] = inputSet;
+        context['updatedInputSet'] = updatedInputSet;
         angular.forEach(components, function (component) {
-            var input = getInput(inputSet, component);
-            var isEmpty = function (variable) {
-                return angular.isUndefined(variable) || variable === null || variable === ''
-                    || (angular.isArray(variable) && variable.length == 0);
-            };
-
-            // Reset
-            input.hasErrors = false;
-            input.error = null;
-
-            // Ignore hidden inputs
-            if (! input.visible) {
-                return;
-            }
-
+            var input = getInput(this.inputSet, component);
+            var updatedInput = getInput(this.updatedInputSet, component);
             switch (component.type) {
                 case 'numeric':
-                    var value = null;
-                    var uncertainty = '';
-                    if (angular.isDefined(input.value) && !isEmpty(input.value.digitalValue)) {
-                        value = input.value.digitalValue;
-                    }
-                    if (angular.isDefined(input.value) && !isEmpty(input.value.uncertainty)) {
-                        uncertainty = input.value.uncertainty;
-                    }
-                    // Errors
-                    if ((! component.required) && (value === null)) {
-                        break;
-                    } else if (component.required && (value === null)) {
-                        input.hasErrors = true;
-                        input.error = __('AF', 'inputInput', 'emptyRequiredField');
-                    } else if (! /^-?[0-9]*[.,]?[0-9]*$/.test(value)) {
-                        input.hasErrors = true;
-                        input.error = __('UI', 'formValidation', 'invalidNumber');
-                    } else if (! /^[0-9]*$/.test(uncertainty)) {
-                        input.hasErrors = true;
-                        input.error = __('UI', 'formValidation', 'invalidUncertainty');
-                    }
-                    // Warnings valeur "bizarre"
-                    input.inconsistent = false;
-                    if (input.hasErrors === false && input.previousValue !== undefined) {
-                        var isValueValid = (value > input.previousValue / 2) && (value < input.previousValue * 2);
-                        input.inconsistent = !isValueValid;
-                    }
-                    break;
                 case 'select':
                 case 'radio':
                 case 'select-multiple':
                 case 'text':
                 case 'textarea':
-                    // Errors
-                    if (component.required && isEmpty(input.value)) {
-                        input.hasErrors = true;
-                        input.error = __('AF', 'inputInput', 'emptyRequiredField');
-                    } else if (input.value === 'null') {
-                        input.hasErrors = true;
-                        input.error = __('AF', 'inputInput', 'emptyRequiredField');
-                    }
+                    input.hasErrors = updatedInput.hasErrors;
+                    input.error = updatedInput.error;
+                    input.inconsistent = updatedInput.inconsistent;
                     break;
                 case 'group':
-                    validateInputSet(inputSet, component.components);
+                    updateInputs(this.inputSet, this.updatedInputSet, component.components);
                     break;
                 case 'subaf-single':
-                    validateInputSet(input.value, component.calledAF.components);
+                    updateInputs(input.value, updatedInput.value, component.calledAF.components);
                     break;
                 case 'subaf-multi':
-                    angular.forEach(input.value, function (subInputSet) {
-                        validateInputSet(subInputSet, component.calledAF.components);
-                    });
+                    angular.forEach(input.value, function (subInputSet, index) {
+                        updateInputs(subInputSet, this.value[index], component.calledAF.components);
+                    }, updatedInput);
                     break;
             }
+        }, context);
+    };
+}]);
+afModule.factory('validateInputSet', ['$window', '$http', 'updateInputs',
+function ($window, $http, updateInputs) {
+    return function validateInputSet(inputSet, components) {
+        var urlParams = $window.afUrlParams;
+        var inputValidationUrl = $window.inputValidationUrl;
+        var data = {
+            input: inputSet,
+            urlParams: urlParams,
+            idInputSet: inputSet.id
+        };
+        $http.post(inputValidationUrl, data).success(function (response) {
+            updateInputs(inputSet, response.input, components);
+        }).error(function () {
+            addMessage(__('Core', 'exception', 'applicationError'), 'error');
         });
     };
 }]);

@@ -14,6 +14,7 @@ use AF\Domain\AF;
 use AF\Domain\AFCopyService;
 use AF\Domain\AFLibrary;
 use AF\Domain\InputService;
+use AF\Domain\InputService\InputSetValuesValidator;
 use AF\Domain\InputSet\PrimaryInputSet;
 use AF\Domain\Algorithm\Numeric\NumericExpressionAlgo;
 use Core\Annotation\Secure;
@@ -72,6 +73,7 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->addBaseTabs();
         $viewConfiguration->setPageTitle($this->translator->get($af->getLabel()));
         $viewConfiguration->setExitUrl('af/library/view/id/' . $af->getLibrary()->getId());
+        $viewConfiguration->setInputValidationUrl('af/input/input-validation?id=' . $af->getId());
         $viewConfiguration->setResultsPreviewUrl('af/input/results-preview?id=' . $af->getId());
 
         // Charge la saisie depuis la session
@@ -111,9 +113,11 @@ class AF_AfController extends Core_Controller
         // Crée une nouvelle saisie initialisée avec les valeurs par défaut
         if ($inputSet === null) {
             $inputSet = $this->inputService->createDefaultInputSet($af);
+        } else {
+            // Ajout des informations de validation.
+            $validator = new InputSetValuesValidator($inputSet);
+            $validator->validate();
         }
-
-        $previousInputSet = $viewConfiguration->getPreviousInputSet();
 
         $urlParams = [
             'actionStack' => $viewConfiguration->getActionStack(),
@@ -123,8 +127,10 @@ class AF_AfController extends Core_Controller
         $this->view->assign('viewConfiguration', $viewConfiguration);
         $this->view->assign('serializedAF', $this->afSerializer->serialize($af));
         $this->view->assign('inputSet', $inputSet);
-        $this->view->assign('serializedInputSet', $this->inputSerializer->serialize($inputSet, $previousInputSet));
+        $this->view->assign('serializedInputSet', $this->inputSerializer->serialize($inputSet));
         $this->view->assign('urlParams', $urlParams);
+
+        $this->entityManager->clear();
     }
 
     /**

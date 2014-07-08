@@ -266,6 +266,7 @@ class CellViewModelFactory
                 $cellViewModel->inputCompletion = 0;
             }
             $cellViewModel->inputStatusTitle = $this->inputStatusList[$cellViewModel->inputStatus];
+            $cellViewModel->inputInconsistencies = $cell->getNumberOfInconsistenciesInInputSet();
 
             $cellViewModel->showInput = true;
         }

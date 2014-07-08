@@ -23,6 +23,11 @@ $inputStatusFilters = [
     Orga_Model_Cell::INPUT_STATUS_NOT_STARTED => ___('Orga', 'view', 'statusNotStarted'),
     Orga_Model_Cell::INPUT_STATUS_AF_NOT_CONFIGURED => ___('Orga', 'view', 'statusAFNotConfigured'),
 ];
+$inputInconsistenciesFilters = [
+    null => ___('Orga', 'view', 'allInputValues'),
+    'with' => ___('Orga', 'view', 'inputWithInconsistentValues'),
+    'without' => ___('Orga', 'view', 'inputWithoutInconsistentValues'),
+];
 
 $defaultDataFirstCell = 0;
 
@@ -401,6 +406,11 @@ if (count($file) > 0) {
                         <option value="<?=$statusValue?>"><?=$statusLabel?></option>
                     <?php endforeach ?>
                 </select>
+                <select name="granularity<?=$narrowerGranularity->getId()?>_inputInconsistencies" data-filter="input-inconsistencies" class="form-control input-sm">
+                    <?php foreach ($inputInconsistenciesFilters as $inconsistenciesValue => $inconsistenciesLabel) : ?>
+                        <option value="<?=$inconsistenciesValue?>"><?=$inconsistenciesLabel?></option>
+                    <?php endforeach ?>
+                </select>
                 <?php endif; ?>
                 <button class="btn btn-default btn-sm reset"><i class="fa fa-search-minus fa-fw"></i> <?=___('UI', 'verb', 'reset')?></button>
                 <select name="show-cells" class="form-control input-sm withTooltip" title="<?=___('UI', 'datagridPagination', 'lineNumber')?>">
@@ -756,6 +766,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                     var inputStatusIcon = (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_FINISHED?>') ? 'certificate' : (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_COMPLETE?>') ? 'check-square-o' : (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_CALCULATION_INCOMPLETE?>') ? 'warning' : (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_INPUT_INCOMPLETE?>') ? 'pencil-square-o' : (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_NOT_STARTED?>') ? 'square-o' : (this.inputStatus == '<?=Orga_Model_Cell::INPUT_STATUS_AF_NOT_CONFIGURED?>') ? 'wrench' : 'ban';
                     inputStatusP +=
                         '<a class="go-input btn btn-link btn-sm withTooltip' + (((this.inventoryStatus != '<?=Orga_Model_Cell::INVENTORY_STATUS_NOTLAUNCHED?>') && (this.inputStatus != '<?=Orga_Model_Cell::INPUT_STATUS_AF_NOT_CONFIGURED?>')) ? '' : ' disabled') + '" href="orga/cell/input/idCell/' + this.id + '/fromIdCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">' +
+                            ((this.inputInconsistencies > 0) ? '<i class="fa fa-exclamation-triangle fa-fw"></i> ' : '') +
                             '<?=___('Orga', 'view', 'inputLinkDetail')?>' +
                         '</a>' +
                         '<span class="input-status withTooltip" title="' + this.inputStatusTitle + '">' +
@@ -763,7 +774,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                         '</span>';
                 }
                 granularity.append(
-                    '<tr class="cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-inventory-status="' + this.inventoryStatus + '">' +
+                    '<tr class="cell" data-tag="' + this.tag + '" data-input-status="' + this.inputStatus + '" data-input-inconsistencies="' + this.inputInconsistencies + '" data-inventory-status="' + this.inventoryStatus + '">' +
                         cellTitle +
                         '<td>'+
                             inputStatusP +

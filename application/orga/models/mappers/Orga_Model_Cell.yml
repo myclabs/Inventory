@@ -28,16 +28,20 @@ Orga_Model_Cell:
       column: allParentsRelevant
       type: boolean
       nullable: false
-    inputStatus:
-      column: inputStatus
-      type: string
-      length: 35
-      nullable: false
     inventoryStatus:
       column: inventoryStatus
       type: string
       length: 35
       nullable: false
+    inputStatus:
+      column: inputStatus
+      type: string
+      length: 35
+      nullable: false
+    numberOfInconsistenciesInInputSet:
+      column: numberOfInconsistenciesInInputSet
+      type: integer
+      nullable: true
 
   oneToOne:
     docLibraryForAFInputSetPrimary:

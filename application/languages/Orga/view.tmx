@@ -188,6 +188,31 @@
             </tuv>
         </tu>
 
+        <tu tuid="allInputValues">
+            <tuv xml:lang="fr">
+                <seg>Toutes valeurs</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>All values</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputWithInconsistentValues">
+            <tuv xml:lang="fr">
+                <seg>Avec valeurs suspectes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>With inconsistent values</seg>
+            </tuv>
+        </tu>
+        <tu tuid="inputWithoutInconsistentValues">
+            <tuv xml:lang="fr">
+                <seg>Sans valeur suspecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Without inconsistent values</seg>
+            </tuv>
+        </tu>
+
         <!-- Tooltips des icônes -->
 
         <tu tuid="contactAdministrators">

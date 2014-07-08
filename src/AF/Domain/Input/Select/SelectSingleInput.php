@@ -6,13 +6,17 @@ use AF\Domain\Component\NumericField;
 use AF\Domain\Input\Input;
 use AF\Domain\Component\Select\SelectOption;
 use AF\Domain\Algorithm\Input\StringInput;
+use AF\Domain\Input\InputErrorField;
+use AF\Domain\Input\InputErrorMessage;
 
 /**
  * @author matthieu.napoli
  * @author yoann.croizer
  */
-class SelectSingleInput extends Input implements StringInput
+class SelectSingleInput extends Input implements StringInput, InputErrorField
 {
+    use InputErrorMessage;
+
     /**
      * Selected option's ref
      * @var string|null

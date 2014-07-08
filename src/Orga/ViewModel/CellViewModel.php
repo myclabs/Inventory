@@ -126,4 +126,9 @@ class CellViewModel
      * @var int
      */
     public $inputCompletion = 0;
+
+    /**
+     * @var int
+     */
+    public $inputInconsistencies = 0;
 }

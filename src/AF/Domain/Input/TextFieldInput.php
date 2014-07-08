@@ -13,8 +13,10 @@ use AF\Domain\Algorithm\Input\StringInput;
  * @author matthieu.napoli
  * @author yoann.croizer
  */
-class TextFieldInput extends Input implements StringInput
+class TextFieldInput extends Input implements StringInput, InputErrorField
 {
+    use InputErrorMessage;
+
     /**
      * @var string
      */

@@ -59,6 +59,12 @@ class AFViewConfiguration
     protected $actionStack;
 
     /**
+     * URL to call for validating the input
+     * @var string
+     */
+    protected $inputValidationUrl;
+
+    /**
      * URL to call for the results preview
      * @var string
      */
@@ -299,6 +305,22 @@ class AFViewConfiguration
             $action['params'] = $params;
         }
         $this->actionStack[] = $action;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setInputValidationUrl($url)
+    {
+        $this->inputValidationUrl = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInputValidationUrl()
+    {
+        return $this->inputValidationUrl;
     }
 
     /**

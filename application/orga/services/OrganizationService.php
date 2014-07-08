@@ -154,7 +154,7 @@ class Orga_Service_OrganizationService
 
         $task = new ServiceCallTask(
             'Orga_Service_InputService',
-            'updateInputsFromOrganization',
+            'updateInconsistentInputsFromOrganization',
             [
                 $organiszation
             ]

@@ -4,6 +4,7 @@ use Account\Application\Service\OrganizationViewFactory;
 use AF\Application\AFViewConfiguration;
 use AF\Architecture\Service\InputSerializer;
 use AF\Domain\AF;
+use AF\Domain\InputService\InputSetValuesValidator;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
 use DW\Application\Service\Export\PdfSpecific;
@@ -496,6 +497,12 @@ class Orga_CellController extends Core_Controller
                         $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inventoryStatus', $filter['value']));
                     } else if ($filter['name'] === ($filterPrefix . 'inputStatus')) {
                         $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('inputStatus', $filter['value']));
+                    } else if ($filter['name'] === ($filterPrefix . 'inputInconsistencies')) {
+                        if ($filter['value'] === 'without') {
+                            $childCellsCriteria->andWhere($childCellsCriteria->expr()->lte('numberOfInconsistenciesInInputSet', 0));
+                        } else {
+                            $childCellsCriteria->andWhere($childCellsCriteria->expr()->gt('numberOfInconsistenciesInInputSet', 0));
+                        }
                     } else {
                         $childCellsCriteria->andWhere($childCellsCriteria->expr()->contains('tag', $filter['value']));
                     }
@@ -530,6 +537,12 @@ class Orga_CellController extends Core_Controller
                         $childCellsQuery->filter->addCondition('inventoryStatus', $filter['value']);
                     } else if ($filter['name'] === ($filterPrefix . 'inputStatus')) {
                         $childCellsQuery->filter->addCondition('inputStatus', $filter['value']);
+                    } else if ($filter['name'] === ($filterPrefix . 'inputInconsistencies')) {
+                        if ($filter['value'] === 'without') {
+                            $childCellsQuery->filter->addCondition('numberOfInconsistenciesInInputSet', 0, Core_Model_Filter::OPERATOR_EQUAL);
+                        } else {
+                            $childCellsQuery->filter->addCondition('numberOfInconsistenciesInInputSet', 0, Core_Model_Filter::OPERATOR_HIGHER);
+                        }
                     } else {
                         $childCellsQuery->filter->addCondition('tag', $filter['value'], Core_Model_Filter::OPERATOR_CONTAINS);
                     }
@@ -1428,6 +1441,9 @@ class Orga_CellController extends Core_Controller
             __('UI', 'name', 'input').' <small>'.$this->translator->get($cell->getLabel()).'</small>'
         );
         $viewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['idCell' => $cell->getId()]);
+        $viewConfiguration->setInputValidationUrl(
+            'orga/cell/input-validation?id=' . $af->getId() . '&idCell=' . $cell->getId()
+        );
         $viewConfiguration->setResultsPreviewUrl(
             'orga/cell/input-preview?id=' . $af->getId() . '&idCell=' . $cell->getId()
         );
@@ -1483,6 +1499,30 @@ class Orga_CellController extends Core_Controller
             'id' => $af->getId(),
             'viewConfiguration' => $viewConfiguration,
         ]);
+    }
+
+    /**
+     * @see \AF_InputController::inputValidationAction
+     * @Secure("inputCell")
+     */
+    public function inputValidationAction()
+    {
+        $cell = Orga_Model_Cell::load($this->getParam('idCell'));
+
+        /** @var $af AF */
+        $af = AF::load($this->getParam('id'));
+
+        $inputSet = $this->inputSerializer->unserialize($this->getParam('input'), $af);
+
+        $validator = new InputSetValuesValidator($inputSet);
+        $validator->validate();
+
+        $this->inputService->updateInconsistentInputSetFromPreviousValue($cell, $inputSet);
+
+        $data = ['input' => $this->inputSerializer->serialize($inputSet)];
+        $this->sendJsonResponse($data);
+
+        $this->entityManager->clear();
     }
 
     /**

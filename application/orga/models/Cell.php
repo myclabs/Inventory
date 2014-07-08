@@ -143,6 +143,13 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
     protected $aFInputSetPrimary = null;
 
     /**
+     * Cache du nombre d'erreur dans l'InputSet.
+     *
+     * @var int
+     */
+    protected $numberOfInconsistenciesInInputSet = 0;
+
+    /**
      * Librairie utilisée pour stocker les documents des InputSets de la cellule et des cellules enfants.
      *
      * @var Library
@@ -1133,6 +1140,25 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             // Pas d'AF spécifié.
         }
         return null;
+    }
+
+    /**
+     * @param $number
+     * @return $this
+     */
+    public function setNumberOfInconsistenciesInInputSet($number)
+    {
+        $this->numberOfInconsistenciesInInputSet = (int) $number;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfInconsistenciesInInputSet()
+    {
+        return $this->numberOfInconsistenciesInInputSet;
     }
 
     /**

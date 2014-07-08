@@ -2,6 +2,7 @@
 
 use AF\Domain\AF;
 use AF\Domain\InputService;
+use AF\Domain\InputService\InputSetInconsistencyFinder;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
@@ -42,14 +43,42 @@ class Orga_Service_InputService
     /**
      * @param Orga_Model_Organization $organization
      */
-    public function updateInputsFromOrganization(Orga_Model_Organization $organization)
+    public function updateInconsistentInputsFromOrganization(Orga_Model_Organization $organization)
     {
         $timeAxis = $organization->getTimeAxis();
 
-        //@todo Voir avec Matthieu pour la mise à jour de l'"incenstitent" de l'input.
         foreach ($organization->getInputGranularities() as $inputGranularity) {
-            foreach ($inputGranularity->getCells() as $inputCell) {
+            if ($timeAxis && $inputGranularity->hasAxis($timeAxis)) {
+                foreach ($inputGranularity->getCells() as $inputCell) {
+                    $this->updateInconsistentInputSetFromPreviousValue($inputCell);
+                }
+            }
+        }
+    }
 
+    /**
+     * @param Orga_Model_Cell $cell
+     * @param PrimaryInputSet $inputSet
+     */
+    public function updateInconsistentInputSetFromPreviousValue(Orga_Model_Cell $cell, PrimaryInputSet $inputSet=null)
+    {
+        if ($inputSet === null) {
+            $inputSet = $cell->getAFInputSetPrimary();
+        }
+        if ($inputSet === null) {
+            return;
+        }
+
+        // Saisie de l'année précédente
+        $timeAxis = $cell->getGranularity()->getOrganization()->getTimeAxis();
+        if ($timeAxis && $cell->getGranularity()->hasAxis($timeAxis)) {
+            $previousCell = $cell->getPreviousCellForAxis($timeAxis);
+            if ($previousCell) {
+                $previousInput = $previousCell->getAFInputSetPrimary();
+                if ($previousInput !== null) {
+                    $inconsistencyFinder = new InputSetInconsistencyFinder($inputSet, $previousInput);
+                    $cell->setNumberOfInconsistenciesInInputSet($inconsistencyFinder->run());
+                }
             }
         }
     }
@@ -100,6 +129,17 @@ class Orga_Service_InputService
 
         // Lance l'évènement
         $this->eventDispatcher->dispatch($event::NAME, $event);
+
+        // Vérification des valeurs précédente.
+        $this->updateInconsistentInputSetFromPreviousValue($cell);
+        // Mise à jour des valeurs suivantes.
+        $timeAxis = $cell->getGranularity()->getOrganization()->getTimeAxis();
+        if ($timeAxis && $cell->getGranularity()->hasAxis($timeAxis)) {
+            $nextCell = $cell->getNextCellForAxis($timeAxis);
+            if ($nextCell) {
+                $this->updateInconsistentInputSetFromPreviousValue($nextCell);
+            }
+        }
 
         // Regénère DW
         $this->workDispatcher->run(

@@ -554,12 +554,13 @@ class Orga_OrganizationController extends Core_Controller
         /** @var Orga_Model_Organization $organization */
         $organization = Orga_Model_Organization::load($idOrganization);
 
+        $timeAxis = null;
         $idAxis = (string) $this->getParam('timeAxis');
-        if (empty($idAxis)) {
-            $organization->setTimeAxis();
-        } else {
-            $organization->setTimeAxis(Orga_Model_Axis::load($idAxis));
+        if (!empty($idAxis)) {
+            /** @var Orga_Model_Axis $timeAxis */
+            $timeAxis = Orga_Model_Axis::load($idAxis);
         }
+        $this->organizationService->editOrganization($organization, $timeAxis);
 
         $this->setFormMessage(__('UI', 'message', 'updated'));
 
