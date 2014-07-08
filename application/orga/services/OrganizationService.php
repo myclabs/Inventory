@@ -145,18 +145,18 @@ class Orga_Service_OrganizationService
     }
 
     /**
-     * @param Orga_Model_Organization $organiszation
+     * @param Orga_Model_Organization $organization
      * @param Orga_Model_Axis $timeAxis
      */
-    public function editOrganization(Orga_Model_Organization $organiszation, Orga_Model_Axis $timeAxis=null)
+    public function editOrganization(Orga_Model_Organization $organization, Orga_Model_Axis $timeAxis=null)
     {
-        $organiszation->setTimeAxis($timeAxis);
+        $organization->setTimeAxis($timeAxis);
 
         $task = new ServiceCallTask(
             'Orga_Service_InputService',
             'updateInconsistentInputsFromOrganization',
             [
-                $organiszation
+                $organization
             ]
         );
         $this->workDispatcher->run($task);
@@ -434,11 +434,22 @@ class Orga_Service_OrganizationService
      */
     public function deleteMember(Orga_Model_Member $member)
     {
+        $organization = $member->getAxis()->getOrganization();
+
         try {
             $this->entityManager->beginTransaction();
 
             $member->removeFromAxis();
             $member->delete();
+
+            $task = new ServiceCallTask(
+                'Orga_Service_InputService',
+                'updateInconsistentInputsFromOrganization',
+                [
+                    $organization
+                ]
+            );
+            $this->workDispatcher->run($task);
 
             $this->entityManager->flush();
             $this->entityManager->commit();

@@ -302,6 +302,15 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
                         }
                         $member->setPosition((int) $newPosition);
                 }
+
+                // Lance la tache en arrière plan
+                $task = new ServiceCallTask(
+                    'Orga_Service_InputService',
+                    'updateInconsistentInputsFromOrganization',
+                    [$organization]
+                );
+                $this->workDispatcher->runAndWait($task, $this->waitDelay);
+
                 $this->message = __('UI', 'message', 'updated');
                 break;
             default:
