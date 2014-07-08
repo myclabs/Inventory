@@ -4,6 +4,7 @@ use Account\Application\Service\OrganizationViewFactory;
 use AF\Application\AFViewConfiguration;
 use AF\Architecture\Service\InputSerializer;
 use AF\Domain\AF;
+use AF\Domain\InputService\InputSetInconsistencyFinder;
 use AF\Domain\InputService\InputSetValuesValidator;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Work\ServiceCall\ServiceCallTask;
@@ -1525,7 +1526,17 @@ class Orga_CellController extends Core_Controller
         $validator = new InputSetValuesValidator($inputSet);
         $validator->validate();
 
-        $this->inputService->updateInconsistentInputSetFromPreviousValue($cell, $inputSet);
+        $timeAxis = $cell->getGranularity()->getOrganization()->getTimeAxis();
+        if ($timeAxis && $cell->getGranularity()->hasAxis($timeAxis)) {
+            $previousCell = $cell->getPreviousCellForAxis($timeAxis);
+            if ($previousCell) {
+                $previousInput = $previousCell->getAFInputSetPrimary();
+                if ($previousInput !== null) {
+                    $inconsistencyFinder = new InputSetInconsistencyFinder($inputSet, $previousInput);
+                    $inconsistencyFinder->run();
+                }
+            }
+        }
 
         $data = ['input' => $this->inputSerializer->serialize($inputSet)];
         $this->sendJsonResponse($data);

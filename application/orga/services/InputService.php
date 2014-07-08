@@ -58,13 +58,10 @@ class Orga_Service_InputService
 
     /**
      * @param Orga_Model_Cell $cell
-     * @param PrimaryInputSet $inputSet
      */
-    public function updateInconsistentInputSetFromPreviousValue(Orga_Model_Cell $cell, PrimaryInputSet $inputSet=null)
+    public function updateInconsistentInputSetFromPreviousValue(Orga_Model_Cell $cell)
     {
-        if ($inputSet === null) {
-            $inputSet = $cell->getAFInputSetPrimary();
-        }
+        $inputSet = $cell->getAFInputSetPrimary();
         if ($inputSet === null) {
             return;
         }
