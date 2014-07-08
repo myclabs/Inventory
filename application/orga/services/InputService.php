@@ -45,13 +45,9 @@ class Orga_Service_InputService
      */
     public function updateInconsistentInputsFromOrganization(Orga_Model_Organization $organization)
     {
-        $timeAxis = $organization->getTimeAxis();
-
         foreach ($organization->getInputGranularities() as $inputGranularity) {
-            if ($timeAxis && $inputGranularity->hasAxis($timeAxis)) {
-                foreach ($inputGranularity->getCells() as $inputCell) {
-                    $this->updateInconsistentInputSetFromPreviousValue($inputCell);
-                }
+            foreach ($inputGranularity->getCells() as $inputCell) {
+                $this->updateInconsistentInputSetFromPreviousValue($inputCell);
             }
         }
     }
@@ -62,22 +58,23 @@ class Orga_Service_InputService
     public function updateInconsistentInputSetFromPreviousValue(Orga_Model_Cell $cell)
     {
         $inputSet = $cell->getAFInputSetPrimary();
-        if ($inputSet === null) {
-            return;
-        }
-
-        // Saisie de l'année précédente
-        $timeAxis = $cell->getGranularity()->getOrganization()->getTimeAxis();
-        if ($timeAxis && $cell->getGranularity()->hasAxis($timeAxis)) {
-            $previousCell = $cell->getPreviousCellForAxis($timeAxis);
-            if ($previousCell) {
-                $previousInput = $previousCell->getAFInputSetPrimary();
-                if ($previousInput !== null) {
-                    $inconsistencyFinder = new InputSetInconsistencyFinder($inputSet, $previousInput);
-                    $cell->setNumberOfInconsistenciesInInputSet($inconsistencyFinder->run());
+        if ($inputSet !== null) {
+            // Saisie de l'année précédente
+            $timeAxis = $cell->getGranularity()->getOrganization()->getTimeAxis();
+            if ($timeAxis && $cell->getGranularity()->hasAxis($timeAxis)) {
+                $previousCell = $cell->getPreviousCellForAxis($timeAxis);
+                if ($previousCell) {
+                    $previousInput = $previousCell->getAFInputSetPrimary();
+                    if ($previousInput !== null) {
+                        $inconsistencyFinder = new InputSetInconsistencyFinder($inputSet, $previousInput);
+                        $cell->setNumberOfInconsistenciesInInputSet($inconsistencyFinder->run());
+                        return;
+                    }
                 }
             }
         }
+
+        $cell->setNumberOfInconsistenciesInInputSet(0);
     }
 
     /**

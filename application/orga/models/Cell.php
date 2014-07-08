@@ -1104,6 +1104,7 @@ class Orga_Model_Cell extends Core_Model_Entity implements EntityResource
             }
             if ($this->aFInputSetPrimary !== null) {
                 $this->aFInputSetPrimary->delete();
+                $this->numberOfInconsistenciesInInputSet = 0;
             }
             $this->aFInputSetPrimary = $aFInputSetPrimary;
         }
