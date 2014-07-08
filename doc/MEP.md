@@ -4,7 +4,14 @@
 
 - Déployer normalement avec update de la BDD.
 
+- Mettre à jour le cache d'orga :
+
+```
+bin/inventory orga-cache:rebuild --input-inconsistencies
+```
+
 - Lancer un rebuild de tous les DW.
+
 
 ## 3.2
 
