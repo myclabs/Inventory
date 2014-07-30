@@ -5,14 +5,19 @@ use Account\Domain\AccountRepository;
 use Account\Domain\ACL\AccountAdminRole;
 use Core\Test\TestCase;
 use MyCLabs\ACL\ACL;
+use Orga\Domain\Axis;
+use Orga\Domain\Cell;
+use Orga\Domain\Granularity;
+use Orga\Domain\Member;
+use Orga\Domain\Workspace;
 use User\Domain\ACL\Actions;
 use MyCLabs\ACL\Model\ClassResource;
 use MyCLabs\ACL\Model\ResourceInterface;
-use Orga\Model\ACL\CellAdminRole;
-use Orga\Model\ACL\CellContributorRole;
-use Orga\Model\ACL\CellManagerRole;
-use Orga\Model\ACL\CellObserverRole;
-use Orga\Model\ACL\OrganizationAdminRole;
+use Orga\Domain\ACL\CellAdminRole;
+use Orga\Domain\ACL\CellContributorRole;
+use Orga\Domain\ACL\CellManagerRole;
+use Orga\Domain\ACL\CellObserverRole;
+use Orga\Domain\ACL\WorkspaceAdminRole;
 use User\Domain\User;
 use User\Domain\UserService;
 
@@ -47,152 +52,152 @@ class Orga_Test_ACLTest extends TestCase
     private $account;
 
     /**
-     * @var Orga_Model_Organization
+     * @var Workspace
      */
-    private $organization;
+    private $workspace;
 
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     private $axisAnnee;
 
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     private $axisSite;
 
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     private $axisPays;
 
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     private $axisZone;
 
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     private $axisMarque;
 
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     private $axisCategorie;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberAnnee2012;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberAnnee2013;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberZoneEurope;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberZoneSudamerique;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberPaysFrance;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberPaysAllemagne;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberPaysPerou;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberMarqueA;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberMarqueB;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberSiteAnnecy;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberSiteChambery;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberSiteBerlin;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberSiteLima;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberCategorieEnergie;
 
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     private $memberCategorieTransport;
 
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     private $granularityGlobale;
 
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     private $granularityZoneMarque;
 
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     private $granularitySite;
 
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     private $granularityAnnee;
 
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     private $granularityAnneeCategorie;
 
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     private $granularityAnneeZoneMarque;
 
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     private $granularityAnneeSite;
 
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     private $granularityAnneeSiteCategorie;
 
@@ -204,7 +209,7 @@ class Orga_Test_ACLTest extends TestCase
     /**
      * @var User
      */
-    private $organizationAdministrator;
+    private $workspaceAdministrator;
 
     /**
      * @var User
@@ -250,9 +255,9 @@ class Orga_Test_ACLTest extends TestCase
         $this->account = new Account('Test');
         $this->accountRepository->add($this->account);
 
-        // Création de l'organization (proche de populateTest au 08/08/2013).
-        $this->organization = new Orga_Model_Organization($this->account);
-        $this->organization->save();
+        // Création de l'workspace (proche de populateTest au 08/08/2013).
+        $this->workspace = new Workspace($this->account);
+        $this->workspace->save();
 
         // Nécéssaire du fait du bug Doctrine inserant les granularités avant les organisations.
         $this->entityManager->flush();
@@ -260,87 +265,87 @@ class Orga_Test_ACLTest extends TestCase
         // Création d'un ensemble d'axes.
 
         // Année.
-        $this->axisAnnee = new Orga_Model_Axis($this->organization, 'annee');
+        $this->axisAnnee = new Axis($this->workspace, 'annee');
 
         // Site.
-        $this->axisSite = new Orga_Model_Axis($this->organization, 'site');
+        $this->axisSite = new Axis($this->workspace, 'site');
 
         // Pays.
-        $this->axisPays = new Orga_Model_Axis($this->organization, 'pays', $this->axisSite);
+        $this->axisPays = new Axis($this->workspace, 'pays', $this->axisSite);
 
         // Zone.
-        $this->axisZone = new Orga_Model_Axis($this->organization, 'zone', $this->axisPays);
+        $this->axisZone = new Axis($this->workspace, 'zone', $this->axisPays);
 
         // Marque.
-        $this->axisMarque = new Orga_Model_Axis($this->organization, 'marque', $this->axisSite);
+        $this->axisMarque = new Axis($this->workspace, 'marque', $this->axisSite);
 
         // Catégories.
-        $this->axisCategorie = new Orga_Model_Axis($this->organization, 'categorie');
+        $this->axisCategorie = new Axis($this->workspace, 'categorie');
 
         // Création des membres des axes.
 
         // Années.
-        $this->memberAnnee2012 = new Orga_Model_Member($this->axisAnnee, '2012');
-        $this->memberAnnee2013 = new Orga_Model_Member($this->axisAnnee, '2013');
+        $this->memberAnnee2012 = new Member($this->axisAnnee, '2012');
+        $this->memberAnnee2013 = new Member($this->axisAnnee, '2013');
 
         // Zones.
-        $this->memberZoneEurope = new Orga_Model_Member($this->axisZone, 'europe');
-        $this->memberZoneSudamerique = new Orga_Model_Member($this->axisZone, 'sudamerique');
+        $this->memberZoneEurope = new Member($this->axisZone, 'europe');
+        $this->memberZoneSudamerique = new Member($this->axisZone, 'sudamerique');
 
         // Pays.
-        $this->memberPaysFrance = new Orga_Model_Member($this->axisPays, 'france', [$this->memberZoneEurope]);
-        $this->memberPaysAllemagne = new Orga_Model_Member($this->axisPays, 'allemagne', [$this->memberZoneEurope]);
-        $this->memberPaysPerou = new Orga_Model_Member($this->axisPays, 'perou', [$this->memberZoneSudamerique]);
+        $this->memberPaysFrance = new Member($this->axisPays, 'france', [$this->memberZoneEurope]);
+        $this->memberPaysAllemagne = new Member($this->axisPays, 'allemagne', [$this->memberZoneEurope]);
+        $this->memberPaysPerou = new Member($this->axisPays, 'perou', [$this->memberZoneSudamerique]);
 
         // Marques.
-        $this->memberMarqueA = new Orga_Model_Member($this->axisMarque, 'a');
-        $this->memberMarqueB = new Orga_Model_Member($this->axisMarque, 'b');
+        $this->memberMarqueA = new Member($this->axisMarque, 'a');
+        $this->memberMarqueB = new Member($this->axisMarque, 'b');
         $this->memberMarqueB->setRef('b');
 
         // Sites.
-        $this->memberSiteAnnecy = new Orga_Model_Member($this->axisSite, 'annecy', [$this->memberPaysFrance, $this->memberMarqueA]);
-        $this->memberSiteChambery = new Orga_Model_Member($this->axisSite, 'chambery', [$this->memberPaysFrance, $this->memberMarqueA]);
-        $this->memberSiteBerlin = new Orga_Model_Member($this->axisSite, 'berlin', [$this->memberPaysAllemagne, $this->memberMarqueB]);
-        $this->memberSiteLima = new Orga_Model_Member($this->axisSite, 'lima', [$this->memberPaysPerou, $this->memberMarqueB]);
+        $this->memberSiteAnnecy = new Member($this->axisSite, 'annecy', [$this->memberPaysFrance, $this->memberMarqueA]);
+        $this->memberSiteChambery = new Member($this->axisSite, 'chambery', [$this->memberPaysFrance, $this->memberMarqueA]);
+        $this->memberSiteBerlin = new Member($this->axisSite, 'berlin', [$this->memberPaysAllemagne, $this->memberMarqueB]);
+        $this->memberSiteLima = new Member($this->axisSite, 'lima', [$this->memberPaysPerou, $this->memberMarqueB]);
 
         // Catégories.
-        $this->memberCategorieEnergie = new Orga_Model_Member($this->axisCategorie, 'energie');
-        $this->memberCategorieTransport = new Orga_Model_Member($this->axisCategorie, 'transport');
+        $this->memberCategorieEnergie = new Member($this->axisCategorie, 'energie');
+        $this->memberCategorieTransport = new Member($this->axisCategorie, 'transport');
 
         // Création des granularités de l'organisation.
 
         // Création de la granularité globale.
-        $this->granularityGlobale = new Orga_Model_Granularity($this->organization);
+        $this->granularityGlobale = new Granularity($this->workspace);
         $this->granularityGlobale->setCellsWithACL(true);
         $this->granularityGlobale->setCellsGenerateDWCubes(true);
 
         // Création de la granularité zone marque.
-        $this->granularityZoneMarque = new Orga_Model_Granularity($this->organization, [$this->axisZone, $this->axisMarque]);
+        $this->granularityZoneMarque = new Granularity($this->workspace, [$this->axisZone, $this->axisMarque]);
         $this->granularityZoneMarque->setCellsWithACL(true);
         $this->granularityZoneMarque->setCellsGenerateDWCubes(true);
 
         // Création de la granularité site.
-        $this->granularitySite = new Orga_Model_Granularity($this->organization, [$this->axisSite]);
+        $this->granularitySite = new Granularity($this->workspace, [$this->axisSite]);
         $this->granularitySite->setCellsWithACL(true);
         $this->granularitySite->setCellsGenerateDWCubes(true);
 
         // Création de la granularité année.
-        $this->granularityAnnee = new Orga_Model_Granularity($this->organization, [$this->axisAnnee]);
+        $this->granularityAnnee = new Granularity($this->workspace, [$this->axisAnnee]);
 
         // Création de la granularité année categorie.
-        $this->granularityAnneeCategorie = new Orga_Model_Granularity($this->organization, [$this->axisAnnee, $this->axisCategorie]);
+        $this->granularityAnneeCategorie = new Granularity($this->workspace, [$this->axisAnnee, $this->axisCategorie]);
 
         // Création de la granularité année zone marque.
-        $this->granularityAnneeZoneMarque = new Orga_Model_Granularity($this->organization, [$this->axisAnnee, $this->axisZone, $this->axisMarque]);
+        $this->granularityAnneeZoneMarque = new Granularity($this->workspace, [$this->axisAnnee, $this->axisZone, $this->axisMarque]);
 
         // Création de la granularité année site.
-        $this->granularityAnneeSite = new Orga_Model_Granularity($this->organization, [$this->axisAnnee, $this->axisSite]);
+        $this->granularityAnneeSite = new Granularity($this->workspace, [$this->axisAnnee, $this->axisSite]);
 
         // Création de la granularité année site categorie.
-        $this->granularityAnneeSiteCategorie = new Orga_Model_Granularity($this->organization, [$this->axisAnnee, $this->axisSite, $this->axisCategorie]);
+        $this->granularityAnneeSiteCategorie = new Granularity($this->workspace, [$this->axisAnnee, $this->axisSite, $this->axisCategorie]);
 
         // Sauvegarde.
-        $this->organization->save();
+        $this->workspace->save();
         $this->entityManager->flush();
 
         // Ajout d'utilisateurs.
@@ -353,10 +358,10 @@ class Orga_Test_ACLTest extends TestCase
         );
 
         // Ajout d'un utilisateur administrateur de l'administration.
-        $this->organizationAdministrator= $this->userService->createUser('organizationAdministrator@example.com', 'organizationAdministrator');
+        $this->workspaceAdministrator= $this->userService->createUser('workspaceAdministrator@example.com', 'workspaceAdministrator');
         $this->acl->grant(
-            $this->organizationAdministrator,
-            new OrganizationAdminRole($this->organizationAdministrator, $this->organization)
+            $this->workspaceAdministrator,
+            new WorkspaceAdminRole($this->workspaceAdministrator, $this->workspace)
         );
 
         // Ajout d'un administrateur de cellule globale.
@@ -430,7 +435,7 @@ class Orga_Test_ACLTest extends TestCase
     {
         $this->isAllowedAccountAdministrator();
 
-        $this->isAllowedOrganizationAdministrator();
+        $this->isAllowedWorkspaceAdministrator();
 
         $this->isAllowedGlobalCellAdmin();
         $this->isAllowedAnnecyCellAdmin();
@@ -455,30 +460,30 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertAllowed($this->accountAdministrator, Actions::ALLOW, $this->account);
 
         // Droit d'admin sur l'organisation en cascade
-        $this->assertAdminOrganization($this->organizationAdministrator, $this->organization);
+        $this->assertAdminWorkspace($this->workspaceAdministrator, $this->workspace);
 
         // Peut traverser l'organisation et le compte
-        $this->assertTraverseAccount($this->organizationAdministrator, $this->account);
-        $this->assertTraverseOrganization($this->organizationAdministrator, $this->organization);
+        $this->assertTraverseAccount($this->workspaceAdministrator, $this->account);
+        $this->assertTraverseWorkspace($this->workspaceAdministrator, $this->workspace);
     }
 
     /**
      * Administrateur de l'organisation.
      */
-    public function isAllowedOrganizationAdministrator()
+    public function isAllowedWorkspaceAdministrator()
     {
         // Pas de droits sur le compte
-        $this->assertNotAllowed($this->organizationAdministrator, Actions::VIEW, $this->account);
-        $this->assertNotAllowed($this->organizationAdministrator, Actions::EDIT, $this->account);
-        $this->assertNotAllowed($this->organizationAdministrator, Actions::DELETE, $this->account);
-        $this->assertNotAllowed($this->organizationAdministrator, Actions::ALLOW, $this->account);
+        $this->assertNotAllowed($this->workspaceAdministrator, Actions::VIEW, $this->account);
+        $this->assertNotAllowed($this->workspaceAdministrator, Actions::EDIT, $this->account);
+        $this->assertNotAllowed($this->workspaceAdministrator, Actions::DELETE, $this->account);
+        $this->assertNotAllowed($this->workspaceAdministrator, Actions::ALLOW, $this->account);
 
         // Droit d'admin sur l'organisation
-        $this->assertAdminOrganization($this->organizationAdministrator, $this->organization);
+        $this->assertAdminWorkspace($this->workspaceAdministrator, $this->workspace);
 
         // Peut traverser l'organisation et le compte
-        $this->assertTraverseAccount($this->organizationAdministrator, $this->account);
-        $this->assertTraverseOrganization($this->organizationAdministrator, $this->organization);
+        $this->assertTraverseAccount($this->workspaceAdministrator, $this->account);
+        $this->assertTraverseWorkspace($this->workspaceAdministrator, $this->workspace);
     }
 
     /**
@@ -492,22 +497,22 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertAdminCell($user, $cell);
 
         // Pas de droit sur l'organisation
-        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
-        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
-        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
+        $this->assertNotAllowed($user, Actions::VIEW, $this->workspace);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->workspace);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->workspace);
 
         // Ne peut pas créer d'organisation
         $this->assertNotAllowed(
             $user,
             Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
+            new ClassResource(Workspace::class)
         );
 
         // Peut traverser l'organisation et le compte
         $this->assertTraverseAccount($user, $this->account);
-        $this->assertTraverseOrganization($user, $this->organization);
+        $this->assertTraverseWorkspace($user, $this->workspace);
     }
 
     /**
@@ -529,22 +534,22 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertNotAllowed($user, Actions::ALLOW, $globalCell);
 
         // Pas de droit sur l'organisation
-        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
-        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
-        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
+        $this->assertNotAllowed($user, Actions::VIEW, $this->workspace);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->workspace);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->workspace);
 
         // Ne peut pas créer d'organisation
         $this->assertNotAllowed(
             $user,
             Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
+            new ClassResource(Workspace::class)
         );
 
         // Peut traverser l'organisation et le compte
         $this->assertTraverseAccount($user, $this->account);
-        $this->assertTraverseOrganization($user, $this->organization);
+        $this->assertTraverseWorkspace($user, $this->workspace);
     }
 
     /**
@@ -558,22 +563,22 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertManageCell($user, $cellEuropeA);
 
         // Pas de droit sur l'organisation
-        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
-        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
-        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
+        $this->assertNotAllowed($user, Actions::VIEW, $this->workspace);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->workspace);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->workspace);
 
         // Ne peut pas créer d'organisation
         $this->assertNotAllowed(
             $user,
             Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
+            new ClassResource(Workspace::class)
         );
 
         // Peut traverser l'organisation et le compte
         $this->assertTraverseAccount($user, $this->account);
-        $this->assertTraverseOrganization($user, $this->organization);
+        $this->assertTraverseWorkspace($user, $this->workspace);
     }
 
     /**
@@ -587,22 +592,22 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertContributeCell($user, $cellEuropeA);
 
         // Pas de droit sur l'organisation
-        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
-        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
-        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
+        $this->assertNotAllowed($user, Actions::VIEW, $this->workspace);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->workspace);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->workspace);
 
         // Ne peut pas créer d'organisation
         $this->assertNotAllowed(
             $user,
             Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
+            new ClassResource(Workspace::class)
         );
 
         // Peut traverser l'organisation et le compte
         $this->assertTraverseAccount($user, $this->account);
-        $this->assertTraverseOrganization($user, $this->organization);
+        $this->assertTraverseWorkspace($user, $this->workspace);
     }
 
     /**
@@ -616,22 +621,22 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertContributeCell($user, $cellLima);
 
         // Pas de droit sur l'organisation
-        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
-        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
-        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
+        $this->assertNotAllowed($user, Actions::VIEW, $this->workspace);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->workspace);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->workspace);
 
         // Ne peut pas créer d'organisation
         $this->assertNotAllowed(
             $user,
             Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
+            new ClassResource(Workspace::class)
         );
 
         // Peut traverser l'organisation et le compte
         $this->assertTraverseAccount($user, $this->account);
-        $this->assertTraverseOrganization($user, $this->organization);
+        $this->assertTraverseWorkspace($user, $this->workspace);
     }
 
     /**
@@ -645,22 +650,22 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertObserveCell($user, $cellSudameriqueB);
 
         // Pas de droit sur l'organisation
-        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
-        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
-        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
+        $this->assertNotAllowed($user, Actions::VIEW, $this->workspace);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->workspace);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->workspace);
 
         // Ne peut pas créer d'organisation
         $this->assertNotAllowed(
             $user,
             Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
+            new ClassResource(Workspace::class)
         );
 
         // Peut traverser l'organisation et le compte
         $this->assertTraverseAccount($user, $this->account);
-        $this->assertTraverseOrganization($user, $this->organization);
+        $this->assertTraverseWorkspace($user, $this->workspace);
     }
 
     /**
@@ -674,22 +679,22 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertObserveCell($user, $cellBerlin);
 
         // Pas de droit sur l'organisation
-        $this->assertNotAllowed($user, Actions::VIEW, $this->organization);
-        $this->assertNotAllowed($user, Actions::EDIT, $this->organization);
-        $this->assertNotAllowed($user, Actions::DELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::UNDELETE, $this->organization);
-        $this->assertNotAllowed($user, Actions::ALLOW, $this->organization);
+        $this->assertNotAllowed($user, Actions::VIEW, $this->workspace);
+        $this->assertNotAllowed($user, Actions::EDIT, $this->workspace);
+        $this->assertNotAllowed($user, Actions::DELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $this->workspace);
+        $this->assertNotAllowed($user, Actions::ALLOW, $this->workspace);
 
         // Ne peut pas créer d'organisation
         $this->assertNotAllowed(
             $user,
             Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
+            new ClassResource(Workspace::class)
         );
 
         // Peut traverser l'organisation et le compte
         $this->assertTraverseAccount($user, $this->account);
-        $this->assertTraverseOrganization($user, $this->organization);
+        $this->assertTraverseWorkspace($user, $this->workspace);
     }
 
     /**
@@ -697,7 +702,7 @@ class Orga_Test_ACLTest extends TestCase
      */
     public function testUsersACLFilter()
     {
-        $this->tACLFilterOrganizationAdministrator();
+        $this->tACLFilterWorkspaceAdministrator();
         $this->tACLFilterGlobaleCellAdministrator();
         $this->tACLFilterEuropeACellContributor();
         $this->tACLFilterSudameriqueBCellObserver();
@@ -709,9 +714,9 @@ class Orga_Test_ACLTest extends TestCase
     /**
      * Test le point du vue (effectif) de l'administrateur de l'organisation.
      */
-    public function tACLFilterOrganizationAdministrator()
+    public function tACLFilterWorkspaceAdministrator()
     {
-        $user = $this->organizationAdministrator;
+        $user = $this->workspaceAdministrator;
 
         // Query des différentes actions.
         $queryView = new Core_Model_Query();
@@ -742,25 +747,25 @@ class Orga_Test_ACLTest extends TestCase
         // Test toutes les ressources.
 
         // Organisation.
-        $organisationsView = Orga_Model_Organization::loadList($queryView);
+        $organisationsView = Workspace::loadList($queryView);
         $this->assertCount(1, $organisationsView);
-        $this->assertContains($this->organization, $organisationsView);
-        $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
+        $this->assertContains($this->workspace, $organisationsView);
+        $organisationsEdit = Workspace::loadList($queryEdit);
         $this->assertCount(1, $organisationsEdit);
-        $this->assertContains($this->organization, $organisationsEdit);
-        $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
+        $this->assertContains($this->workspace, $organisationsEdit);
+        $organisationsDelete = Workspace::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $organisationsTraverse = Workspace::loadList($queryTraverse);
         $this->assertCount(1, $organisationsTraverse);
-        $this->assertContains($this->organization, $organisationsTraverse);
+        $this->assertContains($this->workspace, $organisationsTraverse);
 
-        $cellsView = Orga_Model_Cell::loadList($queryView);
+        $cellsView = Cell::loadList($queryView);
         $this->assertCount(47, $cellsView);
-        $cellsInput = Orga_Model_Cell::loadList($queryInput);
+        $cellsInput = Cell::loadList($queryInput);
         $this->assertCount(47, $cellsInput);
-        $cellsEdit = Orga_Model_Cell::loadList($queryEdit);
+        $cellsEdit = Cell::loadList($queryEdit);
         $this->assertCount(47, $cellsEdit);
-        $cellsAllow = Orga_Model_Cell::loadList($queryAllow);
+        $cellsAllow = Cell::loadList($queryAllow);
         $this->assertCount(47, $cellsAllow);
 
         // Cellules de la granularité global.
@@ -1051,23 +1056,23 @@ class Orga_Test_ACLTest extends TestCase
         // Test toutes les ressources.
 
         // Organisation.
-        $organisationsView = Orga_Model_Organization::loadList($queryView);
+        $organisationsView = Workspace::loadList($queryView);
         $this->assertCount(0, $organisationsView);
-        $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
+        $organisationsEdit = Workspace::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
+        $organisationsDelete = Workspace::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $organisationsTraverse = Workspace::loadList($queryTraverse);
         $this->assertCount(1, $organisationsTraverse);
-        $this->assertContains($this->organization, $organisationsTraverse);
+        $this->assertContains($this->workspace, $organisationsTraverse);
 
-        $cellsView = Orga_Model_Cell::loadList($queryView);
+        $cellsView = Cell::loadList($queryView);
         $this->assertCount(47, $cellsView);
-        $cellsInput = Orga_Model_Cell::loadList($queryInput);
+        $cellsInput = Cell::loadList($queryInput);
         $this->assertCount(47, $cellsInput);
-        $cellsEdit = Orga_Model_Cell::loadList($queryEdit);
+        $cellsEdit = Cell::loadList($queryEdit);
         $this->assertCount(47, $cellsEdit);
-        $cellsAllow = Orga_Model_Cell::loadList($queryAllow);
+        $cellsAllow = Cell::loadList($queryAllow);
         $this->assertCount(47, $cellsAllow);
 
         // Cellules de la granularité global.
@@ -1358,23 +1363,23 @@ class Orga_Test_ACLTest extends TestCase
         // Test toutes les ressources.
 
         // Organisation.
-        $organisationsView = Orga_Model_Organization::loadList($queryView);
+        $organisationsView = Workspace::loadList($queryView);
         $this->assertCount(0, $organisationsView);
-        $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
+        $organisationsEdit = Workspace::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
+        $organisationsDelete = Workspace::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $organisationsTraverse = Workspace::loadList($queryTraverse);
         $this->assertCount(1, $organisationsTraverse);
-        $this->assertContains($this->organization, $organisationsTraverse);
+        $this->assertContains($this->workspace, $organisationsTraverse);
 
-        $cellsView = Orga_Model_Cell::loadList($queryView);
+        $cellsView = Cell::loadList($queryView);
         $this->assertCount(17, $cellsView);
-        $cellsInput = Orga_Model_Cell::loadList($queryInput);
+        $cellsInput = Cell::loadList($queryInput);
         $this->assertCount(17, $cellsInput);
-        $cellsEdit = Orga_Model_Cell::loadList($queryEdit);
+        $cellsEdit = Cell::loadList($queryEdit);
         $this->assertCount(0, $cellsEdit);
-        $cellsAllow = Orga_Model_Cell::loadList($queryAllow);
+        $cellsAllow = Cell::loadList($queryAllow);
         $this->assertCount(0, $cellsAllow);
 
         // Cellules de la granularité global.
@@ -1665,23 +1670,23 @@ class Orga_Test_ACLTest extends TestCase
         // Test toutes les ressources.
 
         // Organisation.
-        $organisationsView = Orga_Model_Organization::loadList($queryView);
+        $organisationsView = Workspace::loadList($queryView);
         $this->assertCount(0, $organisationsView);
-        $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
+        $organisationsEdit = Workspace::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
+        $organisationsDelete = Workspace::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $organisationsTraverse = Workspace::loadList($queryTraverse);
         $this->assertCount(1, $organisationsTraverse);
-        $this->assertContains($this->organization, $organisationsTraverse);
+        $this->assertContains($this->workspace, $organisationsTraverse);
 
-        $cellsView = Orga_Model_Cell::loadList($queryView);
+        $cellsView = Cell::loadList($queryView);
         $this->assertCount(10, $cellsView);
-        $cellsInput = Orga_Model_Cell::loadList($queryInput);
+        $cellsInput = Cell::loadList($queryInput);
         $this->assertCount(0, $cellsInput);
-        $cellsEdit = Orga_Model_Cell::loadList($queryEdit);
+        $cellsEdit = Cell::loadList($queryEdit);
         $this->assertCount(0, $cellsEdit);
-        $cellsAllow = Orga_Model_Cell::loadList($queryAllow);
+        $cellsAllow = Cell::loadList($queryAllow);
         $this->assertCount(0, $cellsAllow);
 
         // Cellules de la granularité global.
@@ -1972,23 +1977,23 @@ class Orga_Test_ACLTest extends TestCase
         // Test toutes les ressources.
 
         // Organisation.
-        $organisationsView = Orga_Model_Organization::loadList($queryView);
+        $organisationsView = Workspace::loadList($queryView);
         $this->assertCount(0, $organisationsView);
-        $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
+        $organisationsEdit = Workspace::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
+        $organisationsDelete = Workspace::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $organisationsTraverse = Workspace::loadList($queryTraverse);
         $this->assertCount(1, $organisationsTraverse);
-        $this->assertContains($this->organization, $organisationsTraverse);
+        $this->assertContains($this->workspace, $organisationsTraverse);
 
-        $cellsView = Orga_Model_Cell::loadList($queryView);
+        $cellsView = Cell::loadList($queryView);
         $this->assertCount(7, $cellsView);
-        $cellsInput = Orga_Model_Cell::loadList($queryInput);
+        $cellsInput = Cell::loadList($queryInput);
         $this->assertCount(7, $cellsInput);
-        $cellsEdit = Orga_Model_Cell::loadList($queryEdit);
+        $cellsEdit = Cell::loadList($queryEdit);
         $this->assertCount(7, $cellsEdit);
-        $cellsAllow = Orga_Model_Cell::loadList($queryAllow);
+        $cellsAllow = Cell::loadList($queryAllow);
         $this->assertCount(7, $cellsAllow);
 
         // Cellules de la granularité global.
@@ -2279,23 +2284,23 @@ class Orga_Test_ACLTest extends TestCase
         // Test toutes les ressources.
 
         // Organisation.
-        $organisationsView = Orga_Model_Organization::loadList($queryView);
+        $organisationsView = Workspace::loadList($queryView);
         $this->assertCount(0, $organisationsView);
-        $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
+        $organisationsEdit = Workspace::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
+        $organisationsDelete = Workspace::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $organisationsTraverse = Workspace::loadList($queryTraverse);
         $this->assertCount(1, $organisationsTraverse);
-        $this->assertContains($this->organization, $organisationsTraverse);
+        $this->assertContains($this->workspace, $organisationsTraverse);
 
-        $cellsView = Orga_Model_Cell::loadList($queryView);
+        $cellsView = Cell::loadList($queryView);
         $this->assertCount(7, $cellsView);
-        $cellsInput = Orga_Model_Cell::loadList($queryInput);
+        $cellsInput = Cell::loadList($queryInput);
         $this->assertCount(0, $cellsInput);
-        $cellsEdit = Orga_Model_Cell::loadList($queryEdit);
+        $cellsEdit = Cell::loadList($queryEdit);
         $this->assertCount(0, $cellsEdit);
-        $cellsAllow = Orga_Model_Cell::loadList($queryAllow);
+        $cellsAllow = Cell::loadList($queryAllow);
         $this->assertCount(0, $cellsAllow);
 
         // Cellules de la granularité global.
@@ -2586,23 +2591,23 @@ class Orga_Test_ACLTest extends TestCase
         // Test toutes les ressources.
 
         // Organisation.
-        $organisationsView = Orga_Model_Organization::loadList($queryView);
+        $organisationsView = Workspace::loadList($queryView);
         $this->assertCount(0, $organisationsView);
-        $organisationsEdit = Orga_Model_Organization::loadList($queryEdit);
+        $organisationsEdit = Workspace::loadList($queryEdit);
         $this->assertCount(0, $organisationsEdit);
-        $organisationsDelete = Orga_Model_Organization::loadList($queryDelete);
+        $organisationsDelete = Workspace::loadList($queryDelete);
         $this->assertCount(0, $organisationsDelete);
-        $organisationsTraverse = Orga_Model_Organization::loadList($queryTraverse);
+        $organisationsTraverse = Workspace::loadList($queryTraverse);
         $this->assertCount(1, $organisationsTraverse);
-        $this->assertContains($this->organization, $organisationsTraverse);
+        $this->assertContains($this->workspace, $organisationsTraverse);
 
-        $cellsView = Orga_Model_Cell::loadList($queryView);
+        $cellsView = Cell::loadList($queryView);
         $this->assertCount(7, $cellsView);
-        $cellsInput = Orga_Model_Cell::loadList($queryInput);
+        $cellsInput = Cell::loadList($queryInput);
         $this->assertCount(7, $cellsInput);
-        $cellsEdit = Orga_Model_Cell::loadList($queryEdit);
+        $cellsEdit = Cell::loadList($queryEdit);
         $this->assertCount(0, $cellsEdit);
-        $cellsAllow = Orga_Model_Cell::loadList($queryAllow);
+        $cellsAllow = Cell::loadList($queryAllow);
         $this->assertCount(0, $cellsAllow);
 
         // Cellules de la granularité global.
@@ -2880,21 +2885,21 @@ class Orga_Test_ACLTest extends TestCase
         $this->assertAllowed($user, Actions::TRAVERSE, $account);
     }
 
-    public function assertTraverseOrganization(User $user, Orga_Model_Organization $organization)
+    public function assertTraverseWorkspace(User $user, Workspace $workspace)
     {
-        $this->assertAllowed($user, Actions::TRAVERSE, $organization);
+        $this->assertAllowed($user, Actions::TRAVERSE, $workspace);
     }
 
-    public function assertAdminOrganization(User $user, Orga_Model_Organization $organization)
+    public function assertAdminWorkspace(User $user, Workspace $workspace)
     {
-        $this->assertAllowed($user, Actions::VIEW, $organization);
-        $this->assertAllowed($user, Actions::EDIT, $organization);
-        $this->assertAllowed($user, Actions::ALLOW, $organization);
-        $this->assertNotAllowed($user, Actions::DELETE, $organization);
-        $this->assertNotAllowed($user, Actions::UNDELETE, $organization);
+        $this->assertAllowed($user, Actions::VIEW, $workspace);
+        $this->assertAllowed($user, Actions::EDIT, $workspace);
+        $this->assertAllowed($user, Actions::ALLOW, $workspace);
+        $this->assertNotAllowed($user, Actions::DELETE, $workspace);
+        $this->assertNotAllowed($user, Actions::UNDELETE, $workspace);
 
         // Droit en cascade d'admin sur toutes les cellules
-        foreach ($organization->getGranularities() as $granularity) {
+        foreach ($workspace->getGranularities() as $granularity) {
             foreach ($granularity->getCells() as $cell) {
                 $this->assertAllowed($user, Actions::VIEW, $cell, $cell->getLabel()->get('fr'));
                 $this->assertAllowed($user, Actions::EDIT, $cell, $cell->getLabel()->get('fr'));
@@ -2906,14 +2911,14 @@ class Orga_Test_ACLTest extends TestCase
         }
     }
 
-    public function assertAdminCell(User $user, Orga_Model_Cell $cell)
+    public function assertAdminCell(User $user, Cell $cell)
     {
         $globalCell = $this->granularityGlobale->getCellByMembers([]);
         $allCells = $globalCell->getChildCells();
         $allCells[] = $globalCell;
 
         foreach ($allCells as $testedCell) {
-            /** @var Orga_Model_Cell $testedCell */
+            /** @var Cell $testedCell */
 
             // Droit d'admin sur la cellule et ses sous-cellules
             if ($testedCell === $cell || $testedCell->isChildOf($cell)) {
@@ -2935,14 +2940,14 @@ class Orga_Test_ACLTest extends TestCase
         }
     }
 
-    public function assertManageCell(User $user, Orga_Model_Cell $cell)
+    public function assertManageCell(User $user, Cell $cell)
     {
         $globalCell = $this->granularityGlobale->getCellByMembers([]);
         $allCells = $globalCell->getChildCells();
         $allCells[] = $globalCell;
 
         foreach ($allCells as $testedCell) {
-            /** @var Orga_Model_Cell $testedCell */
+            /** @var Cell $testedCell */
 
             // Droit de manager sur la cellule et ses sous-cellules
             if ($testedCell === $cell || $testedCell->isChildOf($cell)) {
@@ -2966,14 +2971,14 @@ class Orga_Test_ACLTest extends TestCase
         }
     }
 
-    public function assertContributeCell(User $user, Orga_Model_Cell $cell)
+    public function assertContributeCell(User $user, Cell $cell)
     {
         $globalCell = $this->granularityGlobale->getCellByMembers([]);
         $allCells = $globalCell->getChildCells();
         $allCells[] = $globalCell;
 
         foreach ($allCells as $testedCell) {
-            /** @var Orga_Model_Cell $testedCell */
+            /** @var Cell $testedCell */
 
             // Droit de contributeur sur la cellule et ses sous-cellules
             if ($testedCell === $cell || $testedCell->isChildOf($cell)) {
@@ -2994,14 +2999,14 @@ class Orga_Test_ACLTest extends TestCase
         }
     }
 
-    public function assertObserveCell(User $user, Orga_Model_Cell $cell)
+    public function assertObserveCell(User $user, Cell $cell)
     {
         $globalCell = $this->granularityGlobale->getCellByMembers([]);
         $allCells = $globalCell->getChildCells();
         $allCells[] = $globalCell;
 
         foreach ($allCells as $testedCell) {
-            /** @var Orga_Model_Cell $testedCell */
+            /** @var Cell $testedCell */
 
             // Droit d'observateur sur la cellule et ses sous-cellules
             if ($testedCell === $cell || $testedCell->isChildOf($cell)) {

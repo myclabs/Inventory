@@ -1,0 +1,92 @@
+<?php
+/**
+ * @author valentin.claras
+ * @author sidoine.tardieu
+ * @package Orga
+ * Contenu de l'onglet des grannularity
+ */
+$datagridGranularities = new UI_Datagrid('granularity'.$this->workspaceId, 'datagrid_granularity', 'orga');
+
+$columnAxes = new UI_Datagrid_Col_List('axes', ___('UI', 'name', 'axes'));
+$columnAxes->list = $this->listAxes;
+$columnAxes->multiple = true;
+$columnAxes->addable = true;
+$columnAxes->withEmptyElement = false;
+$columnAxes->fieldType = UI_Datagrid_Col_List::FIELD_AUTOCOMPLETE;
+$datagridGranularities->addCol($columnAxes);
+
+$columnRelevance = new UI_Datagrid_Col_Bool('relevance', ___('Orga', 'cellRelevance', 'relevance'));
+$columnRelevance->addable = true;
+$columnRelevance->editable = true;
+$columnRelevance->defaultAddValue = false;
+$columnRelevance->textTrue = ___('UI', 'other', 'yes');
+$columnRelevance->textFalse = ___('UI', 'other', 'no');
+$columnRelevance->valueTrue = '<i class="fa fa-check"></i> '.___('UI', 'other', 'yes');
+$columnRelevance->valueFalse = '<i class="fa fa-times"></i> '.___('UI', 'other', 'no');
+$datagridGranularities->addCol($columnRelevance);
+
+$columnInput = new UI_Datagrid_Col_Bool('input', ___('UI', 'name', 'input'));
+$columnInput->addable = false;
+$columnInput->editable = true;
+$columnInput->textTrue = ___('UI', 'other', 'yes');
+$columnInput->textFalse = ___('UI', 'other', 'no');
+$columnInput->valueTrue = '<i class="fa fa-check"></i> '.___('UI', 'other', 'yes');
+$columnInput->valueFalse = '<i class="fa fa-times"></i> '.___('UI', 'other', 'no');
+$datagridGranularities->addCol($columnInput);
+
+$columnAfs = new UI_Datagrid_Col_Bool('afs', ___('UI', 'name', 'forms'));
+$columnAfs->addable = false;
+$columnAfs->editable = false;
+$columnAfs->textTrue = ___('UI', 'other', 'yes');
+$columnAfs->textFalse = ___('UI', 'other', 'no');
+$columnAfs->valueTrue = '<i class="fa fa-check"></i> '.___('UI', 'other', 'yes');
+$columnAfs->valueFalse = '<i class="fa fa-times"></i> '.___('UI', 'other', 'no');
+$datagridGranularities->addCol($columnAfs);
+
+$columnInventory = new UI_Datagrid_Col_List('inventory', __('Orga', 'inventory', 'inventory'));
+$columnInventory->addable = false;
+$columnInventory->editable = true;
+$columnInventory->withEmptyElement = false;
+$columnInventory->list = [
+    'monitoring' => __('Orga', 'inventory', 'monitoring'),
+    'none' => '-'
+];
+$datagridGranularities->addCol($columnInventory);
+
+$columnCube = new UI_Datagrid_Col_Bool('reports', ___('DW', 'name', 'analyses'));
+$columnCube->addable = true;
+$columnCube->editable = true;
+$columnCube->defaultAddValue = false;
+$columnCube->textTrue = ___('UI', 'other', 'yes');
+$columnCube->textFalse = ___('UI', 'other', 'no');
+$columnCube->valueTrue = '<i class="fa fa-check"></i> '.___('UI', 'other', 'yes');
+$columnCube->valueFalse = '<i class="fa fa-times"></i> '.___('UI', 'other', 'no');
+$datagridGranularities->addCol($columnCube);
+
+$columnAcl = new UI_Datagrid_Col_Bool('acl', ___('User', 'role', 'roles'));
+$columnAcl->addable = true;
+$columnAcl->editable = true;
+$columnAcl->defaultAddValue = false;
+$columnAcl->textTrue = ___('UI', 'other', 'yes');
+$columnAcl->textFalse = ___('UI', 'other', 'no');
+$columnAcl->valueTrue = '<i CLass="fa fa-check"></i> '.___('UI', 'other', 'yes');
+$columnAcl->valueFalse = '<i CLass="fa fa-times"></i> '.___('UI', 'other', 'no');
+$datagridGranularities->addCol($columnAcl);
+
+$datagridGranularities->pagination = false;
+$datagridGranularities->addParam('workspace', $this->workspaceId);
+$datagridGranularities->addElements = true;
+$datagridGranularities->addPanelTitle = ___('Orga', 'granularity', 'addPanelTitle');
+$datagridGranularities->deleteElements = true;
+
+if ($this->display === false) {
+    echo $datagridGranularities->render();
+} else {
+    $datagridGranularities->display();
+}
+?>
+<script type="text/javascript">
+    $('#granularity_addPanel').on('hide', function() {
+        $('#granularity_axes_addForm').val([]).trigger('change');
+    });
+</script>

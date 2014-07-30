@@ -15,7 +15,7 @@
             </tuv>
         </tu>
 
-        <!-- Libellé de l'organisation et choix de la granularité des collectes -->
+        <!-- Libellé du workspace et choix de la granularité des collectes -->
 
         <tu tuid="granularityForInventoryStatus">
             <tuv xml:lang="fr">

@@ -517,7 +517,7 @@ class UI_Datagrid_Col_List extends UI_Datagrid_Col_Generic
                 if ($this->withEmptyElement === true) {
                     $editorValue .= 'allowClear: true,';
                 }
-                $editorValue .= 'containerCss: {width: "100%"},';
+                $editorValue .= 'containerCss: {width: "100%"}';
                 $editorValue .= '}';
                 $editorValue .= ');';
             }

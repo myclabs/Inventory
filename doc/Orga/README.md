@@ -6,7 +6,7 @@
 
 Rôles :
 
-- **OrganizationAdminRole** : admin sur l'organisation, et admin sur la cellule globale
+- **WorkspaceAdminRole** : admin sur l'organisation, et admin sur la cellule globale
 
 Les rôles des cellules donnent automatiquement le droit de voir l'organisation.
 

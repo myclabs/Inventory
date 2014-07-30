@@ -5,7 +5,7 @@
 
 namespace AuditTrail\Domain;
 
-use AuditTrail\Domain\Context\OrganizationContext;
+use AuditTrail\Domain\Context\WorkspaceContext;
 use Core\Domain\EntityRepository;
 use DateTime;
 
@@ -21,24 +21,24 @@ interface EntryRepository extends EntityRepository
     public function findLatest($count);
 
     /**
-     * @param OrganizationContext $context
+     * @param WorkspaceContext $context
      * @param int                 $count
      * @return Entry[]
      */
-    public function findLatestForOrganizationContext(OrganizationContext $context, $count);
+    public function findLatestForWorkspaceContext(WorkspaceContext $context, $count);
 
     /**
-     * @param OrganizationContext $context
+     * @param WorkspaceContext $context
      * @param DateTime            $upTo
      * @param DateTime            $from
      * @return Entry[]
      */
-    public function findUpToForOrganizationContext(OrganizationContext $context, DateTime $upTo, DateTime $from=null);
+    public function findUpToForWorkspaceContext(WorkspaceContext $context, DateTime $upTo, DateTime $from=null);
 
     /**
-     * @param OrganizationContext $context
+     * @param WorkspaceContext $context
      * @param DateTime            $from
      * @return Entry[]
      */
-    public function hasFromForOrganizationContext(OrganizationContext $context, DateTime $from=null);
+    public function hasFromForWorkspaceContext(WorkspaceContext $context, DateTime $from=null);
 }

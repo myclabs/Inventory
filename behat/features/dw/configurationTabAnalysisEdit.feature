@@ -7,14 +7,14 @@ Feature: General info tab analysis edit feature
   @javascript
   Scenario: Add a granularity analysis (global granularity)
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Config. Analyses"
   # Accès au datagrid des analyses pré-configurées au niveau global
     And I open collapse "Niveau organisationnel global"
     Then I should see the "datagridCellReports1" datagrid
   # Nouvelle analyse
-    When I click element "a[href='orga/granularity/view-report/idGranularity/1/']"
+    When I click element "a[href='orga/granularity/view-report/granularity/1/']"
     And I select "sum" from "typeSumRatioChoice"
     And I select "Camembert" from "displayType"
     And I click "Lancer"
@@ -33,7 +33,7 @@ Feature: General info tab analysis edit feature
 
   @javascript
   Scenario: Delete a granularity analysis
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Config. Analyses"
     And I open collapse "Niveau organisationnel global"

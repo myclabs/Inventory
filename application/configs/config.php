@@ -6,6 +6,11 @@ use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\Doctrine\ACLSetup;
+use Orga\Domain\Cell;
+use Orga\Domain\Workspace;
+use Orga\Domain\Service\Cell\Input\CellInputService;
+use Orga\Domain\Service\Cell\Input\CellInputCreatedEvent;
+use Orga\Domain\Service\Cell\Input\CellInputEditedEvent;
 use Unit\Service\CachedUnitOperationService;
 use Unit\Service\CachedUnitService;
 use User\Domain\ACL\Actions;
@@ -13,13 +18,13 @@ use Inventory\Command\CreateDBCommand;
 use Inventory\Command\UpdateDBCommand;
 use MyCLabs\ACL\ACL;
 use MyCLabs\ACL\CascadeStrategy\SimpleCascadeStrategy;
-use Orga\Model\ACL\CellAdminRole;
-use Orga\Model\ACL\CellContributorRole;
-use Orga\Model\ACL\CellManagerRole;
-use Orga\Model\ACL\CellObserverRole;
-use Orga\Model\ACL\CellResourceGraphTraverser;
-use Orga\Model\ACL\OrganizationAdminRole;
-use Orga\Model\ACL\OrganizationResourceGraphTraverser;
+use Orga\Domain\ACL\CellAdminRole;
+use Orga\Domain\ACL\CellContributorRole;
+use Orga\Domain\ACL\CellManagerRole;
+use Orga\Domain\ACL\CellObserverRole;
+use Orga\Domain\ACL\CellResourceGraphTraverser;
+use Orga\Domain\ACL\WorkspaceAdminRole;
+use Orga\Domain\ACL\WorkspaceResourceGraphTraverser;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use MyCLabs\UnitAPI\UnitOperationService;
 use MyCLabs\UnitAPI\UnitService;
@@ -40,6 +45,9 @@ return [
 
     // Répertoire d'upload les documents
     'documents.path' => PACKAGE_PATH . '/data/documents',
+
+    // Répertoire d'enregistrement des exports
+    'exports.inputs.path' => PACKAGE_PATH . '/data/exports/inputs',
 
     // Emails
     'emails.noreply.name'   => 'My C-Tool',
@@ -78,13 +86,13 @@ return [
 
         // User events (plus prioritaire)
         $userEventListener = $c->get(\User\Domain\Event\EventListener::class);
-        $dispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
-        $dispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
+        $dispatcher->addListener(CellInputCreatedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
+        $dispatcher->addListener(CellInputEditedEvent::NAME, [$userEventListener, 'onUserEvent'], 10);
 
         // AuditTrail
         $auditTrailListener = $c->get(AuditTrail\Application\Service\EventListener::class);
-        $dispatcher->addListener(Orga_Service_InputCreatedEvent::NAME, [$auditTrailListener, 'onInputCreated']);
-        $dispatcher->addListener(Orga_Service_InputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
+        $dispatcher->addListener(CellInputCreatedEvent::NAME, [$auditTrailListener, 'onInputCreated']);
+        $dispatcher->addListener(CellInputEditedEvent::NAME, [$auditTrailListener, 'onInputEdited']);
 
         return $dispatcher;
     }),
@@ -101,9 +109,6 @@ return [
     UpdateDBCommand::class => DI\object()
             ->constructor(DI\link(EntityManager::class), DI\link('db.name')),
 
-    Orga_Service_ETLStructure::class => DI\object()
-            ->constructorParameter('defaultLocale', DI\link('translation.defaultLocale'))
-            ->constructorParameter('locales', DI\link('translation.languages')),
 
     // ACL
     ACL::class => DI\factory(function (ContainerInterface $c) {
@@ -111,11 +116,11 @@ return [
 
         $cascadeStrategy = new SimpleCascadeStrategy($em);
         $cascadeStrategy->setResourceGraphTraverser(
-            Orga_Model_Organization::class,
-            $c->get(OrganizationResourceGraphTraverser::class)
+            Workspace::class,
+            $c->get(WorkspaceResourceGraphTraverser::class)
         );
         $cascadeStrategy->setResourceGraphTraverser(
-            Orga_Model_Cell::class,
+            Cell::class,
             $c->get(CellResourceGraphTraverser::class)
         );
 
@@ -127,7 +132,7 @@ return [
         $setup->setActionsClass(Actions::class);
         $setup->registerRoleClass(AdminRole::class, 'superadmin');
         $setup->registerRoleClass(AccountAdminRole::class, 'accountAdmin');
-        $setup->registerRoleClass(OrganizationAdminRole::class, 'organizationAdmin');
+        $setup->registerRoleClass(WorkspaceAdminRole::class, 'organizationAdmin');
         $setup->registerRoleClass(CellAdminRole::class, 'cellAdmin');
         $setup->registerRoleClass(CellManagerRole::class, 'cellManager');
         $setup->registerRoleClass(CellContributorRole::class, 'cellContributor');

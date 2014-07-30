@@ -1,4 +1,0 @@
-Orga\Model\ACL\CellAdminRole:
-  type: entity
-  table: Orga_ACL_Role_CellAdmin
-  readOnly: true

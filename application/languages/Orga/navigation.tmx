@@ -3,7 +3,7 @@
     <header adminlang="en" creationtool="locale4j" creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*"/>
     <body>
 
-        <tu tuid="demoOrganizationLabel">
+        <tu tuid="demoWorkspaceLabel">
             <tuv xml:lang="fr">
                 <seg>Espace de travail #[LABEL]</seg>
             </tuv>
@@ -12,7 +12,7 @@
             </tuv>
         </tu>
 
-        <tu tuid="defaultOrganizationLabel">
+        <tu tuid="defaultWorkspaceLabel">
             <tuv xml:lang="fr">
                 <seg>Cliquer pour accéder (workspace sans libellé)</seg>
             </tuv>

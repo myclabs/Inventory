@@ -1,0 +1,122 @@
+<div id="comments" ng-controller="CommentsController">
+
+    <blockquote ng-repeat="comment in comments" ng-cloak>
+        <div ng-show="!comment.edition">
+            <div ng-bind-html="comment.html | rawHtml"></div>
+            <small>
+                <?=__('Orga', 'comment', 'by')?> <strong>{{ comment.author }}</strong>
+                <?=__('Orga', 'comment', 'dated')?> {{ comment.date }}
+
+                <span ng-if="comment.canBeEdited && !comment.edition">
+                    <button ng-click="comment.edition = true" type="button" class="btn btn-default btn-xs"
+                            tooltip="<?= __('UI', 'verb', 'edit') ?>">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </button>
+                    <button ng-click="deleteComment(comment)" type="button" class="btn btn-default btn-xs"
+                            tooltip="<?= __('UI', 'verb', 'delete') ?>">
+                        <i class="fa fa-trash-o"></i>
+                    </button>
+                </span>
+            </small>
+        </div>
+        <form ng-if="comment.canBeEdited && comment.edition" ng-submit="editComment(comment)">
+            <div class="form-group">
+                <textarea ng-model="comment.text" class="form-control" rows="5"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <?=__('UI', 'verb', 'save')?>
+            </button>
+            <button ng-click="comment.edition = false" type="button" class="btn btn-default">
+                <?=__('UI', 'verb', 'cancel')?>
+            </button>
+        </form>
+    </blockquote>
+
+    <p ng-if="comments.length == 0" class="text-muted">
+        <?=__('Orga', 'comment', 'noComment')?>
+    </p>
+
+    <?php if ($this->isUserAbleToComment) : ?>
+        <form ng-submit="addComment()">
+            <div class="form-group">
+                <textarea ng-model="newComment" name="newComment" class="form-control" rows="5"
+                          placeholder="<?=__('Orga', 'comment', 'comment')?>"></textarea>
+            </div>
+            <button type="submit" class="btn btn-default">
+                <?=__('Orga', 'comment', 'addComment')?>
+            </button>
+        </form>
+    <?php endif; ?>
+
+</div>
+
+<script>
+    var commentsModule = angular.module('Comments', ['ui.bootstrap']);
+
+    // Configure Angular pour poster en "form data" plutôt qu'en JSON
+    commentsModule.config(function ($httpProvider) {
+        $httpProvider.defaults.transformRequest = function(data){
+            if (data === undefined) {
+                return data;
+            }
+            return $.param(data);
+        };
+        $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+    });
+
+    commentsModule.filter('rawHtml', function($sce){
+        return function(text) {
+            return $sce.trustAsHtml(text);
+        };
+    });
+
+    commentsModule.controller('CommentsController', function ($scope, $http) {
+        $scope.comments = [];
+
+        $scope.refresh = function() {
+            $http.get('orga/comment/list/cell/<?=$this->cellId?>/')
+            .success(function(data) {
+                $scope.comments = data;
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.addComment = function() {
+            $http.post('orga/comment/new/cell/<?=$this->cellId?>/', { text: $scope.newComment })
+            .success(function(data) {
+                addMessage(JSON.parse(data), 'success');
+                $scope.refresh();
+                $scope.newComment = '';
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.editComment = function(comment) {
+            $http.post('orga/comment/edit/cell/<?=$this->cellId?>/', { id: comment.id, text: comment.text })
+            .success(function(data) {
+                addMessage(JSON.parse(data), 'success');
+                $scope.refresh();
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.deleteComment = function(comment) {
+            $http.post('orga/comment/delete/cell/<?=$this->cellId?>/', { id: comment.id })
+            .success(function(data) {
+                addMessage(JSON.parse(data), 'success');
+                $scope.refresh();
+            }).error(function(data) {
+                addMessage(data);
+            });
+        };
+
+        $scope.refresh();
+    });
+
+    // Bootstrap the angular app manually because we can't have 2 angular apps in the main page loaded automatically
+    angular.bootstrap($('#comments'), ['Comments']);
+</script>
+

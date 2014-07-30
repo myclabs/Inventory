@@ -7,7 +7,7 @@ AuditTrail\Domain\Context\Context:
     type: string
   discriminatorMap:
     global: AuditTrail\Domain\Context\GlobalContext
-    organization: AuditTrail\Domain\Context\OrganizationContext
+    workspace: AuditTrail\Domain\Context\WorkspaceContext
 
   id:
     id:

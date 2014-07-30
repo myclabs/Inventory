@@ -241,11 +241,11 @@
         <tu tuid="granularityCantBeDeleted">
             <tuv xml:lang="fr">
                 <seg>Ce niveau organisationnel ne peut pas être supprimé, car il est utilisé pour la configuration
-     générale de l'organisation (statut des collectes, rôles, sélection des formulaires comptables, saisies).</seg>
+     générale du workspace (statut des collectes, rôles, sélection des formulaires comptables, saisies).</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>This organizational level cannot be deleted, since it is used for the general configuration
-                of this organization (collection data status, roles, accounting form selection, inputs).</seg>
+                of this workspace (collection data status, roles, accounting form selection, inputs).</seg>
             </tuv>
         </tu>
         <tu tuid="deleteGranularityInventory">

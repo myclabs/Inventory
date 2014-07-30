@@ -1,6 +1,7 @@
 <?php
 
 use Core\Annotation\Secure;
+use Orga\Application\Service\Workspace\PublicDemoService;
 use User\Application\Service\AuthAdapter;
 use User\Domain\UserService;
 
@@ -21,7 +22,7 @@ class User_RegisterController extends UI_Controller_Captcha
 
     /**
      * @Inject
-     * @var Orga_Service_PublicDemoService
+     * @var PublicDemoService
      */
     private $publicDemoService;
 
@@ -77,7 +78,7 @@ class User_RegisterController extends UI_Controller_Captcha
 
             try {
                 $this->entityManager->beginTransaction();
-                $this->publicDemoService->createDemoAccount($email, $password);
+                $this->publicDemoService->createDemoAccount($email, $password, $projectName);
                 $this->entityManager->flush();
                 $this->entityManager->commit();
             } catch (Core_ORM_DuplicateEntryException $e) {

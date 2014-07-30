@@ -6,9 +6,9 @@
 
         <!-- Libellés des différents rôles -->
 
-        <!-- Administrateur d'organisation -->
+        <!-- Administrateur de workspace -->
 
-        <tu tuid="organizationAdministrator">
+        <tu tuid="workspaceAdministrator">
             <tuv xml:lang="fr">
                 <seg>Administrateur de workspace</seg>
             </tuv>
@@ -16,7 +16,7 @@
                 <seg>Workspace administrator</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationAdministrators">
+        <tu tuid="workspaceAdministrators">
             <tuv xml:lang="fr">
                 <seg>Administrateurs de workspace</seg>
             </tuv>
@@ -86,7 +86,7 @@
         <tu tuid="cellObservers">
             <tuv xml:lang="fr">
                 <seg>Observateur(s)</seg>
-            </tuv>
+            </tuv>organization
             <tuv xml:lang="en">
                 <seg>Observer(s)</seg>
             </tuv>
@@ -104,10 +104,10 @@
         </tu>
         <tu tuid="cellDetails">
             <tuv xml:lang="fr">
-                <seg>par élément d'organisation</seg>
+                <seg>par élément du workspace</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>by organization item</seg>
+                <seg>by workspace item</seg>
             </tuv>
         </tu>
 

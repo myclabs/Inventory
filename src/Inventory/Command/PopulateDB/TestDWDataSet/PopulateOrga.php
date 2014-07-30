@@ -23,7 +23,7 @@ class PopulateOrga extends AbstractPopulateOrga
 
         // Création d'une organisation.
         // Param : label
-        $organization = $this->createOrganization($account, 'Workspace avec données');
+        $organization = $this->createWorkspace($account, 'Workspace avec données');
 
         // Création des axes.
         // Params : Organization, ref, label
@@ -57,7 +57,7 @@ class PopulateOrga extends AbstractPopulateOrga
 
         // Ajout d'un role sun une organisation à un utilisateur existant.
         // Params : email, Organization
-        $this->addOrganizationAdministrator('admin@myc-sense.com', $organization);
+        $this->addWorkspaceAdministrator('admin@myc-sense.com', $organization);
 
         // Ajout d'un role sur une cellule à un utilisateur existant.
         // Params : email, Granularity, [Member]

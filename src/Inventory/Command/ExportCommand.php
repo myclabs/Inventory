@@ -45,11 +45,11 @@ class ExportCommand extends Command
                     ],
                 ],
             ],
-            \Orga\Model\ACL\OrganizationAdminRole::class => [ 'exclude' => true ],
-            \Orga\Model\ACL\CellAdminRole::class => [ 'exclude' => true ],
-            \Orga\Model\ACL\CellManagerRole::class => [ 'exclude' => true ],
-            \Orga\Model\ACL\CellContributorRole::class => [ 'exclude' => true ],
-            \Orga\Model\ACL\CellObserverRole::class => [ 'exclude' => true ],
+            \Orga\Domain\ACL\WorkspaceAdminRole::class => [ 'exclude' => true ],
+            \Orga\Domain\ACL\CellAdminRole::class => [ 'exclude' => true ],
+            \Orga\Domain\ACL\CellManagerRole::class => [ 'exclude' => true ],
+            \Orga\Domain\ACL\CellContributorRole::class => [ 'exclude' => true ],
+            \Orga\Domain\ACL\CellObserverRole::class => [ 'exclude' => true ],
             \DW\Domain\Cube::class => [ 'exclude' => true ],
             \DW\Domain\Axis::class => [ 'exclude' => true ],
             \DW\Domain\Member::class => [ 'exclude' => true ],
@@ -73,7 +73,7 @@ class ExportCommand extends Command
                     ],
                 ],
             ],
-            \Orga_Model_Cell_InputComment::class => [
+            \Orga\Domain\Cell\CellInputComment::class => [
                 'properties' => [
                     'author' => [
                         'transform' => function (User $author) {
@@ -82,13 +82,13 @@ class ExportCommand extends Command
                     ],
                 ],
             ],
-            \Orga_Model_Cell::class => [
+            \Orga\Domain\Cell::class => [
                 'properties' => [
                     'acl' => [ 'exclude' => true ],
                     'dwResults' => [ 'exclude' => true ],
                 ],
             ],
-            \Orga_Model_CellsGroup::class => [
+            \Orga\Domain\SubCellsGroup::class => [
                 'properties' => [
                     'aF' => [
                         'transform' => function (\AF\Domain\AF $af = null) {
@@ -131,13 +131,13 @@ class ExportCommand extends Command
         file_put_contents($root . '/af.json', $serializer->serialize($data));
 
         $output->writeln('<comment>Exporting Orga</comment>');
-        $data = \Orga_Model_Organization::loadList();
+        $data = \Orga\Domain\Workspace::loadList();
         file_put_contents($root . '/orga.json', $serializer->serialize($data));
 
         $reportsData = [];
         $aclData = [];
-        /** @var \Orga_Model_Organization $organization */
-        foreach (\Orga_Model_Organization::loadList() as $organization) {
+        /** @var \Orga\Domain\Workspace $organization */
+        foreach (\Orga\Domain\Workspace::loadList() as $organization) {
             $organizationAdmins = [];
             foreach ($organization->getAdminRoles() as $adminRoles) {
                 $organizationAdmins[] = $adminRoles->getSecurityIdentity()->getEmail();
@@ -172,7 +172,7 @@ class ExportCommand extends Command
                             $cellDataObject = new \StdClass();
                             $cellDataObject->type = 'cell';
                             $cellDataObject->members = array_map(
-                                function (\Orga_Model_Member $m) {
+                                function (\Orga\Domain\Member $m) {
                                     return $m->getAxis()->getRef() . ';' . $m->getCompleteRef();
                                 },
                                 $cellMembers
@@ -190,7 +190,7 @@ class ExportCommand extends Command
                         $granularityDataObject = new \StdClass();
                         $granularityDataObject->type = 'granularity';
                         $granularityDataObject->granularityAxes = array_map(
-                            function (\Orga_Model_Axis $a) {
+                            function (\Orga\Domain\Axis $a) {
                                 return $a->getRef();
                             },
                             $granularityAxes
@@ -212,7 +212,7 @@ class ExportCommand extends Command
                     $granularityDataObject = new \StdClass();
                     $granularityDataObject->type = 'granularity';
                     $granularityDataObject->granularityAxes = array_map(
-                        function (\Orga_Model_Axis $a) {
+                        function (\Orga\Domain\Axis $a) {
                             return $a->getRef();
                         },
                         $granularityAxes

@@ -7,7 +7,7 @@ Feature: Organizational axis feature
   @javascript
   Scenario: Creation of an organizational axis, correct input
   # Accès à l'onglet "Axes"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
     And I wait 2 seconds
@@ -43,7 +43,7 @@ Feature: Organizational axis feature
   @javascript
   Scenario: Creation of an organizational axis, incorrect input
   # Accès à l'onglet "Axes"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
     And I wait 2 seconds
@@ -69,7 +69,7 @@ Feature: Organizational axis feature
   @javascript
   Scenario: Edition of label and identifier of an organizational axis
   # Accès à l'onglet "Axes"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
     And I wait 3 seconds
@@ -98,7 +98,7 @@ Feature: Organizational axis feature
   @javascript
   Scenario: Edition of position and parent axis of an organizational axis
   # Accès à l'onglet "Axes"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
     And I wait 2 seconds
@@ -128,7 +128,7 @@ Feature: Organizational axis feature
   @javascript
   Scenario:  Deletion of an organizational axis
   # Accès à l'onglet "Axes"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
     And I wait 2 seconds

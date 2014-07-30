@@ -1,5 +1,53 @@
 # Mise en production
 
+## 3.4
+
+- NE PAS DEPLOYER.
+
+- Exécuter les requêtes suivantes :
+
+```sql
+ALTER TABLE AuditTrail_OrganizationContext DROP FOREIGN KEY FK_D4A6627C32C8A3DE;
+ALTER TABLE AuditTrail_OrganizationContext DROP INDEX IDX_D4A6627C32C8A3DE;
+ALTER TABLE Orga_ACL_Role_OrganizationAdmin DROP FOREIGN KEY FK_D18D46E32C8A3DE;
+ALTER TABLE Orga_ACL_Role_OrganizationAdmin DROP INDEX IDX_D18D46E32C8A3DE;
+ALTER TABLE Orga_Axis DROP FOREIGN KEY FK_3AD44EC39F70C78D;
+ALTER TABLE Orga_Axis DROP INDEX IDX_3AD44EC39F70C78D;
+ALTER TABLE Orga_Axis DROP INDEX axisRefUniquenessInOrganization;
+ALTER TABLE Orga_Granularity DROP FOREIGN KEY FK_9457AFC29F70C78D;
+ALTER TABLE Orga_Granularity DROP INDEX IDX_9457AFC29F70C78D;
+ALTER TABLE Orga_Granularity DROP INDEX granularityRefUniquenessInOrganization;
+
+ALTER TABLE AuditTrail_OrganizationContext CHANGE organization_id workspace_id INT(11);
+ALTER TABLE Orga_ACL_Role_OrganizationAdmin CHANGE organization_id workspace_id INT(11);
+ALTER TABLE Orga_Axis CHANGE idOrganization idWorkspace INT(11);
+ALTER TABLE Orga_Granularity CHANGE idOrganization idWorkspace INT(11);
+
+RENAME TABLE AuditTrail_OrganizationContext TO AuditTrail_WorkspaceContext;
+RENAME TABLE Orga_ACL_Role_OrganizationAdmin TO Orga_ACL_Role_WorkspaceAdmin;
+RENAME TABLE Orga_CellsGroup TO Orga_SubCellsGroup;
+RENAME TABLE Orga_Organization TO Orga_Workspace;
+RENAME TABLE Orga_Organization_Contextindicator TO Orga_Workspace_Contextindicator;
+
+ALTER TABLE AuditTrail_WorkspaceContext DROP FOREIGN KEY FK_D4A6627CCB39D93A;
+ALTER TABLE AuditTrail_WorkspaceContext DROP INDEX IDX_D4A6627CCB39D93A;
+ALTER TABLE Orga_Workspace DROP FOREIGN KEY FK_4EF089EFE174710F;
+ALTER TABLE Orga_Workspace DROP INDEX UNIQ_4EF089EFE174710F;
+ALTER TABLE Orga_Workspace DROP FOREIGN KEY FK_4EF089EF632614CF;
+ALTER TABLE Orga_Workspace DROP INDEX UNIQ_4EF089EF632614CF;
+ALTER TABLE Orga_Workspace DROP FOREIGN KEY FK_4EF089EF6D8F3D56;
+ALTER TABLE Orga_Workspace DROP INDEX IDX_4EF089EF6D8F3D56;
+ALTER TABLE Orga_Workspace_Contextindicator DROP FOREIGN KEY FK_196AF602D7E5EAE8;
+ALTER TABLE Orga_Workspace_Contextindicator DROP INDEX IDX_196AF602D7E5EAE8;
+ALTER TABLE Orga_SubCellsGroup DROP FOREIGN KEY FK_262E11F24CB6F1FF;
+ALTER TABLE Orga_SubCellsGroup DROP INDEX IDX_262E11F24CB6F1FF;
+ALTER TABLE Orga_SubCellsGroup DROP FOREIGN KEY FK_262E11F25E699E88;
+ALTER TABLE Orga_SubCellsGroup DROP INDEX IDX_262E11F25E699E88;
+```
+
+- Puis seulement, déployer normalement avec update de la BDD.
+
+
 ## 3.3
 
 - Déployer normalement avec update de la BDD.

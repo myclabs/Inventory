@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author valentin.claras
+ * @package Orga
+ * Traduction des Axis
+ */
+?>
+    <div class="page-header">
+        <h1>
+            <?=___('Orga', 'translate', 'organizationalAxes')?> <small><?=___('UI', 'name', 'translations')?></small>
+            <div class="pull-right">
+                <small>
+                    <?=$this->button(__('UI', 'other', 'backButton'))->prependIcon('arrow-left')->link('orga/workspace/edit/workspace/'.$this->workspaceId.'/tab/translate/')?>
+                </small>
+            </div>
+        </h1>
+        <style>
+            h1 .pull-right small a { letter-spacing: normal; }
+        </style>
+    </div>
+<?php
+echo $this->translateDatagrid('Axis', 'label', 'datagrid_translate_axes', 'orga')->simple()->addParam('workspace', $this->workspaceId);

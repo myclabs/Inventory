@@ -43,41 +43,41 @@ The role "[ROLE]" for the organizational unit "[CELL]" has been removed from you
             </tuv>
         </tu>        
     
-       <!-- Rôle relatif à une organisation -->
+       <!-- Rôle relatif à un workspace -->
 
-        <tu tuid="userOrganizationAdministratorRoleGivenAtCreation">
+        <tu tuid="userWorkspaceAdministratorRoleGivenAtCreation">
             <tuv xml:lang="fr">
                 <seg>
-Le rôle d'administrateur de l'organisation « [ORGANIZATION] » vous a été attribué.
+Le rôle d'administrateur du workspace « [ORGANIZATION] » vous a été attribué.
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-The role administrator of organization "[ORGANIZATION]" has been assigned to you.
+The role administrator of workspace "[ORGANIZATION]" has been assigned to you.
                 </seg>
             </tuv>
         </tu>        
-        <tu tuid="userOrganizationAdministratorRoleAdded">
+        <tu tuid="userWorkspaceAdministratorRoleAdded">
             <tuv xml:lang="fr">
                 <seg>
-Le rôle d'administrateur de l'organisation « [ORGANIZATION] » vous a été attribué par un administrateur de l'application.
+Le rôle d'administrateur du workspace « [ORGANIZATION] » vous a été attribué par un administrateur de l'application.
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-The role administrator of organization "[ORGANIZATION]" has been assigned to you by an application administrator.
+The role administrator of workspace "[ORGANIZATION]" has been assigned to you by an application administrator.
                 </seg>
             </tuv>
         </tu>        
-        <tu tuid="userOrganizationAdministratorRoleRemoved">
+        <tu tuid="userWorkspaceAdministratorRoleRemoved">
             <tuv xml:lang="fr">
                 <seg>
-Le rôle d'administrateur de l'organisation « [ORGANIZATION] » vous a été retiré par un administrateur de l'application.
+Le rôle d'administrateur du workspace « [ORGANIZATION] » vous a été retiré par un administrateur de l'application.
                 </seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>
-The role administrator of organization "[ORGANIZATION]" has been removed from your access rights by an application administrator.
+The role administrator of workspace "[ORGANIZATION]" has been removed from your access rights by an application administrator.
                 </seg>
             </tuv>
         </tu>        

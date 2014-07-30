@@ -1,0 +1,64 @@
+<?php
+use Orga\Domain\Workspace;
+
+/** @var Workspace $workspace */
+$workspace = $this->workspace;
+?>
+<form class="form form-inline" id="addGranularity<?=$workspace->getId()?>_<?=$this->purpose?>"
+      action="orga/workspace/add-granularity-<?=$this->purpose?>/workspace/<?=$workspace->getId()?>/">
+    <select multiple name="axes[]" class="axes" style="min-width: 250px;">
+        <?php foreach ($workspace->getFirstOrderedAxes() as $axis) : ?>
+            <option value="<?=$axis->getRef()?>"><?=$this->translate($axis->getLabel())?></option>
+        <?php endforeach; ?>
+    </select>
+   <?=$this->complementaryFields?>
+    <button class="btn btn-primary addGranularity">
+        <i class="fa fa-plus-circle"></i>
+        <?=___('UI', 'verb', 'add')?>
+    </button>
+</form>
+
+<script>
+    $('#addGranularity<?=$workspace->getId()?>_<?=$this->purpose?> .axes').select2(
+        {
+            closeOnSelect: false,
+            placeholder: '<?=(empty($this->selectAxesPlaceholder) ? ___('Orga', 'granularity', 'addGranularitySelectAxes') : $this->selectAxesPlaceholder)?>'
+        }
+    );
+    $('#addGranularity<?=$workspace->getId()?>_<?=$this->purpose?>').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        if (form.attr('data-submitting') === 'true') {
+            return false;
+        }
+        form.attr('data-submitting', true);
+        $('.granularityAddInfo', form.parent()).remove();
+        form.after('<div class="alert alert-info granularityAddInfo"></div>');
+        var granularityInfo = $('.granularityAddInfo', form.parent());
+        granularityInfo.html('<img class="granularityLoading" src="images/ui/ajax-loader.gif"> <?=___('UI', 'loading', 'loading')?>');
+        $.ajax({
+            url: form.attr('action'),
+            type: "POST",
+            data: form.serialize(),
+            success: function(data) {
+                $('#addGranularity<?=$workspace->getId()?>_<?=$this->purpose?>').trigger('granularityAdded', data);
+                form.attr('data-submitting', false);
+            },
+            error: function(jqXHR) {
+                granularityInfo[0].className = granularityInfo[0].className.replace(/\balert-.*?\b/g, '');
+                var response = $.parseJSON(jqXHR.responseText);
+                if (typeof(response.typeError) == 'string') {
+                    granularityInfo.addClass('alert-' + response.typeError);
+                } else {
+                    granularityInfo.addClass('alert-danger');
+                }
+                if (typeof(response.message) == 'string') {
+                    granularityInfo.html(response.message);
+                } else {
+                    granularityInfo.html('<?=___('UI', 'loading', 'error')?>');
+                }
+                form.attr('data-submitting', false);
+            }
+        });
+    });
+</script>

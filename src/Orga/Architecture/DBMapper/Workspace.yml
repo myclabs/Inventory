@@ -1,0 +1,71 @@
+Orga\Domain\Workspace:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Orga_Workspace
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  lifecycleCallbacks:
+    preRemove: [ preDelete ]
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  oneToOne:
+    timeAxis:
+      targetEntity: Axis
+      joinColumn:
+        name: idTimeAxis
+        referencedColumnName: id
+        nullable: true
+        unique: true
+        onDelete: SET NULL
+    granularityForInventoryStatus:
+      targetEntity: Granularity
+      joinColumn:
+        name: idGranularityForInventoryStatus
+        referencedColumnName: id
+        nullable: true
+        unique: true
+        onDelete: SET NULL
+
+  manyToOne:
+    account:
+      targetEntity: Account\Domain\Account
+      joinColumn:
+        name: idAccount
+        referencedColumnName: id
+        nullable: false
+
+  oneToMany:
+    axes:
+      targetEntity: Axis
+      mappedBy: workspace
+      orderBy:
+        narrowerTag: ASC
+      orphanRemoval: true
+      cascade: [ persist ]
+    granularities:
+      targetEntity: Granularity
+      mappedBy: workspace
+      orderBy:
+        position: ASC
+      orphanRemoval: true
+      cascade: [ persist ]
+    adminRoles:
+      targetEntity: Orga\Domain\ACL\WorkspaceAdminRole
+      mappedBy: workspace
+      cascade: [ all ]
+      orphanRemoval: true
+
+  manyToMany:
+    contextIndicators:
+      targetEntity: Classification\Domain\ContextIndicator
+      joinTable:
+        name: Orga_Workspace_Contextindicator

@@ -1,0 +1,11 @@
+Orga\Domain\ACL\WorkspaceAdminRole:
+  type: entity
+  table: Orga_ACL_Role_WorkspaceAdmin
+  readOnly: true
+
+  manyToOne:
+    workspace:
+      targetEntity: \Orga\Domain\Workspace
+      inversedBy: adminRoles
+      joinColumn:
+        nullable: false

@@ -35,7 +35,6 @@ return [
 
         $paths = [
             APPLICATION_PATH . '/models/mappers',
-            APPLICATION_PATH . '/orga/models/mappers',
         ];
         $doctrineYAMLDriver = new YamlDriver($paths, '.yml');
 
@@ -67,6 +66,7 @@ return [
             'AuditTrail',
             'AF',
             'Account',
+            'Orga'
         ];
         foreach ($modules as $module) {
             $yamlDriver = new SimplifiedYamlDriver(

@@ -18,7 +18,7 @@ $account = $this->account;
             <th colspan="2">Workspaces</th>
             <th class="col-button hidden-xs">
                 <?php if ($this->canEditAccount) : ?>
-                    <a href="orga/organization/add/account/<?=$account->id?>" class="btn btn-default btn-xs pull-right"
+                    <a href="orga/workspace/add/account/<?=$account->id?>" class="btn btn-default btn-xs pull-right"
                        title="<?=__('Orga', 'workspace', 'createNewWorkspace')?>">
                         <i class="fa fa-lg fa-plus"></i>
                     </a>
@@ -28,31 +28,31 @@ $account = $this->account;
         </thead>
         <tbody>
 
-        <?php foreach ($account->organizations as $organization) : ?>
-            <tr class="organization">
+        <?php foreach ($account->workspaces as $workspace) : ?>
+            <tr class="workspace">
                 <td class="col-icon">
                     <i class="fa fa-inbox fa-2x text-muted"></i>
                 </td>
                 <td>
                     <h4>
-                        <a href="orga/organization/view/idOrganization/<?=$organization->id?>">
-                            <?=$organization->label?>
+                        <a href="orga/workspace/view/workspace/<?=$workspace->id?>">
+                            <?=$workspace->label?>
                         </a>
-                        <small><?=___('Orga', 'organizationList', 'goToData')?></small>
+                        <small><?=___('Orga', 'workspaceList', 'goToData')?></small>
                     </h4>
                 </td>
                 <td class="col-button hidden-xs">
                     <div class="btn-group pull-right">
-                        <?php if ($organization->canBeEdited) : ?>
-                            <a class="editOrganization btn btn-sm btn-default"
-                               href="orga/organization/edit/idOrganization/<?=$organization->id?>">
+                        <?php if ($workspace->canBeEdited) : ?>
+                            <a class="editWorkspace btn btn-sm btn-default"
+                               href="orga/workspace/edit/workspace/<?=$workspace->id?>">
                                 <i class="fa fa-wrench"></i>
                                 <?=___('UI', 'name', 'configurationOrga')?>
                             </a>
                         <?php endif; ?>
-                        <?php if ($organization->canBeDeleted) : ?>
-                            <a class="deleteOrganization btn btn-sm btn-warning"
-                               href="orga/organization/delete/idOrganization/<?=$organization->id?>">
+                        <?php if ($workspace->canBeDeleted) : ?>
+                            <a class="deleteWorkspace btn btn-sm btn-warning"
+                               href="orga/workspace/delete/workspace/<?=$workspace->id?>">
                                 <i class="fa fa-trash-o"></i>
                                 <?=___('UI', 'verb', 'delete')?>
                             </a>
@@ -62,7 +62,7 @@ $account = $this->account;
             </tr>
         <?php endforeach; ?>
 
-        <?php if (empty($account->organizations)) : ?>
+        <?php if (empty($account->workspaces)) : ?>
             <tr>
                 <td class="text-muted" colspan="4">
                     Aucun workspace
@@ -102,7 +102,7 @@ $account = $this->account;
                         <a href="af/library/view/id/<?=$library->id?>">
                             <?=$library->label?>
                         </a>
-                        <small><?=___('Orga', 'organizationList', 'goToData')?></small>
+                        <small><?=___('Orga', 'workspaceList', 'goToData')?></small>
                     </h4>
                 </td>
                 <?php if ($library->canDelete) : ?>
@@ -157,7 +157,7 @@ $account = $this->account;
                         <a href="parameter/library/view/id/<?=$library->id?>">
                             <?=$library->label?>
                         </a>
-                        <small><?=___('Orga', 'organizationList', 'goToData')?></small>
+                        <small><?=___('Orga', 'workspaceList', 'goToData')?></small>
                     </h4>
                 </td>
                 <?php if ($library->canDelete) : ?>
@@ -213,7 +213,7 @@ $account = $this->account;
                         <a href="classification/library/view/id/<?=$library->id?>">
                             <?=$library->label?>
                         </a>
-                        <small><?=___('Orga', 'organizationList', 'goToData')?></small>
+                        <small><?=___('Orga', 'workspaceList', 'goToData')?></small>
                     </h4>
                 </td>
                 <?php if ($library->canDelete) : ?>
@@ -245,7 +245,7 @@ $account = $this->account;
 
 <script>
     $(function() {
-        $(".deleteOrganization").confirm({
+        $(".deleteWorkspace").confirm({
             text: '<?=___('UI', 'message', 'areYouSure')?>',
             confirmButton: '<i class="fa fa-check"></i> <?=___('UI', 'verb', 'confirm')?>',
             cancelButton: '<i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?>',

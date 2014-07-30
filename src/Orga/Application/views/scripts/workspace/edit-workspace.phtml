@@ -1,0 +1,203 @@
+    <fieldset class="wrapper">
+    <legend style="cursor:default"><?=___('UI', 'name', 'general')?></legend>
+    <div>
+        <form id="workspaceDetails<?=$this->workspaceId?>" class="form-horizontal" method="POST" action="orga/workspace/edit-workspace-submit/workspace/<?=$this->workspaceId?>">
+            <div class="form-group">
+                <label for="workspace_label" class="control-label col-xs-2">
+                    <?=___('UI', 'name', 'label')?>
+                </label>
+                <div class="col-xs-10">
+                    <input name="label" id="workspace_label" type="text" class="form-control" value="<?=$this->workspaceLabel?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                new AjaxForm('#workspaceDetails<?=$this->workspaceId?>');
+            });
+        </script>
+    </div>
+</fieldset>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default">
+        <?=___('Orga', 'workspace', 'timeAxis')?>
+        <small><?=___('Orga', 'workspace', 'timeAxisExplanation')?></small>
+    </legend>
+    <div>
+        <form id="workspaceTimeAxis<?=$this->workspaceId?>" class="form-horizontal" method="POST" action="orga/workspace/edit-time-axis/workspace/<?=$this->workspaceId?>">
+            <div class="form-group">
+                <label for="workspace_timeAxis" class="control-label col-xs-2">
+                    <?=___('Orga', 'workspace', 'timeAxisLabel')?>
+                </label>
+                <div class="col-xs-10">
+                    <select name="timeAxis" id="workspace_timeAxis" class="form-control">
+                        <option value=""></option>
+                        <?php foreach ($this->potentialAxes as $axis) : ?>
+                            <option value="<?=$axis->getId()?>"<?php if ($this->selectedAxis === $axis) :?> selected<?php endif; ?>>
+                                <?=$this->translate($axis->getLabel())?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                new AjaxForm('#workspaceTimeAxis<?=$this->workspaceId?>');
+            });
+        </script>
+    </div>
+</fieldset>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=___('Orga', 'workspace', 'contextIndicators')?></legend>
+    <div>
+        <form id="workspaceContextIndicators<?=$this->workspaceId?>" class="form-horizontal" method="POST" action="orga/workspace/edit-context-indicators/workspace/<?=$this->workspaceId?>">
+            <div class="form-group">
+                <label for="contextIndicators" class="control-label col-xs-2">
+                    <?=___('Classification', 'contextIndicator', 'contextIndicators')?>
+                </label>
+                <div class="col-xs-10">
+                    <select name="contextIndicators[]" multiple id="contextIndicators" style="width: 100%">
+                        <?php foreach ($this->potentialContextIndicators as $contextIndicator) : ?>
+                            <option value="<?=$contextIndicator->getId()?>"<?=(in_array($contextIndicator, $this->selectedContextIndicators) ? ' selected' : '')?>>
+                                <?=$this->translate($contextIndicator->getLabel())?>
+                                (<?=$this->translate($contextIndicator->getLibrary()->getLabel())?>)
+                            </option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#contextIndicators').select2();
+                new AjaxForm('#workspaceContextIndicators<?=$this->workspaceId?>');
+            });
+        </script>
+    </div>
+</fieldset>
+
+
+<?php
+$file = glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $this->workspaceId . '.*');
+$file = reset($file);
+?>
+
+<fieldset class="wrapper">
+    <legend style="cursor:default">
+        <?=___('Orga', 'workspace', 'banner')?>
+        <small><?=___('Orga', 'workspace', 'bannerExplanations')?></small>
+    </legend>
+    <div>
+        <form id="editBanner<?=$this->workspaceId?>" class="form-horizontal" method="POST" action="orga/workspace/edit-banner/workspace/<?=$this->workspaceId?>" enctype="multipart/form-data" target="upload_iframe<?=$this->workspaceId?>">
+            <div class="form-group">
+                <label for="workspace_banner" class="control-label col-xs-2">
+                    <?=__('Orga', 'workspace', 'choiceBanner')?>
+                </label>
+                <div class="col-xs-10">
+                    <input name="banner" id="workspace_banner" type="file">
+                </div>
+            </div>
+            <div class="form-group">
+                <span class="form-control-static control-label col-xs-2">
+                    <?=___('Orga', 'workspace', 'currentBanner')?>
+                </span>
+                <div class="col-xs-10">
+                    <img id="currentBanner<?=$this->workspaceId?>" width="100%" src="<?=(($file !== false) ? 'workspaceBanners/'.pathinfo($file)['filename'] : '')?>" alt="<?=___('Orga', 'workspace', 'noBanner')?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
+                    <button id="removeBanner<?=$this->workspaceId?>" class="btn btn-warning<?=(($file !== false) ? '': ' hide')?>" type="button">
+                        <?=__('UI', 'verb', 'delete')?>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group hide">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <div class="uploading-banner-errors alert alert-danger"></div>
+                </div>
+            </div>
+            <div class="form-group hide">
+                <div class="col-xs-10 col-xs-offset-2">
+                    <div class="uploading-banner alert alert-info">
+                        <?=$this->image('images/ui/ajax-loader.gif', '')?>
+                        <?=__('Doc', 'library', 'uploading')?>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <iframe id="upload_iframe<?=$this->workspaceId?>" name="upload_iframe<?=$this->workspaceId?>" src="#" class="hidden">
+        </iframe>
+
+        <script>
+            $(document).ready(function() {
+                // Début de l'upload
+                $("#editBanner<?=$this->workspaceId?>").on('submit', function() {
+                    $('#workspace .uploading-banner').closest('.form-group').removeClass('hide');
+                    $('#workspace .uploading-banner-errors').closest('.form-group').addClass('hide');
+                });
+
+                // Callback appelée lorsque le téléchargement a réussi
+                fileUploadResult<?=$this->workspaceId?> = function(success, message) {
+                    if (success) {
+                        $('#currentBanner<?=$this->workspaceId?>').attr('src', 'workspaceBanners/' + message + '?' + new Date().getTime());
+                        $("#removeBanner<?=$this->workspaceId?>").removeClass('hide');
+                    } else {
+                        $('#workspace .uploading-banner-errors').html(message);
+                        $('#workspace .uploading-banner-errors').closest('.form-group').removeClass('hide');
+                    }
+                    $('#workspace .uploading-banner').closest('.form-group').addClass('hide');
+                }
+
+                // Suppression de la bannière
+                $("#removeBanner<?=$this->workspaceId?>").on('click', function(e) {
+                    var button = $(this);
+                    if (button.hasClass('disabled')) {
+                        return;
+                    }
+                    e.preventDefault();
+                    button.addClass('disabled');
+                    $.ajax({
+                        url: 'orga/workspace/remove-banner/workspace/<?=$this->workspaceId?>',
+                        type: "POST",
+                        success: function(data) {
+                            addMessage(data.message, 'success');
+                            $('#currentBanner<?=$this->workspaceId?>').attr('src', '');
+                            $("#removeBanner<?=$this->workspaceId?>").addClass('hide')();
+                        },
+                        error: function(jqXHR) {
+                            var data = $.parseJSON(jqXHR.responseText);
+                            addMessage(data.message, data.typeError);
+                        },
+                        complete: function(jqXHR) {
+                            button.removeClass('disabled');
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+</fieldset>

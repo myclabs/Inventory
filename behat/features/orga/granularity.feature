@@ -7,7 +7,7 @@ Feature: Organization granularity feature
   @javascript
   Scenario: Creation of a granularity, correct input
   # Accès à l'onglet "Niveaux"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Niveaux"
     Then I should see the "granularity1" datagrid
@@ -29,7 +29,7 @@ Feature: Organization granularity feature
   @javascript
   Scenario: Creation of a granularity, incorrect input
   # Accès à l'onglet "Niveaux"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Niveaux"
     Then I should see the "granularity1" datagrid
@@ -60,7 +60,7 @@ Feature: Organization granularity feature
   @javascript
   Scenario: Edition of a granularity
   # Accès à l'onglet "Niveaux"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Niveaux"
     Then I should see the "granularity1" datagrid
@@ -79,7 +79,7 @@ Feature: Organization granularity feature
   @javascript
   Scenario: Attribute 'with roles' of a granularity cannot be changed to 'No' if roles exist for cells at this granularity
   # Accès à l'onglet "Niveaux"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Niveaux"
     Then I should see the "granularity1" datagrid
@@ -106,7 +106,7 @@ Feature: Organization granularity feature
   @javascript
   Scenario: Deletion of a granularity (test on existing granularities)
   # Accès à l'onglet "Niveaux"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Niveaux"
     Then I should see the "granularity1" datagrid

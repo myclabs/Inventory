@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManager;
 use MyCLabs\ACL\Model\CascadingResource;
 use MyCLabs\ACL\Model\ClassResource;
 use MyCLabs\ACL\Model\EntityResource;
+use Orga\Domain\Workspace;
 use Parameter\Domain\ParameterLibrary;
 
 /**
@@ -102,7 +103,7 @@ class Account implements EntityResource, CascadingResource
         $query->filter->addCondition('account', $this);
 
         return array_merge(
-            \Orga_Model_Organization::loadList($query),
+            Workspace::loadList($query),
             AFLibrary::loadList($query),
             ParameterLibrary::loadList($query),
             ClassificationLibrary::loadList($query)

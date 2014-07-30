@@ -1,0 +1,16 @@
+AuditTrail\Domain\Context\WorkspaceContext:
+  type: entity
+  table: AuditTrail_WorkspaceContext
+
+  manyToOne:
+    workspace:
+      targetEntity: \Orga\Domain\Workspace
+      joinColumn:
+        # Suppression du contexte si l'organisation est supprimée
+        onDelete: CASCADE
+    cell:
+      targetEntity: \Orga\Domain\Cell
+      joinColumn:
+        nullable: true
+        # Suppression du contexte si la cellule est supprimée
+        onDelete: CASCADE

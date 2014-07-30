@@ -1,0 +1,27 @@
+<?php
+use MyCLabs\MUIH\Button;
+
+$columnControl = new UI_Datagrid_Col_Text('control', ___('Orga', 'control', 'seekedIssue'));
+
+$columnDiag = new UI_Datagrid_Col_Bool('diagnostic', ___('UI', 'name', 'diagnostic'));
+$columnDiag->valueTrue = '<i class="fa fa-check"></i> '.___('UI', 'other', 'ok');
+$columnDiag->valueFalse = '<i class="fa fa-times"></i> '.___('UI', 'other', 'nok');
+
+$columnEchec = new UI_Datagrid_Col_Text('failure', ___('Orga', 'control', 'abnormalItems'));
+
+$datagrid = new UI_Datagrid('consistency'.$this->workspaceId, 'datagrid_workspace_consistency', 'orga');
+$datagrid->addCol($columnControl);
+$datagrid->addCol($columnDiag);
+$datagrid->addCol($columnEchec);
+$datagrid->addParam('workspace', $this->workspaceId);
+$datagrid->pagination = false;
+
+if ($this->display === false) {
+    echo $datagrid->render();
+} else {
+    $datagrid->display();
+}
+
+$controlButton = new Button(___('Orga', 'control', 'renewControl'), Button::TYPE_PRIMARY);
+$controlButton->setAttribute('onclick', 'consistency'.$this->workspaceId.'.filter();');
+$controlButton->display();

@@ -3,6 +3,7 @@
 namespace Tests\Core;
 
 use Core\Test\TestCase;
+use Core_Exception_InvalidArgument;
 use Doctrine\ORM\EntityRepository;
 use Inventory_Model_Ordered;
 use PHPUnit_Framework_TestSuite;
@@ -425,7 +426,13 @@ class EntityOrderedOthers extends TestCase
         $orderedEntity2->setContext('context2');
         $orderedEntity2->save();
 
-        $orderedEntity1->moveAfter($orderedEntity2);
+        try {
+            $orderedEntity1->moveAfter($orderedEntity2);
+        } catch (Core_Exception_InvalidArgument $e) {
+            $orderedEntity1->delete();
+            $orderedEntity2 ->delete();
+            throw $e;
+        }
     }
 
     /**

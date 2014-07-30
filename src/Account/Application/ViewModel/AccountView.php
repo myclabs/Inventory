@@ -20,9 +20,9 @@ class AccountView
     public $name;
 
     /**
-     * @var OrganizationView[]
+     * @var WorkspaceView[]
      */
-    public $organizations = [];
+    public $workspaces = [];
 
     /**
      * @var AFLibraryView[]

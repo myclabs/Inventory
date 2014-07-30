@@ -1,0 +1,76 @@
+Orga\Domain\Member:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Orga_Member
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      column: ref
+      type: string
+      length: 255
+      nullable: false
+    parentMembersHashKey:
+      column: parentMembersHashKey
+      type: string
+      length: 255
+      nullable: true
+    tag:
+      column: tag
+      type: text
+      nullable: false
+    position:
+      column: position
+      type: integer
+      nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    axis:
+      targetEntity: Axis
+      inversedBy: members
+      joinColumn:
+        name: idAxis
+        referencedColumnName: id
+
+  manyToMany:
+    directChildren:
+      targetEntity: Member
+      inversedBy: directParents
+      joinTable:
+        name: Orga_Member_Association
+        joinColumns:
+          idParent:
+            referencedColumnName: id
+        inverseJoinColumns:
+          idChild:
+            referencedColumnName: id
+    directParents:
+      targetEntity: Member
+      mappedBy: directChildren
+    cells:
+      targetEntity: Cell
+      mappedBy: members
+      orderBy:
+        membersHashKey: ASC
+      cascade: [ persist ]
+
+  lifecycleCallbacks:
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]
+
+  uniqueConstraints:
+    memberRefUniquenessInAxisAndParentMembersSashKey:
+      columns:
+        - ref
+        - parentMembersHashKey
+        - idAxis

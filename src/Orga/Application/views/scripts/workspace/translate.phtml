@@ -1,0 +1,18 @@
+<?=$this->translateDatagrid('Workspace', 'label', 'datagrid_translate_workspaces', 'orga')->simple()->addParam('workspace', $this->workspaceId)->disablePagination()->getDatagrid()->render()?>
+<ul>
+    <li>
+        <a href="orga/translate/axes/workspace/<?=$this->workspaceId?>/">
+            <?=___('Orga', 'translate', 'translateOrganizationalAxes')?>
+        </a>
+    </li>
+    <li>
+        <a href="orga/translate/members/workspace/<?=$this->workspaceId?>/">
+            <?=___('Orga', 'translate', 'translateOrganizationalMembers')?>
+        </a>
+    </li>
+    <li>
+        <a href="orga/translate/granularity-reports/workspace/<?=$this->workspaceId?>/">
+            <?=___('Orga', 'translate', 'translateGranularityReports')?>
+        </a>
+    </li>
+</ul>

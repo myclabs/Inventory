@@ -6,7 +6,7 @@ Feature: Check uncertainty computation feature
 
   @javascript
   Scenario: Check uncertainty computation scenario
-    Given I am on "orga/cell/view/idCell/1"
+    Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
   # Accès cellule "Annecy"
     And I click element "a[href='#granularity4']"

@@ -6,7 +6,7 @@ Feature: History of values of a field feature
 
   @javascript
   Scenario: Input history scenario, general data form, creation and modification of an input
-    Given I am on "orga/cell/input/idCell/4/fromIdCell/1/"
+    Given I am on "orga/cell/input/cell/4/fromCell/1/"
     And I wait for the page to finish loading
   # Création de la saisie initiale
     When I fill in "chiffre_affaire" with "10"
@@ -32,7 +32,7 @@ Feature: History of values of a field feature
   @javascript
   Scenario: Input history scenario, display of history for various kinds of input fields
     # Cellule : 2012 | Chambéry | Test affichage
-    Given I am on "orga/cell/input/idCell/33/fromIdCell/1"
+    Given I am on "orga/cell/input/cell/33/fromCell/1"
     And I wait for the page to finish loading
   # Champ numérique
     And I click element "#c_nHistory"
@@ -79,7 +79,7 @@ Feature: History of values of a field feature
   @javascript
   Scenario: Input history scenario, display of history for a repeated subform containing various types of fields, one repetition
   # Cellule : 2013 | Annecy | Test affichage
-    Given I am on "orga/cell/input/idCell/42/fromIdCell/1"
+    Given I am on "orga/cell/input/cell/42/fromCell/1"
     And I wait for the page to finish loading
   # Ajout 1 blocs de répétition
     And I click "Ajouter"

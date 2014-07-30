@@ -1,4 +1,0 @@
-Orga\Model\ACL\CellObserverRole:
-  type: entity
-  table: Orga_ACL_Role_CellObserver
-  readOnly: true

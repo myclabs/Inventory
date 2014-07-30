@@ -13,7 +13,7 @@ use Core_Model_Query;
 use Mnapoli\Translated\Translator;
 use MyCLabs\ACL\ACL;
 use User\Domain\ACL\Actions;
-use Orga_Model_Organization;
+use Orga\Domain\Workspace;
 use Parameter\Domain\ParameterLibrary;
 use User\Domain\User;
 
@@ -25,9 +25,9 @@ use User\Domain\User;
 class AccountViewFactory
 {
     /**
-     * @var OrganizationViewFactory
+     * @var WorkspaceViewFactory
      */
-    private $organizationViewFactory;
+    private $workspaceViewFactory;
 
     /**
      * @var ACL
@@ -40,11 +40,11 @@ class AccountViewFactory
     private $translator;
 
     public function __construct(
-        OrganizationViewFactory $organizationViewFactory,
+        WorkspaceViewFactory $workspaceViewFactory,
         ACL $acl,
         Translator $translator
     ) {
-        $this->organizationViewFactory = $organizationViewFactory;
+        $this->workspaceViewFactory = $workspaceViewFactory;
         $this->acl = $acl;
         $this->translator = $translator;
     }
@@ -63,10 +63,10 @@ class AccountViewFactory
         $query = new Core_Model_Query();
         $query->filter->addCondition('account', $account);
         $query->aclFilter->enable($user, Actions::TRAVERSE);
-        foreach (Orga_Model_Organization::loadList($query) as $organization) {
-            /** @var Orga_Model_Organization $organization */
-            $accountView->organizations[] = $this->organizationViewFactory->createOrganizationView(
-                $organization,
+        foreach (Workspace::loadList($query) as $workspace) {
+            /** @var Workspace $workspace */
+            $accountView->workspaces[] = $this->workspaceViewFactory->createWorkspaceView(
+                $workspace,
                 $user
             );
         }

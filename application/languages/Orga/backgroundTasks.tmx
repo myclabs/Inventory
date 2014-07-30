@@ -4,20 +4,20 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="createOrganization">
+        <tu tuid="createWorkspace">
             <tuv xml:lang="fr">
-                <seg>Ajout de l’organisation : [LABEL]</seg>
+                <seg>Ajout du workspace : [LABEL]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of organization: [LABEL]</seg>
+                <seg>Creation of the workspace: [LABEL]</seg>
             </tuv>
         </tu>
-        <tu tuid="removeOrganization">
+        <tu tuid="removeWorkspace">
             <tuv xml:lang="fr">
-                <seg>Suppression de l'organisation : [LABEL]</seg>
+                <seg>Suppression du workspace : [LABEL]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Deletion of organization: [LABEL]</seg>
+                <seg>Deletion of the workspace: [LABEL]</seg>
             </tuv>
         </tu>
         <tu tuid="addMember">

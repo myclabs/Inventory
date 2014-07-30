@@ -6,13 +6,13 @@ Feature: History of user actions on a cell feature
 
   @javascript
   Scenario: Input history feature, no history scenario
-    Given I am on "orga/cell/view/idCell/1"
+    Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
     Then I should see "L'historique est vide."
 
   @javascript
   Scenario: Input history scenario, general data form, creation of an input
-    Given I am on "orga/cell/input/idCell/4/fromIdCell/1/"
+    Given I am on "orga/cell/input/cell/4/fromCell/1/"
     And I wait for the page to finish loading
   # TODO : vérifier que pas de bouton pour la saisie initiale.
   # Création de la saisie initiale

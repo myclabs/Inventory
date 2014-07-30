@@ -1,0 +1,191 @@
+<?php use Orga\Domain\Workspace;
+
+if ((count($this->granularitiesData) > 1) || (!(reset($this->granularitiesData) instanceof Workspace))) : ?>
+<fieldset class="wrapper">
+    <legend style="cursor:default"><?=___('DW', 'rebuild', 'analysisDataRebuildCollapse')?></legend>
+<p><?=___('DW', 'rebuild', 'analysisDataRebuildWarningMessageWorkspace')?></p>
+<div>
+    <form action="orga/workspace/rebuild-data/workspace/<?=$this->workspace->getId()?>/" class="rebuild-data">
+        <div class="input-group">
+            <?php if (count($this->granularitiesData) > 1) : ?>
+                <span class="input-group-addon granularity-label">Sélection d'un niveau</span>
+                <select name="granularity" style="width: 100%;">
+                    <?php foreach ($this->granularitiesData as $granularityData) : ?>
+                        <?php if ($granularityData instanceof Workspace) : ?>
+                            <option value=""><?=$this->translate($granularityData->getLabel())?></option>
+                        <?php else : ?>
+                            <option value="<?=$granularityData->getRef()?>"><?=$this->translate($granularityData->getLabel())?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </select>
+                <span class="input-group-addon cell-label<?=(($this->canEditWorkspace) ? ' hide' : '')?>">Choix de la cellule</span>
+                <input type="text" name="cell" class="cell<?=(($this->canEditWorkspace) ? ' hide' : '')?>" style="width: 100%;">
+            <?php else : ?>
+                <input type="hidden" name="granularity" value="<?=reset($this->granularitiesData)->getId()?>">
+                <span class="input-group-addon cell-label">Choix de la cellule</span>
+                <input type="text" name="cell" class="cell" style="width: 100%;">
+            <?php endif; ?>
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary dw-action">
+                    <i class="fa fa-refresh"></i>
+                    <span>
+                        <?=___('DW', 'rebuild', 'analysisDataRebuildButton')?>
+                    </span>
+                </button>
+            </span>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $('body').on('submit', '.rebuild-data', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            if (this.hasAttribute('data-processing')) {
+                return false;
+            }
+            form.attr('data-processing', 'true');
+            var infoButton = $('.dw-action', form);
+            infoButton.removeClass('btn-primary');
+            infoButton.addClass('btn-info');
+            infoButton.addClass('disabled');
+            $('i.fa', infoButton).addClass('fa-spin');
+            $('span', infoButton).html(
+                '<?=___('DW', 'rebuild', 'analysisDataRebuilding')?>'
+            );
+            $.ajax({
+                type: 'post',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function (data) {
+                    addMessage(data.message, 'success');
+                },
+                error: function(jqXHR) {
+                    errorHandler(jqXHR);
+                },
+                complete: function () {
+                    form.removeAttr('data-processing');
+                    infoButton.removeClass('btn-info');
+                    infoButton.removeClass('disabled');
+                    $('i.fa', infoButton).removeClass('fa-spin');
+                    infoButton.addClass('btn-primary');
+                    $('span', infoButton).html(
+                        '<?=___('DW', 'rebuild', 'analysisDataRebuildButton')?>'
+                    );
+                }
+            });
+        });
+    </script>
+</div>
+</fieldset>
+<?php endif; ?>
+
+<?php if (($this->canEditWorkspace) && (count($this->granularitiesResults) > 0)) : ?>
+<fieldset class="wrapper">
+    <legend style="cursor: default"><?=___('DW', 'rebuild', 'outputDataRebuildCollapse') ?></legend>
+    <p><?=___('DW', 'rebuild', 'outputDataRebuildWarningMessageWorkspace') ?></p>
+    <form action="orga/workspace/rebuild-results/workspace/<?=$this->workspace->getId()?>/" class="rebuild-results">
+        <div class="input-group">
+            <span class="input-group-addon granularity-label">Sélection d'un niveau</span>
+            <select name="granularity" style="width: 100%;">
+                <?php foreach ($this->granularitiesResults as $granularityResults) : ?>
+                    <option value="<?=$granularityResults->getRef()?>"><?=$this->translate($granularityResults->getLabel())?></option>
+                <?php endforeach; ?>
+            </select>
+            <span class="input-group-addon cell-label hide">Choix de la cellule</span>
+            <input type="text" name="cell" class="cell hide" style="width: 100%;">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-primary dw-action">
+                    <i class="fa fa-refresh"></i>
+                    <span>
+                            <?=___('DW', 'rebuild', 'outputDataRebuildButton')?>
+                    </span>
+                </button>
+            </span>
+        </div>
+    </form>
+    <script type="text/javascript">
+        $('body').on('submit', '.rebuild-results', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            if (this.hasAttribute('data-processing')) {
+                return false;
+            }
+            form.attr('data-processing', 'true');
+            var infoButton = $('.dw-action', form);
+            infoButton.removeClass('btn-primary');
+            infoButton.addClass('btn-info');
+            infoButton.addClass('disabled');
+            $('i.fa', infoButton).addClass('fa-spin');
+            $('span', infoButton).html(
+                '<?=___('DW', 'rebuild', 'outputDataRebuilding')?>'
+            );
+            $.ajax({
+                type: 'post',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function (data) {
+                    addMessage(data.message, 'success');
+                },
+                error: function(jqXHR) {
+                    errorHandler(jqXHR);
+                },
+                complete: function () {
+                    form.removeAttr('data-processing');
+                    infoButton.removeClass('btn-info');
+                    infoButton.removeClass('disabled');
+                    $('i.fa', infoButton).removeClass('fa-spin');
+                    infoButton.addClass('btn-primary');
+                    $('span', infoButton).html(
+                        '<?=___('DW', 'rebuild', 'outputDataRebuildButton')?>'
+                    );
+                }
+            });
+        });
+    </script>
+</fieldset>
+<?php endif; ?>
+
+<script type="text/javascript">
+    $('select[name="granularity"]').on('change', function () {
+        $('.cell', $(this).closest('form')).select2('val', '');
+        if (($(this).val() == '') || ($(this).val() == 'global')) {
+            $('.cell-label, .cell', $(this).closest('form')).addClass('hide');
+        } else {
+            $('.cell-label, .cell', $(this).closest('form')).removeClass('hide');
+        }
+    });
+    $('select[name="granularity"]').select2({
+        matcher: function(term, text) {
+            var terms = term.split(' ');
+            for (var termIndex in terms) {
+                if ((terms[termIndex] != '')
+                    && (text.toUpperCase().indexOf(terms[termIndex].toUpperCase()) < 0)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    });
+    $('[name="cell"]').select2({
+        placeholder: "Rechercher une cellule",
+        minimumInputLength: 1,
+        ajax: {
+            url: function () {
+                $(this);
+                return 'orga/workspace/rebuild-list-cell/workspace/<?=$this->workspace->getId()?>/granularity/'
+                    + $('select[name="granularity"]', $(this).closest('form')).val()
+                    + '/';
+            },
+            dataType: 'json',
+            data: function (term) {
+                return {
+                    q: term
+                };
+            },
+            results: function (data) {
+                return { results: data };
+            }
+        },
+        dropdownCssClass: "bigdrop",
+        escapeMarkup: function (m) { return m; }
+    });
+</script>

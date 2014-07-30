@@ -6,7 +6,7 @@ Feature: Cell comment tab feature
 
   @javascript
   Scenario: Cell comment tab scenario
-    Given I am on "orga/cell/input/idCell/1/fromIdCell/1/"
+    Given I am on "orga/cell/input/cell/1/fromCell/1/"
     And I open tab "Commentaires"
   # Au départ, aucun commentaire
     Then I should see "Aucun commentaire."

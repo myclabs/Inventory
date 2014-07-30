@@ -6,13 +6,13 @@ Feature: Organization input input feature
 
   @javascript @readOnly
   Scenario: Global administrator direct access to input scenario
-    Given I am on "orga/cell/input/idCell/29/fromIdCell/1"
+    Given I am on "orga/cell/input/cell/29/fromCell/1"
     And I wait for the page to finish loading
     Then I should see "Saisie 2012 | Annecy | Énergie"
 
   @javascript @readOnly
   Scenario: Display of existing input with correct values and uncertainties scenario
-    Given I am on "orga/cell/view/idCell/1"
+    Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
     And I click "Année | Site Fonctionnalités disponibles à ce niveau : Suivi des collectes, Saisies"
     And I go input the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:1-energie/" cell
@@ -29,7 +29,7 @@ Feature: Organization input input feature
 
   @javascript @readOnly
   Scenario: Display of existing input for a closed inventory scenario
-    Given I am on "orga/cell/view/idCell/1"
+    Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
     And I click element "div[id='granularity8'] button.reset"
   # Vérification contenu datagrid

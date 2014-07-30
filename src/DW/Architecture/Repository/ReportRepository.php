@@ -253,8 +253,7 @@ class ReportRepository extends Core_Model_Repository
             $queryBuilder->setParameter('members_' . $subMembersAlias, $filter->getMembers()->toArray());
         }
 
-
-        return $this->getQueryFromQueryBuilder($queryBuilder)->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**

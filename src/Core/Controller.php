@@ -77,9 +77,9 @@ abstract class Core_Controller extends Zend_Controller_Action
         $this->view->assign('activeMenu', $item);
     }
 
-    protected function setActiveMenuItemOrganization($organizationId)
+    protected function setActiveMenuItemWorkspace($workspaceId)
     {
-        $this->setActiveMenuItem('organization-' . $organizationId);
+        $this->setActiveMenuItem('workspace-' . $workspaceId);
     }
 
     protected function setActiveMenuItemAFLibrary($libraryId)

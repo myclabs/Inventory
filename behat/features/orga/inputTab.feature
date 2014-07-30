@@ -7,7 +7,7 @@ Feature: Organization input tab feature
   @javascript @readOnly
   Scenario: Filter on organization members in Input tab
   # Accès à l'onglet "Saisies"
-    Given I am on "orga/cell/view/idCell/1"
+    Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
     Then I should see "4 / 6" in the "#granularity8 span.granularity-info" element
   # Filtre sur le site "Annecy"
@@ -21,7 +21,7 @@ Feature: Organization input tab feature
 
   @javascript @readOnly
   Scenario: Display of the various columns (inventory status, input progress, input status)
-    Given I am on "orga/cell/view/idCell/1"
+    Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
   # Cas inventaire en cours, saisie complète
     Then I should see the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/" cell

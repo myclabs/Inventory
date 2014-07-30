@@ -1,6 +1,13 @@
 <?php
 use Account\Domain\Account;
 use Core\Test\TestCase;
+use Doc\Domain\Library;
+use DW\Domain\Cube;
+use Orga\Domain\Axis;
+use Orga\Domain\Cell;
+use Orga\Domain\Granularity;
+use Orga\Domain\Member;
+use Orga\Domain\Workspace;
 
 /**
  * Class Orga_Test_GranularityTest
@@ -33,23 +40,23 @@ class Orga_Test_GranularityTest
 class Orga_Test_GranularityAttributes extends TestCase
 {
     /**
-     * @var Orga_Model_Organization
+     * @var Workspace
      */
-    protected $organization;
+    protected $workspace;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis1;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis11;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis12;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis2;
 
@@ -60,31 +67,31 @@ class Orga_Test_GranularityAttributes extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+        $this->workspace = new Workspace($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
-        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
+        $this->axis1 = new Axis($this->workspace, 'ref_1');
         $this->axis1->getLabel()->set('Label 1', 'fr');
 
-        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
+        $this->axis11 = new Axis($this->workspace, 'ref_11', $this->axis1);
         $this->axis11->getLabel()->set('Label 11', 'fr');
 
-        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
+        $this->axis12 = new Axis($this->workspace, 'ref_12', $this->axis1);
         $this->axis12->getLabel()->set('Label 12', 'fr');
 
-        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
+        $this->axis2 = new Axis($this->workspace, 'ref_2');
         $this->axis2->getLabel()->set('Label 2', 'fr');
     }
 
     function testConstruct()
     {
-        $granularity = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
-        $this->assertSame($this->organization, $granularity->getOrganization());
+        $granularity = new Granularity($this->workspace, [$this->axis11, $this->axis12]);
+        $this->assertSame($this->workspace, $granularity->getWorkspace());
         $this->assertCount(2, $granularity->getAxes());
         $this->assertTrue($granularity->hasAxis($this->axis11));
         $this->assertTrue($granularity->hasAxis($this->axis12));
 
-        $granularity = new Orga_Model_Granularity($this->organization, [$this->axis2, $this->axis12, $this->axis11, $this->axis2]);
-        $this->assertSame($this->organization, $granularity->getOrganization());
+        $granularity = new Granularity($this->workspace, [$this->axis2, $this->axis12, $this->axis11, $this->axis2]);
+        $this->assertSame($this->workspace, $granularity->getWorkspace());
         $this->assertCount(3, $granularity->getAxes());
         $this->assertTrue($granularity->hasAxis($this->axis11));
         $this->assertTrue($granularity->hasAxis($this->axis12));
@@ -97,18 +104,18 @@ class Orga_Test_GranularityAttributes extends TestCase
      */
     function testConstructLinedAxes()
     {
-        $granularity = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis11]);
+        $granularity = new Granularity($this->workspace, [$this->axis1, $this->axis11]);
     }
 
     function testGetRef()
     {
-        $granularity0 = new Orga_Model_Granularity($this->organization, []);
+        $granularity0 = new Granularity($this->workspace, []);
         $this->assertSame('global', $granularity0->getRef());
 
-        $granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
+        $granularity1 = new Granularity($this->workspace, [$this->axis11, $this->axis12]);
         $this->assertSame('ref_11|ref_12', $granularity1->getRef());
 
-        $granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis2, $this->axis12, $this->axis11, $this->axis2]);
+        $granularity2 = new Granularity($this->workspace, [$this->axis2, $this->axis12, $this->axis11, $this->axis2]);
         $this->assertSame('ref_11|ref_12|ref_2', $granularity2->getRef());
 
         $this->axis11->setRef('ref_11_updated');
@@ -118,13 +125,13 @@ class Orga_Test_GranularityAttributes extends TestCase
 
     function testGetLabel()
     {
-        $granularity0 = new Orga_Model_Granularity($this->organization, []);
+        $granularity0 = new Granularity($this->workspace, []);
         $this->assertSame(__('Orga', 'granularity', 'labelGlobalGranularity'), $granularity0->getLabel()->get('fr'));
 
-        $granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
+        $granularity1 = new Granularity($this->workspace, [$this->axis11, $this->axis12]);
         $this->assertSame('Label 11 | Label 12', $granularity1->getLabel()->get('fr'));
 
-        $granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis2, $this->axis12, $this->axis11, $this->axis2]);
+        $granularity2 = new Granularity($this->workspace, [$this->axis2, $this->axis12, $this->axis11, $this->axis2]);
         $this->assertSame('Label 11 | Label 12 | Label 2', $granularity2->getLabel()->get('fr'));
 
         $this->axis11->getLabel()->set('Label 11 updated', 'fr');
@@ -137,59 +144,59 @@ class Orga_Test_GranularityAttributes extends TestCase
 class Orga_Test_GranularityHierarchy extends TestCase
 {
     /**
-     * @var Orga_Model_Organization
+     * @var Workspace
      */
-    protected $organization;
+    protected $workspace;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis1;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis11;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis111;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis12;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis2;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity0;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity1;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity2;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity3;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity4;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity5;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity6;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity7;
 
@@ -197,33 +204,33 @@ class Orga_Test_GranularityHierarchy extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization(
+        $this->workspace = new Workspace(
             $this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock()
         );
 
-        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
+        $this->axis1 = new Axis($this->workspace, 'ref_1');
         $this->axis1->getLabel()->set('Label 1', 'fr');
 
-        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
+        $this->axis11 = new Axis($this->workspace, 'ref_11', $this->axis1);
         $this->axis11->getLabel()->set('Label 11', 'fr');
 
-        $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
+        $this->axis111 = new Axis($this->workspace, 'ref_111', $this->axis11);
         $this->axis111->getLabel()->set('Label 111', 'fr');
 
-        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
+        $this->axis12 = new Axis($this->workspace, 'ref_12', $this->axis1);
         $this->axis12->getLabel()->set('Label 12', 'fr');
 
-        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
+        $this->axis2 = new Axis($this->workspace, 'ref_2');
         $this->axis2->getLabel()->set('Label 2', 'fr');
 
-        $this->granularity0 = new Orga_Model_Granularity($this->organization);
-        $this->granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);
-        $this->granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
-        $this->granularity3 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis2]);
-        $this->granularity4 = new Orga_Model_Granularity($this->organization, [$this->axis12, $this->axis2]);
-        $this->granularity5 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12, $this->axis2]);
-        $this->granularity6 = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis2]);
-        $this->granularity7 = new Orga_Model_Granularity($this->organization, [$this->axis2]);
+        $this->granularity0 = new Granularity($this->workspace);
+        $this->granularity1 = new Granularity($this->workspace, [$this->axis111]);
+        $this->granularity2 = new Granularity($this->workspace, [$this->axis11, $this->axis12]);
+        $this->granularity3 = new Granularity($this->workspace, [$this->axis11, $this->axis2]);
+        $this->granularity4 = new Granularity($this->workspace, [$this->axis12, $this->axis2]);
+        $this->granularity5 = new Granularity($this->workspace, [$this->axis11, $this->axis12, $this->axis2]);
+        $this->granularity6 = new Granularity($this->workspace, [$this->axis1, $this->axis2]);
+        $this->granularity7 = new Granularity($this->workspace, [$this->axis2]);
     }
 
     function testGetTag()
@@ -411,44 +418,28 @@ class Orga_Test_GranularityHierarchy extends TestCase
         $this->assertFalse($this->granularity7->isBroaderThan($this->granularity7));
     }
 
-    function estGetNarrowerGranularities()
+    function testGetNarrowerGranularities()
     {
-        $this->assertSame([$this->granularity1, $this->granularity2, $this->granularity7, $this->granularity3, $this->granularity4, $this->granularity5, $this->granularity6], $this->granularity0->getNarrowerGranularities());
-        $this->assertSame([$this->granularity2, $this->granularity3, $this->granularity5, $this->granularity6], $this->granularity1->getNarrowerGranularities());
+        $this->assertSame([$this->granularity7, $this->granularity4, $this->granularity1, $this->granularity3, $this->granularity2, $this->granularity5, $this->granularity6], $this->granularity0->getNarrowerGranularities());
+        $this->assertSame([$this->granularity3, $this->granularity2, $this->granularity5, $this->granularity6], $this->granularity1->getNarrowerGranularities());
         $this->assertSame([$this->granularity5, $this->granularity6], $this->granularity2->getNarrowerGranularities());
         $this->assertSame([$this->granularity5, $this->granularity6], $this->granularity3->getNarrowerGranularities());
         $this->assertSame([$this->granularity5, $this->granularity6], $this->granularity4->getNarrowerGranularities());
         $this->assertSame([$this->granularity6], $this->granularity5->getNarrowerGranularities());
         $this->assertSame([], $this->granularity6->getNarrowerGranularities());
-        $this->assertSame([$this->granularity3, $this->granularity4, $this->granularity5, $this->granularity6], $this->granularity7->getNarrowerGranularities());
+        $this->assertSame([$this->granularity4, $this->granularity3, $this->granularity5, $this->granularity6], $this->granularity7->getNarrowerGranularities());
     }
 
-    function estGetBroaderGranularities()
+    function testGetBroaderGranularities()
     {
         $this->assertSame([], $this->granularity0->getBroaderGranularities());
         $this->assertSame([$this->granularity0], $this->granularity1->getBroaderGranularities());
         $this->assertSame([$this->granularity0, $this->granularity1], $this->granularity2->getBroaderGranularities());
-        $this->assertSame([$this->granularity0, $this->granularity1, $this->granularity7], $this->granularity3->getBroaderGranularities());
+        $this->assertSame([$this->granularity0, $this->granularity7, $this->granularity1,], $this->granularity3->getBroaderGranularities());
         $this->assertSame([$this->granularity0, $this->granularity7], $this->granularity4->getBroaderGranularities());
-        $this->assertSame([$this->granularity0, $this->granularity1, $this->granularity2, $this->granularity7, $this->granularity3, $this->granularity4], $this->granularity5->getBroaderGranularities());
-        $this->assertSame([$this->granularity0, $this->granularity1, $this->granularity2, $this->granularity7, $this->granularity3, $this->granularity4, $this->granularity5], $this->granularity6->getBroaderGranularities());
+        $this->assertSame([$this->granularity0, $this->granularity7, $this->granularity4, $this->granularity1, $this->granularity3, $this->granularity2,], $this->granularity5->getBroaderGranularities());
+        $this->assertSame([$this->granularity0, $this->granularity7, $this->granularity4, $this->granularity1, $this->granularity3, $this->granularity2, $this->granularity5], $this->granularity6->getBroaderGranularities());
         $this->assertSame([$this->granularity0], $this->granularity7->getBroaderGranularities());
-    }
-
-    function estGetCrossedGranularity()
-    {
-        $this->assertSame($this->granularity5, $this->granularity2->getCrossedGranularity($this->granularity7));
-        $this->assertSame($this->granularity5, $this->granularity3->getCrossedGranularity($this->granularity4));
-        $this->assertSame($this->granularity3, $this->granularity3->getCrossedGranularity($this->granularity7));
-    }
-
-    /**
-     * @expectedException Core_Exception_NotFound
-     * @expectedExceptionMessage No Granularity in Organization matching ref "ref_111|ref_2".
-     */
-    function testGetCrossedGranularityNotFound()
-    {
-        $this->assertSame($this->granularity3, $this->granularity1->getCrossedGranularity($this->granularity7));
     }
 
 }
@@ -456,87 +447,87 @@ class Orga_Test_GranularityHierarchy extends TestCase
 class Orga_Test_GranularityCells extends TestCase
 {
     /**
-     * @var Orga_Model_Organization
+     * @var Workspace
      */
-    protected $organization;
+    protected $workspace;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis1;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis11;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis111;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis12;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis2;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1c;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1d;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1e;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1f;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11c;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member111a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member111b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member12a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member12b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member2a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member2b;
 
@@ -544,60 +535,60 @@ class Orga_Test_GranularityCells extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+        $this->workspace = new Workspace($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
-        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
+        $this->axis1 = new Axis($this->workspace, 'ref_1');
         $this->axis1->getLabel()->set('Label 1', 'fr');
 
-        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
+        $this->axis11 = new Axis($this->workspace, 'ref_11', $this->axis1);
         $this->axis11->getLabel()->set('Label 11', 'fr');
 
-        $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
+        $this->axis111 = new Axis($this->workspace, 'ref_111', $this->axis11);
         $this->axis111->getLabel()->set('Label 111', 'fr');
 
-        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
+        $this->axis12 = new Axis($this->workspace, 'ref_12', $this->axis1);
         $this->axis12->getLabel()->set('Label 12', 'fr');
 
-        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
+        $this->axis2 = new Axis($this->workspace, 'ref_2');
         $this->axis2->getLabel()->set('Label 2', 'fr');
 
-        $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
-        $this->member111b = new Orga_Model_Member($this->axis111, 'ref111_b');
+        $this->member111a = new Member($this->axis111, 'ref111_a');
+        $this->member111b = new Member($this->axis111, 'ref111_b');
 
-        $this->member11a = new Orga_Model_Member($this->axis11, 'ref11_a', [$this->member111a]);
-        $this->member11b = new Orga_Model_Member($this->axis11, 'ref11_b', [$this->member111b]);
-        $this->member11c = new Orga_Model_Member($this->axis11, 'ref11_c', [$this->member111b]);
+        $this->member11a = new Member($this->axis11, 'ref11_a', [$this->member111a]);
+        $this->member11b = new Member($this->axis11, 'ref11_b', [$this->member111b]);
+        $this->member11c = new Member($this->axis11, 'ref11_c', [$this->member111b]);
 
-        $this->member12a = new Orga_Model_Member($this->axis12, 'ref12_a');
-        $this->member12b = new Orga_Model_Member($this->axis12, 'ref12_b');
+        $this->member12a = new Member($this->axis12, 'ref12_a');
+        $this->member12b = new Member($this->axis12, 'ref12_b');
 
-        $this->member1a = new Orga_Model_Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
-        $this->member1b = new Orga_Model_Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
-        $this->member1c = new Orga_Model_Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
-        $this->member1d = new Orga_Model_Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
-        $this->member1e = new Orga_Model_Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
-        $this->member1f = new Orga_Model_Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
+        $this->member1a = new Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
+        $this->member1b = new Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
+        $this->member1c = new Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
+        $this->member1d = new Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
+        $this->member1e = new Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
+        $this->member1f = new Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
 
-        $this->member2a = new Orga_Model_Member($this->axis2, 'ref2_a');
-        $this->member2b = new Orga_Model_Member($this->axis2, 'ref2_b');
+        $this->member2a = new Member($this->axis2, 'ref2_a');
+        $this->member2b = new Member($this->axis2, 'ref2_b');
     }
 
     public function testGenerateCells()
     {
-        $granularity0 = new Orga_Model_Granularity($this->organization, []);
+        $granularity0 = new Granularity($this->workspace, []);
 
         $granularity0Cells = $granularity0->getOrderedCells();
         $this->assertCount(1, $granularity0Cells);
         $this->assertSame([], $granularity0Cells[0]->getMembers());
 
-        $granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);
+        $granularity1 = new Granularity($this->workspace, [$this->axis111]);
 
         $granularity1Cells = $granularity1->getOrderedCells();
         $this->assertCount(2, $granularity1Cells);
         $this->assertSame([$this->member111a], $granularity1Cells[0]->getMembers());
         $this->assertSame([$this->member111b], $granularity1Cells[1]->getMembers());
 
-        $granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis2]);
+        $granularity2 = new Granularity($this->workspace, [$this->axis11, $this->axis2]);
 
         $granularity2Cells = $granularity2->getOrderedCells();
         $this->assertCount(6, $granularity2Cells);
@@ -608,7 +599,7 @@ class Orga_Test_GranularityCells extends TestCase
         $this->assertSame([$this->member11b, $this->member2b], $granularity2Cells[3]->getMembers());
         $this->assertSame([$this->member11c, $this->member2b], $granularity2Cells[5]->getMembers());
 
-        $granularity3 = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis2]);
+        $granularity3 = new Granularity($this->workspace, [$this->axis1, $this->axis2]);
 
         $granularity3Cells = $granularity3->getOrderedCells();
         $this->assertCount(12, $granularity3Cells);
@@ -628,7 +619,7 @@ class Orga_Test_GranularityCells extends TestCase
 
     public function testGetCellsByMembers()
     {
-        $granularity = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis2]);
+        $granularity = new Granularity($this->workspace, [$this->axis11, $this->axis2]);
 
         $granularityCells2a = $granularity->getCellsByMembers([$this->member2a]);
         $this->assertCount(3, $granularityCells2a);
@@ -656,17 +647,17 @@ class Orga_Test_GranularityCells extends TestCase
 
     public function testGetCellByMembers()
     {
-        $granularity = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis2]);
+        $granularity = new Granularity($this->workspace, [$this->axis11, $this->axis2]);
 
         $cells11a2a = $granularity->getCellByMembers([$this->member11a, $this->member2a]);
-        $this->assertInstanceOf(Orga_Model_Cell::class, $cells11a2a);
+        $this->assertInstanceOf(Cell::class, $cells11a2a);
         $this->assertSame($granularity, $cells11a2a->getGranularity());
         $this->assertCount(2, $cells11a2a->getMembers());
         $this->assertTrue($cells11a2a->hasMember($this->member11a));
         $this->assertTrue($cells11a2a->hasMember($this->member2a));
 
         $cells11c2b = $granularity->getCellByMembers([$this->member11c, $this->member2b]);
-        $this->assertInstanceOf(Orga_Model_Cell::class, $cells11c2b);
+        $this->assertInstanceOf(Cell::class, $cells11c2b);
         $this->assertSame($granularity, $cells11c2b->getGranularity());
         $this->assertCount(2, $cells11c2b->getMembers());
         $this->assertTrue($cells11c2b->hasMember($this->member11c));
@@ -680,7 +671,7 @@ class Orga_Test_GranularityCells extends TestCase
      */
     public function testGetCellByMembersNotFound()
     {
-        $granularity = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis2]);
+        $granularity = new Granularity($this->workspace, [$this->axis11, $this->axis2]);
 
         $cell1a = $granularity->getCellByMembers([$this->member1a]);
     }
@@ -691,9 +682,105 @@ class Orga_Test_GranularityCells extends TestCase
      */
     public function testGetCellByMembersTooMany()
     {
-        $granularity = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis2]);
+        $granularity = new Granularity($this->workspace, [$this->axis11, $this->axis2]);
 
         $cell111a = $granularity->getCellByMembers([$this->member11a]);
+    }
+
+    public function testSetCellsControlRelevance()
+    {
+        $granularity = new Granularity($this->workspace, [$this->axis11, $this->axis2]);
+        $cells11a2a = $granularity->getCellByMembers([$this->member11a, $this->member2a]);
+
+        $this->assertFalse($granularity->getCellsControlRelevance());
+
+        $granularity->setCellsControlRelevance(true);
+        $this->assertTrue($granularity->getCellsControlRelevance());
+
+        $cells11a2a->setRelevant(false);
+        $this->assertFalse($cells11a2a->getRelevant());
+
+        $granularity->setCellsControlRelevance(false);
+        $this->assertFalse($granularity->getCellsControlRelevance());
+
+        $this->assertTrue($cells11a2a->getRelevant());
+    }
+
+    public function testSetInputConfigGranularity()
+    {
+        $granularityInput = new Granularity($this->workspace, [$this->axis11, $this->axis2]);
+        $granularityConfig = new Granularity($this->workspace, [$this->axis2]);
+        $cells11a2a = $granularityInput->getCellByMembers([$this->member11a, $this->member2a]);
+
+        $this->assertFalse($granularityInput->isInput());
+        try {
+            $cells11a2a->getDocLibraryForAFInputSetPrimary();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $this->assertEquals('The Doc library for the cell has not be set.', $e->getMessage());
+        }
+
+        $granularityInput->setInputConfigGranularity($granularityConfig);
+
+        $this->assertTrue($granularityInput->isInput());
+        $this->assertInstanceOf(Library::class, $cells11a2a->getDocLibraryForAFInputSetPrimary());
+
+        $granularityInput->setInputConfigGranularity();
+
+        $this->assertFalse($granularityInput->isInput());
+        try {
+            $cells11a2a->getDocLibraryForAFInputSetPrimary();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $this->assertEquals('The Doc library for the cell has not be set.', $e->getMessage());
+        }
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage The config Granularity needs to be broader than this Granularity.
+     */
+    public function testSetInputConfigGranularityNotBroader()
+    {
+        $granularityInput = new Granularity($this->workspace, [$this->axis1]);
+        $granularityConfig = new Granularity($this->workspace, [$this->axis2]);
+
+        $granularityInput->setInputConfigGranularity($granularityConfig);
+    }
+
+    public function testSetCellsGenerateDWCubes()
+    {
+        $granularity = new Granularity($this->workspace, [$this->axis11, $this->axis2]);
+        $cells11a2a = $granularity->getCellByMembers([$this->member11a, $this->member2a]);
+
+        $this->assertFalse($granularity->getCellsGenerateDWCubes());
+        try {
+            $granularity->getDWCube();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $this->assertEquals('The Granularity does not generate DW Cube.', $e->getMessage());
+        }
+        try {
+            $cells11a2a->getDWCube();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $this->assertEquals('DW Cube has not be defined.', $e->getMessage());
+        }
+
+        $granularity->setCellsGenerateDWCubes(true);
+
+        $this->assertTrue($granularity->getCellsGenerateDWCubes());
+        $this->assertInstanceOf(Cube::class, $cells11a2a->getDWCube());
+
+        $granularity->setCellsGenerateDWCubes(false);
+
+        $this->assertFalse($granularity->getCellsGenerateDWCubes());
+        try {
+            $granularity->getDWCube();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $this->assertEquals('The Granularity does not generate DW Cube.', $e->getMessage());
+        }
+        try {
+            $cells11a2a->getDWCube();
+        } catch (Core_Exception_UndefinedAttribute $e) {
+            $this->assertEquals('DW Cube has not be defined.', $e->getMessage());
+        }
     }
 
 }

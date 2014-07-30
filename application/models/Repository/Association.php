@@ -46,7 +46,7 @@ class Inventory_Model_Repository_Association extends Core_Model_Repository
                     )
             );
 
-        return $this->getQueryFromQueryBuilder($queryBuilder)->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
@@ -68,7 +68,7 @@ class Inventory_Model_Repository_Association extends Core_Model_Repository
                     )
             );
 
-        return $this->getQueryFromQueryBuilder($queryBuilderCountTotal)->getSingleScalarResult();
+        return $queryBuilderCountTotal->getQuery()->getSingleScalarResult();
     }
 
     /**

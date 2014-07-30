@@ -7,7 +7,7 @@ Feature: Organizational member feature
   @javascript
   Scenario: Creation of an organizational member, correct input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
   # Accès au datagrid des sites
@@ -31,7 +31,7 @@ Feature: Organizational member feature
   @javascript
   Scenario: Creation of an organizational member, incorrect input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
     Then I should see "Site"
@@ -62,7 +62,7 @@ Feature: Organizational member feature
   @javascript
   Scenario: Edition of an organizational member's attributes (label and identifier), correct input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
   # Ajout élément axe Pays, zone non renseignée
@@ -78,7 +78,7 @@ Feature: Organizational member feature
   @javascript
   Scenario: Edition of an organizational member's attributes (label and identifier), incorrect input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
   # Ajout élément axe Pays, zone non renseignée
@@ -97,7 +97,7 @@ Feature: Organizational member feature
   @javascript
   Scenario: Edition of parent member of an organizational member
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
     When I open collapse "Site"

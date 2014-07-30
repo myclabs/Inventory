@@ -102,6 +102,6 @@ class ContextIndicatorRepository extends Core_Model_Repository
         $this->addCustomParametersToQueryBuilder($queryBuilderCountTotal, $queryParameters);
         $queryParameters->parseToQueryBuilderWithoutLimit($queryBuilderCountTotal);
 
-        return $this->getQueryFromQueryBuilder($queryBuilderCountTotal)->getSingleScalarResult();
+        return $queryBuilderCountTotal->getQuery()->getSingleScalarResult();
     }
 }

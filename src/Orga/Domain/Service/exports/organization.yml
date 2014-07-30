@@ -1,0 +1,119 @@
+sheets:
+
+
+  - label: "{{ workspaceSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ workspaceColumnLabel }}"
+          - label: "{{ workspaceColumnGranularityForInventoryStatus }}"
+        lines:
+          - cells:
+              - "{{ translateString(workspace.label) }}"
+              - "{{ translateString(workspace.granularityForInventoryStatus.label) }}"
+
+      - type: VerticalTable
+        title: "{{ workspaceInputGranularities }}"
+        columns:
+          - label: "{{ workspaceInputGranularityColumnInput }}"
+          - label: "{{ workspaceInputGranularityColumnInputConfig }}"
+        lines:
+          - foreach: workspace.inputGranularities as inputGranularity
+            do:
+              - cells:
+                  - "{{ translateString(inputGranularity.label) }}"
+                  - "{{ translateString(inputGranularity.inputConfigGranularity.label) }}"
+
+
+  - label: "{{ axesSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ axisColumnLabel }}"
+          - label: "{{ axisColumnRef }}"
+          - label: "{{ axisColumnNarrower }}"
+        lines:
+          - foreach: workspace.firstOrderedAxes as axis
+            do:
+              - cells:
+                  - "{{ translateString(axis.label) }}"
+                  - "{{ axis.ref }}"
+                  - "{{ displayAxisDirectNarrower(axis) }}"
+
+
+  - label: "{{ granularitiesSheetLabel }}"
+
+    content:
+
+      - type: VerticalTable
+        columns:
+          - label: "{{ granularityColumnLabel }}"
+          - label: "{{ granularityColumnNavigable }}"
+          - label: "{{ granularityColumnOrgaTab }}"
+          - label: "{{ granularityColumnACL }}"
+          - label: "{{ granularityColumnAFTab }}"
+          - label: "{{ granularityColumnDW }}"
+          - label: "{{ granularityColumnInputDocuments }}"
+        lines:
+          - foreach: workspace.granularities as granularity
+            do:
+              - cells:
+                  - "{{ translateString(granularity.label) }}"
+                  - "{{ granularity.navigable }}"
+                  - "{{ granularity.cellsWithOrgaTab }}"
+                  - "{{ granularity.cellsWithACL }}"
+                  - "{{ granularity.cellsWithAFConfigTab }}"
+                  - "{{ granularity.cellsGenerateDWCubes }}"
+                  - "{{ granularity.cellsWithInputDocs }}"
+
+
+  - label: "{{ membersSheetLabel }}"
+
+    content:
+
+      - foreach: workspace.lastOrderedAxes as axis
+        do:
+          - type: VerticalTable
+            label: "{{ translateString(axis.label) }}"
+            columns:
+              - label: "{{ memberColumnLabel }}"
+              - label: "{{ memberColumnRef }}"
+              - foreach: axis.directBroaders as broaderAxis
+                do:
+                  - label: "{{ translateString(broaderAxis.label) }}"
+            lines:
+              - foreach: axis.members as member
+                do:
+                  - cells:
+                      - "{{ translateString(member.label) }}"
+                      - "{{ member.ref }}"
+                      - foreach: axis.directBroaders as broaderAxis
+                        do:
+                          - "{{ displayParentMemberForAxis(member, broaderAxis) }}"
+
+
+  - label: "{{ cellsRelevanceSheetLabel }}"
+
+    content:
+
+      - foreach: filterRelevanceGranularities(workspace.granularities) as granularity
+        do:
+          - type: VerticalTable
+            label: "{{ translateString(granularity.label) }}"
+            columns:
+              - foreach: granularity.axes as axis
+                do:
+                  - label: "{{ translateString(axis.label) }}"
+              - label: "{{ cellColumnRelevant }}"
+            lines:
+              - foreach: filterAllParentsRelevantCells(granularity.cells) as cell
+                do:
+                  - cells:
+                      - foreach: granularity.axes as axis
+                        do:
+                          - "{{ displayCellMemberForAxis(cell, axis) }}"
+                      - "{{ cell.relevant }}"

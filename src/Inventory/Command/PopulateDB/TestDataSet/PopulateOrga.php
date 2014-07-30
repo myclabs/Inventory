@@ -9,7 +9,7 @@ use Calc_UnitValue;
 use Classification\Domain\ClassificationLibrary;
 use DW\Domain\Report;
 use Inventory\Command\PopulateDB\Base\AbstractPopulateOrga;
-use Orga_Model_Cell;
+use Orga\Domain\Cell;
 use Symfony\Component\Console\Output\OutputInterface;
 use Unit\UnitAPI;
 
@@ -30,24 +30,24 @@ class PopulateOrga extends AbstractPopulateOrga
         $account = new Account('Pizza Forever Inc.');
         $this->accountRepository->add($account);
 
-        // Création d'une organisation.
-        $organization = $this->createOrganization($account, 'Workspace avec données');
-        $organization->addContextIndicator($library->getContextIndicatorByRef('general', 'chiffre_affaire'));
-        $organization->addContextIndicator($library->getContextIndicatorByRef('general', 'ges'));
-        $organization->addContextIndicator($library->getContextIndicatorByRef('deplacement', 'ges'));
-        $organization_vide = $this->createOrganization($account, 'Workspace vide');
+        // Création d'un workspace.
+        $workspace = $this->createWorkspace($account, 'Workspace avec données');
+        $workspace->addContextIndicator($library->getContextIndicatorByRef('general', 'chiffre_affaire'));
+        $workspace->addContextIndicator($library->getContextIndicatorByRef('general', 'ges'));
+        $workspace->addContextIndicator($library->getContextIndicatorByRef('deplacement', 'ges'));
+        $empty_workspace = $this->createWorkspace($account, 'Workspace vide');
 
         // Création des axes.
-        $axis_annee = $this->createAxis($organization, 'annee', 'Année', null, true);
-        $axis_site = $this->createAxis($organization, 'site', 'Site', null, false);
-        $axis_pays = $this->createAxis($organization, 'pays', 'Pays', $axis_site, false);
-        $axis_zone = $this->createAxis($organization, 'zone', 'Zone', $axis_pays, false);
-        $axis_marque = $this->createAxis($organization, 'marque', 'Marque', $axis_site, false);
-        $axis_categorie = $this->createAxis($organization, 'categorie', 'Catégorie', null, true);
-        $axis_vide = $this->createAxis($organization, 'axe_vide', 'Axe vide', null, false);
+        $axis_annee = $this->createAxis($workspace, 'annee', 'Année', null, true);
+        $axis_site = $this->createAxis($workspace, 'site', 'Site', null, false);
+        $axis_pays = $this->createAxis($workspace, 'pays', 'Pays', $axis_site, false);
+        $axis_zone = $this->createAxis($workspace, 'zone', 'Zone', $axis_pays, false);
+        $axis_marque = $this->createAxis($workspace, 'marque', 'Marque', $axis_site, false);
+        $axis_categorie = $this->createAxis($workspace, 'categorie', 'Catégorie', null, true);
+        $axis_vide = $this->createAxis($workspace, 'axe_vide', 'Axe vide', null, false);
 
         // Granularité du temps.
-        $organization->setTimeAxis($axis_annee);
+        $workspace->setTimeAxis($axis_annee);
 
         // Création des éléments.
         $member_annee_2012 = $this->createMember($axis_annee, '2012', '2012');
@@ -65,17 +65,17 @@ class PopulateOrga extends AbstractPopulateOrga
         $member_categorie_forfait_marque = $this->createMember($axis_categorie, 'forfait_marque', 'Forfait marque');
 
         // Création des granularités.
-        $granularityGlobal = $this->createGranularity($organization, [],                                                        false, false, true,  true);
-        $granularity_zone_marque = $this->createGranularity($organization, [$axis_zone, $axis_marque],                          true,  false, true,  true);
-        $granularity_site = $this->createGranularity($organization, [$axis_site],                                               false, false, true,  true);
-        $granularity_annee = $this->createGranularity($organization, [$axis_annee],                                             false, false, false, false);
-        $granularity_annee_categorie = $this->createGranularity($organization, [$axis_annee, $axis_categorie],                  false, false, false, false);
-        $granularity_annee_zone_marque = $this->createGranularity($organization, [$axis_annee, $axis_zone, $axis_marque],       false, false, false, false);
+        $granularityGlobal = $this->createGranularity($workspace, [],                                                        false, false, true,  true);
+        $granularity_zone_marque = $this->createGranularity($workspace, [$axis_zone, $axis_marque],                          true,  false, true,  true);
+        $granularity_site = $this->createGranularity($workspace, [$axis_site],                                               false, false, true,  true);
+        $granularity_annee = $this->createGranularity($workspace, [$axis_annee],                                             false, false, false, false);
+        $granularity_annee_categorie = $this->createGranularity($workspace, [$axis_annee, $axis_categorie],                  false, false, false, false);
+        $granularity_annee_zone_marque = $this->createGranularity($workspace, [$axis_annee, $axis_zone, $axis_marque],       false, false, false, false);
         // Granularité des collectes
-        $organization->setGranularityForInventoryStatus($granularity_annee_zone_marque);
+        $workspace->setGranularityForInventoryStatus($granularity_annee_zone_marque);
         // Création des granularités.
-        $granularity_annee_site = $this->createGranularity($organization, [$axis_annee, $axis_site],                            false, true,  false, false);
-        $granularity_annee_site_categorie = $this->createGranularity($organization, [$axis_annee, $axis_site, $axis_categorie], false, true,  false, false);
+        $granularity_annee_site = $this->createGranularity($workspace, [$axis_annee, $axis_site],                            false, true,  false, false);
+        $granularity_annee_site_categorie = $this->createGranularity($workspace, [$axis_annee, $axis_site, $axis_categorie], false, true,  false, false);
 
 
         // Granularités de saisie
@@ -86,11 +86,11 @@ class PopulateOrga extends AbstractPopulateOrga
 
         // Statut des inventaires
         // 2012 ouvert pour Europe marque A
-        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::INVENTORY_STATUS_ACTIVE);
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_a], Cell::INVENTORY_STATUS_ACTIVE);
         // 2012 clôturé pour Europe marque B
-        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_b], Orga_Model_Cell::INVENTORY_STATUS_CLOSED);
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2012, $member_zone_europe, $member_marque_marque_b], Cell::INVENTORY_STATUS_CLOSED);
         // 2013 ouvert pour Europe marque A
-        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2013, $member_zone_europe, $member_marque_marque_a], Orga_Model_Cell::INVENTORY_STATUS_ACTIVE);
+        $this->setInventoryStatus($granularity_annee_zone_marque, [$member_annee_2013, $member_zone_europe, $member_marque_marque_a], Cell::INVENTORY_STATUS_ACTIVE);
         // 2013 non lancé pour Europe marque B (par défaut)
 
         // Sélection des formulaires
@@ -193,8 +193,8 @@ qui officia deserunt mollit anim id est laborum.',
 
         $this->entityManager->flush();
 
-        // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
-        $this->addOrganizationAdministrator('administrateur.workspace@toto.com', $organization);
+        // Ajout d'un role d'administrateur de workspace à un utilisateur existant.
+        $this->addWorkspaceAdministrator('administrateur.workspace@toto.com', $workspace);
 
         // Ajout d'un role sur une cellule à un utilisateur existant.
 

@@ -1,0 +1,38 @@
+Orga\Domain\SubCellsGroup:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Orga_SubCellsGroup
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  manyToOne:
+    containerCell:
+      targetEntity: Cell
+      inversedBy: subCellsGroups
+      joinColumn:
+        name: idContainerCell
+        referencedColumnName: id
+    inputGranularity:
+      targetEntity: Granularity
+      joinColumn:
+        name: idInputGranularity
+        referencedColumnName: id
+    aF:
+      targetEntity: AF\Domain\AF
+      joinColumn:
+        name: idAF
+        referencedColumnName: id
+
+  lifecycleCallbacks:
+    preRemove: [ preDelete ]
+
+  uniqueConstraints:
+    CellAFUniqueness:
+      columns:
+        - idContainerCell
+        - idInputGranularity

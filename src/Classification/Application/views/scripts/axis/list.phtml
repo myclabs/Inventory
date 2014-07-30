@@ -1,6 +1,8 @@
 <?php
 use MyCLabs\MUIH\GenericTag;
 use MyCLabs\MUIH\GenericVoidTag;
+use Orga\Domain\Axis;
+
 ?>
 <div class="page-header">
     <h1><?=__('Classification', 'axis', 'pageTitle')?></h1>
@@ -90,7 +92,7 @@ $optionParent = new GenericTag('option');
 $optionParent->setAttribute('value', '');
 $addParentInput->appendContent($optionParent);
 foreach ($this->listParents as $parentAxis) {
-    /** @var Orga_Model_Axis $parentAxis */
+    /** @var Axis $parentAxis */
     $optionParent = new GenericTag('option', $this->translate($parentAxis->getLabel()));
     $optionParent->setAttribute('value', $parentAxis->getRef());
     $addParentInput->appendContent($optionParent);

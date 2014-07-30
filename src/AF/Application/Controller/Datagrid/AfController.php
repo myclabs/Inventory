@@ -10,6 +10,7 @@ use AF\Domain\Output\OutputElement;
 use Core\Translation\TranslatedString;
 use DI\Annotation\Inject;
 use Core\Annotation\Secure;
+use Orga\Domain\SubCellsGroup;
 
 /**
  * @author matthieu.napoli
@@ -149,7 +150,7 @@ class AF_Datagrid_AfController extends UI_Controller_Datagrid
                 && $e->getSourceField() == 'calledAF') {
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByOtherAF');
             }
-            if ($e->isSourceEntityInstanceOf(Orga_Model_CellsGroup::class)) {
+            if ($e->isSourceEntityInstanceOf(SubCellsGroup::class)) {
                 throw new Core_Exception_User('AF', 'formList', 'afUsedByOrga');
             }
             if ($e->isSourceEntityInstanceOf(OutputElement::class)) {

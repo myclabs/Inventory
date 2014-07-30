@@ -1,0 +1,112 @@
+Orga\Domain\Granularity:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Orga_Granularity
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      column: ref
+      type: string
+      length: 255
+      nullable: false
+    tag:
+      column: tag
+      type: text
+      nullable: false
+    position:
+      column: position
+      type: integer
+      nullable: false
+    cellsControlRelevance:
+      column: cellsControlRelevance
+      type: boolean
+      nullable: false
+    cellsMonitorInventory:
+      column: cellsMonitorInventory
+      type: boolean
+      nullable: false
+    cellsWithInputDocs:
+      column: cellsWithInputDocs
+      type: boolean
+      nullable: false
+    cellsGenerateDWCubes:
+      column: cellsGenerateDWCubes
+      type: boolean
+      nullable: false
+    cellsWithACL:
+      column: cellsWithACL
+      type: boolean
+      nullable: false
+
+  manyToOne:
+    workspace:
+      targetEntity: Workspace
+      inversedBy: granularities
+      joinColumn:
+        name: idWorkspace
+        referencedColumnName: id
+        nullable: false
+    inputConfigGranularity:
+      targetEntity: Granularity
+      inversedBy: inputGranularities
+      joinColumn:
+        name: idInputConfigGranularity
+        referencedColumnName: id
+        onDelete: CASCADE
+        nullable: true
+        onDelete: SET NULL
+
+  oneToOne:
+    dWCube:
+      targetEntity: DW\Domain\Cube
+      joinColumn:
+        name: idDWCube
+        referencedColumnName: id
+        nullable: true
+        unique: true
+      orphanRemoval: true
+      cascade: [ persist, remove ]
+
+  manyToMany:
+    axes:
+      targetEntity: Axis
+      inversedBy: granularities
+      joinTable:
+        name: Orga_Granularity_Axis
+        joinColumns:
+          idGranularity:
+            referencedColumnName: id
+            onDelete: CASCADE
+        inverseJoinColumns:
+          idAxis:
+            referencedColumnName: id
+      orderBy:
+        narrowerTag: ASC
+
+  oneToMany:
+    cells:
+      targetEntity: Cell
+      mappedBy: granularity
+      orderBy:
+        tag: ASC
+      orphanRemoval: true
+      cascade: [ persist ]
+    inputGranularities:
+      targetEntity: Granularity
+      mappedBy: inputConfigGranularity
+
+  lifecycleCallbacks:
+    preRemove: [ preDelete ]
+
+  uniqueConstraints:
+    granularityRefUniquenessInWorkspace:
+      columns:
+        - ref
+        - idWorkspace

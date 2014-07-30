@@ -1,0 +1,91 @@
+Orga\Domain\Axis:
+  type: entity
+  repositoryClass: \Core_Model_Repository_Ordered
+  table: Orga_Axis
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    ref:
+      column: ref
+      type: string
+      length: 255
+      nullable: false
+    narrowerTag:
+      column: narrowerTag
+      type: text
+      nullable: false
+    broaderTag:
+      column: broaderTag
+      type: text
+      nullable: false
+    contextualizing:
+      column: contextualizing
+      type: boolean
+      nullable: false
+    memberPositioning:
+      column: memberPositioning
+      type: boolean
+      nullable: false
+    position:
+      column: position
+      type: integer
+      nullable: false
+
+  embedded:
+    label:
+      class: Core\Translation\TranslatedString
+
+  manyToOne:
+    workspace:
+      targetEntity: Workspace
+      inversedBy: axes
+      joinColumn:
+        name: idWorkspace
+        referencedColumnName: id
+        nullable: false
+        onDelete: CASCADE
+    directNarrower:
+      targetEntity: Axis
+      inversedBy: directBroaders
+      joinColumn:
+        name: idDirectNarrower
+        referencedColumnName: id
+        onDelete: SET NULL
+
+  oneToMany:
+    directBroaders:
+      targetEntity: Axis
+      mappedBy: directNarrower
+      orderBy:
+        position: ASC
+    members:
+      targetEntity: Member
+      mappedBy: axis
+      orphanRemoval: true
+      cascade: [ persist ]
+      orderBy:
+        tag: ASC
+
+  manyToMany:
+    granularities:
+      targetEntity: Granularity
+      mappedBy: axes
+      cascade: [ persist ]
+      orderBy:
+        position: ASC
+
+  lifecycleCallbacks:
+    preRemove: [ preDelete ]
+    postLoad: [ postLoad ]
+
+  uniqueConstraints:
+    axisRefUniquenessInWorkspace:
+      columns:
+        - ref
+        - idWorkspace

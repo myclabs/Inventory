@@ -2,11 +2,12 @@
 
 namespace Orga\Command;
 
+use Core\ContainerSingleton;
 use Doctrine\ORM\EntityManager;
-use Orga_Service_Export;
-use Orga_Model_Organization;
-use Orga_Model_Granularity;
-use Orga_Model_Cell;
+use Orga\Domain\Service\Export;
+use Orga\Domain\Workspace;
+use Orga\Domain\Granularity;
+use Orga\Domain\Cell;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -25,27 +26,24 @@ class RebuildExportsCommand extends Command
      */
     private $entityManager;
     /**
-     * @var Orga_Service_Export
+     * @var \Orga\Domain\Service\Export
      */
     private $exportService;
     /**
      * @var string
      */
     private $directoryInputsExports;
-    /**
-     * @var string
-     */
-    private $gitIgnoreFile;
 
-    public function __construct(EntityManager $entityManager, Orga_Service_Export $exportService)
+    /**
+     * @param EntityManager $entityManager
+     * @param Export $exportService
+     */
+    public function __construct(EntityManager $entityManager, Export $exportService)
     {
         $this->entityManager = $entityManager;
         $this->exportService = $exportService;
 
-        // TODO devrait être dans la configuration...
-        $this->directoryInputsExports = APPLICATION_PATH . '/../data/exports/inputs/';
-        // TODO devrait ignorer tous les dotfiles plutot que ce cas particulier
-        $this->gitIgnoreFile = $this->directoryInputsExports . '.gitignore';
+        $this->directoryInputsExports = ContainerSingleton::getContainer()->get('exports.inputs.path');
 
         parent::__construct();
     }
@@ -71,7 +69,7 @@ class RebuildExportsCommand extends Command
         $output->writeln('<comment>Clearing old exports</comment>');
 
         foreach (glob($this->directoryInputsExports . '*') as $file) {
-            if (is_file($file) && ($file !== $this->gitIgnoreFile)) {
+            if (is_file($file) && (substr($file, 0, 1) != '.')) {
                 unlink($file);
             }
         }
@@ -81,19 +79,19 @@ class RebuildExportsCommand extends Command
     {
         $output->writeln('<comment>Generating the exports</comment>');
 
-        /** @var Orga_Model_Organization $organization */
-        foreach (Orga_Model_Organization::loadList() as $organization) {
-            $output->writeln(sprintf('  <info>%s</info>', $organization->getLabel()->get('fr')));
+        /** @var \Orga\Domain\Workspace $workspace */
+        foreach (Workspace::loadList() as $workspace) {
+            $output->writeln(sprintf('  <info>%s</info>', $workspace->getLabel()->get('fr')));
 
-            foreach ($organization->getInputGranularities() as $inputGranularity) {
+            foreach ($workspace->getInputGranularities() as $inputGranularity) {
                 $this->entityManager->clear();
-                $inputGranularity = Orga_Model_Granularity::load($inputGranularity->getId());
+                $inputGranularity = Granularity::load($inputGranularity->getId());
 
                 $output->writeln(sprintf('    <info>%s</info>', $inputGranularity->getLabel()->get('fr')));
 
                 foreach ($inputGranularity->getOrderedCells() as $inputCell) {
                     if (!(count(glob($this->directoryInputsExports . $inputCell->getId() . '.*')) >0)) {
-                        $inputCell = Orga_Model_Cell::load($inputCell->getId());
+                        $inputCell = Cell::load($inputCell->getId());
                         $this->exportService->saveCellInput($inputCell);
                         if (count(glob($this->directoryInputsExports . $inputCell->getId() . '.*')) >0) {
                             $output->writeln(sprintf(
@@ -114,7 +112,7 @@ class RebuildExportsCommand extends Command
         $output->writeln('<comment>Updating the file permissions</comment>');
 
         foreach (glob($this->directoryInputsExports . '*') as $file) {
-            if (is_file($file) && ($file !== $this->gitIgnoreFile)) {
+            if (is_file($file) && (substr($file, 0, 1) != '.')) {
                 chmod($file, 0777);
             }
         }

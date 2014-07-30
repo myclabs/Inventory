@@ -21,7 +21,7 @@ use MyCLabs\MUIH\Tabs;
         <a id="exportAsPdf" href="javascript: void(0)" class="btn btn-default disabled">
             <img src="images/dw/pdf_gris.png" alt="pdf" />
         <?php else : ?>
-        <a id="exportAsPdf" href="dw/report/pdf/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn btn-default">
+        <a id="exportAsPdf" href="dw/report/pdf/cube/<?=$this->cubeId?>/hashReport/<?=$this->hashReport?>" class="btn btn-default">
             <img src="images/dw/pdf.png" alt="pdf" />
         <?php endif;?>
             <?=__('UI', 'verb','exportToPDF')?>
@@ -30,7 +30,7 @@ use MyCLabs\MUIH\Tabs;
         <a id="exportAsExcel" href="javascript: void(0)" class="btn btn-default disabled">
             <img src="images/dw/xls_gris.png" alt="xls" />
         <?php else : ?>
-        <a id="exportAsExcel" href="dw/report/excel/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>" class="btn btn-default">
+        <a id="exportAsExcel" href="dw/report/excel/cube/<?=$this->cubeId?>/hashReport/<?=$this->hashReport?>" class="btn btn-default">
             <img src="images/dw/xls.png" alt="xls" />
         <?php endif; ?>
             <?=__('UI', 'verb','exportToExcel')?>
@@ -84,7 +84,7 @@ use MyCLabs\MUIH\Tabs;
 
             $saveReportForm = new GenericTag('form');
             $saveReportForm->setAttribute('id', 'saveReport_'.$this->hashReport);
-            $saveReportForm->setAttribute('action', 'dw/report/save/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport);
+            $saveReportForm->setAttribute('action', 'dw/report/save/cube/'.$this->cubeId.'/hashReport/'.$this->hashReport);
             $saveReportForm->setAttribute('method', 'POST');
             $saveReportForm->addClass('form-horizontal');
 
@@ -182,7 +182,7 @@ use MyCLabs\MUIH\Tabs;
         <?php
         $tabView = new Tabs();
 
-        $tabGraph = new Tab('reportChart', __('DW', 'name', 'chart'), 'dw/report/graph/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport);
+        $tabGraph = new Tab('reportChart', __('DW', 'name', 'chart'), 'dw/report/graph/cube/'.$this->cubeId.'/hashReport/'.$this->hashReport);
         $tabGraph->setAjax(true, true);
         $tabView->addTab($tabGraph);
         if (!$this->isNew) {
@@ -190,7 +190,7 @@ use MyCLabs\MUIH\Tabs;
         }
         UI_Chart_Generic::addHeader();
 
-        $tabValues = new Tab('reportValues', __('UI', 'name', 'values'), 'dw/report/values/idCube/'.$this->idCube.'/hashReport/'.$this->hashReport);
+        $tabValues = new Tab('reportValues', __('UI', 'name', 'values'), 'dw/report/values/cube/'.$this->cubeId.'/hashReport/'.$this->hashReport);
         $tabValues->setAjax(true, true);
         $tabView->addTab($tabValues);
         UI_Datagrid::addHeader();
@@ -224,7 +224,7 @@ use MyCLabs\MUIH\Tabs;
         $script .= 'e.preventDefault();';
         $script .= '$.post(';
         $script .= '\'dw/report/saveimagedata\',';
-        $script .= '{idCube: '.$this->idCube.', name: \'pdfChart\', image: getImageData(\'reportChart\')},';
+        $script .= '{cube: '.$this->cubeId.', name: \'pdfChart\', image: getImageData(\'reportChart\')},';
         $script .= 'function(){';
         $script .= 'window.location = $(e.target).prop(\'href\');';
         $script .= '}';
@@ -440,10 +440,10 @@ $(document).ready(function() {
             <? endif; ?>
         <?php else : ?>
             $('#exportAsPdf').attr('class', 'btn');
-            $('#exportAsPdf').attr('href', 'dw/report/pdf/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>');
+            $('#exportAsPdf').attr('href', 'dw/report/pdf/cube/<?=$this->cubeId?>/hashReport/<?=$this->hashReport?>');
             $('#exportAsPdf img').attr('src', 'images/dw/pdf.png');
             $('#exportAsExcel').attr('class', 'btn btn-default');
-            $('#exportAsExcel').attr('href', 'dw/report/excel/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>');
+            $('#exportAsExcel').attr('href', 'dw/report/excel/cube/<?=$this->cubeId?>/hashReport/<?=$this->hashReport?>');
             $('#exportAsExcel img').attr('src', 'images/dw/xls.png');
             $('#reportState').attr('class', 'label label-success');
             <?php if (($this->viewConfiguration->canBeUpdated()) || ($this->viewConfiguration->canBeSavedAs())) : ?>
@@ -482,10 +482,10 @@ $(document).ready(function() {
             $('#saveReportButton').attr('title', '');
         <?php endif; ?>
         $('#exportAsPdf').attr('class', 'btn btn-default');
-        $('#exportAsPdf').attr('href', 'dw/report/pdf/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>');
+        $('#exportAsPdf').attr('href', 'dw/report/pdf/cube/<?=$this->cubeId?>/hashReport/<?=$this->hashReport?>');
         $('#exportAsPdf img').attr('src', 'images/dw/pdf.png');
         $('#exportAsExcel').attr('class', 'btn btn-default');
-        $('#exportAsExcel').attr('href', 'dw/report/excel/idCube/<?=$this->idCube?>/hashReport/<?=$this->hashReport?>');
+        $('#exportAsExcel').attr('href', 'dw/report/excel/cube/<?=$this->cubeId?>/hashReport/<?=$this->hashReport?>');
         $('#exportAsExcel img').attr('src', 'images/dw/xls.png');
         <?php if ($this->isNew) : ?>
             if ($('li a[href="#reportChart"]').closest('li').hasClass('disabled')) {
@@ -517,7 +517,7 @@ $(document).ready(function() {
 
     <?php // Ecoute de la soumission du formulaire de sauvegarde. ?>
     $('#saveReport_<?=$this->hashReport?>').on('successSubmit', function(e, response) {
-        window.location.replace('<?=$this->viewConfiguration->getSaveURL()?>/idReport/' + response.idReport);
+        window.location.replace('<?=$this->viewConfiguration->getSaveURL()?>/report/' + response.report);
     });
 });
 </script>

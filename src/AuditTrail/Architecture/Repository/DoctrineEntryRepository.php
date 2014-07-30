@@ -5,12 +5,12 @@
 
 namespace AuditTrail\Architecture\Repository;
 
-use AuditTrail\Domain\Context\OrganizationContext;
+use AuditTrail\Domain\Context\WorkspaceContext;
 use AuditTrail\Domain\Entry;
 use AuditTrail\Domain\EntryRepository;
 use Core\Domain\DoctrineEntityRepository;
-use Orga_Model_Cell;
-use Orga_Model_Repository_Cell;
+use Orga\Domain\Cell;
+use Orga\Architecture\Repository\CellRepository;
 use DateTime;
 
 /**
@@ -32,11 +32,11 @@ class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryR
     }
 
     /**
-     * @param OrganizationContext $context
+     * @param WorkspaceContext $context
      * @param int                 $count
      * @return Entry[]
      */
-    public function findLatestForOrganizationContext(OrganizationContext $context, $count)
+    public function findLatestForWorkspaceContext(WorkspaceContext $context, $count)
     {
         $qb = $this->createQueryBuilder('e');
         $qb->addOrderBy('e.date', 'DESC')
@@ -47,10 +47,10 @@ class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryR
             // @see http://stackoverflow.com/questions/14851602/where-ing-in-discriminated-tables/14854067#14854067
             $subQuery = $this->getEntityManager()->createQueryBuilder();
             $subQuery->select('context')
-                ->from('AuditTrail\Domain\Context\OrganizationContext', 'context')
+                ->from('AuditTrail\Domain\Context\WorkspaceContext', 'context')
                 ->innerJoin('context.cell', 'cell');
-            /** @var Orga_Model_Repository_Cell $cellRepository */
-            $cellRepository = $this->getEntityManager()->getRepository(Orga_Model_Cell::class);
+            /** @var CellRepository $cellRepository */
+            $cellRepository = $this->getEntityManager()->getRepository(Cell::class);
             $cellRepository->addCellAndChildrenConditionsToQueryBuilder($subQuery, $context->getCell(), 'cell');
 
             $qb->andWhere('e.context IN (' . $subQuery->getDQL() . ')');
@@ -58,20 +58,20 @@ class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryR
             // Merge les paramètres
             $qb->setParameters($subQuery->getParameters());
         } else {
-            $qb->andWhere('e.context IN (SELECT c FROM AuditTrail\Domain\Context\OrganizationContext c WHERE c.organization = :organization)')
-                ->setParameter('organization', $context->getOrganization());
+            $qb->andWhere('e.context IN (SELECT c FROM AuditTrail\Domain\Context\WorkspaceContext c WHERE c.workspace = :workspace)')
+                ->setParameter('workspace', $context->getWorkspace());
         }
 
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * @param OrganizationContext $context
+     * @param WorkspaceContext $context
      * @param DateTime            $upTo
      * @param DateTime            $from
      * @return Entry[]
      */
-    public function findUpToForOrganizationContext(OrganizationContext $context, DateTime $upTo, DateTime $from=null)
+    public function findUpToForWorkspaceContext(WorkspaceContext $context, DateTime $upTo, DateTime $from=null)
     {
         $qb = $this->createQueryBuilder('e');
         $qb->addOrderBy('e.date', 'DESC');
@@ -81,10 +81,10 @@ class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryR
             // @see http://stackoverflow.com/questions/14851602/where-ing-in-discriminated-tables/14854067#14854067
             $subQuery = $this->getEntityManager()->createQueryBuilder();
             $subQuery->select('context')
-                ->from('AuditTrail\Domain\Context\OrganizationContext', 'context')
+                ->from('AuditTrail\Domain\Context\WorkspaceContext', 'context')
                 ->innerJoin('context.cell', 'cell');
-            /** @var Orga_Model_Repository_Cell $cellRepository */
-            $cellRepository = $this->getEntityManager()->getRepository(Orga_Model_Cell::class);
+            /** @var \Orga\Architecture\Repository\CellRepository $cellRepository */
+            $cellRepository = $this->getEntityManager()->getRepository(Cell::class);
             $cellRepository->addCellAndChildrenConditionsToQueryBuilder($subQuery, $context->getCell(), 'cell');
 
             $qb->andWhere('e.context IN (' . $subQuery->getDQL() . ')');
@@ -92,8 +92,8 @@ class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryR
             // Merge les paramètres
             $qb->setParameters($subQuery->getParameters());
         } else {
-            $qb->andWhere('e.context IN (SELECT c FROM AuditTrail\Domain\Context\OrganizationContext c WHERE c.organization = :organization)')
-                ->setParameter('organization', $context->getOrganization());
+            $qb->andWhere('e.context IN (SELECT c FROM AuditTrail\Domain\Context\WorkspaceContext c WHERE c.workspace = :workspace)')
+                ->setParameter('workspace', $context->getWorkspace());
         }
 
         $qb->andWhere($qb->expr()->gte('e.date', ':upTo'));
@@ -107,12 +107,12 @@ class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryR
     }
 
     /**
-     * @param OrganizationContext $context
+     * @param WorkspaceContext $context
      * @param DateTime            $upTo
      * @param DateTime            $from
      * @return Entry[]
      */
-    public function hasFromForOrganizationContext(OrganizationContext $context, DateTime $from=null)
+    public function hasFromForWorkspaceContext(WorkspaceContext $context, DateTime $from=null)
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select($qb->expr()->count('e'))
@@ -124,10 +124,10 @@ class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryR
             // @see http://stackoverflow.com/questions/14851602/where-ing-in-discriminated-tables/14854067#14854067
             $subQuery = $this->getEntityManager()->createQueryBuilder();
             $subQuery->select('context')
-                ->from('AuditTrail\Domain\Context\OrganizationContext', 'context')
+                ->from('AuditTrail\Domain\Context\WorkspaceContext', 'context')
                 ->innerJoin('context.cell', 'cell');
-            /** @var Orga_Model_Repository_Cell $cellRepository */
-            $cellRepository = $this->getEntityManager()->getRepository(Orga_Model_Cell::class);
+            /** @var \Orga\Architecture\Repository\CellRepository $cellRepository */
+            $cellRepository = $this->getEntityManager()->getRepository(Cell::class);
             $cellRepository->addCellAndChildrenConditionsToQueryBuilder($subQuery, $context->getCell(), 'cell');
 
             $qb->andWhere('e.context IN (' . $subQuery->getDQL() . ')');
@@ -135,8 +135,8 @@ class DoctrineEntryRepository extends DoctrineEntityRepository implements EntryR
             // Merge les paramètres
             $qb->setParameters($subQuery->getParameters());
         } else {
-            $qb->andWhere('e.context IN (SELECT c FROM AuditTrail\Domain\Context\OrganizationContext c WHERE c.organization = :organization)')
-                ->setParameter('organization', $context->getOrganization());
+            $qb->andWhere('e.context IN (SELECT c FROM AuditTrail\Domain\Context\WorkspaceContext c WHERE c.workspace = :workspace)')
+                ->setParameter('workspace', $context->getWorkspace());
         }
 
         $qb->andWhere($qb->expr()->lte('e.date', ':from'));

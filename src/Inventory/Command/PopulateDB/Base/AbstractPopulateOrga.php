@@ -29,17 +29,17 @@ use DW\Domain\Cube;
 use DW\Domain\Filter;
 use DW\Domain\Report;
 use MyCLabs\ACL\ACL;
-use Orga\Model\ACL\CellAdminRole;
-use Orga\Model\ACL\CellManagerRole;
-use Orga\Model\ACL\CellContributorRole;
-use Orga\Model\ACL\CellObserverRole;
-use Orga\Model\ACL\OrganizationAdminRole;
-use Orga_Model_Axis;
-use Orga_Model_Granularity;
-use Orga_Model_Member;
-use Orga_Model_Organization;
-use Orga_Service_ETLData;
-use Orga_Service_OrganizationService;
+use Orga\Domain\ACL\CellAdminRole;
+use Orga\Domain\ACL\CellManagerRole;
+use Orga\Domain\ACL\CellContributorRole;
+use Orga\Domain\ACL\CellObserverRole;
+use Orga\Domain\ACL\WorkspaceAdminRole;
+use Orga\Domain\Axis;
+use Orga\Domain\Granularity;
+use Orga\Domain\Member;
+use Orga\Domain\Workspace;
+use Orga\Domain\Service\ETL\ETLDataService;
+use Orga\Application\Service\Workspace\WorkspaceService;
 use Symfony\Component\Console\Output\OutputInterface;
 use User\Domain\User;
 use User\Domain\UserService;
@@ -63,9 +63,9 @@ abstract class AbstractPopulateOrga
 
     /**
      * @Inject
-     * @var Orga_Service_OrganizationService
+     * @var \Orga\Application\Service\Workspace\WorkspaceService
      */
-    protected $organizationService;
+    protected $workspaceService;
 
     /**
      * @Inject
@@ -75,7 +75,7 @@ abstract class AbstractPopulateOrga
 
     /**
      * @Inject
-     * @var Orga_Service_ETLData
+     * @var \Orga\Domain\Service\ETL\ETLDataService
      */
     protected $etlDataService;
 
@@ -97,13 +97,13 @@ abstract class AbstractPopulateOrga
      */
     protected $publicAccount;
 
-    // Création d'une organisation.
-    //  + createOrganization : -
+    // Création d'un workspace.
+    //  + createWorkspace : -
     // Param : label
 
     // Création des axes.
     //  + createAxis : -
-    // Params : Organization, ref, label
+    // Params : Workspace, ref, label
     // OptionalParams : Axis parent=null
 
     // Création des membres.
@@ -113,12 +113,12 @@ abstract class AbstractPopulateOrga
 
     // Création des granularités.
     //  + createGranularity : -
-    // Params : Organization, axes[Axis], navigable
+    // Params : Workspace, axes[Axis], navigable
     // OptionalParams : orgaTab=false, aCL=true, aFTab=false, dWCubes=false, genericAction=false, contextAction=false, inputDocs=false
 
     // Paramétrage des cellules.
     // Params : Granularity granularity, [Member] members
-    //  + setInventoryStatus : granularityStatus (Orga_Model_Cell::STATUS_)
+    //  + setInventoryStatus : granularityStatus (Cell::STATUS_)
     //  + setAFForChildCells : Granularity inputGranularity, refAF
     //  + setInput: [refComponent => mixed value]
     // OptionalParams : -
@@ -143,9 +143,9 @@ abstract class AbstractPopulateOrga
     //  + createUser: -
     // Params : email
 
-    // Ajout d'un role d'administrateur d'organisation à un utilisateur existant.
-    //  + addOrganizationAdministrator: -
-    // Params : email, Organization
+    // Ajout d'un role d'administrateur de workspace à un utilisateur existant.
+    //  + addWorkspaceAdministrator: -
+    // Params : email, Workspace
 
     // Ajout d'un role sur une cellule à un utilisateur existant.
     //  + addCellAdministrator : -
@@ -158,25 +158,25 @@ abstract class AbstractPopulateOrga
     /**
      * @param Account $account
      * @param string $label
-     * @return Orga_Model_Organization
+     * @return Workspace
      */
-    protected function createOrganization(Account $account, $label)
+    protected function createWorkspace(Account $account, $label)
     {
-        return $this->organizationService->createOrganization($account, $label);
+        return $this->workspaceService->create($account, $label);
     }
 
     /**
-     * @param Orga_Model_Organization $organization
+     * @param Workspace $workspace
      * @param string $ref
      * @param string $label
-     * @param Orga_Model_Axis $narrower
+     * @param \Orga\Domain\Axis $narrower
      * @param bool $positioning
-     * @return Orga_Model_Axis
+     * @return Axis
      */
-    protected function createAxis(Orga_Model_Organization $organization, $ref, $label,
-        Orga_Model_Axis $narrower = null, $positioning = false)
+    protected function createAxis(Workspace $workspace, $ref, $label,
+        Axis $narrower = null, $positioning = false)
     {
-        $axis = new Orga_Model_Axis($organization, $ref, $narrower);
+        $axis = new Axis($workspace, $ref, $narrower);
         $axis->getLabel()->set($label, 'fr');
         $axis->setMemberPositioning($positioning);
         $axis->save();
@@ -184,31 +184,31 @@ abstract class AbstractPopulateOrga
     }
 
     /**
-     * @param Orga_Model_Axis $axis
+     * @param \Orga\Domain\Axis $axis
      * @param string $ref
      * @param string $label
      * @param array $parents
-     * @return Orga_Model_Member
+     * @return Member
      */
-    protected function createMember(Orga_Model_Axis $axis, $ref, $label, array $parents = [])
+    protected function createMember(Axis $axis, $ref, $label, array $parents = [])
     {
-        $member = new Orga_Model_Member($axis, $ref, $parents);
+        $member = new Member($axis, $ref, $parents);
         $member->getLabel()->set($label, 'fr');
         $member->save();
         return $member;
     }
 
     /**
-     * @param Orga_Model_Organization $organization
+     * @param Workspace $workspace
      * @param array $axes
      * @param bool $relevance
      * @param bool $monitoring
      * @param bool $dWCubes
      * @param bool $acl
-     * @return Orga_Model_Granularity
+     * @return \Orga\Domain\Granularity
      */
     protected function createGranularity(
-        Orga_Model_Organization $organization,
+        Workspace $workspace,
         array $axes = [],
         $relevance = false,
         $monitoring = false,
@@ -216,9 +216,9 @@ abstract class AbstractPopulateOrga
         $acl = true
     ) {
         try {
-            $granularity = $organization->getGranularityByRef(Orga_Model_Granularity::buildRefFromAxes($axes));
+            $granularity = $workspace->getGranularityByRef(Granularity::buildRefFromAxes($axes));
         } catch (Core_Exception_NotFound $e) {
-            $granularity = new Orga_Model_Granularity($organization, $axes);
+            $granularity = new Granularity($workspace, $axes);
         }
         $granularity->setCellsControlRelevance($relevance);
         $granularity->setCellsMonitorInventory($monitoring);
@@ -229,47 +229,47 @@ abstract class AbstractPopulateOrga
     }
 
     /**
-     * @param Orga_Model_Granularity $granularity
-     * @param Orga_Model_Member[] $members
+     * @param \Orga\Domain\Granularity $granularity
+     * @param \Orga\Domain\Member[] $members
      * @param $inventoryStatus
      */
-    protected function setInventoryStatus(Orga_Model_Granularity $granularity, array $members, $inventoryStatus)
+    protected function setInventoryStatus(Granularity $granularity, array $members, $inventoryStatus)
     {
-        if ($granularity === $granularity->getOrganization()->getGranularityForInventoryStatus()) {
+        if ($granularity === $granularity->getWorkspace()->getGranularityForInventoryStatus()) {
             $granularity->getCellByMembers($members)->setInventoryStatus($inventoryStatus);
         }
     }
 
     /**
-     * @param Orga_Model_Granularity $granularity
-     * @param Orga_Model_Member[]    $members
-     * @param Orga_Model_Granularity $inputGranularity
+     * @param \Orga\Domain\Granularity $granularity
+     * @param Member[]    $members
+     * @param \Orga\Domain\Granularity $inputGranularity
      * @param string                 $afLabel
      */
     protected function setAFForChildCells(
-        Orga_Model_Granularity $granularity,
+        Granularity $granularity,
         array $members,
-        Orga_Model_Granularity $inputGranularity,
+        Granularity $inputGranularity,
         $afLabel
     ) {
-        $granularity->getCellByMembers($members)->getCellsGroupForInputGranularity($inputGranularity)
+        $granularity->getCellByMembers($members)->getSubCellsGroupForInputGranularity($inputGranularity)
             ->setAF($this->getAF($afLabel));
     }
 
     /**
-     * @param Orga_Model_Granularity $granularity
-     * @param Orga_Model_Member[] $members
+     * @param \Orga\Domain\Granularity $granularity
+     * @param Member[] $members
      * @param array $values
      * @param bool $finished
      */
-    protected function setInput(Orga_Model_Granularity $granularity, array $members, array $values, $finished = false)
+    protected function setInput(Granularity $granularity, array $members, array $values, $finished = false)
     {
         $inputCell = $granularity->getCellByMembers($members);
         $inputConfigGranularity = $granularity->getInputConfigGranularity();
         if ($granularity === $inputConfigGranularity) {
-            $aF = $inputCell->getCellsGroupForInputGranularity($granularity)->getAF();
+            $aF = $inputCell->getSubCellsGroupForInputGranularity($granularity)->getAF();
         } else {
-            $aF = $inputCell->getParentCellForGranularity($inputConfigGranularity)->getCellsGroupForInputGranularity(
+            $aF = $inputCell->getParentCellForGranularity($inputConfigGranularity)->getSubCellsGroupForInputGranularity(
                 $granularity
             )->getAF();
         }
@@ -341,7 +341,7 @@ abstract class AbstractPopulateOrga
     }
 
     /**
-     * @param Orga_Model_Granularity $granularity
+     * @param \Orga\Domain\Granularity $granularity
      * @param string $label
      * @param string $refIndicator
      * @param string $refAxis
@@ -351,7 +351,7 @@ abstract class AbstractPopulateOrga
      * @param string $sortType
      */
     protected function createSimpleGranularityReport(
-        Orga_Model_Granularity $granularity,
+        Granularity $granularity,
         $label,
         $refIndicator,
         $refAxis,
@@ -368,7 +368,7 @@ abstract class AbstractPopulateOrga
     }
 
     /**
-     * @param Orga_Model_Granularity $granularity
+     * @param \Orga\Domain\Granularity $granularity
      * @param string $label
      * @param string $refNumeratorIndicator
      * @param string $refNumeratorAxis
@@ -380,7 +380,7 @@ abstract class AbstractPopulateOrga
      * @param string $sortType
      */
     protected function createSimpleRatioGranularityReport(
-        Orga_Model_Granularity $granularity,
+        Granularity $granularity,
         $label,
         $refNumeratorIndicator,
         $refNumeratorAxis,
@@ -401,7 +401,7 @@ abstract class AbstractPopulateOrga
     }
 
     /**
-     * @param Orga_Model_Granularity $granularity
+     * @param \Orga\Domain\Granularity $granularity
      * @param string $label
      * @param string $refIndicator
      * @param string $refAxis1
@@ -411,7 +411,7 @@ abstract class AbstractPopulateOrga
      * @param string $chartType
      */
     protected function createDoubleGranularityReport(
-        Orga_Model_Granularity $granularity,
+        Granularity $granularity,
         $label,
         $refIndicator,
         $refAxis1,
@@ -429,7 +429,7 @@ abstract class AbstractPopulateOrga
     }
 
     /**
-     * @param Orga_Model_Granularity $granularity
+     * @param \Orga\Domain\Granularity $granularity
      * @param string $label
      * @param string $refNumeratorIndicator
      * @param string $refNumeratorAxis1
@@ -442,7 +442,7 @@ abstract class AbstractPopulateOrga
      * @param string $chartType
      */
     protected function createDoubleRatioGranularityReport(
-        Orga_Model_Granularity $granularity,
+        Granularity $granularity,
         $label,
         $refNumeratorIndicator,
         $refNumeratorAxis1,
@@ -474,20 +474,20 @@ abstract class AbstractPopulateOrga
 
     /**
      * @param $email
-     * @param Orga_Model_Organization $organization
+     * @param \Orga\Domain\Workspace $workspace
      */
-    protected function addOrganizationAdministrator($email, Orga_Model_Organization $organization)
+    protected function addWorkspaceAdministrator($email, Workspace $workspace)
     {
         $user = User::loadByEmail($email);
-        $this->acl->grant($user, new OrganizationAdminRole($user, $organization));
+        $this->acl->grant($user, new WorkspaceAdminRole($user, $workspace));
     }
 
     /**
      * @param $email
-     * @param Orga_Model_Granularity $granularity
+     * @param Granularity $granularity
      * @param array $members
      */
-    protected function addCellAdministrator($email, Orga_Model_Granularity $granularity, array $members)
+    protected function addCellAdministrator($email, Granularity $granularity, array $members)
     {
         $user = User::loadByEmail($email);
         $this->acl->grant($user, new CellAdminRole($user, $granularity->getCellByMembers($members)));
@@ -495,10 +495,10 @@ abstract class AbstractPopulateOrga
 
     /**
      * @param $email
-     * @param Orga_Model_Granularity $granularity
+     * @param \Orga\Domain\Granularity $granularity
      * @param array $members
      */
-    protected function addCellManager($email, Orga_Model_Granularity $granularity, array $members)
+    protected function addCellManager($email, Granularity $granularity, array $members)
     {
         $user = User::loadByEmail($email);
         $this->acl->grant($user, new CellManagerRole($user, $granularity->getCellByMembers($members)));
@@ -506,10 +506,10 @@ abstract class AbstractPopulateOrga
 
     /**
      * @param $email
-     * @param Orga_Model_Granularity $granularity
+     * @param \Orga\Domain\Granularity $granularity
      * @param array $members
      */
-    protected function addCellContributor($email, Orga_Model_Granularity $granularity, array $members)
+    protected function addCellContributor($email, Granularity $granularity, array $members)
     {
         $user = User::loadByEmail($email);
         $this->acl->grant($user, new CellContributorRole($user, $granularity->getCellByMembers($members)));
@@ -517,10 +517,10 @@ abstract class AbstractPopulateOrga
 
     /**
      * @param $email
-     * @param Orga_Model_Granularity $granularity
+     * @param \Orga\Domain\Granularity $granularity
      * @param array $members
      */
-    protected function addCellObserver($email, Orga_Model_Granularity $granularity, array $members)
+    protected function addCellObserver($email, Granularity $granularity, array $members)
     {
         $user = User::loadByEmail($email);
         $this->acl->grant($user, new CellObserverRole($user, $granularity->getCellByMembers($members)));

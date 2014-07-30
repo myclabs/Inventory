@@ -1,10 +1,10 @@
 <?php
-use AuditTrail\Domain\Context\OrganizationContext;
+use AuditTrail\Domain\Context\WorkspaceContext;
 use AuditTrail\Domain\Entry;
 
 $locale = Core_Locale::loadDefault();
 
-$idCell = isset($this->idCell) ? $this->idCell : null;
+$cellId = isset($this->cellId) ? $this->cellId : null;
 
 /** @var Entry[] $entries */
 $entries = $this->entries;
@@ -44,7 +44,7 @@ $entries = $this->entries;
 
         <?php
         $context = $entry->getContext();
-        if (!$context instanceof OrganizationContext) {
+        if (!$context instanceof WorkspaceContext) {
             continue;
         }
         $entryCell = $context->getCell();
@@ -53,7 +53,7 @@ $entries = $this->entries;
             continue;
         }
 
-        $inputUrl = $this->baseUrl('/orga/cell/input/idCell/' . $entryCell->getId() . '/fromIdCell/' . $idCell);
+        $inputUrl = $this->baseUrl('/orga/cell/input/cell/' . $entryCell->getId() . '/fromCell/' . $cellId);
         $inputLabel = $this->translate($entryCell->getLabel());
         $inputLink = "<a href='$inputUrl''>$inputLabel</a>";
 

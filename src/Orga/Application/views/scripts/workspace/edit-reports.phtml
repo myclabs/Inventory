@@ -1,0 +1,76 @@
+<?php
+
+use MyCLabs\MUIH\Button;
+use MyCLabs\MUIH\Icon;
+use Orga\Domain\Granularity;
+
+foreach ($this->granularities as $granularity) :
+    /** @var $granularity Granularity */
+
+    $datagridGranularityReports = new UI_Datagrid(
+        'datagridCellReports'.$granularity->getId(),
+        'datagrid_workspace_reports',
+        'orga'
+    );
+
+    $columnReport = new UI_Datagrid_Col_Text('report', ___('UI', 'name', 'label'));
+    $datagridGranularityReports->addCol($columnReport);
+
+    $columnLink = new UI_Datagrid_Col_Link('link', ___('UI', 'name', 'details'));
+    $datagridGranularityReports->addCol($columnLink);
+
+    $datagridGranularityReports->addParam('workspace', $this->workspace->getId());
+    $datagridGranularityReports->addParam('granularity', $granularity->getId());
+    $datagridGranularityReports->initialLoading = false;
+    $datagridGranularityReports->deleteElements = true;
+
+
+    $addButton = new Button(___('UI', 'verb', 'add'));
+    $addButton->prependContent(' ');
+    $addButton->prependContent(new Icon('plus-circle'));
+    $addButton->link('orga/granularity/view-report/granularity/' . $granularity->getId() . '/');
+
+    echo $this->collapse(
+        'cellReports'.$granularity->getId(),
+        $this->translate($granularity->getLabel()),
+        $datagridGranularityReports->getHTML() . $addButton->getHTML()
+    );
+
+    $script = '';
+    $script .= '$(\'#cellReports'.$granularity->getId().'\').on(\'show.bs.collapse\', function(e) {';
+    $script .= 'if ($(e.target).attr(\'id\') == \'cellReports'.$granularity->getId().'\') {';
+    $script .= 'datagridCellReports'.$granularity->getId().'.filter();';
+    $script .= '}';
+    $script .= '});';
+
+    if ($this->display === false) :
+        echo '<script type="text/javascript">'.$datagridGranularityReports->getScript().$script.'</script>';
+    else :
+        UI_Datagrid::addHeader($datagridGranularityReports);
+        $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
+    endif;
+endforeach;
+
+if (count($this->granularities) > 0) :
+    echo '<hr>';
+endif;
+echo '<h4>'.__('Orga', 'granularity', 'addGranularityReports').'</h4>';
+echo $this->partial(
+    'granularity/add.phtml',
+    [
+        'workspace' => $this->workspace,
+        'purpose' => 'reports',
+        'complementaryFields' => '',
+        'selectAxesPlaceholder' => ___('Orga', 'granularity', 'addGranularitySelectAxesReportsLevel')
+    ]
+);
+if ($this->display === true) :
+?>
+<script>
+    $('#addGranularity<?=$this->workspace->getId()?>_reports').on('granularityAdded', function(e) {
+        location.reload(true);
+    });
+</script>
+<?php
+endif;
+?>

@@ -10,6 +10,11 @@ use Classification\Domain\ClassificationLibrary;
 use Doc\Domain\Library;
 use DW\Domain\Cube;
 use DW\Domain\Report;
+use Orga\Domain\Cell\CellInputComment;
+use Orga\Domain\Cell;
+use Orga\Domain\Report\CellReport;
+use Orga\Domain\Granularity;
+use Orga\Domain\Workspace;
 use Parameter\Domain\Family\Family;
 use Parameter\Domain\ParameterLibrary;
 use User\Application\HttpNotFoundException;
@@ -32,10 +37,10 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      */
     private $accountRepository;
 
-    public function viewOrganizationsRule(User $identity, Zend_Controller_Request_Abstract $request)
+    public function viewWorkspacesRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $isIdentityAbleToEditOrganizations = $this->editOrganizationsRule($identity, $request);
-        if ($isIdentityAbleToEditOrganizations) {
+        $isIdentityAbleToEditWorkspaces = $this->editWorkspacesRule($identity, $request);
+        if ($isIdentityAbleToEditWorkspaces) {
             return true;
         }
 
@@ -43,22 +48,22 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
         $aclQuery->aclFilter->action = Actions::TRAVERSE;
-        $isIdentityAbleToSeeManyOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
-        if ($isIdentityAbleToSeeManyOrganizations) {
+        $isIdentityAbleToSeeManyWorkspaces = (Workspace::countTotal($aclQuery) > 0);
+        if ($isIdentityAbleToSeeManyWorkspaces) {
             return true;
         }
 
         return false;
     }
 
-    public function editOrganizationsRule(User $identity)
+    public function editWorkspacesRule(User $identity)
     {
-        $isIdentityAbleToCreateOrganizations = $this->acl->isAllowed(
+        $isIdentityAbleToCreateWorkspaces = $this->acl->isAllowed(
             $identity,
             Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
+            new ClassResource(Workspace::class)
         );
-        if ($isIdentityAbleToCreateOrganizations) {
+        if ($isIdentityAbleToCreateWorkspaces) {
             return true;
         }
 
@@ -66,20 +71,20 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
         $aclQuery->aclFilter->enabled = true;
         $aclQuery->aclFilter->user = $identity;
         $aclQuery->aclFilter->action = Actions::EDIT;
-        $isIdentityAbleToEditOrganizations = (Orga_Model_Organization::countTotal($aclQuery) > 0);
-        if ($isIdentityAbleToEditOrganizations) {
+        $isIdentityAbleToEditWorkspaces = (Workspace::countTotal($aclQuery) > 0);
+        if ($isIdentityAbleToEditWorkspaces) {
             return true;
         }
 
         return false;
     }
 
-    public function createOrganizationRule(User $identity)
+    public function createWorkspaceRule(User $identity)
     {
         return $this->acl->isAllowed(
             $identity,
             Actions::CREATE,
-            new ClassResource(Orga_Model_Organization::class)
+            new ClassResource(Workspace::class)
         );
     }
 
@@ -88,12 +93,12 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function viewOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
+    protected function viewWorkspaceRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->acl->isAllowed(
             $identity,
             Actions::TRAVERSE,
-            $this->getOrganization($request)
+            $this->getWorkspace($request)
         );
     }
 
@@ -102,30 +107,30 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function editOrganizationAndCellsRule(User $identity, Zend_Controller_Request_Abstract $request)
+    public function editWorkspaceAndCellsRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $organization = $this->getOrganization($request);
+        $workspace = $this->getWorkspace($request);
 
-        $isUserAllowedToEditOrganizationAndCells = $this->acl->isAllowed(
+        $isUserAllowedToEditWorkspaceAndCells = $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
-            $organization
+            $workspace
         );
-        if (!$isUserAllowedToEditOrganizationAndCells) {
-            foreach ($organization->getOrderedGranularities() as $granularity) {
+        if (!$isUserAllowedToEditWorkspaceAndCells) {
+            foreach ($workspace->getOrderedGranularities() as $granularity) {
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $identity;
                 $aclCellQuery->aclFilter->action = Actions::EDIT;
-                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+                $aclCellQuery->filter->addCondition(Cell::QUERY_GRANULARITY, $granularity);
 
-                $numberCellsUserCanEdit = Orga_Model_Cell::countTotal($aclCellQuery);
+                $numberCellsUserCanEdit = Cell::countTotal($aclCellQuery);
                 if ($numberCellsUserCanEdit > 0) {
                     return true;
                 }
             }
         }
-        return $isUserAllowedToEditOrganizationAndCells;
+        return $isUserAllowedToEditWorkspaceAndCells;
     }
 
     /**
@@ -133,30 +138,30 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function allowOrganizationAndCellsRule(User $identity, Zend_Controller_Request_Abstract $request)
+    public function allowWorkspaceAndCellsRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $organization = $this->getOrganization($request);
+        $workspace = $this->getWorkspace($request);
 
-        $isUserAllowedToEditOrganizationAndCells = $this->acl->isAllowed(
+        $isUserAllowedToEditWorkspaceAndCells = $this->acl->isAllowed(
             $identity,
             Actions::ALLOW,
-            $organization
+            $workspace
         );
-        if (!$isUserAllowedToEditOrganizationAndCells) {
-            foreach ($organization->getOrderedGranularities() as $granularity) {
+        if (!$isUserAllowedToEditWorkspaceAndCells) {
+            foreach ($workspace->getOrderedGranularities() as $granularity) {
                 $aclCellQuery = new Core_Model_Query();
                 $aclCellQuery->aclFilter->enabled = true;
                 $aclCellQuery->aclFilter->user = $identity;
                 $aclCellQuery->aclFilter->action = Actions::ALLOW;
-                $aclCellQuery->filter->addCondition(Orga_Model_Cell::QUERY_GRANULARITY, $granularity);
+                $aclCellQuery->filter->addCondition(Cell::QUERY_GRANULARITY, $granularity);
 
-                $numberCellsUserCanAllow = Orga_Model_Cell::countTotal($aclCellQuery);
+                $numberCellsUserCanAllow = Cell::countTotal($aclCellQuery);
                 if ($numberCellsUserCanAllow > 0) {
                     return true;
                 }
             }
         }
-        return $isUserAllowedToEditOrganizationAndCells;
+        return $isUserAllowedToEditWorkspaceAndCells;
     }
 
     /**
@@ -164,12 +169,12 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function allowOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
+    protected function allowWorkspaceRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
-            $this->getOrganization($request)
+            $this->getWorkspace($request)
         );
     }
 
@@ -178,12 +183,12 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    protected function editOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
+    protected function editWorkspaceRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->acl->isAllowed(
             $identity,
             Actions::EDIT,
-            $this->getOrganization($request)
+            $this->getWorkspace($request)
         );
     }
 
@@ -192,37 +197,37 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      * @param Zend_Controller_Request_Abstract $request
      * @return bool
      */
-    public function deleteOrganizationRule(User $identity, Zend_Controller_Request_Abstract $request)
+    public function deleteWorkspaceRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return $this->acl->isAllowed(
             $identity,
             Actions::DELETE,
-            $this->getOrganization($request)
+            $this->getWorkspace($request)
         );
     }
 
     /**
      * @param Zend_Controller_Request_Abstract $request
      * @throws ForbiddenException
-     * @return Orga_Model_Organization
+     * @return Workspace
      */
-    protected function getOrganization(Zend_Controller_Request_Abstract $request)
+    protected function getWorkspace(Zend_Controller_Request_Abstract $request)
     {
-        $idOrganization = $request->getParam('idOrganization');
-        if ($idOrganization !== null) {
-            return Orga_Model_Organization::load($idOrganization);
+        $workspaceId = $request->getParam('workspace');
+        if ($workspaceId !== null) {
+            return Workspace::load($workspaceId);
         }
-        $idGranularity = $request->getParam('idGranularity');
+        $idGranularity = $request->getParam('granularity');
         if ($idGranularity !== null) {
-            return Orga_Model_Granularity::load($idGranularity)->getOrganization();
+            return Granularity::load($idGranularity)->getWorkspace();
         }
         $index = $request->getParam('index');
         if ($index !== null) {
-            return Orga_Model_Organization::load($index);
+            return Workspace::load($index);
         }
-        $idCell = $request->getParam('idCell');
-        if ($idCell !== null) {
-            return Orga_Model_Cell::load($idCell)->getGranularity()->getOrganization();
+        $cellId = $request->getParam('cell');
+        if ($cellId !== null) {
+            return Cell::load($cellId)->getWorkspace();
         }
 
         throw new ForbiddenException();
@@ -235,7 +240,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      */
     public function viewMembersRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        return ($this->viewOrganizationRule($identity, $request) || $this->editCellRule($identity, $request));
+        return ($this->viewWorkspaceRule($identity, $request) || $this->editCellRule($identity, $request));
     }
 
     /**
@@ -246,11 +251,11 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
     public function editMembersRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         return (
-            $this->editOrganizationRule($identity, $request)
+            $this->editWorkspaceRule($identity, $request)
             || $this->acl->isAllowed(
                 $identity,
                 Actions::EDIT,
-                Orga_Model_Cell::load($request->getParam('idCell'))
+                Cell::load($request->getParam('cell'))
             )
         );
     }
@@ -293,7 +298,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
         return $this->acl->isAllowed(
             $identity,
             Actions::ALLOW,
-            Orga_Model_Cell::load($request->getParam('idCell'))
+            Cell::load($request->getParam('cell'))
         );
     }
 
@@ -378,7 +383,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      */
     protected function editCommentRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $comment = Orga_Model_Cell_InputComment::load($request->getParam('id'));
+        $comment = CellInputComment::load($request->getParam('id'));
 
         return $identity === $comment->getAuthor();
     }
@@ -390,7 +395,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      */
     protected function deleteCommentRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $comment = Orga_Model_Cell_InputComment::load($request->getParam('id'));
+        $comment = CellInputComment::load($request->getParam('id'));
 
         return $identity === $comment->getAuthor();
     }
@@ -398,21 +403,21 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
     /**
      * @param Zend_Controller_Request_Abstract $request
      * @throws \User\Application\ForbiddenException
-     * @return Orga_Model_Cell
+     * @return Cell
      */
     protected function getCell(Zend_Controller_Request_Abstract $request)
     {
         $index = $request->getParam('index');
         if ($index !== null) {
             try {
-                return Orga_Model_Cell::load($index);
+                return Cell::load($index);
             } catch (Core_Exception_NotFound $e) {
                 // Pas une cellule.
             }
         }
-        $idCell = $request->getParam('idCell');
-        if ($idCell !== null) {
-            return Orga_Model_Cell::load($idCell);
+        $cellId = $request->getParam('cell');
+        if ($cellId !== null) {
+            return Cell::load($cellId);
         }
 
         throw new ForbiddenException();
@@ -428,7 +433,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
         try {
             return $this->viewCellRule($identity, $request);
         } catch (ForbiddenException $e) {
-            return $this->viewOrganizationRule($identity, $request);
+            return $this->viewWorkspaceRule($identity, $request);
         }
     }
 
@@ -442,36 +447,36 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
         try {
             return $this->editCellRule($identity, $request);
         } catch (ForbiddenException $e) {
-            return $this->editOrganizationRule($identity, $request);
+            return $this->editWorkspaceRule($identity, $request);
         } catch (Core_Exception_NotFound $e) {
-            return $this->editOrganizationRule($identity, $request);
+            return $this->editWorkspaceRule($identity, $request);
         }
     }
 
     protected function viewReportRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $idReport = $request->getParam('idReport');
+        $idReport = $request->getParam('report');
         if ($idReport !== null) {
-            $idCube = Report::load($idReport)->getCube()->getId();
+            $dWCubeId = Report::load($idReport)->getCube()->getId();
         } else {
-            $idCube = $request->getParam('idCube');
+            $dWCubeId = $request->getParam('cube');
         }
 
-        if ($idCube !== null) {
-            $dWCube = Cube::load($idCube);
+        if ($dWCubeId !== null) {
+            $dWCube = Cube::load($dWCubeId);
             // Si le DWCube est d'un Granularity, vérification que l'utilisateur peut configurer le projet.
             try {
-                $granularity = Orga_Model_Granularity::loadByDWCube($dWCube);
-                $organization = $granularity->getOrganization();
-                $request->setParam('idOrganization', $organization->getKey()['id']);
-                return $this->editOrganizationAndCellsRule($identity, $request);
+                $granularity = Granularity::loadByDWCube($dWCube);
+                $workspace = $granularity->getWorkspace();
+                $request->setParam('workspace', $workspace->getKey()['id']);
+                return $this->editWorkspaceAndCellsRule($identity, $request);
             } catch (Core_Exception_NotFound $e) {
                 // Le cube n'appartient pas à un Granularity.
             }
             // Si le DWCube est d'un Cell, vérification que l'utilisateur peut voir la cellule.
             try {
-                $cell = Orga_Model_Cell::loadByDWCube($dWCube);
-                $request->setParam('idCell', $cell->getKey()['id']);
+                $cell = Cell::loadByDWCube($dWCube);
+                $request->setParam('cell', $cell->getKey()['id']);
                 return $this->viewCellRule($identity, $request);
             } catch (Core_Exception_NotFound $e) {
                 // Le cube n'appartient pas à un Cell.
@@ -499,7 +504,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
     protected function deleteReportRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
         $idReport = $request->getParam('idReport');
-        $cellReport = Orga_Model_CellReport::loadByCellDWReport(Report::load($idReport));
+        $cellReport = CellReport::loadByCellDWReport(Report::load($idReport));
         return ($cellReport->getOwner() === $identity);
     }
 
@@ -520,8 +525,8 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      */
     protected function viewInputAFRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $idCell = $request->getParam('idCell');
-        if ($idCell !== null) {
+        $cellId = $request->getParam('cell');
+        if ($cellId !== null) {
             return $this->viewCellRule($identity, $request);
         }
 
@@ -535,8 +540,8 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      */
     protected function editInputAFRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $idCell = $request->getParam('idCell');
-        if ($idCell !== null) {
+        $cellId = $request->getParam('cell');
+        if ($cellId !== null) {
             return $this->inputCellRule($identity, $request);
         }
 
@@ -550,8 +555,8 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      */
     protected function modeInputAFRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $idCell = $request->getParam('idCell');
-        if ($idCell !== null) {
+        $cellId = $request->getParam('cell');
+        if ($cellId !== null) {
             $mode = $request->getParam('mode');
             if ($mode == AFViewConfiguration::MODE_READ) {
                 return $this->viewCellRule($identity, $request);
@@ -681,7 +686,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
     /**
      * @param Zend_Controller_Request_Abstract $request
      * @throws ForbiddenException
-     * @return Orga_Model_Cell
+     * @return Cell
      */
     protected function getCellFromLibrary(Zend_Controller_Request_Abstract $request)
     {
@@ -689,7 +694,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
         $library = Library::load($idLibrary);
 
         try {
-            return Orga_Model_Cell::loadByDocLibraryForAFInputSetsPrimary($library);
+            return Cell::loadByDocLibraryForAFInputSetsPrimary($library);
         } catch (Core_Exception_NotFound $e) {
             // Pas de Cell
             $this->logger->warning('No cell found for document library #' . $idLibrary);

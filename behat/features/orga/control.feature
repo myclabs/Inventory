@@ -7,7 +7,7 @@ Feature: Control of organizational data feature
   @javascript
   Scenario: Control of organizational data scenario
   # Accès à l'onglet "Contrôle"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Contrôle"
     Then I should see the "consistency1" datagrid

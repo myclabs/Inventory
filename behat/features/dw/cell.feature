@@ -7,7 +7,7 @@ Feature: Cell dataware analysis feature
   @javascript
   Scenario: New cell analysis scenario
   # Accès à l'onglet "Analyses" et au datagrid des analyses (cellule globale)
-    Given I am on "orga/cell/view/idCell/1"
+    Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
     And I click element "#currentGranularity .cell .fa-bar-chart-o"
   # Nouvelle analyse
@@ -23,7 +23,7 @@ Feature: Cell dataware analysis feature
 
   @javascript @readOnly
   Scenario: Cell existing preconfigured analysis scenario
-    Given I am on "orga/cell/view/idCell/1"
+    Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
     And I click element "#currentGranularity .cell .fa-bar-chart-o"
     Then I should see "Chiffre d'affaire 2012, marques A et B, par site"
@@ -40,7 +40,7 @@ Feature: Cell dataware analysis feature
   @javascript
   Scenario: Filter on input status for an analysis scenario
   # Analyse sans filtre sur le statut
-    Given I am on "orga/cell/view/idCell/1"
+    Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
     And I click element "a[href='#granularity4']"
     And I click element ".cell[data-tag='/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/'] .fa-bar-chart-o"

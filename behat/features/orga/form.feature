@@ -7,7 +7,7 @@ Feature: Cell form tab edition feature
   @javascript
   Scenario: Cell form tab edition scenario, global input granularity
   # Accès à l'onglet "Formulaires" et à un des datagrids
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
   #  And I open collapse "Niveau organisationnel global" (ne fonctionne pas car il y en a deux)
@@ -28,7 +28,7 @@ Feature: Cell form tab edition feature
   @javascript
   Scenario: Cell form tab edition scenario, "Année | Catégorie | Site" input granularity
   # Accès à l'onglet "Formulaires" et à un des datagrids
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
     And I click "Année | Catégorie Année | Site | Catégorie"

@@ -6,7 +6,7 @@
  * @subpackage View
  */
 $datagridValues = new UI_Datagrid('reportValues', 'datagrid_values', 'dw');
-$datagridValues->addParam('idCube', $this->idCube);
+$datagridValues->addParam('cube', $this->cubeId);
 $datagridValues->addParam('hashReport', $this->hashReport);
 
 if ($this->numeratorAxis1 !== null) {

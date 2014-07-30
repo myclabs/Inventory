@@ -4,6 +4,141 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="workspaces">
+            <tuv xml:lang="fr">
+                <seg>Workspaces</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Workspaces</seg>
+            </tuv>
+        </tu>
+        <tu tuid="workspaceStructure">
+            <tuv xml:lang="fr">
+                <seg>Structure organisationnelle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Organizational structure</seg>
+            </tuv>
+        </tu>
+        <tu tuid="structure">
+            <tuv xml:lang="fr">
+                <seg>Structure</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Structure</seg>
+            </tuv>
+        </tu>
+        <tu tuid="errorMessageInputGranularities">
+            <tuv xml:lang="fr">
+                <seg>Aucun niveau organisationnel associé à des saisies n'a été configuré pour le moment.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No organizational level for inputs has been chosen yet.</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="defaultWorkspaceLabel">
+            <tuv xml:lang="fr">
+                <seg>Workspace</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Workspace</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="forWorkspace">
+            <tuv xml:lang="fr">
+                <seg>du workspace : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>for workspace: [LABEL]</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="forOrgaUnit">
+            <tuv xml:lang="fr">
+                <seg>de l'unité organisationnelle : [LABEL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>for organizational unit: [LABEL]</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="contextIndicators">
+            <tuv xml:lang="fr">
+                <seg>Liste des indicateurs contextualisés utilisés</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>List of used contextual indicators</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="timeAxis">
+            <tuv xml:lang="fr">
+                <seg>Choix de l'axe temporel</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Selection of the time axis</seg>
+            </tuv>
+        </tu>
+        <tu tuid="timeAxisExplanation">
+            <tuv xml:lang="fr">
+                <seg>Cet axe sera utilisé pour comparer les saisies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This axis will be used to compare inputs</seg>
+            </tuv>
+        </tu>
+        <tu tuid="timeAxisLabel">
+            <tuv xml:lang="fr">
+                <seg>Axe temporel</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Time axis</seg>
+            </tuv>
+        </tu>
+
+        <tu tuid="banner">
+            <tuv xml:lang="fr">
+                <seg>Bannière</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Banner</seg>
+            </tuv>
+        </tu>
+        <tu tuid="bannerExplanations">
+            <tuv xml:lang="fr">
+                <seg>Personnalisation de la page principale; taille d'image en pixels recommandée h=125 et L&lt;=1100.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Customizing the main page, image size recommended in pixels h=125 and L&lt;=1100.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="choiceBanner">
+            <tuv xml:lang="fr">
+                <seg>Choisir une bannière</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Choose a banner</seg>
+            </tuv>
+        </tu>
+        <tu tuid="currentBanner">
+            <tuv xml:lang="fr">
+                <seg>Bannière actuelle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Current banner</seg>
+            </tuv>
+        </tu>
+        <tu tuid="noBanner">
+            <tuv xml:lang="fr">
+                <seg>Aucune bannière</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No banner</seg>
+            </tuv>
+        </tu>
+
         <tu tuid="workspace">
             <tuv xml:lang="fr">
                 <seg>Workspace</seg>

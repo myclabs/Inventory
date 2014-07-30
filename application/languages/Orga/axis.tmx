@@ -53,7 +53,7 @@
                 <seg>Not contextualizing</seg>
             </tuv>
         </tu>
-        <tu tuid="positionningLabel">
+        <tu tuid="positioningLabel">
             <tuv xml:lang="fr">
                 <seg>Positionnement des éléments au sein de l'axe</seg>
             </tuv>
@@ -61,7 +61,7 @@
                 <seg>Positionning of elements in the axis</seg>
             </tuv>
         </tu>
-        <tu tuid="positionningOption">
+        <tu tuid="positioningOption">
             <tuv xml:lang="fr">
                 <seg>Libre</seg>
             </tuv>
@@ -120,12 +120,12 @@
                 <seg>Before removing the contextualizing effect of this axis, please change identical refs from its members first.</seg>
             </tuv>
         </tu>
-        <tu tuid="positionningAxisIsTimeAxis">
+        <tu tuid="positioningAxisIsTimeAxis">
             <tuv xml:lang="fr">
-                <seg>Pour pouvoir enlever le caractère positionnant de cet axe, merci de modifier auparavant l'axe temps de l'organisation.</seg>
+                <seg>Pour pouvoir enlever le caractère positionnant de cet axe, merci de modifier auparavant l'axe temps du workspace.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Before removing the positionning effect of this axis, please change the time axis of his organization first.</seg>
+                <seg>Before removing the positioning effect of this axis, please change the time axis of his workspace first.</seg>
             </tuv>
         </tu>
 

@@ -93,7 +93,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         // Modules
         $builder->addDefinitions(PACKAGE_PATH . '/src/User/Application/config.php');
-        $builder->addDefinitions(APPLICATION_PATH . '/orga/config.php');
+        $builder->addDefinitions(PACKAGE_PATH . '/src/Orga/Application/config.php');
         $builder->addDefinitions(PACKAGE_PATH . '/src/Account/Application/config.php');
 
         switch (APPLICATION_ENV) {
@@ -187,7 +187,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initModules()
     {
-        $autoloader = Autoloader::getInstance();
         $frontController = Zend_Controller_Front::getInstance();
 
         $modules = [
@@ -206,41 +205,19 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         ];
 
         foreach ($modules as $module) {
-            $moduleRoot = APPLICATION_PATH . '/' . strtolower($module);
-            $moduleRoot2 = PACKAGE_PATH . '/src/' . $module;
+            $moduleRoot = PACKAGE_PATH . '/src/' . $module;
 
             if (file_exists($moduleRoot)) {
-                // Autoloader
-                $autoloader->addModule($module, $moduleRoot);
-
-                // Controllers
-                $frontController->addControllerDirectory($moduleRoot . '/controllers', strtolower($module));
-
-                // Bootstrap
-                $bootstrapFile = $moduleRoot . '/Bootstrap.php';
-                if (file_exists($bootstrapFile)) {
-                    require_once $bootstrapFile;
-                    $bootstrapName = $module . '_Bootstrap';
-                    /** @var $bootstrap Core_Package_Bootstrap */
-                    $bootstrap = new $bootstrapName($this->_application);
-                    $bootstrap->container = $this->container;
-                    $bootstrap->setRun($this->_run);
-                    $bootstrap->bootstrap();
-                    foreach ($bootstrap->getRun() as $run) {
-                        $this->_markRun($run);
-                    }
-                }
-            } elseif (file_exists($moduleRoot2)) {
-                if (file_exists($moduleRoot2 . '/Application/Controller')) {
+                if (file_exists($moduleRoot . '/Application/Controller')) {
                     // Controllers
                     $frontController->addControllerDirectory(
-                        $moduleRoot2 . '/Application/Controller',
+                        $moduleRoot . '/Application/Controller',
                         strtolower($module)
                     );
                 }
 
                 // Bootstrap
-                $bootstrapFile = $moduleRoot2 . '/Application/Bootstrap.php';
+                $bootstrapFile = $moduleRoot . '/Application/Bootstrap.php';
                 if (file_exists($bootstrapFile)) {
                     require_once $bootstrapFile;
                     $bootstrapName = $module . '\Application\Bootstrap';

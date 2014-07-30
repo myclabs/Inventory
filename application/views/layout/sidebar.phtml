@@ -27,19 +27,19 @@ $account = $this->account;
             </li>
 
 
-            <!-- Organizations -->
-            <?php if (count($account->organizations) > 0) : ?>
+            <!-- Workspaces -->
+            <?php if (count($account->workspaces) > 0) : ?>
                 <li>
                     <a href="#">
                         <i class="fa fa-lg fa-fw fa-inbox"></i>
                         <span class="menu-item-parent">Workspaces</span>
                     </a>
                     <ul>
-                        <?php foreach ($account->organizations as $organization) : ?>
-                            <li class="<?=$this->activeMenu === 'organization-' . $organization->id ? 'active' : ''?>">
-                                <a href="orga/organization/view/idOrganization/<?=$organization->id?>"
-                                    title="<?=$organization->label?>">
-                                    <?=$organization->label?>
+                        <?php foreach ($account->workspaces as $workspace) : ?>
+                            <li class="<?=$this->activeMenu === 'workspace-' . $workspace->id ? 'active' : ''?>">
+                                <a href="orga/workspace/view/workspace/<?=$workspace->id?>"
+                                    title="<?=$workspace->label?>">
+                                    <?=$workspace->label?>
                                 </a>
                             </li>
                         <?php endforeach; ?>

@@ -7,7 +7,7 @@ Feature: Input in a cell associated to a DW feature
   @javascript
   Scenario: Input in a cell associated to a DW scenario
   # Check that the results of input are indeed taken into account in the DW, refs #6468
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
   # Modification du formulaire associé à une zone-marque
     And I open tab "Formulaires"
@@ -15,7 +15,7 @@ Feature: Input in a cell associated to a DW feature
     And I set "Combustion de combustible, mesuré en unité de masse" for column "af" of row 1 of the "datagridCellAfs3" datagrid with a confirmation message
   # Accès à la cellule "Europe | Marque A"
   # Accès à la saisie
-    And I am on "orga/cell/input/idCell/3/fromIdCell/1/"
+    And I am on "orga/cell/input/cell/3/fromCell/1/"
     And I wait for the page to finish loading
   # Saisie
     And I select "Charbon" from "nature_combustible"

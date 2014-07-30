@@ -7,7 +7,7 @@ Feature: General info of an organization feature
   @javascript
   Scenario: Edit organization label
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Informations générales"
   # Modification du libellé
@@ -22,7 +22,7 @@ Feature: General info of an organization feature
   @javascript
   Scenario: Edit organization inventory granularity
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Collecte"
   # Modification du niveau organisationnel des collectes
@@ -40,7 +40,7 @@ Feature: General info of an organization feature
   @javascript
   Scenario: Add input granularity, incorrect input
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
     Then I should see the "addGranularity1_afs" form
@@ -53,7 +53,7 @@ Feature: General info of an organization feature
   @javascript
   Scenario: Add input granularity, correct input
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
     Then I should see the "addGranularity1_afs" form
@@ -84,7 +84,7 @@ Feature: General info of an organization feature
   @javascript
   Scenario: Delete input granularity
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
     Then I should see the "addGranularity1_afs" form

@@ -31,7 +31,7 @@
         </tu>
 
         <!-- Onglets -->
-        <tu tuid="organization">
+        <tu tuid="workspace">
             <tuv xml:lang="fr">
                 <seg>Informations générales</seg>
             </tuv>
@@ -89,7 +89,7 @@
         </tu>
 
         <!-- Champs -->
-        <tu tuid="organizationLabel">
+        <tu tuid="workspaceLabel">
             <tuv xml:lang="fr">
                 <seg>Libellé du du workspace</seg>
             </tuv>
@@ -97,15 +97,15 @@
                 <seg>Workspace label</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationLabelPlaceholder">
+        <tu tuid="workspaceLabelPlaceholder">
             <tuv xml:lang="fr">
-                <seg>Organisation</seg>
+                <seg>Workspace</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organization</seg>
+                <seg>Workspace</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationTemplate">
+        <tu tuid="workspaceTemplate">
             <tuv xml:lang="fr">
                 <seg>Modèle</seg>
             </tuv>
@@ -113,15 +113,15 @@
                 <seg>Template</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationTemplateExplanation">
+        <tu tuid="workspaceTemplateExplanation">
             <tuv xml:lang="fr">
                 <seg>Le modèle prédéfinit un certain nombre de paramètres du workspace.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>The organization type predefined some parameters.</seg>
+                <seg>The workspace type predefined some parameters.</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationMainAxisLabel">
+        <tu tuid="workspaceMainAxisLabel">
             <tuv xml:lang="fr">
                 <seg>Libellé de l'axe géographique</seg>
             </tuv>
@@ -129,7 +129,7 @@
                 <seg>Geographic axis label</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationMainAxisPlaceholder">
+        <tu tuid="workspaceMainAxisPlaceholder">
             <tuv xml:lang="fr">
                 <seg>Site, Agence, Bâtiment, …</seg>
             </tuv>
@@ -137,7 +137,7 @@
                 <seg>Site, Agency, Building, …</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationAddMainSubAxis">
+        <tu tuid="workspaceAddMainSubAxis">
             <tuv xml:lang="fr">
                 <seg>Ajouter un axe d'agrégation</seg>
             </tuv>
@@ -145,7 +145,7 @@
                 <seg>Add an aggregation axis</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationMainSubAxisLabel">
+        <tu tuid="workspaceMainSubAxisLabel">
             <tuv xml:lang="fr">
                 <seg>Libellé de l'axe d'agrégation</seg>
             </tuv>
@@ -153,7 +153,7 @@
                 <seg>Aggregation axis label</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationMainSubAxisPlaceholder">
+        <tu tuid="workspaceMainSubAxisPlaceholder">
             <tuv xml:lang="fr">
                 <seg>Pays, Zone, Marque, Activités, …</seg>
             </tuv>
@@ -161,7 +161,7 @@
                 <seg>Country, Zone, Brand, …</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationTimeAxisLabel">
+        <tu tuid="workspaceTimeAxisLabel">
             <tuv xml:lang="fr">
                 <seg>Libellé de l'axe temporel</seg>
             </tuv>
@@ -169,7 +169,7 @@
                 <seg>Time axis label</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationTimeAxisPlaceholder">
+        <tu tuid="workspaceTimeAxisPlaceholder">
             <tuv xml:lang="fr">
                 <seg>Année, semaine, …</seg>
             </tuv>
@@ -177,7 +177,7 @@
                 <seg>Year, week, …</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationInputsAxisLabel">
+        <tu tuid="workspaceInputsAxisLabel">
             <tuv xml:lang="fr">
             <seg>Libellé de l'axe de catégorisation des saisies</seg>
             </tuv>
@@ -185,7 +185,7 @@
                 <seg>Inputs categorization axis label</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationInputsAxisPlaceholder">
+        <tu tuid="workspaceInputsAxisPlaceholder">
             <tuv xml:lang="fr">
                 <seg>Catégorie, Type, Rubrique, …</seg>
             </tuv>
@@ -203,7 +203,7 @@
         </tu>
 
         <!-- Legendes -->
-        <tu tuid="organizationMainAxisTitle">
+        <tu tuid="workspaceMainAxisTitle">
             <tuv xml:lang="fr">
                 <seg>Choix de l'axe géographique et de ses agrégations</seg>
             </tuv>
@@ -211,7 +211,7 @@
                 <seg>Choice of the geographic axis and his aggregations</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationTimeAxisTitle">
+        <tu tuid="workspaceTimeAxisTitle">
             <tuv xml:lang="fr">
                 <seg>Choix de l'axe temporel</seg>
             </tuv>
@@ -219,7 +219,7 @@
                 <seg>Choice of the time axis</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationInputsAxisTitle">
+        <tu tuid="workspaceInputsAxisTitle">
             <tuv xml:lang="fr">
                 <seg>Choix de l'axe de découpage des formulaires</seg>
             </tuv>
@@ -335,7 +335,7 @@
         </tu>
 
         <!-- Popup -->
-        <tu tuid="organizationBuildingPopupTitle">
+        <tu tuid="workspaceBuildingPopupTitle">
             <tuv xml:lang="fr">
                 <seg>Initialisation du workspace</seg>
             </tuv>
@@ -343,7 +343,7 @@
                 <seg>Initialization of the workspace</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationBuildingMessage">
+        <tu tuid="workspaceBuildingMessage">
             <tuv xml:lang="fr">
                 <seg>Construction en cours…</seg>
             </tuv>
@@ -351,7 +351,7 @@
                 <seg>Building in progress…</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationBuildingGoHome">
+        <tu tuid="workspaceBuildingGoHome">
             <tuv xml:lang="fr">
                 <seg>Revenir à l'accueil</seg>
             </tuv>
@@ -359,15 +359,15 @@
                 <seg>Back to home</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationBuildingAddMore">
+        <tu tuid="workspaceBuildingAddMore">
             <tuv xml:lang="fr">
-                <seg>Construire une autre organisation</seg>
+                <seg>Construire un autre workspace</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Build another organization</seg>
+                <seg>Build another workspace</seg>
             </tuv>
         </tu>
-        <tu tuid="errorWhileCreatingOrganization">
+        <tu tuid="errorWhileCreatingWorkspace">
             <tuv xml:lang="fr">
                 <seg>Une erreur est surevenue durant la création et nous en sommes désolé.</seg>
             </tuv>
@@ -375,7 +375,7 @@
                 <seg>An error happened during the process and we are sorry for that.</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationTryAgainOrContactAdministrators">
+        <tu tuid="workspaceTryAgainOrContactAdministrators">
             <tuv xml:lang="fr">
                 <seg>Essayez à nouveau, si le problème persiste contactez, un administarteur.</seg>
             </tuv>
@@ -383,7 +383,7 @@
                 <seg>Try again, if the problem persists, please contact an administrator.</seg>
             </tuv>
         </tu>
-        <tu tuid="organizationBuildingClosePopup">
+        <tu tuid="workspaceBuildingClosePopup">
             <tuv xml:lang="fr">
                 <seg>Fermer</seg>
             </tuv>

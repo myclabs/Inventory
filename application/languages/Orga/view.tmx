@@ -8,10 +8,10 @@
 
         <tu tuid="addMember">
             <tuv xml:lang="fr">
-                <seg>Ajouter un élément d'organisation</seg>
+                <seg>Ajouter un élément de workspace</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Add an organization element</seg>
+                <seg>Add an workspace element</seg>
             </tuv>
         </tu>
 
@@ -573,10 +573,10 @@
 
         <tu tuid="addMembersAxisExplanations">
             <tuv xml:lang="fr">
-                <seg>Axe d'organisation auquel l'élément sera ajouté.</seg>
+                <seg>Axe du workspace auquel l'élément sera ajouté.</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Organizational axis to which element will be added.</seg>
+                <seg>Workspace axis to which element will be added.</seg>
             </tuv>
         </tu>
         <tu tuid="addMembersMemberExplanations">

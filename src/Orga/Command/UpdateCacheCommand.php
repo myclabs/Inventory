@@ -3,9 +3,9 @@
 namespace Orga\Command;
 
 use Doctrine\ORM\EntityManager;
-use Orga_Model_Organization;
-use Orga_Model_Granularity;
-use Orga_Service_InputService;
+use Orga\Domain\Workspace;
+use Orga\Domain\Granularity;
+use Orga\Domain\Service\Cell\Input\CellInputUpdaterInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,7 +24,7 @@ class UpdateCacheCommand extends Command
      */
     private $entityManager;
     /**
-     * @var EntityManager
+     * @var \Orga\Domain\Service\Cell\Input\CellInputUpdaterInterface
      */
     private $inputService;
 
@@ -39,7 +39,7 @@ class UpdateCacheCommand extends Command
     private $rebuildInputInconsistencies = false;
 
 
-    public function __construct(EntityManager $entityManager, Orga_Service_InputService $inputService)
+    public function __construct(EntityManager $entityManager, CellInputUpdaterInterface $inputService)
     {
         $this->entityManager = $entityManager;
         $this->inputService = $inputService;
@@ -57,52 +57,51 @@ class UpdateCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $options = $input->getArguments();
-        if (empty($options) || $input->getOption('input-status')) {
+        if ($input->getOption('input-status')) {
             $this->rebuildInputStatus = true;
         }
-        if (empty($options) || $input->getOption('input-inconsistencies')) {
+        if ($input->getOption('input-inconsistencies')) {
             $this->rebuildInputInconsistencies = true;
         }
 
-        $this->traverseOrganizations($output);
+        $this->traverseWorkspaces($output);
         $this->entityManager->flush();
     }
 
     /**
      * @param OutputInterface $output
      */
-    protected function traverseOrganizations(OutputInterface $output)
+    protected function traverseWorkspaces(OutputInterface $output)
     {
-        foreach (Orga_Model_Organization::loadList() as $organization) {
-            $this->traverseGranularities($output, $organization);
-            $output->writeln('<comment>Rebuilt organization ' . $organization->getId() . '</comment>');
+        foreach (Workspace::loadList() as $workspace) {
+            $this->traverseGranularities($output, $workspace);
+            $output->writeln('<comment>Rebuilt workspace ' . $workspace->getId() . '</comment>');
         }
     }
 
     /**
      * @param OutputInterface $output
-     * @param Orga_Model_Organization $organization
+     * @param \Orga\Domain\Workspace $workspace
      */
-    protected function traverseGranularities(OutputInterface $output, Orga_Model_Organization $organization)
+    protected function traverseGranularities(OutputInterface $output, Workspace $workspace)
     {
-        foreach ($organization->getGranularities() as $granularity) {
+        foreach ($workspace->getGranularities() as $granularity) {
             $this->traverseCells($output, $granularity);
         }
     }
 
     /**
      * @param OutputInterface $output
-     * @param Orga_Model_Granularity $granularity
+     * @param Granularity $granularity
      */
-    protected function traverseCells(OutputInterface $output, Orga_Model_Granularity $granularity)
+    protected function traverseCells(OutputInterface $output, Granularity $granularity)
     {
         foreach ($granularity->getCells() as $cell) {
             if ($this->rebuildInputStatus) {
                 $cell->updateInputStatus();
             }
             if ($this->rebuildInputInconsistencies) {
-                $this->inputService->updateInconsistentInputSetFromPreviousValue($cell);
+                $this->inputService->updateInconsistencyForCell($cell);
             }
         }
     }

@@ -432,8 +432,11 @@ class ReportService
     {
         $stdReport = $this->getReportAsStdReport($report);
         $stdReport->id = null;
-        $stdReport->idCube = $cube->getId();
-        return $this->getReportFromJson($this->encodeStdReportAsJson($stdReport));
+        $stdReport->idCube = null;
+        return $this->getReportFromStdReport(
+            $this->decodeJsonAsStdReport($this->encodeStdReportAsJson($stdReport)),
+            $cube
+        );
     }
 
     /**
@@ -446,7 +449,10 @@ class ReportService
         $stdReport = $this->getReportAsStdReport($sourceReport);
         $stdReport->id = $report->getId();
         $stdReport->idCube = $report->getCube()->getId();
-        return $this->getReportFromJson($this->encodeStdReportAsJson($stdReport));
+        return $this->getReportFromStdReport(
+            $this->decodeJsonAsStdReport($this->encodeStdReportAsJson($stdReport)),
+            $report->getCube()
+        );
     }
 
 }

@@ -4,7 +4,7 @@ namespace Script\Jobs\Orga;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Orga_Model_Organization;
+use Orga\Domain\Workspace;
 
 define('RUN', false);
 require_once __DIR__ . '/../../../application/init.php';
@@ -31,8 +31,8 @@ class RebuildConfiguration
 
     protected function checkLibrary()
     {
-        /** @var Orga_Model_Organization $organization */
-        foreach (Orga_Model_Organization::loadList() as $organization) {
+        /** @var Workspace $organization */
+        foreach (Workspace::loadList() as $organization) {
             foreach ($organization->getGranularities() as $granularities) {
                 foreach ($granularities->getCells() as $cell) {
                     $cell->enableDocLibraryForAFInputSetPrimary();

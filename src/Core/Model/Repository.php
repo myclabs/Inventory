@@ -11,20 +11,6 @@ use Doctrine\ORM\QueryBuilder;
 class Core_Model_Repository extends Doctrine\ORM\EntityRepository
 {
     /**
-     * Récupère la requête depuis le query builder.
-     *
-     * @param QueryBuilder $queryBuilder
-     *
-     * @return Query
-     */
-    public function getQueryFromQueryBuilder(QueryBuilder $queryBuilder)
-    {
-        $query = $queryBuilder->getQuery();
-
-        return $query;
-    }
-
-    /**
      * Charge une entité en fonction de son id.
      *
      * @param array|mixed $id
@@ -96,7 +82,7 @@ class Core_Model_Repository extends Doctrine\ORM\EntityRepository
         $this->addCustomParametersToQueryBuilder($queryBuilderLoadList, $queryParameters);
         $queryParameters->parseToQueryBuilderWithLimit($queryBuilderLoadList);
 
-        return $this->getQueryFromQueryBuilder($queryBuilderLoadList)->getResult();
+        return $queryBuilderLoadList->getQuery()->getResult();
     }
 
     /**
@@ -119,7 +105,7 @@ class Core_Model_Repository extends Doctrine\ORM\EntityRepository
         $this->addCustomParametersToQueryBuilder($queryBuilderCountTotal, $queryParameters);
         $queryParameters->parseToQueryBuilderWithoutLimit($queryBuilderCountTotal);
 
-        return $this->getQueryFromQueryBuilder($queryBuilderCountTotal)->getSingleScalarResult();
+        return $queryBuilderCountTotal->getQuery()->getSingleScalarResult();
     }
 
     /**

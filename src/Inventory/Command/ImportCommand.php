@@ -28,11 +28,11 @@ use Core_Exception_NotFound;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Exception;
-use Orga\Model\ACL\CellAdminRole;
-use Orga\Model\ACL\CellContributorRole;
-use Orga\Model\ACL\CellManagerRole;
-use Orga\Model\ACL\CellObserverRole;
-use Orga\Model\ACL\OrganizationAdminRole;
+use Orga\Domain\ACL\CellAdminRole;
+use Orga\Domain\ACL\CellContributorRole;
+use Orga\Domain\ACL\CellManagerRole;
+use Orga\Domain\ACL\CellObserverRole;
+use Orga\Domain\ACL\WorkspaceAdminRole;
 use Parameter\Domain\Family\Cell;
 use Parameter\Domain\Family\Dimension;
 use Parameter\Domain\Family\Family;
@@ -259,8 +259,8 @@ class ImportCommand extends Command
                     },
                 ],
             ],
-            \Orga_Model_Organization::class => [
-                'callbacks' => function (\Orga_Model_Organization $object) use ($account, $classificationLibrary) {
+            \Orga\Domain\Workspace::class => [
+                'callbacks' => function (\Orga\Domain\Workspace $object) use ($account, $classificationLibrary) {
                         $this->setProperty($object, 'account', $account);
                         $this->setProperty($object, 'contextIndicators', new ArrayCollection());
                         foreach ($classificationLibrary->getContextIndicators() as $contextIndicator) {
@@ -272,14 +272,14 @@ class ImportCommand extends Command
                     'adminRoles' => [ 'exclude' => true ],
                 ],
             ],
-            \Orga_Model_Axis::class => [],
-            \Orga_Model_Member::class => [],
-            \Orga_Model_Granularity::class => [
+            \Orga\Domain\Axis::class => [],
+            \Orga\Domain\Member::class => [],
+            \Orga\Domain\Granularity::class => [
                 'properties' => [
                     'dWCube' => [ 'exclude' => true ],
                 ],
             ],
-            \Orga_Model_Cell::class => [
+            \Orga\Domain\Cell::class => [
                 'properties' => [
                     'dWCube' => [ 'exclude' => true ],
                     'dWResults' => [ 'exclude' => true ],
@@ -294,13 +294,13 @@ class ImportCommand extends Command
                     'contributorRoles' => [ 'exclude' => true ],
                     'observerRoles' => [ 'exclude' => true ],
                 ],
-                'callbacks' => function (\Orga_Model_Cell $object) {
+                'callbacks' => function (\Orga\Domain\Cell $object) {
                     foreach ($object->getCommentsForInputSetPrimary() as $comment) {
                         $this->setProperty($comment, 'cell', $object);
                     }
                 },
             ],
-            \Orga_Model_CellsGroup::class => [
+            \Orga\Domain\SubCellsGroup::class => [
                 'properties' => [
                     'aF' => [
                         'callback' => function ($var) use ($afLibrary) {
@@ -375,7 +375,7 @@ class ImportCommand extends Command
                 ],
             ],
             'Social_Model_Comment' => [
-                'class' => \Orga_Model_Cell_InputComment::class,
+                'class' => \Orga\Domain\Cell\CellInputComment::class,
                 'properties' => [
                     'author' => [
                         'callback' => function ($var) {
@@ -384,8 +384,8 @@ class ImportCommand extends Command
                     ]
                 ],
             ],
-            \Orga_Model_GranularityReport::class => [ 'exclude' => true ],
-            \Orga_Model_CellReport::class => [ 'exclude' => true ],
+            \Orga\Domain\Report\GranularityReport::class => [ 'exclude' => true ],
+            \Orga\Domain\Report\CellReport::class => [ 'exclude' => true ],
             \DW\Domain\Cube::class => [
                 'properties' => [
                     'axes' => [ 'exclude' => true ],
@@ -487,15 +487,15 @@ class ImportCommand extends Command
 
 
         // Managing Orga.
-        /** @var \Orga_Model_Organization $organization */
+        /** @var \Orga\Domain\Workspace $organization */
         $account = $this->entityManager->find(Account::class, $input->getArgument('account'));
 
         // Regenerate DW cubes.
         $output->writeln('<comment>Regenerating DW Cubes</comment>');
         $queryOrgaAccount = new \Core_Model_Query();
         $queryOrgaAccount->filter->addCondition('account', $account);
-        /** @var \Orga_Model_Organization $organization */
-        foreach (\Orga_Model_Organization::loadList($queryOrgaAccount) as $organization) {
+        /** @var \Orga\Domain\Workspace $organization */
+        foreach (\Orga\Domain\Workspace::loadList($queryOrgaAccount) as $organization) {
             foreach ($organization->getGranularities() as $granularity) {
                 $granularity->setCellsGenerateDWCubes($granularity->getCellsGenerateDWCubes());
             }
@@ -517,7 +517,7 @@ class ImportCommand extends Command
                         $granularityAxes[] = $organization->getAxisByRef($refAxis);
                     }
                     $granularity = $organization->getGranularityByRef(
-                        \Orga_Model_Granularity::buildRefFromAxes($granularityAxes)
+                        \Orga\Domain\Granularity::buildRefFromAxes($granularityAxes)
                     );
 
                     $dwCube = $granularity->getDWCube();
@@ -684,7 +684,7 @@ class ImportCommand extends Command
                     ));
                     $this->acl->grant(
                         User::loadByEmail($adminEmail),
-                        new OrganizationAdminRole(
+                        new WorkspaceAdminRole(
                             User::loadByEmail($adminEmail),
                             $organization
                         )
@@ -697,7 +697,7 @@ class ImportCommand extends Command
                         $granularityAxes[] = $organization->getAxisByRef($refAxis);
                     }
                     $granularity = $organization->getGranularityByRef(
-                        \Orga_Model_Granularity::buildRefFromAxes($granularityAxes)
+                        \Orga\Domain\Granularity::buildRefFromAxes($granularityAxes)
                     );
 
                     foreach ($granularityObject->cellsACL as $cellObject) {
@@ -762,11 +762,11 @@ class ImportCommand extends Command
 
     /**
      * @param string $label
-     * @return \Orga_Model_Organization
+     * @return \Orga\Domain\Workspace
      */
     private function getOrganizationByLabel($label)
     {
-        foreach (\Orga_Model_Organization::loadList() as $organization) {
+        foreach (\Orga\Domain\Workspace::loadList() as $organization) {
             if ($organization->getLabel()->get('fr') === $label) {
                 return $organization;
             }

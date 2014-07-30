@@ -25,6 +25,16 @@ class EntityVersionedTest extends TestCase
         $loggableListener->setUsername('foo');
     }
 
+    public function tearDown()
+    {
+        /** @var $repository \Gedmo\Loggable\Entity\Repository\LogEntryRepository */
+        $repository = $this->entityManager->getRepository(LogEntry::class);
+        foreach ($repository->findAll() as $version) {
+            $this->entityManager->remove($version);
+        }
+        $this->entityManager->flush();
+    }
+
     public function testSimpleField()
     {
         /** @var $repository \Gedmo\Loggable\Entity\Repository\LogEntryRepository */

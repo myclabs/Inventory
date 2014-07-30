@@ -1,6 +1,11 @@
 <?php
 use Account\Domain\Account;
 use Core\Test\TestCase;
+use Orga\Domain\Axis;
+use Orga\Domain\Cell;
+use Orga\Domain\Granularity;
+use Orga\Domain\Member;
+use Orga\Domain\Workspace;
 
 /**
  * Class Orga_Test_CellTest
@@ -33,258 +38,258 @@ class Orga_Test_CellTest
 
 
 /**
- * Tests de la classe Organization
- * @package Organization
+ * Tests de la classe Workspace
+ * @package Workspace
  * @subpackage Test
  */
 class Orga_Test_CellAttributes extends TestCase
 {
     /**
-     * @var Orga_Model_Organization
+     * @var Workspace
      */
-    protected $organization;
+    protected $workspace;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis1;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis11;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis111;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis12;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis2;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1c;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1d;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1e;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1f;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11c;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member111a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member111b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member12a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member12b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member2a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member2b;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity0;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity1;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity2;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity3;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity4;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity5;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell0_0;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell1_111a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell1_111b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11a12a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11b12a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11c12a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11a12b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11b12b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11c12b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1c2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1d2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1e2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1f2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1c2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1d2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1e2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1f2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell5_2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell5_2b;
 
@@ -292,71 +297,71 @@ class Orga_Test_CellAttributes extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization(
+        $this->workspace = new Workspace(
             $this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock()
         );
 
-        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
+        $this->axis1 = new Axis($this->workspace, 'ref_1');
         $this->axis1->getLabel()->set('Label 1', 'fr');
 
-        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
+        $this->axis11 = new Axis($this->workspace, 'ref_11', $this->axis1);
         $this->axis11->getLabel()->set('Label 11', 'fr');
 
-        $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
+        $this->axis111 = new Axis($this->workspace, 'ref_111', $this->axis11);
         $this->axis111->getLabel()->set('Label 111', 'fr');
 
-        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
+        $this->axis12 = new Axis($this->workspace, 'ref_12', $this->axis1);
         $this->axis12->getLabel()->set('Label 12', 'fr');
 
-        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
+        $this->axis2 = new Axis($this->workspace, 'ref_2');
         $this->axis2->getLabel()->set('Label 2', 'fr');
 
-        $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
+        $this->member111a = new Member($this->axis111, 'ref111_a');
         $this->member111a->getLabel()->set('Label 111 A', 'fr');
-        $this->member111b = new Orga_Model_Member($this->axis111, 'ref111_b');
+        $this->member111b = new Member($this->axis111, 'ref111_b');
         $this->member111b->getLabel()->set('Label 111 B', 'fr');
 
-        $this->member11a = new Orga_Model_Member($this->axis11, 'ref11_a', [$this->member111a]);
+        $this->member11a = new Member($this->axis11, 'ref11_a', [$this->member111a]);
         $this->member11a->getLabel()->set('Label 11 A', 'fr');
-        $this->member11b = new Orga_Model_Member($this->axis11, 'ref11_b', [$this->member111b]);
+        $this->member11b = new Member($this->axis11, 'ref11_b', [$this->member111b]);
         $this->member11b->getLabel()->set('Label 11 B', 'fr');
-        $this->member11c = new Orga_Model_Member($this->axis11, 'ref11_c', [$this->member111b]);
+        $this->member11c = new Member($this->axis11, 'ref11_c', [$this->member111b]);
         $this->member11c->getLabel()->set('Label 11 C', 'fr');
 
-        $this->member12a = new Orga_Model_Member($this->axis12, 'ref12_a');
+        $this->member12a = new Member($this->axis12, 'ref12_a');
         $this->member12a->getLabel()->set('Label 12 A', 'fr');
-        $this->member12b = new Orga_Model_Member($this->axis12, 'ref12_b');
+        $this->member12b = new Member($this->axis12, 'ref12_b');
         $this->member12b->getLabel()->set('Label 12 B', 'fr');
 
-        $this->member1a = new Orga_Model_Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
+        $this->member1a = new Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
         $this->member1a->getLabel()->set('Label 1 A', 'fr');
-        $this->member1b = new Orga_Model_Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
+        $this->member1b = new Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
         $this->member1b->getLabel()->set('Label 1 B', 'fr');
-        $this->member1c = new Orga_Model_Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
+        $this->member1c = new Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
         $this->member1c->getLabel()->set('Label 1 C', 'fr');
-        $this->member1d = new Orga_Model_Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
+        $this->member1d = new Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
         $this->member1d->getLabel()->set('Label 1 D', 'fr');
-        $this->member1e = new Orga_Model_Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
+        $this->member1e = new Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
         $this->member1e->getLabel()->set('Label 1 E', 'fr');
-        $this->member1f = new Orga_Model_Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
+        $this->member1f = new Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
         $this->member1f->getLabel()->set('Label 1 F', 'fr');
 
-        $this->member2a = new Orga_Model_Member($this->axis2, 'ref2_a');
+        $this->member2a = new Member($this->axis2, 'ref2_a');
         $this->member2a->getLabel()->set('Label 2 A', 'fr');
-        $this->member2b = new Orga_Model_Member($this->axis2, 'ref2_b');
+        $this->member2b = new Member($this->axis2, 'ref2_b');
         $this->member2b->getLabel()->set('Label 2 B', 'fr');
 
-        $this->granularity0 = new Orga_Model_Granularity($this->organization, []);
+        $this->granularity0 = new Granularity($this->workspace, []);
         $this->granularity0->setCellsControlRelevance(true);
-        $this->granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);
+        $this->granularity1 = new Granularity($this->workspace, [$this->axis111]);
         $this->granularity1->setCellsControlRelevance(true);
-        $this->granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
+        $this->granularity2 = new Granularity($this->workspace, [$this->axis11, $this->axis12]);
         $this->granularity2->setCellsControlRelevance(true);
-        $this->granularity3 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12, $this->axis2]);
+        $this->granularity3 = new Granularity($this->workspace, [$this->axis11, $this->axis12, $this->axis2]);
         $this->granularity3->setCellsControlRelevance(true);
-        $this->granularity4 = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis2]);
+        $this->granularity4 = new Granularity($this->workspace, [$this->axis1, $this->axis2]);
         $this->granularity4->setCellsControlRelevance(true);
-        $this->granularity5 = new Orga_Model_Granularity($this->organization, [$this->axis2]);
+        $this->granularity5 = new Granularity($this->workspace, [$this->axis2]);
         $this->granularity5->setCellsControlRelevance(true);
 
         $this->cell0_0 = $this->granularity0->getCellByMembers([]);
@@ -801,15 +806,57 @@ class Orga_Test_CellAttributes extends TestCase
     function testSetRelevantWrongGranularity()
     {
         // Désactivation de la partie member12b pour vérifier les mises à jour vers Relevant et NotRelevant.
-        $granularity6 = new Orga_Model_Granularity($this->organization, [$this->axis12]);
+        $granularity6 = new Granularity($this->workspace, [$this->axis12]);
         $granularity6->getCellByMembers([$this->member12b])->setRelevant(false);
     }
 
     function testEnableDisable()
     {
-        // Désactivation de la partie member12b pour vérifier les mises à jour vers Relevant et NotRelevant.
-        $granularity6 = new Orga_Model_Granularity($this->organization, [$this->axis12]);
+        $granularity6 = new Granularity($this->workspace, [$this->axis12]);
         $granularity6->setCellsControlRelevance(true);
+
+        $this->assertTrue($this->cell0_0->isRelevant());
+
+        $this->assertTrue($this->cell1_111a->isRelevant());
+        $this->assertTrue($this->cell1_111b->isRelevant());
+
+        $this->assertTrue($this->cell2_11a12a->isRelevant());
+        $this->assertTrue($this->cell2_11b12a->isRelevant());
+        $this->assertTrue($this->cell2_11c12a->isRelevant());
+        $this->assertTrue($this->cell2_11a12b->isRelevant());
+        $this->assertTrue($this->cell2_11b12b->isRelevant());
+        $this->assertTrue($this->cell2_11c12b->isRelevant());
+
+        $this->assertTrue($this->cell3_11a12a2a->isRelevant());
+        $this->assertTrue($this->cell3_11b12a2a->isRelevant());
+        $this->assertTrue($this->cell3_11c12a2a->isRelevant());
+        $this->assertTrue($this->cell3_11a12b2a->isRelevant());
+        $this->assertTrue($this->cell3_11b12b2a->isRelevant());
+        $this->assertTrue($this->cell3_11c12b2a->isRelevant());
+        $this->assertTrue($this->cell3_11a12a2b->isRelevant());
+        $this->assertTrue($this->cell3_11b12a2b->isRelevant());
+        $this->assertTrue($this->cell3_11c12a2b->isRelevant());
+        $this->assertTrue($this->cell3_11a12b2b->isRelevant());
+        $this->assertTrue($this->cell3_11b12b2b->isRelevant());
+        $this->assertTrue($this->cell3_11c12b2b->isRelevant());
+
+        $this->assertTrue($this->cell4_1a2a->isRelevant());
+        $this->assertTrue($this->cell4_1b2a->isRelevant());
+        $this->assertTrue($this->cell4_1c2a->isRelevant());
+        $this->assertTrue($this->cell4_1d2a->isRelevant());
+        $this->assertTrue($this->cell4_1e2a->isRelevant());
+        $this->assertTrue($this->cell4_1f2a->isRelevant());
+        $this->assertTrue($this->cell4_1a2b->isRelevant());
+        $this->assertTrue($this->cell4_1b2b->isRelevant());
+        $this->assertTrue($this->cell4_1c2b->isRelevant());
+        $this->assertTrue($this->cell4_1d2b->isRelevant());
+        $this->assertTrue($this->cell4_1e2b->isRelevant());
+        $this->assertTrue($this->cell4_1f2b->isRelevant());
+
+        $this->assertTrue($this->cell5_2a->isRelevant());
+        $this->assertTrue($this->cell5_2b->isRelevant());
+
+        // Désactivation de la partie member12b pour vérifier les mises à jour vers Relevant et NotRelevant.
         $granularity6->getCellByMembers([$this->member12b])->setRelevant(false);
 
         $this->assertTrue($this->cell0_0->isRelevant());
@@ -942,60 +989,31 @@ class Orga_Test_CellAttributes extends TestCase
         $this->assertTrue($this->cell5_2b->isRelevant());
 
         // Suppression d'un axe.
-        $this->organization->removeAxis($this->axis11);
+        $this->workspace->removeAxis($this->axis11);
 
         $this->assertTrue($this->cell0_0->isRelevant());
 
         $this->assertTrue($this->cell1_111a->isRelevant());
         $this->assertTrue($this->cell1_111b->isRelevant());
 
-        $this->assertFalse($this->cell4_1a2a->isRelevant());
+        $this->assertTrue($this->cell4_1a2a->isRelevant());
         $this->assertFalse($this->cell4_1b2a->isRelevant());
-        $this->assertFalse($this->cell4_1c2a->isRelevant());
+        $this->assertTrue($this->cell4_1c2a->isRelevant());
         $this->assertFalse($this->cell4_1d2a->isRelevant());
-        $this->assertFalse($this->cell4_1e2a->isRelevant());
+        $this->assertTrue($this->cell4_1e2a->isRelevant());
         $this->assertFalse($this->cell4_1f2a->isRelevant());
-        $this->assertFalse($this->cell4_1a2b->isRelevant());
+        $this->assertTrue($this->cell4_1a2b->isRelevant());
         $this->assertFalse($this->cell4_1b2b->isRelevant());
-        $this->assertFalse($this->cell4_1c2b->isRelevant());
+        $this->assertTrue($this->cell4_1c2b->isRelevant());
         $this->assertFalse($this->cell4_1d2b->isRelevant());
-        $this->assertFalse($this->cell4_1e2b->isRelevant());
+        $this->assertTrue($this->cell4_1e2b->isRelevant());
         $this->assertFalse($this->cell4_1f2b->isRelevant());
 
         $this->assertTrue($this->cell5_2a->isRelevant());
         $this->assertTrue($this->cell5_2b->isRelevant());
 
-        // Utile pour vérifier la mise à jour futur des cellules dont cell1_111a deviendra la nouvelle parente.
+        // Vérification du nouveau parent défini par la suppression.
         $this->cell1_111a->setRelevant(false);
-
-        $this->assertTrue($this->cell0_0->isRelevant());
-
-        $this->assertFalse($this->cell1_111a->isRelevant());
-        $this->assertTrue($this->cell1_111b->isRelevant());
-
-        $this->assertFalse($this->cell4_1a2a->isRelevant());
-        $this->assertFalse($this->cell4_1b2a->isRelevant());
-        $this->assertFalse($this->cell4_1c2a->isRelevant());
-        $this->assertFalse($this->cell4_1d2a->isRelevant());
-        $this->assertFalse($this->cell4_1e2a->isRelevant());
-        $this->assertFalse($this->cell4_1f2a->isRelevant());
-        $this->assertFalse($this->cell4_1a2b->isRelevant());
-        $this->assertFalse($this->cell4_1b2b->isRelevant());
-        $this->assertFalse($this->cell4_1c2b->isRelevant());
-        $this->assertFalse($this->cell4_1d2b->isRelevant());
-        $this->assertFalse($this->cell4_1e2b->isRelevant());
-        $this->assertFalse($this->cell4_1f2b->isRelevant());
-
-        $this->assertTrue($this->cell5_2a->isRelevant());
-        $this->assertTrue($this->cell5_2b->isRelevant());
-
-        // Définition des parents des membres de axis1 pour axis111, son nouveau parent remplaçant axis11.
-        $this->member1a->setDirectParentForAxis($this->member111a);
-        $this->member1b->setDirectParentForAxis($this->member111a);
-        $this->member1c->setDirectParentForAxis($this->member111b);
-        $this->member1d->setDirectParentForAxis($this->member111b);
-        $this->member1e->setDirectParentForAxis($this->member111a);
-        $this->member1f->setDirectParentForAxis($this->member111b);
 
         $this->assertTrue($this->cell0_0->isRelevant());
 
@@ -1023,258 +1041,258 @@ class Orga_Test_CellAttributes extends TestCase
 
 
 /**
- * Tests de la classe Organization
- * @package Organization
+ * Tests de la classe Workspace
+ * @package Workspace
  * @subpackage Test
  */
 class Orga_Test_CellHierarchy extends TestCase
 {
     /**
-     * @var Orga_Model_Organization
+     * @var Workspace
      */
-    protected $organization;
+    protected $workspace;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis1;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis11;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis111;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis12;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis2;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1c;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1d;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1e;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1f;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11c;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member111a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member111b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member12a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member12b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member2a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member2b;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity0;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity1;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity2;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity3;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity4;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity5;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell0_0;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell1_111a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell1_111b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11a12a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11b12a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11c12a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11a12b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11b12b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11c12b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1c2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1d2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1e2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1f2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1c2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1d2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1e2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1f2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell5_2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell5_2b;
 
@@ -1285,50 +1303,50 @@ class Orga_Test_CellHierarchy extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+        $this->workspace = new Workspace($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
-        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
+        $this->axis1 = new Axis($this->workspace, 'ref_1');
         $this->axis1->getLabel()->set('Label 1', 'fr');
 
-        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
+        $this->axis11 = new Axis($this->workspace, 'ref_11', $this->axis1);
         $this->axis11->getLabel()->set('Label 11', 'fr');
 
-        $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
+        $this->axis111 = new Axis($this->workspace, 'ref_111', $this->axis11);
         $this->axis111->getLabel()->set('Label 111', 'fr');
 
-        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
+        $this->axis12 = new Axis($this->workspace, 'ref_12', $this->axis1);
         $this->axis12->getLabel()->set('Label 12', 'fr');
 
-        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
+        $this->axis2 = new Axis($this->workspace, 'ref_2');
         $this->axis2->setRef('ref_2');
         $this->axis2->getLabel()->set('Label 2', 'fr');
 
-        $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
-        $this->member111b = new Orga_Model_Member($this->axis111, 'ref111_b');
+        $this->member111a = new Member($this->axis111, 'ref111_a');
+        $this->member111b = new Member($this->axis111, 'ref111_b');
 
-        $this->member11a = new Orga_Model_Member($this->axis11, 'ref11_a', [$this->member111a]);
-        $this->member11b = new Orga_Model_Member($this->axis11, 'ref11_b', [$this->member111b]);
-        $this->member11c = new Orga_Model_Member($this->axis11, 'ref11_c', [$this->member111b]);
+        $this->member11a = new Member($this->axis11, 'ref11_a', [$this->member111a]);
+        $this->member11b = new Member($this->axis11, 'ref11_b', [$this->member111b]);
+        $this->member11c = new Member($this->axis11, 'ref11_c', [$this->member111b]);
 
-        $this->member12a = new Orga_Model_Member($this->axis12, 'ref12_a');
-        $this->member12b = new Orga_Model_Member($this->axis12, 'ref12_b');
+        $this->member12a = new Member($this->axis12, 'ref12_a');
+        $this->member12b = new Member($this->axis12, 'ref12_b');
 
-        $this->member1a = new Orga_Model_Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
-        $this->member1b = new Orga_Model_Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
-        $this->member1c = new Orga_Model_Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
-        $this->member1d = new Orga_Model_Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
-        $this->member1e = new Orga_Model_Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
-        $this->member1f = new Orga_Model_Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
+        $this->member1a = new Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
+        $this->member1b = new Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
+        $this->member1c = new Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
+        $this->member1d = new Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
+        $this->member1e = new Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
+        $this->member1f = new Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
 
-        $this->member2a = new Orga_Model_Member($this->axis2, 'ref2_a');
-        $this->member2b = new Orga_Model_Member($this->axis2, 'ref2_b');
+        $this->member2a = new Member($this->axis2, 'ref2_a');
+        $this->member2b = new Member($this->axis2, 'ref2_b');
 
-        $this->granularity0 = new Orga_Model_Granularity($this->organization, []);
-        $this->granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);
-        $this->granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
-        $this->granularity3 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12, $this->axis2]);
-        $this->granularity4 = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis2]);
-        $this->granularity5 = new Orga_Model_Granularity($this->organization, [$this->axis2]);
+        $this->granularity0 = new Granularity($this->workspace, []);
+        $this->granularity1 = new Granularity($this->workspace, [$this->axis111]);
+        $this->granularity2 = new Granularity($this->workspace, [$this->axis11, $this->axis12]);
+        $this->granularity3 = new Granularity($this->workspace, [$this->axis11, $this->axis12, $this->axis2]);
+        $this->granularity4 = new Granularity($this->workspace, [$this->axis1, $this->axis2]);
+        $this->granularity5 = new Granularity($this->workspace, [$this->axis2]);
 
         $this->cell0_0 = $this->granularity0->getCellByMembers([]);
 
@@ -1712,330 +1730,330 @@ class Orga_Test_CellHierarchy extends TestCase
 
 
 /**
- * Tests de la classe Organization
- * @package Organization
+ * Tests de la classe Workspace
+ * @package Workspace
  * @subpackage Test
  */
 class Orga_Test_CellAdjacent extends TestCase
 {
     /**
-     * @var Orga_Model_Organization
+     * @var Workspace
      */
-    protected $organization;
+    protected $workspace;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis1;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis11;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis111;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis12;
     /**
-     * @var Orga_Model_Axis
+     * @var Axis
      */
     protected $axis2;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1c;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1d;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1e;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1f;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1g;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1h;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1i;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1j;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1k;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member1l;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member11c;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member111a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member111b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member12a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member12b;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member2a;
     /**
-     * @var Orga_Model_Member
+     * @var Member
      */
     protected $member2b;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity0;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity1;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity2;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity3;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity4;
     /**
-     * @var Orga_Model_Granularity
+     * @var Granularity
      */
     protected $granularity5;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell0_0;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell1_111a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell1_111b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11a12a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11b12a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11c12a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11a12b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11b12b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell2_11c12b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11a12b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11b12b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell3_11c12b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1a2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1b2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1c2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1d2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1e2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1f2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1g2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1h2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1i2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1j2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1k2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1l2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1a2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1b2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1c2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1d2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1e2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1f2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1g2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1h2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1i2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1j2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1k2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell4_1l2b;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell5_2a;
     /**
-     * @var Orga_Model_Cell
+     * @var Cell
      */
     protected $cell5_2b;
 
@@ -2046,52 +2064,52 @@ class Orga_Test_CellAdjacent extends TestCase
     {
         parent::setUp();
 
-        $this->organization = new Orga_Model_Organization($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
+        $this->workspace = new Workspace($this->getMockBuilder(Account::class)->disableOriginalConstructor()->getMock());
 
-        $this->axis1 = new Orga_Model_Axis($this->organization, 'ref_1');
+        $this->axis1 = new Axis($this->workspace, 'ref_1');
         $this->axis1->setMemberPositioning(true);
-        $this->axis11 = new Orga_Model_Axis($this->organization, 'ref_11', $this->axis1);
+        $this->axis11 = new Axis($this->workspace, 'ref_11', $this->axis1);
         $this->axis11->setMemberPositioning(true);
-        $this->axis111 = new Orga_Model_Axis($this->organization, 'ref_111', $this->axis11);
+        $this->axis111 = new Axis($this->workspace, 'ref_111', $this->axis11);
         $this->axis111->setMemberPositioning(true);
         $this->axis111->setContextualize(true);
-        $this->axis12 = new Orga_Model_Axis($this->organization, 'ref_12', $this->axis1);
+        $this->axis12 = new Axis($this->workspace, 'ref_12', $this->axis1);
         $this->axis12->setMemberPositioning(true);
         $this->axis12->setContextualize(true);
-        $this->axis2 = new Orga_Model_Axis($this->organization, 'ref_2');
+        $this->axis2 = new Axis($this->workspace, 'ref_2');
 
-        $this->member111a = new Orga_Model_Member($this->axis111, 'ref111_a');
-        $this->member111b = new Orga_Model_Member($this->axis111, 'ref111_b');
+        $this->member111a = new Member($this->axis111, 'ref111_a');
+        $this->member111b = new Member($this->axis111, 'ref111_b');
 
-        $this->member11a = new Orga_Model_Member($this->axis11, 'ref11_a', [$this->member111a]);
-        $this->member11b = new Orga_Model_Member($this->axis11, 'ref11_b', [$this->member111b]);
-        $this->member11c = new Orga_Model_Member($this->axis11, 'ref11_c', [$this->member111b]);
+        $this->member11a = new Member($this->axis11, 'ref11_a', [$this->member111a]);
+        $this->member11b = new Member($this->axis11, 'ref11_b', [$this->member111b]);
+        $this->member11c = new Member($this->axis11, 'ref11_c', [$this->member111b]);
 
-        $this->member12a = new Orga_Model_Member($this->axis12, 'ref12_a');
-        $this->member12b = new Orga_Model_Member($this->axis12, 'ref12_b');
+        $this->member12a = new Member($this->axis12, 'ref12_a');
+        $this->member12b = new Member($this->axis12, 'ref12_b');
 
-        $this->member1a = new Orga_Model_Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
-        $this->member1b = new Orga_Model_Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
-        $this->member1c = new Orga_Model_Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
-        $this->member1d = new Orga_Model_Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
-        $this->member1e = new Orga_Model_Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
-        $this->member1f = new Orga_Model_Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
-        $this->member1g = new Orga_Model_Member($this->axis1, 'ref1_g', [$this->member11a, $this->member12a]);
-        $this->member1h = new Orga_Model_Member($this->axis1, 'ref1_h', [$this->member11a, $this->member12b]);
-        $this->member1i = new Orga_Model_Member($this->axis1, 'ref1_i', [$this->member11a, $this->member12a]);
-        $this->member1j = new Orga_Model_Member($this->axis1, 'ref1_j', [$this->member11b, $this->member12b]);
-        $this->member1k = new Orga_Model_Member($this->axis1, 'ref1_k', [$this->member11c, $this->member12a]);
-        $this->member1l = new Orga_Model_Member($this->axis1, 'ref1_l', [$this->member11c, $this->member12b]);
+        $this->member1a = new Member($this->axis1, 'ref1_a', [$this->member11a, $this->member12a]);
+        $this->member1b = new Member($this->axis1, 'ref1_b', [$this->member11a, $this->member12b]);
+        $this->member1c = new Member($this->axis1, 'ref1_c', [$this->member11b, $this->member12a]);
+        $this->member1d = new Member($this->axis1, 'ref1_d', [$this->member11b, $this->member12b]);
+        $this->member1e = new Member($this->axis1, 'ref1_e', [$this->member11c, $this->member12a]);
+        $this->member1f = new Member($this->axis1, 'ref1_f', [$this->member11c, $this->member12b]);
+        $this->member1g = new Member($this->axis1, 'ref1_g', [$this->member11a, $this->member12a]);
+        $this->member1h = new Member($this->axis1, 'ref1_h', [$this->member11a, $this->member12b]);
+        $this->member1i = new Member($this->axis1, 'ref1_i', [$this->member11a, $this->member12a]);
+        $this->member1j = new Member($this->axis1, 'ref1_j', [$this->member11b, $this->member12b]);
+        $this->member1k = new Member($this->axis1, 'ref1_k', [$this->member11c, $this->member12a]);
+        $this->member1l = new Member($this->axis1, 'ref1_l', [$this->member11c, $this->member12b]);
 
-        $this->member2a = new Orga_Model_Member($this->axis2, 'ref2_a');
-        $this->member2b = new Orga_Model_Member($this->axis2, 'ref2_b');
+        $this->member2a = new Member($this->axis2, 'ref2_a');
+        $this->member2b = new Member($this->axis2, 'ref2_b');
 
-        $this->granularity0 = new Orga_Model_Granularity($this->organization, []);
-        $this->granularity1 = new Orga_Model_Granularity($this->organization, [$this->axis111]);
-        $this->granularity2 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12]);
-        $this->granularity3 = new Orga_Model_Granularity($this->organization, [$this->axis11, $this->axis12, $this->axis2]);
-        $this->granularity4 = new Orga_Model_Granularity($this->organization, [$this->axis1, $this->axis2]);
-        $this->granularity5 = new Orga_Model_Granularity($this->organization, [$this->axis2]);
+        $this->granularity0 = new Granularity($this->workspace, []);
+        $this->granularity1 = new Granularity($this->workspace, [$this->axis111]);
+        $this->granularity2 = new Granularity($this->workspace, [$this->axis11, $this->axis12]);
+        $this->granularity3 = new Granularity($this->workspace, [$this->axis11, $this->axis12, $this->axis2]);
+        $this->granularity4 = new Granularity($this->workspace, [$this->axis1, $this->axis2]);
+        $this->granularity5 = new Granularity($this->workspace, [$this->axis2]);
 
         $this->cell0_0 = $this->granularity0->getCellByMembers([]);
 

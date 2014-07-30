@@ -1,0 +1,30 @@
+Orga\Domain\Report\CellReport:
+  type: entity
+  repositoryClass: \Core_Model_Repository
+  table: Orga_Cell_DWReport
+
+  id:
+    id:
+      column: id
+      type: integer
+      generator:
+        strategy: AUTO
+
+  oneToOne:
+    cellDWReport:
+      targetEntity: DW\Domain\Report
+      joinColumn:
+        name: idCellDWReport
+        referencedColumnName: id
+        nullable: false
+        unique: true
+        onDelete: CASCADE
+
+  manyToOne:
+    owner:
+      targetEntity: User\Domain\User
+      joinColumn:
+        name: idOwner
+        referencedColumnName: id
+        nullable: false
+        onDelete: CASCADE

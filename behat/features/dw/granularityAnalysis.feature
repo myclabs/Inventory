@@ -8,7 +8,7 @@ Feature: Granularity dataware analysis feature
   Scenario: Trying to launch an analysis when configuration is not complete
   # Affichage des messages d'erreur lorsque des champs ne sont pas remplis
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/idOrganization/1"
+    Given I am on "orga/organization/edit/workspace/1"
     And I open tab "Config. Analyses"
   # Accès au datagrid des analyses pré-configurées au niveau global
     And I open collapse "Niveau organisationnel global"
@@ -45,7 +45,7 @@ Feature: Granularity dataware analysis feature
   @javascript
   Scenario: Display of the status of analysis configuration (new configuration / change in course)
   # Affichage du cartouche indiquant le statut de la configuration
-    Given I am on "orga/granularity/view-report/idGranularity/1/"
+    Given I am on "orga/granularity/view-report/granularity/1/"
   # Nouvelle analyse
     Then I should see "Nouvelle configuration"
     And I should not see "Modifications en cours"
@@ -82,7 +82,7 @@ Feature: Granularity dataware analysis feature
   @javascript
   Scenario: Launch and save a granularity analysis, empty label
   # Accès à l'interface de configuration d'une analyse
-    Given I am on "orga/granularity/view-report/idGranularity/1/"
+    Given I am on "orga/granularity/view-report/granularity/1/"
     When I select "sum" from "typeSumRatioChoice"
     And I select "Camembert" from "displayType"
     And I click "Lancer"
@@ -96,7 +96,7 @@ Feature: Granularity dataware analysis feature
   @javascript
   Scenario: Launch and save a granularity analysis, non empty label
   # Accès à l'interface de configuration d'une analyse
-    Given I am on "orga/granularity/view-report/idGranularity/1/"
+    Given I am on "orga/granularity/view-report/granularity/1/"
     And I wait for the page to finish loading
     When I select "sum" from "typeSumRatioChoice"
     And I select "Camembert" from "displayType"
@@ -143,7 +143,7 @@ Feature: Granularity dataware analysis feature
 
   @javascript
   Scenario: Update a granularity analysis, without any change except on filters
-    Given I am on "orga/granularity/view-report/idGranularity/1/idReport/2"
+    Given I am on "orga/granularity/view-report/granularity/1/idReport/2"
     And I wait for the page to finish loading
     Then I should see "Chiffre d'affaire, par année Niveau organisationnel global"
   # Ajout d'un filtre
@@ -177,7 +177,7 @@ Feature: Granularity dataware analysis feature
   @javascript
   Scenario: Create a granularity analysis, modify it, and save as another configuration scenario
   # Configuration et lancement d'une nouvelle analyse préconfigurée
-    Given I am on "orga/granularity/view-report/idGranularity/1/"
+    Given I am on "orga/granularity/view-report/granularity/1/"
     When I select "sum" from "typeSumRatioChoice"
     And I select "Camembert" from "displayType"
     And I click "Lancer"

@@ -1,0 +1,62 @@
+<?php
+/**
+ * @author valentin.claras
+ * @package Orga
+ * Traduction des Report
+ */
+use Orga\Domain\Granularity;
+
+?>
+    <div class="page-header">
+        <h1>
+            <?=___('Orga', 'translate', 'granularityReports')?> <small><?=___('UI', 'name', 'translations')?></small>
+            <div class="pull-right">
+                <small>
+                    <?=$this->button(__('UI', 'other', 'backButton'))->prependIcon('arrow-left')->link('orga/workspace/edit/workspace/'.$this->workspaceId.'/tab/translate/')?>
+                </small>
+            </div>
+        </h1>
+        <style>
+            h1 .pull-right small a { letter-spacing: normal; }
+        </style>
+    </div>
+<?php
+foreach ($this->granularities as $granularity) {
+    /** @var $granularity Granularity */
+    if ($granularity->getCellsGenerateDWCubes()) {
+
+        $datagrid = new UI_Datagrid('datagridTranslate_DW_Model_Report_label_'.$granularity->getId(), 'datagrid_translate_granularityreports', 'orga');
+        $datagrid->automaticFiltering = false;
+
+        $identifierColumn = new UI_Datagrid_Col_Text('identifier', ___('UI', 'name', 'identifier'));
+        $identifierColumn->editable = false;
+        $datagrid->addCol($identifierColumn);
+
+        foreach (\Core\ContainerSingleton::getContainer()->get('translation.languages') as $language) {
+            $languageColumn = new UI_Datagrid_Col_Text($language, ___('UI', 'translate', 'language' . $language));
+            $languageColumn->editable = true;
+            $datagrid->addCol($languageColumn);
+        }
+
+        $datagrid->addParam('workspace', $this->workspaceId);
+        $datagrid->addParam('granularity', $granularity->getRef());
+        $datagrid->initialLoading = false;
+
+        echo $this->collapse(
+            'translateGranularityReports'.$granularity->getId(),
+            $this->translate($granularity->getLabel()),
+            $datagrid->getHTML()
+        );
+
+        $script = '';
+        $script .= '$(\'#translateGranularityReports'.$granularity->getId().'\').on(\'show.bs.collapse\', function(e) {';
+        $script .= 'if ($(e.target).attr(\'id\') == \'translateGranularityReports'.$granularity->getId().'\') {';
+        $script .= 'datagridTranslate_DW_Model_Report_label_'.$granularity->getId().'.filter();';
+        $script .= '}';
+        $script .= '});';
+
+        UI_Datagrid::addHeader($datagrid);
+        $this->headScript()->appendScript('$(document).ready(function(){'.$script.'});');
+
+    }
+}

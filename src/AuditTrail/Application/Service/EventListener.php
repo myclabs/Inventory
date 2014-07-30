@@ -6,12 +6,10 @@
 namespace AuditTrail\Application\Service;
 
 use AuditTrail\Domain\AuditTrailService;
-use AuditTrail\Domain\Context\OrganizationContext;
-use Core_Exception_NotFound;
-use Orga_Model_Cell;
-use Orga_Service_InputCreatedEvent;
-use Orga_Service_InputEditedEvent;
-use User\Domain\User;
+use AuditTrail\Domain\Context\WorkspaceContext;
+use Orga\Domain\Cell;
+use Orga\Domain\Service\Cell\Input\CellInputCreatedEvent;
+use Orga\Domain\Service\Cell\Input\CellInputEditedEvent;
 
 /**
  * Event listener
@@ -32,26 +30,26 @@ class EventListener
     }
 
     /**
-     * @param Orga_Service_InputCreatedEvent $event
+     * @param CellInputCreatedEvent $event
      */
-    public function onInputCreated(Orga_Service_InputCreatedEvent $event)
+    public function onInputCreated(CellInputCreatedEvent $event)
     {
         $cell = $event->getCell();
 
-        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
+        $context = new WorkspaceContext($cell->getGranularity()->getWorkspace());
         $context->setCell($cell);
 
         $this->auditTrailService->addEntry($event->getName(), $context, $event->getUser());
     }
 
     /**
-     * @param Orga_Service_InputEditedEvent $event
+     * @param CellInputEditedEvent $event
      */
-    public function onInputEdited(Orga_Service_InputEditedEvent $event)
+    public function onInputEdited(CellInputEditedEvent $event)
     {
         $cell = $event->getCell();
 
-        $context = new OrganizationContext($cell->getGranularity()->getOrganization());
+        $context = new WorkspaceContext($cell->getGranularity()->getWorkspace());
         $context->setCell($cell);
 
         $this->auditTrailService->addEntry($event->getName(), $context, $event->getUser());

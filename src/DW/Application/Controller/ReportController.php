@@ -73,10 +73,10 @@ class DW_ReportController extends Core_Controller
             $report = $this->getReportFromSession($this->getParam('hashReport'));
         }
         if (!isset($report) || !($report instanceof Report)) {
-            if ($this->hasParam('idReport')) {
-                $report = Report::load($this->getParam('idReport'));
+            if ($this->hasParam('report')) {
+                $report = Report::load($this->getParam('report'));
             } else {
-                $report = new Report(Cube::load($this->getParam('idCube')));
+                $report = new Report(Cube::load($this->getParam('cube')));
                 $this->translator->set($report->getLabel(), __('DW', 'report', 'newReportDefaultLabelPage'));
             }
         }
@@ -87,7 +87,7 @@ class DW_ReportController extends Core_Controller
         }
         $hash = ($this->hasParam('hashReport')) ? $this->getParam('hashReport') : (string) spl_object_hash($report);
 
-        $this->view->assign('idCube', $report->getCube()->getId());
+        $this->view->assign('cubeId', $report->getCube()->getId());
         $this->view->assign('hashReport', $hash);
         $this->view->assign('reportLabel', $this->translator->get($report->getLabel()));
         $this->view->assign('configurationForm', new DWFormconfiguration($report, $hash, $this->translator));
@@ -96,7 +96,7 @@ class DW_ReportController extends Core_Controller
             $this->view->assign('viewConfiguration', $this->getParam('viewConfiguration'));
         } else {
             $viewConfiguration = new DWViewConfiguration();
-            $viewConfiguration->setOutputUrl('index/report/idCube/'.$report->getCube()->getId());
+            $viewConfiguration->setOutputUrl('index/report/cube/'.$report->getCube()->getId());
             $viewConfiguration->setSaveURL('dw/report/details');
             $this->view->assign('viewConfiguration', $viewConfiguration);
         }
@@ -336,7 +336,7 @@ class DW_ReportController extends Core_Controller
                 [
                     'message'  => __('UI', 'message', 'updated'),
                     'type'     => 'success',
-                    'idReport' => $report->getId()
+                    'report' => $report->getId()
                 ]
             );
 
@@ -352,7 +352,7 @@ class DW_ReportController extends Core_Controller
     public function valuesAction()
     {
         $report = $this->getReportFromSession($this->getParam('hashReport'));
-        $this->view->assign('idCube', $this->getParam('idCube'));
+        $this->view->assign('cubeId', $this->getParam('cube'));
         $this->view->assign('hashReport', $this->getParam('hashReport'));
         $this->view->assign('numeratorAxis1', $report->getNumeratorAxis1());
         $this->view->assign('numeratorAxis2', $report->getNumeratorAxis2());
