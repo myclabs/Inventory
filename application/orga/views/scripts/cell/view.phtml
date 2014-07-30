@@ -566,7 +566,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
     granularityInfo[0].className = granularityInfo[0].className.replace(/\bbadge-.*?\b/g, '');
     granularityInfo.addClass('badge-info');
     granularityInfo.html('<i class="fa fa-spinner fa-fw fa-spin"></i> <?=___('UI', 'loading', 'loading')?>');
-    granularity.append(
+    granularity.html(
         '<tr class="loading-cells">' +
             '<td colspan="100%">' +
                 '<i class="fa fa-spinner fa-fw fa-spin"></i> ' +
@@ -580,6 +580,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
         type: "POST",
         data: { firstCell: $(this).attr('data-first-cell'), showCells: $('.cells-filter :input[name="show-cells"]', $(this)).val(), filters: $('.cells-filter :input[name!="show-cells"]', $(this)).serializeArray() },
         success: function(data) {
+            granularity.html('');
             granularity.attr('data-filtered-cells', data.totalCells);
             granularityInfo.html(granularity.attr('data-filtered-cells') + ' / ' + granularity.parent().attr('data-total-cells'));
             $(data.childCells).each(function() {
@@ -824,7 +825,6 @@ $('.cells-filter button.reset').on('click', function(e) {
 $('.cells-filter select').on('keyup change', function(e) {
     var collapse = $(this).closest('.collapse');
     collapse.attr('data-first-cell', <?=$defaultDataFirstCell?>);
-    $('.granularity', collapse).html('');
     collapse.trigger('loadCells');
 });
 $('.cells-filter').on('resetCellsFilter', function(e) {
@@ -832,7 +832,6 @@ $('.cells-filter').on('resetCellsFilter', function(e) {
     $('select[name!="show-cells"]', $(this)).val('');
     var collapse = $(this).closest('.collapse');
     collapse.attr('data-first-cell', <?=$defaultDataFirstCell?>);
-    $('.granularity', collapse).html('');
     collapse.trigger('loadCells');
 });
 $('div.collapse[id^="granularity"]').on('showCells', function(e) {
