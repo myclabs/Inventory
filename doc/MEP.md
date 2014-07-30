@@ -47,6 +47,12 @@ ALTER TABLE Orga_SubCellsGroup DROP INDEX IDX_262E11F25E699E88;
 
 - Puis seulement, déployer normalement avec update de la BDD.
 
+- Lancer le script de rebuild des ACL
+
+```
+php scripts/jobs/acl/rebuild.php acl:rebuild
+```
+
 
 ## 3.3
 
