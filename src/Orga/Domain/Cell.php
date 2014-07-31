@@ -1296,6 +1296,10 @@ class Cell extends Core_Model_Entity implements EntityResource
      */
     public function deleteDWResultsForDWCube(Cube $dWCube)
     {
+        // Un matching sur une PersistentCollection (manyToMany) non initialisée produit une erreur.
+        //@todo Supprimer l'initialisation lorsque le problème sera corrigé. 
+        $this->dWResults->toArray();
+
         $criteria = Criteria::create()->where(Criteria::expr()->eq('cube', $dWCube));
         foreach ($this->dWResults->matching($criteria) as $dWResult) {
             $this->dWResults->removeElement($dWResult);
