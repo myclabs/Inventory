@@ -422,10 +422,10 @@ class ETLStructureService implements ETLStructureInterface
             $this->resetDWCube(
                 $cell->getDWCube(),
                 $cell->getGranularity()->getWorkspace(),
-                array(
+                [
                     'axes' => $cell->getGranularity()->getAxes(),
                     'members' => $cell->getMembers()
-                )
+                ]
             );
 
             $this->etlDataService->populateDWResultsForCell($cell);

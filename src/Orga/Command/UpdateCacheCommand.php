@@ -64,6 +64,19 @@ class UpdateCacheCommand extends Command
             $this->rebuildInputInconsistencies = true;
         }
 
+        // Si aucune option, tout est activé par défaut.
+        if (!$this->rebuildInputStatus && !$this->rebuildInputInconsistencies) {
+            $this->rebuildInputStatus = true;
+            $this->rebuildInputInconsistencies = true;
+        }
+        
+        if ($this->rebuildInputStatus) {
+            $output->writeln('<comment>The input-status will be updated</comment>');
+        }
+        if ($this->rebuildInputInconsistencies) {
+            $output->writeln('<comment>The input-inconsistency will be recalculated</comment>');
+        }
+
         $this->traverseWorkspaces($output);
         $this->entityManager->flush();
     }
@@ -75,7 +88,7 @@ class UpdateCacheCommand extends Command
     {
         foreach (Workspace::loadList() as $workspace) {
             $this->traverseGranularities($output, $workspace);
-            $output->writeln('<comment>Rebuilt workspace ' . $workspace->getId() . '</comment>');
+            $output->writeln("<comment>\tRebuilt workspace " . $workspace->getId() . "</comment>");
         }
     }
 

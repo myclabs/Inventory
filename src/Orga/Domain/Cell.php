@@ -296,6 +296,10 @@ class Cell extends Core_Model_Entity implements EntityResource
             );
         }
 
+        // Un matching sur une PersistentCollection (manyToMany) non initialisée produit une erreur.
+        //@todo Supprimer l'initialisation lorsque le problème sera corrigé.
+        $this->members->toArray();
+
         $criteriaAxis = new Criteria();
         $criteriaAxis->where($criteriaAxis->expr()->eq('axis', $axis));
         $member = $this->members->matching($criteriaAxis)->toArray();
@@ -1297,7 +1301,7 @@ class Cell extends Core_Model_Entity implements EntityResource
     public function deleteDWResultsForDWCube(Cube $dWCube)
     {
         // Un matching sur une PersistentCollection (manyToMany) non initialisée produit une erreur.
-        //@todo Supprimer l'initialisation lorsque le problème sera corrigé. 
+        //@todo Supprimer l'initialisation lorsque le problème sera corrigé.
         $this->dWResults->toArray();
 
         $criteria = Criteria::create()->where(Criteria::expr()->eq('cube', $dWCube));

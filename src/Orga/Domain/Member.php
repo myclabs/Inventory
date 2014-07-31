@@ -502,9 +502,13 @@ class Member extends Core_Model_Entity
             throw new Core_Exception_InvalidArgument('The given Axis is not a direct broader of the Member\'s Axis');
         }
 
+        // Un matching sur une PersistentCollection (manyToMany) non initialisée produit une erreur.
+        //@todo Supprimer l'initialisation lorsque le problème sera corrigé.
+        $this->directParents->toArray();
+
         $criteria = Criteria::create();
         $criteria->where($criteria->expr()->eq('axis', $axis));
-        $member = $this->getDirectParents()->matching($criteria)->toArray();
+        $member = $this->directParents->matching($criteria)->toArray();
 
         if (count($member) === 0) {
             throw new Core_Exception_NotFound('No direct parent Member matching Axis "' . $axis->getRef() . '".');
