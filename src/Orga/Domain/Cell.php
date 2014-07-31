@@ -1296,7 +1296,7 @@ class Cell extends Core_Model_Entity implements EntityResource
      */
     public function deleteDWResultsForDWCube(Cube $dWCube)
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq('dWCube', $dWCube));
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('cube', $dWCube));
         foreach ($this->dWResults->matching($criteria) as $dWResult) {
             $this->dWResults->removeElement($dWResult);
             $dWResult->delete();
