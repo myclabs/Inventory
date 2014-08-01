@@ -650,7 +650,7 @@ class Orga_WorkspaceController extends Core_Controller
      *
      * @throws Core_Exception_User
      *
-     * @return Axis
+     * @return Axis[]
      */
     protected function getAxesAddGranularity(Workspace $workspace)
     {
@@ -730,32 +730,38 @@ class Orga_WorkspaceController extends Core_Controller
             if ($granularity->getCellsControlRelevance()) {
                 throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
-            $granularity->setCellsControlRelevance(true);
-            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+            $action = 'editGranularity';
+            $parameters = [
+                $granularity,
+                ['relevance' => true]
+            ];
         } catch (Core_Exception_NotFound $e) {
-            $success = function () {
-                $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
-            };
-            $timeout = function () {
-                $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
-            };
-            $error = function (Exception $e) {
-                throw $e;
-            };
-
-            // Lance la tache en arrière plan
-            $task = new ServiceCallTask(
-                WorkspaceService::class,
-                'addGranularity',
-                [
-                    $workspace,
-                    $axes,
-                    ['relevance' => true]
-                ],
-                __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
-            );
-            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
+            $action = 'addGranularity';
+            $parameters = [
+                $workspace,
+                $axes,
+                ['relevance' => true]
+            ];
         }
+
+        $success = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            WorkspaceService::class,
+            $action,
+            $parameters,
+            __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
+        );
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -842,32 +848,38 @@ class Orga_WorkspaceController extends Core_Controller
             if ($granularity->getCellsMonitorInventory()) {
                 throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
-            $granularity->setCellsMonitorInventory(true);
-            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+            $action = 'editGranularity';
+            $parameters = [
+                $granularity,
+                ['inventory' => true]
+            ];
         } catch (Core_Exception_NotFound $e) {
-            $success = function () {
-                $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
-            };
-            $timeout = function () {
-                $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
-            };
-            $error = function (Exception $e) {
-                throw $e;
-            };
-
-            // Lance la tache en arrière plan
-            $task = new ServiceCallTask(
-                WorkspaceService::class,
-                'addGranularity',
-                [
-                    $workspace,
-                    $axes,
-                    ['inventory' => true]
-                ],
-                __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
-            );
-            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
+            $action = 'addGranularity';
+            $parameters = [
+                $workspace,
+                $axes,
+                ['inventory' => true]
+            ];
         }
+
+        $success = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            WorkspaceService::class,
+            $action,
+            $parameters,
+            __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
+        );
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -950,36 +962,38 @@ class Orga_WorkspaceController extends Core_Controller
             $inputGranularity = $workspace->getGranularityByRef(
                 Granularity::buildRefFromAxes($inputAxes)
             );
-
-            $configGranularity = $workspace->getGranularityByRef(
-                Granularity::buildRefFromAxes($configAxes)
-            );
-            $inputGranularity->setInputConfigGranularity($configGranularity);
-            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+            $action = 'editGranularity';
+            $parameters = [
+                $inputGranularity,
+                ['afs' => $configAxes]
+            ];
         } catch (Core_Exception_NotFound $e) {
-            $success = function () {
-                $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
-            };
-            $timeout = function () {
-                $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
-            };
-            $error = function (Exception $e) {
-                throw $e;
-            };
-
-            // Lance la tache en arrière plan
-            $task = new ServiceCallTask(
-                WorkspaceService::class,
-                'addGranularity',
-                [
-                    $workspace,
-                    $inputAxes,
-                    ['afs' => $configAxes]
-                ],
-                __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $inputAxes)])
-            );
-            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
+            $action = 'addGranularity';
+            $parameters = [
+                $workspace,
+                $inputAxes,
+                ['afs' => $configAxes]
+            ];
         }
+
+        $success = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            WorkspaceService::class,
+            $action,
+            $parameters,
+            __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $inputAxes)])
+        );
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -1018,32 +1032,38 @@ class Orga_WorkspaceController extends Core_Controller
             if ($granularity->getCellsWithACL()) {
                 throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
-            $granularity->setCellsWithACL(true);
-            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+            $action = 'editGranularity';
+            $parameters = [
+                $granularity,
+                ['acl' => true]
+            ];
         } catch (Core_Exception_NotFound $e) {
-            $success = function () {
-                $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
-            };
-            $timeout = function () {
-                $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
-            };
-            $error = function (Exception $e) {
-                throw $e;
-            };
-
-            // Lance la tache en arrière plan
-            $task = new ServiceCallTask(
-                WorkspaceService::class,
-                'addGranularity',
-                [
-                    $workspace,
-                    $axes,
-                    ['acl' => true]
-                ],
-                __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
-            );
-            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
+            $action = 'addGranularity';
+            $parameters = [
+                $workspace,
+                $axes,
+                ['acl' => true]
+            ];
         }
+
+        $success = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            WorkspaceService::class,
+            $action,
+            $parameters,
+            __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
+        );
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
@@ -1100,32 +1120,38 @@ class Orga_WorkspaceController extends Core_Controller
             if ($granularity->getCellsGenerateDWCubes()) {
                 throw new Core_Exception_User('Orga', 'granularity', 'granularityAlreadyConfigured');
             }
-            $granularity->setCellsGenerateDWCubes(true);
-            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+            $action = 'editGranularity';
+            $parameters = [
+                $granularity,
+                ['reports' => true]
+            ];
         } catch (Core_Exception_NotFound $e) {
-            $success = function () {
-                $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
-            };
-            $timeout = function () {
-                $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
-            };
-            $error = function (Exception $e) {
-                throw $e;
-            };
-
-            // Lance la tache en arrière plan
-            $task = new ServiceCallTask(
-                WorkspaceService::class,
-                'addGranularity',
-                [
-                    $workspace,
-                    $axes,
-                    ['reports' => true]
-                ],
-                __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
-            );
-            $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
+            $action = 'addGranularity';
+            $parameters = [
+                $workspace,
+                $axes,
+                ['reports' => true]
+            ];
         }
+
+        $success = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'added')]);
+        };
+        $timeout = function () {
+            $this->sendJsonResponse(['message' => __('UI', 'message', 'addedLater')]);
+        };
+        $error = function (Exception $e) {
+            throw $e;
+        };
+
+        // Lance la tache en arrière plan
+        $task = new ServiceCallTask(
+            WorkspaceService::class,
+            $action,
+            $parameters,
+            __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
+        );
+        $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
 
     /**
