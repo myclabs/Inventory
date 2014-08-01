@@ -136,17 +136,17 @@ class ExportCommand extends Command
 
         $reportsData = [];
         $aclData = [];
-        /** @var \Orga\Domain\Workspace $organization */
-        foreach (\Orga\Domain\Workspace::loadList() as $organization) {
-            $organizationAdmins = [];
-            foreach ($organization->getAdminRoles() as $adminRoles) {
-                $organizationAdmins[] = $adminRoles->getSecurityIdentity()->getEmail();
+        /** @var \Orga\Domain\Workspace $workspace */
+        foreach (\Orga\Domain\Workspace::loadList() as $workspace) {
+            $workspaceAdmins = [];
+            foreach ($workspace->getAdminRoles() as $adminRoles) {
+                $workspaceAdmins[] = $adminRoles->getSecurityIdentity()->getEmail();
             }
 
             $granularitiesACL = [];
             $granularitiesReports = [];
 
-            foreach ($organization->getGranularities() as $granularity) {
+            foreach ($workspace->getGranularities() as $granularity) {
                 if ($granularity->getCellsWithACL()) {
                     $cellsACL = [];
                     foreach ($granularity->getCells() as $cell) {
@@ -222,20 +222,20 @@ class ExportCommand extends Command
                     $granularitiesReports[] = $granularityDataObject;
                 }
             }
-            if ((count($organizationAdmins) > 0) || (count($granularitiesACL) > 0)) {
-                $organizationDataObject = new \StdClass();
-                $organizationDataObject->type = 'organization';
-                $organizationDataObject->label = $organization->getLabel();
-                $organizationDataObject->admins = $organizationAdmins;
-                $organizationDataObject->granularitiesACL = $granularitiesACL;
-                $aclData[] = $organizationDataObject;
+            if ((count($workspaceAdmins) > 0) || (count($granularitiesACL) > 0)) {
+                $workspaceDataObject = new \StdClass();
+                $workspaceDataObject->type = 'organization';
+                $workspaceDataObject->label = $workspace->getLabel();
+                $workspaceDataObject->admins = $workspaceAdmins;
+                $workspaceDataObject->granularitiesACL = $granularitiesACL;
+                $aclData[] = $workspaceDataObject;
             }
             if (count($granularitiesReports) > 0) {
-                $organizationDataObject = new \StdClass();
-                $organizationDataObject->type = 'organization';
-                $organizationDataObject->label = $organization->getLabel();
-                $organizationDataObject->granularitiesReports = $granularitiesReports;
-                $reportsData[] = $organizationDataObject;
+                $workspaceDataObject = new \StdClass();
+                $workspaceDataObject->type = 'organization';
+                $workspaceDataObject->label = $workspace->getLabel();
+                $workspaceDataObject->granularitiesReports = $granularitiesReports;
+                $reportsData[] = $workspaceDataObject;
             }
         }
 

@@ -7,7 +7,7 @@ Feature: Input in a cell associated to a DW feature
   @javascript
   Scenario: Input in a cell associated to a DW scenario
   # Check that the results of input are indeed taken into account in the DW, refs #6468
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
   # Modification du formulaire associé à une zone-marque
     And I open tab "Formulaires"

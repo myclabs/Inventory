@@ -5,9 +5,9 @@ Feature: Organizational axis feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an organizational axis, correct input
+  Scenario: Creation of a workspace axis, correct input
   # Accès à l'onglet "Axes"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
     And I wait 2 seconds
@@ -41,9 +41,9 @@ Feature: Organizational axis feature
     Then the following message is shown and closed: "Cet axe ne peut pas être supprimé, car il est hiérarchiquement relié à (au moins) un axe plus grossier."
 
   @javascript
-  Scenario: Creation of an organizational axis, incorrect input
+  Scenario: Creation of a workspace axis, incorrect input
   # Accès à l'onglet "Axes"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
     And I wait 2 seconds
@@ -67,9 +67,9 @@ Feature: Organizational axis feature
     Then I should not see "Ajout d'un axe"
 
   @javascript
-  Scenario: Edition of label and identifier of an organizational axis
+  Scenario: Edition of label and identifier of a workspace axis
   # Accès à l'onglet "Axes"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
     And I wait 3 seconds
@@ -96,9 +96,9 @@ Feature: Organizational axis feature
     Then I should not see "Édition d'un axe"
 
   @javascript
-  Scenario: Edition of position and parent axis of an organizational axis
+  Scenario: Edition of position and parent axis of a workspace axis
   # Accès à l'onglet "Axes"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
     And I wait 2 seconds
@@ -126,9 +126,9 @@ Feature: Organizational axis feature
     Then the following message is shown and closed: "Modification effectuée."
 
   @javascript
-  Scenario:  Deletion of an organizational axis
+  Scenario:  Deletion of a workspace axis
   # Accès à l'onglet "Axes"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Axes"
     And I wait 2 seconds

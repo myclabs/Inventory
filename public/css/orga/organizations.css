@@ -1,10 +1,10 @@
-.organizationList {
+.workspaceList {
 }
 
-.organizationList .organization {
+.workspaceList .workspace {
     margin-bottom: 20px;
 }
 
-.organizationList .organization h3 {
+.workspaceList .workspace h3 {
     margin-top: 0;
 }

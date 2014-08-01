@@ -26,11 +26,11 @@ trait AccountFeatureContext
     }
 
     /**
-     * @Then /^I should see the "([^"]*)" organization$/
+     * @Then /^I should see the "([^"]*)" workspace$/
      */
     public function iShouldSeeTheOrganization($name)
     {
-        $this->assertSession()->elementExists('css', ".organization:contains(\"$name\")");
+        $this->assertSession()->elementExists('css', ".workspace:contains(\"$name\")");
     }
 
     /**

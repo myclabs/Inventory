@@ -5,9 +5,9 @@ Feature: Organizational member feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an organizational member, correct input
+  Scenario: Creation of a workspace member, correct input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
   # Accès au datagrid des sites
@@ -29,9 +29,9 @@ Feature: Organizational member feature
       | AAA    | aaa | France      |
 
   @javascript
-  Scenario: Creation of an organizational member, incorrect input
+  Scenario: Creation of a workspace member, incorrect input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
     Then I should see "Site"
@@ -60,9 +60,9 @@ Feature: Organizational member feature
     Then the field "listMemberssite_ref_addForm" should have error: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
-  Scenario: Edition of an organizational member's attributes (label and identifier), correct input
+  Scenario: Edition of a workspace member's attributes (label and identifier), correct input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
   # Ajout élément axe Pays, zone non renseignée
@@ -76,9 +76,9 @@ Feature: Organizational member feature
       | Annecy modifiée | annecy_modifie |
 
   @javascript
-  Scenario: Edition of an organizational member's attributes (label and identifier), incorrect input
+  Scenario: Edition of a workspace member's attributes (label and identifier), incorrect input
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
   # Ajout élément axe Pays, zone non renseignée
@@ -95,9 +95,9 @@ Feature: Organizational member feature
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
-  Scenario: Edition of parent member of an organizational member
+  Scenario: Edition of parent member of a workspace member
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
     When I open collapse "Site"

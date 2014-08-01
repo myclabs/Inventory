@@ -8,7 +8,7 @@ Feature: Granularity dataware analysis feature
   Scenario: Trying to launch an analysis when configuration is not complete
   # Affichage des messages d'erreur lorsque des champs ne sont pas remplis
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I open tab "Config. Analyses"
   # Accès au datagrid des analyses pré-configurées au niveau global
     And I open collapse "Niveau organisationnel global"

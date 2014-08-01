@@ -7,7 +7,7 @@ Feature: Organizational relevance tab feature
   @javascript
   Scenario: Cell relevance scenario
   # Accès au volet "Pertinence"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Pertinence"
   # Ouverture volet "Zone|Marque"

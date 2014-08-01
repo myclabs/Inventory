@@ -1,13 +1,13 @@
 @dbFull
-Feature: Control of organizational data feature
+Feature: Control of workspace data feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: Control of organizational data scenario
+  Scenario: Control of workspace data scenario
   # Accès à l'onglet "Contrôle"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Contrôle"
     Then I should see the "consistency1" datagrid

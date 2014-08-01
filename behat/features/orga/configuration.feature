@@ -1,18 +1,18 @@
 @dbFull
-Feature: General info of an organization feature
+Feature: General info of a workspace feature
 
   Background:
     Given I am logged in
 
   @javascript
-  Scenario: Edit organization label
+  Scenario: Edit workspace label
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Informations générales"
   # Modification du libellé
     When I fill in "Libellé" with "Workspace avec données modifiée"
-    And I click element "#organizationDetails1 .btn-primary"
+    And I click element "#workspaceDetails1 .btn-primary"
     Then the following message is shown and closed: "Modification effectuée."
   # Vérification modification prise en compte
     When I reload the page
@@ -20,9 +20,9 @@ Feature: General info of an organization feature
     Then I should see "Workspace avec données modifiée"
 
   @javascript
-  Scenario: Edit organization inventory granularity
+  Scenario: Edit workspace inventory granularity
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Collecte"
   # Modification du niveau organisationnel des collectes
@@ -40,7 +40,7 @@ Feature: General info of an organization feature
   @javascript
   Scenario: Add input granularity, incorrect input
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
     Then I should see the "addGranularity1_afs" form
@@ -53,7 +53,7 @@ Feature: General info of an organization feature
   @javascript
   Scenario: Add input granularity, correct input
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
     Then I should see the "addGranularity1_afs" form
@@ -84,7 +84,7 @@ Feature: General info of an organization feature
   @javascript
   Scenario: Delete input granularity
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
     Then I should see the "addGranularity1_afs" form

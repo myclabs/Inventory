@@ -7,7 +7,7 @@ Feature: General info tab analysis edit feature
   @javascript
   Scenario: Add a granularity analysis (global granularity)
   # Accès à l'onglet "Informations générales"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Config. Analyses"
   # Accès au datagrid des analyses pré-configurées au niveau global
@@ -33,7 +33,7 @@ Feature: General info tab analysis edit feature
 
   @javascript
   Scenario: Delete a granularity analysis
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Config. Analyses"
     And I open collapse "Niveau organisationnel global"

@@ -5,9 +5,9 @@ Feature: Organizational member deletion feature
     Given I am logged in
 
   @javascript
-  Scenario: Deletion of an organizational member generating cells with inputs and DW, without or with roles
+  Scenario: Deletion of a workspace member generating cells with inputs and DW, without or with roles
     # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
     And I open collapse "Site"
@@ -34,10 +34,10 @@ Feature: Organizational member deletion feature
       | Annecy |
 
   @javascript
-  Scenario: Deletion of an organizational member scenario
+  Scenario: Deletion of a workspace member scenario
   #6268 Exceptions non capturées suppression d'un élément organisationnel
   # Accès à l'onglet "Éléments"
-    Given I am on "orga/organization/edit/workspace/1"
+    Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Éléments"
   # Élément jouant le rôle de parent direct pour au moins un autre élément

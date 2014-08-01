@@ -33,6 +33,7 @@ use Orga\Domain\ACL\CellContributorRole;
 use Orga\Domain\ACL\CellManagerRole;
 use Orga\Domain\ACL\CellObserverRole;
 use Orga\Domain\ACL\WorkspaceAdminRole;
+use Orga\Domain\Workspace;
 use Parameter\Domain\Family\Cell;
 use Parameter\Domain\Family\Dimension;
 use Parameter\Domain\Family\Family;
@@ -259,8 +260,8 @@ class ImportCommand extends Command
                     },
                 ],
             ],
-            \Orga\Domain\Workspace::class => [
-                'callbacks' => function (\Orga\Domain\Workspace $object) use ($account, $classificationLibrary) {
+            Workspace::class => [
+                'callbacks' => function (Workspace $object) use ($account, $classificationLibrary) {
                         $this->setProperty($object, 'account', $account);
                         $this->setProperty($object, 'contextIndicators', new ArrayCollection());
                         foreach ($classificationLibrary->getContextIndicators() as $contextIndicator) {
@@ -487,19 +488,19 @@ class ImportCommand extends Command
 
 
         // Managing Orga.
-        /** @var \Orga\Domain\Workspace $organization */
+        /** @var Workspace $workspace */
         $account = $this->entityManager->find(Account::class, $input->getArgument('account'));
 
         // Regenerate DW cubes.
         $output->writeln('<comment>Regenerating DW Cubes</comment>');
         $queryOrgaAccount = new \Core_Model_Query();
         $queryOrgaAccount->filter->addCondition('account', $account);
-        /** @var \Orga\Domain\Workspace $organization */
-        foreach (\Orga\Domain\Workspace::loadList($queryOrgaAccount) as $organization) {
-            foreach ($organization->getGranularities() as $granularity) {
+        /** @var Workspace $workspace */
+        foreach (Workspace::loadList($queryOrgaAccount) as $workspace) {
+            foreach ($workspace->getGranularities() as $granularity) {
                 $granularity->setCellsGenerateDWCubes($granularity->getCellsGenerateDWCubes());
             }
-            $organization->save();
+            $workspace->save();
             $this->entityManager->flush();
         }
         $this->entityManager->flush();
@@ -509,14 +510,14 @@ class ImportCommand extends Command
         $output->writeln('<comment>Importing Reports</comment>');
         $objects = $serializer->unserialize(file_get_contents($root . '/reports.json'));
         foreach ($objects as $object) {
-            if (($object instanceof \StdClass) && ($object->type === "organization")) {
-                $organization = $this->getOrganizationByLabel($object->label['fr']);
+            if (($object instanceof \StdClass) && ($object->type === "workspace")) {
+                $workspace = $this->getOrganizationByLabel($object->label['fr']);
                 foreach ($object->granularitiesReports as $granularityObject) {
                     $granularityAxes = [];
                     foreach ($granularityObject->granularityAxes as $refAxis) {
-                        $granularityAxes[] = $organization->getAxisByRef($refAxis);
+                        $granularityAxes[] = $workspace->getAxisByRef($refAxis);
                     }
-                    $granularity = $organization->getGranularityByRef(
+                    $granularity = $workspace->getGranularityByRef(
                         \Orga\Domain\Granularity::buildRefFromAxes($granularityAxes)
                     );
 
@@ -673,20 +674,20 @@ class ImportCommand extends Command
         $output->writeln('<comment>Importing ACL</comment>');
         $objects = $serializer->unserialize(file_get_contents($root . '/acl.json'));
         foreach ($objects as $object) {
-            if (($object instanceof \StdClass) && ($object->type === "organization")) {
-                $organization = $this->getOrganizationByLabel($object->label['fr']);
+            if (($object instanceof \StdClass) && ($object->type === "workspace")) {
+                $workspace = $this->getOrganizationByLabel($object->label['fr']);
 
                 foreach ($object->admins as $adminEmail) {
                     $output->writeln(sprintf(
-                        '<comment>%s admin of organization %s</comment>',
+                        '<comment>%s admin of workspace %s</comment>',
                         $adminEmail,
-                        $organization->getLabel()->get('fr')
+                        $workspace->getLabel()->get('fr')
                     ));
                     $this->acl->grant(
                         User::loadByEmail($adminEmail),
                         new WorkspaceAdminRole(
                             User::loadByEmail($adminEmail),
-                            $organization
+                            $workspace
                         )
                     );
                 }
@@ -694,9 +695,9 @@ class ImportCommand extends Command
                 foreach ($object->granularitiesACL as $granularityObject) {
                     $granularityAxes = [];
                     foreach ($granularityObject->granularityAxes as $refAxis) {
-                        $granularityAxes[] = $organization->getAxisByRef($refAxis);
+                        $granularityAxes[] = $workspace->getAxisByRef($refAxis);
                     }
-                    $granularity = $organization->getGranularityByRef(
+                    $granularity = $workspace->getGranularityByRef(
                         \Orga\Domain\Granularity::buildRefFromAxes($granularityAxes)
                     );
 
@@ -704,7 +705,7 @@ class ImportCommand extends Command
                         $members = [];
                         foreach ($cellObject->members as $refAxisMember) {
                             list($refAxis, $refMember) = explode(';', $refAxisMember);
-                            $axis = $organization->getAxisByRef($refAxis);
+                            $axis = $workspace->getAxisByRef($refAxis);
                             $members[] = $axis->getMemberByCompleteRef($refMember);
                         }
                         $cell = $granularity->getCellByMembers($members);
@@ -762,13 +763,14 @@ class ImportCommand extends Command
 
     /**
      * @param string $label
-     * @return \Orga\Domain\Workspace
+     * @throws \Exception
+     * @return Workspace
      */
     private function getOrganizationByLabel($label)
     {
-        foreach (\Orga\Domain\Workspace::loadList() as $organization) {
-            if ($organization->getLabel()->get('fr') === $label) {
-                return $organization;
+        foreach (Workspace::loadList() as $workspace) {
+            if ($workspace->getLabel()->get('fr') === $label) {
+                return $workspace;
             }
         }
         throw new Exception;

@@ -5,7 +5,7 @@ Feature: Organization input tab feature
     Given I am logged in
 
   @javascript @readOnly
-  Scenario: Filter on organization members in Input tab
+  Scenario: Filter on workspace members in Input tab
   # Accès à l'onglet "Saisies"
     Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading

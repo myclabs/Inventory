@@ -11,7 +11,7 @@ Feature: Cell observer feature
     And I click "connection"
   # On tombe sur la page de la cellule
     Then I should see "Workspace avec données"
-    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    When I click element "tr.workspace h4 a:contains('Workspace avec données')"
     And I wait for the page to finish loading
     Then I should see "Workspace avec données"
     And I should see "Europe | Marque A"
@@ -37,7 +37,7 @@ Feature: Cell observer feature
     And I click "connection"
   # On tombe sur la liste des cellules
     Then I should see "Workspace avec données"
-    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    When I click element "tr.workspace h4 a:contains('Workspace avec données')"
     And I wait for the page to finish loading
     Then I should see "Workspace avec données"
     And I should see "Observateur Annecy"

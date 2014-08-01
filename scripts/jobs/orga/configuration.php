@@ -31,14 +31,14 @@ class RebuildConfiguration
 
     protected function checkLibrary()
     {
-        /** @var Workspace $organization */
-        foreach (Workspace::loadList() as $organization) {
-            foreach ($organization->getGranularities() as $granularities) {
+        /** @var Workspace $workspace */
+        foreach (Workspace::loadList() as $workspace) {
+            foreach ($workspace->getGranularities() as $granularities) {
                 foreach ($granularities->getCells() as $cell) {
                     $cell->enableDocLibraryForAFInputSetPrimary();
                 }
             }
-            $organization->save();
+            $workspace->save();
             $this->entityManager->flush();
         }
     }

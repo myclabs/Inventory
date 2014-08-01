@@ -11,7 +11,7 @@ Feature: Cell administrator feature
     And I click "connection"
   # On tombe sur la page de la cellule globale
     Then I should see "Workspace avec données"
-    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    When I click element "tr.workspace h4 a:contains('Workspace avec données')"
     And I wait for the page to finish loading
     Then I should see "Workspace avec données"
     And I should see "Vue globale"
@@ -37,7 +37,7 @@ Feature: Cell administrator feature
     And I click "connection"
   # On tombe sur la page de la cellule
     Then I should see "Workspace avec données"
-    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    When I click element "tr.workspace h4 a:contains('Workspace avec données')"
     And I wait for the page to finish loading
     Then I should see "Europe | Marque A"
   # Accès à une saisie et à l'historique des valeurs d'un champ (suite à détection bug droits utilisateur)
@@ -57,7 +57,7 @@ Feature: Cell administrator feature
     And I click "connection"
   # On tombe sur le datagrid des cellules
     Then I should see "Workspace avec données"
-    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    When I click element "tr.workspace h4 a:contains('Workspace avec données')"
     And I wait for the page to finish loading
     Then I should see "Administrateur Annecy"
     And I should see "Administrateur Chambéry"
@@ -90,7 +90,7 @@ Feature: Cell administrator feature
     And I click "connection"
     And I wait 5 seconds
     Then I should see "Workspace avec données"
-    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    When I click element "tr.workspace h4 a:contains('Workspace avec données')"
     And I wait for the page to finish loading
     Then I should see "Workspace avec données"
     Then I should see "Europe | Marque A"
@@ -127,7 +127,7 @@ Feature: Cell administrator feature
     And I fill in "password" with "administrateur.zone-marque@toto.com"
     And I click "connection"
     Then I should see "Workspace avec données"
-    When I click element "tr.organization h4 a:contains('Workspace avec données')"
+    When I click element "tr.workspace h4 a:contains('Workspace avec données')"
     And I wait for the page to finish loading
     When I click element "h1 small a"
   # Ajout et suppression d'un élément à l'axe "Pays"

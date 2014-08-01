@@ -23,13 +23,13 @@ class PopulateOrga extends AbstractPopulateOrga
 
         // Création d'une organisation.
         // Param : label
-        $organization = $this->createWorkspace($account, 'Workspace avec données');
+        $workspace = $this->createWorkspace($account, 'Workspace avec données');
 
         // Création des axes.
         // Params : Organization, ref, label
         // OptionalParams : Axis parent=null
-        $axis_site = $this->createAxis($organization, 'site', 'Site');
-        $axis_pays = $this->createAxis($organization, 'pays', 'Pays', $axis_site);
+        $axis_site = $this->createAxis($workspace, 'site', 'Site');
+        $axis_pays = $this->createAxis($workspace, 'pays', 'Pays', $axis_site);
 
         // Création des membres.
         // Params : Axis, ref, label
@@ -40,8 +40,8 @@ class PopulateOrga extends AbstractPopulateOrga
         // Création des granularités.
         // Params : Organization, axes[Axis], navigable
         // OptionalParams : orgaTab=false, aCL=true, aFTab=false, dWCubes=false, genericAction=false, contextAction=false, inputDocs=false
-        $granularityGlobal = $this->createGranularity($organization, [],                                                        true, false, true,  true, true,  true, false, false, false);
-        $granularity_site = $this->createGranularity($organization, [$axis_site],                                               true, false, false, true, false, true, false, false, true );
+        $granularityGlobal = $this->createGranularity($workspace, [],                                                        true, false, true,  true, true,  true, false, false, false);
+        $granularity_site = $this->createGranularity($workspace, [$axis_site],                                               true, false, false, true, false, true, false, false, true );
 
         // Granularité des inventaires
         // $organization->setGranularityForInventoryStatus($granularity_annee_zone_marque);
@@ -57,7 +57,7 @@ class PopulateOrga extends AbstractPopulateOrga
 
         // Ajout d'un role sun une organisation à un utilisateur existant.
         // Params : email, Organization
-        $this->addWorkspaceAdministrator('admin@myc-sense.com', $organization);
+        $this->addWorkspaceAdministrator('admin@myc-sense.com', $workspace);
 
         // Ajout d'un role sur une cellule à un utilisateur existant.
         // Params : email, Granularity, [Member]

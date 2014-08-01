@@ -44,7 +44,7 @@ class User_RegisterController extends UI_Controller_Captcha
 
         // Si l'utilisateur est déjà connecté, on redirige
         if ($this->_helper->auth()) {
-            $this->redirect('orga/organization/manage');
+            $this->redirect('orga/workspace/manage');
             return;
         }
 

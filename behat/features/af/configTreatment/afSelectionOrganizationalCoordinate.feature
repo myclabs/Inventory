@@ -5,7 +5,7 @@ Feature: AF selection organizatinal coordinate algo feature
     Given I am logged in
 
   @javascript
-  Scenario: Creation of an organizational coordinate algo scenario, correct input
+  Scenario: Creation of a workspace coordinate algo scenario, correct input
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
     And I open collapse "Algorithmes de sélection d’identifiant"
@@ -26,7 +26,7 @@ Feature: AF selection organizatinal coordinate algo feature
       | aaa | bbb  | ccc          |
 
   @javascript
-  Scenario: Creation of an organizational coordinate algo scenario, incorrect input
+  Scenario: Creation of a workspace coordinate algo scenario, incorrect input
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
     And I open collapse "Algorithmes de sélection d’identifiant"
@@ -46,7 +46,7 @@ Feature: AF selection organizatinal coordinate algo feature
   # TODO : identifiant axe organisationnel et identifiant valeur par défaut obligatoires ?
 
   @javascript
-  Scenario: Edition of an organizational coordinate algo scenario, correct input
+  Scenario: Edition of a workspace coordinate algo scenario, correct input
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
     And I open collapse "Algorithmes de sélection d’identifiant"
@@ -64,7 +64,7 @@ Feature: AF selection organizatinal coordinate algo feature
       | orga_coordinate_modifiee | axis_ref_1_modifie | dafault_value_1_modifie |
 
   @javascript
-  Scenario: Edition of an organizational coordinate algo scenario, incorrect input
+  Scenario: Edition of a workspace coordinate algo scenario, incorrect input
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
     And I open collapse "Algorithmes de sélection d’identifiant"
@@ -80,7 +80,7 @@ Feature: AF selection organizatinal coordinate algo feature
     Then the following message is shown and closed: "Merci de choisir un autre identifiant, celui-ci est déjà utilisé."
 
   @javascript
-  Scenario: Deletion of an organizational coordinate algo scenario
+  Scenario: Deletion of a workspace coordinate algo scenario
     Given I am on "af/edit/menu/id/4/onglet/traitement"
     And I wait for the page to finish loading
     And I open collapse "Algorithmes de sélection d’identifiant"
