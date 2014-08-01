@@ -5,7 +5,6 @@ namespace Orga\Domain\Service\ETL;
 use Classification\Domain\ContextIndicator;
 use Classification\Domain\Indicator;
 use Classification\Domain\Axis as ClassificationAxis;
-use Classification\Domain\Member as ClassificationMember;
 use Core\Translation\TranslatedString;
 use Core_EventDispatcher;
 use Doctrine\ORM\EntityManager;
@@ -21,12 +20,10 @@ use Orga\Domain\Axis as OrgaAxis;
 use Orga\Domain\Member as OrgaMember;
 use Orga\Domain\Granularity;
 use Orga\Domain\Cell;
-use Orga\Domain\Report\GranularityReport;
 use Core_Exception_NotFound;
 use Core_Model_Query;
 use ErrorException;
 use Exception;
-use Orga\Domain\Service\ETL\OrgaReportFactory;
 use Orga\Domain\Workspace;
 
 /**

@@ -1142,6 +1142,7 @@ class Cell extends Core_Model_Entity implements EntityResource
             // Suppression de tous les résultats.
             OrgaDomainHelper::getETLData()->clearDWResultsForCell($this);
 
+            // Appel du delete() pour éviter des problème avec la suppression des rapports.
             $this->dWCube->delete();
             $this->dWCube = null;
         }
