@@ -41,11 +41,11 @@ class DWFormConfiguration extends GenericTag
         $denominatorAxisOne = $report->getDenominatorAxis1();
         $denominatorAxisTwo = $report->getDenominatorAxis2();
 
-        $idCube = $report->getCube()->getId();
+        $cubeId = $report->getCube()->getId();
 
         parent::__construct('form');
         $this->setAttribute('method', 'POST');
-        $this->setAttribute('action', 'dw/report/applyconfiguration/idCube/'.$idCube.'/hashReport/'.$hash);
+        $this->setAttribute('action', 'dw/report/applyconfiguration/cube/'.$cubeId.'/hashReport/'.$hash);
         $this->setAttribute('id', 'form_' . $hash);
 
 
