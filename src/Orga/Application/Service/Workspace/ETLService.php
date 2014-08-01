@@ -5,8 +5,9 @@ namespace Orga\Application\Service\Workspace;
 use Core\Work\ServiceCall\ServiceCallTask;
 use Mnapoli\Translated\Translator;
 use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
+use Orga\Domain\Service\ETL\ETLDataService;
 use Orga\Domain\Service\ETL\ETLStructureInterface;
-use Orga\Domain\Service\ETL\ETLDataInterface;
+use Orga\Domain\Service\ETL\ETLStructureService;
 use Orga\Domain\Workspace;
 use Orga\Domain\Granularity;
 use Orga\Domain\Cell;
@@ -25,11 +26,6 @@ class ETLService
     private $etlStructureService;
 
     /**
-     * @var ETLDataInterface
-     */
-    private $etlDataService;
-
-    /**
      * @var Translator
      */
     private $translator;
@@ -42,18 +38,15 @@ class ETLService
 
     /**
      * @param ETLStructureInterface $etlStructureService
-     * @param ETLDataInterface $etlDataService
      * @param Translator $translator
      * @param SynchronousWorkDispatcher $workDispatcher
      */
     public function __construct(
         ETLStructureInterface $etlStructureService,
-        ETLDataInterface $etlDataService,
         Translator $translator,
         SynchronousWorkDispatcher $workDispatcher
     ) {
         $this->etlStructureService = $etlStructureService;
-        $this->etlDataService = $etlDataService;
         $this->translator = $translator;
         $this->workDispatcher = $workDispatcher;
     }
@@ -121,7 +114,7 @@ class ETLService
                     new ServiceCallTask(
                         ETLService::class,
                         'resetCellChidrenDWCubesForGranularity',
-                        [$cell],
+                        [$cell, $narrowerGranularity],
                         __(
                             'Orga', 'backgroundTasks', 'resetCellChidrenDWCubesForGranularity',
                             [
