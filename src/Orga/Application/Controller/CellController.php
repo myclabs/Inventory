@@ -1190,7 +1190,7 @@ class Orga_CellController extends Core_Controller
         /** @var Cell $cell */
         $cell = Cell::load($cellId);
 
-        $this->view->assign('cell', $cellId);
+        $this->view->assign('cellId', $cellId);
 
         // Formats d'exports.
         $this->view->defaultFormat = 'xls';
