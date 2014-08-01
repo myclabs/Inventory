@@ -43,6 +43,8 @@ ALTER TABLE Orga_SubCellsGroup DROP FOREIGN KEY FK_262E11F24CB6F1FF;
 ALTER TABLE Orga_SubCellsGroup DROP INDEX IDX_262E11F24CB6F1FF;
 ALTER TABLE Orga_SubCellsGroup DROP FOREIGN KEY FK_262E11F25E699E88;
 ALTER TABLE Orga_SubCellsGroup DROP INDEX IDX_262E11F25E699E88;
+
+UPDATE Context SET type_context = 'workspace' WHERE Context.type_context = 'organization';
 ```
 
 - Puis seulement, déployer normalement avec update de la BDD.
