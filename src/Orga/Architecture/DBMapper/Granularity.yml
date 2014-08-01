@@ -53,6 +53,7 @@ Orga\Domain\Granularity:
         name: idWorkspace
         referencedColumnName: id
         nullable: false
+        onDelete: CASCADE
     inputConfigGranularity:
       targetEntity: Granularity
       inversedBy: inputGranularities
