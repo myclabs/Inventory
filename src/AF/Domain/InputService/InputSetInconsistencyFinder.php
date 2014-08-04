@@ -48,6 +48,7 @@ class InputSetInconsistencyFinder extends ArrayComparator
         parent::__construct();
 
         // Handlers
+        $this->whenEqual([$this, 'whenEqualHandler']);
         $this->whenDifferent([$this, 'whenDifferentHandler']);
 
         $this->inputSet = $inputSet;
@@ -126,7 +127,6 @@ class InputSetInconsistencyFinder extends ArrayComparator
             }
         }
 
-        $this->whenEqualHandler($input1, $input2);
         return true;
     }
 

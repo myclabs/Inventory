@@ -23,7 +23,7 @@
         "symfony/translation": "~2.3",
         "symfony/yaml": "~2.3",
         "myclabs/acl": "~1.1",
-        "myclabs/array-comparator": "1.0.*",
+        "myclabs/array-comparator": "1.1.*",
         "myclabs/xport": "0.2.*",
         "myclabs/php-enum": "1.*",
         "myclabs/deep-copy": "1.*",
