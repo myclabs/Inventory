@@ -106,7 +106,7 @@ class Parameter_LibraryController extends Core_Controller
         $library = ParameterLibrary::load($this->getParam('id'));
 
         $date = date(str_replace('&nbsp;', '', __('DW', 'export', 'dateFormat')));
-        $filename = $date . '_' . __('Classification', 'classification', 'classification') . '.xls';
+        $filename = $date . '_' . __('Parameter', 'name', 'parameters') . '.xls';
 
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition:attachement;filename='.$filename);
