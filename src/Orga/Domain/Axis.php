@@ -670,6 +670,11 @@ class Axis extends Core_Model_Entity
                 }
             }
 
+            // Suppression des cellules.
+            foreach ($this->getGranularities() as $granularity) {
+                $granularity->removeCellsFromMember($member);
+            }
+
             // Suppression de la position.
             $member->setPosition();
             // Suppression du membre effective.
@@ -683,22 +688,18 @@ class Axis extends Core_Model_Entity
             foreach ($member->getDirectChildren() as $directChildMember) {
                 $directChildMember->removeDirectParentForAxis($member);
             }
-            // Suppression des cellules.
-            foreach ($this->granularities as $granularity) {
-                $granularity->removeCellsFromMember($member);
-            }
 
             /** @var Cell $childCell */
             foreach (array_unique($memberCellsChildCells) as $childCell) {
                 $childCell->updateHierarchy();
             }
 
+            $member->removeFromAxis();
+
             // Recacul de la cohérence des saisie si nécéssaire.
             if ($this->getWorkspace()->getTimeAxis() === $this) {
                 OrgaDomainHelper::getCellInputUpdater()->updateInconsistencyForWorkspace($this->getWorkspace());
             }
-
-            $member->removeFromAxis();
         }
     }
 

@@ -320,9 +320,6 @@ class Member extends Core_Model_Entity
         if ($this->axis !== null) {
             $this->axis->removeMember($this);
 
-            // Suppression de la position.
-            $this->deletePosition();
-
             // Détachement du membre de l'axe.
             $this->axis = null;
         }

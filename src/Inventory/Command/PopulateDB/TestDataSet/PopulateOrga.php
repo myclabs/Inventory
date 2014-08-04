@@ -52,6 +52,7 @@ class PopulateOrga extends AbstractPopulateOrga
         // Création des éléments.
         $member_annee_2012 = $this->createMember($axis_annee, '2012', '2012');
         $member_annee_2013 = $this->createMember($axis_annee, '2013', '2013');
+        $member_annee_2014 = $this->createMember($axis_annee, '2014', '2014');
         $member_zone_europe = $this->createMember($axis_zone, 'europe', 'Europe');
         $member_pays_france = $this->createMember($axis_pays, 'france', 'France', [$member_zone_europe]);
         $member_marque_marque_a = $this->createMember($axis_marque, 'marque_a', 'Marque A');
