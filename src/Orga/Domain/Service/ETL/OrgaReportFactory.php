@@ -97,12 +97,6 @@ class OrgaReportFactory implements Core_Event_ObserverInterface
                         $cellReport->delete();
                     } catch (Core_Exception_NotFound $e) {
                         // Le Report n'est pas issue d'un Utilisateur.
-                        foreach (GranularityReport::loadList() as $granularityReport) {
-                            /** @var \Orga\Domain\Report\GranularityReport $granularityReport */
-                            if ($granularityReport->hasCellDWReport($subject)) {
-                                $granularityReport->removeCellDWReport($subject);
-                            }
-                        }
                     }
                 }
                 break;
