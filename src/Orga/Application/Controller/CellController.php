@@ -1464,7 +1464,7 @@ class Orga_CellController extends Core_Controller
         // Saisie de l'année précédente.
         $previousInput = $cell->getPreviousAFInputSetPrimary();
         if ($previousInput) {
-            $label = $this->translator->get($previousCell->getLabel());
+            $label = $this->translator->get($cell->getPreviousCellForAxis($workspace->getTimeAxis())->getLabel());
             $viewConfiguration->setPreviousInputSet($label, $previousInput);
         }
 
