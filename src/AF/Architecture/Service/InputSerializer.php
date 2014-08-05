@@ -270,11 +270,23 @@ class InputSerializer
                 case $input instanceof NumericFieldInput:
                     /** @var NumericFieldInput $input */
                     $value = $input->getValue();
-                    $arr['value'] = [
-                        'unit'         => $value->getUnit()->getRef(),
-                        'digitalValue' => $value->getDigitalValue(),
-                        'uncertainty'  => $value->getUncertainty(),
-                    ];
+                    /** @var NumericField $component */
+                    $component = $input->getComponent();
+                    if (($value->getUnit() != $component->getUnit())
+                        && (in_array($value->getUnit(), $component->getUnit()->getCompatibleUnits()))
+                        && !$component->hasUnitSelection()) {
+                        $arr['value'] = [
+                            'unit'         => $component->getUnit()->getRef(),
+                            'digitalValue' => $value->convertTo($component->getUnit())->getDigitalValue(),
+                            'uncertainty'  => $value->getUncertainty(),
+                        ];
+                    } else {
+                        $arr['value'] = [
+                            'unit'         => $value->getUnit()->getRef(),
+                            'digitalValue' => $value->getDigitalValue(),
+                            'uncertainty'  => $value->getUncertainty(),
+                        ];
+                    }
                     $arr['inconsistent'] = $input->hasInconsistentValue();
                     break;
                 case $input instanceof TextFieldInput:
