@@ -148,7 +148,8 @@ class CellViewFactory
                 if (($withInventory === true)
                     || (($withInventory !== false)
                         && (($cell->getGranularity() === $granularityForInventoryStatus)
-                            || ($cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus))))
+                            || ($granularityForInventoryStatus
+                                && $cell->getGranularity()->isNarrowerThan($granularityForInventoryStatus))))
                 ) {
                     $cellViewModel->showInventory = true;
 
