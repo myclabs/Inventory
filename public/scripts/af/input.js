@@ -218,7 +218,7 @@ afModule.factory('updateInputs', ['getInput', function (getInput) {
 }]);
 afModule.factory('validateInputSet', ['$window', '$http', 'updateInputs',
 function ($window, $http, updateInputs) {
-    return function validateInputSet(inputSet, components) {
+    return function validateInputSet(inputSet, components, callback) {
         var urlParams = $window.afUrlParams;
         var inputValidationUrl = $window.inputValidationUrl;
         var data = {
@@ -230,7 +230,7 @@ function ($window, $http, updateInputs) {
             updateInputs(inputSet, response.input, components);
         }).error(function () {
             addMessage(__('Core', 'exception', 'applicationError'), 'error');
-        });
+        }).then(callback);
     };
 }]);
 
@@ -295,45 +295,45 @@ function ($scope, $element, $window, $http, $timeout, validateInputSet) {
     // Preview results
     $scope.preview = function () {
         // Validate input
-        validateInputSet($scope.inputSet, $scope.af.components);
-
-        $scope.previewIsLoading = true;
-        $scope.resultsPreview = null;
-        var data = {
-            input: $scope.inputSet,
-            urlParams: urlParams,
-            idInputSet: $scope.inputSet.id
-        };
-        $http.post(resultsPreviewUrl, data).success(function (response) {
-            $scope.resultsPreview = response.data;
-            $scope.previewIsLoading = false;
-        }).error(function () {
-            $scope.previewIsLoading = false;
-            addMessage(__('Core', 'exception', 'applicationError'), 'error');
+        validateInputSet($scope.inputSet, $scope.af.components, function () {
+            $scope.previewIsLoading = true;
+            $scope.resultsPreview = null;
+            var data = {
+                input: $scope.inputSet,
+                urlParams: urlParams,
+                idInputSet: $scope.inputSet.id
+            };
+            $http.post(resultsPreviewUrl, data).success(function (response) {
+                $scope.resultsPreview = response.data;
+                $scope.previewIsLoading = false;
+            }).error(function () {
+                $scope.previewIsLoading = false;
+                addMessage(__('Core', 'exception', 'applicationError'), 'error');
+            });
         });
     };
 
     // Save input
     $scope.save = function () {
         // Validate input
-        validateInputSet($scope.inputSet, $scope.af.components);
-
-        $scope.resultsPreview = null;
-        $scope.saving = true;
-        var data = {
-            input: $scope.inputSet,
-            urlParams: urlParams,
-            idInputSet: $scope.inputSet.id
-        };
-        $http.post('af/input/submit?id=' + $scope.af.id, data).success(function (response) {
-            $scope.saving = false;
-            $scope.inputSet.completion = response.data.completion;
-            $scope.inputSet.status = response.data.status;
-            $scope.inputSet.id = response.data.idInputSet;
-            addMessage(response.message, response.type);
-        }).error(function () {
-            $scope.saving = false;
-            addMessage(__('Core', 'exception', 'applicationError'), 'error');
+        validateInputSet($scope.inputSet, $scope.af.components, function () {
+            $scope.resultsPreview = null;
+            $scope.saving = true;
+            var data = {
+                input: $scope.inputSet,
+                urlParams: urlParams,
+                idInputSet: $scope.inputSet.id
+            };
+            $http.post('af/input/submit?id=' + $scope.af.id, data).success(function (response) {
+                $scope.saving = false;
+                $scope.inputSet.completion = response.data.completion;
+                $scope.inputSet.status = response.data.status;
+                $scope.inputSet.id = response.data.idInputSet;
+                addMessage(response.message, response.type);
+            }).error(function () {
+                $scope.saving = false;
+                addMessage(__('Core', 'exception', 'applicationError'), 'error');
+            });
         });
     };
 
