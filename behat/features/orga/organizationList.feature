@@ -1,5 +1,5 @@
 @dbFull
-Feature: Organization datagrid feature
+Feature: Organization List feature
 
   Background:
     Given I am logged in
@@ -12,8 +12,8 @@ Feature: Organization datagrid feature
   # Ajout d'une organisation
     And I click element "a[data-original-title='Créer un nouveau workspace']"
     When I fill in "workspaceLabel" with "Test Behat"
-    And I click element "form[id='addOrganization'] div.navigation-buttons:nth-child(1) button.navigation-next"
-    And I click element "form[id='addOrganization'] div.navigation-buttons:nth-child(1) button.navigation-end"
+    And I click element "form[id='addWorkspace'] div.navigation-buttons:nth-child(1) button.navigation-next"
+    And I click element "form[id='addWorkspace'] div.navigation-buttons:nth-child(1) button.navigation-end"
     Then I should see the popup "Initialisation du workspace"
     And I wait for 5 seconds
     And I should see "Ajout effectué"
@@ -33,7 +33,7 @@ Feature: Organization datagrid feature
     And the "granularity3" datagrid should contain 1 row
     And the row 1 of the "granularity3" datagrid should contain:
       | axes | relevance | input | afs | inventory | reports | acl |
-      |      | Non       | Non   | Non | -       | Non     | Non |
+      |      | Non       | Non   | Non | -         | Non     | Non |
 
   @javascript
   Scenario: Deletion of a workspace without data scenario
@@ -44,8 +44,8 @@ Feature: Organization datagrid feature
     And I click element "a[data-original-title='Créer un nouveau workspace']"
     Then I should be on "orga/workspace/add/account/1"
     When I fill in "workspaceLabel" with "Test Behat"
-    And I click element "form[id='addOrganization'] div.navigation-buttons:nth-child(1) button.navigation-next"
-    And I click element "form[id='addOrganization'] div.navigation-buttons:nth-child(1) button.navigation-end"
+    And I click element "form[id='addWorkspace'] div.navigation-buttons:nth-child(1) button.navigation-next"
+    And I click element "form[id='addWorkspace'] div.navigation-buttons:nth-child(1) button.navigation-end"
     Then I should see the popup "Initialisation du workspace"
     And I wait for 5 seconds
     And I should see "Ajout effectué"

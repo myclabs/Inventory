@@ -9,15 +9,15 @@ Feature: Organization input tab feature
   # Accès à l'onglet "Saisies"
     Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
-    Then I should see "4 / 6" in the "#granularity8 span.granularity-info" element
+    Then I should see "4 / 9" in the "#granularity8 span.granularity-info" element
   # Filtre sur le site "Annecy"
     When I select "Annecy" from "granularity8_axissite"
     And I wait 2 seconds
-    Then I should see "2 / 6" in the "#granularity8 span.granularity-info" element
+    Then I should see "2 / 9" in the "#granularity8 span.granularity-info" element
   # Bouton "Réinitialiser"
     When I click element "#granularity8 button.reset"
     And I wait 2 seconds
-    Then I should see "6 / 6" in the "#granularity8 span.granularity-info" element
+    Then I should see "9 / 9" in the "#granularity8 span.granularity-info" element
 
   @javascript @readOnly
   Scenario: Display of the various columns (inventory status, input progress, input status)

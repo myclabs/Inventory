@@ -18,8 +18,8 @@ Feature: Input in a cell associated to a DW feature
     And I am on "orga/cell/input/cell/3/fromCell/1/"
     And I wait for the page to finish loading
   # Saisie
-    And I select "Charbon" from "nature_combustible"
-    And I fill in "quantite_combustible" with "10"
+    When I fill in "quantite_combustible" with "10"
+    And I click element "[name='nature_combustible'] [value='0']"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
     When I click "Quitter"
@@ -35,7 +35,7 @@ Feature: Input in a cell associated to a DW feature
     When I open tab "Valeurs"
     Then the row 1 of the "reportValues" datagrid should contain:
       | valueAxisc_1_gaz | valueDigital |
-      | CO2            | 66,6         |
+      | CO2              | 66,6         |
 
 
 

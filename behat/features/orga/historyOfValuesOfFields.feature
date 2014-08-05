@@ -11,10 +11,16 @@ Feature: History of values of a field feature
   # Création de la saisie initiale
     When I fill in "chiffre_affaire" with "10"
     And I fill in "percentchiffre_affaire" with "10"
+    # Nécéssaire pour que Angular détecte le changement.
+    And I click element "[name='chiffre_affaire_unit'] [value='euro']"
+    And I click element "[name='chiffre_affaire_unit'] [value='kiloeuro']"
     And I click "Enregistrer"
   # Modification de la saisie
     When I fill in "chiffre_affaire" with "20"
     And I fill in "percentchiffre_affaire" with "20"
+      # Nécéssaire pour que Angular détecte le changement.
+    And I click element "[name='chiffre_affaire_unit'] [value='euro']"
+    And I click element "[name='chiffre_affaire_unit'] [value='kiloeuro']"
     And I click "Enregistrer"
     And I reload the page
     And I wait for the page to finish loading
@@ -32,7 +38,7 @@ Feature: History of values of a field feature
   @javascript
   Scenario: Input history scenario, display of history for various kinds of input fields
     # Cellule : 2012 | Chambéry | Test affichage
-    Given I am on "orga/cell/input/cell/33/fromCell/1"
+    Given I am on "orga/cell/input/cell/43/fromCell/1"
     And I wait for the page to finish loading
   # Champ numérique
     And I click element "#c_nHistory"
@@ -79,7 +85,7 @@ Feature: History of values of a field feature
   @javascript
   Scenario: Input history scenario, display of history for a repeated subform containing various types of fields, one repetition
   # Cellule : 2013 | Annecy | Test affichage
-    Given I am on "orga/cell/input/cell/42/fromCell/1"
+    Given I am on "orga/cell/input/cell/49/fromCell/1"
     And I wait for the page to finish loading
   # Ajout 1 blocs de répétition
     And I click "Ajouter"

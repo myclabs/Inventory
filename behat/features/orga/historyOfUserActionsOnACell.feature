@@ -17,6 +17,9 @@ Feature: History of user actions on a cell feature
   # TODO : vérifier que pas de bouton pour la saisie initiale.
   # Création de la saisie initiale
     When I fill in "chiffre_affaire" with "10"
+  # Nécéssaire pour que Angular détecte le changement.
+    And I click element "[name='chiffre_affaire_unit'] [value='euro']"
+    And I click element "[name='chiffre_affaire_unit'] [value='kiloeuro']"
     And I click "Enregistrer"
     And I reload the page
     And I wait for the page to finish loading
@@ -28,8 +31,3 @@ Feature: History of user actions on a cell feature
     When I click element "#chiffre_affaireHistory"
     And I click "Quitter"
     Then I should see "La saisie Europe | Marque B a été enregistrée pour la première fois par Administrateur Système."
-
-
-
-
-

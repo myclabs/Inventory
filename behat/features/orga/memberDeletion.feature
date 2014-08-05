@@ -48,8 +48,9 @@ Feature: Organizational member deletion feature
     Then the following message is shown and closed: "Cet élément ne peut être supprimé, car il y a au moins un élément subordonné (exemple : on ne peut supprimer France alors qu’il existe Lyon subordonné à France)."
     # Suppression d'un élément, sans obstacle
     When I open collapse "Année"
-    And I click "Supprimer" in the row 1 of the "listMembersannee" datagrid
+    Then the "listMembersannee" datagrid should contain 3 row
+    When I click "Supprimer" in the row 1 of the "listMembersannee" datagrid
     Then I should see the popup "Demande de confirmation"
     When I click "Confirmer"
     Then the following message is shown and closed: "Suppression effectuée."
-    Then the "listMembersannee" datagrid should contain 1 row
+    Then the "listMembersannee" datagrid should contain 2 row
