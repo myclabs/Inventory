@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\Domain\Cell;
 use Orga\Domain\Service\Cell\Input\CellInputUpdaterInterface;
+use Orga\Domain\Service\ETL\ETLDataService;
 use Orga\Domain\Workspace;
 use Orga\Domain\Service\Cell\Input\CellInputCreatedEvent;
 use Orga\Domain\Service\Cell\Input\CellInputEditedEvent;
@@ -117,8 +118,8 @@ class CellInputService implements CellInputUpdaterInterface
             // Sauvegarde et attache à la cellule
             $inputSet->save();
             $cell->setAFInputSetPrimary($inputSet);
-            $cell->updateInputStatus();
             $this->afInputService->updateResults($inputSet);
+            $cell->updateInputStatus();
 
             $event = new CellInputCreatedEvent($cell);
         }
@@ -139,11 +140,11 @@ class CellInputService implements CellInputUpdaterInterface
 
         // Regénère DW
         $this->workDispatcher->run(
-            new ServiceCallTask('ETLDataService', 'clearDWResultsFromCell', [$cell])
+            new ServiceCallTask(ETLDataService::class, 'clearDWResultsFromCell', [$cell])
         );
         if ($inputSet->isInputComplete()) {
             $this->workDispatcher->run(
-                new ServiceCallTask('ETLDataService', 'populateDWResultsFromCell', [$cell])
+                new ServiceCallTask(ETLDataService::class, 'populateDWResultsFromCell', [$cell])
             );
         }
         // Regénère l'exports de la cellule.
