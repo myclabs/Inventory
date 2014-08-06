@@ -33,27 +33,28 @@ Feature: General data input feature
     And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
     And I click "Aperçu des résultats"
     And I wait 3 seconds
-    Then the field "chiffre_affaire" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
+    Then the field "chiffre_affaire" should have error: "Champ obligatoire pour atteindre le statut : complet. Les valeurs numériques incorrectes sont ignorées."
     When I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
-    And the field "chiffre_affaire" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
-  # Saisie incertitude incorrecte
+    And the field "chiffre_affaire" should have error: "Champ obligatoire pour atteindre le statut : complet. Les valeurs numériques incorrectes sont ignorées."
     When I fill in "chiffre_affaire" with "12"
-    And I fill in "percentchiffre_affaire" with "auie"
-    # Nécéssaire pour que Angular détecte le changement.
-    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
-    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
-    And I click "Aperçu des résultats"
-    And I wait 3 seconds
-    Then the field "chiffre_affaire" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
-  # Saisie incertitude non entière
-    When I fill in "percentchiffre_affaire" with "5.3"
-    # Nécéssaire pour que Angular détecte le changement.
-    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
-    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
-    And I click "Aperçu des résultats"
-    And I wait 3 seconds
-    Then the field "chiffre_affaire" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
+  # L'incertitude est désormais ignorée. @see refs #7293
+#  # Saisie incertitude incorrecte
+#    And I fill in "percentchiffre_affaire" with "auie"
+#    # Nécéssaire pour que Angular détecte le changement.
+#    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
+#    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
+#    And I click "Aperçu des résultats"
+#    And I wait 3 seconds
+#    Then the field "chiffre_affaire" should have error: "Champ obligatoire pour atteindre le statut : complet. Les valeurs numériques incorrectes sont ignorées."
+#  # Saisie incertitude non entière
+#    When I fill in "percentchiffre_affaire" with "5.3"
+#    # Nécéssaire pour que Angular détecte le changement.
+#    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
+#    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
+#    And I click "Aperçu des résultats"
+#    And I wait 3 seconds
+#    Then the field "chiffre_affaire" should have error: "Champ obligatoire pour atteindre le statut : complet. Les valeurs numériques incorrectes sont ignorées."
   # Bouton "Quitter" (colorié en rouge), popup de confirmation
     When I click "Quitter"
     Then I should see "Perte des modifications non enregistrées. Poursuivre ?"

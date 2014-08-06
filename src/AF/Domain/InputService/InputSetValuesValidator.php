@@ -117,12 +117,10 @@ class InputSetValuesValidator
         }
         if ((!$input->getComponent()->getRequired()) && ($value === null)) {
             return;
-        } else if ($input->getComponent()->getRequired() && ($value === null)) {
-            $input->setError(__('AF', 'inputInput', 'emptyRequiredField'));
-        } else if (!preg_match('#^-?[0-9]*[.,]?[0-9]*$#', $value)) {
-            $input->setError(__('UI', 'formValidation', 'invalidNumber'));
-        } else if (!preg_match('#^[0-9]*$#', $uncertainty)) {
-            $input->setError(__('UI', 'formValidation', 'invalidUncertainty'));
+        } else if (($input->getComponent()->getRequired() && ($value === null))
+            || (!preg_match('#^-?[0-9]*[.,]?[0-9]*$#', $value))
+            || (!preg_match('#^[0-9]*$#', $uncertainty))) {
+            $input->setError(__('AF', 'inputInput', 'emptyNumericRequiredField'));
         }
     }
 

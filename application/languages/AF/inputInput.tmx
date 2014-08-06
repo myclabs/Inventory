@@ -236,6 +236,14 @@
                 <seg>This field is mandatory to reach the status: complete.</seg>
             </tuv>
         </tu>
+        <tu tuid="emptyNumericRequiredField">
+            <tuv xml:lang="fr">
+                <seg>Champ obligatoire pour atteindre le statut : complet. Les valeurs numériques incorrectes sont ignorées.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>This field is mandatory to reach the status: complete. Incorrect numeric values are ignored.</seg>
+            </tuv>
+        </tu>
 
         <!-- Message lors de la modification du caractère terminée ou non -->
 
