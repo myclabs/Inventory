@@ -10,8 +10,8 @@ Feature: Combustion input feature
     Given I am on "af/af/test/id/1"
     And I wait for the page to finish loading
   # Saisie
-    And I select "Charbon" from "nature_combustible"
     And I fill in "quantite_combustible" with "10"
+    And I click element "select[name='nature_combustible'] [value='0']"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
   # Vérification contenu onglet détails calculs

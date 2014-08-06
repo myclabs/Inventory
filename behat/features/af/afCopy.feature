@@ -23,10 +23,11 @@ Feature: AF copy feature
       | label                                                     |
       | Copie combustion de combustible, mesuré en unité de masse |
     When I click "Test" in the row 9 of the "listAF" datagrid
-    And I select "Charbon" from "nature_combustible"
     And I fill in "quantite_combustible" with "10"
+    And I click element "select[name='nature_combustible'] [value='0']"
   # Formulaire copié : aperçu des résultats
     And I click "Aperçu des résultats"
+    And I wait 5 seconds
     Then I should see "Total : 33,3 t équ. CO2"
   # Formulaire copié : enregistrement de la saisie
     When I click "Enregistrer"
@@ -70,6 +71,9 @@ Feature: AF copy feature
     When I click "Test" in the row 9 of the "listAF" datagrid
   # Saisie et enregistrement
     When I fill in "sans_effet" with "0"
+    # Nécéssaire pour que Angular détecte le changement.
+    And I click element "select[name='sans_effet_unit'] [value='euro']"
+    And I click element "select[name='sans_effet_unit'] [value='kiloeuro']"
     And I click "Enregistrer"
     And I open tab "Résultats"
     Then I should see "Total : 1 t équ. CO2"

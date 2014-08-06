@@ -28,7 +28,11 @@ Feature: General data input feature
     And I wait for the page to finish loading
   # Saisie nombre incorrect
     When I fill in "chiffre_affaire" with "auie"
+    # Nécéssaire pour que Angular détecte le changement.
+    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
+    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
     And I click "Aperçu des résultats"
+    And I wait 3 seconds
     Then the field "chiffre_affaire" should have error: "La quantité saisie n'a pas pu être interprétée, merci de corriger (en français merci d'utiliser la virgule comme séparateur décimal)."
     When I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué, saisie incomplète. Vous pouvez renseigner les zones obligatoires manquantes maintenant ou plus tard."
@@ -36,11 +40,19 @@ Feature: General data input feature
   # Saisie incertitude incorrecte
     When I fill in "chiffre_affaire" with "12"
     And I fill in "percentchiffre_affaire" with "auie"
+    # Nécéssaire pour que Angular détecte le changement.
+    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
+    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
     And I click "Aperçu des résultats"
+    And I wait 3 seconds
     Then the field "chiffre_affaire" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
   # Saisie incertitude non entière
     When I fill in "percentchiffre_affaire" with "5.3"
+    # Nécéssaire pour que Angular détecte le changement.
+    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
+    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
     And I click "Aperçu des résultats"
+    And I wait 3 seconds
     Then the field "chiffre_affaire" should have error: "L'incertitude saisie n'a pas pu être interprétée, merci de saisir un nombre entier."
   # Bouton "Quitter" (colorié en rouge), popup de confirmation
     When I click "Quitter"
@@ -59,12 +71,20 @@ Feature: General data input feature
   # Affichage du bon nombre de chiffres significatifs
   # Incertitude non obligatoire
     When I fill in "chiffre_affaire" with "12345,6789"
+      # Nécéssaire pour que Angular détecte le changement.
+    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
+    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
     And I click "Aperçu des résultats"
+    And I wait 3 seconds
     Then I should see "12 300"
   # Bon affichage du séparateur décimal en français
   # Bon arrondi au nombre de chiffres significatifs
     When I fill in "chiffre_affaire" with "0,1236"
+    # Nécéssaire pour que Angular détecte le changement.
+    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
+    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
     And I click "Aperçu des résultats"
+    And I wait 3 seconds
     Then I should see "0,124"
   # Le clic sur "Aperçu des résultats" ne modifie pas l'avancement
     And I should see "Saisie en cours"
@@ -96,12 +116,14 @@ Feature: General data input feature
   # Saisie valeur
     When I fill in "chiffre_affaire" with "1000"
   # Choix unité de saisie
-    And I select "euro" from "chiffre_affaire_unit"
+    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
   # Aperçu des résultats
     And I click "Aperçu des résultats"
+    And I wait 3 seconds
     Then I should see "Total : 1 k€"
   # Enregistrement et contenu de l'onglet "Résultats"
     When I click "Enregistrer"
+    And I wait 3 seconds
     And I open tab "Résultats"
     Then I should see "Total : 1 k€"
   # Contenu de l'onglet "Détails calculs$
@@ -114,5 +136,9 @@ Feature: General data input feature
     And I click "Quitter"
     And I click "Test" in the row 2 of the "listAF" datagrid
     And I fill in "chiffre_affaire" with "10000"
+      # Nécéssaire pour que Angular détecte le changement.
+    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
+    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
     And I click "Aperçu des résultats"
+    And I wait 3 seconds
     Then I should see "Total : 10 k€"

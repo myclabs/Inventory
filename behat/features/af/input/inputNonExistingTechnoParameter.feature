@@ -10,8 +10,8 @@ Feature: Input with a non existing Parameter parameter feature
     Given I am on "af/af/test/id/1"
     And I wait for the page to finish loading
   # Saisie
-    And I select "Gaz naturel" from "nature_combustible"
     And I fill in "quantite_combustible" with "10"
+    And I click element "select[name='nature_combustible'] [value='1']"
     And I click "Enregistrer"
     Then the following message is shown and closed: "Enregistrement effectué. La saisie est complète, mais un problème est intervenu dans l'exécution des calculs : le paramètre « processus -> combustion, combustible -> gaz_naturel » de la famille « Combustion de combustible, mesuré en unité de masse » est introuvable."
   # Vérification du statut "orange" (saisie complète, calculs incomplets).

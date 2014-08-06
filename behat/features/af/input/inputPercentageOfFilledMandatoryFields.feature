@@ -10,7 +10,11 @@ Feature: Percentage of filled mandatory fields feature
     Given I am on "af/af/test/id/5"
     And I wait for the page to finish loading
     And I fill in "c_n" with "10"
+        # Nécéssaire pour que Angular détecte le changement.
+    And I click element "select[name='c_n_unit'] [value='kg_ce.l^-1']"
+    And I click element "select[name='c_n_unit'] [value='kg_ce.m3^-1']"
     And I click "Enregistrer"
+    And I wait 2 seconds
   # 7 champs obligatoires, un seul rempli, le pourcentage de remplissage est de 100/7 = 14,29
     Then the "#tabs_tabInput .inputProgress .progress-bar" element should contain "14%"
 

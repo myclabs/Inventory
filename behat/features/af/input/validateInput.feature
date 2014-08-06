@@ -9,6 +9,9 @@ Feature: Validate and reopen an input
     Given I am on "af/af/test/id/2"
     And I wait for the page to finish loading
     And I fill in "chiffre_affaire" with "12345"
+      # Nécéssaire pour que Angular détecte le changement.
+    And I click element "select[name='chiffre_affaire_unit'] [value='euro']"
+    And I click element "select[name='chiffre_affaire_unit'] [value='kiloeuro']"
     And I click "Enregistrer"
     And the following message is shown and closed: "Enregistrement effectué (saisie complète)."
     Then I should see "La saisie est complète, vous devez cliquer sur \"Terminer la saisie\" si vous ne comptez plus y apporter de modifications."
