@@ -58,12 +58,14 @@ Feature: Cell dataware analysis feature
       | 2012                | 33,3         | 23%              |
   # On filtre sur la valeur "Terminé" pour le statut
     When I open collapse "Filtres"
+    And I select "inputStatus" from "addFilter"
+    And I click element "button[class='btn btn-default add-filter']"
     And I click element "input[name='inputStatus_memberNumberChoice'][value='one']"
     And I select "Terminé" from "inputStatus_members[]"
     And I click "Lancer"
     Then the following message is shown and closed: "Analyse effectuée."
   # Focus pour scroller vers le haut pour pouvoir ouvrir l'onglet "Valeurs"
-    When I focus on element "#saveReportButton.btn:contains('Enregistrer')"
+    When I focus on element ".btn:contains('Retour')"
   # Résultat inchangé
     And I open tab "Valeurs"
     Then the "reportValues" datagrid should contain 1 row
@@ -75,7 +77,7 @@ Feature: Cell dataware analysis feature
     And I click "Lancer"
     Then the following message is shown and closed: "Analyse effectuée."
   # Focus pour scroller vers le haut
-    When I focus on element "#saveReportButton.btn:contains('Enregistrer')"
+    When I focus on element ".btn:contains('Retour')"
   # Cette fois-ci aucun résultat ne sort
     And I open tab "Valeurs"
     Then the "reportValues" datagrid should contain 0 row

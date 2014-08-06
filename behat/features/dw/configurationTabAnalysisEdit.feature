@@ -44,6 +44,6 @@ Feature: General info tab analysis edit feature
     When I click "Confirmer"
     And I wait 10 seconds
     Then the following message is shown and closed: "Suppression effectuée"
-    And the "granularity1Report" datagrid should contain 1 row
+    And the "datagridCellReports1" datagrid should contain 1 row
 
 

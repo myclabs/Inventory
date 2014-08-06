@@ -75,7 +75,11 @@ Feature: Granularity dataware analysis feature
     And I should not see "Modifications en cours"
   # Édition d'un filtre
     When I open collapse "Filtres"
+    And I select "o_annee" from "addFilter"
+    And I click element "button[class='btn btn-default add-filter']"
     And I click element "input[name='o_annee_memberNumberChoice'][value='one']"
+      # Focus pour scroller vers le haut
+    And I focus on element ".btn:contains('Retour')"
     Then I should not see "Nouvelle configuration"
     And I should see "Modifications en cours"
 
@@ -143,17 +147,19 @@ Feature: Granularity dataware analysis feature
 
   @javascript
   Scenario: Update a granularity analysis, without any change except on filters
-    Given I am on "orga/granularity/view-report/granularity/1/idReport/2"
+    Given I am on "orga/granularity/view-report/granularity/1/report/2"
     And I wait for the page to finish loading
     Then I should see "Chiffre d'affaire, par année Niveau organisationnel global"
   # Ajout d'un filtre
     When I open collapse "Filtres"
+    And I select "o_annee" from "addFilter"
+    And I click element "button[class='btn btn-default add-filter']"
     And I click element "input[name='o_annee_memberNumberChoice'][value='one']"
     And I select "2013" from "o_annee_members[]"
-    # And I focus on element "#applyReportConfiguration"
+    # Focus pour scroller vers le haut
+    And I focus on element ".btn:contains('Retour')"
     And I click "Lancer"
     Then the following message is shown and closed: "Analyse effectuée."
-  # On utilise "click element" pour scroller vers le haut (focus)
     When I click element "#saveReportButton.btn:contains('Enregistrer')"
     Then I should see the popup "Enregistrer la configuration de l'analyse"
   # Par défaut, il est proposé de mettre à jour la configuration existante
