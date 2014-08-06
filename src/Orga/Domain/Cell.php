@@ -198,7 +198,7 @@ class Cell extends Core_Model_Entity implements EntityResource
      */
     public static function loadByAFInputSetPrimary(PrimaryInputSet $aFInputSetPrimary)
     {
-        return self::getEntityRepository()->loadBy(array('aFInputSetPrimary' => $aFInputSetPrimary));
+        return self::getEntityRepository()->loadBy(['aFInputSetPrimary' => $aFInputSetPrimary]);
     }
 
     /**
@@ -207,7 +207,7 @@ class Cell extends Core_Model_Entity implements EntityResource
      */
     public static function loadByDWCube(Cube $dWCube)
     {
-        return self::getEntityRepository()->loadBy(array('dWCube' => $dWCube));
+        return self::getEntityRepository()->loadBy(['dWCube' => $dWCube]);
     }
 
     /**
