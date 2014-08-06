@@ -2,6 +2,7 @@
 
 namespace Orga\Domain\Service\ETL;
 
+use Doctrine\ORM\EntityManager;
 use Core_Event_ObserverInterface;
 use Core_Exception_NotFound;
 use DW\Application\Service\ReportService;
@@ -30,16 +31,23 @@ class OrgaReportFactory implements Core_Event_ObserverInterface
     private static $copiedReports = [];
 
     /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
      * @var ReportService
      */
     private $reportService;
 
 
     /**
+     * @param EntityManager $entityManager
      * @param ReportService $reportService
      */
-    public function __construct(ReportService $reportService)
+    public function __construct(EntityManager $entityManager, ReportService $reportService)
     {
+        $this->entityManager = $entityManager;
         $this->reportService = $reportService;
     }
 
@@ -125,6 +133,7 @@ class OrgaReportFactory implements Core_Event_ObserverInterface
                 $cellDWReport,
                 $granularityDWReport
             )->save();
+            $this->entityManager->flush($cellDWReport);
         }
     }
 
