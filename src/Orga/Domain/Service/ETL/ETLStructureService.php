@@ -412,7 +412,7 @@ class ETLStructureService implements ETLStructureInterface
             // Début de transaction.
             $this->entityManager->beginTransaction();
 
-            $this->etlDataService->clearDWResultsForCell($cell);
+            $this->etlDataService->clearCellDWCubeFromDWResults($cell);
             $this->entityManager->flush();
 
             $this->updateCellDWCubeLabel($cell);
@@ -425,7 +425,7 @@ class ETLStructureService implements ETLStructureInterface
                 ]
             );
 
-            $this->etlDataService->populateDWResultsForCell($cell);
+            $this->etlDataService->populateCellDWCubeWithInputResults($cell);
             $this->entityManager->flush();
 
             // Fin de transaction.

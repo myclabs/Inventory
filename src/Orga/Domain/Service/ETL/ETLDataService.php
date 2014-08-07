@@ -23,31 +23,25 @@ class ETLDataService implements ETLDataInterface
     }
 
     /**
-     * Supprime l'ensemble des résultats de la Cell donnée.
-     *
      * @param Cell $cell
      */
-    public function clearDWResultsFromCell(Cell $cell)
+    public function clearDWCubesFromCellDWResults(Cell $cell)
     {
         $cell->deleteDWResults();
     }
 
     /**
-     * Peuple les cubes de DW alimentés par et avec les résultats de la Cell donnée.
-     *
      * @param Cell $cell
      */
-    public function populateDWResultsFromCell(Cell $cell)
+    public function populateDWCubesWithCellInputResults(Cell $cell)
     {
         $cell->createDWResults();
     }
 
     /**
-     * Supprime l'ensemble des résultats du Cube de DW de la Cell donnée.
-     *
      * @param Cell $cell
      */
-    public function clearDWResultsForCell(Cell $cell)
+    public function clearCellDWCubeFromDWResults(Cell $cell)
     {
         foreach ($cell->getPopulatingCells() as $populatingCell) {
             $populatingCell->deleteDWResultsForDWCube($cell->getDWCube());
@@ -55,11 +49,9 @@ class ETLDataService implements ETLDataInterface
     }
 
     /**
-     * Peuple le cube de DW de la Cell donnée avec les résultats de l'ensemble des inputs enfants.
-     *
      * @param Cell $cell
      */
-    public function populateDWResultsForCell(Cell $cell)
+    public function populateCellDWCubeWithInputResults(Cell $cell)
     {
         foreach ($cell->getPopulatingCells() as $populatingCell) {
             $populatingCell->createDWResultsForDWCube($cell->getDWCube());
@@ -67,8 +59,6 @@ class ETLDataService implements ETLDataInterface
     }
 
     /**
-     * Peuple le cube de DW de la Cell donnée avec les résultats de l'ensemble des inputs enfants.
-     *
      * @param Cell $cell
      */
     public function calculateResultsForCellAndChildren(Cell $cell)

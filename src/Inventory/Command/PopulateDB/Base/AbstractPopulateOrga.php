@@ -313,7 +313,7 @@ abstract class AbstractPopulateOrga
 
         $inputCell->setAFInputSetPrimary($inputSetPrimary);
         $inputCell->updateInputStatus();
-        $this->etlDataService->populateDWResultsFromCell($inputCell);
+        $this->etlDataService->populateDWCubesWithCellInputResults($inputCell);
     }
 
     /**

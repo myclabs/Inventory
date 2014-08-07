@@ -140,11 +140,11 @@ class CellInputService implements CellInputUpdaterInterface
 
         // Regénère DW
         $this->workDispatcher->run(
-            new ServiceCallTask(ETLDataService::class, 'clearDWResultsFromCell', [$cell])
+            new ServiceCallTask(ETLDataService::class, 'clearDWCubesFromCellDWResults', [$cell])
         );
         if ($inputSet->isInputComplete()) {
             $this->workDispatcher->run(
-                new ServiceCallTask(ETLDataService::class, 'populateDWResultsFromCell', [$cell])
+                new ServiceCallTask(ETLDataService::class, 'populateDWCubesWithCellInputResults', [$cell])
             );
         }
         // Regénère l'exports de la cellule.

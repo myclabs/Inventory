@@ -1132,7 +1132,7 @@ class Cell extends Core_Model_Entity implements EntityResource
             OrgaDomainHelper::getOrgaReportFactory()->addGranularityDWReportsToCellDWCube($this);
 
             // Peuplement du cube avec les résultats existants.
-            OrgaDomainHelper::getETLData()->populateDWResultsForCell($this);
+            OrgaDomainHelper::getETLData()->populateCellDWCubeWithInputResults($this);
         }
     }
 
@@ -1140,7 +1140,7 @@ class Cell extends Core_Model_Entity implements EntityResource
     {
         if ($this->dWCube !== null) {
             // Suppression de tous les résultats.
-            OrgaDomainHelper::getETLData()->clearDWResultsForCell($this);
+            OrgaDomainHelper::getETLData()->clearCellDWCubeFromDWResults($this);
 
             // Appel du delete() pour éviter des problème avec la suppression des rapports.
             $this->dWCube->delete();
