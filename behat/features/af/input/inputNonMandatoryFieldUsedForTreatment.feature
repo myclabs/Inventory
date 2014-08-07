@@ -17,6 +17,7 @@ Feature: Non mandatory field used for treatment feature
     And I click "Test"
     And I select "Charbon" from "nature_combustible"
     And I click "Aperçu des résultats"
+    And I wait 3 seconds
   # Le résultat est affiché valant zéro, c'est-à-dire que le champ numérique vide est interprété comme s'il était rempli avec la valeur zéro.
     Then I should see "Total : 0 t équ. CO2"
     And I click "Enregistrer"

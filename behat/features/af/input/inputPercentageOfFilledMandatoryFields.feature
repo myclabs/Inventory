@@ -14,7 +14,7 @@ Feature: Percentage of filled mandatory fields feature
     And I click element "select[name='c_n_unit'] [value='kg_ce.l^-1']"
     And I click element "select[name='c_n_unit'] [value='kg_ce.m3^-1']"
     And I click "Enregistrer"
-    And I wait 2 seconds
+    And I wait 3 seconds
   # 7 champs obligatoires, un seul rempli, le pourcentage de remplissage est de 100/7 = 14,29
     Then the "#tabs_tabInput .inputProgress .progress-bar" element should contain "14%"
 
@@ -34,6 +34,7 @@ Feature: Percentage of filled mandatory fields feature
   # On remplit le champ numérigue
     And I fill in "c_n" with "10"
     And I click "Enregistrer"
+    And I wait 3 seconds
   # 5 champs obligatoires, un rempli, le pourcentage doit être de 20%
     Then the "#tabs_tabInput .inputProgress .progress-bar" element should contain "20%"
 
@@ -53,6 +54,7 @@ Feature: Percentage of filled mandatory fields feature
   # On remplit le champ numérigue
     And I fill in "c_n" with "10"
     And I click "Enregistrer"
+    And I wait 3 seconds
   # 5 champs obligatoires, un rempli, le pourcentage doit être de 20%
     Then the "#tabs_tabInput .inputProgress .progress-bar" element should contain "20%"
   # On remplit un champ de sélection multiple
@@ -85,6 +87,7 @@ Feature: Percentage of filled mandatory fields feature
   # On checke le champ booléen, histoire de modifier la saisie et donc de pouvoir l'enregistrer
     And I click element "[name='c_b']"
     And I click "Enregistrer"
+    And I wait 3 seconds
   # La saisie est complète
     Then the "#tabs_tabInput .inputProgress .progress-bar" element should contain "100%"
 
