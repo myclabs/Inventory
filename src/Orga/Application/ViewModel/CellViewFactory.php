@@ -185,14 +185,14 @@ class CellViewFactory
                             $withInventoryProgress = $withInventoryProgress && $narrowerGranularityHasACLParent;
                         }
                         if ($withInventoryProgress) {
-                            $narrowerGranularityHasSubInputGranlarities = false;
+                            $narrowerGranularityHasSubInputGranularities = false;
                             foreach ($cell->getGranularity()->getNarrowerGranularities() as $narrowerInventoryGranularity) {
                                 if ($narrowerInventoryGranularity->getInputConfigGranularity() !== null) {
-                                    $narrowerGranularityHasSubInputGranlarities = true;
+                                    $narrowerGranularityHasSubInputGranularities = true;
                                     break;
                                 }
                             }
-                            $withInventoryProgress = $withInventoryProgress && $narrowerGranularityHasSubInputGranlarities;
+                            $withInventoryProgress = $withInventoryProgress && $narrowerGranularityHasSubInputGranularities;
                         }
                     }
                     if ($withInventoryProgress === true) {
