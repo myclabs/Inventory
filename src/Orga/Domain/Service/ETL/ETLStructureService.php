@@ -109,7 +109,10 @@ class ETLStructureService implements ETLStructureInterface
         $this->populateDWCube(
             $cell->getDWCube(),
             $cell->getGranularity()->getWorkspace(),
-            ['axes' => $cell->getGranularity()->getAxes(), 'members' => $cell->getMembers()]
+            [
+                'excludedAxesFromRoot' => $cell->getGranularity()->getAxes(),
+                'includedMembersChildren' => $cell->getMembers()
+            ]
         );
     }
 
@@ -122,7 +125,9 @@ class ETLStructureService implements ETLStructureInterface
         $this->populateDWCube(
             $granularity->getDWCube(),
             $granularity->getWorkspace(),
-            ['axes' => $granularity->getAxes()]
+            [
+                'excludedAxesFromRoot' => $granularity->getAxes()
+            ]
         );
     }
 
@@ -257,21 +262,19 @@ class ETLStructureService implements ETLStructureInterface
     /**
      * @param ClassificationAxis $classificationAxis
      * @param DWCube $dwCube
-     * @param array &$associationArray
      */
-    private function copyAxisAndMembersFromClassificationToDW(
-        ClassificationAxis $classificationAxis,
-        DWCube $dwCube,
-        &$associationArray = []
-    ) {
+    private function copyAxisAndMembersFromClassificationToDW(ClassificationAxis $classificationAxis, DWCube $dwCube)
+    {
         $dWAxis = new DWAxis($dwCube);
         $dWAxis->setRef('c_' . $classificationAxis->getLibrary()->getId() . '_' . $classificationAxis->getRef());
         $dWAxis->setLabel(clone $classificationAxis->getLabel());
 
-        $associationArray['axes'][$classificationAxis->getRef()] = $dWAxis;
-        $narrowerAxis = $classificationAxis->getDirectNarrower();
-        if ($narrowerAxis !== null) {
-            $dWAxis->setDirectNarrower($associationArray['axes'][$narrowerAxis->getRef()]);
+        $classificationNarrowerAxis = $classificationAxis->getDirectNarrower();
+        if ($classificationNarrowerAxis !== null) {
+            $dWNarrowerAxis = $dwCube->getAxisByRef(
+                'c_' . $classificationNarrowerAxis->getLibrary()->getId() . '_' . $classificationNarrowerAxis->getRef()
+            );
+            $dWAxis->setDirectNarrower($dWNarrowerAxis);
         }
 
         foreach ($classificationAxis->getMembers() as $classificationMember) {
@@ -280,17 +283,15 @@ class ETLStructureService implements ETLStructureInterface
             $dWMember->setPosition($classificationMember->getPosition());
             $dWMember->setLabel(clone $classificationMember->getLabel());
 
-            $memberIdentifier = $classificationMember->getAxis()->getRef() . '_' . $classificationMember->getRef();
-            $associationArray['members'][$memberIdentifier] = $dWMember;
-            foreach ($classificationMember->getDirectChildren() as $narrowerClassificationMember) {
-                $narrowerIdentifier = $narrowerClassificationMember->getAxis()->getRef()
-                    . '_' . $narrowerClassificationMember->getRef();
-                $associationArray['members'][$narrowerIdentifier]->setDirectParentForAxis($dWMember);
+            foreach ($classificationMember->getDirectChildren() as $childClassificationMember) {
+                $dWNarrowerAxis->getMemberByRef(
+                    $childClassificationMember->getRef()
+                )->setDirectParentForAxis($dWMember);
             }
         }
 
         foreach ($classificationAxis->getDirectBroaders() as $broaderClassificationAxis) {
-            $this->copyAxisAndMembersFromClassificationToDW($broaderClassificationAxis, $dwCube, $associationArray);
+            $this->copyAxisAndMembersFromClassificationToDW($broaderClassificationAxis, $dwCube);
         }
     }
 
@@ -313,19 +314,14 @@ class ETLStructureService implements ETLStructureInterface
      * @param OrgaAxis $orgaAxis
      * @param DWCube $dwCube
      * @param array $orgaFilters
-     * @param array &$associationArray
      */
-    private function copyAxisAndMembersFromOrgaToDW(
-        OrgaAxis $orgaAxis,
-        DWCube $dwCube,
-        $orgaFilters,
-        &$associationArray = []
-    ) {
-        if (in_array($orgaAxis, $orgaFilters['axes'])) {
+    private function copyAxisAndMembersFromOrgaToDW(OrgaAxis $orgaAxis, DWCube $dwCube, $orgaFilters)
+    {
+        if (in_array($orgaAxis, $orgaFilters['excludedAxesFromRoot'])) {
             return;
         } else {
             $filteringOrgaBroaderAxes = array();
-            foreach ($orgaFilters['axes'] as $filteringOrgaAxis) {
+            foreach ($orgaFilters['excludedAxesFromRoot'] as $filteringOrgaAxis) {
                 if ($orgaAxis->isNarrowerThan($filteringOrgaAxis)) {
                     $filteringOrgaBroaderAxes[] = $filteringOrgaAxis;
                 }
@@ -336,16 +332,16 @@ class ETLStructureService implements ETLStructureInterface
         $dWAxis->setRef('o_' . $orgaAxis->getRef());
         $dWAxis->setLabel(clone $orgaAxis->getLabel());
 
-        $associationArray['axes'][$orgaAxis->getRef()] = $dWAxis;
-        $narrowerAxis = $orgaAxis->getDirectNarrower();
-        if ($narrowerAxis !== null) {
-            $dWAxis->setDirectNarrower($associationArray['axes'][$narrowerAxis->getRef()]);
+        $orgaNarrowerAxis = $orgaAxis->getDirectNarrower();
+        if ($orgaNarrowerAxis !== null) {
+            $dWNarrowerAxis = $dwCube->getAxisByRef('o_' . $orgaNarrowerAxis->getRef());
+            $dWAxis->setDirectNarrower($dWNarrowerAxis);
         }
 
         foreach ($orgaAxis->getOrderedMembers() as $orgaMember) {
-            if (isset($orgaFilters['members'])) {
+            if (isset($orgaFilters['includedMembersChildren'])) {
                 foreach ($filteringOrgaBroaderAxes as $filteringOrgaAxis) {
-                    foreach ($orgaFilters['members'] as $filteringOrgaMember) {
+                    foreach ($orgaFilters['includedMembersChildren'] as $filteringOrgaMember) {
                         /** @var OrgaMember $filteringOrgaMember */
                         if (($filteringOrgaMember->getAxis() === $filteringOrgaAxis)
                             && (in_array($filteringOrgaMember, $orgaMember->getAllParents()))
@@ -361,19 +357,23 @@ class ETLStructureService implements ETLStructureInterface
             $dWMember->setRef($orgaMember->getRef());
             $dWMember->setLabel(clone $orgaMember->getLabel());
 
-            $memberIdentifier = $orgaMember->getAxis()->getRef() . '_' . $orgaMember->getCompleteRef();
-            $associationArray['members'][$memberIdentifier] = $dWMember;
-            foreach ($orgaMember->getDirectChildren() as $narrowerOrgaMember) {
-                $narrowerIdentifier = $narrowerOrgaMember->getAxis()->getRef() . '_'
-                    . $narrowerOrgaMember->getCompleteRef();
-                if (isset($associationArray['members'][$narrowerIdentifier])) {
-                    $associationArray['members'][$narrowerIdentifier]->setDirectParentForAxis($dWMember);
+            foreach ($orgaMember->getDirectChildren() as $childOrgaMember) {
+                if (!isset($orgaFilters['includedMembersChildren']) ||
+                    !in_array($orgaMember, $orgaFilters['includedMembersChildren'])
+                ) {
+                    try {
+                        $dWNarrowerAxis->getMemberByRef(
+                            $childOrgaMember->getRef()
+                        )->setDirectParentForAxis($dWMember);
+                    } catch (\Core_Exception_NotFound $e) {
+                        // Le membre enfant a été filtré.
+                    }
                 }
             }
         }
 
         foreach ($orgaAxis->getDirectBroaders() as $broaderAxis) {
-            $this->copyAxisAndMembersFromOrgaToDW($broaderAxis, $dwCube, $orgaFilters, $associationArray);
+            $this->copyAxisAndMembersFromOrgaToDW($broaderAxis, $dwCube, $orgaFilters);
         }
     }
 
@@ -393,7 +393,9 @@ class ETLStructureService implements ETLStructureInterface
         $this->resetDWCube(
             $granularity->getDWCube(),
             $granularity->getWorkspace(),
-            ['axes' => $granularity->getAxes()]
+            [
+                'excludedAxesFromRoot' => $granularity->getAxes()
+            ]
         );
     }
 
@@ -420,8 +422,8 @@ class ETLStructureService implements ETLStructureInterface
                 $cell->getDWCube(),
                 $cell->getGranularity()->getWorkspace(),
                 [
-                    'axes' => $cell->getGranularity()->getAxes(),
-                    'members' => $cell->getMembers()
+                    'excludedAxesFromRoot' => $cell->getGranularity()->getAxes(),
+                    'includedMembersChildren' => $cell->getMembers()
                 ]
             );
 
