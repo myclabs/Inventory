@@ -520,7 +520,6 @@ class Report extends Core_Model_Entity
      */
     public function reset()
     {
-        $this->label = null;
         $this->chartType = null;
         $this->sortType = self::SORT_VALUE_DECREASING;
         $this->withUncertainty = false;
