@@ -2,8 +2,6 @@
 
 namespace Orga\Application\ViewModel;
 
-use string;
-
 /**
  * Modèle d'une cellule pour les vues.
  */

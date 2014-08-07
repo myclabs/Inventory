@@ -13,7 +13,6 @@ use Orga\Domain\Report\CellReport;
 use Orga\Domain\Granularity;
 use Orga\Domain\Report\GranularityReport;
 use Orga\Domain\Service\OrgaDomainHelper;
-use string;
 use User\Application\ForbiddenException;
 use User\Domain\User;
 use Zend_Auth;
