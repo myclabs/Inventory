@@ -698,8 +698,13 @@ class Orga_WorkspaceController extends Core_Controller
             $workspace
         );
         $this->view->assign('isUserAllowedToEditWorkspace', $isUserAllowedToEditWorkspace);
+        if ($isUserAllowedToEditWorkspace) {
+            $granularities = $workspace->getGranularities();
+        } else {
+            $granularities = $this->orgaUserAccessManager->getGranularitiesCanEdit($connectedUser, $workspace);
+        }
         $relevanceGranularities = [];
-        foreach ($this->orgaUserAccessManager->getGranularitiesCanEdit($connectedUser, $workspace) as $granularity) {
+        foreach ($granularities as $granularity) {
             if ($granularity->getCellsControlRelevance()) {
                 $relevanceGranularities[] = $granularity;
             }

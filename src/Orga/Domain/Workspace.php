@@ -458,7 +458,7 @@ class Workspace extends Core_Model_Entity implements EntityResource
     public function getACLGranularities()
     {
         $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->neq('cellsWithACL', true));
+        $criteria->where(Criteria::expr()->eq('cellsWithACL', true));
         $criteria->orderBy(['position' => 'ASC']);
         return $this->granularities->matching($criteria)->toArray();
     }
