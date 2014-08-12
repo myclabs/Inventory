@@ -2,6 +2,7 @@
 use Account\Domain\Account;
 use Core\Test\TestCase;
 use Orga\Domain\Axis;
+use Orga\Domain\Granularity;
 use Orga\Domain\Member;
 use Orga\Domain\Workspace;
 
@@ -472,6 +473,44 @@ class Orga_Test_AxisHierarchy extends TestCase
         $this->assertSame([$this->axis121], $this->axis12->getAllBroadersFirstOrdered());
         $this->assertSame([], $this->axis121->getAllBroadersFirstOrdered());
         $this->assertSame([$this->axis11, $this->axis111, $this->axis112], $this->axis2->getAllBroadersFirstOrdered());
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage The given Axis is equal or broader than the current one.
+     */
+    public function testMoveToBroader()
+    {
+        $this->axis11->moveTo($this->axis111);
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage The given Axis is equal or broader than the current one.
+     */
+    public function testMoveToSame()
+    {
+        $this->axis11->moveTo($this->axis11);
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage Moving this Axis would broke the granularities.
+     */
+    public function testMoveToCollided()
+    {
+        $granularity = new Granularity($this->workspace, [$this->axis111, $this->axis2]);
+        $this->axis11->moveTo($this->axis2);
+    }
+
+    public function testMoveToGranularities()
+    {
+        $granularity1 = new Granularity($this->workspace, [$this->axis111, $this->axis31]);
+        $granularity2 = new Granularity($this->workspace, [$this->axis112, $this->axis32]);
+        $granularity3 = new Granularity($this->workspace, [$this->axis11, $this->axis321]);
+        $granularity4 = new Granularity($this->workspace, [$this->axis1, $this->axis2]);
+        $this->axis11->moveTo($this->axis2);
+        $this->assertTrue(true);
     }
 
     public function testRemoveAxisFromWorkspace()

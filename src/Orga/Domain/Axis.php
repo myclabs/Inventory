@@ -370,11 +370,31 @@ class Axis extends Core_Model_Entity
     public function moveTo(Axis $newDirectNarrowerAxis = null)
     {
         if ($this->getDirectNarrower() !== $newDirectNarrowerAxis) {
-            if ($newDirectNarrowerAxis !== null && $newDirectNarrowerAxis->isBroaderThan($this)) {
-                throw new Core_Exception_InvalidArgument('The given Axis is broader than the current one.');
+            if (($newDirectNarrowerAxis !== null)
+                && (($newDirectNarrowerAxis === $this) || ($newDirectNarrowerAxis->isBroaderThan($this)))) {
+                throw new Core_Exception_InvalidArgument(
+                    'The given Axis is equal or broader than the current one.'
+                );
             }
 
-            //@todo Vérification les collision des granularités !
+            // Vérification de la possibilité de collision des axes des granularités.
+            foreach ($this->getWorkspace()->getGranularities() as $granularity) {
+                foreach ($granularity->getAxes() as $granularityAxis) {
+                    // Si l'axe d'une granularité est celui-là ou l'un de ses broader, on vérifie.
+                    if (($granularityAxis === $this) || ($granularityAxis->isBroaderThan($this))) {
+                        foreach ($granularity->getAxes() as $collisionAxis) {
+                            // Si la granularité comporte aussi le nouveau narrower
+                            //  ou l'un de ses narrower, on stop le déplacement.
+                            if (($collisionAxis === $newDirectNarrowerAxis)
+                                || ($collisionAxis->isNarrowerThan($newDirectNarrowerAxis))) {
+                                throw new Core_Exception_InvalidArgument(
+                                    'Moving this Axis would broke the granularities.'
+                                );
+                            }
+                        }
+                    }
+                }
+            }
 
             //@todo Caractère contextualisant des axes !
 
