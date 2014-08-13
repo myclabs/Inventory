@@ -495,6 +495,26 @@ class Orga_Test_AxisHierarchy extends TestCase
 
     /**
      * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage The moving axis must not be contextualizing.
+     */
+    public function testMoveToContextualizing()
+    {
+        $this->axis11->setContextualize(true);
+        $this->axis11->moveTo($this->axis2);
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
+     * @expectedExceptionMessage Broaders of the moving axis must not be contextualizing.
+     */
+    public function testMoveToContextualizingBroader()
+    {
+        $this->axis112->setContextualize(true);
+        $this->axis11->moveTo($this->axis2);
+    }
+
+    /**
+     * @expectedException Core_Exception_InvalidArgument
      * @expectedExceptionMessage Moving this Axis would broke the granularities.
      */
     public function testMoveToCollided()

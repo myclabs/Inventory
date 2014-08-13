@@ -377,6 +377,21 @@ class Axis extends Core_Model_Entity
                 );
             }
 
+            // Vérification de la non contextualisation de l'axe ou ses broaders.
+            if ($this->isContextualizing()) {
+                throw new Core_Exception_InvalidArgument(
+                    'The moving axis must not be contextualizing.'
+                );
+            } else {
+                foreach ($this->getAllBroadersFirstOrdered() as $broaderAxis) {
+                    if ($broaderAxis->isContextualizing()) {
+                        throw new Core_Exception_InvalidArgument(
+                            'Broaders of the moving axis must not be contextualizing.'
+                        );
+                    }
+                }
+            }
+
             // Vérification de la possibilité de collision des axes des granularités.
             foreach ($this->getWorkspace()->getGranularities() as $granularity) {
                 foreach ($granularity->getAxes() as $granularityAxis) {
@@ -395,8 +410,6 @@ class Axis extends Core_Model_Entity
                     }
                 }
             }
-
-            //@todo Caractère contextualisant des axes !
 
             $oldDirectNarrowerAxis = $this->getDirectNarrower();
             if ($oldDirectNarrowerAxis !== null) {
