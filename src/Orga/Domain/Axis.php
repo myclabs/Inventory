@@ -401,7 +401,9 @@ class Axis extends Core_Model_Entity
                             // Si la granularité comporte aussi le nouveau narrower
                             //  ou l'un de ses narrower, on stop le déplacement.
                             if (($collisionAxis === $newDirectNarrowerAxis)
-                                || ($collisionAxis->isNarrowerThan($newDirectNarrowerAxis))) {
+                                || (($newDirectNarrowerAxis !== null)
+                                    && ($collisionAxis->isNarrowerThan($newDirectNarrowerAxis)))
+                            ) {
                                 throw new Core_Exception_InvalidArgument(
                                     'Moving this Axis would broke the granularities.'
                                 );
