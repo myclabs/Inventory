@@ -476,6 +476,7 @@ class Cell extends Core_Model_Entity implements EntityResource
         OrgaDomainHelper::getCellInputUpdater()->updateInconsistencyForCell($this);
 
         //@todo Mettre à jour la cascade des autorisations.
+        // Pour l'instant, la cascade est reconstruite par le WorkspaceService (Application)
     }
 
     /**

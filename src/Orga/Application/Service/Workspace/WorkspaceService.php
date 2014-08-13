@@ -4,6 +4,7 @@ namespace Orga\Application\Service\Workspace;
 
 use Account\Domain\Account;
 use AF\Domain\AF;
+use Core\Work\ServiceCall\ServiceCallTask;
 use Core_Exception_NotFound;
 use Core_Exception_User;
 use Core_Locale;
@@ -267,6 +268,8 @@ class WorkspaceService
     public function editMember(Member $member, $changes)
     {
         try {
+            $changesNeedACLRebuild = false;
+
             $this->entityManager->beginTransaction();
 
             foreach ($changes as $attribute => $value) {
@@ -321,6 +324,7 @@ class WorkspaceService
                                 $member->removeDirectParentForAxis($member->getDirectParentForAxis($broaderAxis));
                             }
                         }
+                        $changesNeedACLRebuild = count($value > 0);
                         break;
                 }
             }
@@ -328,6 +332,16 @@ class WorkspaceService
 
             $this->entityManager->flush();
             $this->entityManager->commit();
+
+            if ($changesNeedACLRebuild) {
+                $this->workDispatcher->run(
+                    new ServiceCallTask(
+                        OrgaACLManager::class,
+                        'rebuildWorkspaceACL',
+                        [$member->getAxis()->getWorkspace()]
+                    )
+                );
+            }
         } catch (Exception $e) {
             $this->entityManager->rollback();
             $this->entityManager->clear();
