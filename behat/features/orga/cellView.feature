@@ -6,7 +6,7 @@ Feature: Cell view feature
 
   @javascript
   Scenario: Manage cell users
-    ## Ajout d'un contributeur et d'un observateur
+    # Ajout d'un contributeur et d'un observateur
     Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
     Then I should see "Europe Marque B"
@@ -38,7 +38,7 @@ Feature: Cell view feature
     And I should not see "observator@test.behat"
     Then I click element "div#inventoryUsers32 div.modal-header button"
 
-    #Suppression du contributeur
+    # Suppression du contributeur
     When I click element "tr.cell[data-tag='/1-zone:europe/&/2-marque:marque_b/'] a.show-users i"
     Then I should see the popup "Rôles utilisateur —  Europe | Marque B"
     And I should see "contributor@test.behat"
@@ -48,7 +48,7 @@ Feature: Cell view feature
     And I wait 2 seconds
     Then I should see "Suppression effectuée."
 
-      # Rechargement et vérification
+    # Rechargement et vérification
     When I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
     Then I should see "Europe Marque B"
