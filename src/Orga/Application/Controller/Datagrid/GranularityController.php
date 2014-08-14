@@ -131,7 +131,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                         'acl'       => (bool) $this->getAddElementValue('acl')
                     ]
                 ],
-                __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
+                __('Orga', 'backgroundTasks', 'addGranularity', ['GRANULARITY' => implode(', ', $axes)])
             );
             $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
         }
@@ -170,7 +170,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
             'removeGranularity',
             [$granularity],
             __('Orga', 'backgroundTasks', 'removeGranularity', [
-                'LABEL' => $this->translator->get($granularity->getLabel())
+                'GRANULARITY' => $this->translator->get($granularity->getLabel())
             ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
@@ -216,7 +216,7 @@ class Orga_Datagrid_GranularityController extends UI_Controller_Datagrid
                 'editGranularity',
                 [$granularity, [ $this->update['column'] => $value ]],
                 __('Orga', 'backgroundTasks', 'editGranularity', [
-                    'LABEL' => $this->translator->get($granularity->getLabel())
+                    'GRANULARITY' => $this->translator->get($granularity->getLabel())
                 ])
             );
             $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);

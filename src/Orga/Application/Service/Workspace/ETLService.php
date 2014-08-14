@@ -67,7 +67,7 @@ class ETLService
                         __(
                             'Orga', 'backgroundTasks', 'resetGranularityAndCellsDWCubes',
                             [
-                                'LABEL' => $this->translator->get($granularity->getLabel())
+                                'GRANULARITY' => $this->translator->get($granularity->getLabel())
                             ]
                         )
                     )
@@ -101,7 +101,7 @@ class ETLService
                 __(
                     'Orga', 'backgroundTasks', 'resetCellDWCube',
                     [
-                        'LABEL' => $this->translator->get($cell->getLabel())
+                        'CELL' => $this->translator->get($cell->getExtendedLabel())
                     ]
                 )
             )
@@ -118,7 +118,8 @@ class ETLService
                         __(
                             'Orga', 'backgroundTasks', 'resetCellChidrenDWCubesForGranularity',
                             [
-                                'LABEL' => $this->translator->get($narrowerGranularity->getLabel())
+                                'CELL' => $this->translator->get($cell->getExtendedLabel()),
+                                'GRANULARITY' => $this->translator->get($narrowerGranularity->getLabel())
                             ]
                         )
                     )
@@ -152,7 +153,7 @@ class ETLService
                 __(
                     'Orga', 'backgroundTasks', 'calculateResultsForCellAndChildren',
                     [
-                        'LABEL' => $this->translator->get($cell->getLabel())
+                        'CELL' => $this->translator->get($cell->getExtendedLabel())
                     ]
                 )
             )

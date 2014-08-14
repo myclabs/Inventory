@@ -300,7 +300,7 @@ class Orga_Datagrid_MemberController extends UI_Controller_Datagrid
             'editMember',
             [$member, $changes],
             __('Orga', 'backgroundTasks', 'updateMember', [
-                    'MEMBER' => $this->translator->get($member->getLabel()),
+                    'MEMBER' => $this->translator->get($member->getExtendedLabel()),
                 ])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);

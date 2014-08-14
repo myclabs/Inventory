@@ -4,20 +4,38 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
-        <tu tuid="createWorkspace">
+        <tu tuid="addRoleToUser">
             <tuv xml:lang="fr">
-                <seg>Ajout du workspace : [LABEL]</seg>
+                <seg>Attribution du rôle : [ROLE] à l’utilisateur : [USER]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of the workspace: [LABEL]</seg>
+                <seg>Creation of role: [ROLE] for user: [USER]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="removeRoleFromUser">
+            <tuv xml:lang="fr">
+                <seg>Suppression du rôle : [ROLE] pour l’utilisateur : [USER]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Deletion of role: [ROLE] for user: [USER]</seg>
+            </tuv>
+        </tu>
+
+        <!-- WorkspaceService -->
+        <tu tuid="createWorkspace">
+            <tuv xml:lang="fr">
+                <seg>Ajout du workspace : [WORKSPACE]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Creation of the workspace: [WORKSPACE]</seg>
             </tuv>
         </tu>
         <tu tuid="removeWorkspace">
             <tuv xml:lang="fr">
-                <seg>Suppression du workspace : [LABEL]</seg>
+                <seg>Suppression du workspace : [WORKSPACE]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Deletion of the workspace: [LABEL]</seg>
+                <seg>Deletion of the workspace: [WORKSPACE]</seg>
             </tuv>
         </tu>
         <tu tuid="addMember">
@@ -30,34 +48,34 @@
         </tu>
         <tu tuid="addGranularity">
             <tuv xml:lang="fr">
-                <seg>Ajout de la granularité : [LABEL]</seg>
+                <seg>Ajout de la granularité : [GRANULARITY]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of granularity: [LABEL]</seg>
+                <seg>Creation of granularity: [GRANULARITY]</seg>
             </tuv>
         </tu>
         <tu tuid="editGranularity">
             <tuv xml:lang="fr">
-                <seg>Modification de la granularité : [LABEL]</seg>
+                <seg>Modification de la granularité : [GRANULARITY]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Modification of granularity: [LABEL]</seg>
+                <seg>Modification of granularity: [GRANULARITY]</seg>
             </tuv>
         </tu>
         <tu tuid="removeGranularity">
             <tuv xml:lang="fr">
-                <seg>Suppression de la granularité : [LABEL]</seg>
+                <seg>Suppression de la granularité : [GRANULARITY]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Deletion of granularity: [LABEL]</seg>
+                <seg>Deletion of granularity: [GRANULARITY]</seg>
             </tuv>
         </tu>
-        <tu tuid="addRoleToUser">
+        <tu tuid="updateMember">
             <tuv xml:lang="fr">
-                <seg>Attribution du rôle : [ROLE] à l’utilisateur : [USER]</seg>
+                <seg>Mise à jour de l'élément : [MEMBER]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Creation of role: [ROLE] for user: [USER]</seg>
+                <seg>Update of element: [MEMBER]</seg>
             </tuv>
         </tu>
         <tu tuid="deleteMember">
@@ -76,36 +94,50 @@
                 <seg>Deletion of axis: [AXIS]</seg>
             </tuv>
         </tu>
-        <tu tuid="removeRoleFromUser">
-            <tuv xml:lang="fr">
-                <seg>Suppression du rôle : [ROLE] pour l’utilisateur : [USER]</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Deletion of role: [ROLE] for user: [USER]</seg>
-            </tuv>
-        </tu>
-        <tu tuid="resetDWOrga">
-            <tuv xml:lang="fr">
-                <seg>Régénération des données d’analyse [FOR_ORGANIZATIONAL_UNIT]</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Analysis data rebuild [FOR_ORGANIZATIONAL_UNIT]</seg>
-            </tuv>
-        </tu>
-        <tu tuid="resetDWCellAndResults">
-            <tuv xml:lang="fr">
-                <seg>Relance des calculs et régénération des données d’analyse de l’unité organisationnelle : [LABEL]</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Computations restart and analysis data rebuild for organizational unit: [LABEL]</seg>
-            </tuv>
-        </tu>
+
+        <!-- Membres -->
+
+        <!-- Cell -->
         <tu tuid="setCellRelevance">
             <tuv xml:lang="fr">
-                <seg>Modification de la pertinence de l’unité organisationnelle : [LABEL]</seg>
+                <seg>Modification de la pertinence de l’unité organisationnelle : [CELL]</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Relevance change for organizational unit: [LABEL]</seg>
+                <seg>Relevance change for organizational unit: [CELL]</seg>
+            </tuv>
+        </tu>
+
+        <!-- ETLService -->
+        <tu tuid="resetGranularityAndCellsDWCubes">
+            <tuv xml:lang="fr">
+                <seg>Régénération des données d’analyse au niveau [GRANULARITY]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data rebuild for units at level [GRANULARITY]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resetCellDWCube">
+            <tuv xml:lang="fr">
+                <seg>Régénération des données d’analyse pour l'unité organisationnelle : [CELL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data rebuild for organizational unit: [CELL]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="resetCellChidrenDWCubesForGranularity">
+            <tuv xml:lang="fr">
+                <seg>Régénération des données d’analyse pour les unités organisationnelles enfants de : [CELL] au niveau : [GRANULARITY]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data rebuild for children organizational units of: [CELL] at level: [GRANULARITY]</seg>
+            </tuv>
+        </tu>
+        <tu tuid="calculateResultsForCellAndChildren">
+            <tuv xml:lang="fr">
+                <seg>Relance des calculs et régénération des données d’analyse de l’unité organisationnelle : [CELL]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Computations restart and analysis data rebuild for organizational unit: [CELL]</seg>
             </tuv>
         </tu>
 

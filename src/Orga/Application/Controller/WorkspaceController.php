@@ -141,7 +141,7 @@ class Orga_WorkspaceController extends Core_Controller
             WorkspaceService::class,
             'createFromTemplatesForm',
             [$user, $this->accountRepository->get($this->getParam('account')), $this->getRequest()->getPost()],
-            __('Orga', 'backgroundTasks', 'createWorkspace', ['LABEL' => $label])
+            __('Orga', 'backgroundTasks', 'createWorkspace', ['WORKSPACE' => $label])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
@@ -169,7 +169,7 @@ class Orga_WorkspaceController extends Core_Controller
             'delete',
             [$workspace],
             ___('Orga', 'backgroundTasks', 'removeWorkspace',
-                ['LABEL' => $this->translator->get($workspace->getLabel())]
+                ['WORKSPACE' => $this->translator->get($workspace->getLabel())]
             )
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
@@ -764,7 +764,7 @@ class Orga_WorkspaceController extends Core_Controller
             WorkspaceService::class,
             $action,
             $parameters,
-            __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
+            __('Orga', 'backgroundTasks', 'addGranularity', ['GRANULARITY' => implode(', ', $axes)])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
@@ -882,7 +882,7 @@ class Orga_WorkspaceController extends Core_Controller
             WorkspaceService::class,
             $action,
             $parameters,
-            __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
+            __('Orga', 'backgroundTasks', 'addGranularity', ['GRANULARITY' => implode(', ', $axes)])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
@@ -996,7 +996,7 @@ class Orga_WorkspaceController extends Core_Controller
             WorkspaceService::class,
             $action,
             $parameters,
-            __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $inputAxes)])
+            __('Orga', 'backgroundTasks', 'addGranularity', ['GRANULARITY' => implode(', ', $inputAxes)])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
@@ -1066,7 +1066,7 @@ class Orga_WorkspaceController extends Core_Controller
             WorkspaceService::class,
             $action,
             $parameters,
-            __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
+            __('Orga', 'backgroundTasks', 'addGranularity', ['GRANULARITY' => implode(', ', $axes)])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
@@ -1154,7 +1154,7 @@ class Orga_WorkspaceController extends Core_Controller
             WorkspaceService::class,
             $action,
             $parameters,
-            __('Orga', 'backgroundTasks', 'addGranularity', ['LABEL' => implode(', ', $axes)])
+            __('Orga', 'backgroundTasks', 'addGranularity', ['GRANULARITY' => implode(', ', $axes)])
         );
         $this->workDispatcher->runAndWait($task, $this->waitDelay, $success, $timeout, $error);
     }
