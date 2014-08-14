@@ -273,8 +273,8 @@ if (count($file) > 0) {
                         </div>
                         <div class="modal-footer">
                             <form class="form-inline addUser" action="orga/cell/add-user/cell/<?=$currentCell->id?>/">
-                                <input type="text" name="userEmail" placeholder="<?=___('User', 'user', 'emailAddress')?>" class="form-control">
-                                <select name="userRole" class="form-control">
+                                <input type="text" id="userEmail<?=$currentCell->id?>" name="userEmail" placeholder="<?=___('User', 'user', 'emailAddress')?>" class="form-control">
+                                <select id="userEmail<?=$currentCell->id?>" name="userRole" class="form-control">
                                     <option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>
                                     <option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>
                                     <option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>
@@ -616,8 +616,8 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                                     '</div>' +
                                     '<div class="modal-footer">' +
                                         '<form class="form-inline addUser" action="orga/cell/add-user/cell/' + this.id + '/">' +
-                                            '<input type="text" placeholder="<?=___('User', 'user', 'emailAddress')?>" name="userEmail" class="form-control"> ' +
-                                            '<select name="userRole" class="form-control">' +
+                                            '<input type="text" placeholder="<?=___('User', 'user', 'emailAddress')?>" id="userEmail' + this.id + '" name="userEmail" class="form-control"> ' +
+                                            '<select id="userRole' + this.id + '" name="userRole" class="form-control">' +
                                                 '<option value="CellAdminRole"><?=CellAdminRole::getLabel()?></option>' +
                                                 '<option value="CellManagerRole"><?=CellManagerRole::getLabel()?></option>' +
                                                 '<option value="CellContributorRole"><?=CellContributorRole::getLabel()?></option>' +
