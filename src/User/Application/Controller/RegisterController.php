@@ -28,9 +28,21 @@ class User_RegisterController extends UI_Controller_Captcha
 
     /**
      * @Inject("feature.register")
-     * @var boolean
+     * @var int
      */
     private $enableRegister;
+
+    /**
+     * @Inject("feature.workspace.individual.register")
+     * @var int
+     */
+    private $enableRegisterIndividual;
+
+    /**
+     * @Inject("feature.workspace.pme.register")
+     * @var int
+     */
+    private $enableRegisterPME;
 
     /**
      * @Secure("public")
@@ -44,25 +56,29 @@ class User_RegisterController extends UI_Controller_Captcha
 
         // Si l'utilisateur est déjà connecté, on redirige
         if ($this->_helper->auth()) {
-            $this->redirect('orga/workspace/manage');
+            $this->redirect('account/dashboard');
             return;
         }
 
+        $this->_helper->_layout->setLayout('layout-public');
+        $this->view->assign('registerIndividual', ($this->enableRegisterIndividual !== null));
+        $this->view->assign('registerPME', ($this->enableRegisterPME !== null));
+
         if ($this->getRequest()->isPost()) {
-            $projectName = trim($this->getParam('projectName'));
-            $this->view->assign('projectName', $projectName);
+            $projectType = trim($this->getParam('projectType'));
+            $this->view->assign('projectType', $projectType);
             $email = trim($this->getParam('email'));
             $this->view->assign('email', $email);
             $password = $this->getParam('password');
-            $password2 = $this->getParam('password2');
+            $passwordConfirm = $this->getParam('password2');
             $captchaInput = $this->getParam('captcha');
 
             // Validation du formulaire
-            if (! $projectName || ! $email || ! $password || ! $password2) {
+            if (! $projectType || ! $email || ! $password || ! $passwordConfirm) {
                 UI_Message::addMessageStatic(__('UI', 'formValidation', 'allFieldsRequired'));
                 return;
             }
-            if ($password && ($password != $password2)) {
+            if ($password && ($password != $passwordConfirm)) {
                 UI_Message::addMessageStatic(__('User', 'editPassword', 'passwordsAreNotIdentical'));
                 return;
             }
@@ -77,16 +93,18 @@ class User_RegisterController extends UI_Controller_Captcha
             }
 
             try {
-                $this->entityManager->beginTransaction();
-                $this->publicDemoService->createDemoAccount($email, $password, $projectName);
-                $this->entityManager->flush();
-                $this->entityManager->commit();
+                switch ($projectType) {
+                    case 'pme':
+                        $this->publicDemoService->createUserToPMEDemo($email, $password);
+                        break;
+                    default:
+                        $this->publicDemoService->createUserToIndividualDemo($email, $password);
+                        break;
+                }
             } catch (Core_ORM_DuplicateEntryException $e) {
-                $this->entityManager->rollback();
                 UI_Message::addMessageStatic(__('User', 'editEmail', 'emailAlreadyUsed'));
                 return;
             } catch (\Exception $e) {
-                $this->entityManager->rollback();
                 throw $e;
             }
 
@@ -99,7 +117,5 @@ class User_RegisterController extends UI_Controller_Captcha
             $this->redirect('');
             return;
         }
-
-        $this->_helper->_layout->setLayout('layout-public');
     }
 }

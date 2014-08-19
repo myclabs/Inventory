@@ -12,12 +12,28 @@
                 <seg>Sign up</seg>
             </tuv>
         </tu>
-        <tu tuid="projectName">
+        <tu tuid="projectType">
             <tuv xml:lang="fr">
-                <seg>Nom de votre projet</seg>
+                <seg>Type de démo</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Password</seg>
+                <seg>Demo type</seg>
+            </tuv>
+        </tu>
+        <tu tuid="projectTypePME">
+            <tuv xml:lang="fr">
+                <seg>Démo PME</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>SMEs demo</seg>
+            </tuv>
+        </tu>
+        <tu tuid="projectTypeIndividual">
+            <tuv xml:lang="fr">
+                <seg>Démo individuelle</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Individual demo</seg>
             </tuv>
         </tu>
         <tu tuid="password">
