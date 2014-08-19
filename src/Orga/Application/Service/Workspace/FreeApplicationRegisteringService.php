@@ -15,9 +15,9 @@ use Orga\Domain\Member;
 use Orga\Domain\ACL\CellManagerRole;
 
 /**
- * Service gérant la démo publique et gratuite.
+ * Service gérant l'application publique et gratuite.
  */
-class PublicDemoService
+class FreeApplicationRegisteringService
 {
     /**
      * @var EntityManager
@@ -54,27 +54,27 @@ class PublicDemoService
      * @param $email
      * @param $password
      */
-    public function createUserToIndividualDemo($email, $password)
+    public function createOrAddUserToIndividualDemo($email)
     {
-        $this->createUserToDemo('individual', $email, $password);
+        $this->createOrAddUserToDemo('individual', $email);
     }
 
     /**
      * @param $email
      * @param $password
      */
-    public function createUserToCollectivityDemo($email, $password)
+    public function createOrAddUserToCollectivityDemo($email)
     {
-        $this->createUserToDemo('collectivity', $email, $password);
+        $this->createOrAddUserToDemo('collectivity', $email);
     }
 
     /**
      * @param $email
      * @param $password
      */
-    public function createUserToSMEsDemo($email, $password)
+    public function createOrAddUserToSMEsDemo($email)
     {
-        $this->createUserToDemo('smes', $email, $password);
+        $this->createOrAddUserToDemo('smes', $email);
     }
 
     /**
@@ -82,7 +82,7 @@ class PublicDemoService
      * @param string $email
      * @param string $password
      */
-    protected function createUserToDemo($demo, $email, $password)
+    protected function createOrAddUserToDemo($demo, $email)
     {
         $container = ContainerSingleton::getContainer();
 
@@ -108,10 +108,19 @@ class PublicDemoService
 
             $this->entityManager->flush();
 
-            // Création de l'utilisateur.
-            $user = $this->userService->createUser($email, $password);
-            $user->initTutorials();
-            $this->entityManager->flush();
+            $isCreation = false;
+            if (User::isEmailUsed($email)) {
+                // Récupération de l'utilisateur.
+                $user = User::loadByEmail($email);
+                $password = null;
+            } else {
+                $isCreation = true;
+                // Création de l'utilisateur.
+                $user = $this->userService->createUser($email, null);
+                $user->initTutorials();
+                $password = $user->setRandomPassword();
+                $this->entityManager->flush();
+            }
 
             $role = new CellManagerRole($user, $userCell);
             $this->acl->grant($user, $role);
@@ -119,15 +128,26 @@ class PublicDemoService
             $this->entityManager->flush();
             $this->entityManager->commit();
 
-            // Envoi d'un mail à la fin de la création.
-            $this->userService->sendEmail(
-                $user,
-                __('Orga', 'publicdemo', 'subjectAccess_' . $demo),
-                __('Orga', 'publicdemo', 'bodyAccess_' . $demo )
-            );
+            if ($isCreation) {
+                // Envoi d'un mail à la fin de la création.
+                $this->userService->sendEmail(
+                    $user,
+                    __('Orga', 'freeApplication', 'subjectCreation_' . $demo, ['PASSWORD' => $password]),
+                    __('Orga', 'freeApplication', 'bodyCreation_' . $demo, ['PASSWORD' => $password])
+                );
+            } else {
+                // Envoi d'un mail notifiant la création du nouvel accès.
+                $this->userService->sendEmail(
+                    $user,
+                    __('Orga', 'freeApplication', 'subjectAccess_' . $demo),
+                    __('Orga', 'freeApplication', 'bodyAccess_' . $demo )
+                );
+            }
         } catch (Exception $e) {
             $this->entityManager->rollback();
             throw $e;
         }
+
+        return $password;
     }
 }

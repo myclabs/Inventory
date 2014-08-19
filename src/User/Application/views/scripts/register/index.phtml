@@ -1,7 +1,7 @@
 <div class="well no-padding">
     <form action="user/register" method="post" class="smart-form client-form">
         <header>
-            <?=__('User', 'register', 'register')?>
+            <?=__('User', 'register', 'registerFreeApp')?>
         </header>
 
         <fieldset>
@@ -13,7 +13,7 @@
                             <?=__('User', 'register', 'projectType')?>
                         </option>
                         <?php if ($this->registerIndividual) : ?>
-                            <option value="pme"<?php if ($this->projectType === 'individual') : ?> selected<?php endif; ?>>
+                            <option value="indivudual"<?php if ($this->projectType === 'individual') : ?> selected<?php endif; ?>>
                                 <?=__('User', 'register', 'projectTypeIndividual')?>
                             </option>
                         <?php endif; ?>
@@ -23,7 +23,7 @@
                             </option>
                         <?php endif; ?>
                         <?php if ($this->registerSMEs) : ?>
-                            <option value="pme"<?php if ($this->projectType === 'pme') : ?> selected<?php endif; ?>>
+                            <option value="smes"<?php if ($this->projectType === 'smes') : ?> selected<?php endif; ?>>
                                 <?=__('User', 'register', 'projectTypeSMEs')?>
                             </option>
                         <?php endif; ?>
@@ -35,8 +35,7 @@
             <section>
                 <label class="input">
                     <i class="icon-append fa fa-user"></i>
-                    <input type="email" name="email"
-                           value="<?=$this->email?>"
+                    <input type="email" name="email" required value="<?=$this->email?>"
                            placeholder="<?=__('User', 'user', 'emailAddress')?>">
                     <b class="tooltip tooltip-top-right">
                         <i class="fa fa-user txt-color-teal"></i>
@@ -48,23 +47,11 @@
             <section>
                 <label class="input">
                     <i class="icon-append fa fa-lock"></i>
-                    <input type="password" name="password"
-                           placeholder="<?=__('User', 'register', 'password')?>">
+                    <input type="email" name="emailConfirm" required value="<?=$this->emailConfirm?>"
+                           placeholder="<?=__('User', 'register', 'emailAddressConfirm')?>">
                     <b class="tooltip tooltip-top-right">
                         <i class="fa fa-lock txt-color-teal"></i>
-                        <?=__('User', 'register', 'password')?>
-                    </b>
-                </label>
-            </section>
-
-            <section>
-                <label class="input">
-                    <i class="icon-append fa fa-lock"></i>
-                    <input type="password" name="password2"
-                           placeholder="<?=__('User', 'register', 'passwordAgain')?>">
-                    <b class="tooltip tooltip-top-right">
-                        <i class="fa fa-lock txt-color-teal"></i>
-                        <?=__('User', 'register', 'passwordAgain')?>
+                        <?=__('User', 'register', 'emailAddressConfirm')?>
                     </b>
                 </label>
             </section>
