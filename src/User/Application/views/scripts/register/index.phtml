@@ -17,9 +17,14 @@
                                 <?=__('User', 'register', 'projectTypeIndividual')?>
                             </option>
                         <?php endif; ?>
-                        <?php if ($this->registerPME) : ?>
+                        <?php if ($this->registerCollectivity) : ?>
+                            <option value="collectivity"<?php if ($this->projectType === 'collectivity') : ?> selected<?php endif; ?>>
+                                <?=__('User', 'register', 'projectTypeCollectivity')?>
+                            </option>
+                        <?php endif; ?>
+                        <?php if ($this->registerSMEs) : ?>
                             <option value="pme"<?php if ($this->projectType === 'pme') : ?> selected<?php endif; ?>>
-                                <?=__('User', 'register', 'projectTypePME')?>
+                                <?=__('User', 'register', 'projectTypeSMEs')?>
                             </option>
                         <?php endif; ?>
                     </select>

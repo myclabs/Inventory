@@ -12,8 +12,13 @@ return [
     // 'feature.workspace.individual.label.fr' => 'Mon habitation',
     // 'feature.workspace.individual.label.en' => 'My home',
 
-    // 'feature.workspace.pme.register' => workspaceId || null,
-    // 'feature.workspace.pme.userAxis.ref' => 'company',
-    // 'feature.workspace.pme.label.fr' => 'Mon entreprise',
-    // 'feature.workspace.pme.label.en' => 'My company',
+    // 'feature.workspace.collectivity.register' => workspaceId || null,
+    // 'feature.workspace.collectivity.userAxis.ref' => 'collectivity',
+    // 'feature.workspace.collectivity.label.fr' => 'Ma collectivité',
+    // 'feature.workspace.collectivity.label.en' => 'My collectivity',
+
+    // 'feature.workspace.smes.register' => workspaceId || null,
+    // 'feature.workspace.smes.userAxis.ref' => 'company',
+    // 'feature.workspace.smes.label.fr' => 'Mon entreprise',
+    // 'feature.workspace.smes.label.en' => 'My company',
 ];

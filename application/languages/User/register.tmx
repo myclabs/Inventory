@@ -20,20 +20,28 @@
                 <seg>Demo type</seg>
             </tuv>
         </tu>
-        <tu tuid="projectTypePME">
-            <tuv xml:lang="fr">
-                <seg>Démo PME</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>SMEs demo</seg>
-            </tuv>
-        </tu>
         <tu tuid="projectTypeIndividual">
             <tuv xml:lang="fr">
                 <seg>Démo individuelle</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Individual demo</seg>
+            </tuv>
+        </tu>
+        <tu tuid="projectTypeCollectivity">
+            <tuv xml:lang="fr">
+                <seg>Démo collectivité</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collectivity demo</seg>
+            </tuv>
+        </tu>
+        <tu tuid="projectTypeSMEs">
+            <tuv xml:lang="fr">
+                <seg>Démo PME</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>SMEs demo</seg>
             </tuv>
         </tu>
         <tu tuid="password">

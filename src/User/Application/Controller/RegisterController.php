@@ -39,10 +39,16 @@ class User_RegisterController extends UI_Controller_Captcha
     private $enableRegisterIndividual;
 
     /**
-     * @Inject("feature.workspace.pme.register")
+     * @Inject("feature.workspace.collectivity.register")
      * @var int
      */
-    private $enableRegisterPME;
+    private $enableRegisterCollectivity;
+
+    /**
+     * @Inject("feature.workspace.smes.register")
+     * @var int
+     */
+    private $enableRegisterSMEs;
 
     /**
      * @Secure("public")
@@ -62,7 +68,8 @@ class User_RegisterController extends UI_Controller_Captcha
 
         $this->_helper->_layout->setLayout('layout-public');
         $this->view->assign('registerIndividual', ($this->enableRegisterIndividual !== null));
-        $this->view->assign('registerPME', ($this->enableRegisterPME !== null));
+        $this->view->assign('registerCollectivity', ($this->enableRegisterCollectivity !== null));
+        $this->view->assign('registerSMEs', ($this->enableRegisterSMEs !== null));
 
         if ($this->getRequest()->isPost()) {
             $projectType = trim($this->getParam('projectType'));
@@ -94,8 +101,11 @@ class User_RegisterController extends UI_Controller_Captcha
 
             try {
                 switch ($projectType) {
-                    case 'pme':
-                        $this->publicDemoService->createUserToPMEDemo($email, $password);
+                    case 'smes':
+                        $this->publicDemoService->createUserToSMEsDemo($email, $password);
+                        break;
+                    case 'collectivity':
+                        $this->publicDemoService->createUserToCollectivityDemo($email, $password);
                         break;
                     default:
                         $this->publicDemoService->createUserToIndividualDemo($email, $password);

@@ -63,9 +63,18 @@ class PublicDemoService
      * @param $email
      * @param $password
      */
-    public function createUserToPMEDemo($email, $password)
+    public function createUserToCollectivityDemo($email, $password)
     {
-        $this->createUserToDemo('pme', $email, $password);
+        $this->createUserToDemo('collectivity', $email, $password);
+    }
+
+    /**
+     * @param $email
+     * @param $password
+     */
+    public function createUserToSMEsDemo($email, $password)
+    {
+        $this->createUserToDemo('smes', $email, $password);
     }
 
     /**
