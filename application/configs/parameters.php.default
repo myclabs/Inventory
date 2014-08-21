@@ -7,7 +7,7 @@ return [
 
     // 'feature.register' => true,
 
-    // 'feature.workspace.individual.register' => workspaceId || null,
+    // 'feature.workspace.individual.register' => workspaceId (populateTest:3) || null,
     // 'feature.workspace.individual.userAxis.ref' => 'home',
     // 'feature.workspace.individual.label.fr' => 'Mon habitation',
     // 'feature.workspace.individual.label.en' => 'My home',
@@ -17,7 +17,7 @@ return [
     // 'feature.workspace.collectivity.label.fr' => 'Ma collectivité',
     // 'feature.workspace.collectivity.label.en' => 'My collectivity',
 
-    // 'feature.workspace.smes.register' => workspaceId || null,
+    // 'feature.workspace.smes.register' => workspaceId (populateTest:4) || null,
     // 'feature.workspace.smes.userAxis.ref' => 'company',
     // 'feature.workspace.smes.label.fr' => 'Mon entreprise',
     // 'feature.workspace.smes.label.en' => 'My company',
