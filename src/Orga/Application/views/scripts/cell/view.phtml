@@ -9,6 +9,7 @@ use Orga\Domain\ACL\CellManagerRole;
 use Orga\Domain\ACL\CellContributorRole;
 use Orga\Domain\ACL\CellObserverRole;
 use Account\Application\ViewModel\WorkspaceView;
+use User\Application\ViewHelper\TutorialHelper;
 
 $inventoryStatusFilters = [
     null => ___('Orga', 'view', 'allInventoryStatus'),
@@ -1191,4 +1192,4 @@ $(document).ready(function() {
 });
 </script>
 
-<?= $this->tutorial('orga'); ?>
+<?= $this->tutorial(TutorialHelper::ORGA); ?>

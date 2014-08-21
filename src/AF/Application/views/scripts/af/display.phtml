@@ -4,6 +4,7 @@ use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
 use MyCLabs\MUIH\Tab;
 use MyCLabs\MUIH\Tabs;
+use User\Application\ViewHelper\TutorialHelper;
 
 /** @var $af AF */
 $af = $this->af;
@@ -138,4 +139,4 @@ $tabView->activeTab('tabs_tabInput');
 <?php
 $tabView->display();
 
-echo $this->tutorial('af');
+echo $this->tutorial(TutorialHelper::AF);
