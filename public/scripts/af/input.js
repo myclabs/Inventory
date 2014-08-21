@@ -221,11 +221,9 @@ function ($window, $http, updateInputs) {
     return function validateInputSet(inputSet, components, callback) {
         var urlParams = $window.afUrlParams;
         var inputValidationUrl = $window.inputValidationUrl;
-        var data = {
-            input: inputSet,
-            urlParams: urlParams,
-            idInputSet: inputSet.id
-        };
+        var data = urlParams;
+        data.input = inputSet;
+        data.idInputSet = inputSet.id;
         $http.post(inputValidationUrl, data).success(function (response) {
             updateInputs(inputSet, response.input, components);
         }).error(function () {
@@ -298,11 +296,9 @@ function ($scope, $element, $window, $http, $timeout, validateInputSet) {
         validateInputSet($scope.inputSet, $scope.af.components, function () {
             $scope.previewIsLoading = true;
             $scope.resultsPreview = null;
-            var data = {
-                input: $scope.inputSet,
-                urlParams: urlParams,
-                idInputSet: $scope.inputSet.id
-            };
+            var data = urlParams;
+            data.input = $scope.inputSet;
+            data.idInputSet = $scope.inputSet.id;
             $http.post(resultsPreviewUrl, data).success(function (response) {
                 $scope.resultsPreview = response.data;
                 $scope.previewIsLoading = false;
@@ -319,11 +315,9 @@ function ($scope, $element, $window, $http, $timeout, validateInputSet) {
         validateInputSet($scope.inputSet, $scope.af.components, function () {
             $scope.resultsPreview = null;
             $scope.saving = true;
-            var data = {
-                input: $scope.inputSet,
-                urlParams: urlParams,
-                idInputSet: $scope.inputSet.id
-            };
+            var data = urlParams;
+            data.input = $scope.inputSet;
+            data.idInputSet = $scope.inputSet.id;
             $http.post('af/input/submit?id=' + $scope.af.id, data).success(function (response) {
                 $scope.saving = false;
                 $scope.inputSet.completion = response.data.completion;
@@ -341,11 +335,9 @@ function ($scope, $element, $window, $http, $timeout, validateInputSet) {
     $scope.finish = function () {
         $scope.resultsPreview = null;
         $scope.markingInputAsFinished = true;
-        var data = {
-            input: $scope.inputSet,
-            urlParams: urlParams,
-            idInputSet: $scope.inputSet.id
-        };
+        var data = urlParams;
+        data.input = $scope.inputSet;
+        data.idInputSet = $scope.inputSet.id;
         $http.post('af/input/finish?id=' + $scope.af.id, data).success(function (response) {
             $scope.markingInputAsFinished = false;
             $scope.inputSet.status = response.status;
