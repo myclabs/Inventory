@@ -197,7 +197,6 @@ class OrgaACLManager
      */
     public function rebuildWorkspaceACL(Workspace $workspace)
     {
-        //@todo Réstreindre le rebuild au Workspace concerné.
-        $this->acl->rebuildAuthorizations();
+        $this->acl->rebuildAuthorizationsForResource($workspace);
     }
 }
