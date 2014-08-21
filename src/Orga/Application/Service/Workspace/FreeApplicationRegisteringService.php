@@ -128,25 +128,25 @@ class FreeApplicationRegisteringService
 
             $this->entityManager->flush();
             $this->entityManager->commit();
-
-            if ($isCreation) {
-                // Envoi d'un mail à la fin de la création.
-                $this->userService->sendEmail(
-                    $user,
-                    __('Orga', 'freeApplication', 'subjectCreation_' . $demo, ['PASSWORD' => $password]),
-                    __('Orga', 'freeApplication', 'bodyCreation_' . $demo, ['PASSWORD' => $password])
-                );
-            } else {
-                // Envoi d'un mail notifiant la création du nouvel accès.
-                $this->userService->sendEmail(
-                    $user,
-                    __('Orga', 'freeApplication', 'subjectAccess_' . $demo),
-                    __('Orga', 'freeApplication', 'bodyAccess_' . $demo )
-                );
-            }
         } catch (Exception $e) {
             $this->entityManager->rollback();
             throw $e;
+        }
+
+        if ($isCreation) {
+            // Envoi d'un mail à la fin de la création.
+            $this->userService->sendEmail(
+                $user,
+                __('Orga', 'freeApplication', 'subjectCreation_' . $demo, ['PASSWORD' => $password]),
+                __('Orga', 'freeApplication', 'bodyCreation_' . $demo, ['PASSWORD' => $password])
+            );
+        } else {
+            // Envoi d'un mail notifiant la création du nouvel accès.
+            $this->userService->sendEmail(
+                $user,
+                __('Orga', 'freeApplication', 'subjectAccess_' . $demo),
+                __('Orga', 'freeApplication', 'bodyAccess_' . $demo )
+            );
         }
 
         return $password;
