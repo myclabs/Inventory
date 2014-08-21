@@ -38,9 +38,11 @@ $cellUsers = $this->cellUsers;
                 <?=$cellRole->getLabel()?>
             </td>
             <td>
-                <a href="orga/cell/remove-user/cell/<?=$this->cellId?>/role/<?=$cellRole->getId()?>/" class="delete-user withTooltip" title="<?=___('Orga', 'role', 'deleteRole')?>">
-                    <i class="fa fa-trash-o"></i>
-                </a>
+                <?php if ($cellRole->getSecurityIdentity() !== $this->connectedUser) : ?>
+                    <a href="orga/cell/remove-user/cell/<?=$this->cellId?>/role/<?=$cellRole->getId()?>/" class="delete-user withTooltip" title="<?=___('Orga', 'role', 'deleteRole')?>">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                <?php endif; ?>
             </td>
         </tr>
         <?php endforeach; ?>

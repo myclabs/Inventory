@@ -851,6 +851,10 @@ class Orga_CellController extends Core_Controller
      */
     public function viewUsersAction()
     {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+        $this->view->assign('connectedUser', $connectedUser);
+
         $cellId = $this->getParam('cell');
         /** @var Cell $cell */
         $cell = Cell::load($cellId);
