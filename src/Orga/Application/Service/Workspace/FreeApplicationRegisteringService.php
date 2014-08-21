@@ -56,7 +56,7 @@ class FreeApplicationRegisteringService
      */
     public function createOrAddUserToIndividualDemo($email)
     {
-        $this->createOrAddUserToDemo('individual', $email);
+        return $this->createOrAddUserToDemo('individual', $email);
     }
 
     /**
@@ -65,7 +65,7 @@ class FreeApplicationRegisteringService
      */
     public function createOrAddUserToCollectivityDemo($email)
     {
-        $this->createOrAddUserToDemo('collectivity', $email);
+        return $this->createOrAddUserToDemo('collectivity', $email);
     }
 
     /**
@@ -74,7 +74,7 @@ class FreeApplicationRegisteringService
      */
     public function createOrAddUserToSMEsDemo($email)
     {
-        $this->createOrAddUserToDemo('smes', $email);
+        return $this->createOrAddUserToDemo('smes', $email);
     }
 
     /**
@@ -104,6 +104,7 @@ class FreeApplicationRegisteringService
                 '(' . Core_Locale::load('en')->formatDateTime(new DateTime()) . ')',
                 'en'
             );
+            $userMember->save();
             $userCell = $workspace->getGranularityByRef($userAxis->getRef())->getCellByMembers([$userMember]);
 
             $this->entityManager->flush();

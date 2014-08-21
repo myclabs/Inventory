@@ -1051,16 +1051,16 @@
         },
         {
             "name": "mnapoli/phpdocreader",
-            "version": "1.2.1",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnapoli/PhpDocReader.git",
-                "reference": "0da1a14d38df6233d7783d9917cdccba9bcfe536"
+                "reference": "8a6e123fd1ce54f7fcbd71747b3bf04e465da229"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/PhpDocReader/zipball/0da1a14d38df6233d7783d9917cdccba9bcfe536",
-                "reference": "0da1a14d38df6233d7783d9917cdccba9bcfe536",
+                "url": "https://api.github.com/repos/mnapoli/PhpDocReader/zipball/8a6e123fd1ce54f7fcbd71747b3bf04e465da229",
+                "reference": "8a6e123fd1ce54f7fcbd71747b3bf04e465da229",
                 "shasum": ""
             },
             "require": {
@@ -1082,7 +1082,7 @@
                 "phpdoc",
                 "reflection"
             ],
-            "time": "2014-01-28 14:49:44"
+            "time": "2014-08-21 08:20:45"
         },
         {
             "name": "monolog/monolog",
