@@ -14,6 +14,14 @@
                 <seg>My account</seg>
             </tuv>
         </tu>
+        <tu tuid="pageSecondTitleMyAccount">
+            <tuv xml:lang="fr">
+                <seg>Mes roles</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>My roles</seg>
+            </tuv>
+        </tu>
         <tu tuid="pageTitleSomeoneElsesAccount">
             <tuv xml:lang="fr">
                 <seg>Compte de l'utilisateur : </seg>

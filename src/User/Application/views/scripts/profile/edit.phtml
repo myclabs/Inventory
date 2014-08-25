@@ -1,5 +1,9 @@
 <?php
 use User\Domain\User;
+use User\Domain\ACL\AdminRole;
+use Account\Domain\ACL\AccountAdminRole;
+use Orga\Domain\ACL\WorkspaceAdminRole;
+use Orga\Domain\ACL\AbstractCellRole;
 
 /** @var $user User */
 $user = $this->user;
@@ -98,6 +102,58 @@ if ($this->editSelf) {
 
     </form>
 </div>
+
+<?php if ($this->editSelf) : ?>
+<div class="page-header">
+    <h2>
+        <i class="fa fa-fw fa-key"></i>
+        <?=__('User', 'editProfile', 'pageSecondTitleMyAccount')?>
+    </h2>
+</div>
+<div class="well">
+    <dl class="dl-horizontal">
+        <?php foreach ($user->getRoles() as $role) : ?>
+            <?php if ($role instanceof AdminRole) : ?>
+                <dt>
+                </dt>
+                <dd>
+                    <?=$role->getLabel()?>
+                </dd>
+            <?php endif; ?>
+            <?php if ($role instanceof AccountAdminRole) : ?>
+                <dt>
+                    <?=$role->getLabel()?>
+                </dt>
+                <dd>
+                    <a href="account/dashboard?id=<?=$role->getAccount()->getId()?>/">
+                        <?=$role->getAccount()->getName()?>
+                    </a>
+                </dd>
+            <?php endif; ?>
+            <?php if ($role instanceof WorkspaceAdminRole) : ?>
+                <dt>
+                    <?=$role->getLabel()?>
+                </dt>
+                <dd>
+                    <a href="orga/worksapce/view/workspace/<?=$role->getWorkspace()->getId()?>/">
+                        <?=$this->translate($role->getWorkspace()->getLabel())?>
+                    </a>
+                </dd>
+            <?php endif; ?>
+            <?php if ($role instanceof AbstractCellRole) : ?>
+                <dt>
+                    <?=$role->getLabel()?>
+                </dt>
+                <dd>
+                    <a href="orga/cell/view/cell/<?=$role->getCell()->getId()?>/">
+                        <?=$this->translate($role->getCell()->getLabel())?>
+                    </a>
+                </dd>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </dl>
+</div>
+<?php endif; ?>
 
 <script>
     $(function() {

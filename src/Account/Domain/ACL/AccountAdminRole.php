@@ -45,4 +45,9 @@ class AccountAdminRole extends Role
             $this->account
         );
     }
+
+    public static function getLabel()
+    {
+        return __('Account', 'role', 'accountAdmin');
+    }
 }
