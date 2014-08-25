@@ -169,6 +169,19 @@ class InputSetInconsistencyFinder extends ArrayComparator
         if ($input1 instanceof NumericFieldInput) {
             $input1->setInconsistentValue(false);
         }
+        if ($input1 instanceof NotRepeatedSubAFInput) {
+            // Lance une mise à jour du sous-inputSet
+            $subUpdater = new InputSetInconsistencyFinder(
+                $input1->getValue(),
+                null,
+                $this->varianceSought
+            );
+            $this->numberOfInconsistencies += $subUpdater->run();
+        }
+        if ($input1 instanceof RepeatedSubAFInput) {
+            // Lance une comparaison des listes de sous-InputSet
+            $this->compareInputSubAFRepeated($input1, []);
+        }
     }
 
     /**
