@@ -98,7 +98,7 @@ class Export
         $modelBuilder->bind('axisColumnNarrower', __('Classification', 'export', 'axisColumnNarrower'));
         $modelBuilder->bindFunction(
             'displayAxisDirectNarrower',
-            function (ClassificationAxis $axis) {
+            function (Axis $axis) {
                 if ($axis->getDirectNarrower() !== null) {
                     return $this->translator->get($axis->getDirectNarrower()->getLabel())
                     . ' (' . $axis->getDirectNarrower()->getRef() . ')';
