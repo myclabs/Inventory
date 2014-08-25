@@ -865,6 +865,7 @@ class Export
                             $subInputs,
                             $this->getInputsDetails(
                                 $subInput,
+                                $translator,
                                 $path . $componentLabel . '/' . $label . '/'
                             )
                         );
