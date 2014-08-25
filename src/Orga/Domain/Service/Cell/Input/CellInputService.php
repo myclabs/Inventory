@@ -12,6 +12,7 @@ use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\Domain\Cell;
 use Orga\Domain\Service\Cell\Input\CellInputUpdaterInterface;
 use Orga\Domain\Service\ETL\ETLDataService;
+use Orga\Domain\Service\Export;
 use Orga\Domain\Workspace;
 use Orga\Domain\Service\Cell\Input\CellInputCreatedEvent;
 use Orga\Domain\Service\Cell\Input\CellInputEditedEvent;
@@ -149,7 +150,7 @@ class CellInputService implements CellInputUpdaterInterface
         }
         // Regénère l'exports de la cellule.
         $this->workDispatcher->run(
-            new ServiceCallTask('Export', 'saveCellInput', [$cell])
+            new ServiceCallTask(Export::class, 'saveCellInput', [$cell])
         );
     }
 
