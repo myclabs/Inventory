@@ -845,6 +845,7 @@ class Orga_Service_Export
                             $subInputs,
                             $this->getInputsDetails(
                                 $subInput,
+                                $translator,
                                 $path . $componentLabel . '/' . $label . '/'
                             )
                         );
