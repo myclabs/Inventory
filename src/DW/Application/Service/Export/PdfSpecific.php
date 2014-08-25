@@ -5,6 +5,7 @@
 
 namespace DW\Application\Service\Export;
 
+use Core_Locale;
 use Core_Tools;
 use DOMDocument;
 use DOMNode;
