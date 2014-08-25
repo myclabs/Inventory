@@ -75,6 +75,10 @@ class CellInputService implements CellInputUpdaterInterface
                 $inconsistencyFinder = new InputSetInconsistencyFinder($inputSet, $previousInput);
                 $cell->setNumberOfInconsistenciesInInputSet($inconsistencyFinder->run());
                 return;
+            } else {
+                $inconsistencyFinder = new InputSetInconsistencyFinder($inputSet);
+                $cell->setNumberOfInconsistenciesInInputSet($inconsistencyFinder->run());
+                return;
             }
         }
 
@@ -135,7 +139,7 @@ class CellInputService implements CellInputUpdaterInterface
         if ($timeAxis && $cell->getGranularity()->hasAxis($timeAxis)) {
             $nextCell = $cell->getNextCellForAxis($timeAxis);
             if ($nextCell) {
-                $this->updateInconsistencyForCell($nextCell);
+//                $this->updateInconsistencyForCell($nextCell);
             }
         }
 

@@ -43,13 +43,14 @@ class InputSetInconsistencyFinder extends ArrayComparator
      * @param InputSet $referenceValues Autre InputSet contenant les valeurs de référence
      * @param float $varianceSought
      */
-    public function __construct(InputSet $inputSet, InputSet $referenceValues, $varianceSought = 2.0)
+    public function __construct(InputSet $inputSet, InputSet $referenceValues = null, $varianceSought = 2.0)
     {
         parent::__construct();
 
         // Handlers
         $this->whenEqual([$this, 'whenEqualHandler']);
         $this->whenDifferent([$this, 'whenDifferentHandler']);
+        $this->whenMissingRight([$this, 'whenMissingRightHandler']);
 
         $this->inputSet = $inputSet;
         $this->referenceValues = $referenceValues;
@@ -64,7 +65,11 @@ class InputSetInconsistencyFinder extends ArrayComparator
         $this->numberOfInconsistencies = 0;
 
         // Copie les saisies
-        $this->compare($this->inputSet->getInputs(), $this->referenceValues->getInputs());
+        if ($this->referenceValues !== null) {
+            $this->compare($this->inputSet->getInputs(), $this->referenceValues->getInputs());
+        } else {
+            $this->compare($this->inputSet->getInputs(), []);
+        }
 
         return $this->numberOfInconsistencies;
     }
@@ -149,6 +154,17 @@ class InputSetInconsistencyFinder extends ArrayComparator
      * @param Input $input2
      */
     protected function whenEqualHandler(Input $input1, Input $input2)
+    {
+        if ($input1 instanceof NumericFieldInput) {
+            $input1->setInconsistentValue(false);
+        }
+    }
+
+    /**
+     * Handler appelé lorsqu'un élément de l'input set a été supprimé dans la nouvelle saisie
+     * @param Input $input1
+     */
+    protected function whenMissingRightHandler(Input $input1)
     {
         if ($input1 instanceof NumericFieldInput) {
             $input1->setInconsistentValue(false);
