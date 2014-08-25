@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
 use Doctrine\ORM\PersistentCollection;
+use Orga\Domain\Service\OrgaDomainHelper;
 
 /**
  * Member
@@ -25,7 +26,9 @@ use Doctrine\ORM\PersistentCollection;
  */
 class Member extends Core_Model_Entity
 {
-    use Core_Strategy_Ordered;
+    use Core_Strategy_Ordered {
+        Core_Strategy_ordered::setPositionInternal as setPositioninternalStrategy;
+    }
 
     // Constantes de tris et de filtres.
     const QUERY_TAG = 'tag';
@@ -211,6 +214,15 @@ class Member extends Core_Model_Entity
             }
         } catch (Core_Exception_NotFound $e) {
             // Pas de membre trouvé.
+        }
+    }
+    
+    protected function setPositionInternal($position=null)
+    {
+        $this->setPositionInternalStrategy($position);
+
+        if ($this->getAxis() === $this->getAxis()->getWorkspace()->getTimeAxis()) {
+            OrgaDomainHelper::getCellInputUpdater()->updateInconsistencyForWorkspace($this->getAxis()->getWorkspace());
         }
     }
 
