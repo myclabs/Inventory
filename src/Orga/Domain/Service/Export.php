@@ -742,7 +742,7 @@ class Export
 
         $modelBuilder->bindFunction(
             'displayMemberForClassifAxis',
-            function (OutputElement $output, Axis $axis) {
+            function (OutputElement $output, ClassificationAxis $axis) {
                 try {
                     $member = $output->getIndexForAxis($axis)->getMember();
                     if ($member->getAxis() !== $axis) {
