@@ -180,7 +180,7 @@ class InputSetInconsistencyFinder extends ArrayComparator
         }
         if ($input1 instanceof RepeatedSubAFInput) {
             // Lance une comparaison des listes de sous-InputSet
-            $this->compareInputSubAFRepeated($input1, []);
+            $this->resetInputSubAFRepeated($input1);
         }
     }
 
@@ -212,6 +212,28 @@ class InputSetInconsistencyFinder extends ArrayComparator
                 $this->numberOfInconsistencies += $subUpdater->run();
             }
         );
+
         $comparator->compare($input1->getValue(), $input2->getValue());
+    }
+
+    /**
+     * Reset des saisies de sous-AF répétés
+     * @param RepeatedSubAFInput $input1
+     */
+    private function resetInputSubAFRepeated(RepeatedSubAFInput $input1) {
+        $comparator = new ArrayComparator();
+        $comparator->whenMissingRight(
+            function (SubInputSet $inputSet1) {
+                // Compare les champs des SubInputSet.
+                $subUpdater = new InputSetInconsistencyFinder(
+                    $inputSet1,
+                    null,
+                    $this->varianceSought
+                );
+                $this->numberOfInconsistencies += $subUpdater->run();
+            }
+        );
+
+        $comparator->compare($input1->getValue(), []);
     }
 }
