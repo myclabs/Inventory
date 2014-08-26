@@ -272,7 +272,7 @@ class InputSerializer
                     $value = $input->getValue();
                     /** @var NumericField $component */
                     $component = $input->getComponent();
-                    if (($value->getUnit() != $component->getUnit())
+                    if (($component !== null) && ($value->getUnit() != $component->getUnit())
                         && (in_array($value->getUnit(), $component->getUnit()->getCompatibleUnits()))
                         && !$component->hasUnitSelection()) {
                         $arr['value'] = [

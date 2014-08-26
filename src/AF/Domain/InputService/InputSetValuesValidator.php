@@ -115,12 +115,16 @@ class InputSetValuesValidator
             $value = $input->getValue()->getDigitalValue();
             $uncertainty = $input->getValue()->getUncertainty();
         }
-        if ((!$input->getComponent()->getRequired()) && ($value === null)) {
-            return;
-        } else if (($input->getComponent()->getRequired() && ($value === null))
-            || (!preg_match('#^-?[0-9]*[.,]?[0-9]*$#', $value))
-            || (!preg_match('#^[0-9]*$#', $uncertainty))) {
-            $input->setError(__('AF', 'inputInput', 'emptyNumericRequiredField'));
+        /** @var Component $component */
+        $component = $input->getComponent();
+        if ($component !== null) {
+            if ((!$component->getRequired()) && ($value === null)) {
+                return;
+            } else if (($component->getRequired() && ($value === null))
+                || (!preg_match('#^-?[0-9]*[.,]?[0-9]*$#', $value))
+                || (!preg_match('#^[0-9]*$#', $uncertainty))) {
+                $input->setError(__('AF', 'inputInput', 'emptyNumericRequiredField'));
+            }
         }
     }
 
