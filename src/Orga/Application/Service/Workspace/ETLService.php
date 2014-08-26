@@ -81,10 +81,10 @@ class ETLService
     public function resetGranularityAndCellsDWCubes(Granularity $granularity)
     {
         foreach ($granularity->getCells() as $cell) {
-            $this->etlStructureService->resetCellDWCube($cell);
+            $this->etlStructureService->resetCellDWCube(Cell::load($cell->getId()));
         }
 
-        $this->etlStructureService->resetGranularityDWCube($granularity);
+        $this->etlStructureService->resetGranularityDWCube(Granularity::load($granularity->getId()));
     }
 
     /**
@@ -92,6 +92,7 @@ class ETLService
      */
     public function resetCellAndChildrenDWCubes(Cell $cell)
     {
+        // Lance une tâche pour la cellule courante.
         $this->workDispatcher->run(
             new ServiceCallTask(
                 ETLStructureInterface::class,
@@ -134,7 +135,7 @@ class ETLService
     public function resetCellChidrenDWCubesForGranularity(Cell $cell, Granularity $granularity)
     {
         foreach ($cell->getChildCellsForGranularity($granularity) as $childCell) {
-            $this->etlStructureService->resetCellDWCube($childCell);
+            $this->etlStructureService->resetCellDWCube(Cell::load($childCell));
         }
     }
 

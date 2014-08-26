@@ -432,9 +432,11 @@ class ETLStructureService implements ETLStructureInterface
 
             // Fin de transaction.
             $this->entityManager->commit();
+            $this->entityManager->clear();
         } catch (ErrorException $e) {
             // Annulation de la transaction.
             $this->entityManager->rollback();
+            $this->entityManager->clear();
 
             throw $e;
         }
