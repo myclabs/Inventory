@@ -3,25 +3,21 @@
 $library = $this->library;
 ?>
 
-<form id="addDocument<?=$library->getId()?>" class="form-horizontal" method="post" enctype="multipart/form-data"
+<form id="addDocument<?=$library->getId()?>" class="smart-form" method="post" enctype="multipart/form-data"
       action="doc/library/add?id=<?=$library->getId()?>" target="upload_iframe<?=$library->getId()?>">
 
-    <div class="form-group">
-        <label class="col-sm-2 control-label">
+    <section>
+        <label class="label">
             <?=__('Doc', 'library', 'fileAddress')?>
         </label>
-        <div class="col-sm-10">
-            <input name="file" type="file" class="form-control" required>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary">
-                <?=__('UI', 'verb', 'add')?>
-            </button>
-        </div>
-    </div>
+        <label for="file" class="input input-file">
+            <div class="button">
+                <input name="file" type="file" required onchange="$('input.file-display', $(this).closest('.input-file')).val(this.value);">
+                <?=___('Doc', 'library', 'browseFile')?>
+            </div>
+            <input type="text" class="file-display" placeholder="<?=___('Doc', 'library', 'selectFile')?>" readonly>
+        </label>
+    </section>
 
 </form>
 
