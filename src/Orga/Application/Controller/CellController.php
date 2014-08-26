@@ -1346,7 +1346,7 @@ class Orga_CellController extends Core_Controller
 
         switch ($format) {
             case 'xlsx':
-                $contentType = "application/vnd.ms-excel";
+                $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                 break;
             case 'xls':
                 $contentType = "Content-type: application/vnd.ms-excel";
@@ -1356,7 +1356,7 @@ class Orga_CellController extends Core_Controller
                 break;
         }
         header($contentType);
-        header('Content-Disposition:attachement;filename='.$filename);
+        header('Content-Disposition: attachement;filename='.$filename);
         header('Cache-Control: max-age=0');
 
         Zend_Layout::getMvcInstance()->disableLayout();
