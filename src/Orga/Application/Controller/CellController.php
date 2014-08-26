@@ -1346,7 +1346,7 @@ class Orga_CellController extends Core_Controller
 
         switch ($format) {
             case 'xlsx':
-                $contentType = "Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                $contentType = "application/vnd.ms-excel";
                 break;
             case 'xls':
                 $contentType = "Content-type: application/vnd.ms-excel";
