@@ -7,13 +7,12 @@ use Mnapoli\Translated\Translator;
 use MyCLabs\Work\Dispatcher\SynchronousWorkDispatcher;
 use Orga\Domain\Service\ETL\ETLDataService;
 use Orga\Domain\Service\ETL\ETLStructureInterface;
-use Orga\Domain\Service\ETL\ETLStructureService;
 use Orga\Domain\Workspace;
 use Orga\Domain\Granularity;
 use Orga\Domain\Cell;
 
 /**
- * ETLStructureService
+ * ETLService
  *
  * @author valentin.claras
  */
@@ -95,7 +94,7 @@ class ETLService
     {
         $this->workDispatcher->run(
             new ServiceCallTask(
-                ETLStructureService::class,
+                ETLStructureInterface::class,
                 'resetCellDWCube',
                 [$cell],
                 __(
