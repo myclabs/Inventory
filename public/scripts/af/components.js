@@ -367,7 +367,7 @@ afModule.directive('afHistory', function($http) {
             var url = 'af/input/input-history?inputSet=' + $scope.inputSet.id + '&input=' + $scope.input.id;
 
             button.popover({
-                placement: 'bottom',
+                placement: 'left',
                 title: __('UI', 'history', 'valueHistory'),
                 html: true,
                 content: '<p class="text-center"><img src="images/ui/ajax-loader.gif"></p>'
