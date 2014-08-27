@@ -1,5 +1,13 @@
 # Mise en production
 
+## 3.5
+
+- Déployer normalement avec update de la BDD.
+
+- Mettre à jour le fichier application/configs/parameters.php pour activer l'application gratuite
+ (voir parameters.php.default).
+
+
 ## 3.4
 
 - NE PAS DEPLOYER.
