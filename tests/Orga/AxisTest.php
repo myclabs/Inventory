@@ -1285,32 +1285,32 @@ class Orga_Test_AxisContextualizing extends TestCase
 
     public function testUnContextualizeDifferentRef()
     {
-        $member1B1 = new Member($this->axis, 'ref1', [$this->memberA1, $this->memberB1]);
-        $member1B2 = new Member($this->axis, 'ref1', [$this->memberA1, $this->memberB2]);
-        $member2B1 = new Member($this->axis, 'ref2', [$this->memberA2, $this->memberB1]);
-        $member2B2 = new Member($this->axis, 'ref2', [$this->memberA2, $this->memberB2]);
+        $memberA1B1 = new Member($this->axis, 'ref1', [$this->memberA1, $this->memberB1]);
+        $memberA1B2 = new Member($this->axis, 'ref1', [$this->memberA1, $this->memberB2]);
+        $memberA2B1 = new Member($this->axis, 'ref2', [$this->memberA2, $this->memberB1]);
+        $memberA2B2 = new Member($this->axis, 'ref2', [$this->memberA2, $this->memberB2]);
 
-        $this->assertEquals('ref1', $member1B1->getRef());
-        $this->assertEquals('ref1', $member1B2->getRef());
-        $this->assertEquals('ref2', $member2B1->getRef());
-        $this->assertEquals('ref2', $member2B2->getRef());
+        $this->assertEquals('ref1', $memberA1B1->getRef());
+        $this->assertEquals('ref1', $memberA1B2->getRef());
+        $this->assertEquals('ref2', $memberA2B1->getRef());
+        $this->assertEquals('ref2', $memberA2B2->getRef());
 
-        $this->assertSame([$this->memberA1, $this->memberB1], $member1B1->getContextualizingParents());
-        $this->assertSame([$this->memberA1, $this->memberB2], $member1B2->getContextualizingParents());
-        $this->assertSame([$this->memberA2, $this->memberB1], $member2B1->getContextualizingParents());
-        $this->assertSame([$this->memberA2, $this->memberB2], $member2B2->getContextualizingParents());
+        $this->assertSame([$this->memberA1, $this->memberB1], $memberA1B1->getContextualizingParents());
+        $this->assertSame([$this->memberA1, $this->memberB2], $memberA1B2->getContextualizingParents());
+        $this->assertSame([$this->memberA2, $this->memberB1], $memberA2B1->getContextualizingParents());
+        $this->assertSame([$this->memberA2, $this->memberB2], $memberA2B2->getContextualizingParents());
 
         $this->axisA->setContextualize(false);
 
-        $this->assertEquals('ref1', $member1B1->getRef());
-        $this->assertEquals('ref1', $member1B2->getRef());
-        $this->assertEquals('ref2', $member2B1->getRef());
-        $this->assertEquals('ref2', $member2B2->getRef());
+        $this->assertEquals('ref1', $memberA1B1->getRef());
+        $this->assertEquals('ref1', $memberA1B2->getRef());
+        $this->assertEquals('ref2', $memberA2B1->getRef());
+        $this->assertEquals('ref2', $memberA2B2->getRef());
 
-        $this->assertSame([$this->memberB1], $member1B1->getContextualizingParents());
-        $this->assertSame([$this->memberB2], $member1B2->getContextualizingParents());
-        $this->assertSame([$this->memberB1], $member2B1->getContextualizingParents());
-        $this->assertSame([$this->memberB2], $member2B2->getContextualizingParents());
+        $this->assertSame([$this->memberB1], $memberA1B1->getContextualizingParents());
+        $this->assertSame([$this->memberB2], $memberA1B2->getContextualizingParents());
+        $this->assertSame([$this->memberB1], $memberA2B1->getContextualizingParents());
+        $this->assertSame([$this->memberB2], $memberA2B2->getContextualizingParents());
     }
 
     /**
@@ -1335,5 +1335,40 @@ class Orga_Test_AxisContextualizing extends TestCase
         $this->assertSame([$this->memberA2, $this->memberB2], $memberA2B2->getContextualizingParents());
 
         $this->axisA->setContextualize(false);
+    }
+
+    public function testContextualizeChangesMembersPosition()
+    {
+        $memberA1B1 = new Member($this->axis, 'refa1b1', [$this->memberA1, $this->memberB1]);
+        $memberA1B2 = new Member($this->axis, 'refa1b2', [$this->memberA1, $this->memberB2]);
+        $memberA2B1 = new Member($this->axis, 'refa2b1', [$this->memberA2, $this->memberB1]);
+        $memberA2B2 = new Member($this->axis, 'refa2b2', [$this->memberA2, $this->memberB2]);
+
+        $this->assertEquals(1, $memberA1B1->getPosition());
+        $this->assertEquals(1, $memberA1B2->getPosition());
+        $this->assertEquals(1, $memberA2B1->getPosition());
+        $this->assertEquals(1, $memberA2B2->getPosition());
+
+        $this->axisA->setContextualize(false);
+
+        $this->assertEquals(1, $memberA1B1->getPosition());
+        $this->assertEquals(1, $memberA1B2->getPosition());
+        $this->assertEquals(2, $memberA2B1->getPosition());
+        $this->assertEquals(2, $memberA2B2->getPosition());
+
+        $this->axisB->setContextualize(false);
+
+        $this->assertEquals(1, $memberA1B1->getPosition());
+        $this->assertEquals(2, $memberA1B2->getPosition());
+        $this->assertEquals(3, $memberA2B1->getPosition());
+        $this->assertEquals(4, $memberA2B2->getPosition());
+
+        $this->axisA->setContextualize(true);
+
+        $this->assertEquals(1, $memberA1B1->getPosition());
+        $this->assertEquals(2, $memberA1B2->getPosition());
+        $this->assertEquals(1, $memberA2B1->getPosition());
+        $this->assertEquals(2, $memberA2B2->getPosition());
+
     }
 }
