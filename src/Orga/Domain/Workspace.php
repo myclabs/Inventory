@@ -475,6 +475,17 @@ class Workspace extends Core_Model_Entity implements EntityResource
     }
 
     /**
+     * @return Granularity[]
+     */
+    public function getDWGranularities()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('cellsGenerateDWCubes', true));
+        $criteria->orderBy(['position' => 'ASC']);
+        return $this->granularities->matching($criteria)->toArray();
+    }
+
+    /**
      * @param Granularity $granularity
      */
     public function setGranularityForInventoryStatus(Granularity $granularity = null)

@@ -109,7 +109,7 @@ class Parameter_LibraryController extends Core_Controller
         $filename = $date . '_' . __('Parameter', 'name', 'parameters') . '.xls';
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition:attachement;filename='.$filename);
+        header('Content-Disposition: attachement;filename='.$filename);
         header('Cache-Control: max-age=0');
 
         Zend_Layout::getMvcInstance()->disableLayout();

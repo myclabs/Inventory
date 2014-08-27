@@ -567,6 +567,13 @@ class Axis extends Core_Model_Entity
     public function setContextualize($contextualizing)
     {
         if ($this->contextualizing !== $contextualizing) {
+            // Suppression de la postion des membres des axes narrowers avant changement du contexte.
+            foreach ($this->getAllNarrowers() as $narrowerAxis) {
+                foreach ($narrowerAxis->getMembers() as $childMember) {
+                    $childMember->setPosition();
+                }
+            }
+
             if (!$contextualizing) {
                 // Passage à false pour récupérer les nouveaux contextes des enfants.
                 $this->contextualizing = false;
@@ -595,8 +602,16 @@ class Axis extends Core_Model_Entity
                 $this->contextualizing = true;
             }
 
+            // Mise à jour des parentMembersHashKey.
             foreach ($this->getMembers() as $member) {
                 $member->updateDirectChildrenMembersParentMembersHashKey();
+            }
+
+            // Ajout de la position des membres des axes narrowers après changement du contexte.
+            foreach ($this->getAllNarrowers() as $narrowerAxis) {
+                foreach ($narrowerAxis->getMembers() as $childMember) {
+                    $childMember->setPosition();
+                }
             }
         }
     }

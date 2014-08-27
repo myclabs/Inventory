@@ -43,13 +43,14 @@ class InputSetInconsistencyFinder extends ArrayComparator
      * @param InputSet $referenceValues Autre InputSet contenant les valeurs de référence
      * @param float $varianceSought
      */
-    public function __construct(InputSet $inputSet, InputSet $referenceValues, $varianceSought = 2.0)
+    public function __construct(InputSet $inputSet, InputSet $referenceValues = null, $varianceSought = 2.0)
     {
         parent::__construct();
 
         // Handlers
         $this->whenEqual([$this, 'whenEqualHandler']);
         $this->whenDifferent([$this, 'whenDifferentHandler']);
+        $this->whenMissingRight([$this, 'whenMissingRightHandler']);
 
         $this->inputSet = $inputSet;
         $this->referenceValues = $referenceValues;
@@ -64,7 +65,11 @@ class InputSetInconsistencyFinder extends ArrayComparator
         $this->numberOfInconsistencies = 0;
 
         // Copie les saisies
-        $this->compare($this->inputSet->getInputs(), $this->referenceValues->getInputs());
+        if ($this->referenceValues !== null) {
+            $this->compare($this->inputSet->getInputs(), $this->referenceValues->getInputs());
+        } else {
+            $this->compare($this->inputSet->getInputs(), []);
+        }
 
         return $this->numberOfInconsistencies;
     }
@@ -156,6 +161,30 @@ class InputSetInconsistencyFinder extends ArrayComparator
     }
 
     /**
+     * Handler appelé lorsqu'un élément de l'input set a été supprimé dans la nouvelle saisie
+     * @param Input $input1
+     */
+    protected function whenMissingRightHandler(Input $input1)
+    {
+        if ($input1 instanceof NumericFieldInput) {
+            $input1->setInconsistentValue(false);
+        }
+        if ($input1 instanceof NotRepeatedSubAFInput) {
+            // Lance une mise à jour du sous-inputSet
+            $subUpdater = new InputSetInconsistencyFinder(
+                $input1->getValue(),
+                null,
+                $this->varianceSought
+            );
+            $this->numberOfInconsistencies += $subUpdater->run();
+        }
+        if ($input1 instanceof RepeatedSubAFInput) {
+            // Lance une comparaison des listes de sous-InputSet
+            $this->resetInputSubAFRepeated($input1);
+        }
+    }
+
+    /**
      * Compare et synchronise des saisies de sous-AF répétés
      * @param RepeatedSubAFInput $input1
      * @param RepeatedSubAFInput $input2
@@ -183,6 +212,28 @@ class InputSetInconsistencyFinder extends ArrayComparator
                 $this->numberOfInconsistencies += $subUpdater->run();
             }
         );
+
         $comparator->compare($input1->getValue(), $input2->getValue());
+    }
+
+    /**
+     * Reset des saisies de sous-AF répétés
+     * @param RepeatedSubAFInput $input1
+     */
+    private function resetInputSubAFRepeated(RepeatedSubAFInput $input1) {
+        $comparator = new ArrayComparator();
+        $comparator->whenMissingRight(
+            function (SubInputSet $inputSet1) {
+                // Compare les champs des SubInputSet.
+                $subUpdater = new InputSetInconsistencyFinder(
+                    $inputSet1,
+                    null,
+                    $this->varianceSought
+                );
+                $this->numberOfInconsistencies += $subUpdater->run();
+            }
+        );
+
+        $comparator->compare($input1->getValue(), []);
     }
 }

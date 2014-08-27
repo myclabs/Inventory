@@ -49,6 +49,22 @@
                 <seg>Uploading…</seg>
             </tuv>
         </tu>
+        <tu tuid="browseFile">
+            <tuv xml:lang="fr">
+                <seg>Parcourir</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Browse</seg>
+            </tuv>
+        </tu>
+        <tu tuid="selectFile">
+            <tuv xml:lang="fr">
+                <seg>Séléctionnez un fichier</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Include some file</seg>
+            </tuv>
+        </tu>
 
         <!-- Messages -->
 

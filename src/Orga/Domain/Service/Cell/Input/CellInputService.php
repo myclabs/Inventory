@@ -12,6 +12,7 @@ use MyCLabs\Work\Dispatcher\WorkDispatcher;
 use Orga\Domain\Cell;
 use Orga\Domain\Service\Cell\Input\CellInputUpdaterInterface;
 use Orga\Domain\Service\ETL\ETLDataService;
+use Orga\Domain\Service\Export;
 use Orga\Domain\Workspace;
 use Orga\Domain\Service\Cell\Input\CellInputCreatedEvent;
 use Orga\Domain\Service\Cell\Input\CellInputEditedEvent;
@@ -74,6 +75,10 @@ class CellInputService implements CellInputUpdaterInterface
                 $inconsistencyFinder = new InputSetInconsistencyFinder($inputSet, $previousInput);
                 $cell->setNumberOfInconsistenciesInInputSet($inconsistencyFinder->run());
                 return;
+            } else {
+                $inconsistencyFinder = new InputSetInconsistencyFinder($inputSet);
+                $cell->setNumberOfInconsistenciesInInputSet($inconsistencyFinder->run());
+                return;
             }
         }
 
@@ -134,7 +139,7 @@ class CellInputService implements CellInputUpdaterInterface
         if ($timeAxis && $cell->getGranularity()->hasAxis($timeAxis)) {
             $nextCell = $cell->getNextCellForAxis($timeAxis);
             if ($nextCell) {
-                $this->updateInconsistencyForCell($nextCell);
+//                $this->updateInconsistencyForCell($nextCell);
             }
         }
 
@@ -149,7 +154,7 @@ class CellInputService implements CellInputUpdaterInterface
         }
         // Regénère l'exports de la cellule.
         $this->workDispatcher->run(
-            new ServiceCallTask('Export', 'saveCellInput', [$cell])
+            new ServiceCallTask(Export::class, 'saveCellInput', [$cell])
         );
     }
 
