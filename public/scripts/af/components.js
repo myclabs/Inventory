@@ -54,7 +54,7 @@ afModule.directive('afHorizontalFieldset', ['getInput', function(getInput) {
     };
 }]);
 
-afModule.directive('afComponent', function($window) {
+afModule.directive('afComponent', function($window, $sce) {
     return {
         restrict: 'E',
         scope: {
@@ -68,9 +68,11 @@ afModule.directive('afComponent', function($window) {
             $scope.inputSet = $scope.$parent.inputSet;
             $scope.inputs = $scope.$parent.inputSet.inputs;
 
-            $scope.inconsistentValueWarning = __('AF', 'inputInput', 'valueVeryDifferentFromPreviousInput', {
-                label: $window.previousInputLabel
-            });
+            $scope.inconsistentValueWarning = $sce.trustAsHtml(
+                __('AF', 'inputInput', 'valueVeryDifferentFromPreviousInput', {
+                    label: '<a href="' + $window.previousInputLink + '">' + $window.previousInputLabel + '</a>'
+                })
+            );
         }
     };
 });

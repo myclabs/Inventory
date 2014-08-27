@@ -21,7 +21,7 @@
         <af-select-multiple ng-switch-when="select-multiple" component="component" input="input"></af-select-multiple>
 
         <span class="help-block errorMessage" ng-show="input.hasErrors" ng-bind="input.error"></span>
-        <span class="help-block errorMessage" ng-show="input.inconsistent" ng-bind="inconsistentValueWarning"></span>
+        <span class="help-block errorMessage" ng-show="input.inconsistent" ng-bind-html="inconsistentValueWarning"></span>
     </div>
 
 </div>
