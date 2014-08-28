@@ -54,7 +54,7 @@ echo $optionDatagrid->render();
 <form class="form-inline" id="copyTechnoMembersAsOptions"
       action="af/edit_components/copy-techno-members-as-options?idSelect=<?=$selectField->getId()?>&idAF=<?=$af->getId()?>">
     <div class="input-append">
-        <select name="dimension" class="form-control">
+        <select name="dimension">
             <?php foreach ($families as $family) : ?>
                 <?php foreach ($family->getDimensions() as $dimension) : ?>
                     <option value="<?=$dimension->getId()?>">
@@ -70,3 +70,8 @@ echo $optionDatagrid->render();
         <button type="submit" class="btn btn-default"><i class="fa fa-plus-circle"></i> Ajouter</button>
     </div>
 </form>
+<script>
+    $(document).ready(function () {
+        $('#copyTechnoMembersAsOptions select[name="dimension"]').select2();
+    });
+</script>
