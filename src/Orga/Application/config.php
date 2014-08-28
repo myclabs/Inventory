@@ -1,6 +1,6 @@
 <?php
 
-use Orga\Application\Service\Workspace\ETLService;
+use Orga\Application\Service\Workspace\FreeApplicationRegisteringService;
 use Orga\Domain\Service\ETL\ETLDataInterface;
 use Orga\Domain\Service\ETL\ETLDataService;
 use Orga\Domain\Service\ETL\ETLStructureInterface;
@@ -17,5 +17,8 @@ return [
     ETLDataInterface::class => DI\object(ETLDataService::class),
 
     CellInputUpdaterInterface::class => DI\object(CellInputService::class),
+
+    FreeApplicationRegisteringService::class => DI\object(FreeApplicationRegisteringService::class)
+            ->constructorParameter('applicationUrl', DI\link('application.url')),
 
 ];

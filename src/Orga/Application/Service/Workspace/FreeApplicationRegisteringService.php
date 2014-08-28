@@ -34,20 +34,28 @@ class FreeApplicationRegisteringService
      */
     private $acl;
 
+    /**
+     * @var string
+     */
+    private $applicationUrl;
+
 
     /**
      * @param EntityManager $entityManager
      * @param UserService $userService
-     * @param OrgaACLManager $orgaACLManager
+     * @param ACL $acl
+     * @param string $applicationUrl
      */
     public function __construct(
         EntityManager $entityManager,
         UserService $userService,
-        ACL $acl
+        ACL $acl,
+        $applicationUrl
     ) {
         $this->entityManager = $entityManager;
         $this->userService = $userService;
         $this->acl = $acl;
+        $this->applicationUrl = $applicationUrl;
     }
 
     /**
@@ -137,15 +145,19 @@ class FreeApplicationRegisteringService
             // Envoi d'un mail à la fin de la création.
             $this->userService->sendEmail(
                 $user,
-                __('Orga', 'freeApplication', 'subjectCreation_' . $demo, ['PASSWORD' => $password]),
-                __('Orga', 'freeApplication', 'bodyCreation_' . $demo, ['PASSWORD' => $password])
+                __('User', 'email', 'subjectAccountCreated'), // variable $demo pour le nom du worspace
+                __('User', 'emailSignup', 'bodyAccountCreated', [
+                    'EMAIL' => $email,
+                    'PASSWORD' => $password,
+                    'URL_APPLICATION' => $this->applicationUrl . '/',
+                ])
             );
         } else {
             // Envoi d'un mail notifiant la création du nouvel accès.
             $this->userService->sendEmail(
                 $user,
-                __('Orga', 'freeApplication', 'subjectAccess_' . $demo),
-                __('Orga', 'freeApplication', 'bodyAccess_' . $demo )
+                __('User', 'emailSignup', 'subjectAccessAdded' . $demo),
+                __('User', 'emailSignup', 'bodyAccess_' . $demo )
             );
         }
 

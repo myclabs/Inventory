@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="2.0" xmlns="http://www.lisa.org/tmx20">
+    <header adminlang="en" creationtool="locale4j"
+            creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
+    <body>
+        <tu tuid="bodyAccountCreated">
+            <tuv xml:lang="fr">
+                <seg>
+Une demande de création de compte utilisateur associée à l'adresse e-mail [EMAIL] a été effectuée sur [URL_APPLICATION].
+
+Si vous êtes bien à l'origine de cette demande, vous pouvez vous connecter avec les identifiants ci-dessous pour confirmer la création de votre compte.
+
+Login (e-mail) : [EMAIL]
+Mot de passe : [PASSWORD]
+Adresse de connexion : [URL_APPLICATION]
+
+Vous pourrez modifier ce mot de passe à tout moment (onglet « Mon compte »).
+
+Si vous n'êtes pas à l'origine de cette demande, merci de ne pas tenir compte de cet envoi.
+                </seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>
+Somebody signed up at [URL_APPLICATION] with email address [EMAIL].
+
+If you are behind this request, you can connect yourself with the following parameters in order to complete creation of your account.
+
+Login (e-mail) : [EMAIL]
+Password : [PASSWORD]
+Connection address : [URL_APPLICATION]
+
+You will be able to change your password at any moment (« My account » tab).
+
+If you are not behind this request, please forget this email.
+                </seg>
+            </tuv>
+        </tu>
+    </body>
+</tmx>
