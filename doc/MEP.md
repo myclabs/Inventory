@@ -4,8 +4,9 @@
 
 - Déployer normalement avec update de la BDD.
 
-- Mettre à jour le fichier application/configs/parameters.php pour activer l'application gratuite
- (voir parameters.php.default).
+- Mettre à jour le fichier application/configs/parameters.php pour activer l'application gratuite.
+    Voir parameters.php.default.
+    Si feature.register vaut true, les 3 feature.workspaces.*.register doivent être spécifés (null pour désactiver).
 
 
 ## 3.4
