@@ -146,7 +146,7 @@ class FreeApplicationRegisteringService
             $this->userService->sendEmail(
                 $user,
                 __('User', 'email', 'subjectAccountCreated'), // variable $demo pour le nom du worspace
-                __('User', 'emailSignup', 'bodyAccountCreated', [
+                __('User', 'emailSignUp', 'bodyAccountCreated', [
                     'EMAIL' => $email,
                     'PASSWORD' => $password,
                     'URL_APPLICATION' => $this->applicationUrl . '/',
