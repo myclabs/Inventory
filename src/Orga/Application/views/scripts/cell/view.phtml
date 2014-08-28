@@ -42,7 +42,7 @@ $currentCell = $this->currentCell;
 $workspaceBanner = null;
 $file = glob(APPLICATION_PATH . '/../public/workspaceBanners/' . $workspace->id . '.*');
 if (count($file) > 0) {
-    $workspaceBanner = 'workspaceBanners/' . pathinfo(array_pop($file))['filename'];
+    $workspaceBanner = 'workspaceBanners/' . pathinfo(array_pop($file))['basename'];
 }
 ?>
 
