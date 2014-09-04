@@ -551,7 +551,7 @@ class UI_Tree extends UI_Generic
             $changeOrderFirstInput->setAttribute('value', 'first');
             $changeOrderFirstInput->setAttribute('type', 'radio');
             $changeOrderFirstLabel = new GenericTag('label', $this->changeOrderFirstLabel);
-            $changeOrderFirstLabel->appendContent($changeOrderFirstInput);
+            $changeOrderFirstLabel->prependContent($changeOrderFirstInput);
             $changeOrderFirstWrapper = new GenericTag('div', $changeOrderFirstLabel);
             $changeOrderFirstWrapper->addClass('radio');
 
@@ -560,7 +560,7 @@ class UI_Tree extends UI_Generic
             $changeOrderLastInput->setAttribute('value', 'last');
             $changeOrderLastInput->setAttribute('type', 'radio');
             $changeOrderLastLabel = new GenericTag('label', $this->changeOrderLastLabel);
-            $changeOrderLastLabel->appendContent($changeOrderLastInput);
+            $changeOrderLastLabel->prependContent($changeOrderLastInput);
             $changeOrderLastWrapper = new GenericTag('div', $changeOrderLastLabel);
             $changeOrderLastWrapper->addClass('radio');
 
@@ -569,7 +569,7 @@ class UI_Tree extends UI_Generic
             $changeOrderAfterInput->setAttribute('value', 'after');
             $changeOrderAfterInput->setAttribute('type', 'radio');
             $changeOrderAfterLabel = new GenericTag('label', $this->changeOrderAfterLabel);
-            $changeOrderAfterLabel->appendContent($changeOrderAfterInput);
+            $changeOrderAfterLabel->prependContent($changeOrderAfterInput);
             $changeOrderAfterWrapper = new GenericTag('div', $changeOrderAfterLabel);
             $changeOrderAfterWrapper->addClass('radio');
 
