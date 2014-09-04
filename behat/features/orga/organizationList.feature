@@ -29,9 +29,9 @@ Feature: Organization List feature
     When I click "Paramétrage"
     And I wait for the page to finish loading
     And I open tab "Niveaux"
-    Then I should see the "granularity3" datagrid
-    And the "granularity3" datagrid should contain 1 row
-    And the row 1 of the "granularity3" datagrid should contain:
+    Then I should see the "granularity5" datagrid
+    And the "granularity5" datagrid should contain 1 row
+    And the row 1 of the "granularity5" datagrid should contain:
       | axes | relevance | input | afs | inventory | reports | acl |
       |      | Non       | Non   | Non | -         | Non     | Non |
 
