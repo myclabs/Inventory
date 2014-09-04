@@ -57,9 +57,9 @@ use Orga\Application\Service\Workspace\WorkspaceService;
                     </label>
                     <div class="col-sm-10">
                         <select id="workspaceTemplate" name="workspaceTemplate" class="form-control">
-                            <? foreach ($this->templates as $templateRef => $templateName) : ?>
+                            <?php foreach ($this->templates as $templateRef => $templateName) : ?>
                             <option value="<?=$templateRef?>"><?=$templateName?></option>
-                            <? endforeach; ?>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </div>
