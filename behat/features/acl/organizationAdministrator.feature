@@ -20,3 +20,16 @@ Feature: Organization administrator feature
   # Accès au datagrid des analyses préconfigurées
     Then I should see "Config. Analyses"
     And I should see "Rôles"
+
+  @javascript @readOnly
+  Scenario: Administrator can edit an input
+    Given I am logged in as "administrateur.global@toto.com"
+    Given I am on "orga/cell/input/cell/3/fromCell/3/"
+    And I wait 3 seconds
+# On va sur la page de la cellule
+    Then I should see "Saisie Europe | Marque A"
+    When I fill in "chiffre_affaire" with "100"
+    And I click "Enregistrer"
+    Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
+    When I click "Terminer la saisie"
+    Then the following message is shown and closed: "Saisie terminée."

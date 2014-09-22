@@ -46,3 +46,16 @@ Feature: Cell coordinator feature
   # Accès à une des cellules
     When I click "Coordinateur Annecy"
     Then I should see "Annecy"
+
+  @javascript @readOnly
+  Scenario: Coordinator can edit an input
+    Given I am logged in as "coordinateur.zone-marque@toto.com"
+    Given I am on "orga/cell/input/cell/30/fromCell/3/"
+    And I wait 3 seconds
+  # On va sur la page de la cellule
+    Then I should see "Saisie 2012 | Annecy"
+    When I fill in "chiffre_affaire" with "100"
+    And I click "Enregistrer"
+    Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
+    When I click "Terminer la saisie"
+    Then the following message is shown and closed: "Saisie terminée."
