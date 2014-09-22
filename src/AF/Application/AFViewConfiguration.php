@@ -59,6 +59,18 @@ class AFViewConfiguration
     protected $actionStack;
 
     /**
+     * URL to call for submitting the input
+     * @var string
+     */
+    protected $submitInputUrl;
+
+    /**
+     * URL to call for finishing the input
+     * @var string
+     */
+    protected $finishInputUrl;
+
+    /**
      * URL to call for validating the input
      * @var string
      */
@@ -305,6 +317,38 @@ class AFViewConfiguration
             $action['params'] = $params;
         }
         $this->actionStack[] = $action;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setSubmitInputUrl($url)
+    {
+        $this->submitInputUrl = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubmitInputUrl()
+    {
+        return $this->submitInputUrl;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setFinishInputUrl($url)
+    {
+        $this->finishInputUrl = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFinishInputUrl()
+    {
+        return $this->finishInputUrl;
     }
 
     /**

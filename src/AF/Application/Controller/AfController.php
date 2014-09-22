@@ -73,6 +73,8 @@ class AF_AfController extends Core_Controller
         $viewConfiguration->addBaseTabs();
         $viewConfiguration->setPageTitle($this->translator->get($af->getLabel()));
         $viewConfiguration->setExitUrl('af/library/view/id/' . $af->getLibrary()->getId());
+        $viewConfiguration->setSubmitInputUrl('af/input/submit?id=' . $af->getId());
+        $viewConfiguration->setFinishInputUrl('af/input/finish?id=' . $af->getId());
         $viewConfiguration->setInputValidationUrl('af/input/input-validation?id=' . $af->getId());
         $viewConfiguration->setResultsPreviewUrl('af/input/results-preview?id=' . $af->getId());
 

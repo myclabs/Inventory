@@ -1449,6 +1449,12 @@ class Orga_CellController extends Core_Controller
             __('UI', 'name', 'input').' <small>'.$this->translator->get($cell->getLabel()).'</small>'
         );
         $viewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['cell' => $cell->getId()]);
+        $viewConfiguration->setSubmitInputUrl(
+            'af/input/submit?id=' . $af->getId() . '&cell=' . $cell->getId()
+        );
+        $viewConfiguration->setFinishInputUrl(
+            'af/input/finish?id=' . $af->getId() . '&cell=' . $cell->getId()
+        );
         $viewConfiguration->setInputValidationUrl(
             'orga/cell/input-validation?id=' . $af->getId() . '&cell=' . $cell->getId()
         );

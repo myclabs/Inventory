@@ -241,6 +241,8 @@ function ($scope, $element, $window, $http, $timeout, validateInputSet) {
     $scope.inputSet = $window.inputSet;
     $scope.refPrefix = '';
     var urlParams = $window.afUrlParams;
+    var submitInputUrl = $window.submitInputUrl;
+    var finishInputUrl = $window.finishInputUrl;
     var resultsPreviewUrl = $window.resultsPreviewUrl;
 
     $scope.inputStatuses = {
@@ -324,7 +326,7 @@ function ($scope, $element, $window, $http, $timeout, validateInputSet) {
                 urlParams: urlParams,
                 idInputSet: $scope.inputSet.id
             };
-            $http.post('af/input/submit?id=' + $scope.af.id, data).success(function (response) {
+            $http.post(submitInputUrl, data).success(function (response) {
                 $scope.saving = false;
                 $scope.inputSet.completion = response.data.completion;
                 $scope.inputSet.status = response.data.status;
@@ -346,7 +348,7 @@ function ($scope, $element, $window, $http, $timeout, validateInputSet) {
             urlParams: urlParams,
             idInputSet: $scope.inputSet.id
         };
-        $http.post('af/input/finish?id=' + $scope.af.id, data).success(function (response) {
+        $http.post(finishInputUrl, data).success(function (response) {
             $scope.markingInputAsFinished = false;
             $scope.inputSet.status = response.status;
             addMessage(response.message, 'success');
