@@ -95,6 +95,7 @@ class ETLDataService implements ETLDataInterface
                 ->getSubCellsGroupForInputGranularity($inputGranularity)->getAF();
         }
 
-        $this->inputService->updateResults($cell, $inputSet, $af);
+        $this->inputService->updateResults($cell, $inputSet, $af, false);
+        $cell->updateInputStatus();
     }
 }

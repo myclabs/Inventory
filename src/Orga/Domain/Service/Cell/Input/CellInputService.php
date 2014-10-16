@@ -164,8 +164,10 @@ class CellInputService implements CellInputUpdaterInterface
      * @param Cell $cell
      * @param PrimaryInputSet $inputSet
      * @param AF|null $af Permet d'uiliser un AF différent de celui de la saisie
+     * @param bool $updateFinish Indique s'il faut mettre à jour le status finish de la saisie
+     *                           false dans le cas où on recalcule toutes les saisies
      */
-    public function updateResults(Cell $cell, PrimaryInputSet $inputSet, AF $af = null)
+    public function updateResults(Cell $cell, PrimaryInputSet $inputSet, AF $af = null, $updateFinish = true)
     {
         // Injecte les coordonnées orga à la saisie en tant que ContextValue
         foreach ($cell->getMembers() as $member) {
@@ -177,6 +179,6 @@ class CellInputService implements CellInputUpdaterInterface
         }
 
         // Met à jour les résultats
-        $this->afInputService->updateResults($inputSet, $af);
+        $this->afInputService->updateResults($inputSet, $af, $updateFinish);
     }
 }
