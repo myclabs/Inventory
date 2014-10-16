@@ -455,6 +455,8 @@ class Cell extends Core_Model_Entity implements EntityResource
         // Mise à jour de la pertinence.
         $this->enable();
 
+        // Mise à jour du status de la saisie.
+        $this->updateInputStatus();
         // Mise à jour du status de l'inventaire.
         $granularityForInventoryStatus = $this->getWorkspace()->getGranularityForInventoryStatus();
         // Définition du statut de l'inventaire.
@@ -462,7 +464,7 @@ class Cell extends Core_Model_Entity implements EntityResource
             && ($this->granularity !== $granularityForInventoryStatus)
             && ($this->granularity->isNarrowerThan($granularityForInventoryStatus))
         ) {
-            // Cherche la cellule parent dans la granularité de définition des statut des inventaires
+            // Cherche la cellule parent dans la granularité de définition des statut des inventaires.
             try {
                 $parentCellForInventoryStatus = $this->getParentCellForGranularity($granularityForInventoryStatus);
                 $this->updateInventoryStatus($parentCellForInventoryStatus->getInventoryStatus());
@@ -476,7 +478,7 @@ class Cell extends Core_Model_Entity implements EntityResource
         OrgaDomainHelper::getCellInputUpdater()->updateInconsistencyForCell($this);
 
         //@todo Mettre à jour la cascade des autorisations.
-        // Pour l'instant, la cascade est reconstruite par le WorkspaceService (Application)
+        // Pour l'instant, la cascade est reconstruite par le WorkspaceService (Application).
     }
 
     /**
