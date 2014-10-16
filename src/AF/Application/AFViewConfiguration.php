@@ -59,6 +59,12 @@ class AFViewConfiguration
     protected $actionStack;
 
     /**
+     * Actions to call when the AF is finished
+     * @var array
+     */
+    protected $finishActionStack;
+
+    /**
      * URL to call for submitting the input
      * @var string
      */
@@ -301,6 +307,14 @@ class AFViewConfiguration
     }
 
     /**
+     * @return array
+     */
+    public function getFinishActionStack()
+    {
+        return $this->finishActionStack;
+    }
+
+    /**
      * @param string $action
      * @param string $controller
      * @param string $module
@@ -317,6 +331,25 @@ class AFViewConfiguration
             $action['params'] = $params;
         }
         $this->actionStack[] = $action;
+    }
+
+    /**
+     * @param string $action
+     * @param string $controller
+     * @param string $module
+     * @param array  $params
+     */
+    public function addToFinishActionStack($action, $controller, $module, array $params = [])
+    {
+        $action = [
+            'action'     => $action,
+            'controller' => $controller,
+            'module'     => $module,
+        ];
+        if (count($params) > 0) {
+            $action['params'] = $params;
+        }
+        $this->finishActionStack[] = $action;
     }
 
     /**

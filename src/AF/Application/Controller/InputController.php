@@ -210,6 +210,27 @@ class AF_InputController extends Core_Controller
             $this->inputSessionStorage->saveInputSet($af, $inputSet);
         }
 
+        // Fait suivre aux actions de processing du finish
+        $actions = $this->getParam('urlParams')['finishActionStack'];
+
+        // On est obligé de construire un "container" pour que les sous-actions puissent remplacer l'inputset
+        $inputSetContainer = new \stdClass();
+        $inputSetContainer->inputSet = false;
+
+        // Reverse car l'action stack est une pile (last in first out)
+        $actions = array_reverse($actions);
+        foreach ($actions as $action) {
+            $request = clone $this->getRequest();
+            $request->setModuleName($action['module']);
+            $request->setControllerName($action['controller']);
+            $request->setActionName($action['action']);
+            if (isset($action['params'])) {
+                $request->setParams($action['params']);
+            }
+            $request->setParam('inputSetContainer', $inputSetContainer);
+            $this->_helper->actionStack($request);
+        }
+
         $this->sendJsonResponse([
             'message' => __('AF', 'inputInput', 'inputFinished'),
             'status'  => $inputSet->getStatus(),

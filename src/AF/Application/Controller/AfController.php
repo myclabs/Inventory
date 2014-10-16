@@ -123,6 +123,7 @@ class AF_AfController extends Core_Controller
 
         $urlParams = [
             'actionStack' => $viewConfiguration->getActionStack(),
+            'finishActionStack' => $viewConfiguration->getFinishActionStack()
         ];
 
         $this->view->assign('af', $af);

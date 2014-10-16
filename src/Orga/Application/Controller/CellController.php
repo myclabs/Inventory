@@ -1449,6 +1449,7 @@ class Orga_CellController extends Core_Controller
             __('UI', 'name', 'input').' <small>'.$this->translator->get($cell->getLabel()).'</small>'
         );
         $viewConfiguration->addToActionStack('input-save', 'cell', 'orga', ['cell' => $cell->getId()]);
+        $viewConfiguration->addToFinishActionStack('input-finish', 'cell', 'orga', ['cell' => $cell->getId()]);
         $viewConfiguration->setSubmitInputUrl(
             'af/input/submit?id=' . $af->getId() . '&cell=' . $cell->getId()
         );
@@ -1579,6 +1580,26 @@ class Orga_CellController extends Core_Controller
 
         // Remplace l'input set temporaire par celui de la cellule
         $inputSetContainer->inputSet = $cell->getAFInputSetPrimary();
+
+        $this->_helper->viewRenderer->setNoRender(true);
+    }
+
+    /**
+     * @Secure("inputCell")
+     */
+    public function inputFinishAction()
+    {
+        $cellId = $this->getParam('cell');
+        /** @var Cell $cell */
+        $cell = Cell::load($cellId);
+
+        $inputSetContainer = $this->getParam('inputSetContainer');
+        /** @var $newInputSet PrimaryInputSet */
+
+        $cell->updateInputStatus();
+        //$cell->setInventoryStatus(Cell::INPUT_STATUS_FINISHED);
+
+        $this->entityManager->flush();
 
         $this->_helper->viewRenderer->setNoRender(true);
     }
