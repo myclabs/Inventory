@@ -68,38 +68,18 @@ class ETLService
                 )
             )
         );
-        foreach ($workspace->getDWGranularities() as $granularity) {
-            // Lance la tache en arrière plan.
-            $this->workDispatcher->run(
-                new ServiceCallTask(
-                    ETLService::class,
-                    'resetGranularityCellsDWCubes',
-                    [$granularity],
-                    __(
-                        'Orga', 'backgroundTasks', 'resetGranularityAndCellsDWCubes',
-                        [
-                            'GRANULARITY' => $this->translator->get($granularity->getLabel())
-                        ]
-                    )
-                )
-            );
-        }
+        $granularity = $workspace->getGranularityByRef('global');
+        $cell = $granularity->getCellByMembers([]);
+        $this->resetCellAndChildrenDWCubes($cell);
     }
 
+    /**
+     * @param Workspace $workspace
+     */
     public function resetGranularitiesDWCubes(Workspace $workspace)
     {
         foreach ($workspace->getDWGranularities() as $granularity) {
             $this->etlStructureService->resetGranularityDWCube(Granularity::load($granularity->getId()));
-        }
-    }
-
-    /**
-     * @param Granularity $granularity
-     */
-    public function resetGranularityCellsDWCubes(Granularity $granularity)
-    {
-        foreach ($granularity->getCells()->toArray() as $cell) {
-            $this->etlStructureService->resetCellDWCube(Cell::load($cell->getId()));
         }
     }
 

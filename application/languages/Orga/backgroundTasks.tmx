@@ -108,14 +108,6 @@
         </tu>
 
         <!-- ETLService -->
-        <tu tuid="resetGranularityAndCellsDWCubes">
-            <tuv xml:lang="fr">
-                <seg>Régénération des données d’analyse au niveau [GRANULARITY]</seg>
-            </tuv>
-            <tuv xml:lang="en">
-                <seg>Analysis data rebuild for units at level [GRANULARITY]</seg>
-            </tuv>
-        </tu>
         <tu tuid="resetGranularitiesDWCubes">
             <tuv xml:lang="fr">
                 <seg>Régénération des données d’analyse des granularités du workspace [WORKSPACE]</seg>
