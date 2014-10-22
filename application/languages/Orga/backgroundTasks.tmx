@@ -116,6 +116,14 @@
                 <seg>Analysis data rebuild for units at level [GRANULARITY]</seg>
             </tuv>
         </tu>
+        <tu tuid="resetGranularitiesDWCubes">
+            <tuv xml:lang="fr">
+                <seg>Régénération des données d’analyse des granularités du workspace [WORKSPACE]</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Analysis data rebuild for granularities of workspace [WORKSPACE]</seg>
+            </tuv>
+        </tu>
         <tu tuid="resetCellDWCube">
             <tuv xml:lang="fr">
                 <seg>Régénération des données d’analyse pour l'unité organisationnelle : [CELL]</seg>
