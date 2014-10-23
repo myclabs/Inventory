@@ -14,4 +14,4 @@ Feature: Rebuild feature
     Then I should see "Régénération des données d'analyse"
   # Régénération simple du workspace global
     When I click "Régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération effectuée."
+    Then the following message is shown and closed: "Opération en cours."

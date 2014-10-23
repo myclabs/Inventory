@@ -14,4 +14,4 @@ Feature: Rebuild feature
     Then I should see "Régénération des données d'analyse"
   # Régénération simple du workspace global
     When I click "Relancer les calculs et régénérer les données d'analyse"
-    Then the following message is shown and closed: "Opération en cours. En fonction des données présentes l'opération peut être instantanée ou nécessiter du temps"
+    Then the following message is shown and closed: "Opération en cours."
