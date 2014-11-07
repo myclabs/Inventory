@@ -6,6 +6,7 @@ use AF\Domain\AF;
 use AF\Domain\InputSet\PrimaryInputSet;
 use Core\Translation\TranslatedString;
 use Core_Exception;
+use Core_Exception_Duplicate;
 use Core_Exception_InvalidArgument;
 use Core_Exception_NotFound;
 use Core_Exception_TooMany;

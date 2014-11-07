@@ -4,6 +4,7 @@
 use Account\Application\Command\CreateAccountCommand;
 use Inventory\Command\ClearCacheCommand;
 use Inventory\Command\CreateDBCommand;
+use Inventory\Command\ImportInputsCommand;
 use Inventory\Command\PopulateDBCommand;
 use Inventory\Command\UpdateDBCommand;
 use Inventory\Command\ExportCommand;
@@ -30,5 +31,7 @@ $application->add($container->get(RebuildExportsCommand::class));
 $application->add($container->get(CreateAccountCommand::class));
 $application->add($container->get(ExportCommand::class));
 $application->add($container->get(ImportCommand::class));
+$application->add($container->get(ImportInputsCommand::class));
+
 
 $application->run();

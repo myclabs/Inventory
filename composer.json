@@ -39,7 +39,8 @@
         "netcarver/textile": "~3.5",
         "dompdf/dompdf": "dev-master",
         "phpoffice/phpexcel": "dev-WriterExcel5OptionalConstructor as 1.7.99",
-        "videlalvaro/php-amqplib": "~2.2"
+        "videlalvaro/php-amqplib": "~2.2",
+        "league/csv": "~6.0.0"
     },
     "require-dev": {
         "behat/behat": "~2.4",
