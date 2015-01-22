@@ -13,7 +13,7 @@
             <se:sequence>
                 <se:choice maxOccurs="unbounded">
                     <se:element name="row" type="exportRow"/>
-                    <se:element name="chart" type="exportChart"/>
+                    <se:element name="report" type="exportReport"/>
                     <se:element name="values" type="exportValues"/>
                     <se:element name="pageBreak"><se:complexType></se:complexType></se:element>
                 </se:choice>
@@ -57,9 +57,9 @@
 
 
     <!-- Type des contenus graphiques -->
-    <se:complexType name="exportChart">
+    <se:complexType name="exportReport">
 
-        <se:group ref="report"/>
+        <se:group ref="reportConfig"/>
 
         <se:attribute name="label" type="se:string" use="required"/>
         <se:attribute name="sortType">
@@ -71,7 +71,7 @@
                 </se:restriction>
             </se:simpleType>
         </se:attribute>
-        <se:attribute name="format" use="required">
+        <se:attribute name="format" use="optional">
             <se:simpleType>
                 <se:restriction base="se:string">
                     <se:enumeration value="pie_chart"/>
@@ -86,6 +86,15 @@
                 </se:restriction>
             </se:simpleType>
         </se:attribute>
+        <se:attribute name="type" use="required">
+            <se:simpleType>
+                <se:restriction base="se:string">
+                    <se:enumeration value="chart"/>
+                    <se:enumeration value="chart_table"/>
+                    <se:enumeration value="table"/>
+                </se:restriction>
+            </se:simpleType>
+        </se:attribute>
         <se:attribute name="withUncertainty" type="se:boolean" use="required"/>
 
     </se:complexType>
@@ -94,7 +103,7 @@
     <!-- Type des contenus graphiques -->
     <se:complexType name="exportValues">
 
-        <se:group ref="report"/>
+        <se:group ref="reportConfig"/>
 
         <se:attribute name="label" type="se:string" use="required"/>
         <se:attribute name="withUncertainty" type="se:boolean" use="required"/>
@@ -103,7 +112,7 @@
 
 
     <!-- Groupe d'élément composants les rapports -->
-    <se:group name="report">
+    <se:group name="reportConfig">
         <se:sequence>
             <se:element name="indicator" type="exportIndicator" maxOccurs="2"/>
             <se:element ref="filter" minOccurs="0" maxOccurs="unbounded"/>

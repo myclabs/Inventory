@@ -14,18 +14,18 @@ $cellReports = $this->cellReports;
                         <option value=""><?=___('Orga', 'view', 'filterAllReports')?></option>
                         <?php if (count($this->otherUsers) > 0) : ?>
                         <optgroup label="<?=___('Orga', 'view', 'reportTypes')?>">
-                            <? endif; ?>
+                            <?php endif; ?>
                             <option value="specificReport"><?=___('DW', 'reportList', 'cellReport_specificReport')?></option>
                             <option value="copiedReport"><?=___('DW', 'reportList', 'cellReport_copiedReport')?></option>
                             <option value="userReport" data-user="<?=$this->connectedUserId?>"><?=___('DW', 'reportList', 'cellReport_userReport')?></option>
                             <?php if (count($this->otherUsers) > 0) : ?>
                         </optgroup>
                         <optgroup label="<?=___('Orga', 'view', 'otherUsersReports')?>" class="other-users">
-                            <? foreach ($this->otherUsers as $userId => $userLabel) : ?>
+                            <?php foreach ($this->otherUsers as $userId => $userLabel) : ?>
                                 <option value="userReport" data-user="<?=$userId?>"><?=$userLabel?></option>
-                            <? endforeach; ?>
+                            <?php endforeach; ?>
                         </optgroup>
-                    <? endif; ?>
+                    <?php endif; ?>
                     </select>
                 </form>
             </th>

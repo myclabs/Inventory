@@ -437,7 +437,7 @@ $(document).ready(function() {
                 if ($('li a[href="#reportValues"]').closest('li').hasClass('active')) {
                     $('li a[href="#reportValues"]').closest('li').removeClass('active');
                 }
-            <? endif; ?>
+            <?php endif; ?>
         <?php else : ?>
             $('#exportAsPdf').attr('class', 'btn');
             $('#exportAsPdf').attr('href', 'dw/report/pdf/cube/<?=$this->cubeId?>/hashReport/<?=$this->hashReport?>');
@@ -451,12 +451,12 @@ $(document).ready(function() {
                 $('#saveReportButton').attr('class', 'btn btn-primary');
                 $('#saveReportButton').attr('data-target', '#saveReport');
                 $('#saveReportButton').attr('title', '');
-            <? else : ?>
+            <?php else : ?>
                 $('#reportState').html('<i class="fa fa-info-circle"></i> <?=___('DW', 'config', 'reportLaunched')?>');
                 if (configurationFormHasChanged == true) {
                     $('#form_<?=$this->hashReport?>').submit();
                 }
-            <? endif; ?>
+            <?php endif; ?>
         <?php endif; ?>
     });
     
