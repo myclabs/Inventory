@@ -268,14 +268,9 @@ $(document).ready(function() {
 
         $('select[name="sumAxisTwo"]', currentForm.first())
             .closest('.form-group').addClass('hide');
-        $('select[name="resultsOrder"]', currentForm.first())
-            .closest('.form-group').addClass('hide');
 
         if ($('input[name="sumAxisNumberChoice"]:checked', currentForm).val() == 'two') {
             $('select[name="sumAxisTwo"]', currentForm.first())
-                .closest('.form-group').removeClass('hide');
-        } else if ($('input[name="sumAxisNumberChoice"]:checked', currentForm).val() == 'one') {
-            $('select[name="resultsOrder"]', currentForm.first())
                 .closest('.form-group').removeClass('hide');
         }
     });
@@ -286,16 +281,11 @@ $(document).ready(function() {
             .closest('.form-group').addClass('hide');
         $('select[name="ratioDenominatorAxisTwo"]', currentForm.first())
             .closest('.form-group').addClass('hide');
-        $('select[name="resultsOrder"]', currentForm.first())
-            .closest('.form-group').addClass('hide');
 
         if ($('input[name="ratioAxisNumberChoice"]:checked', currentForm).val() == 'two') {
             $('select[name="ratioNumeratorAxisTwo"]', currentForm.first())
                 .closest('.form-group').removeClass('hide');
             $('select[name="ratioDenominatorAxisTwo"]', currentForm.first())
-                .closest('.form-group').removeClass('hide');
-        } else if ($('input[name="ratioAxisNumberChoice"]:checked', currentForm).val() == 'one') {
-            $('select[name="resultsOrder"]', currentForm.first())
                 .closest('.form-group').removeClass('hide');
         }
     });
