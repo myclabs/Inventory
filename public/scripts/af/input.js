@@ -241,6 +241,8 @@ function ($scope, $element, $window, $http, $timeout, validateInputSet) {
     $scope.inputSet = $window.inputSet;
     $scope.refPrefix = '';
     var urlParams = $window.afUrlParams;
+    var submitInputUrl = $window.submitInputUrl;
+    var finishInputUrl = $window.finishInputUrl;
     var resultsPreviewUrl = $window.resultsPreviewUrl;
 
     $scope.inputStatuses = {
