@@ -56,13 +56,15 @@ class AF_InputController extends Core_Controller
         $af = AF::load($this->getParam('id'));
         $this->setParam('af', $af);
 
+        $urlParams = $this->getParam('urlParams');
+
         // Form data
         $formData = $this->getParam('input');
 
         $inputSet = $this->inputSerializer->unserialize($formData, $af);
 
         // Fait suivre aux actions de processing
-        $actions = $this->getParam('actionStack');
+        $actions = $urlParams['actionStack'];
         // Fait suivre à la fin à l'action qui renvoie la réponse
         $actions[] = [
             'action'     => 'submit-send-response',
