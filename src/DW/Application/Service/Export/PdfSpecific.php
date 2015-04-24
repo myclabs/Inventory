@@ -104,15 +104,6 @@ class PdfSpecific extends Export_Pdf
                 . '-' . Core_Tools::refactor($xmlSpecificExport->getAttribute('label'));
             if ($isPreview) {
                 UI_Chart_Generic::addHeader();
-                $broker = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
-                $broker->view->headScript()->appendFile(
-                    'http://canvg.googlecode.com/svn/trunk/rgbcolor.js',
-                    'text/javascript'
-                );
-                $broker->view->headScript()->appendFile(
-                    'http://canvg.googlecode.com/svn/trunk/canvg.js',
-                    'text/javascript'
-                );
             }
             $this->html .= '<style type="text/css">';
 
@@ -163,6 +154,27 @@ class PdfSpecific extends Export_Pdf
     .pdf div.footer {
         margin: 15px 0px 0px 0px;
         text-align: left;
+    }
+
+    .pdf .data table {
+		border-collapse: collapse;
+		margin-top: 5px;
+		width: 100%;
+		vertical-align: top;
+    }
+
+    .pdf .data table tr td {
+        border-top: 1px solid;
+    }
+
+    .pdf .data table tr th {
+    	text-align: center;
+    	font-weight: bold;
+        border-bottom: 2px solid;
+    }
+
+    .pdf .data table tr:nth-child(2n) {
+    	background: #DDDDDD;
     }
         ';
 
@@ -251,27 +263,71 @@ class PdfSpecific extends Export_Pdf
 
                         break;
 
-                    case 'chart':
+                    case 'report':
                         $report = $this->getReportFromXML($xmlContent, $cube, false);
-                        $reportNumber = (isset($reportNumber)) ? $reportNumber + 1 : 1;
 
                         $this->html .= '<div class="data">';
                         $this->html .= '<h4>';
                         $this->html .= $this->translator->get($report->getLabel());
                         $this->html .= '</h4>';
+                        if ($xmlContent->getAttribute('type') == 'chart' || $xmlContent->getAttribute('type') == 'chart_table') {
+                            $reportChartNumber = (isset($reportChartNumber)) ? $reportChartNumber + 1 : 1;
+                            if ($isPreview) {
+                                $chart = $this->reportService->getChartReport(
+                                    $report,
+                                    'pdfChartSpecificExport' . $reportChartNumber
+                                );
+                                $chart->height = 200;
+                                $this->html .= $chart->render();
+                            } else {
+                                $this->html .= '<img src="temp/pdfChartSpecificExport' . $reportChartNumber . '.png">';
+                            }
 
-                        if ($isPreview) {
-                            $chart = $this->reportService->getChartReport(
-                                $report,
-                                'pdfChartSpecificExport' . $reportNumber
-                            );
-                            $chart->height = 200;
-                            $this->html .= $chart->render();
-                        } else {
-                            $this->html .= '<img src="temp/pdfChartSpecificExport' . $reportNumber . '.png">';
                         }
+                        if ($xmlContent->getAttribute('type') == 'table' || $xmlContent->getAttribute('type') == 'chart_table') {
 
+                            // Tableau des valeurs du report
+
+                            $this->html .= '<table>';
+                            $this->html .= '<tr>';
+                            $numeratorAxis1 = $report->getNumeratorAxis1();
+                            $numeratorAxis2 = $report->getNumeratorAxis2();
+                            if ($numeratorAxis1 !== null) {
+                                $this->html .= '<th>' . $this->translator->get($numeratorAxis1->getLabel()) . '</th>';
+                            }
+                            if ($numeratorAxis2 !== null) {
+                                $this->html .= '<th>' . $this->translator->get($numeratorAxis2->getLabel()) . '</th>';
+                            }
+                            $this->html .= '<th>' . __('UI', 'name', 'value') . ' ('
+                                . $this->translator->get($report->getValuesUnitSymbol()) . ')</th>';
+                            $this->html .= '<th>' . __('UI', 'name', 'uncertainty') . ' (%)</th>';
+                            $this->html .= '</tr>';
+
+
+                            // Récupération des unités
+
+                            $locale = Core_Locale::loadDefault();
+
+                            foreach ($report->getValues() as $value) {
+                                if ($value['value'] != 0) {
+                                    $this->html .= '<tr>';
+                                    foreach ($value['members'] as $member) {
+                                        $this->html .= '<td>' . $this->translator->get($member->getLabel()) . '</td>';
+                                    }
+                                    $this->html .= '<td align="right">' . str_replace(
+                                            '.',
+                                            ',',
+                                            $locale->formatNumber($value['value'], 3)
+                                        ) . '</td>';
+                                    $this->html .= '<td align="right">' . str_replace('.', ',', round($value['uncertainty'])) . '</td>';
+                                    $this->html .= '</tr>';
+                                }
+                            }
+
+                            $this->html .= '</table>';
+                        }
                         $this->html .= '</div>';
+
                         break;
 
                     case 'pageBreak':
@@ -296,33 +352,22 @@ class PdfSpecific extends Export_Pdf
                 $this->html .= __('UI', 'verb', 'exportToPDF');
                 $this->html .= '</a>';
 
-                $reportNumber = (isset($reportNumber)) ? $reportNumber : 0;
-                if ($reportNumber > 0) {
+                $reportChartNumber = (isset($reportChartNumber)) ? $reportChartNumber : 0;
+                if ($reportChartNumber > 0) {
                     $script = '';
                     // Fonction de récupération de l'image.
                     $script .= 'function getImageData(idChart) {';
-                    $script .= 'var chartArea = $(\'#\' + idChart + \' div:first-child div:first-child\')[0];';
-                    $script .= 'var svg = chartArea.innerHTML.replace(/&nbsp;/g, " ");';
-                    $script .= 'var doc = chartArea.ownerDocument;';
-                    $script .= 'var canvas = doc.createElement( \'canvas\');';
-                    $script .= 'canvas.setAttribute(\'width\', chartArea.offsetWidth);';
-                    $script .= 'canvas.setAttribute(\'height\', chartArea.offsetHeight);';
-                    $script .= 'canvas.setAttribute(\'style\', ';
-                    $script .= '\'position: absolute; \'';
-                    $script .= ' +\'top: \' + (-chartArea.offsetHeight * 2) + \'px; \'';
-                    $script .= ' +\'left: \' + (-chartArea.offsetWidth * 2) + \'px;\'';
-                    $script .= ');';
-                    $script .= 'doc.body.appendChild(canvas);';
-                    $script .= 'canvg(canvas, svg);';
-                    $script .= 'var imgData = canvas.toDataURL(\'image/png\');';
-                    $script .= 'canvas.parentNode.removeChild(canvas);';
-                    $script .= 'return imgData;';
+                    $script .= 'if (window[idChart + "_data"].getNumberOfRows() == 0) {';
+                    $script .= 'return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAADIAQMAAAAqQRdZAAAABlBMVEX///////9VfPVsAAAFjUlEQVR4nO1aS66kOBCEZkHvuEBL3ORxlTlGL1oFNxvmJhyhlrVA0M6PDaRxVvqp50kzciwoChyO9Jd02lVVUFBQUFBQUFBQUFBQUFBQUFBQUPB/Qrs/+a4Od9X+0ghLHgFe7/tEd/2+87MuPItR7/tW5RDQrt3b4+7YxnE/bJRwOe9zDoE5K9417u7ljeVnNxiDVUYCc6jQrshcEW14FgNy5qxthIrarqXi95ujMds9m+4JnSOMlLWNgIa5d+MCt8PTSZKcszR0IYFhB8MrO8GhharssY4hPcnBdUg05AjPyWobwaGDVy3Ucb0fci6PLtHxR8h/nO0ESASWNKu/kNzm/97gcWW9JzgMYFOFiV7+Uq/+coOfcMHyGwkgMsF1BJuePiUSq+2e8Ffl0xoJnL2TAusWnxLZ/OYemKudsIXydHMo0+KfpVCjiJlAFdm7933gdO9FsOObCSQCRlGaIcjRVaGZCfXrEME7LNPknyUBtWwmnESo3cAcMpHqIAEYLWYCi7Qzj7JTmdp3ImZC/Qwi1M/AHDKx1b5CIGAmnETWYA6Z2GgiYLuZ4EWWrxHh1oGUxK41/2OoMghfKjJ/kcgzpOTEmvsxVBmEY5w0gVPbROyEY8QnOd/p59u/KvKDftrPi/hZeKqaxT/gyubeX31UPokQSRFSIm4abQOnuXL4g3edyIcqTYhBL3qFw9+i6yfpMyIah4tw/YLniQz+dZLDn4mrL/KRJzJxDp7zK3C4xWkGF17VQyHEwMqAHGC2Z85y4ZBT1VznjIdCiIGVATl4ziNwqCa5DOKL9FAIMYIv6N2AR9UKzhaMObBqhAjBF0xzsF8JfydPBB1y8LrTHOwbwnPLE8GlBSw00hwsxHWYwGyVIzIsVbupItgc12GSK9KvuOJTONAtxDBp1J4So93/wSVlmgN9QwyTXJGawx5pDg7V6zCBJDkibs2MVaFwtmiYZIv0FFVQOGM0TCBxlgjHYxSOGyNimPSZIj4K4zkfgdOfshTrQViQKIQI/U6hEoXjGkSsbI81pk1kfFLsReG0T7lGH3WrJGqcVha1ipuXGCb4DcyZhXGC1MdWvcr1jT4PRcCwS/dmUt3EMMHayxChUMymc0YxTBp9sotAA2DXOYOIyqHnkCFCA2CcVE4v4ottpgjHVmaV04lhgk1kF+EB0OsirRgm2EQZIi9vWo4INqRdpAkL0xwRbEi7CL93Wjlt8u7bkBTRHELZu8inVAhXsDmuaTTXdvh7OpPqi8h7X/gksgRO5KSLEU/TpUYQImziIXK33BBzF02XGuFeZNU4chYmSbtIbxGR3xOqvD8sIr+MNKlmiFQhZeBEy3L5jadJ1b6OP4mkAwzSWyFFe0TCJCL8Lq67fJFfGkd4kM0R6MotCaeEn1VwhC/cHoGuBOGdyE0gTnr1/XJ+b4jcHV04zZHrE9rX+cMicqU1Tp8WSYd55ZrRz/vmuLBFRKx+a69nFjmmeh/fX0J833PEOj40T5LwXmSONhFERCLkZd51YBGwLrkdImIr4c68f8LqUJ2pjR0ZJQplMu8EsQhkkdqikvGu0DrmPa3D70putsnIXehn5t25JniQyW1DEYMMPdi+z3j4wskNUBFNPfaRs3dM5/RWrogLt6Fx7Hu/NEfAdJTalBYR7i50M/su9rF9j5VNdsLfUC0iVn/0oRQhxrBUvATGlHRQAAoWDgqIXYdT8yYIMfBVv/pC8ZGM5XTkQeyfnJo3QYiBBzfwcAUd3kA78fDGfJu+Pjn4JgKgwXMraI5bIPAaodunLnEMBWJwO8fhTAREoNgO1JxFzCdw3BrdpzQdDTqL2M8SZZ6KOovYT0Vlnu+6iJjPd2HTe73F342qXYeBuYSCgoKCgoKCgoKCgoKCgoKCgoL/KH4D7MpzFoOVH5sAAAAASUVORK5CYII=";';
+                    $script .= "} else {";
+                    $script .= 'return window[idChart].getImageURI();';
+                    $script .= '}';
                     $script .= '}';
                     // Fonction de récupération de l'image.
                     $script .= 'function saveImageData(e) {';
                     $script .= 'e.preventDefault();';
                     $script .= '$.when(';
-                    for ($i = 1; $i <= $reportNumber; $i++) {
+                    for ($i = 1; $i <= $reportChartNumber; $i++) {
                         $chartId = 'pdfChartSpecificExport' . $i;
                         if ($i > 1) {
                             $script .= ',';

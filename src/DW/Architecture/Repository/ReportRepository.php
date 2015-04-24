@@ -22,6 +22,13 @@ use DW\Domain\Result;
 class ReportRepository extends Core_Model_Repository
 {
     /**
+     * @var array Contient les ref des membres de l'axe 1 triés par ordre ascendant de la somme des valeurs
+     * Utilisé pour le trie des valeurs dans le cas d'un report à deux axes,
+     * les valeurs sont la somme des valeurs pour l'axe 2
+     */
+    protected $orderedAxis1;
+
+    /**
      * @param Report $report
      * @return array
      */
@@ -165,19 +172,33 @@ class ReportRepository extends Core_Model_Repository
             }
         }
 
-        if (($report->getNumeratorAxis2() === null)
-            && ($report->getSortType() === Report::SORT_VALUE_INCREASING)
-        ) {
+        if ($report->getSortType() === Report::SORT_VALUE_INCREASING) {
+            if ($report->getNumeratorAxis2() === null) {
+                $sortingMethod = 'orderResultByIncreasingValue';
+            }
+            else {
+                $sum = $this->getAxis1Sum($values);
+                asort($sum);
+                $this->orderedAxis1 = array_keys($sum);
+                $sortingMethod = 'orderResultByIncreasingValueAndByMember';
+            }
             usort(
                 $values,
-                ['DW\Architecture\Repository\ReportRepository', 'orderResultByIncreasingValue']
+                ['DW\Architecture\Repository\ReportRepository', $sortingMethod]
             );
-        } elseif (($report->getNumeratorAxis2() === null)
-            && ($report->getSortType() === Report::SORT_VALUE_DECREASING)
-        ) {
+        } elseif ($report->getSortType() === Report::SORT_VALUE_DECREASING) {
+            if ($report->getNumeratorAxis2() === null) {
+                $sortingMethod = 'orderResultByDecreasingValue';
+            }
+            else {
+                $sum = $this->getAxis1Sum($values);
+                asort($sum);
+                $this->orderedAxis1 = array_keys($sum);
+                $sortingMethod = 'orderResultByDecreasingValueAndByMember';
+            }
             usort(
                 $values,
-                ['DW\Architecture\Repository\ReportRepository', 'orderResultByDecreasingValue']
+                ['DW\Architecture\Repository\ReportRepository', $sortingMethod]
             );
         } else {
             usort(
@@ -305,6 +326,40 @@ class ReportRepository extends Core_Model_Repository
     }
 
     /**
+     * Renvoie la liste des membres de l'axe 1 ordonné selon la somme des valeurs
+     * pour tous les membres de l'axe 2
+     *
+     * @param $values
+     * @return array Liste des ref des membres de l'axe 1
+     */
+    protected function getAxis1MembersOrderedByAxis2Sum($values) {
+        $sum = $this->getAxis1Sum($values);
+        asort($sum);
+        $this->orderedAxis1 = array_keys($sum);
+        return $this->orderedAxis1;
+    }
+
+    /**
+     * Renvoie un tableau comportant la somme des valeurs sur l'axe 2 par membre de l'axe 1
+     *
+     * @param $values
+     * @return array Tableau indexé par les ref des membres de l'axe 1, chaque valeur
+     *               est la somme des valeurs pour tous les membres de l'axe 2
+     */
+    protected function getAxis1Sum($values) {
+        $sum = [];
+        foreach ($values as $value) {
+            /** @var $memberAxis1 Member **/
+            $memberAxis1 = $value['members'][0];
+            if (!array_key_exists($memberAxis1->getRef(), $sum)) {
+                $sum[$memberAxis1->getRef()] = 0;
+            }
+            $sum[$memberAxis1->getRef()] += $value['value'];
+        }
+        return $sum;
+    }
+
+    /**
      * Fonction de tri personnalisé des résultats par ordre des membres.
      *
      * @param array $a
@@ -317,5 +372,41 @@ class ReportRepository extends Core_Model_Repository
             return $a['members'][1]->getPosition() - $b['members'][1]->getPosition();
         }
         return $a['members'][0]->getPosition() - $b['members'][0]->getPosition();
+    }
+
+    /**
+     * Fonction de tri personnalisé des résultats par ordre croissant de la somme des valeurs
+     * par membre de l'axe 1 puis par ordre des membres pour l'axe 2
+     *
+     * @param $a
+     * @param $b
+     * @return mixed
+     */
+    protected function orderResultByIncreasingValueAndByMember($a, $b)
+    {
+        if ($a['members'][0] === $b['members'][0]) {
+            return $a['members'][1]->getPosition() - $b['members'][1]->getPosition();
+        }
+        $aPos = array_search($a['members'][0]->getRef(), $this->orderedAxis1);
+        $bPos = array_search($b['members'][0]->getRef(), $this->orderedAxis1);
+        return $aPos - $bPos;
+    }
+
+    /**
+     * Fonction de tri personnalisé des résultats par ordre décroissant de la somme des valeurs
+     * par membre de l'axe 1 puis par ordre des membres pour l'axe 2
+     *
+     * @param $a
+     * @param $b
+     * @return mixed
+     */
+    protected function orderResultByDecreasingValueAndByMember($a, $b)
+    {
+        if ($a['members'][0] === $b['members'][0]) {
+            return $a['members'][1]->getPosition() - $b['members'][1]->getPosition();
+        }
+        $aPos = array_search($a['members'][0]->getRef(), $this->orderedAxis1);
+        $bPos = array_search($b['members'][0]->getRef(), $this->orderedAxis1);
+        return $bPos - $aPos;
     }
 }

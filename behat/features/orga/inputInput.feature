@@ -14,13 +14,17 @@ Feature: Organization input input feature
   Scenario: Display of existing input with correct values and uncertainties scenario
     Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
+  # On doit fermer le premier volet sinon le clic suivant est trop bas dans la page
     And I click "Année | Site Fonctionnalités disponibles à ce niveau : Suivi des collectes, Saisies"
+  # Accès à la saisie
     And I go input the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:1-energie/" cell
     Then I should see "Saisie 2012 | Annecy | Énergie"
     And the "quantite_combustible" field should contain "10"
     And the "percentquantite_combustible" field should contain "15"
   # Vérification dans l'onglet "Détails calculs" que c'est bien cette valeur et cette incertitude qu'on devrait voir
     When I open tab "Détails calculs"
+  # Ajout attente pour que le test passe en local sur machine Emmanuel
+    And I wait 5 seconds
     And I open collapse "Formulaire maître"
     And I open collapse "emissions_combustion"
     And I open collapse "quantite_combustible"
@@ -31,6 +35,7 @@ Feature: Organization input input feature
   Scenario: Display of existing input for a closed inventory scenario
     Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
+  # Cliquer sur le bouton "Réinitialiser" pour la granularité Année|Site, pour faire apparaître les collectes clôturées
     And I click element "div[id='granularity8'] button.reset"
   # Vérification contenu datagrid
     Then the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:grenoble/&/2-marque:marque_b/2-site:grenoble/" cell input status should be "statusFinished"

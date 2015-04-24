@@ -65,6 +65,24 @@ class AFViewConfiguration
     protected $actionStack;
 
     /**
+     * Actions to call when the AF is finished
+     * @var array
+     */
+    protected $finishActionStack;
+
+    /**
+     * URL to call for submitting the input
+     * @var string
+     */
+    protected $submitInputUrl;
+
+    /**
+     * URL to call for finishing the input
+     * @var string
+     */
+    protected $finishInputUrl;
+
+    /**
      * URL to call for validating the input
      * @var string
      */
@@ -296,6 +314,14 @@ class AFViewConfiguration
     }
 
     /**
+     * @return array
+     */
+    public function getFinishActionStack()
+    {
+        return $this->finishActionStack;
+    }
+
+    /**
      * @param string $action
      * @param string $controller
      * @param string $module
@@ -312,6 +338,57 @@ class AFViewConfiguration
             $action['params'] = $params;
         }
         $this->actionStack[] = $action;
+    }
+
+    /**
+     * @param string $action
+     * @param string $controller
+     * @param string $module
+     * @param array  $params
+     */
+    public function addToFinishActionStack($action, $controller, $module, array $params = [])
+    {
+        $action = [
+            'action'     => $action,
+            'controller' => $controller,
+            'module'     => $module,
+        ];
+        if (count($params) > 0) {
+            $action['params'] = $params;
+        }
+        $this->finishActionStack[] = $action;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setSubmitInputUrl($url)
+    {
+        $this->submitInputUrl = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubmitInputUrl()
+    {
+        return $this->submitInputUrl;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setFinishInputUrl($url)
+    {
+        $this->finishInputUrl = $url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFinishInputUrl()
+    {
+        return $this->finishInputUrl;
     }
 
     /**

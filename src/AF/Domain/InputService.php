@@ -74,9 +74,11 @@ class InputService
      * Si la saisie est incomplète, les résultats seront vidés.
      *
      * @param PrimaryInputSet $inputSet
-     * @param AF              $af Permet d'uiliser un AF différent de celui de la saisie
+     * @param AF $af Permet d'uiliser un AF différent de celui de la saisie
+     * @param bool $updateFinish Indique s'il faut mettre à jour le status finish de la saisie
+     *                           false dans le cas où on recalcule toutes les saisies
      */
-    public function updateResults(PrimaryInputSet $inputSet, AF $af = null)
+    public function updateResults(PrimaryInputSet $inputSet, AF $af = null, $updateFinish = true)
     {
         if (!$af) {
             $af = $inputSet->getAF();
@@ -86,11 +88,14 @@ class InputService
         $inputSet->updateCompletion();
 
         // La saisie vient d'être modifiée, donc on la force à "non terminée"
-        $inputSet->markAsFinished(false);
+        if ($updateFinish) {
+            $inputSet->markAsFinished(false);
+        }
 
         // Si la saisie est incomplète
         if (!$inputSet->isInputComplete()) {
             $inputSet->clearOutputSet();
+            $inputSet->markAsFinished(false);
             return;
         }
 

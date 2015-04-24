@@ -149,3 +149,16 @@ Feature: Cell administrator feature
     Then the following message is shown and closed: "Suppression effectuée."
     And the "listMemberssite" datagrid should contain 2 row
   # TODO : Suppression d'un élément entraînant la suppression de cellules associées à des DWs (par exemple un site).
+
+  @javascript @readOnly
+  Scenario: Cell administrator can edit an input
+    Given I am logged in as "administrateur.global@toto.com"
+    Given I am on "orga/cell/input/cell/3/fromCell/3/"
+    And I wait 3 seconds
+# On va sur la page de la cellule
+    Then I should see "Saisie Europe | Marque A"
+    When I fill in "chiffre_affaire" with "100"
+    And I click "Enregistrer"
+    Then the following message is shown and closed: "Enregistrement effectué (saisie complète)."
+    When I click "Terminer la saisie"
+    Then the following message is shown and closed: "Saisie terminée."

@@ -46,7 +46,8 @@
         "behat/mink": "~1.5",
         "behat/mink-extension": "*",
         "behat/mink-selenium2-driver": "*",
-        "mnapoli/metaconsole": "dev-master"
+        "mnapoli/metaconsole": "dev-master",
+        "phpunit/phpunit": "4.1.*"
     },
     "suggest": {
         "shvetsgroup/parallelrunner": "Run Behat scenarios in parallel"

@@ -137,12 +137,6 @@ Abstract class UI_Chart_Generic extends UI_Generic
         }
 
         return $options.'}';
-
-        $script .= 'var '.$this->id.' = new google.visualization.PieChart(';
-        $script .= 'document.getElementById(\''.$this->id.'\')';
-        $script .= ');';
-        $script .= 'chart.draw(data, {';
-        $options = '';
     }
 
     /**

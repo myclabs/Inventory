@@ -45,6 +45,14 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * @Given /^(?:|I )am logged in as "(?P<email>(?:[^"]|\\")*)"$/
+     */
+    public function assertLoggedInAs($email)
+    {
+        $this->visit('user/debug/login?email='.$email);
+    }
+
+    /**
      * @Then /^the following message is shown and closed: "(?P<message>(?:[^"]|\\")*)"$/
      */
     public function assertMessageShown($message)

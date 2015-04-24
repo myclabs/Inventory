@@ -164,6 +164,7 @@ class UI_Chart_Bar extends UI_Chart_Generic
         $script .= 'document.getElementById(\''.$this->id.'\')';
         $script .= ');';
         $script .= $this->id.'.draw(data, '.$this->getOptions().');';
+        $script .= $this->id.'_data = data;';
 
         $script .= '};';
 

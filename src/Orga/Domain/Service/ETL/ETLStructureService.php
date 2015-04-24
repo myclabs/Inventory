@@ -379,24 +379,38 @@ class ETLStructureService implements ETLStructureInterface
 
     /**
      * @param Granularity $granularity
+     * @throws ErrorException
+     * @throws Exception
      */
     public function resetGranularityDWCube(Granularity $granularity)
     {
         if (!$granularity->getCellsGenerateDWCubes()) {
             return;
         }
+        try {
+            // Début de transaction.
+            $this->entityManager->beginTransaction();
+            // Ne pas mettre à jour les rapports des cellules alors qu'aucune modification n'a eu lieu.
+            $this->eventDispatcher->removeListener(OrgaReportFactory::class, DWReport::class);
 
-        // Ne pas mettre à jour les rapports des cellules alors qu'aucune modification n'a eu lieu.
-        $this->eventDispatcher->removeListener(OrgaReportFactory::class, DWReport::class);
+            $this->updateGranularityDWCubeLabel($granularity);
+            $this->resetDWCube(
+                $granularity->getDWCube(),
+                $granularity->getWorkspace(),
+                [
+                    'excludedAxesFromRoot' => $granularity->getAxes()
+                ]
+            );
 
-        $this->updateGranularityDWCubeLabel($granularity);
-        $this->resetDWCube(
-            $granularity->getDWCube(),
-            $granularity->getWorkspace(),
-            [
-                'excludedAxesFromRoot' => $granularity->getAxes()
-            ]
-        );
+            // Fin de transaction.
+            $this->entityManager->commit();
+
+        } catch (ErrorException $e) {
+            // Annulation de la transaction.
+            $this->entityManager->rollback();
+
+            throw $e;
+        }
     }
 
     /**

@@ -135,33 +135,6 @@ class ReportService
                     $seriesValues[$serieValueId][$value['members'][0]->getId()] = $value;
                 }
 
-                // Complément des paires de membres sans résultats et tris des valeurs.
-                foreach ($numeratorAxis2MembersUsed as $member2Id => $member2) {
-                    $serieValueId = 'serieValue' . $member2Id;
-
-                    foreach ($numeratorAxis1MembersUsed as $member1Id => $member1) {
-                        if (!(isset($seriesValues[$serieValueId][$member1Id]))) {
-                            $seriesValues[$serieValueId][$member1Id] = array('value' => 0, 'uncertainty' => 0);
-                        }
-                    }
-                    uksort(
-                        $seriesValues[$serieValueId],
-                        function ($a, $b) {
-                            $memberA = Member::load($a);
-                            $memberB = Member::load($b);
-                            return $memberA->getPosition() - $memberB->getPosition();
-                        }
-                    );
-                }
-                uksort(
-                    $seriesAxisLabel,
-                    function ($a, $b) {
-                        $memberA = Member::load($a);
-                        $memberB = Member::load($b);
-                        return $memberA->getPosition() - $memberB->getPosition();
-                    }
-                );
-
                 // Ajout des séries et limitation de l'affichage.
                 $numberAxes = 0;
                 foreach ($seriesAxisLabel as $member1Id => $axisLabel) {
@@ -183,9 +156,16 @@ class ReportService
                         )
                     );
                     $numberValues = 0;
-                    foreach ($values as $memberIndex => $value) {
-                        $serie->values[$memberIndex] = $value['value'];
-                        $serie->uncertainties[$memberIndex] = $value['uncertainty'];
+                    foreach ($numeratorAxis1MembersUsed as $member1Id => $member1) {
+                        // Complément des paires de membres sans résultats
+                        if (isset($values[$member1Id])) {
+                            $serie->values[$member1Id] = $values[$member1Id]['value'];
+                            $serie->uncertainties[$member1Id] = $values[$member1Id]['uncertainty'];
+                        }
+                        else {
+                            $serie->values[$member1Id] = 0;
+                            $serie->uncertainties[$member1Id] = 0;
+                        }
 
                         $numberValues++;
                         if ($numberValues >= 15) {

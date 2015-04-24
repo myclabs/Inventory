@@ -55,33 +55,31 @@ class ETLService
      */
     public function resetWorkspaceDWCubes(Workspace $workspace)
     {
-        foreach ($workspace->getDWGranularities() as $granularity) {
-            // Lance la tache en arrière plan.
-            $this->workDispatcher->run(
-                new ServiceCallTask(
-                    ETLService::class,
-                    'resetGranularityAndCellsDWCubes',
-                    [$granularity],
-                    __(
-                        'Orga', 'backgroundTasks', 'resetGranularityAndCellsDWCubes',
-                        [
-                            'GRANULARITY' => $this->translator->get($granularity->getLabel())
-                        ]
-                    )
+        $this->workDispatcher->run(
+            new ServiceCallTask(
+                ETLService::class,
+                'resetGranularitiesDWCubes',
+                [$workspace],
+                __(
+                    'Orga', 'backgroundTasks', 'resetGranularitiesDWCubes',
+                    [
+                        'WORKSPACE' => $this->translator->get($workspace->getLabel())
+                    ]
                 )
-            );
-        }
+            )
+        );
+        $granularity = $workspace->getGranularityByRef('global');
+        $cell = $granularity->getCellByMembers([]);
+        $this->resetCellAndChildrenDWCubes($cell);
     }
 
     /**
-     * @param Granularity $granularity
+     * @param Workspace $workspace
      */
-    public function resetGranularityAndCellsDWCubes(Granularity $granularity)
+    public function resetGranularitiesDWCubes(Workspace $workspace)
     {
-        $this->etlStructureService->resetGranularityDWCube(Granularity::load($granularity->getId()));
-
-        foreach ($granularity->getCells()->toArray() as $cell) {
-            $this->etlStructureService->resetCellDWCube(Cell::load($cell->getId()));
+        foreach ($workspace->getDWGranularities() as $granularity) {
+            $this->etlStructureService->resetGranularityDWCube(Granularity::load($granularity->getId()));
         }
     }
 
