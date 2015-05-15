@@ -129,6 +129,14 @@
                 <seg>Yes</seg>
             </tuv>
         </tu>
+        <tu tuid="no">
+            <tuv xml:lang="fr">
+                <seg>Non</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>No</seg>
+            </tuv>
+        </tu>
 
         <!-- Absence de description -->        
         

@@ -76,6 +76,14 @@
                 <seg>Initial value</seg>
             </tuv>
         </tu>
+        <tu tuid="hasInconsistency">
+            <tuv xml:lang="fr">
+                <seg>Saisie suspecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Inconsistent value</seg>
+            </tuv>
+        </tu>
 
         <!-- Types de champ -->
         <tu tuid="numericField">

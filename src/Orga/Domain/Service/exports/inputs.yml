@@ -23,6 +23,7 @@ sheets:
           - label: "{{ inputUnit }}"
           - label: "{{ inputReferenceValue }}"
           - label: "{{ inputReferenceUnit }}"
+          - label: "{{ inputHasInconsistency }}"
 
         lines:
           - foreach: inputs as input
