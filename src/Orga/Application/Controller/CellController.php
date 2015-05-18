@@ -42,6 +42,7 @@ use Orga\Domain\ACL\CellAdminRole;
 use Orga\Domain\ACL\CellManagerRole;
 use Orga\Domain\ACL\CellContributorRole;
 use Orga\Domain\ACL\CellObserverRole;
+use Core\Annotation\Secure;
 
 /**
  * @author valentin.claras

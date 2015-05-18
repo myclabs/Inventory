@@ -38,7 +38,16 @@ $cellUsers = $this->cellUsers;
                 <?=$cellRole->getLabel()?>
             </td>
             <td>
-                <a href="orga/cell/remove-user/cell/<?=$this->cellId?>/role/<?=$cellRole->getId()?>/" class="delete-user withTooltip" title="<?=___('Orga', 'role', 'deleteRole')?>">
+                <a href="orga/cell/edit-user/cell/<?=$this->cellId?>/role/<?=$cellRole->getId()?>/"
+                   class="edit-user withTooltip"
+                   title="<?=___('Orga', 'role', 'editRole')?>"
+                   data-firstname="<?=$cellRole->getSecurityIdentity()->getFirstName()?>"
+                   data-lastname="<?=$cellRole->getSecurityIdentity()->getLastName()?>">
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+                <a href="orga/cell/remove-user/cell/<?=$this->cellId?>/role/<?=$cellRole->getId()?>/"
+                   class="delete-user withTooltip"
+                   title="<?=___('Orga', 'role', 'deleteRole')?>">
                     <i class="fa fa-trash-o"></i>
                 </a>
             </td>

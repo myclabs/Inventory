@@ -55,11 +55,17 @@ if (count($file) > 0) {
     .users .modal-body { padding: 0; }
     .users .modal-body .modal-loading { padding: 20px; }
     .users .modal-body table { margin: 0; }
-    .users .modal-body tr.user-message td:first-child { text-align: center; }
+    .users .modal-body tr.user-message td:first-child { text-align: center; line-height: 30px; }
     .users .modal-body tr.user-message .btn { margin: 0 5px 0 5px; }
     .users .modal-body tr.user-message .close-user-message { float: none; font-size: inherit; opacity: 1; }
     .users .modal-body .delete-user { color: #000000; }
     .users .modal-body .delete-user + .tooltip.left { margin-left: -15px; }
+    .users .modal-body .edit-user { color: #000000; margin-right: 10px; }
+    .users .modal-body tr.user-form td:first-child { line-height: 30px; }
+    .users .modal-body tr.user-form label { font-weight: bold; }
+    .users .modal-body tr.user-form .form-control { line-height: normal; }
+    .users .modal-body tr.user-form .btn { margin: 0 5px 0 5px; }
+    .users .modal-body tr.user-form .close-user-message { float: none; font-size: inherit; opacity: 1; }
     .users .modal-footer div.user-message { text-align: center; margin-bottom: 5px; }
     .users .modal-footer form { margin: 0; }
 
@@ -899,6 +905,7 @@ $('body').on('click', '.delete-user', function(e) {
         return false;
     }
     $('.user-message').remove();
+    $('.user-form').remove();
     $(this).closest('tr').after(
         '<tr class="info user-message">' +
             '<td colspan="5">' +
@@ -907,6 +914,35 @@ $('body').on('click', '.delete-user', function(e) {
                 '<button class="btn btn-primary confirm"><i class="fa fa-check fa-fw"></i> <?=___('UI', 'verb', 'confirm')?></button>' +
                 '<button class="btn btn-default close-user-message"><i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?></button>' +
             '</td>' +
+        '</tr>'
+    );
+});
+$('body').on('click', '.edit-user', function(e) {
+    e.preventDefault();
+    var row = $(this).closest('tr');
+    if ($(this).attr('data-submitting') === 'true') {
+        return false;
+    }
+    $('.user-message').remove();
+    $('.user-form').remove();
+    console.log($('a.edit-user', row).attr('data-firstname'));
+    console.log($('a.edit-user', row));
+    $(this).closest('tr').after(
+        '<tr class="info user-form">' +
+        '<td colspan="5">' +
+        '<form class="form-inline">' +
+        '<div class="form-group">' +
+        '<label for="firstname">Prénom :</label>' +
+        '<input type="text" class="form-control" name="firstname" id="firstname" value="' + $('a.edit-user', row).attr('data-firstname') + '" size="13">' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label for="lastname">Nom :</label>' +
+        '<input type="text" class="form-control" name="lastname" id="lastname" value="' + $('a.edit-user', row).attr('data-lastname') + '" size="13">' +
+        '</div>' +
+        '<button class="btn btn-primary confirm"><i class="fa fa-check fa-fw"></i> <?=___('UI', 'verb', 'edit')?></button>' +
+        '<button class="btn btn-default close-user-form"><i class="fa fa-times"></i> <?=___('UI', 'verb', 'cancel')?></button>' +
+        '</form>' +
+        '</td>' +
         '</tr>'
     );
 });
@@ -955,6 +991,10 @@ $('body').on('click', 'tr.user-message .confirm', function(e) {
     });
 });
 $('body').on('click', 'tr.user-message .close-user-message', function(e) {
+    e.preventDefault();
+    $(this).closest('tr').remove();
+});
+$('body').on('click', 'tr.user-form .close-user-form', function(e) {
     e.preventDefault();
     $(this).closest('tr').remove();
 });
