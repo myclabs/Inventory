@@ -771,7 +771,7 @@ $('div.collapse[id^="granularity"]').on('loadCells', function(e) {
                 if (this.showInput) {
                     var inputStatusIcon = (this.inputStatus == '<?=Cell::INPUT_STATUS_FINISHED?>') ? 'certificate' : (this.inputStatus == '<?=Cell::INPUT_STATUS_COMPLETE?>') ? 'check-square-o' : (this.inputStatus == '<?=Cell::INPUT_STATUS_CALCULATION_INCOMPLETE?>') ? 'warning' : (this.inputStatus == '<?=Cell::INPUT_STATUS_INPUT_INCOMPLETE?>') ? 'pencil-square-o' : (this.inputStatus == '<?=Cell::INPUT_STATUS_NOT_STARTED?>') ? 'square-o' : (this.inputStatus == '<?=Cell::INPUT_STATUS_AF_NOT_CONFIGURED?>') ? 'wrench' : 'ban';
                     inputStatusP +=
-                        '<a class="go-input btn btn-link btn-sm withTooltip' + (((this.inventoryStatus != '<?=Cell::INVENTORY_STATUS_NOTLAUNCHED?>') && (this.inputStatus != '<?=Cell::INPUT_STATUS_AF_NOT_CONFIGURED?>')) ? '' : ' disabled') + '" href="orga/cell/input/cell/' + this.id + '/fromCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>">' +
+                        '<a class="go-input btn btn-link btn-sm withTooltip' + (((this.inventoryStatus != '<?=Cell::INVENTORY_STATUS_NOTLAUNCHED?>') && (this.inputStatus != '<?=Cell::INPUT_STATUS_AF_NOT_CONFIGURED?>')) ? '' : ' disabled') + '" href="orga/cell/input/cell/' + this.id + '/fromCell/<?=$currentCell->id?>/" title="<?=___('Orga', 'view', 'viewInput')?>" target="_blank">' +
                             ((this.inputInconsistencies > 0) ? '<i class="fa fa-exclamation-triangle fa-fw"></i> ' : '') +
                             '<?=___('Orga', 'view', 'inputLinkDetail')?>' +
                         '</a>' +
