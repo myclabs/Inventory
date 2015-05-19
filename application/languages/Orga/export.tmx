@@ -78,7 +78,7 @@
         </tu>
         <tu tuid="hasInconsistency">
             <tuv xml:lang="fr">
-                <seg>Saisie suspecte</seg>
+                <seg>Valeur suspecte</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>Inconsistent value</seg>
