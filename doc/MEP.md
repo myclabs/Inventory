@@ -1,5 +1,15 @@
 # Mise en production
 
+## 3.4.7
+
+- Déployer normalement avec update de la BDD.
+
+- Exécuter la requête :
+
+```sql
+UPDATE DW_Report SET sortType = 'orderResultByMembers' WHERE idNumeratorAxis2 IS NULL;
+```
+
 ## 3.4
 
 - NE PAS DEPLOYER.
