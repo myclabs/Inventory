@@ -7,7 +7,7 @@
 - Exécuter la requête :
 
 ```sql
-UPDATE DW_Report SET sortType = 'orderResultByMembers' WHERE idNumeratorAxis2 IS NULL;
+UPDATE DW_Report SET sortType = 'orderResultByMembers' WHERE idNumeratorAxis2 IS NOT NULL;
 ```
 
 ## 3.4
