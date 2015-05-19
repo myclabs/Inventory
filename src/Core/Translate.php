@@ -68,6 +68,10 @@ class Core_Translate
             return $replacement;
         }, $replacements);
 
+        if (!isset($locale)) {
+            $locale = Core_Locale::loadDefault()->getId();
+        }
+
         $message = $this->getFromCache($id, $replacements, $locale);
 
         if ($message === false) {

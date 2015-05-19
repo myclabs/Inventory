@@ -8,6 +8,11 @@
     Voir parameters.php.default.
     Si feature.register vaut true, les 3 feature.workspaces.*.register doivent être spécifés (null pour désactiver).
 
+- Exécuter la requête :
+
+```sql
+UPDATE DW_Report SET sortType = 'orderResultByMembers' WHERE idNumeratorAxis2 IS NOT NULL;
+```
 
 ## 3.4
 
