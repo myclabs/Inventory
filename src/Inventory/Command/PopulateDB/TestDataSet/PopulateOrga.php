@@ -225,10 +225,10 @@ qui officia deserunt mollit anim id est laborum.',
 
         $this->entityManager->flush();
 
-        $this->createHreeAppAccount();
+        $this->createFreeAppAccount();
     }
 
-    public function createHreeAppAccount()
+    public function createFreeAppAccount()
     {
         // Création d'un compte d'application gratuite
         $account = new Account('Application gratuite');
