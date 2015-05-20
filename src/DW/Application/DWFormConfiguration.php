@@ -359,6 +359,10 @@ class DWFormConfiguration extends GenericTag
         $resultsOrderSelect->setAttribute('name', 'resultsOrder');
         $resultsOrderSelect->addClass('form-control');
         $resultsOrderGroup->appendContent($resultsOrderSelect);
+        // Valeurs par ordre conventionnel.
+        $resultOrderConventionalOption = new GenericTag('option', __('DW', 'config', 'sortByMembers'));
+        $resultOrderConventionalOption->setAttribute('value', Report::SORT_CONVENTIONAL);
+        $resultsOrderSelect->appendContent($resultOrderConventionalOption);
         // Valeurs décroissantes.
         $resultsOrderDecreasingOption = new GenericTag('option', __('DW', 'config', 'sortByDecreasingValues'));
         $resultsOrderDecreasingOption->setAttribute('value', Report::SORT_VALUE_DECREASING);
@@ -367,10 +371,6 @@ class DWFormConfiguration extends GenericTag
         $resultsOrderIncreasingOption = new GenericTag('option', __('DW', 'config', 'sortByIncreasingValues'));
         $resultsOrderIncreasingOption->setAttribute('value', Report::SORT_VALUE_INCREASING);
         $resultsOrderSelect->appendContent($resultsOrderIncreasingOption);
-        // Valeurs décroissantes.
-        $resultOrderConventionalOption = new GenericTag('option', __('DW', 'config', 'sortByMembers'));
-        $resultOrderConventionalOption->setAttribute('value', Report::SORT_CONVENTIONAL);
-        $resultsOrderSelect->appendContent($resultOrderConventionalOption);
 
         // Groupe de sélection de l'affichage de l'incertitude.
         $uncertaintyGroup = new GenericTag('div');
