@@ -420,6 +420,10 @@ class DWFormConfiguration extends GenericTag
             $axisFilterWrapper = new GenericTag('fieldset');
             $axisFilterWrapper->addClass('filter-' . $axis->getRef());
             $axisFilterLegend = new GenericTag('legend', $this->translator->get($axis->getLabel()));
+            $axisFilterRemove = new Icon('trash-o', Icon::FONT_AWESOME);
+            $axisFilterRemove->addClass('remove-filter');
+            $axisFilterRemove->setAttribute('data-filter', $axis->getRef());
+            $axisFilterLegend->appendContent($axisFilterRemove);
             $axisFilterWrapper->appendContent($axisFilterLegend);
             $filtersCollapse->appendContent($axisFilterWrapper);
 

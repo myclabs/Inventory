@@ -334,9 +334,18 @@ $(document).ready(function() {
         var select = $('select[name="addFilter"]');
         if (select.val() != '') {
             $('.filter-' + $('select[name="addFilter"]').val()).removeClass('hide');
-            $('option:selected', select).remove();
+            $('option:selected', select).hide();
             select.val('');
         }
+    });
+    $('.remove-filter').on('click', function() {
+        var select = $('select[name="addFilter"]');
+        var fieldset = $(this).closest('fieldset').addClass('hide');
+        var option = $(this).attr('data-filter');
+        $('option[value="' + option + '"]', select).show();
+        $('input:radio', fieldset).filter('[value="all"]').prop('checked', true);
+        $('select', fieldset)[0].selectedIndex = 0;
+        $('select', fieldset).closest('.form-group').addClass('hide');
     });
     $('input.filterMemberNumber').on('change', function() {
         var currentForm = $(this).closest('form');
