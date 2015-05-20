@@ -472,8 +472,13 @@ class DWFormConfiguration extends GenericTag
             $membersSelect->addClass('form-control');
             $membersGroup->appendContent($membersSelect);
 
+            $filterAxisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
+            $filterAxisOption->setAttribute('value', $axis->getRef());
+
             $reportFilterForAxis = $report->getFilterForAxis($axis);
             if ($reportFilterForAxis !== null) {
+                $filterAxisOption->setAttribute('style', 'display: none;');
+
                 $reportMembersFilteredForAxis = $reportFilterForAxis->getMembers()->toArray();
                 if (count($reportMembersFilteredForAxis) > 1) {
                     $membersSelect->setBooleanAttribute('multiple');
@@ -482,14 +487,11 @@ class DWFormConfiguration extends GenericTag
                     $oneMemberChoiceInput->setBooleanAttribute('checked');
                 }
             } else {
-                $filterAxisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
-                $filterAxisOption->setAttribute('value', $axis->getRef());
-                $filtersSelect->appendContent($filterAxisOption);
-
                 $axisFilterWrapper->addClass('hide');
                 $membersGroup->addClass('hide');
                 $allMembersChoiceInput->setBooleanAttribute('checked');
             }
+            $filtersSelect->appendContent($filterAxisOption);
 
             foreach ($axis->getMembers() as $member) {
                 $memberOption = new GenericTag('option', $this->translator->get($member->getLabel()));
