@@ -96,6 +96,22 @@
                 <seg>This user account has been deactivated.</seg>
             </tuv>
         </tu>
+        <tu tuid="ownAccountActivationProhibited">
+            <tuv xml:lang="fr">
+                <seg>Impossible d'activer votre propre compte utilisateur.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Cannot activate your own user account.</seg>
+            </tuv>
+        </tu>
+        <tu tuid="ownAccountDeactivationProhibited">
+            <tuv xml:lang="fr">
+                <seg>Impossible de désactiver votre propre compte utilisateur.</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Cannot deactivate your own user account.</seg>
+            </tuv>
+        </tu>
 
     </body>
 </tmx>

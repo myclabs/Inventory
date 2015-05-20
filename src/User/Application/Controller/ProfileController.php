@@ -135,24 +135,29 @@ class User_ProfileController extends Core_Controller
         /** @var $user User */
         $user = User::load($this->getParam('id'));
 
-        // Désactivation de l'utilisateur
-        $user->disable();
-        $user->save();
-        $this->entityManager->flush();
-
-        // Envoi d'un email d'alerte
-        $subject = __('User', 'email', 'subjectAccountDeactivated');
-        $content = __('User', 'email', 'bodyAccountDeactivated', [ 'APPLICATION_NAME' => $this->emailNoReplyName ]);
-        $this->userService->sendEmail($user, $subject, $content);
-
-        UI_Message::addMessageStatic(
-            __('User', 'editProfile', 'accountDeactivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail'),
-            UI_Message::TYPE_SUCCESS
-        );
-
         if ($user === $connectedUser) {
-            $this->redirect('user/action/logout');
-        } else {
+            UI_Message::addMessageStatic(
+                __('User', 'editProfile', 'ownAccountDeactivationProhibited'),
+                UI_Message::TYPE_ERROR
+            );
+            $this->redirect('user/profile/edit/id/' . $user->getId());
+        }
+        else {
+            // Désactivation de l'utilisateur
+            $user->disable();
+            $user->save();
+            $this->entityManager->flush();
+
+            // Envoi d'un email d'alerte
+            $subject = __('User', 'email', 'subjectAccountDeactivated');
+            $content = __('User', 'email', 'bodyAccountDeactivated', [ 'APPLICATION_NAME' => $this->emailNoReplyName ]);
+            $this->userService->sendEmail($user, $subject, $content);
+
+            UI_Message::addMessageStatic(
+                __('User', 'editProfile', 'accountDeactivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail'),
+                UI_Message::TYPE_SUCCESS
+            );
+
             $this->redirect('user/profile/edit/id/' . $user->getId());
         }
     }
@@ -163,23 +168,35 @@ class User_ProfileController extends Core_Controller
      */
     public function enableAction()
     {
+        $connectedUser = $this->_helper->auth();
+
         /** @var $user User */
         $user = User::load($this->getParam('id'));
 
-        // Activation de l'utilisateur
-        $user->enable();
-        $user->save();
-        $this->entityManager->flush();
+        if ($user === $connectedUser) {
+            UI_Message::addMessageStatic(
+                __('User', 'editProfile', 'ownAccountActivationProhibited'),
+                UI_Message::TYPE_ERROR
+            );
+            $this->redirect('user/profile/edit/id/' . $user->getId());
+        }
+        else {
 
-        // Envoi d'un email d'alerte
-        $subject = __('User', 'email', 'subjectAccountActivated');
-        $content = __('User', 'email', 'bodyAccountActivated', [ 'APPLICATION_NAME' => $this->emailNoReplyName ]);
-        $this->userService->sendEmail($user, $subject, $content);
+            // Activation de l'utilisateur
+            $user->enable();
+            $user->save();
+            $this->entityManager->flush();
 
-        $message = __('User', 'editProfile', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
-        UI_Message::addMessageStatic($message, UI_Message::TYPE_SUCCESS);
+            // Envoi d'un email d'alerte
+            $subject = __('User', 'email', 'subjectAccountActivated');
+            $content = __('User', 'email', 'bodyAccountActivated', ['APPLICATION_NAME' => $this->emailNoReplyName]);
+            $this->userService->sendEmail($user, $subject, $content);
 
-        $this->redirect('user/profile/edit/id/' . $user->getId());
+            $message = __('User', 'editProfile', 'accountActivated') . ' ' . __('User', 'editProfile', 'userInformedByEmail');
+            UI_Message::addMessageStatic($message, UI_Message::TYPE_SUCCESS);
+
+            $this->redirect('user/profile/edit/id/' . $user->getId());
+        }
     }
 
     /**

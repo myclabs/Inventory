@@ -87,12 +87,12 @@ if ($this->editSelf) {
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-primary"><?=__('UI', 'verb', 'save')?></button>
 
-                <?php if ($user->isEnabled() && $this->canDisable) : ?>
+                <?php if ($user->isEnabled() && $this->canDisable && !$this->editSelf) : ?>
                     <a class="btn btn-danger disableButton" href="user/profile/disable/id/<?=$user->getId()?>">
                         <?=__('User', 'editProfile', 'disable')?>
                     </a>
                 <?php endif; ?>
-                <?php if (!$user->isEnabled() && $this->canEnable) : ?>
+                <?php if (!$user->isEnabled() && $this->canEnable && !$this->editSelf) : ?>
                     <a class="btn btn-danger enableButton" href="user/profile/enable/id/<?=$user->getId()?>">
                         <?=__('User', 'editProfile', 'enable')?>
                     </a>
