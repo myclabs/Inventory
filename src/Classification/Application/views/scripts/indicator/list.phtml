@@ -2,7 +2,7 @@
     <h1><?=__('Classification', 'indicator', 'indicators')?></h1>
 </div>
 
-<?
+<?php
 $datagrid = new UI_Datagrid('editIndicators', 'datagrid_indicator', 'classification');
 $datagrid->addParam('library', $this->library->getId());
 
