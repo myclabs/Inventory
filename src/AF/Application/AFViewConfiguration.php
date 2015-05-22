@@ -62,13 +62,13 @@ class AFViewConfiguration
      * Actions to call when the AF is submitted
      * @var array
      */
-    protected $actionStack;
+    protected $actionStack = [];
 
     /**
      * Actions to call when the AF is finished
      * @var array
      */
-    protected $finishActionStack;
+    protected $finishActionStack = [];
 
     /**
      * URL to call for submitting the input
