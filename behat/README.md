@@ -34,7 +34,7 @@ In another console, launch the tests:
 You can launch a specific "Feature" or "Scenario" by its name:
 
     cd behat/
-    ../vendor/behat/behat/bin/behat --config behat.yml --ansi --name "Login redirection"
+    ../vendor/behat/behat/bin/behat --config behat.yml --name "Login redirection"
 
 ## Write the tests
 

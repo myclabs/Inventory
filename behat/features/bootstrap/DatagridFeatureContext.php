@@ -246,7 +246,7 @@ JS;
     {
         $this->setCellContent($content, $column, $row, $datagrid);
 
-        return [new Step\Then('the following message is shown and closed: "Modification effectuée."')];
+        $this->assertMessageShown("Modification effectuée.");
     }
 
     /**

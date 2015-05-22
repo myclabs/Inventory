@@ -10,6 +10,7 @@ Feature: Feedback feature
     And I click "Aidez-nous à améliorer cette page"
     And I click "Annuler"
     And I click "Aidez-nous à améliorer cette page"
+    And I click the "Le contenu de cette page n'est pas clair" checkbox
     And I check "Le contenu de cette page n'est pas clair"
     And I check "Je constate un dysfonctionnement"
     And I check "J'ai une amélioration à proposer"

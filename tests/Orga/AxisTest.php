@@ -333,6 +333,10 @@ class Orga_Test_AxisHierarchy extends TestCase
 
     public function testGetAllNarrowers()
     {
+        /**
+         * https://github.com/doctrine/collections/pull/49
+         * http://www.doctrine-project.org/jira/browse/DCOM-283
+         */
         $this->assertSame([], $this->axis->getAllNarrowers());
 
         $this->assertSame([], $this->newAxis->getAllNarrowers());
@@ -1178,6 +1182,26 @@ class Orga_Test_AxisMembers extends TestCase
         $parentMember = new Member($parentMemberAxis, 'parent');
 
         $newMember = new Member($this->axis, 'new', [$parentMember]);
+
+        $this->assertSame($parentMember, $newMember->getDirectParentForAxis($parentMemberAxis));
+        $this->assertSame($parentMember, $newMember->getParentForAxis($parentMemberAxis));
+
+        $parentMemberAxis->removeMember($parentMember);
+
+        $this->assertSame($parentMember, $newMember->getDirectParentForAxis($parentMemberAxis));
+    }
+
+    /**
+     * @expectedException Core_Exception_NotFound
+     * @expectedExceptionMessage No direct parent Member matching Axis "parent".
+     */
+    public function testRemoveMembers()
+    {
+        $parentMemberAxis = new Axis($this->workspace, 'parent', $this->axis);
+        $parentMember = new Member($parentMemberAxis, 'parent');
+
+        $newMember = new Member($this->axis, 'new', [$parentMember]);
+        $newMember2 = new Member($this->axis, 'new2', [$parentMember]);
 
         $this->assertSame($parentMember, $newMember->getDirectParentForAxis($parentMemberAxis));
         $this->assertSame($parentMember, $newMember->getParentForAxis($parentMemberAxis));

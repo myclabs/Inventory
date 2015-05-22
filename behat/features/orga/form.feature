@@ -31,7 +31,7 @@ Feature: Cell form tab edition feature
     Given I am on "orga/workspace/edit/workspace/1"
     And I wait for the page to finish loading
     And I open tab "Formulaires"
-    And I click "Année | Catégorie Année | Site | Catégorie"
+    And I click "Année | Catégorie "
     Then I should see the "datagridCellAfs9" datagrid
   # Sélection d'un formulaire comptable (granularité de saisie plus grossière que la granularité des inventaires
     When I set "Combustion de combustible, mesuré en unité de masse" for column "af" of row 1 of the "datagridCellAfs9" datagrid with a confirmation message

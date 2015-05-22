@@ -52,18 +52,18 @@ Feature: AF tree edit category feature
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en premier
     And I click "Catégorie vide"
-    And I check "Premier"
+    And I select the "Premier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement après une autre catégorie
     And I click "Catégorie vide"
-    And I check "Après"
+    And I select the "Après" radio button
     And I select "Catégorie contenant une sous-catégorie" from "afTree_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en dernier
     And I click "Catégorie vide"
-    And I check "Dernier"
+    And I select the "Dernier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
 

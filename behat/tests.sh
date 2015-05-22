@@ -36,4 +36,4 @@ cd behat
 #export NODE_PATH=/usr/local/lib/node_modules
 
 # Behat
-php ../vendor/behat/behat/bin/behat --config behat.yml --format pretty,failed --rerun failed.txt && rm -f failed.txt
+php ../vendor/behat/behat/bin/behat --config behat.yml --format pretty --rerun

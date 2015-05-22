@@ -105,14 +105,14 @@ Feature: Organizational axis feature
   # Déplacement en premier (axe situé à la racine)
     When I click "Catégorie"
     Then I should see the popup "Édition d'un axe"
-    When I check "Premier"
+    When I select the "Premier" radio button
     And I click "Confirmer"
     And I wait 2 seconds
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement "Après" (axe situé à la racine)
     When I click "Catégorie"
     Then I should see the popup "Édition d'un axe"
-    When I check "Après"
+    When I select the "Après" radio button
     And I select "Année" from "editAxis_selectAfter"
     And I click "Confirmer"
     And I wait 2 seconds
@@ -120,7 +120,7 @@ Feature: Organizational axis feature
   # Déplacement en dernier (axe situé à la racine)
     When I click "Catégorie"
     Then I should see the popup "Édition d'un axe"
-    When I check "Dernier"
+    When I select the "Dernier" radio button
     And I click "Confirmer"
     And I wait 2 seconds
     Then the following message is shown and closed: "Modification effectuée."

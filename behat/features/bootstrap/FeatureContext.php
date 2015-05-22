@@ -1,6 +1,5 @@
 <?php
 
-use Behat\Behat\Context\Step;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ExpectationException;
@@ -27,6 +26,38 @@ class FeatureContext extends MinkContext
     use PopupFeatureContext;
     use AccountFeatureContext;
     use OrgaViewFeatureContext;
+
+    /**
+     * @param string $radioLabel
+     *
+     * @throws ElementNotFoundException
+     * @return void
+     * @Given /^I select the "([^"]*)" radio button$/
+     */
+    public function selectTheRadioButton($radioLabel)
+    {
+        $radioButton = $this->getSession()->getPage()->findField($radioLabel);
+        if (null === $radioButton) {
+            throw new ElementNotFoundException($this->getSession(), 'form field', 'id|name|label|value', $radioLabel);
+        }
+        $this->getSession()->getDriver()->click($radioButton->getXPath());
+    }
+
+    /**
+     * @param string $checkboxLabel
+     *
+     * @throws ElementNotFoundException
+     * @return void
+     * @Given /^I click the "([^"]*)" checkbox$/
+     */
+    public function clickTheCheckbox($checkboxLabel)
+    {
+        $checkbox = $this->getSession()->getPage()->findField($checkboxLabel);
+        if (null === $checkbox) {
+            throw new ElementNotFoundException($this->getSession(), 'form field', 'id|name|label|value', $checkboxLabel);
+        }
+        $this->getSession()->getDriver()->click($checkbox->getXPath());
+    }
 
     /**
      * @BeforeScenario
@@ -61,12 +92,10 @@ class FeatureContext extends MinkContext
             $this->assertElementContainsText('#messageZone', $message);
         });
 
-        return [
-            new Step\Then('I should see "' . $message . '" in the "#messageZone" element'),
-            new Step\Then('I click element "#messageZone button.close"'),
-            new Step\Then('I wait for 0.5 seconds'),
-            new Step\Then('the "#messageZone" element should not contain "' . $message . '"'),
-        ];
+        $this->assertElementContainsText("#messageZone", $message);
+        $this->clickElement("#messageZone button.close");
+        $this->wait(0.5);
+        $this->assertElementNotContains("#messageZone", $message);
     }
 
     /**
