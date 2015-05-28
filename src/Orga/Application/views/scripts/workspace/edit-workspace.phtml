@@ -123,7 +123,7 @@ $file = reset($file);
                     <?=___('Orga', 'workspace', 'currentBanner')?>
                 </span>
                 <div class="col-xs-10">
-                    <img id="currentBanner<?=$this->workspaceId?>" width="100%" src="<?=(($file !== false) ? 'workspaceBanners/'.pathinfo($file)['filename'] : '')?>" alt="<?=___('Orga', 'workspace', 'noBanner')?>">
+                    <img id="currentBanner<?=$this->workspaceId?>" width="100%" src="<?=(($file !== false) ? 'workspaceBanners/'.pathinfo(array_pop($file))['basename'] : '')?>" alt="<?=___('Orga', 'workspace', 'noBanner')?>">
                 </div>
             </div>
             <div class="form-group">
