@@ -14,6 +14,18 @@
 UPDATE DW_Report SET sortType = 'orderResultByMembers' WHERE idNumeratorAxis2 IS NOT NULL;
 ```
 
+- Exécuter le job de rebuild des exports (long)
+
+```
+bin/inventory export:rebuild
+```
+
+- En cas de dépassement de mémoire, ré-exécuter le script avec l'option --no-clear (ou -c)
+
+```
+bin/inventory export:rebuild --no-clear
+```
+
 ## 3.4
 
 - NE PAS DEPLOYER.
