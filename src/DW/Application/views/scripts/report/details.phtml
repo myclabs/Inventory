@@ -12,6 +12,8 @@ use MyCLabs\MUIH\Icon;
 use MyCLabs\MUIH\Modal;
 use MyCLabs\MUIH\Tab;
 use MyCLabs\MUIH\Tabs;
+use User\Application\ViewHelper\TutorialHelper;
+
 ?>
 
 <div class="page-header">
@@ -268,9 +270,17 @@ $(document).ready(function() {
 
         $('select[name="sumAxisTwo"]', currentForm.first())
             .closest('.form-group').addClass('hide');
+        // @2DGraphSorting Remove the next 2 lines to activate 2D graph sorting
+        $('select[name="resultsOrder"]', currentForm.first())
+            .closest('.form-group').addClass('hide');
 
         if ($('input[name="sumAxisNumberChoice"]:checked', currentForm).val() == 'two') {
             $('select[name="sumAxisTwo"]', currentForm.first())
+                .closest('.form-group').removeClass('hide');
+        }
+        // @2DGraphSorting Remove the next else if to activate 2D graph sorting
+        else if ($('input[name="sumAxisNumberChoice"]:checked', currentForm).val() == 'one') {
+            $('select[name="resultsOrder"]', currentForm.first())
                 .closest('.form-group').removeClass('hide');
         }
     });
@@ -281,11 +291,19 @@ $(document).ready(function() {
             .closest('.form-group').addClass('hide');
         $('select[name="ratioDenominatorAxisTwo"]', currentForm.first())
             .closest('.form-group').addClass('hide');
+        // @2DGraphSorting Remove the next 2 lines to activate 2D graph sorting
+        $('select[name="resultsOrder"]', currentForm.first())
+            .closest('.form-group').addClass('hide');
 
         if ($('input[name="ratioAxisNumberChoice"]:checked', currentForm).val() == 'two') {
             $('select[name="ratioNumeratorAxisTwo"]', currentForm.first())
                 .closest('.form-group').removeClass('hide');
             $('select[name="ratioDenominatorAxisTwo"]', currentForm.first())
+                .closest('.form-group').removeClass('hide');
+        }
+        // @2DGraphSorting Remove the next else if to activate 2D graph sorting
+        else if ($('input[name="ratioAxisNumberChoice"]:checked', currentForm).val() == 'one') {
+            $('select[name="resultsOrder"]', currentForm.first())
                 .closest('.form-group').removeClass('hide');
         }
     });
@@ -332,9 +350,18 @@ $(document).ready(function() {
         var select = $('select[name="addFilter"]');
         if (select.val() != '') {
             $('.filter-' + $('select[name="addFilter"]').val()).removeClass('hide');
-            $('option:selected', select).remove();
+            $('option:selected', select).hide();
             select.val('');
         }
+    });
+    $('.remove-filter').on('click', function() {
+        var select = $('select[name="addFilter"]');
+        var fieldset = $(this).closest('fieldset').addClass('hide');
+        var option = $(this).attr('data-filter');
+        $('option[value="' + option + '"]', select).show();
+        $('input:radio', fieldset).filter('[value="all"]').prop('checked', true);
+        $('select', fieldset)[0].selectedIndex = 0;
+        $('select', fieldset).closest('.form-group').addClass('hide');
     });
     $('input.filterMemberNumber').on('change', function() {
         var currentForm = $(this).closest('form');
@@ -507,4 +534,4 @@ $(document).ready(function() {
     }
 </style>
 
-<?= $this->tutorial('dw'); ?>
+<?= $this->tutorial(TutorialHelper::DW); ?>

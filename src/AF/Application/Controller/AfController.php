@@ -121,10 +121,11 @@ class AF_AfController extends Core_Controller
             $validator->validate();
         }
 
-        $urlParams = [
-            'actionStack' => $viewConfiguration->getActionStack(),
-            'finishActionStack' => $viewConfiguration->getFinishActionStack()
-        ];
+        $urlParams = array_merge(
+            $viewConfiguration->getUrlParams(),
+            [ 'actionStack' => $viewConfiguration->getActionStack(),
+                'finishActionStack' => $viewConfiguration->getFinishActionStack() ]
+        );
 
         $this->view->assign('af', $af);
         $this->view->assign('viewConfiguration', $viewConfiguration);

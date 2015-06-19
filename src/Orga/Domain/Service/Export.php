@@ -475,7 +475,8 @@ class Export
         $modelBuilder->bind('inputUnit', __('Orga', 'export', 'choosedUnit'));
         $modelBuilder->bind('inputReferenceValue', __('Orga', 'export', 'valueExpressedInDefaultUnit'));
         $modelBuilder->bind('inputReferenceUnit', __('Orga', 'export', 'defaultUnit'));
-        $modelBuilder->bind('inputHasInconsistency', __('Orga', 'export', 'hasInconsistency'));
+        // @ExportSaisiesSuspectes uncomment next line
+//        $modelBuilder->bind('inputHasInconsistency', __('Orga', 'export', 'hasInconsistency'));
 
         $modelBuilder->bindFunction(
             'displayCellMemberForAxis',
@@ -581,7 +582,8 @@ class Export
             $columns[] = __('Orga', 'export', 'choosedUnit');
             $columns[] = __('Orga', 'export', 'valueExpressedInDefaultUnit');
             $columns[] = __('Orga', 'export', 'defaultUnit');
-            $columns[] = __('Orga', 'export', 'hasInconsistency');
+            // @ExportSaisiesSuspectes uncomment next line
+//            $columns[] = __('Orga', 'export', 'hasInconsistency');
             foreach (array_values($columns) as $columnIndex => $column) {
                 $granularitySheet->setCellValueByColumnAndRow($columnIndex, 1, $column);
             }
@@ -925,12 +927,13 @@ class Export
                 if (preg_match('{\.\d+}', $inputDigitalValue, $matches) === 1) {
                     $inputDigitalValue = number_format($inputDigitalValue, (strlen($matches[0]) - 1), '.', '');
                 }
-                if ($input->hasInconsistentValue()) {
-                    $inputInconsistency = __('UI', 'other', 'yes');
-                }
-                else {
-                    $inputInconsistency = __('UI', 'other', 'no');
-                }
+                // @ExportSaisiesSuspectes uncomment next lines
+//                if ($input->hasInconsistentValue()) {
+//                    $inputInconsistency = __('UI', 'other', 'yes');
+//                }
+//                else {
+//                    $inputInconsistency = __('UI', 'other', 'no');
+//                }
                 /** @var NumericField $component */
                 $component = $input->getComponent();
                 if ($component !== null) {
@@ -942,16 +945,18 @@ class Export
                             $translator->get($inputValue->getUnit()->getSymbol()),
                             $baseConvertedValue->getDigitalValue(),
                             $translator->get($component->getUnit()->getSymbol()),
-                            $inputInconsistency,
+                            // @ExportSaisiesSuspectes uncomment next line
+//                            $inputInconsistency,
                         ];
                     } catch (IncompatibleUnitsException $e) {
                         return [
                             $inputDigitalValue,
                             $inputValue->getUncertainty(),
                             $translator->get($inputValue->getUnit()->getSymbol()),
-                            '',
-                            '',
-                            $inputInconsistency,
+                            // @ExportSaisiesSuspectes uncomment next lines
+//                            '',
+//                            '',
+//                            $inputInconsistency,
                         ];
                     }
                 }
@@ -959,9 +964,10 @@ class Export
                     $inputDigitalValue,
                     $inputValue->getUncertainty(),
                     $inputValue->getUnit()->getSymbol(),
-                    '',
-                    '',
-                    $inputInconsistency,
+                    // @ExportSaisiesSuspectes uncomment next lines
+//                    '',
+//                    '',
+//                    $inputInconsistency,
                 ];
 
             case $input instanceof SelectMultiInput:

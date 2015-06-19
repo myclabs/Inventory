@@ -8,7 +8,7 @@ use Orga\Domain\Axis;
     <h1><?=__('Classification', 'axis', 'pageTitle')?></h1>
 </div>
 
-<?
+<?php
 $tree = new UI_Tree('editAxis', 'tree_axis', 'classification');
 $tree->addParam('library', $this->library->getId());
 

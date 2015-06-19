@@ -12,10 +12,11 @@
                 {
                     element: '.page-header>div',
                     intro: "Vous pouvez exporter votre analyse aux formats PDF et Excel (seuls les valeurs sont exportées en Excel).<br>"+
-                        "Le bouton \"Retour\" vous permet de revenir à l'accueil."
+                        "Le bouton \"Retour\" vous permet de revenir à l'écran précédent."
                 }
             ],
             showBullets: false,
+            showStepNumbers: false,
             nextLabel: "Suivant",
             prevLabel: "Précédent",
             doneLabel: "Terminer",
@@ -23,7 +24,7 @@
         });
         var stepCompleted = function () {
             $.ajax({
-                url: 'user/profile/dismiss-tutorial/tutorial/7/',
+                url: 'user/profile/dismiss-tutorial/tutorial/<?=\User\Application\ViewHelper\TutorialHelper::DW ?>/',
                 type: "GET"
             });
         };
@@ -32,6 +33,6 @@
         intro.start();
     }
     $(document).ready(function () {
-        setTimeout(startIntro, 500);
+        setTimeout(startIntro, 700);
     });
 </script>

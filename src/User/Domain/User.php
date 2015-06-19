@@ -453,12 +453,12 @@ class User extends Core_Model_Entity implements EntityResource, CascadingResourc
      */
     public function initTutorials()
     {
-        $this->tutorials = 105;
+        $this->tutorials = 1155;
     }
 
     /**
      * Passe un tutorial
-     * Nombres premiers utilisés = 3, 5, 7
+     * Nombres premiers utilisés = 3, 5, 7, 11
      * @var int $tutorial Nombre premier unique pour chaque tutoriel
      */
     public function dismissTutorial($tutorial)

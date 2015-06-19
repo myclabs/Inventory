@@ -1,13 +1,29 @@
 # Mise en production
 
-## 3.4.7
+## 3.5
 
 - Déployer normalement avec update de la BDD.
+
+- Mettre à jour le fichier application/configs/parameters.php pour activer l'application gratuite.
+    Voir parameters.php.default.
+    Si feature.register vaut true, les 3 feature.workspaces.*.register doivent être spécifés (null pour désactiver).
 
 - Exécuter la requête :
 
 ```sql
 UPDATE DW_Report SET sortType = 'orderResultByMembers' WHERE idNumeratorAxis2 IS NOT NULL;
+```
+
+- Exécuter le job de rebuild des exports (long)
+
+```
+bin/inventory export:rebuild
+```
+
+- En cas de dépassement de mémoire, ré-exécuter le script avec l'option --no-clear (ou -c)
+
+```
+bin/inventory export:rebuild --no-clear
 ```
 
 ## 3.4

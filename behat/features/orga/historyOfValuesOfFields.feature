@@ -21,6 +21,7 @@ Feature: History of values of a field feature
       # Nécéssaire pour que Angular détecte le changement.
     And I click element "[name='chiffre_affaire_unit'] [value='euro']"
     And I click element "[name='chiffre_affaire_unit'] [value='kiloeuro']"
+    And I wait 2 seconds
     And I click "Enregistrer"
     And I reload the page
     And I wait for the page to finish loading

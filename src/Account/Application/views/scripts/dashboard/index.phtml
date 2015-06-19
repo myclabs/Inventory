@@ -1,5 +1,7 @@
 <?php
 /** @var Account\Application\ViewModel\AccountView $account */
+use User\Application\ViewHelper\TutorialHelper;
+
 $account = $this->account;
 ?>
 
@@ -274,3 +276,5 @@ $account = $this->account;
         $('th .btn').tooltip();
     });
 </script>
+
+<?= $this->tutorial(TutorialHelper::DASHBOARD); ?>

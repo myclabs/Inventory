@@ -83,7 +83,7 @@ class Report extends Core_Model_Entity
     /**
      * @var null
      */
-    protected $sortType = self::SORT_VALUE_DECREASING;
+    protected $sortType = self::SORT_CONVENTIONAL;
 
     /**
      * @var bool

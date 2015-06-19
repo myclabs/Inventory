@@ -141,10 +141,8 @@ class InputSetValuesValidator
         /** @var Component $component */
         $component = $input->getComponent();
         if ($component !== null) {
-            if ($component->getNbRequiredFields() > 0 && !$component->getRequired()
+            if ($component->getNbRequiredFields() > 0 && $component->getRequired()
                 && (($input->getValue() === null) || ($input->getValue() === []))) {
-                $input->setError(__('AF', 'inputInput', 'emptyRequiredField'));
-            } else if (($input->getValue() === null) || ($input->getValue() === [])) {
                 $input->setError(__('AF', 'inputInput', 'emptyRequiredField'));
             }
         }

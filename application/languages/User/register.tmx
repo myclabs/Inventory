@@ -4,6 +4,14 @@
         creationtoolversion="1.1" o-tmf="unknown" segtype="block" srclang="*all*" />
     <body>
 
+        <tu tuid="registerFreeApp">
+            <tuv xml:lang="fr">
+                <seg>Inscription à l'application gratuite</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Sign up to the free app</seg>
+            </tuv>
+        </tu>
         <tu tuid="register">
             <tuv xml:lang="fr">
                 <seg>Inscription</seg>
@@ -12,28 +20,44 @@
                 <seg>Sign up</seg>
             </tuv>
         </tu>
-        <tu tuid="projectName">
+        <tu tuid="projectType">
             <tuv xml:lang="fr">
-                <seg>Nom de votre projet</seg>
+                <seg>Type d'application</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Password</seg>
+                <seg>Application type</seg>
             </tuv>
         </tu>
-        <tu tuid="password">
+        <tu tuid="projectTypeIndividual">
             <tuv xml:lang="fr">
-                <seg>Mot de passe</seg>
+                <seg>Application individuelle</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Password</seg>
+                <seg>Individual app</seg>
             </tuv>
         </tu>
-        <tu tuid="passwordAgain">
+        <tu tuid="projectTypeCollectivity">
             <tuv xml:lang="fr">
-                <seg>Mot de passe (confirmation)</seg>
+                <seg>Application collectivité</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Password (verification)</seg>
+                <seg>Collectivity app</seg>
+            </tuv>
+        </tu>
+        <tu tuid="projectTypeSMEs">
+            <tuv xml:lang="fr">
+                <seg>Application PME</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>SMEs app</seg>
+            </tuv>
+        </tu>
+        <tu tuid="emailAddressConfirm">
+            <tuv xml:lang="fr">
+                <seg>Adresse e-mail (confirmation)</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>E-mail address (verification)</seg>
             </tuv>
         </tu>
         <tu tuid="alreadyRegistered">

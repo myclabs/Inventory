@@ -15,17 +15,12 @@
                     position: 'top'
                 },
                 {
-                    element: '.inputProgress>div:last-child>form>label',
-                    intro: "Quand vous avez saisie toutes les informations qui vous semblent nécessaires, vous pouvez marquer la saisie comme terminée.<br>" +
-                           "Cette saisie ne sera plus visible dans la liste des saisie à faire.",
-                    position: 'left'
-                },
-                {
-                    element: '#tabs',
+                    element: '.nav-tabs',
                     intro: "Après avoir enregistré votre formulaire vous pouvez voir les résultats des calculs, ajouter un commentaire ou voir le détail des calculs."
                 }
             ],
             showBullets: false,
+            showStepNumbers: false,
             nextLabel: "Suivant",
             prevLabel: "Précédent",
             doneLabel: "Terminer",
@@ -33,7 +28,7 @@
         });
         var stepCompleted = function () {
             $.ajax({
-                url: 'user/profile/dismiss-tutorial/tutorial/5/',
+                url: 'user/profile/dismiss-tutorial/tutorial/<?=\User\Application\ViewHelper\TutorialHelper::AF ?>/',
                 type: "GET"
             });
         };
@@ -41,7 +36,12 @@
         intro.oncomplete(stepCompleted);
         intro.start();
     }
-    $("#tabs_tabInput").on("tabLoaded", function () {
+    $(function () {
+        $(document).ready(function () {
+            setTimeout(startIntro, 700);
+        });
+    });
+    $("#tabs_tabInput").on("loadTab.muih", function () {
         startIntro();
     });
 </script>

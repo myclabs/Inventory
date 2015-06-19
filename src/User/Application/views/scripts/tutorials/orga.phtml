@@ -13,17 +13,12 @@
                     intro: "Vous pouvez filtrer les formulaires de saisies par catégorie, année, statut de saisie et d'inventaires."
                 },
                 {
-                    element: '.granularity-wrapper:nth-child(2)',
-                    intro: "Cette zonne affiche l'avancement de votre campagne de collecte par année et vous permet d'accéder aux analyses de vos émission de gaz à effet de serre.",
-                    position: 'top'
+                    element: '#currentGranularity .btn:nth-child(3)',
+                    intro: "Ce bouton vous permet d'accéder à la liste des analyses de vos données."
                 },
                 {
-                    element: '.granularity-wrapper:nth-child(2) .inventory-actions .btn-group',
-                    intro: "Vous pouvez modifier le statut d'une campagne de collecte pour la démarrer ou la clôturer."
-                },
-                {
-                    element: '.granularity-wrapper:nth-child(2) .cell-actions:first-child',
-                    intro: "Ces boutons vous permettent d'accéder à la liste des analyses disponibles et d'exporter vos données."
+                    element: '#currentGranularity .btn:nth-child(4)',
+                    intro: "Celui-ci vous permet d'exporter vos saisies."
                 },
                 {
                     element: '#cellsView',
@@ -32,6 +27,7 @@
                 }
             ],
             showBullets: false,
+            showStepNumbers: false,
             nextLabel: "Suivant",
             prevLabel: "Précédent",
             doneLabel: "Terminer",
@@ -39,7 +35,7 @@
         });
         var stepCompleted = function () {
             $.ajax({
-                url: 'user/profile/dismiss-tutorial/tutorial/3/',
+                url: 'user/profile/dismiss-tutorial/tutorial/<?=\User\Application\ViewHelper\TutorialHelper::ORGA ?>/',
                 type: "GET"
             });
         };
@@ -51,45 +47,15 @@
         intro.onexit(stepCompleted);
         intro.oncomplete(function () {
             stepCompleted();
-            setTimeout(function () {
-                $('div.collapse[id^="granularity"]').collapse('hide')
-            }, 500);
         });
         intro.start();
     }
     $(function () {
-        $('div.collapse[id^="granularity"]').on('cellsLoaded', function(e) {
-            $(this).collapse("show");
+        $(document).ready(function () {
+            //
         });
-        $("#welcomeModal").modal('show');
-        $("#beginTutorial").on('click', function () {
-            setTimeout(function(){startIntro()}, 700);
-        });
-        $("#dismissTutorial").on('click', function () {
-            $('div.collapse[id^="granularity"]').collapse('hide');
-            $.ajax({
-                url: 'user/profile/dismiss-tutorial/tutorial/all/',
-                type: "GET"
-            });
+        $('div.collapse.in:last-child').on('showCells', function(e) {
+            setTimeout(startIntro, 200);
         });
     });
 </script>
-
-<div class="modal fade" id="welcomeModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>Bienvenue dans My C-Tool</h3>
-            </div>
-            <div class="modal-body">
-                <p>Votre espace de travail est prêt. Vous pouvez saisir vos données comptables et analyser vos émissions de gaz à effet de serre.</p>
-                <p>Souhaitez-vous suivre une initiation ?</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="beginTutorial" data-dismiss="modal">Suivre l'initiation</button>
-                <button class="btn btn-default" id="dismissTutorial" data-dismiss="modal">Utiliser directement My C-Tool</button>
-            </div>
-    </div>
-    </div>
-</div>

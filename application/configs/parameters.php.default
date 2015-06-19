@@ -4,5 +4,21 @@ return [
     'application.url' => '',
 
     // 'locale.minSignificantFigures' => 12,
+
     // 'feature.register' => true,
+
+    'feature.workspace.individual.register' => null || workspaceId (populateTest:3),
+    // 'feature.workspace.individual.userAxis.ref' => 'home',
+    // 'feature.workspace.individual.label.fr' => 'Mon habitation',
+    // 'feature.workspace.individual.label.en' => 'My home',
+
+    'feature.workspace.collectivity.register' => null || workspaceId,
+    // 'feature.workspace.collectivity.userAxis.ref' => 'collectivity',
+    // 'feature.workspace.collectivity.label.fr' => 'Ma collectivité',
+    // 'feature.workspace.collectivity.label.en' => 'My collectivity',
+
+    'feature.workspace.smes.register' => null || workspaceId (populateTest:4),
+    // 'feature.workspace.smes.userAxis.ref' => 'company',
+    // 'feature.workspace.smes.label.fr' => 'Mon entreprise',
+    // 'feature.workspace.smes.label.en' => 'My company',
 ];

@@ -224,5 +224,121 @@ qui officia deserunt mollit anim id est laborum.',
 
 
         $this->entityManager->flush();
+
+        $this->createFreeAppAccount();
+    }
+
+    public function createFreeAppAccount()
+    {
+        // Création d'un compte d'application gratuite
+        $account = new Account('Application gratuite');
+        $this->accountRepository->add($account);
+
+        /** @var ClassificationLibrary $library */
+        $library = ClassificationLibrary::load(1);
+
+
+        // Création d'un workspace individuel.
+        $individualWorkspace = $this->createWorkspace($account, 'Individual free app');
+        $individualWorkspace->addContextIndicator($library->getContextIndicatorByRef('general', 'chiffre_affaire'));
+        $individualWorkspace->addContextIndicator($library->getContextIndicatorByRef('general', 'ges'));
+        $individualWorkspace->addContextIndicator($library->getContextIndicatorByRef('deplacement', 'ges'));
+
+        // Création des axes.
+        $yearAxis = $this->createAxis($individualWorkspace, 'year', 'Année', null, true);
+        $yearAxis->getLabel()->set('Year', 'en');
+        $homeAxis = $this->createAxis($individualWorkspace, 'home', 'Habitation', null, false);
+        $homeAxis->getLabel()->set('Home', 'en');
+
+        // Axe du temps.
+        $individualWorkspace->setTimeAxis($yearAxis);
+
+        // Création des éléments.
+        $year_2013Member = $this->createMember($yearAxis, '2013', '2013');
+        $year_2014Member = $this->createMember($yearAxis, '2014', '2014');
+        $year_2015Member = $this->createMember($yearAxis, '2015', '2015');
+        $year_2016Member = $this->createMember($yearAxis, '2016', '2016');
+
+        // Création des granularités.
+        $globalGranularity = $this->createGranularity($individualWorkspace, [],                       false, false, false, false);
+        $homeGranularity = $this->createGranularity($individualWorkspace, [$homeAxis],                false, false, true,  true);
+        $yearGranularity = $this->createGranularity($individualWorkspace, [$yearAxis],                false, false, false, false);
+        $yearHomeGranularity = $this->createGranularity($individualWorkspace, [$yearAxis, $homeAxis], false, false, false, false);
+
+        // Granularité des collectes.
+        $individualWorkspace->setGranularityForInventoryStatus($yearGranularity);
+
+        // Granularités de saisie.
+        $yearHomeGranularity->setInputConfigGranularity($globalGranularity);
+
+        // Statut des inventaires.
+        // 2013 clôturé.
+        $this->setInventoryStatus($yearGranularity, [$year_2013Member], Cell::INVENTORY_STATUS_CLOSED);
+        // 2014 ouvert.
+        $this->setInventoryStatus($yearGranularity, [$year_2014Member], Cell::INVENTORY_STATUS_ACTIVE);
+        // 2015 ouvert.
+        $this->setInventoryStatus($yearGranularity, [$year_2015Member], Cell::INVENTORY_STATUS_ACTIVE);
+
+        // Sélection des formulaires.
+        $this->setAFForChildCells($globalGranularity, [], $yearHomeGranularity, 'Données générales');
+
+        // Flush.
+        $this->entityManager->flush();
+
+
+        // Création d'un workspace PME.
+        $smesWorkspace = $this->createWorkspace($account, 'SMEs free app');
+        $smesWorkspace->addContextIndicator($library->getContextIndicatorByRef('general', 'chiffre_affaire'));
+        $smesWorkspace->addContextIndicator($library->getContextIndicatorByRef('general', 'ges'));
+        $smesWorkspace->addContextIndicator($library->getContextIndicatorByRef('deplacement', 'ges'));
+
+        // Création des axes.
+        $yearAxis = $this->createAxis($smesWorkspace, 'year', 'Année', null, true);
+        $yearAxis->getLabel()->set('Year', 'en');
+        $companyAxis = $this->createAxis($smesWorkspace, 'company', 'Entreprise', null, false);
+        $companyAxis->getLabel()->set('Company', 'en');
+        $categoryAxis = $this->createAxis($smesWorkspace, 'category', 'Catégorie', null, true);
+        $categoryAxis->getLabel()->set('Category', 'en');
+
+        // Axe du temps.
+        $smesWorkspace->setTimeAxis($yearAxis);
+
+        // Création des éléments.
+        $year_2013Member = $this->createMember($yearAxis, '2013', '2013');
+        $year_2014Member = $this->createMember($yearAxis, '2014', '2014');
+        $year_2015Member = $this->createMember($yearAxis, '2015', '2015');
+        $year_2016Member = $this->createMember($yearAxis, '2016', '2016');
+        $category_generalMember = $this->createMember($categoryAxis, 'general', 'Général');
+        $category_generalMember->getLabel()->set('General', 'en');
+        $category_energyMember = $this->createMember($categoryAxis, 'energy', 'Énergie');
+        $category_energyMember->getLabel()->set('Energy', 'en');
+
+        // Création des granularités.
+        $globalGranularity = $this->createGranularity($smesWorkspace, [],                                                    false, false, false, false);
+        $companyGranularity = $this->createGranularity($smesWorkspace, [$companyAxis],                                       false, false, true,  true);
+        $yearGranularity = $this->createGranularity($smesWorkspace, [$yearAxis],                                             false, false, false, false);
+        $categoryGranularity = $this->createGranularity($smesWorkspace, [$categoryAxis],                                     false, false, false, false);
+        $yearCompanyCategoryGranularity = $this->createGranularity($smesWorkspace, [$yearAxis, $companyAxis, $categoryAxis], false, false, false, false);
+
+        // Granularité des collectes.
+        $smesWorkspace->setGranularityForInventoryStatus($yearGranularity);
+
+        // Granularités de saisie.
+        $yearCompanyCategoryGranularity->setInputConfigGranularity($categoryGranularity);
+
+        // Statut des inventaires.
+        // 2013 clôturé.
+        $this->setInventoryStatus($yearGranularity, [$year_2013Member], Cell::INVENTORY_STATUS_CLOSED);
+        // 2014 ouvert.
+        $this->setInventoryStatus($yearGranularity, [$year_2014Member], Cell::INVENTORY_STATUS_ACTIVE);
+        // 2015 ouvert.
+        $this->setInventoryStatus($yearGranularity, [$year_2015Member], Cell::INVENTORY_STATUS_ACTIVE);
+
+        // Sélection des formulaires.
+        $this->setAFForChildCells($categoryGranularity, [$category_generalMember], $yearCompanyCategoryGranularity, 'Données générales');
+        $this->setAFForChildCells($categoryGranularity, [$category_energyMember], $yearCompanyCategoryGranularity, 'Combustion de combustible, mesuré en unité de masse');
+
+        // Flush.
+        $this->entityManager->flush();
     }
 }

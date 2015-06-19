@@ -503,7 +503,7 @@ class Inventory_Plugin_ACL extends AbstractACLPlugin
      */
     protected function deleteReportRule(User $identity, Zend_Controller_Request_Abstract $request)
     {
-        $idReport = $request->getParam('idReport');
+        $idReport = $request->getParam('report');
         $cellReport = CellReport::loadByCellDWReport(Report::load($idReport));
         return ($cellReport->getOwner() === $identity);
     }

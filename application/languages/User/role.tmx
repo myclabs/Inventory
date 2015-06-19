@@ -31,18 +31,18 @@
 
         <tu tuid="roleUser">
             <tuv xml:lang="fr">
-                <seg>Utilisateur</seg>
+                <seg>Utilisateur de l'application</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>User</seg>
+                <seg>Application user</seg>
             </tuv>
         </tu>
         <tu tuid="roleAdmin">
             <tuv xml:lang="fr">
-                <seg>Administrateur</seg>
+                <seg>Administrateur de l'application</seg>
             </tuv>
             <tuv xml:lang="en">
-                <seg>Administrator</seg>
+                <seg>Application administrator</seg>
             </tuv>
         </tu>
 

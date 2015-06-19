@@ -317,6 +317,7 @@ class FileAdapter
                     'application/msword',
                     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                     'application/vnd.ms-powerpoint',
+                    'application/vnd.ms-office',
                     'application/vnd.oasis.opendocument.text',
                     'application/vnd.oasis.opendocument.spreadsheet',
                     'application/vnd.oasis.opendocument.presentation',

@@ -1,29 +1,41 @@
 <div class="well no-padding">
     <form action="user/register" method="post" class="smart-form client-form">
         <header>
-            <?=__('User', 'register', 'register')?>
+            <?=__('User', 'register', 'registerFreeApp')?>
         </header>
 
         <fieldset>
 
             <section>
-                <label class="input">
-                    <i class="icon-append fa fa-inbox"></i>
-
-                    <input type="text" name="projectName" required
-                           placeholder="<?=__('User', 'register', 'projectName')?>"
-                           value="<?=$this->projectName?>">
-                    <b class="tooltip tooltip-top-right">
-                        <i class="fa fa-user txt-color-teal"></i>
-                        <?=__('User', 'register', 'projectName')?>
-                    </b>
+                <label class="select">
+                    <select name="projectType" required>
+                        <option value=""<?php if (empty($this->projectType)) : ?> selected<?php endif; ?> disabled>
+                            <?=__('User', 'register', 'projectType')?>
+                        </option>
+                        <?php if ($this->registerIndividual) : ?>
+                            <option value="indivudual"<?php if ($this->projectType === 'individual') : ?> selected<?php endif; ?>>
+                                <?=__('User', 'register', 'projectTypeIndividual')?>
+                            </option>
+                        <?php endif; ?>
+                        <?php if ($this->registerCollectivity) : ?>
+                            <option value="collectivity"<?php if ($this->projectType === 'collectivity') : ?> selected<?php endif; ?>>
+                                <?=__('User', 'register', 'projectTypeCollectivity')?>
+                            </option>
+                        <?php endif; ?>
+                        <?php if ($this->registerSMEs) : ?>
+                            <option value="smes"<?php if ($this->projectType === 'smes') : ?> selected<?php endif; ?>>
+                                <?=__('User', 'register', 'projectTypeSMEs')?>
+                            </option>
+                        <?php endif; ?>
+                    </select>
+                    <i></i>
                 </label>
             </section>
 
             <section>
                 <label class="input">
                     <i class="icon-append fa fa-user"></i>
-                    <input type="email" name="email"
+                    <input type="email" name="email" required value="<?=$this->email?>"
                            placeholder="<?=__('User', 'user', 'emailAddress')?>">
                     <b class="tooltip tooltip-top-right">
                         <i class="fa fa-user txt-color-teal"></i>
@@ -34,24 +46,12 @@
 
             <section>
                 <label class="input">
-                    <i class="icon-append fa fa-lock"></i>
-                    <input type="password" name="password"
-                           placeholder="<?=__('User', 'register', 'password')?>">
+                    <i class="icon-append fa fa-user"></i>
+                    <input type="email" name="emailConfirm" required value="<?=$this->emailConfirm?>"
+                           placeholder="<?=__('User', 'register', 'emailAddressConfirm')?>">
                     <b class="tooltip tooltip-top-right">
-                        <i class="fa fa-lock txt-color-teal"></i>
-                        <?=__('User', 'register', 'password')?>
-                    </b>
-                </label>
-            </section>
-
-            <section>
-                <label class="input">
-                    <i class="icon-append fa fa-lock"></i>
-                    <input type="password" name="password2"
-                           placeholder="<?=__('User', 'register', 'passwordAgain')?>">
-                    <b class="tooltip tooltip-top-right">
-                        <i class="fa fa-lock txt-color-teal"></i>
-                        <?=__('User', 'register', 'passwordAgain')?>
+                        <i class="fa fa-user txt-color-teal"></i>
+                        <?=__('User', 'register', 'emailAddressConfirm')?>
                     </b>
                 </label>
             </section>

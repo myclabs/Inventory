@@ -1,3 +1,8 @@
+<?php
+    use MyCLabs\ACL\Model\ClassResource;
+    use User\Domain\ACL\Actions;
+    use User\Domain\User;
+?>
 <header id="header">
 
     <div id="logo-group">
@@ -35,6 +40,17 @@
                     </a>
                 </span>
             </div>
+
+            <!-- accounts button -->
+            <?php if ($this->isAllowed(Actions::CREATE, new ClassResource(User::class))) :?>
+            <div class="btn-header transparent pull-right">
+                <span>
+                    <a href="user/profile/list" title="<?=__('User', 'menu', 'accounts')?>">
+                        <i class="fa fa-users"></i>
+                    </a>
+                </span>
+            </div>
+            <?php endif; ?>
 
             <!-- account button -->
             <div class="btn-header transparent pull-right">

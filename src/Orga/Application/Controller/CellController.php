@@ -851,6 +851,10 @@ class Orga_CellController extends Core_Controller
      */
     public function viewUsersAction()
     {
+        /** @var User $connectedUser */
+        $connectedUser = $this->_helper->auth();
+        $this->view->assign('connectedUser', $connectedUser);
+
         $cellId = $this->getParam('cell');
         /** @var Cell $cell */
         $cell = Cell::load($cellId);
@@ -1471,8 +1475,13 @@ class Orga_CellController extends Core_Controller
         // Saisie de l'année précédente.
         $previousInput = $cell->getPreviousAFInputSetPrimary();
         if ($previousInput) {
+            $previousCell = $cell->getPreviousCellForAxis($cell->getWorkspace()->getTimeAxis());
             $label = $this->translator->get($cell->getPreviousCellForAxis($workspace->getTimeAxis())->getLabel());
-            $viewConfiguration->setPreviousInputSet($label, $previousInput);
+            $viewConfiguration->setPreviousInputSet(
+                $label,
+                'orga/cell/input/cell/' . $previousCell->getId() . '/fromCell/' . $fromCellId . '/',
+                $previousInput
+            );
         }
 
         $tabComments = new Tab('inputComments');

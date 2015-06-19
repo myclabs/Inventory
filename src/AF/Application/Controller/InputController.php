@@ -212,6 +212,9 @@ class AF_InputController extends Core_Controller
 
         // Fait suivre aux actions de processing du finish
         $actions = $this->getParam('urlParams')['finishActionStack'];
+        if (is_null($actions)) {
+            $actions = [];
+        }
 
         // On est obligé de construire un "container" pour que les sous-actions puissent remplacer l'inputset
         $inputSetContainer = new \stdClass();

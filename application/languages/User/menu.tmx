@@ -12,6 +12,14 @@
                 <seg>My account</seg>
             </tuv>
         </tu>
+        <tu tuid="accounts">
+            <tuv xml:lang="fr">
+                <seg>Liste des comptes</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Accounts list</seg>
+            </tuv>
+        </tu>
         <tu tuid="login">
             <tuv xml:lang="fr">
                 <seg>Connexion</seg>

@@ -1,0 +1,77 @@
+<script>
+    function startIntro(){
+        var intro = introJs();
+        intro.setOptions({
+            steps: [
+                {
+                    element: '.well',
+                    intro: "Le tableau de bord contient vos différents workspaces et bibliothèques de données. Votre application gratuite est votre premier workspace.",
+                    position: 'left'
+                },
+                {
+                    element: '#left-panel',
+                    intro: "Ce menu vous permet de naviguer entre les workspaces et les bibliothèques. Vous pouvez aussi changer de compte si vous avez accès à une version payante de My C-Tool.",
+                    position: 'right'
+                },
+                {
+                    element: '.workspace',
+                    intro: "Vous pouvez maintenant accéder à votre premier workspace.",
+                    position: 'top'
+                }
+            ],
+            showBullets: false,
+            showStepNumbers: false,
+            nextLabel: "Suivant",
+            prevLabel: "Précédent",
+            doneLabel: "Terminer",
+            skipLabel: "Passer"
+        });
+        var stepCompleted = function () {
+            $.ajax({
+                url: 'user/profile/dismiss-tutorial/tutorial/<?=\User\Application\ViewHelper\TutorialHelper::DASHBOARD ?>/',
+                type: "GET"
+            });
+        };
+        intro.onchange(function (targetElement) {
+            if ($(targetElement).attr('class') == 'workspace') {
+                stepCompleted();
+            }
+        })
+        intro.onexit(stepCompleted);
+        intro.oncomplete(function () {
+            stepCompleted();
+        });
+        intro.start();
+    }
+    $(function () {
+        $("#welcomeModal").modal('show');
+        $("#beginTutorial").on('click', function () {
+            setTimeout(function(){startIntro()}, 700);
+        });
+        $("#dismissTutorial").on('click', function () {
+            $.ajax({
+                url: 'user/profile/dismiss-tutorial/tutorial/all/',
+                type: "GET"
+            });
+        });
+    });
+</script>
+
+<div class="modal fade" id="welcomeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4>Bienvenue dans My C-Tool</h4>
+            </div>
+            <div class="modal-body">
+                <p>Votre espace de travail est prêt. Vous pouvez saisir vos données comptables et analyser vos émissions de gaz à effet de serre.</p>
+                <p>Souhaitez-vous suivre une initiation ?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="beginTutorial" data-dismiss="modal">Suivre l'initiation</button>
+                <button class="btn btn-default" id="dismissTutorial" data-dismiss="modal">Utiliser directement My C-Tool</button>
+            </div>
+    </div>
+    </div>
+</div>

@@ -619,7 +619,7 @@
 
         <tu tuid="noMoreActivity">
             <tuv xml:lang="fr">
-                <seg>Pas d'activité plus ancienne trouvé.</seg>
+                <seg>Pas d'activité plus ancienne trouvée.</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>No more activity found.</seg>
@@ -628,7 +628,7 @@
 
         <tu tuid="viewActivity">
             <tuv xml:lang="fr">
-                <seg>Voir toute l'activité</seg>
+                <seg>Voir toute l'activité.</seg>
             </tuv>
             <tuv xml:lang="en">
                 <seg>View all activity.</seg>

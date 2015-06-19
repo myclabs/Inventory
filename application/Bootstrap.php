@@ -317,6 +317,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     /**
      * Enregistrement du plugin pour le tutorial
+     * @todo: make sure this plugin is useful
      */
     protected function _initPluginTutorial()
     {

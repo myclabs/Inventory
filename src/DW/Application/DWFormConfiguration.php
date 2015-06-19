@@ -359,6 +359,10 @@ class DWFormConfiguration extends GenericTag
         $resultsOrderSelect->setAttribute('name', 'resultsOrder');
         $resultsOrderSelect->addClass('form-control');
         $resultsOrderGroup->appendContent($resultsOrderSelect);
+        // Valeurs par ordre conventionnel.
+        $resultOrderConventionalOption = new GenericTag('option', __('DW', 'config', 'sortByMembers'));
+        $resultOrderConventionalOption->setAttribute('value', Report::SORT_CONVENTIONAL);
+        $resultsOrderSelect->appendContent($resultOrderConventionalOption);
         // Valeurs décroissantes.
         $resultsOrderDecreasingOption = new GenericTag('option', __('DW', 'config', 'sortByDecreasingValues'));
         $resultsOrderDecreasingOption->setAttribute('value', Report::SORT_VALUE_DECREASING);
@@ -367,10 +371,6 @@ class DWFormConfiguration extends GenericTag
         $resultsOrderIncreasingOption = new GenericTag('option', __('DW', 'config', 'sortByIncreasingValues'));
         $resultsOrderIncreasingOption->setAttribute('value', Report::SORT_VALUE_INCREASING);
         $resultsOrderSelect->appendContent($resultsOrderIncreasingOption);
-        // Valeurs décroissantes.
-        $resultOrderConventionalOption = new GenericTag('option', __('DW', 'config', 'sortByMembers'));
-        $resultOrderConventionalOption->setAttribute('value', Report::SORT_CONVENTIONAL);
-        $resultsOrderSelect->appendContent($resultOrderConventionalOption);
 
         // Groupe de sélection de l'affichage de l'incertitude.
         $uncertaintyGroup = new GenericTag('div');
@@ -420,6 +420,10 @@ class DWFormConfiguration extends GenericTag
             $axisFilterWrapper = new GenericTag('fieldset');
             $axisFilterWrapper->addClass('filter-' . $axis->getRef());
             $axisFilterLegend = new GenericTag('legend', $this->translator->get($axis->getLabel()));
+            $axisFilterRemove = new Icon('trash-o', Icon::FONT_AWESOME);
+            $axisFilterRemove->addClass('remove-filter');
+            $axisFilterRemove->setAttribute('data-filter', $axis->getRef());
+            $axisFilterLegend->appendContent($axisFilterRemove);
             $axisFilterWrapper->appendContent($axisFilterLegend);
             $filtersCollapse->appendContent($axisFilterWrapper);
 
@@ -468,8 +472,13 @@ class DWFormConfiguration extends GenericTag
             $membersSelect->addClass('form-control');
             $membersGroup->appendContent($membersSelect);
 
+            $filterAxisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
+            $filterAxisOption->setAttribute('value', $axis->getRef());
+
             $reportFilterForAxis = $report->getFilterForAxis($axis);
             if ($reportFilterForAxis !== null) {
+                $filterAxisOption->setAttribute('style', 'display: none;');
+
                 $reportMembersFilteredForAxis = $reportFilterForAxis->getMembers()->toArray();
                 if (count($reportMembersFilteredForAxis) > 1) {
                     $membersSelect->setBooleanAttribute('multiple');
@@ -478,14 +487,11 @@ class DWFormConfiguration extends GenericTag
                     $oneMemberChoiceInput->setBooleanAttribute('checked');
                 }
             } else {
-                $filterAxisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
-                $filterAxisOption->setAttribute('value', $axis->getRef());
-                $filtersSelect->appendContent($filterAxisOption);
-
                 $axisFilterWrapper->addClass('hide');
                 $membersGroup->addClass('hide');
                 $allMembersChoiceInput->setBooleanAttribute('checked');
             }
+            $filtersSelect->appendContent($filterAxisOption);
 
             foreach ($axis->getMembers() as $member) {
                 $memberOption = new GenericTag('option', $this->translator->get($member->getLabel()));

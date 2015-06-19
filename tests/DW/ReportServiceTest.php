@@ -223,7 +223,7 @@ class ReportServiceTest extends TestCase
         $this->assertNull($newReport->getDenominatorAxis1());
         $this->assertNull($newReport->getDenominatorAxis2());
         $this->assertNull($newReport->getChartType());
-        $this->assertEquals(Report::SORT_VALUE_DECREASING, $newReport->getSortType());
+        $this->assertEquals(Report::SORT_CONVENTIONAL, $newReport->getSortType());
         $this->assertFalse($newReport->getWithUncertainty());
         $this->assertCount(0, $newReport->getFilters());
         $this->assertNull($newReport->getFilterForAxis($this->cube2->getAxisByRef('axis1')));

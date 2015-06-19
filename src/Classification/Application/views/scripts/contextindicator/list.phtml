@@ -1,7 +1,7 @@
 <div class="page-header">
     <h1><?=__('Classification', 'contextIndicator', 'contextIndicators')?></h1>
 </div>
-<?
+<?php
 $datagrid = new UI_Datagrid('editContextIndicators', 'datagrid_contextindicator', 'classification');
 $datagrid->addParam('library', $this->library->getId());
 

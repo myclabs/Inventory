@@ -34,7 +34,7 @@ $cellReports = $this->cellReports;
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($cellReports as $cellReport): ?>
+        <?php foreach ($cellReports as $cellReport) : ?>
         <tr data-report-type="<?=$cellReport['type']?>"<?=(($cellReport['type'] === 'userReport') ? ' data-report-owner="'.$cellReport['owner']->getId().'"': '')?>>
             <td>
                 <a href="<?=$cellReport['link']?>">
@@ -48,10 +48,10 @@ $cellReports = $this->cellReports;
                 <?php endif; ?>
             </td>
             <td>
-                <?php if (isset($cellReport['delete']) && $cellReport['delete']): ?>
-                <a href="orga/cell/remove-report/cell/<?=$this->cellId?>/report/<?=$cellReport['reportId']?>/" class="delete-report withTooltip" title="<?=___('UI', 'verb', 'delete')?>">
-                    <i class="fa fa-trash-o"></i>
-                </a>
+                <?php if (isset($cellReport['delete']) && $cellReport['delete']) : ?>
+                    <a href="orga/cell/remove-report/cell/<?=$this->cellId?>/report/<?=$cellReport['reportId']?>/" class="delete-report withTooltip" title="<?=___('UI', 'verb', 'delete')?>">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
                 <?php endif; ?>
             </td>
         </tr>

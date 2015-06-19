@@ -2,7 +2,7 @@
     <h1><?=__('Classification', 'context', 'pageTitle')?></h1>
 </div>
 
-<?
+<?php
 $datagrid = new UI_Datagrid('editContexts', 'datagrid_context', 'classification');
 $datagrid->addParam('library', $this->library->getId());
 
