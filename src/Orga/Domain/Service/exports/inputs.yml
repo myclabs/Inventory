@@ -23,8 +23,7 @@ sheets:
           - label: "{{ inputUnit }}"
           - label: "{{ inputReferenceValue }}"
           - label: "{{ inputReferenceUnit }}"
-          # @ExportSaisiesSuspectes uncomment next line
-#          - label: "{{ inputHasInconsistency }}"
+          - label: "{{ inputHasInconsistency }}"
 
         lines:
           - foreach: inputs as input
