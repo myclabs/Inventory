@@ -152,7 +152,7 @@ class Core_Locale
      *                              Incompatible Avec les chiffres significatifs.
      * @return string
      */
-    public function formatNumber($number, $significantFigures=null, $numberDecimal=null)
+    public function formatNumber($number, $significantFigures=null, $numberDecimal=null, $numberFormat=null)
     {
         $options = array(
             'locale' => $this->zendLocale,
@@ -177,6 +177,11 @@ class Core_Locale
             // Si un nombre de de décimal est spécifié (mais pas de chiffres significatifs),
             // alors il est spécifié et Zend fera le formattage.
             $options['precision'] = $numberDecimal;
+        }
+
+        if ($numberFormat !== null) {
+            // Si on a un number format (exemple : #0 ou #0.#) on le passe à Zend pour le formattage.
+            $options['number_format'] = $numberFormat;
         }
 
         // Récupération du nombre formatté par Zend.
