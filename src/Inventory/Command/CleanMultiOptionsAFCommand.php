@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Orga\Domain\Cell;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -35,7 +36,8 @@ class CleanMultiOptionsAFCommand extends Command
     protected function configure()
     {
         $this->setName('AF:clean-multi-options')
-            ->setDescription('Corrige les selections multiple avec option_verre');
+            ->setDescription('Corrige les selections multiple avec option_verre')
+            ->addOption('clean', 'c', InputOption::VALUE_NONE, 'Clean the options');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -47,7 +49,9 @@ class CleanMultiOptionsAFCommand extends Command
         //          pour toutes les options du multi
         //              si l'option est dans les valeurs saisies -> on garde l'option
         //          on met à jour l'input
+        $clean = $input->getOption('clean');
         $AFs = AF::loadList();
+        $optionsNotFound = [];
         /** @var AF $af */
         foreach ($AFs as $af) {
             $output->writeln('<info>Cleaning AF '.$af->getLibrary()->getLabel()->get('fr').' / '.$af->getLabel()->get('fr').' (id: '.$af->getId().')</info>');
@@ -69,13 +73,24 @@ class CleanMultiOptionsAFCommand extends Command
                     foreach ($values as $value) {
                         if (!in_array($value, $optionsInMulti)) {
                             $output->writeln('  <comment>Option not found in multi (id: '.$multi->getId().') for cell '.$cell->getLabel()->get('fr').' (cell id: '.$cell->getId().' - inputSet id: '.$inputSet->getId().'): '.$value.'</comment>');
+                            $optionNotFound = 'Library: '.$multi->getAf()->getLibrary()->getLabel()->get('fr').' (id: '.$multi->getAf()->getLibrary()->getId().')'
+                                              .' AF: '.$multi->getAf()->getLabel()->get('fr').' (id: '.$multi->getAf()->getId().')'
+                                              .' multi: '.$multi->getLabel()->get('fr').' (ref: '.$multi->getRef().')'
+                                              .' option ref: '.$value;
+                            if (!in_array($optionNotFound, $optionsNotFound)) {
+                                $optionsNotFound[] = $optionNotFound;
+                            }
                         }
                     }
-                    $input->setValue($options);
+                    if ($clean) $input->setValue($options);
                 }
             }
         }
-        $this->entityManager->flush();
+        if ($clean) $this->entityManager->flush();
+        $output->writeln('<info>Options not found summary:</info>');
+        array_walk($optionsNotFound, function ($option) use ($output) {
+            $output->writeln($option);
+        });
         $output->writeln('<comment>Patch applied</comment>');
     }
 }
