@@ -146,7 +146,8 @@ trait DatagridFeatureContext
     {
         $cellSelector = $this->getDatagridSelector($datagrid)
             . " .yui-dt-data tr:nth-child($row)"
-            . " .yui-dt-col-$column";
+            . " .yui-dt-col-$column"
+            . " .yui-dt-edit-icon";
 
         // Double-click
         $cellNode = $this->findElement($cellSelector);

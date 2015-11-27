@@ -30,11 +30,11 @@ Feature: Family dimension list edit feature
 
     And I should see "Combustible : combustible"
     And I should see the "combustibleMembersDatagrid" datagrid
-    And the "combustibleMembersDatagrid" datagrid should contain 2 rows
+    And the "combustibleMembersDatagrid" datagrid should contain 2 row
 
     And I should see "Processus : processus"
     And I should see the "processusMembersDatagrid" datagrid
-    And the "processusMembersDatagrid" datagrid should contain 2 rows
+    And the "processusMembersDatagrid" datagrid should contain 2 row
 
   @javascript
   Scenario: Delete family dimension

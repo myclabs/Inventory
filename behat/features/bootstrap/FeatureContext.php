@@ -44,6 +44,19 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * @throws ElementNotFoundException
+     * @return void
+     * @Given /^I switch to the new tab$/
+     */
+    public function switchToNewTab()
+    {
+        $windowNames = $this->getSession()->getWindowNames();
+        if(count($windowNames) > 1) {
+            $this->getSession()->switchToWindow($windowNames[1]);
+        }
+    }
+
+    /**
      * @param string $checkboxLabel
      *
      * @throws ElementNotFoundException
@@ -259,7 +272,7 @@ class FeatureContext extends MinkContext
 
         /** @var NodeElement $node */
         $node = current($nodes);
-        $node->check();
+        $node->click();
     }
 
     /**
