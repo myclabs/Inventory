@@ -2,7 +2,7 @@
 
 ## Installation
 
-Download the Selenium server ([download link](http://selenium.googlecode.com/files/selenium-server-standalone-2.33.0.jar))
+Download the Selenium server ([download link](http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.2.jar))
 and save it in this directory as:
 
     selenium-server-standalone.jar
