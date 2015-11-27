@@ -15,7 +15,7 @@ Feature: Organization input input feature
     Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
   # On doit fermer le premier volet sinon le clic suivant est trop bas dans la page
-    And I click "Année | Site Fonctionnalités disponibles à ce niveau : Suivi des collectes, Saisies"
+    And I click "Site Fonctionnalités disponibles à ce niveau : Suivi des collectes, Saisies"
   # Accès à la saisie
     And I go input the "/1-annee:1-2012/&/1-zone:europe/1-pays:france/2-site:annecy/&/2-marque:marque_a/2-site:annecy/&/3-categorie:1-energie/" cell
     And I switch to the new tab

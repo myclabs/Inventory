@@ -142,7 +142,10 @@ Feature: Granularity dataware analysis feature
   # Accès à l'analyse de la cellule
     When I click "Données"
     And I click element "#currentGranularity .fa-bar-chart-o"
+    And I wait 2 seconds
     And I click "Analyse préconfigurée test"
+    And I wait 2 seconds
+    And I switch to the new tab
     Then I should see "Analyse préconfigurée test Vue globale"
 
   @javascript
@@ -173,7 +176,10 @@ Feature: Granularity dataware analysis feature
       | Chiffre d'affaire, par année |
     When I click "Données"
     And I click element "#currentGranularity .fa-bar-chart-o"
+    And I wait 2 seconds
     And I click "Chiffre d'affaire, par année"
+    And I wait 2 seconds
+    And I switch to the new tab
     And I open tab "Valeurs"
     Then the "reportValues" datagrid should contain 1 row
     And the row 1 of the "reportValues" datagrid should contain:
