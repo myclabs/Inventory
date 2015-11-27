@@ -16,7 +16,7 @@
         "zendframework/zendframework1": "1.12.*",
         "doctrine/common": "2.5.*",
         "doctrine/orm": "2.5.*",
-        "doctrine/annotations": "~1.0",
+        "doctrine/annotations": "~1.2",
         "doctrine/collections": "1.2",
         "gedmo/doctrine-extensions": "~2.4",
         "symfony/event-dispatcher": "~2.3",
@@ -36,11 +36,11 @@
         "php-di/php-di": "~5.0",
         "php-di/zf1-bridge": "*",
         "psr/log": "~1.0",
-        "monolog/monolog": "~1.6",
+        "monolog/monolog": "~1.17",
         "netcarver/textile": "~3.5",
         "dompdf/dompdf": "dev-master",
         "phpoffice/phpexcel": "dev-WriterExcel5OptionalConstructor as 1.7.99",
-        "videlalvaro/php-amqplib": "~2.2"
+        "videlalvaro/php-amqplib": "~2.6"
     },
     "require-dev": {
         "behat/behat": "~3.0",
