@@ -11,7 +11,7 @@ Feature: Input in a cell associated to a DW feature
     And I wait for the page to finish loading
   # Modification du formulaire associé à une zone-marque
     And I open tab "Formulaires"
-    And I click "Zone | Marque Zone | Marque"
+    And I click "Marque Zone"
     And I set "Combustion de combustible, mesuré en unité de masse" for column "af" of row 1 of the "datagridCellAfs3" datagrid with a confirmation message
   # Accès à la cellule "Europe | Marque A"
   # Accès à la saisie

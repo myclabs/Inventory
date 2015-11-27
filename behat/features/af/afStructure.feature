@@ -12,20 +12,20 @@ Feature: AF structure feature
   # Déplacement d'un groupe, à la fin
     When I click "Groupe vide"
     Then I should see the popup "Déplacement dans la structure du formulaire"
-    When I check "Dernier"
+    When I select the "Dernier" radio button
   # L'attente qui suit semble, curieusement, nécessaire
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un groupe, au début
     And I click "Groupe contenant un sous-groupe"
     Then I should see the popup "Déplacement dans la structure du formulaire"
-    When I check "Premier"
+    When I select the "Premier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un groupe, après un autre composant ou group
     And I click "Groupe contenant un champ"
     Then I should see the popup "Déplacement dans la structure du formulaire"
-    When I check "Après"
+    When I select the "Après" radio button
     And I select "Champ sélection simple" from "afTree_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
@@ -57,19 +57,19 @@ Feature: AF structure feature
   # Déplacement d'un composant, à la fin
     And I click "Sous-formulaire non répété"
     Then I should see the popup "Déplacement dans la structure du formulaire"
-    When I check "Dernier"
+    When I select the "Dernier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un composant, au début
     And I click "Champ texte long"
     Then I should see the popup "Déplacement dans la structure du formulaire"
-    When I check "Premier"
+    When I select the "Premier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement d'un composant, après un autre composant
     And I click "Champ texte court"
     Then I should see the popup "Déplacement dans la structure du formulaire"
-    When I check "Après"
+    When I select the "Après" radio button
     And I select "Sous-formulaire répété" from "afTree_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."

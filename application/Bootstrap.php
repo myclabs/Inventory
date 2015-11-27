@@ -95,6 +95,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $builder->addDefinitions(PACKAGE_PATH . '/src/User/Application/config.php');
         $builder->addDefinitions(PACKAGE_PATH . '/src/Orga/Application/config.php');
         $builder->addDefinitions(PACKAGE_PATH . '/src/Account/Application/config.php');
+        $builder->addDefinitions(PACKAGE_PATH . '/src/AuditTrail/Application/config.php');
 
         switch (APPLICATION_ENV) {
             case 'testsunitaires':
@@ -125,6 +126,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
         $cache->setNamespace($configuration->get('applicationName', ''));
         $builder->setDefinitionCache($cache);
+        $builder->useAnnotations(true);
 
         $this->container = $builder->build();
 

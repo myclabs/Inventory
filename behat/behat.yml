@@ -1,18 +1,19 @@
 default:
 
-  paths:
-    features: features
+  autoload:
+    '': %paths.base%/features/bootstrap
 
-  filters:
-    tags: ~@skipped
+  gherkin:
+    filters:
+      tags: ~@skipped
 
   extensions:
-    Behat\MinkExtension\Extension:
+    Behat\MinkExtension:
       base_url: http://localhost/inventory
       default_session: selenium2
       javascript_session: selenium2
       show_cmd: 'chromium-browser %s'
+      browser_name: 'chrome'
       #show_auto: true # activer pour auto-ouvrir les scénarios avec erreur
       selenium2:
-        browser: 'chrome'
         wd_host: 'http://localhost:4444/wd/hub'

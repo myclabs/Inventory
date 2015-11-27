@@ -146,7 +146,8 @@ trait DatagridFeatureContext
     {
         $cellSelector = $this->getDatagridSelector($datagrid)
             . " .yui-dt-data tr:nth-child($row)"
-            . " .yui-dt-col-$column";
+            . " .yui-dt-col-$column"
+            . " .yui-dt-edit-icon";
 
         // Double-click
         $cellNode = $this->findElement($cellSelector);
@@ -246,7 +247,7 @@ JS;
     {
         $this->setCellContent($content, $column, $row, $datagrid);
 
-        return [new Step\Then('the following message is shown and closed: "Modification effectuée."')];
+        $this->assertMessageShown("Modification effectuée.");
     }
 
     /**

@@ -26,9 +26,12 @@ Feature: Cell dataware analysis feature
     Given I am on "orga/cell/view/cell/1"
     And I wait for the page to finish loading
     And I click element "#currentGranularity .cell .fa-bar-chart-o"
+    And I wait 5 seconds
     Then I should see "Chiffre d'affaire 2012, marques A et B, par site"
     Then I should see "Chiffre d'affaire, par année"
     When I click "Chiffre d'affaire, par année"
+    And I wait 8 seconds
+    And I switch to the new tab
     And I open tab "Valeurs"
     Then the row 1 of the "reportValues" datagrid should contain:
       | valueAxiso_annee | valueDigital | valueUncertainty |

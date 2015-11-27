@@ -85,6 +85,7 @@ Feature: Subforms input feature
     And I fill in "s_f_r__1__quantite_combustible" with "1000"
     And I select "kg" from "s_f_r__1__quantite_combustible_unit"
     And I click "Enregistrer"
+    And I wait 2 seconds
     And I open tab "Détails calculs"
     And I open collapse "Sous-formulaire non répété"
     And I open collapse "chiffre_affaire"

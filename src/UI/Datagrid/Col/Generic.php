@@ -293,7 +293,7 @@ abstract class UI_Datagrid_Col_Generic
         $this->id = $id;
         $this->label = $label;
         // Définition des pseudo-constantes pouvant être redéfinies.
-        $this->editableLabel = '<i class="fa fa-pencil-square-o"></i>';
+        $this->editableLabel = '<i class="fa fa-pencil-square-o yui-dt-edit-icon"></i>';
         $this->editLabelSave = __('UI', 'verb', 'save');
         $this->editLabelCancel = __('UI', 'verb', 'cancel');
     }

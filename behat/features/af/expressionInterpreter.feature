@@ -68,7 +68,7 @@ Feature: Expression interpreter feature
   Scenario: Boolean expression interpreter scenario
     Given I am on "tec/expression/test"
     And I wait for the page to finish loading
-    And I check "Booléenne"
+    And I select the "Booléenne" radio button
   # Expression vide
     When I click "Interpréter"
     Then I should see "L'expression n'a pas pu être interprétée."
@@ -100,7 +100,7 @@ Feature: Expression interpreter feature
   # Divers messages d'erreurs qui peuvent être renvoyés
     Given I am on "tec/expression/test"
     And I wait for the page to finish loading
-    And I check "Booléenne"
+    And I select the "Booléenne" radio button
     When I fill in "input" with "a|(b|(c|d)"
     And I click "Interpréter"
     Then I should see "Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."
@@ -121,7 +121,7 @@ Feature: Expression interpreter feature
   Scenario: Selection expression interpreter scenario
     Given I am on "tec/expression/test"
     And I wait for the page to finish loading
-    And I check "Sélection"
+    And I select the "Sélection" radio button
   # Expression vide
     When I click "Interpréter"
     Then I should see "L'expression n'a pas pu être interprétée."
@@ -148,7 +148,7 @@ Feature: Expression interpreter feature
   # Divers messages d'erreurs qui peuvent être renvoyés
     Given I am on "tec/expression/test"
     And I wait for the page to finish loading
-    And I check "Sélection"
+    And I select the "Sélection" radio button
     When I fill in "input" with "a:(b:(c:d)"
     And I click "Interpréter"
     Then I should see "Au moins une parenthèse ouvrante n'est associée à aucune parenthèse fermante."

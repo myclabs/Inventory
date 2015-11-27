@@ -104,20 +104,20 @@ Feature: Classification axis feature
   # Déplacement en dernier (axe situé à la racine)
     And I click "Gaz"
     Then I should see the popup "Édition d'un axe"
-    When I check "Dernier"
+    When I select the "Dernier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement "après" (axe situé à la racine)
     When I click "Gaz"
     Then I should see the popup "Édition d'un axe"
-    When I check "Après"
+    When I select the "Après" radio button
     And I select "Poste article 75" from "editAxis_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en premier (axe situé à la racine)
     When I click "Gaz"
     Then I should see the popup "Édition d'un axe"
-    When I check "Premier"
+    When I select the "Premier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement comme axe plus grossier d'un autre axe
@@ -129,19 +129,19 @@ Feature: Classification axis feature
   # Déplacement en premier (axe non situé à la racine)
     And I click "Gaz"
     Then I should see the popup "Édition d'un axe"
-    When I check "Premier"
+    When I select the "Premier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en dernier (axe non situé à la racine)
     And I click "Gaz"
     Then I should see the popup "Édition d'un axe"
-    When I check "Dernier"
+    When I select the "Dernier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement "après" (axe non situé à la racine)
     And I click "Scope"
     Then I should see the popup "Édition d'un axe"
-    When I check "Après"
+    When I select the "Après" radio button
     And I select "Gaz" from "editAxis_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."

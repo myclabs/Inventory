@@ -23,18 +23,18 @@ Feature: Family tree edit of families feature
     Given I am on "parameter/library/view/id/1"
   # Déplacement en dernier
     And I click "Combustion de combustible, mesuré en unité de masse"
-    And I check "Premier"
+    And I select the "Premier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement après
     And I click "Combustion de combustible, mesuré en unité de masse"
-    And I check "Après"
+    And I select the "Après" radio button
     And I select "Masse volumique de combustible" from "familyTree_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en premier
     And I click "Combustion de combustible, mesuré en unité de masse"
-    And I check "Premier"
+    And I select the "Premier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement dans une autre catégorie

@@ -27,18 +27,18 @@ Feature: AF tree edit AF feature
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en premier
     And I click "Formulaire test"
-    And I check "Premier"
+    And I select the "Premier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement après
     And I click "Formulaire test"
-    And I check "Après"
+    And I select the "Après" radio button
     And I select "Données générales" from "afTree_selectAfter"
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
   # Déplacement en dernier
     And I click "Formulaire test"
-    And I check "Premier"
+    And I select the "Premier" radio button
     And I click "Confirmer"
     Then the following message is shown and closed: "Modification effectuée."
 

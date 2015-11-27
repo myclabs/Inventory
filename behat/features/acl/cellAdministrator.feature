@@ -71,6 +71,7 @@ Feature: Cell administrator feature
     Then I should see "Chiffre d'affaire, par année"
     When I click "Chiffre d'affaire, par année"
     And I wait 8 seconds
+    And I switch to the new tab
     And I open tab "Valeurs"
     Then the row 1 of the "reportValues" datagrid should contain:
       | valueAxiso_annee | valueDigital | valueUncertainty |
