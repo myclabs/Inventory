@@ -247,12 +247,8 @@ class PdfReport extends Export_Pdf
                 foreach ($value['members'] as $member) {
                     $this->html .= '<td>' . $this->translator->get($member->getLabel()) . '</td>';
                 }
-                $this->html .= '<td align="right">' . str_replace(
-                        '.',
-                        ',',
-                        $locale->formatNumber($value['value'], 3)
-                    ) . '</td>';
-                $this->html .= '<td align="right">' . str_replace('.', ',', round($value['uncertainty'])) . '</td>';
+                $this->html .= '<td align="right">' . $locale->formatNumber($value['value'], 3) . '</td>';
+                $this->html .= '<td align="right">' . round($value['uncertainty']) . '</td>';
                 $this->html .= '</tr>';
             }
         }

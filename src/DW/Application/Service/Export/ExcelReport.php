@@ -219,7 +219,7 @@ class ExcelReport extends Export_Excel
                         str_replace(
                             ['&Acirc;', '&nbsp;'],
                             '',
-                            htmlentities(str_replace(',', '.', $locale->formatNumber($value['value'], 3)))
+                            htmlentities(str_replace(',', '.', $locale->formatNumber($value['value'], 3, null, '#0.000')))
                         )
                     );
                     $line[] = round($value['uncertainty']);
@@ -236,7 +236,7 @@ class ExcelReport extends Export_Excel
                         str_replace(
                             ['&Acirc;', '&nbsp;'],
                             '',
-                            htmlentities(str_replace(',', '.', $locale->formatNumber($value['value'], 3)))
+                            htmlentities(str_replace(',', '.', $locale->formatNumber($value['value'], 3, null, '#0.000')))
                         )
                     );
                     $line[] = round($value['uncertainty']);

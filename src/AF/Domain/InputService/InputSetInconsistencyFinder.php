@@ -121,6 +121,7 @@ class InputSetInconsistencyFinder extends ArrayComparator
                 && ($input1->getRefComponent() === $input2->getRefComponent())
                 && ($input1->isDisabled() === $input2->isDisabled())
                 && ($input1->isHidden() === $input2->isHidden())
+                && ($input1->getValue()->getUnit()->isEquivalent($input2->getValue()->getUnit()))
             ) {
                 $currentValue = (float) $input1->getValue()->getDigitalValue();
                 $previousValue = (float) $input2->getValue()->convertTo($input1->getValue()->getUnit())->getDigitalValue();

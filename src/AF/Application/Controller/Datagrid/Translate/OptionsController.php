@@ -54,8 +54,8 @@ class AF_Datagrid_Translate_OptionsController extends UI_Controller_Datagrid
     {
         $option = SelectOption::load($this->update['index']);
         $option->getLabel()->set($this->update['value'], $this->update['column']);
-        $this->data = $this->cellTranslatedText($option->getLabel());
 
+        $this->data = $option->getLabel()->get($this->update['column']);
         $this->send(true);
     }
 }
