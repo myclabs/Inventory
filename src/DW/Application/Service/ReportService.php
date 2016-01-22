@@ -7,6 +7,7 @@ namespace DW\Application\Service;
 
 use Core\Translation\TranslatedString;
 use Core_Exception_InvalidArgument;
+use Core_Exception_NotFound;
 use DW\Domain\Cube;
 use DW\Domain\Member;
 use DW\Domain\Report;
@@ -374,9 +375,14 @@ class ReportService
             $axis = $report->getCube()->getAxisByRef($stdFilter->refAxis);
             $filter = new Filter($report, $axis);
             foreach ($stdFilter->refMembers as $filterRefMember) {
-                $filter->addMember(
-                    $filter->getAxis()->getMemberByRef($filterRefMember)
-                );
+                try {
+                    $filter->addMember(
+                        $filter->getAxis()->getMemberByRef($filterRefMember)
+                    );
+                }
+                catch (Core_Exception_NotFound $e) {
+                    // the member does not exists in this axis, we do nothing
+                }
             }
         }
 
