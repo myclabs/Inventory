@@ -852,6 +852,33 @@ class Export
         $modelBuilder->bind('cell', $cell);
         $modelBuilder->bind('populatingCells', $cell->getPopulatingCells());
 
+        $granularities = $cell->getGranularity()->getBroaderGranularities();
+        $narrowerGranularities = $cell->getGranularity()->getNarrowerGranularities();
+        foreach ($granularities as $granularity) {
+            $axes = $granularity->getAxes();
+            $narowers = $granularity->getNarrowerGranularities();
+            $broaderAxes = [];
+            foreach ($granularity->getBroaderGranularities() as $broaderGranularity) {
+                foreach ($broaderGranularity->getAxes() as $axe) {
+                    $broaderAxes[] = $axe;
+                }
+            }
+            $orgaAxes = [];
+            foreach ($cell->getGranularity()->getWorkspace()->getFirstOrderedAxes() as $workspaceAxis) {
+                foreach ($granularity->getAxes() as $granularityAxis) {
+                    if ($workspaceAxis->isNarrowerThan($granularityAxis)) {
+                        continue;
+                    } elseif (!($workspaceAxis->isTransverse([$granularityAxis]))) {
+                        continue 2;
+                    }
+                }
+                $orgaAxes[] = $workspaceAxis;
+            }
+            $test = true;
+        }
+//        foreach ($cell->getGranularity()->getBroaderGranularities() as $granularity) {
+//        }
+
 //        $queryWorkspaceAxes = new Core_Model_Query();
 //        $queryWorkspaceAxes->filter->addCondition(
 //            Axis::QUERY_WORKSPACE,
