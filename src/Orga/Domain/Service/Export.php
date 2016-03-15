@@ -838,6 +838,110 @@ class Export
         );
     }
 
+    /**
+     * Exporte les Completions de la version de orga.
+     *
+     * @param string $format
+     * @param Cell $cell
+     */
+    public function streamCompletions($format, Cell $cell)
+    {
+        $modelBuilder = new SpreadsheetModelBuilder();
+        $export = new PHPExcelExporter();
+
+        $modelBuilder->bind('cell', $cell);
+        $modelBuilder->bind('populatingCells', $cell->getPopulatingCells());
+
+//        $queryWorkspaceAxes = new Core_Model_Query();
+//        $queryWorkspaceAxes->filter->addCondition(
+//            Axis::QUERY_WORKSPACE,
+//            $cell->getGranularity()->getWorkspace()
+//        );
+//        $queryWorkspaceAxes->order->addOrder(Axis::QUERY_NARROWER);
+//        $queryWorkspaceAxes->order->addOrder(Axis::QUERY_POSITION);
+        $orgaAxes = [];
+        foreach ($cell->getGranularity()->getWorkspace()->getFirstOrderedAxes() as $workspaceAxis) {
+            foreach ($cell->getGranularity()->getAxes() as $granularityAxis) {
+//                if ($workspaceAxis->isNarrowerThan($granularityAxis)) {
+//                    continue;
+//                } elseif (!($workspaceAxis->isTransverse([$granularityAxis]))) {
+//                    continue 2;
+//                }
+            }
+            $orgaAxes[] = $workspaceAxis;
+        }
+        $modelBuilder->bind('orgaAxes', $orgaAxes);
+
+        $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
+
+
+        $modelBuilder->bindFunction(
+            'displayMemberForOrgaAxis',
+            function (Cell $cell, Axis $axis) {
+                foreach ($cell->getMembers() as $cellMember) {
+                    if ($cellMember->getAxis() === $axis) {
+                        return $this->translator->get($cellMember->getExtendedLabel());
+                    } elseif ($cellMember->getAxis()->isNarrowerThan($axis)) {
+                        try {
+                            return $this->translator->get($cellMember->getParentForAxis($axis)->getExtendedLabel());
+                        } catch (Core_Exception_NotFound $e) {
+                            // Pas de parent pour cet axe.
+                        }
+                    }
+                }
+                return '';
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayInputStatus',
+            function (Cell $cell) {
+                if ($cell->getAFInputSetPrimary() === null) {
+                    return __('AF', 'inputInput', 'statusNotStarted');
+                }
+                switch ($cell->getAFInputSetPrimary()->getStatus()) {
+                    case PrimaryInputSet::STATUS_FINISHED:
+                        return __('AF', 'inputInput', 'statusFinished');
+                        break;
+                    case PrimaryInputSet::STATUS_COMPLETE:
+                        return __('AF', 'inputInput', 'statusComplete');
+                        break;
+                    case PrimaryInputSet::STATUS_CALCULATION_INCOMPLETE:
+                        return __('AF', 'inputInput', 'statusCalculationIncomplete');
+                        break;
+                    case PrimaryInputSet::STATUS_INPUT_INCOMPLETE:
+                        return __('AF', 'inputInput', 'statusInputIncomplete');
+                        break;
+                    default:
+                        return '';
+                }
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'translateString',
+            function (AbstractTranslatedString $string) {
+                return $this->translator->get($string);
+            }
+        );
+
+        switch ($format) {
+            case 'xls':
+                $writer = new PHPExcel_Writer_Excel5();
+                break;
+            case 'xlsx':
+            default:
+                $writer = new PHPExcel_Writer_Excel2007();
+                break;
+        }
+
+        $export->export(
+            $modelBuilder->build(new YamlMappingReader(__DIR__ . '/exports/completions.yml')),
+            'php://output',
+            $writer
+        );
+    }
+
     private function getInputsDetails(Input $input, Translator $translator, $path = '')
     {
         if (($input->getComponent() !== null) && (!$input->isHidden())) {

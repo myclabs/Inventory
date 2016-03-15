@@ -619,5 +619,13 @@
                 <seg>Resources</seg>
             </tuv>
         </tu>
+        <tu tuid="completions">
+            <tuv xml:lang="fr">
+                <seg>Avancement de la collecte</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Collection progress</seg>
+            </tuv>
+        </tu>
 	</body>
 </tmx>

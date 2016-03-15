@@ -1298,6 +1298,10 @@ class Orga_CellController extends Core_Controller
             ];
         }
 
+        $exports['Completions'] = [
+            'label' => __('UI', 'name', 'completions'),
+        ];
+
         $this->view->assign('exports', $exports);
 
         // Désactivation du layout.
@@ -1338,6 +1342,10 @@ class Orga_CellController extends Core_Controller
             case 'Outputs':
                 $streamFunction = 'streamOutputs';
                 $baseFilename = __('UI', 'name', 'results');
+                break;
+            case 'Completions':
+                $streamFunction = 'streamCompletions';
+                $baseFilename = __('UI', 'name', 'completions');
                 break;
             default:
                 UI_Message::addMessageStatic(__('Orga', 'export', 'notFound'), UI_Message::TYPE_ERROR);

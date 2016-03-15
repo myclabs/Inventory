@@ -1,0 +1,28 @@
+sheets:
+
+  - label: "{{ translateString(cell.granularity.label) }}"
+
+    content:
+
+      - type: VerticalTable
+
+        columns:
+          - foreach: orgaAxes as orgaAxis
+            do:
+              - label: "{{ translateString(orgaAxis.label) }}"
+#              - foreach: orgaAxis.allBroadersFirstOrdered as broaderAxis
+#                do:
+#                  - label: "{{ translateString(broaderAxis.label) }}"
+          - label: "{{ inputStatus }}"
+
+        lines:
+          - foreach: populatingCells as populatingCell
+            do:
+              - cells:
+                  - foreach: orgaAxes as orgaAxis
+                    do:
+                      - "{{ displayMemberForOrgaAxis(populatingCell, orgaAxis) }}"
+#                      - foreach: orgaAxis.allBroadersFirstOrdered as broaderAxis
+#                        do:
+#                          - "{{ displayMemberForOrgaAxis(cell, broaderAxis) }}"
+                  - "{{ displayInputStatus(populatingCell) }}"

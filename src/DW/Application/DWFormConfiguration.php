@@ -470,6 +470,7 @@ class DWFormConfiguration extends GenericTag
             $membersSelect = new GenericTag('select');
             $membersSelect->setAttribute('name', $axis->getRef().'_members[]');
             $membersSelect->addClass('form-control');
+            $membersSelect->addClass('selectpicker');
             $membersGroup->appendContent($membersSelect);
 
             $filterAxisOption = new GenericTag('option', $this->translator->get($axis->getLabel()));
