@@ -22,6 +22,7 @@ use Classification\Domain\Axis as ClassificationAxis;
 use Classification\Domain\Indicator;
 use Core_Exception_NotFound;
 use Core_Model_Query;
+use Doctrine\Common\Collections\Criteria;
 use Mnapoli\Translated\AbstractTranslatedString;
 use Mnapoli\Translated\Translator;
 use Orga\Domain\Axis;
@@ -852,55 +853,59 @@ class Export
         $modelBuilder->bind('cell', $cell);
         $modelBuilder->bind('populatingCells', $cell->getPopulatingCells());
 
-        $granularities = $cell->getGranularity()->getBroaderGranularities();
         $narrowerGranularities = $cell->getGranularity()->getNarrowerGranularities();
-        foreach ($granularities as $granularity) {
-            $axes = $granularity->getAxes();
-            $narowers = $granularity->getNarrowerGranularities();
-            $broaderAxes = [];
-            foreach ($granularity->getBroaderGranularities() as $broaderGranularity) {
-                foreach ($broaderGranularity->getAxes() as $axe) {
-                    $broaderAxes[] = $axe;
-                }
-            }
-            $orgaAxes = [];
-            foreach ($cell->getGranularity()->getWorkspace()->getFirstOrderedAxes() as $workspaceAxis) {
-                foreach ($granularity->getAxes() as $granularityAxis) {
-                    if ($workspaceAxis->isNarrowerThan($granularityAxis)) {
-                        continue;
-                    } elseif (!($workspaceAxis->isTransverse([$granularityAxis]))) {
-                        continue 2;
-                    }
-                }
-                $orgaAxes[] = $workspaceAxis;
-            }
-            $test = true;
-        }
-//        foreach ($cell->getGranularity()->getBroaderGranularities() as $granularity) {
-//        }
+        $cellGranularity = $cell->getGranularity();
+        $workspace = $cell->getWorkspace();
 
-//        $queryWorkspaceAxes = new Core_Model_Query();
-//        $queryWorkspaceAxes->filter->addCondition(
-//            Axis::QUERY_WORKSPACE,
-//            $cell->getGranularity()->getWorkspace()
-//        );
-//        $queryWorkspaceAxes->order->addOrder(Axis::QUERY_NARROWER);
-//        $queryWorkspaceAxes->order->addOrder(Axis::QUERY_POSITION);
-        $orgaAxes = [];
-        foreach ($cell->getGranularity()->getWorkspace()->getFirstOrderedAxes() as $workspaceAxis) {
-            foreach ($cell->getGranularity()->getAxes() as $granularityAxis) {
-//                if ($workspaceAxis->isNarrowerThan($granularityAxis)) {
-//                    continue;
-//                } elseif (!($workspaceAxis->isTransverse([$granularityAxis]))) {
-//                    continue 2;
-//                }
-            }
-            $orgaAxes[] = $workspaceAxis;
+        // Get all the granularities to export.
+        // Each exported granularity is a tab in the xls exported file.
+        /** @var Granularity[] $exportedGranularities */
+        $exportedGranularities = [];
+        if ($cellGranularity->isInput()
+            || $cellGranularity->getCellsMonitorInventory()
+            || $workspace->getGranularityForInventoryStatus() == $cellGranularity
+        ) {
+            $exportedGranularities[] = $cellGranularity;
         }
-        $modelBuilder->bind('orgaAxes', $orgaAxes);
+        foreach ($narrowerGranularities as $granularity) {
+            if ($granularity->isInput()
+                || $granularity->getCellsMonitorInventory()
+                || $workspace->getGranularityForInventoryStatus() == $granularity
+            ) {
+                $exportedGranularities[] = $granularity;
+            }
+        }
+        // Sort the granularities according to their narrower<->broader relation
+        usort($exportedGranularities, function (Granularity $a, Granularity $b) {
+            if ($a->isNarrowerThan($b)) {
+                return -1;
+            }
+            elseif ($a->isBroaderThan($b)) {
+                return 1;
+            }
+            return 0;
+        });
+
+        $axes = [];
+        foreach ($exportedGranularities as $granularity) {
+            $axes[$granularity->getId()] = [];
+            foreach ($granularity->getAxes() as $axis) {
+                $axes[$granularity->getId()][] = $axis;
+                foreach ($axis->getAllBroadersFirstOrdered() as $broaderGranularity) {
+                    $axes[$granularity->getId()][] = $broaderGranularity;
+                }
+            }
+        }
+        $modelBuilder->bind('granularities', $exportedGranularities);
 
         $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
 
+        $modelBuilder->bindFunction(
+            'getAxesForGranularity',
+            function (Granularity $granularity) use ($axes) {
+                return $axes[$granularity->getId()];
+            }
+        );
 
         $modelBuilder->bindFunction(
             'displayMemberForOrgaAxis',
@@ -921,8 +926,46 @@ class Export
         );
 
         $modelBuilder->bindFunction(
+            'getChildCellsForGranularity',
+            function (Cell $cell, Granularity $granularity) {
+                $relevantCriteria = new Criteria();
+                $relevantCriteria->where($relevantCriteria->expr()->eq(Cell::QUERY_ALLPARENTSRELEVANT, true));
+                $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Cell::QUERY_RELEVANT, true));
+                return $cell->getChildCellsForGranularity($granularity)->matching($relevantCriteria);
+            }
+        );
+
+        $modelBuilder->bindFunction(
             'displayInputStatus',
-            function (Cell $cell) {
+            function (Granularity $granularity, Cell $cell) {
+                if (!$granularity->isInput()) {
+                    $numberOfInputCells = 0;
+                    $inventoryFinishedInputsNumber = 0;
+                    $narowerGranularities = $granularity->getNarrowerGranularities();
+                    foreach ($granularity->getNarrowerGranularities() as $narrowerInputGranularity) {
+                        $relevantCriteria = new Criteria();
+                        $relevantCriteria->where($relevantCriteria->expr()->eq(Cell::QUERY_ALLPARENTSRELEVANT, true));
+                        $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Cell::QUERY_RELEVANT, true));
+                        $relevantChildInputCells = $cell->getChildCellsForGranularity($narrowerInputGranularity)->matching($relevantCriteria);
+                        $inventoryFinishedInputsNumber = 0;
+                        /** @var \Orga\Domain\Cell $childInputCell */
+                        foreach ($relevantChildInputCells as $childInputCell) {
+                            $numberOfInputCells++;
+                            if ($childInputCell->getAFInputSetPrimary() !== null
+                                && $childInputCell->getAFInputSetPrimary()->isFinished()
+                            ) {
+                                $inventoryFinishedInputsNumber ++;
+                            }
+                        }
+                    }
+                    if ($numberOfInputCells == $inventoryFinishedInputsNumber) {
+                        return 'bilan terminé';
+                    }
+                    else {
+                        return 'bilan non terminé';
+                    }
+//                    return 'not an input granularity';
+                }
                 if ($cell->getAFInputSetPrimary() === null) {
                     return __('AF', 'inputInput', 'statusNotStarted');
                 }

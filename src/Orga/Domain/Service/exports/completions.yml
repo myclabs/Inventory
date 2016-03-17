@@ -1,28 +1,23 @@
 sheets:
 
-  - label: "{{ translateString(cell.granularity.label) }}"
+  - foreach: granularities as granularity
+    do:
+      - label: "{{ translateString(granularity.label) }}"
 
-    content:
+        content:
 
-      - type: VerticalTable
+          - type: VerticalTable
+            columns:
+              - foreach: getAxesForGranularity(granularity) as axis
+                do:
+                  - label: "{{ translateString(axis.label) }}"
+              - label: "{{ inputStatus }}"
 
-        columns:
-          - foreach: orgaAxes as orgaAxis
-            do:
-              - label: "{{ translateString(orgaAxis.label) }}"
-#              - foreach: orgaAxis.allBroadersFirstOrdered as broaderAxis
-#                do:
-#                  - label: "{{ translateString(broaderAxis.label) }}"
-          - label: "{{ inputStatus }}"
-
-        lines:
-          - foreach: populatingCells as populatingCell
-            do:
-              - cells:
-                  - foreach: orgaAxes as orgaAxis
-                    do:
-                      - "{{ displayMemberForOrgaAxis(populatingCell, orgaAxis) }}"
-#                      - foreach: orgaAxis.allBroadersFirstOrdered as broaderAxis
-#                        do:
-#                          - "{{ displayMemberForOrgaAxis(cell, broaderAxis) }}"
-                  - "{{ displayInputStatus(populatingCell) }}"
+            lines:
+              - foreach: getChildCellsForGranularity(cell, granularity) as childCell
+                do:
+                  - cells:
+                    - foreach: getAxesForGranularity(granularity) as axis
+                      do:
+                        - "{{ displayMemberForOrgaAxis(childCell, axis) }}"
+                    - "{{ displayInputStatus(granularity, childCell) }}"
