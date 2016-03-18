@@ -936,10 +936,15 @@ class Export
         $modelBuilder->bindFunction(
             'getChildCellsForGranularity',
             function (Cell $cell, Granularity $granularity) {
-                $relevantCriteria = new Criteria();
-                $relevantCriteria->where($relevantCriteria->expr()->eq(Cell::QUERY_ALLPARENTSRELEVANT, true));
-                $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Cell::QUERY_RELEVANT, true));
-                return $cell->getChildCellsForGranularity($granularity)->matching($relevantCriteria);
+                if ($cell->getGranularity() == $granularity) {
+                    return [$cell];
+                }
+                else {
+                    $relevantCriteria = new Criteria();
+                    $relevantCriteria->where($relevantCriteria->expr()->eq(Cell::QUERY_ALLPARENTSRELEVANT, true));
+                    $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Cell::QUERY_RELEVANT, true));
+                    return $cell->getChildCellsForGranularity($granularity)->matching($relevantCriteria);
+                }
             }
         );
 
