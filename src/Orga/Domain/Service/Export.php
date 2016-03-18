@@ -898,12 +898,20 @@ class Export
         }
         $modelBuilder->bind('granularities', $exportedGranularities);
 
-        $modelBuilder->bind('inputStatus', __('Orga', 'input', 'inputStatus'));
-
         $modelBuilder->bindFunction(
             'getAxesForGranularity',
             function (Granularity $granularity) use ($axes) {
                 return $axes[$granularity->getId()];
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'displayLastColumn',
+            function (Granularity $granularity) {
+                if ($granularity->isInput()) {
+                    return __('Orga', 'input', 'inputStatus');
+                }
+                return __('Orga', 'inventory', 'assessmentComplete');
             }
         );
 
@@ -941,30 +949,30 @@ class Export
                 if (!$granularity->isInput()) {
                     $numberOfInputCells = 0;
                     $inventoryFinishedInputsNumber = 0;
-                    $narowerGranularities = $granularity->getNarrowerGranularities();
                     foreach ($granularity->getNarrowerGranularities() as $narrowerInputGranularity) {
-                        $relevantCriteria = new Criteria();
-                        $relevantCriteria->where($relevantCriteria->expr()->eq(Cell::QUERY_ALLPARENTSRELEVANT, true));
-                        $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Cell::QUERY_RELEVANT, true));
-                        $relevantChildInputCells = $cell->getChildCellsForGranularity($narrowerInputGranularity)->matching($relevantCriteria);
-                        $inventoryFinishedInputsNumber = 0;
-                        /** @var \Orga\Domain\Cell $childInputCell */
-                        foreach ($relevantChildInputCells as $childInputCell) {
-                            $numberOfInputCells++;
-                            if ($childInputCell->getAFInputSetPrimary() !== null
-                                && $childInputCell->getAFInputSetPrimary()->isFinished()
-                            ) {
-                                $inventoryFinishedInputsNumber ++;
+                        if ($narrowerInputGranularity->isInput()) {
+                            $relevantCriteria = new Criteria();
+                            $relevantCriteria->where($relevantCriteria->expr()->eq(Cell::QUERY_ALLPARENTSRELEVANT, true));
+                            $relevantCriteria->andWhere($relevantCriteria->expr()->eq(Cell::QUERY_RELEVANT, true));
+                            $relevantChildInputCells = $cell->getChildCellsForGranularity($narrowerInputGranularity)->matching($relevantCriteria);
+                            $inventoryFinishedInputsNumber = 0;
+                            /** @var \Orga\Domain\Cell $childInputCell */
+                            foreach ($relevantChildInputCells as $childInputCell) {
+                                $numberOfInputCells++;
+                                if ($childInputCell->getAFInputSetPrimary() !== null
+                                    && $childInputCell->getAFInputSetPrimary()->isFinished()
+                                ) {
+                                    $inventoryFinishedInputsNumber++;
+                                }
                             }
                         }
                     }
                     if ($numberOfInputCells == $inventoryFinishedInputsNumber) {
-                        return 'bilan terminé';
+                        return __('UI', 'other', 'yes');
                     }
                     else {
-                        return 'bilan non terminé';
+                        return __('UI', 'other', 'no');
                     }
-//                    return 'not an input granularity';
                 }
                 if ($cell->getAFInputSetPrimary() === null) {
                     return __('AF', 'inputInput', 'statusNotStarted');

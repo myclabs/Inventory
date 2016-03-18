@@ -60,6 +60,14 @@
                 <seg>Not started</seg>
             </tuv>
         </tu>
+        <tu tuid="assessmentComplete">
+            <tuv xml:lang="fr">
+                <seg>Bilan terminé</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Assessment complete</seg>
+            </tuv>
+        </tu>
         <tu tuid="involvedUsers">
             <tuv xml:lang="fr">
                 <seg>Utilisateurs</seg>

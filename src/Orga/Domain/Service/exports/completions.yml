@@ -11,7 +11,7 @@ sheets:
               - foreach: getAxesForGranularity(granularity) as axis
                 do:
                   - label: "{{ translateString(axis.label) }}"
-              - label: "{{ inputStatus }}"
+              - label: "{{ displayLastColumn(granularity) }}"
 
             lines:
               - foreach: getChildCellsForGranularity(cell, granularity) as childCell
