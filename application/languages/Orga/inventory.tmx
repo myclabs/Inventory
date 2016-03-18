@@ -68,6 +68,22 @@
                 <seg>Assessment complete</seg>
             </tuv>
         </tu>
+        <tu tuid="numberOfInputs">
+            <tuv xml:lang="fr">
+                <seg>Nombre de saisies</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Number of inputs</seg>
+            </tuv>
+        </tu>
+        <tu tuid="numberOfFinishedInputs">
+            <tuv xml:lang="fr">
+                <seg>Nombre de saisies terminées</seg>
+            </tuv>
+            <tuv xml:lang="en">
+                <seg>Number of finished inputs</seg>
+            </tuv>
+        </tu>
         <tu tuid="involvedUsers">
             <tuv xml:lang="fr">
                 <seg>Utilisateurs</seg>

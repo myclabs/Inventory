@@ -944,8 +944,25 @@ class Export
         );
 
         $modelBuilder->bindFunction(
+            'getExtraColumnsForGranularity',
+            function (Granularity $granularity) {
+                if ($granularity->isInput()) {
+                    return [];
+                }
+                return [
+                    __('Orga', 'inventory', 'numberOfInputs'),
+                    __('Orga', 'inventory', 'numberOfFinishedInputs')
+                ];
+            }
+        );
+
+        // This array contains the extra cells for a given Orga_Cell
+        // containing the number of narrower input cells and the number of finished input cells
+        $extraCells = [];
+
+        $modelBuilder->bindFunction(
             'displayInputStatus',
-            function (Granularity $granularity, Cell $cell) {
+            function (Granularity $granularity, Cell $cell) use (&$extraCells) {
                 if (!$granularity->isInput()) {
                     $numberOfInputCells = 0;
                     $inventoryFinishedInputsNumber = 0;
@@ -967,6 +984,10 @@ class Export
                             }
                         }
                     }
+                    $extraCells[$cell->getId()] = [
+                        $numberOfInputCells,
+                        $inventoryFinishedInputsNumber
+                    ];
                     if ($numberOfInputCells == $inventoryFinishedInputsNumber) {
                         return __('UI', 'other', 'yes');
                     }
@@ -993,6 +1014,16 @@ class Export
                     default:
                         return '';
                 }
+            }
+        );
+
+        $modelBuilder->bindFunction(
+            'getExtraCells',
+            function (Cell $cell) use (&$extraCells) {
+                if (array_key_exists($cell->getId(), $extraCells)) {
+                    return $extraCells[$cell->getId()];
+                }
+                return [];
             }
         );
 

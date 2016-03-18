@@ -12,6 +12,9 @@ sheets:
                 do:
                   - label: "{{ translateString(axis.label) }}"
               - label: "{{ displayLastColumn(granularity) }}"
+              - foreach: getExtraColumnsForGranularity(granularity) as extraColumn
+                do:
+                  - label: " {{ extraColumn }} "
 
             lines:
               - foreach: getChildCellsForGranularity(cell, granularity) as childCell
@@ -21,3 +24,6 @@ sheets:
                       do:
                         - "{{ displayMemberForOrgaAxis(childCell, axis) }}"
                     - "{{ displayInputStatus(granularity, childCell) }}"
+                    - foreach: getExtraCells(childCell) as extraCell
+                      do:
+                        - " {{ extraCell }} "
