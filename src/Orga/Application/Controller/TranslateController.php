@@ -13,7 +13,7 @@ class Orga_TranslateController extends Core_Controller
      */
     public function axesAction()
     {
-        $this->view->assign('workspaceId', $this->getParam('workspaceId'));
+        $this->view->assign('workspaceId', $this->getParam('workspace'));
     }
 
     /**
