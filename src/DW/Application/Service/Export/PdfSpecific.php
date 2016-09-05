@@ -137,6 +137,10 @@ class PdfSpecific extends Export_Pdf
         page-break-inside: avoid;
     }
 
+    .pdf .data table {
+        margin-bottom: 20px;
+    }
+
     .pdf table {
         text-align: left;
         font-size:15px;
