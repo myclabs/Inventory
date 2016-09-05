@@ -4,7 +4,7 @@
         targetNamespace="http://www.w3schools.com"
         xmlns="http://www.w3schools.com"
         elementFormDefault="qualified"
-        >
+>
 
     <!-- Format du documents -->
     <se:element name="specificExport">
@@ -43,7 +43,13 @@
     <se:complexType name="exportRowData">
 
         <se:sequence>
-            <se:element name="sumIndicator" maxOccurs="2">
+            <se:element name="AFIndicator" minOccurs="0">
+                <se:complexType>
+                    <se:attribute name="refGranularity" type="se:string" use="required"/>
+                    <se:attribute name="refInput" type="se:string" use="required"/>
+                </se:complexType>
+            </se:element>
+            <se:element name="sumIndicator" maxOccurs="2" minOccurs="0">
                 <se:complexType>
                     <se:attribute name="ref" type="se:string" use="required"/>
                 </se:complexType>
@@ -52,6 +58,7 @@
         </se:sequence>
 
         <se:attribute name="label" type="se:string" use="required"/>
+        <se:attribute name="type" type="se:string" default="DW"/>
 
     </se:complexType>
 

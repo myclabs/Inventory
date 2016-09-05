@@ -17,6 +17,9 @@ use DW\Domain\Report;
 use Exception;
 use Export_Pdf;
 use Mnapoli\Translated\Translator;
+use Orga\Domain\Axis;
+use Orga\Domain\Cell;
+use Orga\Domain\Granularity;
 use UI_Chart_Generic;
 use Zend_Controller_Action_HelperBroker;
 
@@ -43,13 +46,16 @@ class PdfSpecific extends Export_Pdf
 
     /**
      * @param string $xmlPath
+     * @param Cell $cell
      * @param Cube $cube
      * @param ReportService $reportService
      * @param Translator $translator
      * @param string|null $exportUrl
+     * @throws \Core_Exception_InvalidArgument
      */
     public function __construct(
         $xmlPath,
+        Cell $cell,
         Cube $cube,
         ReportService $reportService,
         Translator $translator,
@@ -196,12 +202,12 @@ class PdfSpecific extends Export_Pdf
                 . '</h2>';
 
             // Récupération des contenus de données.
+            /** @var \DOMNodeList $xmlContent */
             foreach ($xmlSpecificExport->childNodes as $xmlContent) {
                 if ($xmlContent instanceof DOMText) {
                     continue;
                 }
 
-                /* @var DOMNode $xmlContent */
                 switch ($xmlContent->nodeName) {
 
                     case 'row':
@@ -231,15 +237,30 @@ class PdfSpecific extends Export_Pdf
                                 $this->html .= '<td width="50%">';
                             }
 
-                            $report = $this->getReportFromXML($xmlData, $cube, true);
+                            $type = $xmlData->getAttribute('type');
 
-                            $results = $report->getValues();
+                            if ($type === 'AF') {
+                                // un AF input = une cell d'orga
+                                // cette cell d'orga est reprise en fonction de la
+                                // récupérer l'AF input correspondant
+                                $AFIndicators = $xmlData->getElementsByTagName('AFIndicator');
+                                $AFRef = $AFIndicators->item(0)->getAttribute('refGranularity');
+                                $AFGranularity = $cell->getWorkspace()->getGranularityByRef($AFRef);
+                                $AFCells = $cell->getChildCellsForGranularity($AFGranularity);
+//                                $cell->getSubCellsGroupForInputGranularity();
+                                $this->html .= "AF data detected";
+                            }
+                            else {
+                                $report = $this->getReportFromXML($xmlData, $cube, true);
 
-                            $this->html .= $this->translator->get($report->getLabel())
-                                . ' : ' . $locale->formatNumber(array_pop($results)['value'], 3)
-                                // On n'affiche pas l'incertitude
-                                //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
-                                . ' ' . $this->translator->get($report->getValuesUnitSymbol());
+                                $results = $report->getValues();
+
+                                $this->html .= $this->translator->get($report->getLabel())
+                                    . ' : ' . $locale->formatNumber(array_pop($results)['value'], 3)
+                                    // On n'affiche pas l'incertitude
+                                    //' ± '.$locale->formatUncertainty($results[0]['uncertainty']).
+                                    . ' ' . $this->translator->get($report->getValuesUnitSymbol());
+                            }
 
                             if ($isMain) {
                                 $this->html .= '</h3>';

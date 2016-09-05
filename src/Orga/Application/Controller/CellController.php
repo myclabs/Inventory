@@ -1168,6 +1168,7 @@ class Orga_CellController extends Core_Controller
             str_replace('|', '_', $cell->getGranularity()->getRef()).'/';
         $specificReports = new PdfSpecific(
             $specificReportsDirectoryPath.$this->getParam('report').'.xml',
+            $cell,
             $cell->getDWCube(),
             $this->reportService,
             $this->translator,
