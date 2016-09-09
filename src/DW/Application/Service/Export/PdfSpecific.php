@@ -137,10 +137,6 @@ class PdfSpecific extends Export_Pdf
         page-break-inside: avoid;
     }
 
-    .pdf .data table {
-        margin-bottom: 20px;
-    }
-
     .pdf table {
         text-align: left;
         font-size:15px;
@@ -163,8 +159,10 @@ class PdfSpecific extends Export_Pdf
     .pdf .data table {
 		border-collapse: collapse;
 		margin-top: 5px;
+		margin-bottom: 40px;
 		width: 100%;
 		vertical-align: top;
+		border-bottom: 2px solid;
     }
 
     .pdf .data table tr td {
@@ -172,9 +170,16 @@ class PdfSpecific extends Export_Pdf
     }
 
     .pdf .data table tr th {
-    	text-align: center;
     	font-weight: bold;
         border-bottom: 2px solid;
+    }
+
+    .pdf .data table tr th.text-right {
+    	text-align: right;
+    }
+
+    .pdf .data table tr th.text-left {
+    	text-align: left;
     }
 
     .pdf .data table tr:nth-child(2n) {
@@ -302,9 +307,11 @@ class PdfSpecific extends Export_Pdf
                             if ($numeratorAxis2 !== null) {
                                 $this->html .= '<th>' . $this->translator->get($numeratorAxis2->getLabel()) . '</th>';
                             }
-                            $this->html .= '<th>' . __('UI', 'name', 'value') . ' ('
+                            $this->html .= '<th class="text-right">' . __('UI', 'name', 'value') . ' ('
                                 . $this->translator->get($report->getValuesUnitSymbol()) . ')</th>';
-                            $this->html .= '<th>' . __('UI', 'name', 'uncertainty') . ' (%)</th>';
+                            if ($report->getWithUncertainty()) {
+                                $this->html .= '<th class="text-right">' . __('UI', 'name', 'uncertainty') . ' (%)</th>';
+                            }
                             $this->html .= '</tr>';
 
 
@@ -323,7 +330,9 @@ class PdfSpecific extends Export_Pdf
                                             ',',
                                             $locale->formatNumber($value['value'], 3)
                                         ) . '</td>';
-                                    $this->html .= '<td align="right">' . str_replace('.', ',', round($value['uncertainty'])) . '</td>';
+                                    if ($report->getWithUncertainty()) {
+                                        $this->html .= '<td align="right">' . str_replace('.', ',', round($value['uncertainty'])) . '</td>';
+                                    }
                                     $this->html .= '</tr>';
                                 }
                             }
